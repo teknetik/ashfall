@@ -1,0 +1,101 @@
+[
+  {
+    "tool": "refresh_unity",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"success\":true,\"message\":\"Refresh requested.\",\"error\":null,\"data\":{\"refresh_triggered\":true,\"compile_requested\":true,\"resulting_state\":\"idle\",\"hint\":\"If Unity enters compilation/domain reload, poll the mcpforunity://editor/state resource until data.advice.ready_for_tools is true.\"},\"hint\":null}",
+          "annotations": null,
+          "meta": null
+        }
+      ],
+      "structured_content": {
+        "result": {
+          "success": true,
+          "message": "Refresh requested.",
+          "error": null,
+          "data": {
+            "refresh_triggered": true,
+            "compile_requested": true,
+            "resulting_state": "idle",
+            "hint": "If Unity enters compilation/domain reload, poll the mcpforunity://editor/state resource until data.advice.ready_for_tools is true."
+          },
+          "hint": null
+        }
+      },
+      "meta": {
+        "fastmcp": {
+          "wrap_result": true
+        }
+      },
+      "data": {
+        "success": true,
+        "message": "Refresh requested.",
+        "error": null,
+        "data": {
+          "refresh_triggered": true,
+          "compile_requested": true,
+          "resulting_state": "idle",
+          "hint": "If Unity enters compilation/domain reload, poll the mcpforunity://editor/state resource until data.advice.ready_for_tools is true."
+        },
+        "hint": null
+      },
+      "is_error": false
+    }
+  },
+  {
+    "tool": "manage_material",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"success\":true,\"message\":\"Created material at Assets/AthenHill/Materials/ProbeBlue.mat with shader Universal Render Pipeline/Lit\"}",
+          "annotations": null,
+          "meta": null
+        }
+      ],
+      "structured_content": {
+        "success": true,
+        "message": "Created material at Assets/AthenHill/Materials/ProbeBlue.mat with shader Universal Render Pipeline/Lit"
+      },
+      "meta": null,
+      "data": {
+        "success": true,
+        "message": "Created material at Assets/AthenHill/Materials/ProbeBlue.mat with shader Universal Render Pipeline/Lit"
+      },
+      "is_error": false
+    }
+  },
+  {
+    "tool": "manage_material",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"success\":false,\"code\":\"Exception has been thrown by the target of an invocation.\",\"error\":\"Exception has been thrown by the target of an invocation.\",\"data\":{\"stackTrace\":\"  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x00083] in <fe1d7a670f4f4d078f963f4439913bcb>:0 \\n  at System.Reflection.MethodBase.Invoke (System.Object obj, System.Object[] parameters) [0x00000] in <fe1d7a670f4f4d078f963f4439913bcb>:0 \\n  at MCPForUnity.Runtime.Helpers.UnityObjectIdCompat.InstanceIDToObjectCompat (System.Int32 instanceId) [0x0003d] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Runtime/Helpers/UnityObjectIdCompat.cs:66 \\n  at MCPForUnity.Editor.Helpers.GameObjectLookup.ResolveInstanceID (System.Int32 instanceId) [0x00000] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Editor/Helpers/GameObjectLookup.cs:73 \\n  at MCPForUnity.Editor.Helpers.GameObjectLookup.FindById (System.Int32 instanceId) [0x00000] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Editor/Helpers/GameObjectLookup.cs:81 \\n  at MCPForUnity.Editor.Helpers.GameObjectLookup.FindByTarget (Newtonsoft.Json.Linq.JToken target, System.String searchMethod, System.Boolean includeInactive) [0x00014] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Editor/Helpers/GameObjectLookup.cs:65 \\n  at MCPForUnity.Editor.Helpers.ObjectResolver.Resolve (Newtonsoft.Json.Linq.JObject instruction, System.Type targetType) [0x000c5] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Editor/Helpers/ObjectResolver.cs:65 \\n  at MCPForUnity.Editor.Tools.ManageMaterial.AssignMaterialToRenderer (Newtonsoft.Json.Linq.JObject params) [0x000b3] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Editor/Tools/ManageMaterial.cs:212 \\n  at MCPForUnity.Editor.Tools.ManageMaterial.HandleCommand (Newtonsoft.Json.Linq.JObject params) [0x0012f] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Editor/Tools/ManageMaterial.cs:40 \"}}",
+          "annotations": null,
+          "meta": null
+        }
+      ],
+      "structured_content": {
+        "success": false,
+        "code": "Exception has been thrown by the target of an invocation.",
+        "error": "Exception has been thrown by the target of an invocation.",
+        "data": {
+          "stackTrace": "  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x00083] in <fe1d7a670f4f4d078f963f4439913bcb>:0 \n  at System.Reflection.MethodBase.Invoke (System.Object obj, System.Object[] parameters) [0x00000] in <fe1d7a670f4f4d078f963f4439913bcb>:0 \n  at MCPForUnity.Runtime.Helpers.UnityObjectIdCompat.InstanceIDToObjectCompat (System.Int32 instanceId) [0x0003d] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Runtime/Helpers/UnityObjectIdCompat.cs:66 \n  at MCPForUnity.Editor.Helpers.GameObjectLookup.ResolveInstanceID (System.Int32 instanceId) [0x00000] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Editor/Helpers/GameObjectLookup.cs:73 \n  at MCPForUnity.Editor.Helpers.GameObjectLookup.FindById (System.Int32 instanceId) [0x00000] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Editor/Helpers/GameObjectLookup.cs:81 \n  at MCPForUnity.Editor.Helpers.GameObjectLookup.FindByTarget (Newtonsoft.Json.Linq.JToken target, System.String searchMethod, System.Boolean includeInactive) [0x00014] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Editor/Helpers/GameObjectLookup.cs:65 \n  at MCPForUnity.Editor.Helpers.ObjectResolver.Resolve (Newtonsoft.Json.Linq.JObject instruction, System.Type targetType) [0x000c5] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Editor/Helpers/ObjectResolver.cs:65 \n  at MCPForUnity.Editor.Tools.ManageMaterial.AssignMaterialToRenderer (Newtonsoft.Json.Linq.JObject params) [0x000b3] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Editor/Tools/ManageMaterial.cs:212 \n  at MCPForUnity.Editor.Tools.ManageMaterial.HandleCommand (Newtonsoft.Json.Linq.JObject params) [0x0012f] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Editor/Tools/ManageMaterial.cs:40 "
+        }
+      },
+      "meta": null,
+      "data": {
+        "success": false,
+        "code": "Exception has been thrown by the target of an invocation.",
+        "error": "Exception has been thrown by the target of an invocation.",
+        "data": {
+          "stackTrace": "  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x00083] in <fe1d7a670f4f4d078f963f4439913bcb>:0 \n  at System.Reflection.MethodBase.Invoke (System.Object obj, System.Object[] parameters) [0x00000] in <fe1d7a670f4f4d078f963f4439913bcb>:0 \n  at MCPForUnity.Runtime.Helpers.UnityObjectIdCompat.InstanceIDToObjectCompat (System.Int32 instanceId) [0x0003d] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Runtime/Helpers/UnityObjectIdCompat.cs:66 \n  at MCPForUnity.Editor.Helpers.GameObjectLookup.ResolveInstanceID (System.Int32 instanceId) [0x00000] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Editor/Helpers/GameObjectLookup.cs:73 \n  at MCPForUnity.Editor.Helpers.GameObjectLookup.FindById (System.Int32 instanceId) [0x00000] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Editor/Helpers/GameObjectLookup.cs:81 \n  at MCPForUnity.Editor.Helpers.GameObjectLookup.FindByTarget (Newtonsoft.Json.Linq.JToken target, System.String searchMethod, System.Boolean includeInactive) [0x00014] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Editor/Helpers/GameObjectLookup.cs:65 \n  at MCPForUnity.Editor.Helpers.ObjectResolver.Resolve (Newtonsoft.Json.Linq.JObject instruction, System.Type targetType) [0x000c5] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Editor/Helpers/ObjectResolver.cs:65 \n  at MCPForUnity.Editor.Tools.ManageMaterial.AssignMaterialToRenderer (Newtonsoft.Json.Linq.JObject params) [0x000b3] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Editor/Tools/ManageMaterial.cs:212 \n  at MCPForUnity.Editor.Tools.ManageMaterial.HandleCommand (Newtonsoft.Json.Linq.JObject params) [0x0012f] in ./Library/PackageCache/com.coplaydev.unity-mcp@045e809812a8/Editor/Tools/ManageMaterial.cs:40 "
+        }
+      },
+      "is_error": false
+    }
+  }
+]

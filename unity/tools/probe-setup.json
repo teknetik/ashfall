@@ -1,0 +1,135 @@
+[
+  {
+    "tool": "refresh_unity",
+    "args": {
+      "mode": "force",
+      "compile": "request",
+      "wait_for_ready": true
+    }
+  },
+  {
+    "tool": "manage_gameobject",
+    "args": {
+      "action": "create",
+      "name": "ProbeCamera",
+      "position": [
+        6,
+        5,
+        -8
+      ],
+      "components_to_add": [
+        "Camera",
+        "AudioListener"
+      ],
+      "tag": "MainCamera"
+    }
+  },
+  {
+    "tool": "manage_gameobject",
+    "args": {
+      "action": "look_at",
+      "target": "ProbeCamera",
+      "look_at_target": [
+        0,
+        0.8,
+        0
+      ]
+    }
+  },
+  {
+    "tool": "manage_gameobject",
+    "args": {
+      "action": "create",
+      "name": "Sun",
+      "rotation": [
+        45,
+        -30,
+        0
+      ],
+      "components_to_add": [
+        "Light"
+      ],
+      "component_properties": {
+        "Light": {
+          "type": 1,
+          "intensity": 2.0
+        }
+      }
+    }
+  },
+  {
+    "tool": "manage_material",
+    "args": {
+      "action": "create",
+      "material_path": "Assets/AthenHill/Materials/ProbeBlue.mat",
+      "shader": "Universal Render Pipeline/Lit",
+      "properties": {
+        "_BaseColor": [
+          0.04,
+          0.2,
+          0.8,
+          1
+        ]
+      }
+    }
+  },
+  {
+    "tool": "manage_material",
+    "args": {
+      "action": "assign_material_to_renderer",
+      "target": "PROBE_CUBE",
+      "material_path": "Assets/AthenHill/Materials/ProbeBlue.mat"
+    }
+  },
+  {
+    "tool": "manage_components",
+    "args": {
+      "action": "add",
+      "target": "PROBE_CUBE",
+      "component_type": "ProbeRotation"
+    }
+  },
+  {
+    "tool": "manage_gameobject",
+    "args": {
+      "action": "create",
+      "name": "Label +X",
+      "position": [
+        3,
+        1,
+        0
+      ],
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "components_to_add": [
+        "TextMesh"
+      ],
+      "component_properties": {
+        "TextMesh": {
+          "text": "+X",
+          "characterSize": 0.3,
+          "fontSize": 48
+        }
+      }
+    }
+  },
+  {
+    "tool": "manage_scene",
+    "args": {
+      "action": "save"
+    }
+  },
+  {
+    "tool": "read_console",
+    "args": {
+      "action": "get",
+      "types": [
+        "error"
+      ],
+      "count": 20
+    }
+  }
+]
