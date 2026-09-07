@@ -1,4 +1,16 @@
-    # Athen Hill — Codex Build Guide
+# Current direction — Unity only (2026-09-07)
+
+The user has explicitly superseded the original browser MVP stack below: build and
+test **only the Unity game** in `unity/AthenHill`, targeting native Linux. Do not
+develop, rebuild or browser-test the legacy TypeScript/Vite game. Existing web
+source and shared asset-production inputs are historical references, not a second
+shipping target; preserve unrelated work when retiring them.
+
+The supplied Ward Guard is for the four talking NPCs, posed with arms at its sides.
+`meshy/Meshy_AI_weathered_traveler_ri_biped` is for the three non-interactive roaming
+NPCs, using its supplied walking animation. Keep their gameplay roots and routes.
+
+# Historical Athen Hill — Codex Build Guide
 ## An Old-Athen-type 2001 sci-fi MMO city MVP
 
 Drop this file in an empty repo as `AGENTS.md` (or keep it next to `AGENTS.md` and paste the **Master Prompt** at the bottom into Codex on **high / Astra** reasoning).
@@ -31,8 +43,7 @@ What actually makes it look expensive:
 - **The judge is a screenshot, not a vibe.** Same camera, same time of day, every pass.
 - **60 fps is a hard gate**, not a later optimization. Triangle budget and draw-call budget are set before detailing.
 - **High reasoning + overnight /goal loops.** People let Astra run, then a critic agent refuses to accept “done.”
-- **No external marketplace assets.** The impressive demos model in Blender and texture from image gen so the style stays coherent.
-
+-
 Official-adjacent stack that keeps winning for browser MVPs:
 
 - TypeScript + Vite
@@ -525,6 +536,15 @@ HUD should feel like a 2001 MMO overlay drawn originally:
 - Cursor: simple bracket, not a sword
 
 Audio (generate or synthesize, original only):
+
+Use elevenlabs API
+
+```bash
+claude mcp add elevenlabs --scope project --env 
+ELEVENLABS_API_KEY=sk_124d029ad748e32a935633e2f68f3cf7ae4df5f18817e70f -- uvx elevenlabs-mcp
+```
+
+
 
 - dry wind + distant market murmur
 - stone footsteps

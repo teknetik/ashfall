@@ -1,5 +1,5 @@
 import { Vector3, type Camera, type Scene } from 'three';
-import type { CharacterInstance, CharacterLibrary } from './characters';
+import type { CharacterInstance, CharacterLibrary, CharacterVariant } from './characters';
 
 type Point = readonly [number, number, number];
 export type NamedNPCId = 'npc_mira' | 'npc_torr' | 'npc_vex' | 'npc_linn';
@@ -108,7 +108,8 @@ export class NPCSystem {
     overlayRoot.append(this.root);
     try {
       for (const definition of NPC_DEFINITIONS) {
-        const actor = this.createActor(library, definition.id, definition.name, definition.tint);
+        // Legacy browser prototype: interactive colonists use the Ward Guard.
+        const actor = this.createActor(library, definition.id, definition.name, definition.tint, 'guard');
         actor.definition = definition;
         actor.instance.root.position.fromArray(definition.position);
         actor.instance.root.rotation.y = definition.yaw;
@@ -133,8 +134,8 @@ export class NPCSystem {
     }
   }
 
-  private createActor(library: CharacterLibrary, id: string, name: string, tint: string): Actor {
-    const instance = library.create({ id, kind: 'npc', tint });
+  private createActor(library: CharacterLibrary, id: string, name: string, tint: string, variant: CharacterVariant = 'default'): Actor {
+    const instance = library.create({ id, kind: 'npc', variant, tint });
     instance.root.name = id;
     instance.root.userData.npcId = id;
     const actor: Actor = { id, name, instance, definition: null, walker: null, routeLengths: [],

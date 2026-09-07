@@ -1,41 +1,52 @@
 # Athen Hill
 
-An original 2001 sci-fi MMO homage city slice, built with TypeScript, Vite,
-Three.js and Rapier. Production meshes will be authored through Blender MCP.
+An original 2001 sci-fi MMO homage city slice. **Unity is the sole active game
+and build target.** Open `unity/AthenHill` in Unity 6000.6.0f1; see the
+[Unity guide](unity/README.md) for controls, native Linux builds and diagnostics.
+The earlier TypeScript/Vite prototype is retired, retained only as historical
+source and shared asset-production references. Do not rebuild or test it.
 
-**Current milestone: Phase 1 — greybox city, movement and collision.** Explore a
+The [Unity port handover](UNITY_PORT_HANDOVER.md) records the historical migration.
+
+**Current milestone: playable city; character replacement and beauty pass.** Explore a
 120 × 90 m city block with a raised tree plaza, shop porches, two west gate
-tunnels, Vanguard Hall, a Ring Gate and a Lattice Jack. Geometry is deliberately
-untextured and primitive. Concept art, authored characters, NPC dialogue, shop
-transactions, travel effects and audio are later phases.
+tunnels, Vanguard Hall, a Ring Gate and a Lattice Jack. Four colonists have
+conversations; Mira buys and sells supplies, and the Lattice Jack connects to
+a small sector map. Visual acceptance remains open against the supplied art.
+The imported human base, fitted armour and PBR materials replace the earlier
+primitive player after runtime review. Audio and final release checks are in progress.
+
+See [art credits](public/credits.html), the [full source notice](public/assets/THIRD_PARTY_LICENSES.md),
+and [character replacement evidence](docs/character-replacement.md). External
+assets are now authorized by the user; source licences and attribution are retained.
 
 ## Run locally
 
-Requires Node 22.12+ (verified with Node 22.22.3).
+Open `unity/AthenHill/Assets/AthenHill/Scenes/AthenHill.unity` and press Play,
+or launch the native release:
 
 ```sh
-npm ci
-npm run dev
+./unity/AthenHill/Builds/Linux/AthenHill.x86_64
 ```
 
-Development: http://127.0.0.1:5173/. To test the production bundle:
+Build from **Athen Hill → Build → Linux release player** in Unity.
 
-```sh
-npm run build
-npm run preview
-```
+## Historical browser prototype notes
 
-Production preview: http://127.0.0.1:4173/.
+The remaining architecture and browser QA notes below describe the retired
+prototype, not the current Unity shipping workflow. Use `unity/README.md` instead.
 
 ## Controls
 
 - **WASD / arrows**: walk relative to the camera.
 - **Shift**: run.
 - **Hold right mouse + drag**: rotate the camera. Pointer lock is unnecessary.
+- **E**: talk, trade or use a nearby travel terminal.
+- **1–6**: select quick actions; 5 opens the pack and 6 opens city notes.
 - **Esc / Pause**: pause or resume.
 - **R / Return to gate**: reset position and movement.
 - **Touch**: directional buttons to walk, hold Run to sprint, drag the city to look.
-- **Survey tools**: select a fixed view and save a 1920 × 1080 frame.
+- **Survey tools**: add `?debug=1`, select a fixed view and save a 1920 × 1080 frame.
 
 Spawn at West Gate, walk east up the avenue to the Hill Tree, take the stairs
 onto the plaza, head south to the Ring Gate, then north to the Lattice Jack.
@@ -45,8 +56,8 @@ walkable; buildings and perimeter walls block movement.
 ## Architecture and diagnostics
 
 `src/layout.ts` defines safe landmark foot positions and collision data types.
-`src/world.ts` batches static primitive geometry by material and supplies separate
-simple collision proxies. `src/physics.ts` owns Rapier, `src/player.ts` owns the
+`src/world.ts` loads and batches authored world geometry by material and supplies
+separate simple collision proxies. `src/physics.ts` owns Rapier, `src/player.ts` owns the
 kinematic capsule, `src/input.ts` collects keyboard/pointer/touch intents, and
 `src/camera.ts` owns fixed cameras and the follow boom. `src/game.ts` runs input →
 fixed physics → camera → render; `src/ui.ts` and `src/debug.ts` expose state.
@@ -69,6 +80,8 @@ __ATHEN__.landmarks
 __ATHEN__.goto('shop_row_e')
 __ATHEN__.nearbyColliders(3)
 __ATHEN__.view('cam_avenue')
+__ATHEN__.view('character') // live player review, six fixed cameras stay unchanged
+__ATHEN__.view('portrait')
 await __ATHEN__.shot('cam_avenue')
 __ATHEN__.view('follow')
 __ATHEN__.pause(true)
@@ -82,8 +95,8 @@ visible travel names are Lattice Jack and Ring Gate.
 `shot(name)` saves under `tools/shots/` through a loopback-only Vite endpoint in
 dev and preview. A static host downloads the PNG instead of claiming a local
 repository write. Screenshot capture restores the active camera, canvas size,
-pixel ratio and player visibility. Survey/debug tools deliberately remain in
-this development milestone; public release packaging is Phase 7.
+pixel ratio and player visibility. Survey tools are hidden in production unless
+`?debug=1` is requested; public release packaging is Phase 7.
 
 ## Verification and phase evidence
 

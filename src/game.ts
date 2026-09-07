@@ -104,6 +104,7 @@ export class Game {
     window.addEventListener('resize', this.resize);
     canvas.addEventListener('webglcontextlost', this.contextLost);
     this.ready = Promise.all([this.world.load(), this.characters.load()]).then(async () => {
+      await this.characters.loadGuard();
       if (this.disposed) return;
       if (this.state === 'error') throw new Error(this.error);
       const physics = await Physics.create(this.world.colliderDefs);

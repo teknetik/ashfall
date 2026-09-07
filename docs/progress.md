@@ -19,8 +19,8 @@ reset is authorized if quota exhaustion prevents progress; none used so far.
 - Phase 2: complete. Built-in Codex image generation; eight immutable refs.
 - Phase 3: complete for authored-world integration. See `phase-3.md`; final beauty scores remain Phase 6.
 - Phase 4: technical integration verified, visual acceptance reopened by the user. Replace the primitive-looking character with an externally sourced realistic base and detailed armour. See `art-direction-update.md`.
-- Phase 5: implemented, production QA pending. Four NPC dialogues, buy/sell, Lattice Jack and Ring Gate.
-- Phase 6: pending. Fixed-camera comparisons, audio and measured performance.
+- Phase 5: complete and committed at `d5132e6`. Production dialogue, trading, travel and desktop/mobile QA passed; see `phase-5.md`.
+- Phase 6: active. Imported character replacement, lighting comparison, audio and measured performance.
 - Phase 7: pending. Loading/pause, production QA and static release packaging.
 
 ## Integration constraints

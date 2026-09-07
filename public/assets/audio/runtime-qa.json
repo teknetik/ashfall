@@ -1,0 +1,75 @@
+{
+  "passed": true,
+  "checks": [
+    "No AudioContext or asset fetch before a trusted gesture.",
+    "Trusted gesture unlocks actual Web Audio; four local MP3s decode once and two loops start.",
+    "Terminal clicks throttle duplicates; actual context time throttles footsteps and proximity attenuates hum.",
+    "Mute ramps master gain to zero and prevents new one-shots.",
+    "Pause stops voices and suspends; repeated resume cycles never stack loops.",
+    "Simulated document visibility changes suspend and resume the actual AudioContext safely.",
+    "Idempotent disposal stops/disconnects sources and gains, clears buffers, and closes the context."
+  ],
+  "snapshots": {
+    "ready": {
+      "state": "ready",
+      "contextState": "running",
+      "muted": false,
+      "paused": false,
+      "hidden": false,
+      "buffers": 4,
+      "loops": 2,
+      "voices": 2,
+      "steps": 0,
+      "clicks": 0,
+      "travelGain": 0,
+      "volumes": {
+        "master": 0.8,
+        "ambience": 0.7,
+        "sfx": 0.8,
+        "ui": 0.7
+      },
+      "error": null
+    },
+    "moving": {
+      "state": "ready",
+      "contextState": "running",
+      "muted": false,
+      "paused": false,
+      "hidden": false,
+      "buffers": 4,
+      "loops": 2,
+      "voices": 5,
+      "steps": 5,
+      "clicks": 1,
+      "travelGain": 0.1375,
+      "volumes": {
+        "master": 0.8,
+        "ambience": 0.7,
+        "sfx": 0.8,
+        "ui": 0.7
+      },
+      "error": null
+    },
+    "disposed": {
+      "state": "disposed",
+      "contextState": "closed",
+      "muted": false,
+      "paused": false,
+      "hidden": false,
+      "buffers": 0,
+      "loops": 0,
+      "voices": 0,
+      "steps": 5,
+      "clicks": 1,
+      "travelGain": 0,
+      "volumes": {
+        "master": 0.8,
+        "ambience": 0.7,
+        "sfx": 0.8,
+        "ui": 0.7
+      },
+      "error": null
+    }
+  },
+  "errors": []
+}

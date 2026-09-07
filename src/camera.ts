@@ -9,6 +9,9 @@ export type CameraName = typeof CAMERA_NAMES[number];
 export const PROBE_VERTICAL_FOV = 2 * Math.atan(36 / (2 * 42) / (16 / 9)) * 180 / Math.PI;
 export const NAMED_VERTICAL_FOV = 50;
 const BOOM_DISTANCE = 4.2;
+const CHARACTER_VERTICAL_FOV = 35;
+const REVIEW_YAW_OFFSET = 0.2;
+const UP = new Vector3(0, 1, 0);
 
 type View = { position: [number, number, number]; target: [number, number, number] };
 export const CITY_VIEWS: Record<CameraName, View> = {
@@ -23,12 +26,17 @@ export const CITY_VIEWS: Record<CameraName, View> = {
 export class Cameras {
   readonly named: Record<CameraName, PerspectiveCamera>;
   readonly follow = new PerspectiveCamera(50, 1, 0.08, 240);
+  private readonly character = new PerspectiveCamera(CHARACTER_VERTICAL_FOV, 1, 0.08, 240);
+  private readonly portrait = new PerspectiveCamera(CHARACTER_VERTICAL_FOV, 1, 0.08, 240);
   active: PerspectiveCamera;
   private physics?: Physics;
   private player?: Player;
   private readonly feet = new Vector3();
   private readonly target = new Vector3();
   private readonly direction = new Vector3();
+  private readonly reviewDirection = new Vector3(0, 0, 1);
+  private readonly characterTarget = new Vector3();
+  private readonly portraitTarget = new Vector3();
   private orbitYaw = -Math.PI / 2;
   private pitch = 0.22;
   private distance = BOOM_DISTANCE;
@@ -44,7 +52,9 @@ export class Cameras {
       return [name, camera];
     })) as Record<CameraName, PerspectiveCamera>;
     this.follow.name = 'cam_follow';
-    scene.add(this.follow);
+    this.character.name = 'cam_character';
+    this.portrait.name = 'cam_portrait';
+    scene.add(this.follow, this.character, this.portrait);
     this.active = this.follow;
   }
 
@@ -73,6 +83,12 @@ export class Cameras {
     if (name === 'follow') {
       this.active = this.follow;
       this.update(0, true);
+      return;
+    }
+    if (name === 'character' || name === 'portrait') {
+      this.active = name === 'character' ? this.character : this.portrait;
+      this.updateReviews();
+      if (this.player) this.player.model.visible = true;
       return;
     }
     if (!CAMERA_NAMES.includes(name as CameraName)) throw new Error(`Unknown camera: ${name}`);
@@ -107,9 +123,31 @@ export class Cameras {
     this.follow.lookAt(this.target);
     // Avoid filling the view with the inside of the scale marker in tight corners.
     if (this.player) this.player.model.visible = this.active !== this.follow || this.distance > 0.6;
+    this.updateReviews();
+  }
+
+  private updateReviews() {
+    if (this.player) {
+      this.feet.copy(this.player.position);
+      // The authored visual faces +Z. Its parent applies controller yaw and the
+      // established PI correction, so derive the front from that actual transform.
+      this.player.character.root.getWorldDirection(this.reviewDirection);
+      this.reviewDirection.y = 0;
+      this.reviewDirection.normalize().applyAxisAngle(UP, REVIEW_YAW_OFFSET);
+    }
+    this.characterTarget.copy(this.feet).addScaledVector(UP, 1);
+    this.character.position.copy(this.feet).addScaledVector(this.reviewDirection, 3.2);
+    this.character.position.y += 1.15;
+    this.character.lookAt(this.characterTarget);
+    this.portraitTarget.copy(this.feet).addScaledVector(UP, 1.46);
+    this.portrait.position.copy(this.portraitTarget).addScaledVector(this.reviewDirection, 1.8);
+    this.portrait.lookAt(this.portraitTarget);
   }
 
   get snapshot() {
+    const reviewing = this.active === this.character || this.active === this.portrait;
+    const position = reviewing ? this.active.position : this.follow.position;
+    const target = this.active === this.character ? this.characterTarget : this.active === this.portrait ? this.portraitTarget : this.target;
     return {
       active: this.active.name,
       yaw: this.orbitYaw,
@@ -117,16 +155,17 @@ export class Cameras {
       desiredDistance: BOOM_DISTANCE,
       distance: this.distance,
       obstructed: this.obstructed,
-      position: { x: this.follow.position.x, y: this.follow.position.y, z: this.follow.position.z },
-      target: { x: this.target.x, y: this.target.y, z: this.target.z },
+      position: { x: position.x, y: position.y, z: position.z },
+      target: { x: target.x, y: target.y, z: target.z },
     };
   }
 
   resize(aspect: number) {
-    for (const camera of [...Object.values(this.named), this.follow]) {
+    for (const camera of [...Object.values(this.named), this.follow, this.character, this.portrait]) {
       camera.aspect = aspect;
       // Retain horizontal coverage when the browser is narrowed.
-      const fov = 2 * Math.atan(Math.tan(NAMED_VERTICAL_FOV * Math.PI / 360) * Math.max(1, (16 / 9) / aspect)) * 180 / Math.PI;
+      const baseFov = camera === this.character || camera === this.portrait ? CHARACTER_VERTICAL_FOV : NAMED_VERTICAL_FOV;
+      const fov = 2 * Math.atan(Math.tan(baseFov * Math.PI / 360) * Math.max(1, (16 / 9) / aspect)) * 180 / Math.PI;
       camera.fov = camera === this.follow ? Math.min(85, fov) : fov;
       camera.updateProjectionMatrix();
     }

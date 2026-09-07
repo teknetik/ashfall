@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "provider": "ElevenLabs",
+  "model": "eleven_text_to_sound_v2",
+  "createdAt": "2026-09-07T11:50:37.570765+00:00",
+  "status": "generated",
+  "credentialProbe": "ELEVENLABS_API_KEY=SET",
+  "subscriptionCheck": "existing credits cover conservative 732-credit ceiling",
+  "purchasesOrTopups": false,
+  "outputFormat": "mp3_44100_128",
+  "referenceLedger": [
+    {
+      "source": "/Users/carl.draper/.agents/skills/threejs-audio-generator/SKILL.md",
+      "read": true
+    },
+    {
+      "source": "/Users/carl.draper/.agents/skills/threejs-audio-generator/references/audio-workflows.md",
+      "read": true
+    }
+  ],
+  "documentation": [
+    "https://elevenlabs.io/docs/api-reference/text-to-sound-effects/convert",
+    "https://elevenlabs.io/docs/api-reference/user/subscription/get/"
+  ],
+  "distributionNote": "Original generated prompts; account-specific distribution terms have not been independently reviewed. No third-party music or character voices requested.",
+  "assets": [
+    {
+      "id": "desert_bed",
+      "file": "desert-bed-mix.mp3",
+      "duration": 12,
+      "loop": true,
+      "group": "ambience",
+      "promptInfluence": 0.45,
+      "prompt": "Seamless quiet outdoor ambience for an original dusty desert science fiction market town. Dry warm wind lightly brushing broad pale stone paving and cloth awnings, very soft distant indistinct human market murmur far behind the listener. Sparse airy continuous bed, no intelligible words, no close voices, no footsteps, no music, no melody, no dramatic swells. Smooth seamless loop with consistent gentle level.",
+      "status": "generated",
+      "bytes": 193141,
+      "sourceFile": "desert-bed.mp3",
+      "processing": {
+        "tool": "ffmpeg",
+        "gainDb": 14,
+        "codec": "libmp3lame",
+        "bitrate": "128k",
+        "purpose": "Match ambience levels and retain decoding headroom without changing timing."
+      }
+    },
+    {
+      "id": "stone_step",
+      "file": "stone-step-mix.mp3",
+      "duration": 0.8,
+      "loop": false,
+      "group": "sfx",
+      "promptInfluence": 0.75,
+      "prompt": "One single close boot footstep landing on dry worn stone paving in a desert science fiction town. Firm dusty leather sole thock with a small grit scrape and short natural dry tail. Exactly one step, clean readable transient near the start, no sequence, no echo, no background wind, no voice, no music.",
+      "status": "generated",
+      "bytes": 13836,
+      "sourceFile": "stone-step.mp3",
+      "processing": {
+        "tool": "ffmpeg",
+        "gainDb": -3,
+        "codec": "libmp3lame",
+        "bitrate": "128k",
+        "purpose": "Match ambience levels and retain decoding headroom without changing timing."
+      }
+    },
+    {
+      "id": "terminal_click",
+      "file": "terminal-click-mix.mp3",
+      "duration": 0.5,
+      "loop": false,
+      "group": "ui",
+      "promptInfluence": 0.8,
+      "prompt": "One short understated electronic terminal confirmation click for an old science fiction computer. Tiny soft mechanical tap with a warm low digital pip and very short clean tail. Subtle tactile interface, no piercing beep, no alarm, no melody, no voice, no music, no background ambience.",
+      "status": "generated",
+      "bytes": 8821,
+      "sourceFile": "terminal-click.mp3",
+      "processing": {
+        "tool": "ffmpeg",
+        "gainDb": 2,
+        "codec": "libmp3lame",
+        "bitrate": "128k",
+        "purpose": "Match ambience levels and retain decoding headroom without changing timing."
+      }
+    },
+    {
+      "id": "transport_hum",
+      "file": "transport-hum-mix.mp3",
+      "duration": 5,
+      "loop": true,
+      "group": "ambience",
+      "promptInfluence": 0.5,
+      "prompt": "Seamless low quiet power hum from a stationary science fiction transport terminal. Restrained smooth electrical bass thrum with a faint airy resonant upper layer, gently steady idle energy, spatially close but not loud, no pulsing beat, no startup or shutdown, no whoosh, no alarm, no speech, no music. Smooth seamless loop with stable level.",
+      "status": "generated",
+      "bytes": 81128,
+      "sourceFile": "transport-hum.mp3",
+      "processing": {
+        "tool": "ffmpeg",
+        "gainDb": -16,
+        "codec": "libmp3lame",
+        "bitrate": "128k",
+        "purpose": "Match ambience levels and retain decoding headroom without changing timing."
+      }
+    }
+  ],
+  "creditsConsumedObserved": 0,
+  "qa": "qa.json",
+  "waveform": "waveforms.png",
+  "creditObservationNote": "Subscription character_count did not change immediately after generation; observed0 is not evidence of zero billing. Existing credits covered the conservative budget before generation.",
+  "sourceQA": "qa-source.json",
+  "runtimeQA": "runtime-qa.json"
+}
