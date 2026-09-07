@@ -37,7 +37,7 @@ namespace AthenHill.Editor
                 for(int x=-56;x<=56;x+=4) Joint(joints.transform,jointMat,new Vector3(x,.006f,0),new Vector3(.035f,.01f,86));
                 for(int z=-40;z<=40;z+=4) Joint(joints.transform,jointMat,new Vector3(0,.007f,z),new Vector3(116,.01f,.035f));
             }
-            AssetDatabase.SaveAssets();EditorSceneManager.SaveOpenScenes();
+            AssetDatabase.SaveAssets();EditorSceneManager.MarkSceneDirty(UnityEngine.SceneManagement.SceneManager.GetActiveScene());EditorSceneManager.SaveOpenScenes();
         }
         static void Joint(Transform parent,Material mat,Vector3 p,Vector3 scale)
         {
