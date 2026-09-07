@@ -14,8 +14,8 @@ make prefab/material variants for adaptations. Generated render batches, if
 needed, retain their editable source objects and have an explicit rebuild action.
 Do not silently overwrite user edits or replace the city with one mega-mesh.
 
-Current checkpoint: U0 passed. U1 import baseline is being assembled. Full editing
-instructions will be added as each gameplay and UI asset is introduced.
+Current checkpoint: the imported city and player controls are verified. City-loop
+assets below are saved and verified with keyboard input.
 
 ## Assets available now
 
@@ -39,3 +39,24 @@ Open `unity/AthenHill` in Unity 6000.6.0f1, then open
 
 Save scene and prefab edits outside Play mode. Imported GLBs are preserved source
 assets; changing a material on a variant is safer than editing importer sub-assets.
+
+## Dialogue, trading and HUD
+
+- Select **CitySession** for interaction range, player/input/camera references,
+  reduced motion and mute defaults. **CityCatalog.asset** holds starting credits,
+  starting inventory, item descriptions/prices, destination names and transition time.
+- Each **Data/npc_*.asset** holds that colonist's name, role, dialogue nodes and
+  choices. Preserve IDs when changing wording so existing branches remain connected.
+- Move NPC prefab instances under **Colonists** in Scene View. Their interaction
+  position follows the object. Select a walker to adjust speed and its waypoint list;
+  move the numbered objects in its route group to reshape the path.
+- Open **UI/CityHUD.uxml** in UI Builder. Its **CityHUD.uss** controls colours,
+  spacing, fonts and panels. Keep element names used by CityHud bindings when
+  rearranging controls. **CityPanel.asset** controls reference resolution and scaling.
+- Import/assembly commands create initial assets only; they refuse to recreate an
+  existing city loop. Editing the scene does not require rerunning the scripts or
+  changing the original TypeScript files.
+
+**Hill visit area**, **Lattice interaction** and **Ring interaction** are editable
+scene markers referenced by CitySession. Move the associated marker when relocating
+its landmark; interaction ranges are also Inspector properties.

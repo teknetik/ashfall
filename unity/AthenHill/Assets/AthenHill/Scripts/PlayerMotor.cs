@@ -13,7 +13,7 @@ namespace AthenHill
   public Transform spawn;
   public bool Grounded {get;private set;}
   public float Speed {get;private set;}
-  public bool Blocked;
+  public bool Blocked,Talking;
   CharacterController body;
   float vertical;
   void Awake(){body=GetComponent<CharacterController>();}
@@ -36,7 +36,7 @@ namespace AthenHill
    }
    Speed=Vector3.ProjectOnPlane(transform.position-previous,Vector3.up).magnitude/dt;
    if(direction.sqrMagnitude>.001f)visual.rotation=Quaternion.Slerp(visual.rotation,Quaternion.LookRotation(direction),1-Mathf.Exp(-turnSpeed*dt));
-   actor.SetMotion(Speed,input.Run,false);
+   actor.SetMotion(Speed,input.Run,Talking);
   }
   public void Teleport(Vector3 feet){if(!body)body=GetComponent<CharacterController>();body.enabled=false;transform.position=feet+Vector3.up*.015f;body.enabled=true;vertical=0;Grounded=false;Physics.SyncTransforms();}
   public void ReturnToGate(){Teleport(spawn.position);}

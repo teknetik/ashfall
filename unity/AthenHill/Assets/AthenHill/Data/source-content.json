@@ -1,0 +1,332 @@
+{
+  "catalog": {
+    "startingCredits": 25,
+    "items": [
+      {
+        "id": "water_flask",
+        "name": "Water Flask",
+        "description": "A dented field flask with a fresh seal and clean water.",
+        "buyPrice": 4,
+        "sellPrice": 2,
+        "icon": "flask",
+        "startingQuantity": 0
+      },
+      {
+        "id": "medkit",
+        "name": "Medkit",
+        "description": "A compact pack of sealed dressings and colony first-aid supplies.",
+        "buyPrice": 9,
+        "sellPrice": 4,
+        "icon": "medkit",
+        "startingQuantity": 0
+      },
+      {
+        "id": "scrap_coil",
+        "name": "Scrap Coil",
+        "description": "A worn induction coil. Someone at the market can still use the copper.",
+        "buyPrice": 2,
+        "sellPrice": 1,
+        "icon": "coil",
+        "startingQuantity": 1
+      }
+    ],
+    "destinations": [
+      {
+        "id": "crosswind_reach",
+        "name": "Crosswind Reach",
+        "description": "Wind towers and scattered settlements beyond the western ridge."
+      },
+      {
+        "id": "drywater_works",
+        "name": "Drywater Works",
+        "description": "Reclamation yards surrounding the old water-processing halls."
+      },
+      {
+        "id": "beacon_dunes",
+        "name": "Beacon Dunes",
+        "description": "Signal beacons marking the outer desert routes."
+      }
+    ]
+  },
+  "npcs": [
+    {
+      "id": "npc_mira",
+      "name": "Mira",
+      "role": "vendor",
+      "landmark": "basic_general",
+      "position": [
+        -8,
+        0.5,
+        15.8
+      ],
+      "yaw": 0,
+      "tint": "#8b3c3a",
+      "displayName": "Mira",
+      "nodes": [
+        {
+          "id": "greeting",
+          "speaker": "Mira",
+          "title": "Basic General",
+          "text": "Welcome to Basic General. Fresh seals on the flasks, checked packs in the medkits. I can buy that scrap coil if you need a few credits.",
+          "choices": [
+            {
+              "id": "browse",
+              "label": "Show me your stock.",
+              "action": "shop"
+            },
+            {
+              "id": "leave",
+              "label": "Just looking. Thanks, Mira.",
+              "action": "close"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "npc_torr",
+      "name": "Torr",
+      "role": "fixer",
+      "landmark": "mission_slab",
+      "position": [
+        -9,
+        0.25,
+        -12
+      ],
+      "yaw": 0,
+      "tint": "#69735c",
+      "displayName": "Torr",
+      "nodes": [
+        {
+          "id": "greeting",
+          "speaker": "Torr",
+          "title": "Local fixer",
+          "text": "The city looks quiet from the hill. Down here, every cracked terminal has someone waiting on a spare part.",
+          "choices": [
+            {
+              "id": "terminals",
+              "label": "What is this slab used for?",
+              "next": "slab"
+            },
+            {
+              "id": "leave",
+              "label": "I will leave you to it.",
+              "action": "close"
+            }
+          ]
+        },
+        {
+          "id": "slab",
+          "speaker": "Torr",
+          "title": "Local fixer",
+          "text": "It used to match shifts with maintenance crews. Today we leave notes for each other. Ask around the hill before you trust a blank screen.",
+          "choices": [
+            {
+              "id": "back",
+              "label": "About the city...",
+              "next": "greeting"
+            },
+            {
+              "id": "leave",
+              "label": "I will remember that.",
+              "action": "close"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "npc_vex",
+      "name": "Vex",
+      "role": "guard",
+      "landmark": "west_gate",
+      "position": [
+        -41.7,
+        0,
+        -1.5
+      ],
+      "yaw": -0.7,
+      "tint": "#645e55",
+      "displayName": "Vex",
+      "nodes": [
+        {
+          "id": "greeting",
+          "speaker": "Vex",
+          "title": "Free Column guard",
+          "text": "Keep the passage clear and watch for the carts. Free Column rules are simple: everyone gets through, and everyone helps keep the gate standing.",
+          "choices": [
+            {
+              "id": "gate",
+              "label": "Has this gate always been here?",
+              "next": "gate"
+            },
+            {
+              "id": "leave",
+              "label": "Understood. Safe watch.",
+              "action": "close"
+            }
+          ]
+        },
+        {
+          "id": "gate",
+          "speaker": "Vex",
+          "title": "Free Column guard",
+          "text": "The stone is older than the towers. Look closely and you can see three generations of repairs. We keep the old blocks because they still do the job.",
+          "choices": [
+            {
+              "id": "back",
+              "label": "About those gate rules...",
+              "next": "greeting"
+            },
+            {
+              "id": "leave",
+              "label": "I will keep the path clear.",
+              "action": "close"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "npc_linn",
+      "name": "Linn",
+      "role": "loafer",
+      "landmark": "hill_tree",
+      "position": [
+        -2.5,
+        1.5,
+        4.7
+      ],
+      "yaw": -2,
+      "tint": "#ad865c",
+      "displayName": "Linn",
+      "nodes": [
+        {
+          "id": "greeting",
+          "speaker": "Linn",
+          "title": "Hill regular",
+          "text": "Looking for someone? Try the shade. Sooner or later everyone comes up here, even the people who swear they are too busy.",
+          "choices": [
+            {
+              "id": "tree",
+              "label": "Why does everyone meet here?",
+              "next": "hill"
+            },
+            {
+              "id": "leave",
+              "label": "I will stay for a moment.",
+              "action": "close"
+            }
+          ]
+        },
+        {
+          "id": "hill",
+          "speaker": "Linn",
+          "title": "Hill regular",
+          "text": "You can see the gate, hear the market, and get out of the dust. No terminal needs to explain that. If we get separated, meet me on the hill.",
+          "choices": [
+            {
+              "id": "back",
+              "label": "Who comes up here?",
+              "next": "greeting"
+            },
+            {
+              "id": "leave",
+              "label": "On the hill. Got it.",
+              "action": "close"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "walkers": [
+    {
+      "id": "npc_walker_01",
+      "name": "Market porter",
+      "tint": "#8a7150",
+      "speed": 0.95,
+      "phase": 0.12,
+      "waypoints": [
+        [
+          -38,
+          0,
+          -3.5
+        ],
+        [
+          -16,
+          0,
+          -3.5
+        ],
+        [
+          -16,
+          0,
+          -2.5
+        ],
+        [
+          -38,
+          0,
+          -2.5
+        ]
+      ]
+    },
+    {
+      "id": "npc_walker_02",
+      "name": "Column resident",
+      "tint": "#647971",
+      "speed": 1.05,
+      "phase": 0.47,
+      "waypoints": [
+        [
+          -3,
+          0,
+          22
+        ],
+        [
+          4,
+          0,
+          22
+        ],
+        [
+          4,
+          0,
+          28
+        ],
+        [
+          -3,
+          0,
+          28
+        ]
+      ]
+    },
+    {
+      "id": "npc_walker_03",
+      "name": "Courtyard runner",
+      "tint": "#8b625d",
+      "speed": 1.15,
+      "phase": 0.68,
+      "waypoints": [
+        [
+          -11,
+          0,
+          -23
+        ],
+        [
+          -5,
+          0,
+          -23
+        ],
+        [
+          -5,
+          0,
+          -19
+        ],
+        [
+          -11,
+          0,
+          -19
+        ]
+      ]
+    }
+  ]
+}

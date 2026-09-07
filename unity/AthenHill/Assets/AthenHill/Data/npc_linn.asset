@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a584a25f7a2f6c23a420ed9d0c79f73, type: 3}
+  m_Name: npc_linn
+  m_EditorClassIdentifier: Assembly-CSharp::AthenHill.NpcDefinition
+  id: npc_linn
+  displayName: Linn
+  role: Hill regular
+  nodes:
+  - id: greeting
+    title: Hill regular
+    text: Looking for someone? Try the shade. Sooner or later everyone comes up here, even the people who swear they are too busy.
+    choices:
+    - id: tree
+      label: Why does everyone meet here?
+      next: hill
+      action: 
+    - id: leave
+      label: I will stay for a moment.
+      next: 
+      action: close
+  - id: hill
+    title: Hill regular
+    text: You can see the gate, hear the market, and get out of the dust. No terminal needs to explain that. If we get separated, meet me on the hill.
+    choices:
+    - id: back
+      label: Who comes up here?
+      next: greeting
+      action: 
+    - id: leave
+      label: On the hill. Got it.
+      next: 
+      action: close

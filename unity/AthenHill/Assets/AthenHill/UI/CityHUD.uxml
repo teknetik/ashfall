@@ -1,0 +1,40 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+ <Style src="CityHUD.uss" />
+ <ui:VisualElement name="hud" picking-mode="Ignore">
+  <ui:VisualElement name="identity" picking-mode="Ignore">
+   <ui:Label text="ATHEN HILL" class="title"/><ui:Label text="Free Column · Colony district" class="muted"/>
+  </ui:VisualElement>
+  <ui:VisualElement name="vitals" class="panel" picking-mode="Ignore">
+   <ui:Label text="VITALITY" class="small"/><ui:VisualElement class="vital-bar"/>
+   <ui:Label text="NANO" class="small"/><ui:VisualElement class="nano-bar"/>
+  </ui:VisualElement>
+  <ui:VisualElement name="objective-box" class="panel" picking-mode="Ignore"><ui:Label name="objective"/><ui:Label name="progress" class="muted small"/></ui:VisualElement>
+  <ui:VisualElement name="top-actions"><ui:Button name="inventory-button" text="Inventory · 25 cr"/><ui:Button name="notes-button" text="Notes"/><ui:Button name="pause-button" text="Pause"/></ui:VisualElement>
+  <ui:Label name="notice" class="panel" picking-mode="Ignore"/>
+  <ui:VisualElement name="nametags" picking-mode="Ignore"/>
+  <ui:Button name="interaction" text="E · Talk"/>
+  <ui:VisualElement name="chat" class="panel" picking-mode="Ignore"><ui:Label text="LOCAL CHANNEL" class="small muted"/><ui:Label name="log"/></ui:VisualElement>
+  <ui:VisualElement name="quickbar">
+   <ui:VisualElement name="hotbar" class="panel"><ui:Button name="slot1" text="1&#10;Flask"/><ui:Button name="slot2" text="2&#10;Medkit"/><ui:Button name="slot3" text="3&#10;Lattice"/><ui:Button name="slot4" text="4&#10;Talk"/><ui:Button name="slot5" text="5&#10;Pack"/><ui:Button name="slot6" text="6&#10;Notes"/></ui:VisualElement>
+   <ui:Label text="WASD / arrows · Move     Shift · Run     Right-drag · Look     E · Interact     Esc · Pause" class="help"/>
+  </ui:VisualElement>
+ </ui:VisualElement>
+ <ui:VisualElement name="shade">
+  <ui:VisualElement name="modal" class="panel">
+   <ui:VisualElement class="modal-heading"><ui:Label name="modal-title" class="title"/><ui:Button name="close" text="Close · Esc"/></ui:VisualElement>
+   <ui:Label name="modal-subtitle" class="muted"/>
+   <ui:VisualElement name="dialogue-panel"><ui:Label name="dialogue-text" class="body-copy"/><ui:Button name="choice0"/><ui:Button name="choice1"/></ui:VisualElement>
+   <ui:VisualElement name="shop-panel">
+    <ui:Label name="shop-credit" class="body-copy"/>
+    <ui:VisualElement class="trade-row"><ui:Label name="item0" class="item-copy"/><ui:Button name="buy0" text="Buy · 4 cr"/><ui:Button name="sell0" text="Sell · 2 cr"/></ui:VisualElement>
+    <ui:VisualElement class="trade-row"><ui:Label name="item1" class="item-copy"/><ui:Button name="buy1" text="Buy · 9 cr"/><ui:Button name="sell1" text="Sell · 4 cr"/></ui:VisualElement>
+    <ui:VisualElement class="trade-row"><ui:Label name="item2" class="item-copy"/><ui:Button name="buy2" text="Buy · 2 cr"/><ui:Button name="sell2" text="Sell · 1 cr"/></ui:VisualElement>
+    <ui:Label text="Each trade moves one item. Your balance updates immediately." class="small muted"/>
+   </ui:VisualElement>
+   <ui:VisualElement name="grid-panel"><ui:Label name="grid-status" class="body-copy"/><ui:VisualElement name="tunnel" picking-mode="Ignore"><ui:VisualElement name="tunnel-ring0" class="tunnel-ring"/><ui:VisualElement name="tunnel-ring1" class="tunnel-ring"/><ui:VisualElement name="tunnel-ring2" class="tunnel-ring"/><ui:VisualElement name="tunnel-ring3" class="tunnel-ring"/></ui:VisualElement><ui:ProgressBar name="grid-progress" low-value="0" high-value="100"/><ui:VisualElement name="grid-nodes"><ui:Button name="node0" text="Crosswind Reach"/><ui:Button name="node1" text="Drywater Works"/><ui:Button name="node2" text="Beacon Dunes"/></ui:VisualElement><ui:Label name="grid-selection" class="body-copy"/></ui:VisualElement>
+   <ui:VisualElement name="pause-panel"><ui:Button name="resume" text="Return to the city"/><ui:Button name="reset" text="Return to West Gate"/><ui:Button name="mute" text="Mute audio"/><ui:Button name="reduced-motion" text="Reduced motion: Off"/><ui:Button name="credits-button" text="Credits and licences"/></ui:VisualElement>
+   <ui:ScrollView name="text-panel"><ui:Label name="panel-text" class="body-copy"/></ui:ScrollView>
+   <ui:Label name="modal-notice" class="feedback"/>
+  </ui:VisualElement>
+ </ui:VisualElement>
+</ui:UXML>

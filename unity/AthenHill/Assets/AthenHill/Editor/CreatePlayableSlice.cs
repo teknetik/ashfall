@@ -15,7 +15,7 @@ namespace AthenHill.Editor
    var defs=ScriptableObject.CreateInstance<InputActionAsset>();var map=defs.AddActionMap("Gameplay");
    var move=map.AddAction("Move",InputActionType.Value);move.AddCompositeBinding("2DVector").With("Up","<Keyboard>/w").With("Down","<Keyboard>/s").With("Left","<Keyboard>/a").With("Right","<Keyboard>/d");move.AddCompositeBinding("2DVector").With("Up","<Keyboard>/upArrow").With("Down","<Keyboard>/downArrow").With("Left","<Keyboard>/leftArrow").With("Right","<Keyboard>/rightArrow");
    map.AddAction("Run",InputActionType.Button,"<Keyboard>/leftShift");map.AddAction("Orbit",InputActionType.Button,"<Mouse>/rightButton");map.AddAction("Look",InputActionType.Value,"<Mouse>/delta");map.AddAction("Interact",InputActionType.Button,"<Keyboard>/e");map.AddAction("Reset",InputActionType.Button,"<Keyboard>/r");
-   for(int i=1;i<=6;i++)map.AddAction("Slot"+i,InputActionType.Button,"<Keyboard>/digit"+i);
+   for(int i=1;i<=6;i++)map.AddAction("Slot"+i,InputActionType.Button,"<Keyboard>/"+i);
    var ui=defs.AddActionMap("UI");ui.AddAction("Cancel",InputActionType.Button,"<Keyboard>/escape");
    string path="Assets/AthenHill/Data/Controls.inputactions";File.WriteAllText(path,defs.ToJson());AssetDatabase.ImportAsset(path);
    var input=new GameObject("Input").AddComponent<GameInput>();input.definition=AssetDatabase.LoadAssetAtPath<InputActionAsset>(path);

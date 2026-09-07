@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a584a25f7a2f6c23a420ed9d0c79f73, type: 3}
+  m_Name: npc_mira
+  m_EditorClassIdentifier: Assembly-CSharp::AthenHill.NpcDefinition
+  id: npc_mira
+  displayName: Mira
+  role: Basic General
+  nodes:
+  - id: greeting
+    title: Basic General
+    text: Welcome to Basic General. Fresh seals on the flasks, checked packs in the medkits. I can buy that scrap coil if you need a few credits.
+    choices:
+    - id: browse
+      label: Show me your stock.
+      next: 
+      action: shop
+    - id: leave
+      label: Just looking. Thanks, Mira.
+      next: 
+      action: close
