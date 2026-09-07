@@ -9,7 +9,7 @@ reset is authorized if quota exhaustion prevents progress; none used so far.
 - Phase 1 committed at `812f6e6`; fresh build passed 2026-09-07.
 - Prior route/physics QA passed. Prior M4 Max greybox performance was about
   120 FPS; final world/NPC and medium-laptop performance are still unqualified.
-- Blender MCP connected; current scene is the accepted Phase 0 probe.
+- Blender MCP connected; entry scene was the accepted Phase 0 probe. Current authored city is saved through `10_cliff_silhouettes.blend`.
 - User-added `concept_art/` images are source inspiration, not frozen targets.
   Retain worn bevels/panels and male colonist cues; written brief governs dry
   daylight, compact low-rise scale, original names and practical starting kit.
@@ -17,7 +17,7 @@ reset is authorized if quota exhaustion prevents progress; none used so far.
 ## Phase ledger
 
 - Phase 2: complete. Built-in Codex image generation; eight immutable refs.
-- Phase 3: pending. Blender-authored world with separate simple COL proxies.
+- Phase 3: complete for authored-world integration. See `phase-3.md`; final beauty scores remain Phase 6.
 - Phase 4: pending. Rigged player plus lower-cost NPC variants and clips.
 - Phase 5: pending. Four NPC dialogues, buy/sell, Lattice Jack and Ring Gate.
 - Phase 6: pending. Fixed-camera comparisons, audio and measured performance.
@@ -28,8 +28,8 @@ reset is authorized if quota exhaustion prevents progress; none used so far.
 - Three coordinates: metres, Y up, north -Z; landmark positions are feet.
 - World collider extraction must finish before World.load resolves.
 - Preserve halfspace ground, 0.25 m stairs, 0.5 m porches, 1.5 m hill plaza.
-- Current world batches span all landmarks; introduce explicit ownership for
-  incremental authored replacement and imported texture disposal.
+- World import validates eight landmark groups, globally batches render
+  materials and owns shared textures plus pending-load cleanup.
 - Character art faces +Z; controller currently faces -Z. Rotate visual root.
 - Renderer statistics include shadow passes; budget NPC geometry accordingly.
 - Retain Phase 1 evidence; add later-phase verification rather than relabeling it.
@@ -47,3 +47,15 @@ runtime, committed code, manifests, or reports.
 
 Independent Phase 1 audit and source-reference critic completed. Their findings
 inform the integration constraints and Phase 2 direction above.
+
+## Phase 3 follow-up QA
+
+Final geometry capture report: `tools/phase3-support/runs/2026-09-07T10-05-42.477Z-16797/report.json`.
+119.87 fps, 28 draws, 126,268 rendered triangles, zero browser errors.
+`collider-equivalence.json` proves all 263 runtime static definitions, controller
+configuration and six named camera transforms exactly match the full-route
+baseline. No duplicate route was necessary for visual-only changes.
+
+Gameplay references loaded: `gameplay-workflows.md`,
+`physics-engine-selection.md`, `checklists/new-game-definition-of-done.md`
+under the gameplay-systems skill. All three read successfully.

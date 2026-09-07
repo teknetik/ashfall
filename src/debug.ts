@@ -4,10 +4,12 @@ import { LANDMARKS, type ColliderDef } from './layout';
 import type { Physics } from './physics';
 import type { Player } from './player';
 import { Vector3 } from 'three';
+import type { World } from './world';
 
 export interface AthenDebug {
   readonly version: string;
-  readonly phase: 1;
+  readonly phase: 3;
+  readonly world: World['assets'];
   readonly state: GameState;
   readonly player: Player['snapshot'] | null;
   readonly fps: number;
@@ -44,7 +46,8 @@ declare global {
 
 export function attachDebug(game: Game) {
   const api: AthenDebug = {
-    version: '0.1.0-phase1', phase: 1,
+    version: '0.3.0-world', phase: 3,
+    get world() { return structuredClone(game.world.assets); },
     get state() { return game.state; },
     get player() { return game.player?.snapshot ?? null; },
     get fps() { return game.metrics.fps; },
@@ -71,7 +74,7 @@ export function attachDebug(game: Game) {
     get activeCamera() { return game.cameras.active.name; },
     get landmark() { return game.landmark; },
     get error() { return game.error; },
-    scope: 'Phase 1 greybox city: capsule walking, gravity, stairs, porches, gate tunnels and camera collision. Concept art, authored world/characters, dialogue, shop and audio remain later phases.',
+    scope: 'Phase 3 authored world in progress: frozen concepts, Blender meshes and separate collision. Characters, dialogue, shop, audio and final beauty acceptance remain later phases.',
     nearbyColliders: (radius = 3) => {
       if (!Number.isFinite(radius) || radius <= 0 || radius > 150) throw new Error('Radius must be greater than 0 and at most 150 metres.');
       return game.player && game.physics ? game.physics.nearby(game.player.position, radius) : [];

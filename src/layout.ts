@@ -9,7 +9,7 @@ export const LANDMARKS: Record<string, [number, number, number]> = {
   shop_row_e: [16, 0.5, 9], shop_row_w: [-16, 0.5, 9], basic_general: [-8, 0.5, 16],
   vanguard_hall: [10, 0.5, -25.5], grid_kiosk: [0, 0.5, -36.5], lattice_jack: [0, 0.5, -36.5],
   whompah: [0, 0.5, 36], ring_gate: [0, 0.5, 36], mission_slab: [-8, 0.25, -12.5],
-  billboard: [5, 1.5, 4], east_wreck: [51, 0, 0], probe: [-52, 0, 23.5],
+  billboard: [5, 1.5, -5], east_wreck: [51, 0, 0], probe: [-52, 0, 23.5],
 };
 
 export const LANDMARK_LABELS: Record<string, string> = {

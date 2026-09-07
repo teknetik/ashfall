@@ -5,6 +5,7 @@ import { LANDMARKS, LANDMARK_LABELS } from './layout';
 import { Input } from './input';
 import { Physics, FIXED_STEP } from './physics';
 import { Player } from './player';
+import { Atmosphere } from './atmosphere';
 
 export type GameState = 'boot' | 'play' | 'paused' | 'error';
 export interface FrameMetrics {
@@ -21,6 +22,7 @@ export interface FrameMetrics {
 
 export class Game {
   readonly renderer: WebGLRenderer;
+  readonly atmosphere: Atmosphere;
   readonly world = new World();
   readonly cameras = new Cameras(this.world.scene);
   readonly input: Input;
@@ -47,7 +49,7 @@ export class Game {
     this.renderer = new WebGLRenderer({ canvas, context, antialias: true });
     this.renderer.outputColorSpace = SRGBColorSpace;
     this.renderer.toneMapping = ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1;
+    this.renderer.toneMappingExposure = 0.72;
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = PCFShadowMap;
     // Count the shadow pass together with the visible pass, resetting once per complete frame.
@@ -63,6 +65,7 @@ export class Game {
     this.input.onPause = () => this.pause(this.state !== 'paused');
     this.input.onReset = () => this.reset();
     this.world.setSun(this.hour);
+    this.atmosphere = new Atmosphere(this.renderer, this.world.scene, this.world.sun.position);
     this.resize();
     window.addEventListener('resize', this.resize);
     canvas.addEventListener('webglcontextlost', this.contextLost);
@@ -92,6 +95,7 @@ export class Game {
     if (!Number.isFinite(value) || value < 0 || value > 24) throw new Error('timeOfDay must be between 0 and 24.');
     this.hour = value;
     this.world.setSun(value);
+    this.atmosphere.syncSun(this.world.sun.position);
   }
 
   selectCamera(name: string) {
@@ -262,12 +266,8 @@ export class Game {
     this.input.dispose();
     this.player?.dispose();
     this.physics?.dispose();
-    this.world.scene.traverse((object) => {
-      const mesh = object as import('three').Mesh;
-      mesh.geometry?.dispose();
-      const materials = mesh.material ? (Array.isArray(mesh.material) ? mesh.material : [mesh.material]) : [];
-      for (const material of materials) material.dispose();
-    });
+    this.atmosphere.dispose();
+    this.world.dispose();
     this.renderer.dispose();
   }
 }

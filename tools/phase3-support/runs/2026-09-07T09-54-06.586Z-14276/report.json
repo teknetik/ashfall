@@ -1,0 +1,5788 @@
+{
+  "url": "http://127.0.0.1:4173",
+  "startedAt": "2026-09-07T09:54:06.587Z",
+  "scope": "Phase 3 authored-world integration regression; later character/dialogue/shop/audio and final visual acceptance remain separate.",
+  "inputMethod": "Playwright keyboard and right-mouse drag. The continuous route never teleports or writes simulation state.",
+  "screenshotMethod": "__ATHEN__.shot renders the six named scene cameras. The harness archives their PNG PUT payloads in this run folder; the local Vite screenshot writer is not tested.",
+  "output": "tools/phase3-support/runs/2026-09-07T09-54-06.586Z-14276",
+  "mode": "full",
+  "referenceLedger": [
+    {
+      "path": "threejs-qa-release/references/qa-release-checklists.md",
+      "read": true,
+      "failure": null
+    },
+    {
+      "path": "threejs-qa-release/references/checklists/visual-verification.md",
+      "read": true,
+      "failure": null
+    },
+    {
+      "path": "threejs-qa-release/references/checklists/playtest-qa.md",
+      "read": true,
+      "failure": null
+    },
+    {
+      "path": "threejs-qa-release/references/checklists/release.md",
+      "read": true,
+      "failure": null
+    }
+  ],
+  "checks": [],
+  "errors": [
+    "desktop GLB: http://127.0.0.1:4173/assets/world.glb: response.body: Protocol error (Network.getResponseBody): Request content was evicted from inspector cache"
+  ],
+  "warnings": [
+    "desktop: [.WebGL-0x11c004c4200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "desktop: [.WebGL-0x11c004c4200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "desktop: [.WebGL-0x11c004c4200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "desktop: [.WebGL-0x11c004c4200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+  ],
+  "assets": [
+    {
+      "browser": "desktop",
+      "url": "http://127.0.0.1:4173/assets/world.glb",
+      "status": 200
+    },
+    {
+      "browser": "desktop",
+      "url": "http://127.0.0.1:4173/assets/probe.glb",
+      "status": 200,
+      "bytes": 5564,
+      "sha256": "40991d41b71b0a896428c0458525c2a59cabe12c1d7df8327ac7be2387ddc18a",
+      "generator": "Khronos glTF Blender I/O v5.2.40",
+      "nodeCount": 1,
+      "meshCount": 1,
+      "materialCount": 1,
+      "imageCount": 0,
+      "trianglesInSourceMeshes": 44,
+      "names": [
+        "PROBE_CUBE"
+      ],
+      "collisionNodes": [],
+      "externalURIs": []
+    }
+  ],
+  "route": [],
+  "samples": [],
+  "captures": [],
+  "limitations": [
+    "Automated pixel/geometry checks do not score silhouette, palette or light direction against refs/01–05.",
+    "This command does not run npm run build or start/restart a server. Test the separately built preview before a release claim.",
+    "Target-laptop 60 fps remains a separate acceptance requirement; browser/GPU and measured FPS are reported."
+  ],
+  "phaseAcceptance": "INCOMPLETE: visual scorecard and target-device performance must be reviewed separately.",
+  "identity": {
+    "phase": 3,
+    "state": "play",
+    "version": "0.3.0-world",
+    "error": ""
+  },
+  "initial": {
+    "version": "0.3.0-world",
+    "phase": 3,
+    "player": {
+      "x": -43,
+      "y": 0.014999961853027322,
+      "z": 0,
+      "yaw": -1.5707963267948966,
+      "grounded": true,
+      "speed": 0,
+      "velocity": {
+        "x": 0,
+        "y": -0.006001991423545405,
+        "z": 0
+      },
+      "collisions": [
+        "COL_ground"
+      ]
+    },
+    "physics": {
+      "engine": "Rapier 0.20.0",
+      "timestep": 0.01666666753590107,
+      "steps": 19,
+      "bodies": 1,
+      "colliders": 264,
+      "staticColliders": 263,
+      "characterControllers": 1,
+      "ccdBodies": 0,
+      "sensors": 0,
+      "collisionGroups": "default; camera excludes player",
+      "character": {
+        "radius": 0.35,
+        "height": 1.8,
+        "offset": 0.015,
+        "maxStep": 0.3,
+        "minStepWidth": 0.22,
+        "groundSnap": 0.4,
+        "maxSlope": 0.7853981633974483,
+        "walkSpeed": 3.4,
+        "runSpeed": 6,
+        "gravity": -20
+      },
+      "cameraCastRadius": 0.23,
+      "riskyColliders": []
+    },
+    "landmarks": {
+      "west_gate": [
+        -43,
+        0,
+        0
+      ],
+      "hill_tree": [
+        -4,
+        1.5,
+        0
+      ],
+      "oa_hill": [
+        -4,
+        1.5,
+        4
+      ],
+      "shop_row_e": [
+        16,
+        0.5,
+        9
+      ],
+      "shop_row_w": [
+        -16,
+        0.5,
+        9
+      ],
+      "basic_general": [
+        -8,
+        0.5,
+        16
+      ],
+      "vanguard_hall": [
+        10,
+        0.5,
+        -25.5
+      ],
+      "grid_kiosk": [
+        0,
+        0.5,
+        -36.5
+      ],
+      "lattice_jack": [
+        0,
+        0.5,
+        -36.5
+      ],
+      "whompah": [
+        0,
+        0.5,
+        36
+      ],
+      "ring_gate": [
+        0,
+        0.5,
+        36
+      ],
+      "mission_slab": [
+        -8,
+        0.25,
+        -12.5
+      ],
+      "billboard": [
+        5,
+        1.5,
+        -5
+      ],
+      "east_wreck": [
+        51,
+        0,
+        0
+      ],
+      "probe": [
+        -52,
+        0,
+        23.5
+      ]
+    },
+    "colliders": [
+      {
+        "name": "COL_bench_00",
+        "kind": "box",
+        "position": [
+          -31,
+          0.36000001430511475,
+          -8
+        ],
+        "halfExtents": [
+          1.399999976158142,
+          0.36000001430511475,
+          0.44999998807907104
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_bench_01",
+        "kind": "box",
+        "position": [
+          -30,
+          0.36000001430511475,
+          8
+        ],
+        "halfExtents": [
+          1.399999976158142,
+          0.36000001430511475,
+          0.44999998807907104
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_bench_02",
+        "kind": "box",
+        "position": [
+          29,
+          0.36000001430511475,
+          8
+        ],
+        "halfExtents": [
+          1.399999976158142,
+          0.36000001430511475,
+          0.44999998807907104
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_bench_03",
+        "kind": "box",
+        "position": [
+          28,
+          0.36000001430511475,
+          -10
+        ],
+        "halfExtents": [
+          1.399999976158142,
+          0.36000001430511475,
+          0.44999998807907104
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_billboard_panel",
+        "kind": "box",
+        "position": [
+          5.400000095367432,
+          5.699999809265137,
+          -5.300000190734863
+        ],
+        "halfExtents": [
+          1.75,
+          0.8999999761581421,
+          0.17499999701976776
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_boundary_side",
+        "kind": "box",
+        "position": [
+          -59,
+          1.5,
+          0
+        ],
+        "halfExtents": [
+          1,
+          1.5,
+          45
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_boundary_side001",
+        "kind": "box",
+        "position": [
+          59,
+          1.5,
+          0
+        ],
+        "halfExtents": [
+          1,
+          1.5,
+          45
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_boundary_wall",
+        "kind": "box",
+        "position": [
+          0,
+          2.5,
+          -44.5
+        ],
+        "halfExtents": [
+          60,
+          2.5,
+          0.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_boundary_wall001",
+        "kind": "box",
+        "position": [
+          0,
+          2.5,
+          44.5
+        ],
+        "halfExtents": [
+          60,
+          2.5,
+          0.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_gate_pier",
+        "kind": "box",
+        "position": [
+          -48,
+          1.5,
+          -3.25
+        ],
+        "halfExtents": [
+          1.5,
+          1.5,
+          0.44999998807907104
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_gate_pier001",
+        "kind": "box",
+        "position": [
+          -48,
+          1.5,
+          3.25
+        ],
+        "halfExtents": [
+          1.5,
+          1.5,
+          0.44999998807907104
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_gate_pier002",
+        "kind": "box",
+        "position": [
+          -48,
+          1.5,
+          8.75
+        ],
+        "halfExtents": [
+          1.5,
+          1.5,
+          0.44999998807907104
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_gate_pier003",
+        "kind": "box",
+        "position": [
+          -48,
+          1.5,
+          15.25
+        ],
+        "halfExtents": [
+          1.5,
+          1.5,
+          0.44999998807907104
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_general_awning",
+        "kind": "box",
+        "position": [
+          -8,
+          3.0999999046325684,
+          15.100000381469727
+        ],
+        "halfExtents": [
+          2.75,
+          0.125,
+          1.75
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_general_back",
+        "kind": "box",
+        "position": [
+          -8,
+          2,
+          13.600000381469727
+        ],
+        "halfExtents": [
+          2.5999999046325684,
+          1.5,
+          0.4000000059604645
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_general_first_step",
+        "kind": "box",
+        "position": [
+          -8,
+          0.125,
+          17.799999237060547
+        ],
+        "halfExtents": [
+          1.600000023841858,
+          0.125,
+          0.4000000059604645
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_general_porch",
+        "kind": "box",
+        "position": [
+          -8,
+          0.25,
+          15.699999809265137
+        ],
+        "halfExtents": [
+          2.5999999046325684,
+          0.25,
+          1.7000000476837158
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_general_side_e",
+        "kind": "box",
+        "position": [
+          -5.599999904632568,
+          1.7000000476837158,
+          14.600000381469727
+        ],
+        "halfExtents": [
+          0.20000000298023224,
+          1.2000000476837158,
+          0.8999999761581421
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_general_side_w",
+        "kind": "box",
+        "position": [
+          -10.399999618530273,
+          1.7000000476837158,
+          14.600000381469727
+        ],
+        "halfExtents": [
+          0.20000000298023224,
+          1.2000000476837158,
+          0.8999999761581421
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_hall_front_pier_e",
+        "kind": "box",
+        "position": [
+          14.5,
+          2.200000047683716,
+          -27.5
+        ],
+        "halfExtents": [
+          1,
+          1.7000000476837158,
+          1
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_hall_front_pier_w",
+        "kind": "box",
+        "position": [
+          5.5,
+          2.200000047683716,
+          -27.5
+        ],
+        "halfExtents": [
+          1,
+          1.7000000476837158,
+          1
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_hall_lintel",
+        "kind": "box",
+        "position": [
+          10,
+          4.400000095367432,
+          -27.5
+        ],
+        "halfExtents": [
+          5.75,
+          0.5,
+          1.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_hall_main",
+        "kind": "box",
+        "position": [
+          10,
+          6,
+          -32.5
+        ],
+        "halfExtents": [
+          5.5,
+          5.5,
+          4
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_hall_plinth",
+        "kind": "box",
+        "position": [
+          10,
+          0.25,
+          -30.799999237060547
+        ],
+        "halfExtents": [
+          6.5,
+          0.25,
+          6.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_hall_step",
+        "kind": "box",
+        "position": [
+          10,
+          0.125,
+          -23.899999618530273
+        ],
+        "halfExtents": [
+          3,
+          0.125,
+          0.4000000059604645
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_01_back",
+        "kind": "box",
+        "position": [
+          23,
+          4.5,
+          -18
+        ],
+        "halfExtents": [
+          2,
+          4,
+          3.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_01_first_step",
+        "kind": "box",
+        "position": [
+          14.100000381469727,
+          0.125,
+          -18
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          0.125,
+          2.0999999046325684
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_01_interior_floor",
+        "kind": "box",
+        "position": [
+          20.25,
+          0.25,
+          -18
+        ],
+        "halfExtents": [
+          0.75,
+          0.25,
+          3.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_01_jamb_1",
+        "kind": "box",
+        "position": [
+          18.700000762939453,
+          1.75,
+          -15.649999618530273
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          1.25,
+          1.149999976158142
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_01_jamb_-1",
+        "kind": "box",
+        "position": [
+          18.700000762939453,
+          1.75,
+          -20.350000381469727
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          1.25,
+          1.149999976158142
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_01_lintel",
+        "kind": "box",
+        "position": [
+          19.600000381469727,
+          3.799999952316284,
+          -18
+        ],
+        "halfExtents": [
+          1.2999999523162842,
+          0.800000011920929,
+          3.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_01_porch",
+        "kind": "box",
+        "position": [
+          17,
+          0.25,
+          -18
+        ],
+        "halfExtents": [
+          2.5,
+          0.25,
+          3.799999952316284
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_01_roof",
+        "kind": "box",
+        "position": [
+          21.799999237060547,
+          4.800000190734863,
+          -18
+        ],
+        "halfExtents": [
+          3.9000000953674316,
+          0.17499999701976776,
+          3.75
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_01_side_1",
+        "kind": "box",
+        "position": [
+          20,
+          1.75,
+          -14.75
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_01_side_-1",
+        "kind": "box",
+        "position": [
+          20,
+          1.75,
+          -21.25
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_02_back",
+        "kind": "box",
+        "position": [
+          23,
+          5.5,
+          -9
+        ],
+        "halfExtents": [
+          2,
+          5,
+          3.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_02_first_step",
+        "kind": "box",
+        "position": [
+          14.100000381469727,
+          0.125,
+          -9
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          0.125,
+          2.0999999046325684
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_02_interior_floor",
+        "kind": "box",
+        "position": [
+          20.25,
+          0.25,
+          -9
+        ],
+        "halfExtents": [
+          0.75,
+          0.25,
+          3.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_02_jamb_1",
+        "kind": "box",
+        "position": [
+          18.700000762939453,
+          1.75,
+          -6.650000095367432
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          1.25,
+          1.149999976158142
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_02_jamb_-1",
+        "kind": "box",
+        "position": [
+          18.700000762939453,
+          1.75,
+          -11.350000381469727
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          1.25,
+          1.149999976158142
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_02_lintel",
+        "kind": "box",
+        "position": [
+          19.600000381469727,
+          3.799999952316284,
+          -9
+        ],
+        "halfExtents": [
+          1.2999999523162842,
+          0.800000011920929,
+          3.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_02_porch",
+        "kind": "box",
+        "position": [
+          17,
+          0.25,
+          -9
+        ],
+        "halfExtents": [
+          2.5,
+          0.25,
+          3.799999952316284
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_02_roof",
+        "kind": "box",
+        "position": [
+          21.799999237060547,
+          4.800000190734863,
+          -9
+        ],
+        "halfExtents": [
+          3.9000000953674316,
+          0.17499999701976776,
+          3.75
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_02_side_1",
+        "kind": "box",
+        "position": [
+          20,
+          1.75,
+          -5.75
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_02_side_-1",
+        "kind": "box",
+        "position": [
+          20,
+          1.75,
+          -12.25
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_03_back",
+        "kind": "box",
+        "position": [
+          23,
+          4,
+          9
+        ],
+        "halfExtents": [
+          2,
+          3.5,
+          3.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_03_first_step",
+        "kind": "box",
+        "position": [
+          14.100000381469727,
+          0.125,
+          9
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          0.125,
+          2.0999999046325684
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_03_interior_floor",
+        "kind": "box",
+        "position": [
+          20.25,
+          0.25,
+          9
+        ],
+        "halfExtents": [
+          0.75,
+          0.25,
+          3.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_03_jamb_1",
+        "kind": "box",
+        "position": [
+          18.700000762939453,
+          1.75,
+          11.350000381469727
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          1.25,
+          1.149999976158142
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_03_jamb_-1",
+        "kind": "box",
+        "position": [
+          18.700000762939453,
+          1.75,
+          6.650000095367432
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          1.25,
+          1.149999976158142
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_03_lintel",
+        "kind": "box",
+        "position": [
+          19.600000381469727,
+          3.799999952316284,
+          9
+        ],
+        "halfExtents": [
+          1.2999999523162842,
+          0.800000011920929,
+          3.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_03_porch",
+        "kind": "box",
+        "position": [
+          17,
+          0.25,
+          9
+        ],
+        "halfExtents": [
+          2.5,
+          0.25,
+          3.799999952316284
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_03_roof",
+        "kind": "box",
+        "position": [
+          21.799999237060547,
+          4.800000190734863,
+          9
+        ],
+        "halfExtents": [
+          3.9000000953674316,
+          0.17499999701976776,
+          3.75
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_03_side_1",
+        "kind": "box",
+        "position": [
+          20,
+          1.75,
+          12.25
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_03_side_-1",
+        "kind": "box",
+        "position": [
+          20,
+          1.75,
+          5.75
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_04_back",
+        "kind": "box",
+        "position": [
+          23,
+          5,
+          18
+        ],
+        "halfExtents": [
+          2,
+          4.5,
+          3.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_04_first_step",
+        "kind": "box",
+        "position": [
+          14.100000381469727,
+          0.125,
+          18
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          0.125,
+          2.0999999046325684
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_04_interior_floor",
+        "kind": "box",
+        "position": [
+          20.25,
+          0.25,
+          18
+        ],
+        "halfExtents": [
+          0.75,
+          0.25,
+          3.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_04_jamb_1",
+        "kind": "box",
+        "position": [
+          18.700000762939453,
+          1.75,
+          20.350000381469727
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          1.25,
+          1.149999976158142
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_04_jamb_-1",
+        "kind": "box",
+        "position": [
+          18.700000762939453,
+          1.75,
+          15.649999618530273
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          1.25,
+          1.149999976158142
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_04_lintel",
+        "kind": "box",
+        "position": [
+          19.600000381469727,
+          3.799999952316284,
+          18
+        ],
+        "halfExtents": [
+          1.2999999523162842,
+          0.800000011920929,
+          3.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_04_porch",
+        "kind": "box",
+        "position": [
+          17,
+          0.25,
+          18
+        ],
+        "halfExtents": [
+          2.5,
+          0.25,
+          3.799999952316284
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_04_roof",
+        "kind": "box",
+        "position": [
+          21.799999237060547,
+          4.800000190734863,
+          18
+        ],
+        "halfExtents": [
+          3.9000000953674316,
+          0.17499999701976776,
+          3.75
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_04_side_1",
+        "kind": "box",
+        "position": [
+          20,
+          1.75,
+          21.25
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_e_04_side_-1",
+        "kind": "box",
+        "position": [
+          20,
+          1.75,
+          14.75
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_01_back",
+        "kind": "box",
+        "position": [
+          -23,
+          5.5,
+          -18
+        ],
+        "halfExtents": [
+          2,
+          5,
+          3.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_01_first_step",
+        "kind": "box",
+        "position": [
+          -14.100000381469727,
+          0.125,
+          -18
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          0.125,
+          2.0999999046325684
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_01_interior_floor",
+        "kind": "box",
+        "position": [
+          -20.25,
+          0.25,
+          -18
+        ],
+        "halfExtents": [
+          0.75,
+          0.25,
+          3.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_01_jamb_1",
+        "kind": "box",
+        "position": [
+          -18.700000762939453,
+          1.75,
+          -15.649999618530273
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          1.25,
+          1.149999976158142
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_01_jamb_-1",
+        "kind": "box",
+        "position": [
+          -18.700000762939453,
+          1.75,
+          -20.350000381469727
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          1.25,
+          1.149999976158142
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_01_lintel",
+        "kind": "box",
+        "position": [
+          -19.600000381469727,
+          3.799999952316284,
+          -18
+        ],
+        "halfExtents": [
+          1.2999999523162842,
+          0.800000011920929,
+          3.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_01_porch",
+        "kind": "box",
+        "position": [
+          -17,
+          0.25,
+          -18
+        ],
+        "halfExtents": [
+          2.5,
+          0.25,
+          3.799999952316284
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_01_roof",
+        "kind": "box",
+        "position": [
+          -21.799999237060547,
+          4.800000190734863,
+          -18
+        ],
+        "halfExtents": [
+          3.9000000953674316,
+          0.17499999701976776,
+          3.75
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_01_side_1",
+        "kind": "box",
+        "position": [
+          -20,
+          1.75,
+          -14.75
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_01_side_-1",
+        "kind": "box",
+        "position": [
+          -20,
+          1.75,
+          -21.25
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_02_back",
+        "kind": "box",
+        "position": [
+          -23,
+          5.5,
+          -9
+        ],
+        "halfExtents": [
+          2,
+          5,
+          3.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_02_first_step",
+        "kind": "box",
+        "position": [
+          -14.100000381469727,
+          0.125,
+          -9
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          0.125,
+          2.0999999046325684
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_02_interior_floor",
+        "kind": "box",
+        "position": [
+          -20.25,
+          0.25,
+          -9
+        ],
+        "halfExtents": [
+          0.75,
+          0.25,
+          3.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_02_jamb_1",
+        "kind": "box",
+        "position": [
+          -18.700000762939453,
+          1.75,
+          -6.650000095367432
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          1.25,
+          1.149999976158142
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_02_jamb_-1",
+        "kind": "box",
+        "position": [
+          -18.700000762939453,
+          1.75,
+          -11.350000381469727
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          1.25,
+          1.149999976158142
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_02_lintel",
+        "kind": "box",
+        "position": [
+          -19.600000381469727,
+          3.799999952316284,
+          -9
+        ],
+        "halfExtents": [
+          1.2999999523162842,
+          0.800000011920929,
+          3.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_02_porch",
+        "kind": "box",
+        "position": [
+          -17,
+          0.25,
+          -9
+        ],
+        "halfExtents": [
+          2.5,
+          0.25,
+          3.799999952316284
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_02_roof",
+        "kind": "box",
+        "position": [
+          -21.799999237060547,
+          4.800000190734863,
+          -9
+        ],
+        "halfExtents": [
+          3.9000000953674316,
+          0.17499999701976776,
+          3.75
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_02_side_1",
+        "kind": "box",
+        "position": [
+          -20,
+          1.75,
+          -5.75
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_02_side_-1",
+        "kind": "box",
+        "position": [
+          -20,
+          1.75,
+          -12.25
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_03_back",
+        "kind": "box",
+        "position": [
+          -23,
+          4,
+          9
+        ],
+        "halfExtents": [
+          2,
+          3.5,
+          3.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_03_first_step",
+        "kind": "box",
+        "position": [
+          -14.100000381469727,
+          0.125,
+          9
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          0.125,
+          2.0999999046325684
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_03_interior_floor",
+        "kind": "box",
+        "position": [
+          -20.25,
+          0.25,
+          9
+        ],
+        "halfExtents": [
+          0.75,
+          0.25,
+          3.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_03_jamb_1",
+        "kind": "box",
+        "position": [
+          -18.700000762939453,
+          1.75,
+          11.350000381469727
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          1.25,
+          1.149999976158142
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_03_jamb_-1",
+        "kind": "box",
+        "position": [
+          -18.700000762939453,
+          1.75,
+          6.650000095367432
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          1.25,
+          1.149999976158142
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_03_lintel",
+        "kind": "box",
+        "position": [
+          -19.600000381469727,
+          3.799999952316284,
+          9
+        ],
+        "halfExtents": [
+          1.2999999523162842,
+          0.800000011920929,
+          3.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_03_porch",
+        "kind": "box",
+        "position": [
+          -17,
+          0.25,
+          9
+        ],
+        "halfExtents": [
+          2.5,
+          0.25,
+          3.799999952316284
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_03_roof",
+        "kind": "box",
+        "position": [
+          -21.799999237060547,
+          4.800000190734863,
+          9
+        ],
+        "halfExtents": [
+          3.9000000953674316,
+          0.17499999701976776,
+          3.75
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_03_side_1",
+        "kind": "box",
+        "position": [
+          -20,
+          1.75,
+          12.25
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_03_side_-1",
+        "kind": "box",
+        "position": [
+          -20,
+          1.75,
+          5.75
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_04_back",
+        "kind": "box",
+        "position": [
+          -23,
+          5,
+          18
+        ],
+        "halfExtents": [
+          2,
+          4.5,
+          3.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_04_first_step",
+        "kind": "box",
+        "position": [
+          -14.100000381469727,
+          0.125,
+          18
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          0.125,
+          2.0999999046325684
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_04_interior_floor",
+        "kind": "box",
+        "position": [
+          -20.25,
+          0.25,
+          18
+        ],
+        "halfExtents": [
+          0.75,
+          0.25,
+          3.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_04_jamb_1",
+        "kind": "box",
+        "position": [
+          -18.700000762939453,
+          1.75,
+          20.350000381469727
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          1.25,
+          1.149999976158142
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_04_jamb_-1",
+        "kind": "box",
+        "position": [
+          -18.700000762939453,
+          1.75,
+          15.649999618530273
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          1.25,
+          1.149999976158142
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_04_lintel",
+        "kind": "box",
+        "position": [
+          -19.600000381469727,
+          3.799999952316284,
+          18
+        ],
+        "halfExtents": [
+          1.2999999523162842,
+          0.800000011920929,
+          3.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_04_porch",
+        "kind": "box",
+        "position": [
+          -17,
+          0.25,
+          18
+        ],
+        "halfExtents": [
+          2.5,
+          0.25,
+          3.799999952316284
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_04_roof",
+        "kind": "box",
+        "position": [
+          -21.799999237060547,
+          4.800000190734863,
+          18
+        ],
+        "halfExtents": [
+          3.9000000953674316,
+          0.17499999701976776,
+          3.75
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_04_side_1",
+        "kind": "box",
+        "position": [
+          -20,
+          1.75,
+          21.25
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_shop_w_04_side_-1",
+        "kind": "box",
+        "position": [
+          -20,
+          1.75,
+          14.75
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_west_wall",
+        "kind": "box",
+        "position": [
+          -48,
+          3.700000047683716,
+          -24.350000381469727
+        ],
+        "halfExtents": [
+          1.5,
+          3.700000047683716,
+          20.649999618530273
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_west_wall001",
+        "kind": "box",
+        "position": [
+          -48,
+          3.700000047683716,
+          6
+        ],
+        "halfExtents": [
+          1.5,
+          3.700000047683716,
+          2.299999952316284
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_BLD_west_wall002",
+        "kind": "box",
+        "position": [
+          -48,
+          3.700000047683716,
+          30.350000381469727
+        ],
+        "halfExtents": [
+          1.5,
+          3.700000047683716,
+          14.649999618530273
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_hill_plinth",
+        "kind": "box",
+        "position": [
+          0,
+          0.699999988079071,
+          0
+        ],
+        "halfExtents": [
+          7,
+          0.699999988079071,
+          7
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_hill_stair_north_0",
+        "kind": "box",
+        "position": [
+          0,
+          0.125,
+          -10.300000190734863
+        ],
+        "halfExtents": [
+          2,
+          0.125,
+          0.30000001192092896
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_hill_stair_north_1",
+        "kind": "box",
+        "position": [
+          0,
+          0.25,
+          -9.699999809265137
+        ],
+        "halfExtents": [
+          2,
+          0.25,
+          0.30000001192092896
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_hill_stair_north_2",
+        "kind": "box",
+        "position": [
+          0,
+          0.375,
+          -9.100000381469727
+        ],
+        "halfExtents": [
+          2,
+          0.375,
+          0.30000001192092896
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_hill_stair_north_3",
+        "kind": "box",
+        "position": [
+          0,
+          0.5,
+          -8.5
+        ],
+        "halfExtents": [
+          2,
+          0.5,
+          0.30000001192092896
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_hill_stair_north_4",
+        "kind": "box",
+        "position": [
+          0,
+          0.625,
+          -7.900000095367432
+        ],
+        "halfExtents": [
+          2,
+          0.625,
+          0.30000001192092896
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_hill_stair_north_5",
+        "kind": "box",
+        "position": [
+          0,
+          0.75,
+          -7.300000190734863
+        ],
+        "halfExtents": [
+          2,
+          0.75,
+          0.30000001192092896
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_hill_stair_south_0",
+        "kind": "box",
+        "position": [
+          0,
+          0.125,
+          10.300000190734863
+        ],
+        "halfExtents": [
+          2,
+          0.125,
+          0.30000001192092896
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_hill_stair_south_1",
+        "kind": "box",
+        "position": [
+          0,
+          0.25,
+          9.699999809265137
+        ],
+        "halfExtents": [
+          2,
+          0.25,
+          0.30000001192092896
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_hill_stair_south_2",
+        "kind": "box",
+        "position": [
+          0,
+          0.375,
+          9.100000381469727
+        ],
+        "halfExtents": [
+          2,
+          0.375,
+          0.30000001192092896
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_hill_stair_south_3",
+        "kind": "box",
+        "position": [
+          0,
+          0.5,
+          8.5
+        ],
+        "halfExtents": [
+          2,
+          0.5,
+          0.30000001192092896
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_hill_stair_south_4",
+        "kind": "box",
+        "position": [
+          0,
+          0.625,
+          7.900000095367432
+        ],
+        "halfExtents": [
+          2,
+          0.625,
+          0.30000001192092896
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_hill_stair_south_5",
+        "kind": "box",
+        "position": [
+          0,
+          0.75,
+          7.300000190734863
+        ],
+        "halfExtents": [
+          2,
+          0.75,
+          0.30000001192092896
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_hill_stair_west_0",
+        "kind": "box",
+        "position": [
+          -10.300000190734863,
+          0.125,
+          0
+        ],
+        "halfExtents": [
+          0.30000001192092896,
+          0.125,
+          2
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_hill_stair_west_1",
+        "kind": "box",
+        "position": [
+          -9.699999809265137,
+          0.25,
+          0
+        ],
+        "halfExtents": [
+          0.30000001192092896,
+          0.25,
+          2
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_hill_stair_west_2",
+        "kind": "box",
+        "position": [
+          -9.100000381469727,
+          0.375,
+          0
+        ],
+        "halfExtents": [
+          0.30000001192092896,
+          0.375,
+          2
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_hill_stair_west_3",
+        "kind": "box",
+        "position": [
+          -8.5,
+          0.5,
+          0
+        ],
+        "halfExtents": [
+          0.30000001192092896,
+          0.5,
+          2
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_hill_stair_west_4",
+        "kind": "box",
+        "position": [
+          -7.900000095367432,
+          0.625,
+          0
+        ],
+        "halfExtents": [
+          0.30000001192092896,
+          0.625,
+          2
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_hill_stair_west_5",
+        "kind": "box",
+        "position": [
+          -7.300000190734863,
+          0.75,
+          0
+        ],
+        "halfExtents": [
+          0.30000001192092896,
+          0.75,
+          2
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_hill_surface",
+        "kind": "box",
+        "position": [
+          0,
+          1.4500000476837158,
+          0
+        ],
+        "halfExtents": [
+          7,
+          0.05000000074505806,
+          7
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_lattice_pad",
+        "kind": "box",
+        "position": [
+          0,
+          0.25,
+          -38
+        ],
+        "halfExtents": [
+          4,
+          0.25,
+          4
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_lattice_step",
+        "kind": "box",
+        "position": [
+          0,
+          0.125,
+          -33.599998474121094
+        ],
+        "halfExtents": [
+          2.200000047683716,
+          0.125,
+          0.4000000059604645
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_mission_plinth",
+        "kind": "box",
+        "position": [
+          -8,
+          0.125,
+          -13
+        ],
+        "halfExtents": [
+          3.5,
+          0.125,
+          1.75
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_ring_pad",
+        "kind": "box",
+        "position": [
+          0,
+          0.25,
+          36.099998474121094
+        ],
+        "halfExtents": [
+          6,
+          0.25,
+          2.9000000953674316
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_ring_step_n",
+        "kind": "box",
+        "position": [
+          0,
+          0.125,
+          32.79999923706055
+        ],
+        "halfExtents": [
+          2.200000047683716,
+          0.125,
+          0.4000000059604645
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_ring_step_s",
+        "kind": "box",
+        "position": [
+          0,
+          0.125,
+          39.400001525878906
+        ],
+        "halfExtents": [
+          2.200000047683716,
+          0.125,
+          0.4000000059604645
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_wreck_plinth_n",
+        "kind": "box",
+        "position": [
+          53,
+          1.5,
+          -7
+        ],
+        "halfExtents": [
+          3.5,
+          1.5,
+          1.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ENV_wreck_plinth_s",
+        "kind": "box",
+        "position": [
+          54,
+          2,
+          8
+        ],
+        "halfExtents": [
+          3,
+          2,
+          1.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_gate_arch_shoulder",
+        "kind": "box",
+        "position": [
+          -48,
+          4.800000190734863,
+          -2.700000047683716
+        ],
+        "halfExtents": [
+          1.5,
+          1.2000000476837158,
+          0.42500001192092896
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_gate_arch_shoulder001",
+        "kind": "box",
+        "position": [
+          -48,
+          4.800000190734863,
+          2.700000047683716
+        ],
+        "halfExtents": [
+          1.5,
+          1.2000000476837158,
+          0.42500001192092896
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_gate_arch_shoulder002",
+        "kind": "box",
+        "position": [
+          -48,
+          4.800000190734863,
+          9.300000190734863
+        ],
+        "halfExtents": [
+          1.5,
+          1.2000000476837158,
+          0.42500001192092896
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_gate_arch_shoulder003",
+        "kind": "box",
+        "position": [
+          -48,
+          4.800000190734863,
+          14.699999809265137
+        ],
+        "halfExtents": [
+          1.5,
+          1.2000000476837158,
+          0.42500001192092896
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_gate_tunnel_roof",
+        "kind": "box",
+        "position": [
+          -48,
+          6.599999904632568,
+          0
+        ],
+        "halfExtents": [
+          1.5,
+          0.800000011920929,
+          2.799999952316284
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_gate_tunnel_roof001",
+        "kind": "box",
+        "position": [
+          -48,
+          6.599999904632568,
+          12
+        ],
+        "halfExtents": [
+          1.5,
+          0.800000011920929,
+          2.799999952316284
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_lattice_console_head",
+        "kind": "box",
+        "position": [
+          0,
+          1.899999976158142,
+          -38.935001373291016
+        ],
+        "halfExtents": [
+          0.699999988079071,
+          0.3499999940395355,
+          0.5149999856948853
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_lattice_hoop_00",
+        "kind": "box",
+        "position": [
+          2.398020029067993,
+          4.476995944976807,
+          -40.70000076293945
+        ],
+        "halfExtents": [
+          0.4800000075193891,
+          0.2200000071716771,
+          0.17000000178813934
+        ],
+        "rotation": [
+          0,
+          0,
+          0.7730104303215192,
+          0.6343933122394496
+        ]
+      },
+      {
+        "name": "COL_lattice_hoop_01",
+        "kind": "box",
+        "position": [
+          2.0329432487487793,
+          5.35836935043335,
+          -40.70000076293945
+        ],
+        "halfExtents": [
+          0.4799999725409595,
+          0.21999999113989663,
+          0.17000000178813934
+        ],
+        "rotation": [
+          0,
+          0,
+          0.8819212372358745,
+          0.4713967875498776
+        ]
+      },
+      {
+        "name": "COL_lattice_hoop_02",
+        "kind": "box",
+        "position": [
+          1.35836923122406,
+          6.032943248748779,
+          -40.70000076293945
+        ],
+        "halfExtents": [
+          0.4800001418389936,
+          0.2200000687348302,
+          0.17000000178813934
+        ],
+        "rotation": [
+          0,
+          0,
+          0.956940343477788,
+          0.29028465172070866
+        ]
+      },
+      {
+        "name": "COL_lattice_hoop_03",
+        "kind": "box",
+        "position": [
+          0.4769958257675171,
+          6.398019790649414,
+          -40.70000076293945
+        ],
+        "halfExtents": [
+          0.4799999745946899,
+          0.21999999208118973,
+          0.17000000178813934
+        ],
+        "rotation": [
+          0,
+          0,
+          0.9951847270959258,
+          0.09801713602736939
+        ]
+      },
+      {
+        "name": "COL_lattice_hoop_04",
+        "kind": "box",
+        "position": [
+          -0.4769958257675171,
+          6.398019790649414,
+          -40.70000076293945
+        ],
+        "halfExtents": [
+          0.47999996903998904,
+          0.21999998953528513,
+          0.17000000178813934
+        ],
+        "rotation": [
+          0,
+          0,
+          0.9951847299471391,
+          -0.09801710707850919
+        ]
+      },
+      {
+        "name": "COL_lattice_hoop_05",
+        "kind": "box",
+        "position": [
+          -1.35836923122406,
+          6.032943248748779,
+          -40.70000076293945
+        ],
+        "halfExtents": [
+          0.4800001874706739,
+          0.22000008964935072,
+          0.17000000178813934
+        ],
+        "rotation": [
+          0,
+          0,
+          0.9569403228274769,
+          -0.29028471979565945
+        ]
+      },
+      {
+        "name": "COL_lattice_hoop_06",
+        "kind": "box",
+        "position": [
+          -2.0329432487487793,
+          5.35836935043335,
+          -40.70000076293945
+        ],
+        "halfExtents": [
+          0.48000014510275546,
+          0.22000007023072107,
+          0.17000000178813934
+        ],
+        "rotation": [
+          0,
+          0,
+          0.8819213594320381,
+          -0.47139655893689525
+        ]
+      },
+      {
+        "name": "COL_lattice_hoop_07",
+        "kind": "box",
+        "position": [
+          -2.398020029067993,
+          4.476995944976807,
+          -40.70000076293945
+        ],
+        "halfExtents": [
+          0.4800000075193891,
+          0.2200000071716771,
+          0.17000000178813934
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.7730104303215192,
+          0.6343933122394496
+        ]
+      },
+      {
+        "name": "COL_lattice_hoop_08",
+        "kind": "box",
+        "position": [
+          -2.398020029067993,
+          3.5230040550231934,
+          -40.70000076293945
+        ],
+        "halfExtents": [
+          0.48000000794592523,
+          0.22000000736717282,
+          0.17000000178813934
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.6343932777751887,
+          0.773010458605608
+        ]
+      },
+      {
+        "name": "COL_lattice_hoop_09",
+        "kind": "box",
+        "position": [
+          -2.0329432487487793,
+          2.6416308879852295,
+          -40.70000076293945
+        ],
+        "halfExtents": [
+          0.4799999904852306,
+          0.21999999936435435,
+          0.17000000178813934
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.4713968046011316,
+          0.8819212281217877
+        ]
+      },
+      {
+        "name": "COL_lattice_hoop_10",
+        "kind": "box",
+        "position": [
+          -1.35836923122406,
+          1.9670567512512207,
+          -40.70000076293945
+        ],
+        "halfExtents": [
+          0.48000000610967497,
+          0.22000000652555812,
+          0.17000000178813934
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.29028480776836685,
+          0.9569402961412391
+        ]
+      },
+      {
+        "name": "COL_lattice_hoop_11",
+        "kind": "box",
+        "position": [
+          -0.4769958257675171,
+          1.6019799709320068,
+          -40.70000076293945
+        ],
+        "halfExtents": [
+          0.47999998906143954,
+          0.2199999987117834,
+          0.17000000178813934
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.09801709542647104,
+          0.9951847310947642
+        ]
+      },
+      {
+        "name": "COL_lattice_hoop_12",
+        "kind": "box",
+        "position": [
+          0.4769958257675171,
+          1.6019799709320068,
+          -40.70000076293945
+        ],
+        "halfExtents": [
+          0.47999999118244324,
+          0.21999999968391012,
+          0.17000000178813934
+        ],
+        "rotation": [
+          0,
+          0,
+          0.09801706922738991,
+          0.995184733675147
+        ]
+      },
+      {
+        "name": "COL_lattice_hoop_13",
+        "kind": "box",
+        "position": [
+          1.35836923122406,
+          1.9670567512512207,
+          -40.70000076293945
+        ],
+        "halfExtents": [
+          0.48000000331033943,
+          0.2200000052425293,
+          0.17000000178813934
+        ],
+        "rotation": [
+          0,
+          0,
+          0.2902847439875815,
+          0.956940315488936
+        ]
+      },
+      {
+        "name": "COL_lattice_hoop_14",
+        "kind": "box",
+        "position": [
+          2.0329432487487793,
+          2.6416308879852295,
+          -40.70000076293945
+        ],
+        "halfExtents": [
+          0.48000000247308244,
+          0.2200000048587865,
+          0.17000000178813934
+        ],
+        "rotation": [
+          0,
+          0,
+          0.47139687156432564,
+          0.8819211923292052
+        ]
+      },
+      {
+        "name": "COL_lattice_hoop_15",
+        "kind": "box",
+        "position": [
+          2.398020029067993,
+          3.5230040550231934,
+          -40.70000076293945
+        ],
+        "halfExtents": [
+          0.4799999787274882,
+          0.21999999397538897,
+          0.17000000178813934
+        ],
+        "rotation": [
+          0,
+          0,
+          0.6343932134906815,
+          0.7730105113625342
+        ]
+      },
+      {
+        "name": "COL_PROP_avenue_lamp_00_foot",
+        "kind": "box",
+        "position": [
+          -35,
+          0.11999999731779099,
+          -5
+        ],
+        "halfExtents": [
+          0.23999999463558197,
+          0.11999999731779099,
+          0.23999999463558197
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_avenue_lamp_00_head",
+        "kind": "box",
+        "position": [
+          -35,
+          4.5,
+          -5
+        ],
+        "halfExtents": [
+          0.23499999940395355,
+          0.25999999046325684,
+          0.23499999940395355
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_avenue_lamp_00_post",
+        "kind": "box",
+        "position": [
+          -35,
+          2.299999952316284,
+          -5
+        ],
+        "halfExtents": [
+          0.09000000357627869,
+          2.299999952316284,
+          0.09000000357627869
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_avenue_lamp_01_foot",
+        "kind": "box",
+        "position": [
+          -35,
+          0.11999999731779099,
+          5
+        ],
+        "halfExtents": [
+          0.23999999463558197,
+          0.11999999731779099,
+          0.23999999463558197
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_avenue_lamp_01_head",
+        "kind": "box",
+        "position": [
+          -35,
+          4.5,
+          5
+        ],
+        "halfExtents": [
+          0.23499999940395355,
+          0.25999999046325684,
+          0.23499999940395355
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_avenue_lamp_01_post",
+        "kind": "box",
+        "position": [
+          -35,
+          2.299999952316284,
+          5
+        ],
+        "halfExtents": [
+          0.09000000357627869,
+          2.299999952316284,
+          0.09000000357627869
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_avenue_lamp_02_foot",
+        "kind": "box",
+        "position": [
+          -12,
+          0.11999999731779099,
+          -25
+        ],
+        "halfExtents": [
+          0.23999999463558197,
+          0.11999999731779099,
+          0.23999999463558197
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_avenue_lamp_02_head",
+        "kind": "box",
+        "position": [
+          -12,
+          4.5,
+          -25
+        ],
+        "halfExtents": [
+          0.23499999940395355,
+          0.25999999046325684,
+          0.23499999940395355
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_avenue_lamp_02_post",
+        "kind": "box",
+        "position": [
+          -12,
+          2.299999952316284,
+          -25
+        ],
+        "halfExtents": [
+          0.09000000357627869,
+          2.299999952316284,
+          0.09000000357627869
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_avenue_lamp_03_foot",
+        "kind": "box",
+        "position": [
+          12,
+          0.11999999731779099,
+          25
+        ],
+        "halfExtents": [
+          0.23999999463558197,
+          0.11999999731779099,
+          0.23999999463558197
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_avenue_lamp_03_head",
+        "kind": "box",
+        "position": [
+          12,
+          4.5,
+          25
+        ],
+        "halfExtents": [
+          0.23499999940395355,
+          0.25999999046325684,
+          0.23499999940395355
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_avenue_lamp_03_post",
+        "kind": "box",
+        "position": [
+          12,
+          2.299999952316284,
+          25
+        ],
+        "halfExtents": [
+          0.09000000357627869,
+          2.299999952316284,
+          0.09000000357627869
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_avenue_lamp_04_foot",
+        "kind": "box",
+        "position": [
+          32,
+          0.11999999731779099,
+          5
+        ],
+        "halfExtents": [
+          0.23999999463558197,
+          0.11999999731779099,
+          0.23999999463558197
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_avenue_lamp_04_head",
+        "kind": "box",
+        "position": [
+          32,
+          4.5,
+          5
+        ],
+        "halfExtents": [
+          0.23499999940395355,
+          0.25999999046325684,
+          0.23499999940395355
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_avenue_lamp_04_post",
+        "kind": "box",
+        "position": [
+          32,
+          2.299999952316284,
+          5
+        ],
+        "halfExtents": [
+          0.09000000357627869,
+          2.299999952316284,
+          0.09000000357627869
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_billboard_foot",
+        "kind": "box",
+        "position": [
+          5.400000095367432,
+          1.649999976158142,
+          -5.300000190734863
+        ],
+        "halfExtents": [
+          0.3499999940395355,
+          0.15000000596046448,
+          0.3499999940395355
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_billboard_post",
+        "kind": "box",
+        "position": [
+          5.400000095367432,
+          3.6500000953674316,
+          -5.300000190734863
+        ],
+        "halfExtents": [
+          0.17499999701976776,
+          2.1500000953674316,
+          0.17499999701976776
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_crate_00_shell",
+        "kind": "box",
+        "position": [
+          -29,
+          0.6499999761581421,
+          -23
+        ],
+        "halfExtents": [
+          0.6499999761581421,
+          0.6499999761581421,
+          0.6499999761581421
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_crate_01_shell",
+        "kind": "box",
+        "position": [
+          -31,
+          0.6499999761581421,
+          -22
+        ],
+        "halfExtents": [
+          0.6499999761581421,
+          0.6499999761581421,
+          0.6499999761581421
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_crate_02_shell",
+        "kind": "box",
+        "position": [
+          28,
+          0.6499999761581421,
+          22
+        ],
+        "halfExtents": [
+          0.6499999761581421,
+          0.6499999761581421,
+          0.6499999761581421
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_crate_03_shell",
+        "kind": "box",
+        "position": [
+          30,
+          0.6499999761581421,
+          23
+        ],
+        "halfExtents": [
+          0.6499999761581421,
+          0.6499999761581421,
+          0.6499999761581421
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_crate_04_shell",
+        "kind": "box",
+        "position": [
+          29,
+          0.6499999761581421,
+          -24
+        ],
+        "halfExtents": [
+          0.6499999761581421,
+          0.6499999761581421,
+          0.6499999761581421
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_gate_console",
+        "kind": "box",
+        "position": [
+          -44.099998474121094,
+          0.699999988079071,
+          -5
+        ],
+        "halfExtents": [
+          0.4000000059604645,
+          0.699999988079071,
+          0.32499998807907104
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_hill_market_00_body",
+        "kind": "box",
+        "position": [
+          -5,
+          2.1500000953674316,
+          -4
+        ],
+        "halfExtents": [
+          0.375,
+          0.6499999761581421,
+          0.32499998807907104
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_hill_market_00_foot",
+        "kind": "box",
+        "position": [
+          -5,
+          1.5700000524520874,
+          -4
+        ],
+        "halfExtents": [
+          0.4300000071525574,
+          0.07000000029802322,
+          0.3799999952316284
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_hill_market_01_body",
+        "kind": "box",
+        "position": [
+          5,
+          2.1500000953674316,
+          -4
+        ],
+        "halfExtents": [
+          0.375,
+          0.6499999761581421,
+          0.32499998807907104
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_hill_market_01_foot",
+        "kind": "box",
+        "position": [
+          5,
+          1.5700000524520874,
+          -4
+        ],
+        "halfExtents": [
+          0.4300000071525574,
+          0.07000000029802322,
+          0.3799999952316284
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_hill_market_02_body",
+        "kind": "box",
+        "position": [
+          5,
+          2.1500000953674316,
+          1
+        ],
+        "halfExtents": [
+          0.375,
+          0.6499999761581421,
+          0.32499998807907104
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_hill_market_02_foot",
+        "kind": "box",
+        "position": [
+          5,
+          1.5700000524520874,
+          1
+        ],
+        "halfExtents": [
+          0.4300000071525574,
+          0.07000000029802322,
+          0.3799999952316284
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_lattice_bollard",
+        "kind": "box",
+        "position": [
+          -3.299999952316284,
+          1.0399999618530273,
+          -34.70000076293945
+        ],
+        "halfExtents": [
+          0.17000000178813934,
+          0.3499999940395355,
+          0.17000000178813934
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_lattice_bollard001",
+        "kind": "box",
+        "position": [
+          -3.299999952316284,
+          1.0399999618530273,
+          -41.25
+        ],
+        "halfExtents": [
+          0.17000000178813934,
+          0.3499999940395355,
+          0.17000000178813934
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_lattice_bollard002",
+        "kind": "box",
+        "position": [
+          3.299999952316284,
+          1.0399999618530273,
+          -34.70000076293945
+        ],
+        "halfExtents": [
+          0.17000000178813934,
+          0.3499999940395355,
+          0.17000000178813934
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_lattice_bollard003",
+        "kind": "box",
+        "position": [
+          3.299999952316284,
+          1.0399999618530273,
+          -41.25
+        ],
+        "halfExtents": [
+          0.17000000178813934,
+          0.3499999940395355,
+          0.17000000178813934
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_lattice_bollard_base",
+        "kind": "box",
+        "position": [
+          -3.299999952316284,
+          0.6000000238418579,
+          -34.70000076293945
+        ],
+        "halfExtents": [
+          0.2750000059604645,
+          0.10000000149011612,
+          0.2750000059604645
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_lattice_bollard_base001",
+        "kind": "box",
+        "position": [
+          -3.299999952316284,
+          0.6000000238418579,
+          -41.25
+        ],
+        "halfExtents": [
+          0.2750000059604645,
+          0.10000000149011612,
+          0.2750000059604645
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_lattice_bollard_base002",
+        "kind": "box",
+        "position": [
+          3.299999952316284,
+          0.6000000238418579,
+          -34.70000076293945
+        ],
+        "halfExtents": [
+          0.2750000059604645,
+          0.10000000149011612,
+          0.2750000059604645
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_lattice_bollard_base003",
+        "kind": "box",
+        "position": [
+          3.299999952316284,
+          0.6000000238418579,
+          -41.25
+        ],
+        "halfExtents": [
+          0.2750000059604645,
+          0.10000000149011612,
+          0.2750000059604645
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_lattice_pedestal",
+        "kind": "box",
+        "position": [
+          -1.4500000476837158,
+          0.6899999976158142,
+          -40.70000076293945
+        ],
+        "halfExtents": [
+          0.4749999940395355,
+          0.1899999976158142,
+          0.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_lattice_pedestal001",
+        "kind": "box",
+        "position": [
+          1.4500000476837158,
+          0.6899999976158142,
+          -40.70000076293945
+        ],
+        "halfExtents": [
+          0.4749999940395355,
+          0.1899999976158142,
+          0.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_lattice_support",
+        "kind": "box",
+        "position": [
+          -1.4500000476837158,
+          1.4500000476837158,
+          -40.70000076293945
+        ],
+        "halfExtents": [
+          0.20999999344348907,
+          0.6399999856948853,
+          0.23000000417232513
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_lattice_support001",
+        "kind": "box",
+        "position": [
+          1.4500000476837158,
+          1.4500000476837158,
+          -40.70000076293945
+        ],
+        "halfExtents": [
+          0.20999999344348907,
+          0.6399999856948853,
+          0.23000000417232513
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_lattice_terminal_body",
+        "kind": "box",
+        "position": [
+          0,
+          1.2000000476837158,
+          -39
+        ],
+        "halfExtents": [
+          0.6600000262260437,
+          0.6000000238418579,
+          0.5
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_lattice_terminal_foot",
+        "kind": "box",
+        "position": [
+          0,
+          0.6000000238418579,
+          -39
+        ],
+        "halfExtents": [
+          0.800000011920929,
+          0.10000000149011612,
+          0.6499999761581421
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_mission_00_body",
+        "kind": "box",
+        "position": [
+          -10,
+          0.8999999761581421,
+          -13.800000190734863
+        ],
+        "halfExtents": [
+          0.375,
+          0.6499999761581421,
+          0.32499998807907104
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_mission_00_foot",
+        "kind": "box",
+        "position": [
+          -10,
+          0.3199999928474426,
+          -13.800000190734863
+        ],
+        "halfExtents": [
+          0.4300000071525574,
+          0.07000000029802322,
+          0.3799999952316284
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_mission_01_body",
+        "kind": "box",
+        "position": [
+          -8,
+          0.8999999761581421,
+          -13.800000190734863
+        ],
+        "halfExtents": [
+          0.375,
+          0.6499999761581421,
+          0.32499998807907104
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_mission_01_foot",
+        "kind": "box",
+        "position": [
+          -8,
+          0.3199999928474426,
+          -13.800000190734863
+        ],
+        "halfExtents": [
+          0.4300000071525574,
+          0.07000000029802322,
+          0.3799999952316284
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_mission_02_body",
+        "kind": "box",
+        "position": [
+          -6,
+          0.8999999761581421,
+          -13.800000190734863
+        ],
+        "halfExtents": [
+          0.375,
+          0.6499999761581421,
+          0.32499998807907104
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_mission_02_foot",
+        "kind": "box",
+        "position": [
+          -6,
+          0.3199999928474426,
+          -13.800000190734863
+        ],
+        "halfExtents": [
+          0.4300000071525574,
+          0.07000000029802322,
+          0.3799999952316284
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_ring_0_brace",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          1.2400000095367432,
+          34.06999969482422
+        ],
+        "halfExtents": [
+          0.6200000047683716,
+          0.4399999976158142,
+          0.4650000035762787
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_ring_0_brace001",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          1.2400000095367432,
+          38.130001068115234
+        ],
+        "halfExtents": [
+          0.6200000047683716,
+          0.4399999976158142,
+          0.4650000035762787
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_ring_0_foot",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          0.7099999785423279,
+          34.06999969482422
+        ],
+        "halfExtents": [
+          0.824999988079071,
+          0.20999999344348907,
+          0.75
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_ring_0_foot001",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          0.7099999785423279,
+          38.130001068115234
+        ],
+        "halfExtents": [
+          0.824999988079071,
+          0.20999999344348907,
+          0.75
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_ring_0_keystone",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          6.449999809265137,
+          36.099998474121094
+        ],
+        "halfExtents": [
+          0.6000000238418579,
+          0.23000000417232513,
+          0.33000001311302185
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_ring_1_brace",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          1.2400000095367432,
+          34.06999969482422
+        ],
+        "halfExtents": [
+          0.6200000047683716,
+          0.4399999976158142,
+          0.4650000035762787
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_ring_1_brace001",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          1.2400000095367432,
+          38.130001068115234
+        ],
+        "halfExtents": [
+          0.6200000047683716,
+          0.4399999976158142,
+          0.4650000035762787
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_ring_1_foot",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          0.7099999785423279,
+          34.06999969482422
+        ],
+        "halfExtents": [
+          0.824999988079071,
+          0.20999999344348907,
+          0.75
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_ring_1_foot001",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          0.7099999785423279,
+          38.130001068115234
+        ],
+        "halfExtents": [
+          0.824999988079071,
+          0.20999999344348907,
+          0.75
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_ring_1_keystone",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          6.449999809265137,
+          36.099998474121094
+        ],
+        "halfExtents": [
+          0.6000000238418579,
+          0.23000000417232513,
+          0.33000001311302185
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_ring_status_body",
+        "kind": "box",
+        "position": [
+          2.5199999809265137,
+          1.1200000047683716,
+          38.04999923706055
+        ],
+        "halfExtents": [
+          0.3199999928474426,
+          0.41999998688697815,
+          0.25999999046325684
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_ring_status_foot",
+        "kind": "box",
+        "position": [
+          2.5199999809265137,
+          0.6000000238418579,
+          38.04999923706055
+        ],
+        "halfExtents": [
+          0.41999998688697815,
+          0.10000000149011612,
+          0.32499998807907104
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_wreck_beam_a",
+        "kind": "box",
+        "position": [
+          53,
+          5.199999809265137,
+          -6
+        ],
+        "halfExtents": [
+          0.44999998815137293,
+          4.000000000642683,
+          0.4000000059604645
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.11971219661641157,
+          0.9928086371407501
+        ]
+      },
+      {
+        "name": "COL_PROP_wreck_beam_b",
+        "kind": "box",
+        "position": [
+          55,
+          4.699999809265137,
+          7
+        ],
+        "halfExtents": [
+          0.34999999594151954,
+          4.000000021736961,
+          0.3499999940395355
+        ],
+        "rotation": [
+          0,
+          0,
+          0.12467477036327888,
+          0.9921976625828464
+        ]
+      },
+      {
+        "name": "COL_PROP_wreck_crossbeam",
+        "kind": "box",
+        "position": [
+          54,
+          8.5,
+          0
+        ],
+        "halfExtents": [
+          0.5,
+          0.4999999998699147,
+          7.499999998048721
+        ],
+        "rotation": [
+          0.07492970589399874,
+          0,
+          0,
+          0.9971888182158075
+        ]
+      },
+      {
+        "name": "COL_PROP_wreck_severed_foot",
+        "kind": "box",
+        "position": [
+          51,
+          0.20000000298023224,
+          -4.900000095367432
+        ],
+        "halfExtents": [
+          0.8500000238418579,
+          0.20000000298023224,
+          0.574999988079071
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_PROP_wreck_severed_foot001",
+        "kind": "box",
+        "position": [
+          55.5,
+          0.20000000298023224,
+          5.800000190734863
+        ],
+        "halfExtents": [
+          0.8500000238418579,
+          0.20000000298023224,
+          0.574999988079071
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ring_0_segment_00",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          1.9220267534255981,
+          38.395320892333984
+        ],
+        "halfExtents": [
+          0.5,
+          0.3699999997126137,
+          0.36000000938599885
+        ],
+        "rotation": [
+          0.8778901121224992,
+          0,
+          0,
+          0.4788621419965726
+        ]
+      },
+      {
+        "name": "COL_ring_0_segment_01",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          2.541292905807495,
+          38.69143295288086
+        ],
+        "halfExtents": [
+          0.5,
+          0.3700000134671567,
+          0.3600000227687978
+        ],
+        "rotation": [
+          0.8107234216774467,
+          0,
+          0,
+          0.5854293582863889
+        ]
+      },
+      {
+        "name": "COL_ring_0_segment_02",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          3.21484637260437,
+          38.82371520996094
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000001686108785,
+          0.3600000260710012
+        ],
+        "rotation": [
+          0.730692028240932,
+          0,
+          0,
+          0.6827072285139164
+        ]
+      },
+      {
+        "name": "COL_ring_0_segment_03",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          3.9001054763793945,
+          38.7838020324707
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000002243550834,
+          0.3600000314947618
+        ],
+        "rotation": [
+          0.6390661631470137,
+          0,
+          0,
+          0.7691517659867618
+        ]
+      },
+      {
+        "name": "COL_ring_0_segment_04",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          4.553747653961182,
+          38.57421875
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000000057627874,
+          0.3600000102263216
+        ],
+        "rotation": [
+          0.5372996307981968,
+          0,
+          0,
+          0.8433914315097834
+        ]
+      },
+      {
+        "name": "COL_ring_0_segment_05",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          5.1344499588012695,
+          38.20821762084961
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000000782440656,
+          0.3600000172785543
+        ],
+        "rotation": [
+          0.42700720140601856,
+          0,
+          0,
+          0.9042482236351919
+        ]
+      },
+      {
+        "name": "COL_ring_0_segment_06",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          5.605500221252441,
+          37.70893478393555
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000000279620765,
+          0.36000001238625245
+        ],
+        "rotation": [
+          0.30993899355689986,
+          0,
+          0,
+          0.9507564463483464
+        ]
+      },
+      {
+        "name": "COL_ring_0_segment_07",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          5.9371185302734375,
+          37.107933044433594
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000000575203124,
+          0.36000001526218905
+        ],
+        "rotation": [
+          0.18795274526689354,
+          0,
+          0,
+          0.9821780722183927
+        ]
+      },
+      {
+        "name": "COL_ring_0_segment_08",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          6.108340263366699,
+          36.44321060180664
+        ],
+        "halfExtents": [
+          0.5,
+          0.3700000053342248,
+          0.3600000148556746
+        ],
+        "rotation": [
+          0.06298407769411687,
+          0,
+          0,
+          0.9980145319367959
+        ]
+      },
+      {
+        "name": "COL_ring_0_segment_09",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          6.108340263366699,
+          35.75679016113281
+        ],
+        "halfExtents": [
+          0.550000011920929,
+          0.3700000053342248,
+          0.3600000148556746
+        ],
+        "rotation": [
+          -0.06298407769411687,
+          0,
+          0,
+          0.9980145319367959
+        ]
+      },
+      {
+        "name": "COL_ring_0_segment_10",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          5.9371185302734375,
+          35.09206771850586
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000000575203124,
+          0.36000001526218905
+        ],
+        "rotation": [
+          -0.18795274526689354,
+          0,
+          0,
+          0.9821780722183927
+        ]
+      },
+      {
+        "name": "COL_ring_0_segment_11",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          5.605500221252441,
+          34.491065979003906
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000000279620765,
+          0.36000001238625245
+        ],
+        "rotation": [
+          -0.30993899355689986,
+          0,
+          0,
+          0.9507564463483464
+        ]
+      },
+      {
+        "name": "COL_ring_0_segment_12",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          5.1344499588012695,
+          33.991783142089844
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000000782440656,
+          0.3600000172785543
+        ],
+        "rotation": [
+          -0.42700720140601856,
+          0,
+          0,
+          0.9042482236351919
+        ]
+      },
+      {
+        "name": "COL_ring_0_segment_13",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          4.553747653961182,
+          33.62577819824219
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000000057627874,
+          0.3600000102263216
+        ],
+        "rotation": [
+          -0.5372996307981968,
+          0,
+          0,
+          0.8433914315097834
+        ]
+      },
+      {
+        "name": "COL_ring_0_segment_14",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          3.9001054763793945,
+          33.41619873046875
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000002243550834,
+          0.3600000314947618
+        ],
+        "rotation": [
+          -0.6390661631470137,
+          0,
+          0,
+          0.7691517659867618
+        ]
+      },
+      {
+        "name": "COL_ring_0_segment_15",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          3.21484637260437,
+          33.376285552978516
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000001686108785,
+          0.3600000260710012
+        ],
+        "rotation": [
+          -0.730692028240932,
+          0,
+          0,
+          0.6827072285139164
+        ]
+      },
+      {
+        "name": "COL_ring_0_segment_16",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          2.541292905807495,
+          33.508567810058594
+        ],
+        "halfExtents": [
+          0.5,
+          0.3700000134671567,
+          0.3600000227687978
+        ],
+        "rotation": [
+          -0.8107234216774467,
+          0,
+          0,
+          0.5854293582863889
+        ]
+      },
+      {
+        "name": "COL_ring_0_segment_17",
+        "kind": "box",
+        "position": [
+          -4.199999809265137,
+          1.9220267534255981,
+          33.80467987060547
+        ],
+        "halfExtents": [
+          0.5,
+          0.3699999997126137,
+          0.36000000938599885
+        ],
+        "rotation": [
+          0.8778901121224992,
+          0,
+          0,
+          -0.4788621419965726
+        ]
+      },
+      {
+        "name": "COL_ring_1_segment_00",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          1.9220267534255981,
+          38.395320892333984
+        ],
+        "halfExtents": [
+          0.5,
+          0.3699999997126137,
+          0.36000000938599885
+        ],
+        "rotation": [
+          0.8778901121224992,
+          0,
+          0,
+          0.4788621419965726
+        ]
+      },
+      {
+        "name": "COL_ring_1_segment_01",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          2.541292905807495,
+          38.69143295288086
+        ],
+        "halfExtents": [
+          0.5,
+          0.3700000134671567,
+          0.3600000227687978
+        ],
+        "rotation": [
+          0.8107234216774467,
+          0,
+          0,
+          0.5854293582863889
+        ]
+      },
+      {
+        "name": "COL_ring_1_segment_02",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          3.21484637260437,
+          38.82371520996094
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000001686108785,
+          0.3600000260710012
+        ],
+        "rotation": [
+          0.730692028240932,
+          0,
+          0,
+          0.6827072285139164
+        ]
+      },
+      {
+        "name": "COL_ring_1_segment_03",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          3.9001054763793945,
+          38.7838020324707
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000002243550834,
+          0.3600000314947618
+        ],
+        "rotation": [
+          0.6390661631470137,
+          0,
+          0,
+          0.7691517659867618
+        ]
+      },
+      {
+        "name": "COL_ring_1_segment_04",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          4.553747653961182,
+          38.57421875
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000000057627874,
+          0.3600000102263216
+        ],
+        "rotation": [
+          0.5372996307981968,
+          0,
+          0,
+          0.8433914315097834
+        ]
+      },
+      {
+        "name": "COL_ring_1_segment_05",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          5.1344499588012695,
+          38.20821762084961
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000000782440656,
+          0.3600000172785543
+        ],
+        "rotation": [
+          0.42700720140601856,
+          0,
+          0,
+          0.9042482236351919
+        ]
+      },
+      {
+        "name": "COL_ring_1_segment_06",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          5.605500221252441,
+          37.70893478393555
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000000279620765,
+          0.36000001238625245
+        ],
+        "rotation": [
+          0.30993899355689986,
+          0,
+          0,
+          0.9507564463483464
+        ]
+      },
+      {
+        "name": "COL_ring_1_segment_07",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          5.9371185302734375,
+          37.107933044433594
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000000575203124,
+          0.36000001526218905
+        ],
+        "rotation": [
+          0.18795274526689354,
+          0,
+          0,
+          0.9821780722183927
+        ]
+      },
+      {
+        "name": "COL_ring_1_segment_08",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          6.108340263366699,
+          36.44321060180664
+        ],
+        "halfExtents": [
+          0.5,
+          0.3700000053342248,
+          0.3600000148556746
+        ],
+        "rotation": [
+          0.06298407769411687,
+          0,
+          0,
+          0.9980145319367959
+        ]
+      },
+      {
+        "name": "COL_ring_1_segment_09",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          6.108340263366699,
+          35.75679016113281
+        ],
+        "halfExtents": [
+          0.550000011920929,
+          0.3700000053342248,
+          0.3600000148556746
+        ],
+        "rotation": [
+          -0.06298407769411687,
+          0,
+          0,
+          0.9980145319367959
+        ]
+      },
+      {
+        "name": "COL_ring_1_segment_10",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          5.9371185302734375,
+          35.09206771850586
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000000575203124,
+          0.36000001526218905
+        ],
+        "rotation": [
+          -0.18795274526689354,
+          0,
+          0,
+          0.9821780722183927
+        ]
+      },
+      {
+        "name": "COL_ring_1_segment_11",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          5.605500221252441,
+          34.491065979003906
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000000279620765,
+          0.36000001238625245
+        ],
+        "rotation": [
+          -0.30993899355689986,
+          0,
+          0,
+          0.9507564463483464
+        ]
+      },
+      {
+        "name": "COL_ring_1_segment_12",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          5.1344499588012695,
+          33.991783142089844
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000000782440656,
+          0.3600000172785543
+        ],
+        "rotation": [
+          -0.42700720140601856,
+          0,
+          0,
+          0.9042482236351919
+        ]
+      },
+      {
+        "name": "COL_ring_1_segment_13",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          4.553747653961182,
+          33.62577819824219
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000000057627874,
+          0.3600000102263216
+        ],
+        "rotation": [
+          -0.5372996307981968,
+          0,
+          0,
+          0.8433914315097834
+        ]
+      },
+      {
+        "name": "COL_ring_1_segment_14",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          3.9001054763793945,
+          33.41619873046875
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000002243550834,
+          0.3600000314947618
+        ],
+        "rotation": [
+          -0.6390661631470137,
+          0,
+          0,
+          0.7691517659867618
+        ]
+      },
+      {
+        "name": "COL_ring_1_segment_15",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          3.21484637260437,
+          33.376285552978516
+        ],
+        "halfExtents": [
+          0.5,
+          0.37000001686108785,
+          0.3600000260710012
+        ],
+        "rotation": [
+          -0.730692028240932,
+          0,
+          0,
+          0.6827072285139164
+        ]
+      },
+      {
+        "name": "COL_ring_1_segment_16",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          2.541292905807495,
+          33.508567810058594
+        ],
+        "halfExtents": [
+          0.5,
+          0.3700000134671567,
+          0.3600000227687978
+        ],
+        "rotation": [
+          -0.8107234216774467,
+          0,
+          0,
+          0.5854293582863889
+        ]
+      },
+      {
+        "name": "COL_ring_1_segment_17",
+        "kind": "box",
+        "position": [
+          4.199999809265137,
+          1.9220267534255981,
+          33.80467987060547
+        ],
+        "halfExtents": [
+          0.5,
+          0.3699999997126137,
+          0.36000000938599885
+        ],
+        "rotation": [
+          0.8778901121224992,
+          0,
+          0,
+          -0.4788621419965726
+        ]
+      },
+      {
+        "name": "COL_tree_core",
+        "kind": "cylinder",
+        "position": [
+          0,
+          5.800000190734863,
+          0
+        ],
+        "radius": 1.2999999523162842,
+        "halfHeight": 4.300000190734863
+      },
+      {
+        "name": "COL_ground",
+        "kind": "halfspace",
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "normal": [
+          0,
+          1,
+          0
+        ]
+      }
+    ],
+    "cameras": [
+      "cam_gate",
+      "cam_avenue",
+      "cam_hill",
+      "cam_grid",
+      "cam_whompah",
+      "cam_hero"
+    ],
+    "cameraTransforms": {
+      "cam_gate": {
+        "sceneObject": true,
+        "position": [
+          -32,
+          9,
+          18
+        ],
+        "direction": [
+          -0.7489730603331082,
+          -0.2621405711165879,
+          -0.6085406115206508
+        ],
+        "fov": 50,
+        "aspect": 1.7777777777777777
+      },
+      "cam_avenue": {
+        "sceneObject": true,
+        "position": [
+          -12,
+          7,
+          34
+        ],
+        "direction": [
+          0.2937332277888388,
+          0.048955537964806464,
+          -0.9546329903137261
+        ],
+        "fov": 50,
+        "aspect": 1.7777777777777777
+      },
+      "cam_hill": {
+        "sceneObject": true,
+        "position": [
+          23,
+          14,
+          27
+        ],
+        "direction": [
+          -0.6421175024741438,
+          -0.1395907614074226,
+          -0.7537901116000821
+        ],
+        "fov": 50,
+        "aspect": 1.7777777777777777
+      },
+      "cam_grid": {
+        "sceneObject": true,
+        "position": [
+          -10,
+          6,
+          -28
+        ],
+        "direction": [
+          0.6804138174397717,
+          -0.2721655269759087,
+          -0.6804138174397717
+        ],
+        "fov": 50,
+        "aspect": 1.7777777777777777
+      },
+      "cam_whompah": {
+        "sceneObject": true,
+        "position": [
+          13,
+          6.5,
+          26
+        ],
+        "direction": [
+          -0.7751702321999273,
+          -0.20869967789998045,
+          0.5962847939999437
+        ],
+        "fov": 50,
+        "aspect": 1.7777777777777777
+      },
+      "cam_hero": {
+        "sceneObject": true,
+        "position": [
+          -5,
+          3.4,
+          9
+        ],
+        "direction": [
+          0.42661867571297646,
+          0.47781291679853355,
+          -0.7679136162833577
+        ],
+        "fov": 50,
+        "aspect": 1.7777777777777777
+      }
+    },
+    "scope": "Phase 3 authored world in progress: frozen concepts, Blender meshes and separate collision. Characters, dialogue, shop, audio and final beauty acceptance remain later phases.",
+    "world": {
+      "loaded": true,
+      "manifestSource": "./assets/world-manifest.json",
+      "source": "http://127.0.0.1:4173/assets/world.glb",
+      "landmarks": [
+        "hill_tree",
+        "west_gate",
+        "shop_rows",
+        "vanguard_hall",
+        "grid_kiosk",
+        "whompah",
+        "props",
+        "boundary"
+      ],
+      "greyboxLandmarks": [],
+      "bytes": 19706836,
+      "sourceMeshes": 1094,
+      "batches": 10,
+      "triangles": 56233,
+      "materialNames": [
+        "MAT_bark",
+        "MAT_cyan",
+        "MAT_dark",
+        "MAT_grass",
+        "MAT_leaf",
+        "MAT_metal",
+        "MAT_red",
+        "MAT_rust",
+        "MAT_stone"
+      ],
+      "textureCount": 6,
+      "textures": [
+        {
+          "name": "gunmetal_trim_albedo",
+          "width": 1254,
+          "height": 1254
+        },
+        {
+          "name": "stone_paving_albedo",
+          "width": 1254,
+          "height": 1254
+        },
+        {
+          "name": "free_column_canvas_albedo",
+          "width": 1254,
+          "height": 1254
+        },
+        {
+          "name": "cyan_hologlass_atlas",
+          "width": 1254,
+          "height": 1254
+        },
+        {
+          "name": "ancient_bark_albedo",
+          "width": 1254,
+          "height": 1254
+        },
+        {
+          "name": "olive_foliage_atlas",
+          "width": 1254,
+          "height": 1254
+        }
+      ],
+      "colliderCount": 262,
+      "bounds": {
+        "min": [
+          -116.54414367675781,
+          -2.694852113723755,
+          -132.17474365234375
+        ],
+        "max": [
+          119.24995422363281,
+          34.564002990722656,
+          88.55989837646484
+        ]
+      },
+      "animations": []
+    }
+  },
+  "result": "FAIL",
+  "failure": "AssertionError [ERR_ASSERTION]: The browser must load an authored world.glb, not only the Phase 0 probe\n    at file:///Users/carl.draper/Documents/code/ao2/tools/verify-phase3.mjs:197:3",
+  "failureState": {
+    "player": {
+      "x": -43,
+      "y": 0.014999961853027322,
+      "z": 0,
+      "yaw": -1.5707963267948966,
+      "grounded": true,
+      "speed": 0,
+      "velocity": {
+        "x": 0,
+        "y": -0.006001991423545405,
+        "z": 0
+      },
+      "collisions": [
+        "COL_ground"
+      ]
+    },
+    "camera": {
+      "active": "cam_follow",
+      "yaw": -1.5707963267948966,
+      "pitch": 0.22,
+      "desiredDistance": 4.2,
+      "distance": 4.2,
+      "obstructed": false,
+      "position": {
+        "x": -47.098769287188546,
+        "y": 2.431564378792679,
+        "z": 2.509772343999464e-16
+      },
+      "target": {
+        "x": -43,
+        "y": 1.5149999618530274,
+        "z": 0
+      }
+    },
+    "state": "play",
+    "activeCamera": "cam_follow",
+    "error": "",
+    "physics": {
+      "engine": "Rapier 0.20.0",
+      "timestep": 0.01666666753590107,
+      "steps": 79,
+      "bodies": 1,
+      "colliders": 264,
+      "staticColliders": 263,
+      "characterControllers": 1,
+      "ccdBodies": 0,
+      "sensors": 0,
+      "collisionGroups": "default; camera excludes player",
+      "character": {
+        "radius": 0.35,
+        "height": 1.8,
+        "offset": 0.015,
+        "maxStep": 0.3,
+        "minStepWidth": 0.22,
+        "groundSnap": 0.4,
+        "maxSlope": 0.7853981633974483,
+        "walkSpeed": 3.4,
+        "runSpeed": 6,
+        "gravity": -20
+      },
+      "cameraCastRadius": 0.23,
+      "riskyColliders": []
+    },
+    "renderer": {
+      "fps": 3.199488081906898,
+      "frameMs": 308.2000000000007,
+      "draws": 28,
+      "tris": 113177,
+      "geometries": 16,
+      "textures": 11,
+      "width": 1920,
+      "height": 1080,
+      "pixelRatio": 1,
+      "webgl2": true
+    },
+    "world": {
+      "loaded": true,
+      "manifestSource": "./assets/world-manifest.json",
+      "source": "http://127.0.0.1:4173/assets/world.glb",
+      "landmarks": [
+        "hill_tree",
+        "west_gate",
+        "shop_rows",
+        "vanguard_hall",
+        "grid_kiosk",
+        "whompah",
+        "props",
+        "boundary"
+      ],
+      "greyboxLandmarks": [],
+      "bytes": 19706836,
+      "sourceMeshes": 1094,
+      "batches": 10,
+      "triangles": 56233,
+      "materialNames": [
+        "MAT_bark",
+        "MAT_cyan",
+        "MAT_dark",
+        "MAT_grass",
+        "MAT_leaf",
+        "MAT_metal",
+        "MAT_red",
+        "MAT_rust",
+        "MAT_stone"
+      ],
+      "textureCount": 6,
+      "textures": [
+        {
+          "name": "gunmetal_trim_albedo",
+          "width": 1254,
+          "height": 1254
+        },
+        {
+          "name": "stone_paving_albedo",
+          "width": 1254,
+          "height": 1254
+        },
+        {
+          "name": "free_column_canvas_albedo",
+          "width": 1254,
+          "height": 1254
+        },
+        {
+          "name": "cyan_hologlass_atlas",
+          "width": 1254,
+          "height": 1254
+        },
+        {
+          "name": "ancient_bark_albedo",
+          "width": 1254,
+          "height": 1254
+        },
+        {
+          "name": "olive_foliage_atlas",
+          "width": 1254,
+          "height": 1254
+        }
+      ],
+      "colliderCount": 262,
+      "bounds": {
+        "min": [
+          -116.54414367675781,
+          -2.694852113723755,
+          -132.17474365234375
+        ],
+        "max": [
+          119.24995422363281,
+          34.564002990722656,
+          88.55989837646484
+        ]
+      },
+      "animations": []
+    }
+  },
+  "elapsedMs": 10865
+}

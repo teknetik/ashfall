@@ -1,11 +1,12 @@
 import {
   Box3, BoxGeometry, BufferGeometry, Color, CylinderGeometry, DirectionalLight, Fog,
   HemisphereLight, IcosahedronGeometry, Matrix4, Mesh, MeshStandardMaterial, Object3D,
-  Quaternion, Scene, TorusGeometry, Vector3, type Group,
+  Quaternion, RepeatWrapping, Scene, SRGBColorSpace, TextureLoader, TorusGeometry, Vector3, type Group,
 } from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { LANDMARKS, LANDMARK_LABELS, type ColliderDef } from './layout';
+import { disposeMeshResources, emptyWorldAssetInfo, loadWorldAsset, ownMaterialTextures, type WorldLandmark } from './world-assets';
 
 export interface ProbeInfo {
   loaded: boolean;
@@ -20,23 +21,29 @@ export interface ProbeInfo {
 type MaterialKey = 'paving' | 'stone' | 'plinth' | 'metal' | 'shadow' | 'grass' | 'bark' | 'leaf' | 'red' | 'cyan' | 'rust';
 type Triple = [number, number, number];
 
-/** Phase 1 primitives only. Collision stays separate from batched render geometry. */
+/** Authored landmark imports replace complete greybox sections; collision remains separate. */
 export class World {
   readonly scene = new Scene();
   readonly sun = new DirectionalLight('#ffe2b2', 3.0);
   readonly colliderDefs: ColliderDef[] = [];
+  readonly colliderLandmarks = new Map<ColliderDef, WorldLandmark | 'ground' | 'probe'>();
+  readonly assets = emptyWorldAssetInfo(import.meta.env.BASE_URL);
   readonly probe: ProbeInfo = {
     loaded: false, source: `${import.meta.env.BASE_URL}assets/probe.glb`, meshName: 'PROBE_CUBE',
     dimensions: null, bounds: null, triangles: 0, animations: [],
   };
   imported: Group | null = null;
   private readonly batches = new Map<MaterialKey, BufferGeometry[]>();
+  private readonly batchLandmarks = new Map<MaterialKey, Set<string>>();
+  private currentLandmark: WorldLandmark | 'ground' | 'probe' = 'ground';
   private readonly materials: Record<MaterialKey, MeshStandardMaterial>;
+  private readonly loading = new AbortController();
+  private disposed = false;
 
   constructor() {
     this.scene.background = new Color('#a8b8bd');
     this.scene.fog = new Fog('#bfa684', 65, 175);
-    this.scene.add(new HemisphereLight('#b9d0dc', '#877251', 2.0));
+    this.scene.add(new HemisphereLight('#b9c4d1', '#6e5942', 0.50));
     this.sun.castShadow = true;
     this.sun.shadow.mapSize.set(2048, 2048);
     this.sun.shadow.camera.left = -68;
@@ -60,8 +67,6 @@ export class World {
         ...(key === 'cyan' ? { emissive: color, emissiveIntensity: 0.5 } : {}),
       }),
     ])) as Record<MaterialKey, MeshStandardMaterial>;
-    this.buildGreybox();
-    this.flushBatches();
     for (const [name, position] of Object.entries(LANDMARKS)) {
       const anchor = new Object3D();
       anchor.name = name;
@@ -79,11 +84,19 @@ export class World {
     const batch = this.batches.get(key) ?? [];
     batch.push(prepared);
     this.batches.set(key, batch);
+    const owners = this.batchLandmarks.get(key) ?? new Set<string>();
+    owners.add(this.currentLandmark);
+    this.batchLandmarks.set(key, owners);
+  }
+
+  private addCollider(definition: ColliderDef) {
+    this.colliderDefs.push(definition);
+    this.colliderLandmarks.set(definition, this.currentLandmark);
   }
 
   private box(name: string, key: MaterialKey, position: Triple, size: Triple, collide = true, rotation = new Quaternion()) {
     this.addGeometry(key, new BoxGeometry(...size), position, [1, 1, 1], rotation);
-    if (collide) this.colliderDefs.push({
+    if (collide) this.addCollider({
       name: `COL_${name}`, kind: 'box', position, halfExtents: [size[0] / 2, size[1] / 2, size[2] / 2],
       ...(rotation.equals(new Quaternion()) ? {} : { rotation: rotation.toArray() as [number, number, number, number] }),
     });
@@ -91,7 +104,7 @@ export class World {
 
   private cylinder(name: string, key: MaterialKey, position: Triple, radius: number, height: number, collide = true, topRadius = radius, segments = 12) {
     this.addGeometry(key, new CylinderGeometry(topRadius, radius, height, segments), position);
-    if (collide) this.colliderDefs.push({ name: `COL_${name}`, kind: 'cylinder', position, radius, halfHeight: height / 2 });
+    if (collide) this.addCollider({ name: `COL_${name}`, kind: 'cylinder', position, radius, halfHeight: height / 2 });
   }
 
   private limb(start: Triple, end: Triple, bottomRadius: number, topRadius: number) {
@@ -110,33 +123,39 @@ export class World {
       geometry.computeBoundingSphere();
       const mesh = new Mesh(geometry, this.materials[key]);
       mesh.name = `GREYBOX_${key}`;
+      mesh.userData.landmarks = [...(this.batchLandmarks.get(key) ?? [])];
       mesh.castShadow = key !== 'paving' && key !== 'cyan';
       mesh.receiveShadow = true;
       this.scene.add(mesh);
       for (const source of geometries) source.dispose();
     }
     this.batches.clear();
+    this.batchLandmarks.clear();
   }
 
   private buildGreybox() {
     this.box('ground', 'paving', [0, -0.3, 0], [120, 0.6, 90], false);
     // An exact plane gives stable capsule contacts; the large thin cuboid produced
     // spurious lateral contact normals. Perimeter walls bound the playable floor.
-    this.colliderDefs.push({ name: 'COL_ground', kind: 'halfspace', position: [0, 0, 0], normal: [0, 1, 0] });
+    this.addCollider({ name: 'COL_ground', kind: 'halfspace', position: [0, 0, 0], normal: [0, 1, 0] });
     this.box('desert_backdrop', 'plinth', [0, -0.65, 0], [400, 0.2, 400], false);
     // Paving joints use geometry, with no texture or per-tile draw calls.
     for (let x = -56; x <= 56; x += 4) this.box(`paving_x_${x}`, 'plinth', [x, 0.006, 0], [0.035, 0.01, 86], false);
     for (let z = -40; z <= 40; z += 4) this.box(`paving_z_${z}`, 'plinth', [0, 0.007, z], [116, 0.01, 0.035], false);
     for (const z of [-4, 4]) this.box('avenue_edge', 'stone', [-27, 0.018, z], [37, 0.03, 0.18], false);
     for (const x of [-4, 4]) this.box('south_avenue_edge', 'stone', [x, 0.018, 22], [0.18, 0.03, 19], false);
-    this.buildHill();
-    this.buildGate();
-    this.buildShops();
-    this.buildHall();
-    this.buildLattice();
-    this.buildRings();
-    this.buildProps();
-    this.buildBoundary();
+    const sections: Array<[WorldLandmark, () => void]> = [
+      ['hill_tree', () => this.buildHill()], ['west_gate', () => this.buildGate()],
+      ['shop_rows', () => this.buildShops()], ['vanguard_hall', () => this.buildHall()],
+      ['grid_kiosk', () => this.buildLattice()], ['whompah', () => this.buildRings()],
+      ['props', () => this.buildProps()], ['boundary', () => this.buildBoundary()],
+    ];
+    for (const [landmark, build] of sections) {
+      if (this.assets.landmarks.includes(landmark)) continue;
+      this.currentLandmark = landmark;
+      build();
+    }
+    this.currentLandmark = 'ground';
   }
 
   private buildHill() {
@@ -264,7 +283,7 @@ export class World {
       for (let segment = 0; segment < 12; segment++) {
         const angle = segment * Math.PI / 6;
         const rotation = new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), angle);
-        this.colliderDefs.push({
+        this.addCollider({
           name: `COL_ring_${x}_${segment}`, kind: 'box',
           position: [x, 3.6 + Math.cos(angle) * 2.65, 36.1 + Math.sin(angle) * 2.65],
           halfExtents: [0.5, 0.48, 0.7], rotation: rotation.toArray() as [number, number, number, number],
@@ -316,31 +335,101 @@ export class World {
   }
 
   async load() {
-    // Keep the verified Blender round-trip as an archived exhibit off the route.
-    const gltf = await new GLTFLoader().loadAsync(this.probe.source);
-    const cube = gltf.scene.getObjectByName(this.probe.meshName);
-    if (!cube) throw new Error('probe.glb is missing the Blender render mesh PROBE_CUBE.');
-    gltf.scene.updateMatrixWorld(true);
-    const bounds = new Box3().setFromObject(cube);
-    const size = bounds.getSize(new Vector3());
-    if (![size.x, size.y, size.z].every((n) => Math.abs(n - 2) < 0.02) || Math.abs(bounds.min.y) > 0.02) {
-      throw new Error(`Blender probe must be a ground-centred 2 m cube; received ${size.toArray().map((n) => n.toFixed(3)).join(' × ')} m, base ${bounds.min.y.toFixed(3)} m.`);
+    const { signal } = this.loading;
+    try {
+      signal.throwIfAborted();
+      const paving = await new TextureLoader().loadAsync(`${import.meta.env.BASE_URL}assets/textures/stone_paving_albedo.png`);
+      // TextureLoader has no cancellation API; its result can arrive after shutdown.
+      if (signal.aborted) { paving.dispose(); signal.throwIfAborted(); }
+      paving.colorSpace = SRGBColorSpace;
+      paving.wrapS = paving.wrapT = RepeatWrapping;
+      paving.repeat.set(15, 11.25);
+      paving.anisotropy = 4;
+      this.materials.paving.color.set('#ffffff');
+      this.materials.paving.map = paving;
+      ownMaterialTextures([this.materials.paving]);
+      const authored = await loadWorldAsset(import.meta.env.BASE_URL, signal);
+      if (signal.aborted) {
+        if (authored) disposeMeshResources(authored.root);
+        signal.throwIfAborted();
+      }
+      if (authored) {
+        Object.assign(this.assets, authored.info);
+        this.imported = authored.root;
+        this.scene.add(authored.root);
+        this.colliderDefs.push(...authored.colliders);
+        for (const [collider, landmark] of authored.colliderLandmarks) this.colliderLandmarks.set(collider, landmark);
+      }
+      // Decide which complete sections to build only after the authored manifest has loaded.
+      // This avoids overlapping visuals and stale invisible greybox colliders.
+      this.buildGreybox();
+      this.flushBatches();
+      await this.loadProbe();
+    } catch (error) {
+      this.dispose();
+      throw error;
     }
+  }
+
+  private async loadProbe() {
+    // Keep validating the original round-trip, but hide its exhibit in the authored city.
+    const gltf = await new GLTFLoader().loadAsync(this.probe.source);
+    const materials = new Set<import('three').Material>();
     gltf.scene.traverse((object) => {
       if (object instanceof Mesh) {
-        object.castShadow = true;
-        object.receiveShadow = true;
-        this.probe.triangles += (object.geometry.index?.count ?? object.geometry.attributes.position.count) / 3;
+        for (const material of Array.isArray(object.material) ? object.material : [object.material]) materials.add(material);
       }
     });
-    gltf.scene.position.set(-52, 0, 20);
-    this.imported = gltf.scene;
-    this.scene.add(gltf.scene);
-    this.colliderDefs.push({ name: 'COL_PROBE_CUBE', kind: 'box', position: [-52, 1, 20], halfExtents: [1, 1, 1] });
-    this.probe.dimensions = { x: size.x, y: size.y, z: size.z };
-    this.probe.bounds = { min: bounds.min.toArray(), max: bounds.max.toArray() };
-    this.probe.animations = gltf.animations.map((clip) => clip.name);
-    this.probe.loaded = true;
+    ownMaterialTextures(materials);
+    try {
+      this.loading.signal.throwIfAborted();
+      const cube = gltf.scene.getObjectByName(this.probe.meshName);
+      if (!cube) throw new Error('probe.glb is missing the Blender render mesh PROBE_CUBE.');
+      gltf.scene.updateMatrixWorld(true);
+      const bounds = new Box3().setFromObject(cube);
+      const size = bounds.getSize(new Vector3());
+      if (![size.x, size.y, size.z].every((n) => Math.abs(n - 2) < 0.02) || Math.abs(bounds.min.y) > 0.02) {
+        throw new Error(`Blender probe must be a ground-centred 2 m cube; received ${size.toArray().map((n) => n.toFixed(3)).join(' × ')} m, base ${bounds.min.y.toFixed(3)} m.`);
+      }
+      gltf.scene.traverse((object) => {
+        if (object instanceof Mesh) {
+          object.castShadow = true;
+          object.receiveShadow = true;
+          this.probe.triangles += (object.geometry.index?.count ?? object.geometry.attributes.position.count) / 3;
+        }
+      });
+      gltf.scene.position.set(-52, 0, 20);
+      gltf.scene.visible = !this.assets.loaded;
+      if (!this.imported) this.imported = gltf.scene;
+      this.scene.add(gltf.scene);
+      if (!this.assets.loaded) {
+        this.currentLandmark = 'probe';
+        this.addCollider({ name: 'COL_PROBE_CUBE', kind: 'box', position: [-52, 1, 20], halfExtents: [1, 1, 1] });
+        this.currentLandmark = 'ground';
+      }
+      this.probe.dimensions = { x: size.x, y: size.y, z: size.z };
+      this.probe.bounds = { min: bounds.min.toArray(), max: bounds.max.toArray() };
+      this.probe.animations = gltf.animations.map((clip) => clip.name);
+      this.probe.loaded = true;
+    } catch (error) {
+      disposeMeshResources(gltf.scene);
+      throw error;
+    }
+  }
+
+  dispose() {
+    if (this.disposed) return;
+    this.disposed = true;
+    this.loading.abort();
+    disposeMeshResources(this.scene, Object.values(this.materials));
+    for (const geometries of this.batches.values()) for (const geometry of geometries) geometry.dispose();
+    this.batches.clear();
+    this.batchLandmarks.clear();
+    this.sun.dispose();
+    this.scene.clear();
+    this.imported = null;
+    this.colliderDefs.length = 0;
+    this.colliderLandmarks.clear();
   }
 
   setSun(hour: number) {

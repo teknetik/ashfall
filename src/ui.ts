@@ -5,8 +5,8 @@ const names = { cam_gate: 'West Gate', cam_avenue: 'Avenue', cam_hill: 'Hill Tre
 
 export function createUI(root: HTMLElement) {
   root.innerHTML = `
-    <canvas class="world-canvas" tabindex="0" aria-label="Athen Hill greybox city. Use WASD to walk and right-drag to look."></canvas>
-    <header class="identity"><p class="eyebrow">Phase 1 · Greybox city</p><h1>Athen Hill</h1><p id="location" class="scope">West Gate</p></header>
+    <canvas class="world-canvas" tabindex="0" aria-label="Athen Hill city. Use WASD to walk and right-drag to look."></canvas>
+    <header class="identity"><p class="eyebrow">Phase 3 · Authored city</p><h1>Athen Hill</h1><p id="location" class="scope">West Gate</p></header>
     <div class="top-actions"><button id="pause" disabled>Pause</button><details class="instrumentation"><summary>Survey tools</summary>
       <p id="status" class="status" role="status">Building the city…</p>
       <div class="camera-controls"><label for="view">View</label><select id="view"><option value="follow">Player</option>${CAMERA_NAMES.map((name) => `<option value="${name}">${names[name]}</option>`).join('')}</select></div>
