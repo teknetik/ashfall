@@ -14,8 +14,8 @@ make prefab/material variants for adaptations. Generated render batches, if
 needed, retain their editable source objects and have an explicit rebuild action.
 Do not silently overwrite user edits or replace the city with one mega-mesh.
 
-Current checkpoint: the imported city and player controls are verified. City-loop
-assets below are saved and verified with keyboard input.
+The saved city, controls, dialogue, trading, travel and audio are verified.
+Native keyboard checks exercise the same scene used in the Editor.
 
 ## Assets available now
 
@@ -60,3 +60,30 @@ assets; changing a material on a variant is safer than editing importer sub-asse
 **Hill visit area**, **Lattice interaction** and **Ring interaction** are editable
 scene markers referenced by CitySession. Move the associated marker when relocating
 its landmark; interaction ranges are also Inspector properties.
+
+## Sound and render optimization
+
+- **Audio/City.mixer** opens Unity's Audio Mixer with Ambience, SFX and UI groups.
+  **City Audio** references ordinary AudioSources. Volumes, clips, looping and
+  spatial falloff are editable on those sources. Footstep cadence is on CityAudio.
+  Lattice/Ring hum sources are children of their interaction markers.
+- Select **City Render Chunks**, then **Show Sources for Editing** before changing
+  city meshes. Select individual objects under AuthoredWorld as usual. Click
+  **Rebuild Render Chunks** when finished. This saves grouped render meshes and
+  disables only the source renderers, preserving their transforms and colliders.
+  Do not edit meshes under **Generated material chunks**; they are disposable.
+  The build check refuses stale chunks instead of silently baking over edits.
+
+- **Materials/World** and **Materials/Actors** contain native editable material
+  variants. Adjust their textures, colours and shader properties directly. The
+  original GLB sub-assets are retained. Changes to material properties propagate
+  to render chunks; assigning a different material requires rebuilding chunks.
+- **Sun**, **Skylight Fill**, **City sky reflection** and **DesertSky.mat** expose
+  lighting and sky controls. The reflection probe captures the sky; rebake it after
+  changing the sky. PC_RPAsset controls shadows, MSAA and render scale.
+- Character/portrait review cameras retain editable offsets and follow the actor
+  when selected through the development bridge.
+
+The source-edit round-trip check moved a crate, rebuilt, hid it, rebuilt, and
+restored it. It preserved the imported mesh, prefab connection and 264 colliders.
+This verifies the optimization workflow without requiring manual code changes.

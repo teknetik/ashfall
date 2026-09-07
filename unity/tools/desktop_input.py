@@ -1,13 +1,15 @@
 """Local X11 keyboard/mouse driver for real Unity Game View QA."""
 from Xlib import X, XK, display, protocol
 from Xlib.ext import xtest
-import time
+import time,os
 
 def focus():
     d=display.Display(); root=d.screen().root
     for wid in root.get_full_property(d.intern_atom('_NET_CLIENT_LIST'),X.AnyPropertyType).value:
         w=d.create_resource_object('window',wid)
-        if 'AthenHill' in (w.get_wm_name() or ''):
+        qa_pid=os.environ.get('ATHEN_NATIVE_PID');pid=w.get_full_property(d.intern_atom('_NET_WM_PID'),X.AnyPropertyType)
+        matches=bool(pid is not None and int(pid.value[0])==int(qa_pid)) if qa_pid else 'AthenHill' in (w.get_wm_name() or '')
+        if matches:
             root.send_event(protocol.event.ClientMessage(window=w,client_type=d.intern_atom('_NET_ACTIVE_WINDOW'),data=(32,[2,X.CurrentTime,0,0,0])),event_mask=X.SubstructureRedirectMask|X.SubstructureNotifyMask)
             d.sync();time.sleep(.25)
             return d

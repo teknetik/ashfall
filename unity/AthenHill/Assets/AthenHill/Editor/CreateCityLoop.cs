@@ -34,7 +34,7 @@ namespace AthenHill.Editor
     var route=new GameObject(go.name+" route");var points=new System.Collections.Generic.List<Transform>();int i=0;
     foreach(var p in w["waypoints"]){var t=new GameObject("Waypoint "+(++i)).transform;t.SetParent(route.transform);t.position=ImportBaseline.Convert((float)p[0],(float)p[1],(float)p[2]);points.Add(t);}walker.waypoints=points.ToArray();go.transform.position=points[0].position;Tint(go,(string)w["tint"]);
    }
-   var session=new GameObject("CitySession").AddComponent<GameSession>();session.catalog=catalog;session.npcs=npcs.ToArray();session.input=Object.FindFirstObjectByType<GameInput>();session.player=Object.FindFirstObjectByType<PlayerMotor>();session.follow=Object.FindFirstObjectByType<FollowCamera>();
+   var session=new GameObject("CitySession").AddComponent<GameSession>();session.catalog=catalog;session.npcs=npcs.ToArray();session.input=Object.FindAnyObjectByType<GameInput>();session.player=Object.FindAnyObjectByType<PlayerMotor>();session.follow=Object.FindAnyObjectByType<FollowCamera>();
    AddMarkers();
    var panel=ScriptableObject.CreateInstance<PanelSettings>();panel.scaleMode=PanelScaleMode.ScaleWithScreenSize;panel.referenceResolution=new Vector2Int(1920,1080);panel.screenMatchMode=PanelScreenMatchMode.MatchWidthOrHeight;panel.match=.5f;AssetDatabase.CreateAsset(panel,"Assets/AthenHill/UI/CityPanel.asset");
    var ui=new GameObject("City HUD");var doc=ui.AddComponent<UIDocument>();doc.panelSettings=panel;doc.visualTreeAsset=AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/AthenHill/UI/CityHUD.uxml");var hud=ui.AddComponent<CityHud>();hud.session=session;hud.worldCamera=session.follow.GetComponent<Camera>();
@@ -45,7 +45,7 @@ namespace AthenHill.Editor
   public static void AddMarkers()
   {
    if(EditorApplication.isPlaying)throw new System.Exception("Exit Play first.");
-   var s=Object.FindFirstObjectByType<GameSession>();
+   var s=Object.FindAnyObjectByType<GameSession>();
    if(!s.hillPoint)s.hillPoint=Marker("Hill visit area",Vector3.zero);
    if(!s.latticePoint)s.latticePoint=Marker("Lattice interaction",new Vector3(0,.5f,-39));
    if(!s.ringPoint)s.ringPoint=Marker("Ring interaction",new Vector3(0,.5f,36.1f));

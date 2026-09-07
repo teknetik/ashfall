@@ -19,6 +19,7 @@ namespace AthenHill
    root=GetComponent<UIDocument>().rootVisualElement;
    Bind("close",session.Close);Bind("resume",session.Close);Bind("reset",session.ResetPlayer);
    Bind("inventory-button",()=>session.Open(CityState.Inventory));Bind("notes-button",()=>session.Open(CityState.Notes));Bind("pause-button",()=>session.Open(CityState.Paused));Bind("credits-button",()=>session.Open(CityState.Credits));Bind("interaction",session.Interact);
+   Bind("quit",()=>Application.Quit());Show("quit",!Application.isEditor);
    Bind("mute",session.ToggleMute);Bind("reduced-motion",session.ToggleReducedMotion);
    for(int i=0;i<2;i++){int index=i;Bind("choice"+i,()=>session.Choose(index));}
    for(int i=0;i<3;i++){int index=i;Bind("buy"+i,()=>session.Trade(session.catalog.items[index].id,true));Bind("sell"+i,()=>session.Trade(session.catalog.items[index].id,false));Bind("node"+i,()=>session.SelectDestination(index));}

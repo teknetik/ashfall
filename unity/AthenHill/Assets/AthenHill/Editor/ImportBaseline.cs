@@ -83,7 +83,7 @@ namespace AthenHill.Editor
             var markers=probe.GetComponentsInChildren<Transform>().Select(t=>new{name=t.name,position=new[]{t.position.x,t.position.y,t.position.z}}).ToArray();
             UnityEngine.Object.DestroyImmediate(probe);
             Directory.CreateDirectory("Captures");
-            File.WriteAllText("Captures/import-report.json",JsonConvert.SerializeObject(new{unity=Application.unityVersion,pipeline=GraphicsSettings.currentRenderPipeline?.GetType().Name,colliders=UnityEngine.Object.FindObjectsByType<Collider>(FindObjectsSortMode.None).Length,markers,assets=reports},Formatting.Indented));
+            File.WriteAllText("Captures/import-report.json",JsonConvert.SerializeObject(new{unity=Application.unityVersion,pipeline=GraphicsSettings.currentRenderPipeline?.GetType().Name,colliders=UnityEngine.Object.FindObjectsByType<Collider>().Length,markers,assets=reports},Formatting.Indented));
             Debug.Log("Athen Hill import report saved.");
         }
     }

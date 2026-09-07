@@ -1,7 +1,11 @@
 import asyncio,json,pathlib,math
-from fastmcp import Client
+import os
+if os.environ.get("ATHEN_NATIVE_DIR"):
+ from native_client import Client
+else:
+ from fastmcp import Client
 from desktop_input import focus,key
-R=pathlib.Path(__file__).resolve().parents[1];C=R/'AthenHill/Captures';O=R/'evidence/U3'
+R=pathlib.Path(__file__).resolve().parents[1];C=pathlib.Path(os.environ.get('ATHEN_NATIVE_DIR',R/'AthenHill/Captures'));O=pathlib.Path(os.environ.get('ATHEN_EVIDENCE',R/'evidence/U3'));O.mkdir(parents=True,exist_ok=True)
 async def main():
  d=focus();checks=[]
  async with Client('http://127.0.0.1:18081/mcp',timeout=60) as c:

@@ -26,11 +26,12 @@ namespace AthenHill
   public readonly HashSet<string> Spoken=new HashSet<string>();
   public bool visitedHill,boughtFlask,soldScrap,linked;
   public event Action Changed;
+  public int LogRevision {get;private set;}
   bool ringInside;float noticeTime;
   public bool Complete=>visitedHill&&Spoken.Count==4&&boughtFlask&&soldScrap&&linked;
   public string Objective=>!visitedHill?"Reach the Hill Tree.":Spoken.Count<4?$"Meet the colonists · {Spoken.Count}/4 conversations":!boughtFlask||!soldScrap?"Buy a flask and sell your scrap at Basic General.":!linked?"Use the Lattice Jack in the north court.":"A place on the hill. City visit complete.";
   public DialogueNode Dialogue=>ActiveNpc?ActiveNpc.definition.nodes.First(x=>x.id==dialogueNode):null;
-  void Start(){Shop=new ShopModel(catalog.items,catalog.startingCredits);Log.Add("Linn: Meet me on the hill.");SetState(CityState.Play);}
+  void Start(){AudioListener.volume=muted?0:1;Shop=new ShopModel(catalog.items,catalog.startingCredits);Log.Add("Linn: Meet me on the hill.");SetState(CityState.Play);}
   void OnDestroy(){Time.timeScale=1;AudioListener.pause=false;AudioListener.volume=1;}
   void OnApplicationFocus(bool focused){if(!focused&&State==CityState.Play)SetState(CityState.Paused);}
   void Update()
@@ -97,6 +98,6 @@ namespace AthenHill
   public void ToggleReducedMotion(){reducedMotion=!reducedMotion;Changed?.Invoke();}
   void SetState(CityState state){State=state;input.SetGameplay(state==CityState.Play);player.Blocked=state!=CityState.Play;player.Talking=state==CityState.Dialogue;Time.timeScale=state==CityState.Paused?0:1;AudioListener.pause=state==CityState.Paused;Changed?.Invoke();}
   public void Notify(string text,string speaker="System"){notice=text;noticeTime=4;AddLog(speaker,text);Changed?.Invoke();}
-  void AddLog(string speaker,string text){Log.Add(speaker+": "+text);if(Log.Count>16)Log.RemoveAt(0);Changed?.Invoke();}
+  void AddLog(string speaker,string text){LogRevision++;Log.Add(speaker+": "+text);if(Log.Count>16)Log.RemoveAt(0);Changed?.Invoke();}
  }
 }
