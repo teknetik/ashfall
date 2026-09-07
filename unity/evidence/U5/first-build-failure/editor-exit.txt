@@ -1,0 +1,45 @@
+Build Finished, Result: Success.
+Unloading 13 Unused Serialized files (Serialized files now loaded: 0)
+Loaded scene 'Temp/__Backupscenes/0.backup'
+	Deserialize:            47.697 ms
+	Integration:            172.786 ms
+	Integration of assets:  1.056 ms
+	Thread Wait Time:       -0.015 ms
+	Total Operation Time:   221.523 ms
+Unloading 3 unused Assets / (264.7 KB). Loaded Objects now: 24651.
+Memory consumption went from 0.52 GB to 0.52 GB.
+Total: 28.921274 ms (FindLiveObjects: 1.753735 ms CreateObjectMapping: 1.083295 ms MarkObjects: 25.250150 ms  DeleteObjects: 0.072378 ms)
+
+Asset Pipeline Refresh (id=1732b85de5d20d238a9543a71b2ab29e): Total: 0.214 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+##utp:{"success":true,"type":"PlayerBuildInfo","version":2,"phase":"Immediate","time":1788788927317,"processId":3282017,"steps":[{"description":"Call PrepareForBuild callbacks","duration":16},{"description":"Call internal build started callbacks","duration":0},{"description":"Preprocess Player","duration":390},{"description":"Save scenes before build","duration":3},{"description":"Prepare For Build","duration":1},{"description":"ProducePlayerScriptAssemblies","duration":11631},{"description":"Verify Build setup","duration":35},{"description":"Prepare assets for target platform","duration":1},{"description":"Prepare splash screen","duration":28},{"description":"Build scripts DLLs","duration":21},{"description":"Building scenes","duration":243},{"description":"Build GlobalGameManagers file","duration":207},{"description":"Writing asset files","duration":258607},{"description":"Building Resources/unity_builtin_extra","duration":4117},{"description":"Write data build dirty tracking information","duration":258},{"description":"Postprocess built player","duration":10767},{"description":"Call Post-Process callbacks","duration":350}],"duration":286675}
+
+SDL leaked 3 allocations
+Turn on UNITY_SDL_ALLOCATION_TRACKING for detailed information.
+Internal: Possible leak. All render target surfaces should be removed from IdMap when destructed using RenderTargetMap::Remove(RenderSurfaceBase* rs).
+***Thread 'HIDInput' is still running!***
+***Thread was not cleaned up!***
+
+=================================================================
+	Native Crash Reporting
+=================================================================
+Got a SIGSEGV while executing native code. This usually indicates
+a fatal error in the mono runtime or one of the native libraries 
+used by your application.
+=================================================================
+
+=================================================================
+	Native stacktrace:
+=================================================================
+	0x79d132915a9a - /home/teknetik/Unity/Hub/Editor/6000.6.0f1/Editor/Data/MonoBleedingEdge/MonoEmbedRuntime/libmonobdwgc-2.0.so : 
+	0x79d1328be5ce - /home/teknetik/Unity/Hub/Editor/6000.6.0f1/Editor/Data/MonoBleedingEdge/MonoEmbedRuntime/libmonobdwgc-2.0.so : 
+	0x79d132843ad0 - /home/teknetik/Unity/Hub/Editor/6000.6.0f1/Editor/Data/MonoBleedingEdge/MonoEmbedRuntime/libmonobdwgc-2.0.so : 
+	0x612aa2d77e3b - /home/teknetik/Unity/Hub/Editor/6000.6.0f1/Editor/Unity : 
+	0x79dc19245330 - /lib/x86_64-linux-gnu/libc.so.6 : 
+	0x612aa2839c00 - /home/teknetik/Unity/Hub/Editor/6000.6.0f1/Editor/Unity : 
+	0x612aa283a73a - /home/teknetik/Unity/Hub/Editor/6000.6.0f1/Editor/Unity : 
+	0x612aa2e15fc6 - /home/teknetik/Unity/Hub/Editor/6000.6.0f1/Editor/Unity : 
+	0x79dc1929cb84 - /lib/x86_64-linux-gnu/libc.so.6 : 
+	0x79dc19329d6c - /lib/x86_64-linux-gnu/libc.so.6 : 
+
+=================================================================
+	
