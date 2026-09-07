@@ -1,0 +1,3231 @@
+{
+  "url": "http://127.0.0.1:4173/",
+  "scope": "Phase 1 greybox traversal and collision; no Phase 2 art or NPC acceptance",
+  "inputMethod": "Playwright keyboard and right-mouse drag. The main route never teleports or writes simulation state.",
+  "referenceLedger": [
+    {
+      "path": "threejs-qa-release/references/qa-release-checklists.md",
+      "read": true,
+      "failure": null
+    },
+    {
+      "path": "threejs-qa-release/references/checklists/visual-verification.md",
+      "read": true,
+      "failure": null
+    },
+    {
+      "path": "threejs-qa-release/references/checklists/playtest-qa.md",
+      "read": true,
+      "failure": null
+    },
+    {
+      "path": "threejs-qa-release/references/checklists/release.md",
+      "read": true,
+      "failure": null
+    },
+    {
+      "path": "threejs-game-ui-designer/references/checklists/game-ui-quality.md",
+      "read": true,
+      "failure": null
+    },
+    {
+      "path": "threejs-game-ui-designer/references/checklists/hud-readability.md",
+      "read": true,
+      "failure": null
+    },
+    {
+      "path": "threejs-game-ui-designer/references/checklists/responsive-ui-fit.md",
+      "read": true,
+      "failure": null
+    },
+    {
+      "path": "threejs-aaa-graphics-builder/references/checklists/procedural-model-quality.md",
+      "read": true,
+      "failure": null
+    },
+    {
+      "path": "threejs-aaa-graphics-builder/references/checklists/material-lighting-quality.md",
+      "read": true,
+      "failure": null
+    },
+    {
+      "path": "threejs-aaa-graphics-builder/references/checklists/performance-safe-visual-detail.md",
+      "read": true,
+      "failure": null
+    }
+  ],
+  "checks": [],
+  "errors": [],
+  "route": [],
+  "samples": [
+    {
+      "label": "spawn",
+      "elapsedMs": 1707,
+      "player": {
+        "x": -42.999996185302734,
+        "y": 0.015097951889038064,
+        "z": 0,
+        "yaw": -1.5707963267948966,
+        "grounded": true,
+        "speed": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0.0000018195714801549911,
+          "z": 0
+        },
+        "collisions": [
+          "COL_ground"
+        ]
+      },
+      "camera": {
+        "active": "cam_follow",
+        "yaw": -1.5707963267948966,
+        "pitch": 0.22,
+        "desiredDistance": 4.2,
+        "distance": 4.2,
+        "obstructed": false,
+        "position": {
+          "x": -47.09876547249128,
+          "y": 2.4316623688286896,
+          "z": 2.509772343999464e-16
+        },
+        "target": {
+          "x": -42.999996185302734,
+          "y": 1.5150979518890382,
+          "z": 0
+        }
+      },
+      "state": "play",
+      "activeCamera": "cam_follow",
+      "physics": {
+        "engine": "Rapier 0.20.0",
+        "timestep": 0.01666666753590107,
+        "steps": 59,
+        "bodies": 1,
+        "colliders": 194,
+        "staticColliders": 193,
+        "characterControllers": 1,
+        "ccdBodies": 0,
+        "sensors": 0,
+        "collisionGroups": "default; camera excludes player",
+        "character": {
+          "radius": 0.35,
+          "height": 1.8,
+          "offset": 0.015,
+          "maxStep": 0.3,
+          "minStepWidth": 0.22,
+          "groundSnap": 0.4,
+          "maxSlope": 0.7853981633974483,
+          "walkSpeed": 3.4,
+          "runSpeed": 6,
+          "gravity": -20
+        },
+        "cameraCastRadius": 0.23,
+        "riskyColliders": []
+      },
+      "renderer": {
+        "fps": 17.706079087153253,
+        "frameMs": 50,
+        "draws": 24,
+        "tris": 12724,
+        "geometries": 14,
+        "textures": 3,
+        "width": 1920,
+        "height": 1080,
+        "pixelRatio": 1,
+        "webgl2": true
+      }
+    }
+  ],
+  "limitations": [
+    "Focused regression mode skips the continuous route. It is not full Phase 1 acceptance."
+  ],
+  "initial": {
+    "version": "0.1.0-phase1",
+    "phase": 1,
+    "player": {
+      "x": -42.999996185302734,
+      "y": 0.014997935295104958,
+      "z": 0,
+      "yaw": -1.5707963267948966,
+      "grounded": true,
+      "speed": 0.000028585149607351923,
+      "velocity": {
+        "x": -0.000028585149607351923,
+        "y": -0.006003580492688343,
+        "z": 0
+      },
+      "collisions": [
+        "COL_ground"
+      ]
+    },
+    "physics": {
+      "engine": "Rapier 0.20.0",
+      "timestep": 0.01666666753590107,
+      "steps": 56,
+      "bodies": 1,
+      "colliders": 194,
+      "staticColliders": 193,
+      "characterControllers": 1,
+      "ccdBodies": 0,
+      "sensors": 0,
+      "collisionGroups": "default; camera excludes player",
+      "character": {
+        "radius": 0.35,
+        "height": 1.8,
+        "offset": 0.015,
+        "maxStep": 0.3,
+        "minStepWidth": 0.22,
+        "groundSnap": 0.4,
+        "maxSlope": 0.7853981633974483,
+        "walkSpeed": 3.4,
+        "runSpeed": 6,
+        "gravity": -20
+      },
+      "cameraCastRadius": 0.23,
+      "riskyColliders": []
+    },
+    "landmarks": {
+      "west_gate": [
+        -43,
+        0,
+        0
+      ],
+      "hill_tree": [
+        -4,
+        1.5,
+        0
+      ],
+      "oa_hill": [
+        -4,
+        1.5,
+        4
+      ],
+      "shop_row_e": [
+        16,
+        0.5,
+        9
+      ],
+      "shop_row_w": [
+        -16,
+        0.5,
+        9
+      ],
+      "basic_general": [
+        -8,
+        0.5,
+        16
+      ],
+      "vanguard_hall": [
+        10,
+        0.5,
+        -25.5
+      ],
+      "grid_kiosk": [
+        0,
+        0.5,
+        -36.5
+      ],
+      "lattice_jack": [
+        0,
+        0.5,
+        -36.5
+      ],
+      "whompah": [
+        0,
+        0.5,
+        36
+      ],
+      "ring_gate": [
+        0,
+        0.5,
+        36
+      ],
+      "mission_slab": [
+        -8,
+        0.25,
+        -12.5
+      ],
+      "billboard": [
+        5,
+        1.5,
+        4
+      ],
+      "east_wreck": [
+        51,
+        0,
+        0
+      ],
+      "probe": [
+        -52,
+        0,
+        23.5
+      ]
+    },
+    "colliders": [
+      {
+        "name": "COL_ground",
+        "kind": "box",
+        "position": [
+          0,
+          -0.3,
+          0
+        ],
+        "halfExtents": [
+          60,
+          0.3,
+          45
+        ]
+      },
+      {
+        "name": "COL_hill",
+        "kind": "box",
+        "position": [
+          0,
+          0.7,
+          0
+        ],
+        "halfExtents": [
+          7,
+          0.7,
+          7
+        ]
+      },
+      {
+        "name": "COL_hill_grass",
+        "kind": "box",
+        "position": [
+          0,
+          1.45,
+          0
+        ],
+        "halfExtents": [
+          7,
+          0.05,
+          7
+        ]
+      },
+      {
+        "name": "COL_hill_stair_w_0",
+        "kind": "box",
+        "position": [
+          -10.3,
+          0.125,
+          0
+        ],
+        "halfExtents": [
+          0.3,
+          0.125,
+          2
+        ]
+      },
+      {
+        "name": "COL_hill_stair_s_0",
+        "kind": "box",
+        "position": [
+          0,
+          0.125,
+          10.3
+        ],
+        "halfExtents": [
+          2,
+          0.125,
+          0.3
+        ]
+      },
+      {
+        "name": "COL_hill_stair_n_0",
+        "kind": "box",
+        "position": [
+          0,
+          0.125,
+          -10.3
+        ],
+        "halfExtents": [
+          2,
+          0.125,
+          0.3
+        ]
+      },
+      {
+        "name": "COL_hill_stair_w_1",
+        "kind": "box",
+        "position": [
+          -9.700000000000001,
+          0.25,
+          0
+        ],
+        "halfExtents": [
+          0.3,
+          0.25,
+          2
+        ]
+      },
+      {
+        "name": "COL_hill_stair_s_1",
+        "kind": "box",
+        "position": [
+          0,
+          0.25,
+          9.700000000000001
+        ],
+        "halfExtents": [
+          2,
+          0.25,
+          0.3
+        ]
+      },
+      {
+        "name": "COL_hill_stair_n_1",
+        "kind": "box",
+        "position": [
+          0,
+          0.25,
+          -9.700000000000001
+        ],
+        "halfExtents": [
+          2,
+          0.25,
+          0.3
+        ]
+      },
+      {
+        "name": "COL_hill_stair_w_2",
+        "kind": "box",
+        "position": [
+          -9.100000000000001,
+          0.375,
+          0
+        ],
+        "halfExtents": [
+          0.3,
+          0.375,
+          2
+        ]
+      },
+      {
+        "name": "COL_hill_stair_s_2",
+        "kind": "box",
+        "position": [
+          0,
+          0.375,
+          9.100000000000001
+        ],
+        "halfExtents": [
+          2,
+          0.375,
+          0.3
+        ]
+      },
+      {
+        "name": "COL_hill_stair_n_2",
+        "kind": "box",
+        "position": [
+          0,
+          0.375,
+          -9.100000000000001
+        ],
+        "halfExtents": [
+          2,
+          0.375,
+          0.3
+        ]
+      },
+      {
+        "name": "COL_hill_stair_w_3",
+        "kind": "box",
+        "position": [
+          -8.5,
+          0.5,
+          0
+        ],
+        "halfExtents": [
+          0.3,
+          0.5,
+          2
+        ]
+      },
+      {
+        "name": "COL_hill_stair_s_3",
+        "kind": "box",
+        "position": [
+          0,
+          0.5,
+          8.5
+        ],
+        "halfExtents": [
+          2,
+          0.5,
+          0.3
+        ]
+      },
+      {
+        "name": "COL_hill_stair_n_3",
+        "kind": "box",
+        "position": [
+          0,
+          0.5,
+          -8.5
+        ],
+        "halfExtents": [
+          2,
+          0.5,
+          0.3
+        ]
+      },
+      {
+        "name": "COL_hill_stair_w_4",
+        "kind": "box",
+        "position": [
+          -7.9,
+          0.625,
+          0
+        ],
+        "halfExtents": [
+          0.3,
+          0.625,
+          2
+        ]
+      },
+      {
+        "name": "COL_hill_stair_s_4",
+        "kind": "box",
+        "position": [
+          0,
+          0.625,
+          7.9
+        ],
+        "halfExtents": [
+          2,
+          0.625,
+          0.3
+        ]
+      },
+      {
+        "name": "COL_hill_stair_n_4",
+        "kind": "box",
+        "position": [
+          0,
+          0.625,
+          -7.9
+        ],
+        "halfExtents": [
+          2,
+          0.625,
+          0.3
+        ]
+      },
+      {
+        "name": "COL_hill_stair_w_5",
+        "kind": "box",
+        "position": [
+          -7.300000000000001,
+          0.75,
+          0
+        ],
+        "halfExtents": [
+          0.3,
+          0.75,
+          2
+        ]
+      },
+      {
+        "name": "COL_hill_stair_s_5",
+        "kind": "box",
+        "position": [
+          0,
+          0.75,
+          7.300000000000001
+        ],
+        "halfExtents": [
+          2,
+          0.75,
+          0.3
+        ]
+      },
+      {
+        "name": "COL_hill_stair_n_5",
+        "kind": "box",
+        "position": [
+          0,
+          0.75,
+          -7.300000000000001
+        ],
+        "halfExtents": [
+          2,
+          0.75,
+          0.3
+        ]
+      },
+      {
+        "name": "COL_hill_tree_trunk",
+        "kind": "cylinder",
+        "position": [
+          0,
+          6,
+          0
+        ],
+        "radius": 1.2,
+        "halfHeight": 4.5
+      },
+      {
+        "name": "COL_west_wall",
+        "kind": "box",
+        "position": [
+          -48,
+          3.7,
+          -24.35
+        ],
+        "halfExtents": [
+          1.5,
+          3.7,
+          20.65
+        ]
+      },
+      {
+        "name": "COL_west_wall",
+        "kind": "box",
+        "position": [
+          -48,
+          3.7,
+          6
+        ],
+        "halfExtents": [
+          1.5,
+          3.7,
+          2.3000000000000003
+        ]
+      },
+      {
+        "name": "COL_west_wall",
+        "kind": "box",
+        "position": [
+          -48,
+          3.7,
+          30.35
+        ],
+        "halfExtents": [
+          1.5,
+          3.7,
+          14.65
+        ]
+      },
+      {
+        "name": "COL_gate_pier",
+        "kind": "box",
+        "position": [
+          -48,
+          1.5,
+          -3.25
+        ],
+        "halfExtents": [
+          1.5,
+          1.5,
+          0.45
+        ]
+      },
+      {
+        "name": "COL_gate_pier",
+        "kind": "box",
+        "position": [
+          -48,
+          1.5,
+          3.25
+        ],
+        "halfExtents": [
+          1.5,
+          1.5,
+          0.45
+        ]
+      },
+      {
+        "name": "COL_gate_tunnel_roof",
+        "kind": "box",
+        "position": [
+          -48,
+          6.6,
+          0
+        ],
+        "halfExtents": [
+          1.5,
+          0.8,
+          2.8
+        ]
+      },
+      {
+        "name": "COL_gate_arch_shoulder_a",
+        "kind": "box",
+        "position": [
+          -48,
+          4.8,
+          -2.7
+        ],
+        "halfExtents": [
+          1.5,
+          1.2,
+          0.425
+        ]
+      },
+      {
+        "name": "COL_gate_arch_shoulder_b",
+        "kind": "box",
+        "position": [
+          -48,
+          4.8,
+          2.7
+        ],
+        "halfExtents": [
+          1.5,
+          1.2,
+          0.425
+        ]
+      },
+      {
+        "name": "COL_gate_pier",
+        "kind": "box",
+        "position": [
+          -48,
+          1.5,
+          8.75
+        ],
+        "halfExtents": [
+          1.5,
+          1.5,
+          0.45
+        ]
+      },
+      {
+        "name": "COL_gate_pier",
+        "kind": "box",
+        "position": [
+          -48,
+          1.5,
+          15.25
+        ],
+        "halfExtents": [
+          1.5,
+          1.5,
+          0.45
+        ]
+      },
+      {
+        "name": "COL_gate_tunnel_roof",
+        "kind": "box",
+        "position": [
+          -48,
+          6.6,
+          12
+        ],
+        "halfExtents": [
+          1.5,
+          0.8,
+          2.8
+        ]
+      },
+      {
+        "name": "COL_gate_arch_shoulder_a",
+        "kind": "box",
+        "position": [
+          -48,
+          4.8,
+          9.3
+        ],
+        "halfExtents": [
+          1.5,
+          1.2,
+          0.425
+        ]
+      },
+      {
+        "name": "COL_gate_arch_shoulder_b",
+        "kind": "box",
+        "position": [
+          -48,
+          4.8,
+          14.7
+        ],
+        "halfExtents": [
+          1.5,
+          1.2,
+          0.425
+        ]
+      },
+      {
+        "name": "COL_shop_w_1_first_step",
+        "kind": "box",
+        "position": [
+          -14.1,
+          0.125,
+          -18
+        ],
+        "halfExtents": [
+          0.4,
+          0.125,
+          2.1
+        ]
+      },
+      {
+        "name": "COL_shop_w_1_porch",
+        "kind": "box",
+        "position": [
+          -17,
+          0.25,
+          -18
+        ],
+        "halfExtents": [
+          2.5,
+          0.25,
+          3.8
+        ]
+      },
+      {
+        "name": "COL_shop_w_1_interior_floor",
+        "kind": "box",
+        "position": [
+          -20.25,
+          0.25,
+          -18
+        ],
+        "halfExtents": [
+          0.75,
+          0.25,
+          3.25
+        ]
+      },
+      {
+        "name": "COL_shop_w_1_back",
+        "kind": "box",
+        "position": [
+          -23,
+          5.5,
+          -18
+        ],
+        "halfExtents": [
+          2,
+          5,
+          3.5
+        ]
+      },
+      {
+        "name": "COL_shop_w_1_jamb",
+        "kind": "box",
+        "position": [
+          -18.7,
+          1.75,
+          -20.35
+        ],
+        "halfExtents": [
+          0.4,
+          1.25,
+          1.15
+        ]
+      },
+      {
+        "name": "COL_shop_w_1_side",
+        "kind": "box",
+        "position": [
+          -20,
+          1.75,
+          -21.25
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ]
+      },
+      {
+        "name": "COL_shop_w_1_jamb",
+        "kind": "box",
+        "position": [
+          -18.7,
+          1.75,
+          -15.65
+        ],
+        "halfExtents": [
+          0.4,
+          1.25,
+          1.15
+        ]
+      },
+      {
+        "name": "COL_shop_w_1_side",
+        "kind": "box",
+        "position": [
+          -20,
+          1.75,
+          -14.75
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ]
+      },
+      {
+        "name": "COL_shop_w_1_lintel",
+        "kind": "box",
+        "position": [
+          -19.6,
+          3.8,
+          -18
+        ],
+        "halfExtents": [
+          1.3,
+          0.8,
+          3.5
+        ]
+      },
+      {
+        "name": "COL_shop_w_1_roof",
+        "kind": "box",
+        "position": [
+          -21.8,
+          4.8,
+          -18
+        ],
+        "halfExtents": [
+          3.9,
+          0.175,
+          3.75
+        ]
+      },
+      {
+        "name": "COL_shop_w_2_first_step",
+        "kind": "box",
+        "position": [
+          -14.1,
+          0.125,
+          -9
+        ],
+        "halfExtents": [
+          0.4,
+          0.125,
+          2.1
+        ]
+      },
+      {
+        "name": "COL_shop_w_2_porch",
+        "kind": "box",
+        "position": [
+          -17,
+          0.25,
+          -9
+        ],
+        "halfExtents": [
+          2.5,
+          0.25,
+          3.8
+        ]
+      },
+      {
+        "name": "COL_shop_w_2_interior_floor",
+        "kind": "box",
+        "position": [
+          -20.25,
+          0.25,
+          -9
+        ],
+        "halfExtents": [
+          0.75,
+          0.25,
+          3.25
+        ]
+      },
+      {
+        "name": "COL_shop_w_2_back",
+        "kind": "box",
+        "position": [
+          -23,
+          5.5,
+          -9
+        ],
+        "halfExtents": [
+          2,
+          5,
+          3.5
+        ]
+      },
+      {
+        "name": "COL_shop_w_2_jamb",
+        "kind": "box",
+        "position": [
+          -18.7,
+          1.75,
+          -11.35
+        ],
+        "halfExtents": [
+          0.4,
+          1.25,
+          1.15
+        ]
+      },
+      {
+        "name": "COL_shop_w_2_side",
+        "kind": "box",
+        "position": [
+          -20,
+          1.75,
+          -12.25
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ]
+      },
+      {
+        "name": "COL_shop_w_2_jamb",
+        "kind": "box",
+        "position": [
+          -18.7,
+          1.75,
+          -6.65
+        ],
+        "halfExtents": [
+          0.4,
+          1.25,
+          1.15
+        ]
+      },
+      {
+        "name": "COL_shop_w_2_side",
+        "kind": "box",
+        "position": [
+          -20,
+          1.75,
+          -5.75
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ]
+      },
+      {
+        "name": "COL_shop_w_2_lintel",
+        "kind": "box",
+        "position": [
+          -19.6,
+          3.8,
+          -9
+        ],
+        "halfExtents": [
+          1.3,
+          0.8,
+          3.5
+        ]
+      },
+      {
+        "name": "COL_shop_w_2_roof",
+        "kind": "box",
+        "position": [
+          -21.8,
+          4.8,
+          -9
+        ],
+        "halfExtents": [
+          3.9,
+          0.175,
+          3.75
+        ]
+      },
+      {
+        "name": "COL_shop_w_3_first_step",
+        "kind": "box",
+        "position": [
+          -14.1,
+          0.125,
+          9
+        ],
+        "halfExtents": [
+          0.4,
+          0.125,
+          2.1
+        ]
+      },
+      {
+        "name": "COL_shop_w_3_porch",
+        "kind": "box",
+        "position": [
+          -17,
+          0.25,
+          9
+        ],
+        "halfExtents": [
+          2.5,
+          0.25,
+          3.8
+        ]
+      },
+      {
+        "name": "COL_shop_w_3_interior_floor",
+        "kind": "box",
+        "position": [
+          -20.25,
+          0.25,
+          9
+        ],
+        "halfExtents": [
+          0.75,
+          0.25,
+          3.25
+        ]
+      },
+      {
+        "name": "COL_shop_w_3_back",
+        "kind": "box",
+        "position": [
+          -23,
+          4,
+          9
+        ],
+        "halfExtents": [
+          2,
+          3.5,
+          3.5
+        ]
+      },
+      {
+        "name": "COL_shop_w_3_jamb",
+        "kind": "box",
+        "position": [
+          -18.7,
+          1.75,
+          6.65
+        ],
+        "halfExtents": [
+          0.4,
+          1.25,
+          1.15
+        ]
+      },
+      {
+        "name": "COL_shop_w_3_side",
+        "kind": "box",
+        "position": [
+          -20,
+          1.75,
+          5.75
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ]
+      },
+      {
+        "name": "COL_shop_w_3_jamb",
+        "kind": "box",
+        "position": [
+          -18.7,
+          1.75,
+          11.35
+        ],
+        "halfExtents": [
+          0.4,
+          1.25,
+          1.15
+        ]
+      },
+      {
+        "name": "COL_shop_w_3_side",
+        "kind": "box",
+        "position": [
+          -20,
+          1.75,
+          12.25
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ]
+      },
+      {
+        "name": "COL_shop_w_3_lintel",
+        "kind": "box",
+        "position": [
+          -19.6,
+          3.8,
+          9
+        ],
+        "halfExtents": [
+          1.3,
+          0.8,
+          3.5
+        ]
+      },
+      {
+        "name": "COL_shop_w_3_roof",
+        "kind": "box",
+        "position": [
+          -21.8,
+          4.8,
+          9
+        ],
+        "halfExtents": [
+          3.9,
+          0.175,
+          3.75
+        ]
+      },
+      {
+        "name": "COL_shop_w_4_first_step",
+        "kind": "box",
+        "position": [
+          -14.1,
+          0.125,
+          18
+        ],
+        "halfExtents": [
+          0.4,
+          0.125,
+          2.1
+        ]
+      },
+      {
+        "name": "COL_shop_w_4_porch",
+        "kind": "box",
+        "position": [
+          -17,
+          0.25,
+          18
+        ],
+        "halfExtents": [
+          2.5,
+          0.25,
+          3.8
+        ]
+      },
+      {
+        "name": "COL_shop_w_4_interior_floor",
+        "kind": "box",
+        "position": [
+          -20.25,
+          0.25,
+          18
+        ],
+        "halfExtents": [
+          0.75,
+          0.25,
+          3.25
+        ]
+      },
+      {
+        "name": "COL_shop_w_4_back",
+        "kind": "box",
+        "position": [
+          -23,
+          5,
+          18
+        ],
+        "halfExtents": [
+          2,
+          4.5,
+          3.5
+        ]
+      },
+      {
+        "name": "COL_shop_w_4_jamb",
+        "kind": "box",
+        "position": [
+          -18.7,
+          1.75,
+          15.65
+        ],
+        "halfExtents": [
+          0.4,
+          1.25,
+          1.15
+        ]
+      },
+      {
+        "name": "COL_shop_w_4_side",
+        "kind": "box",
+        "position": [
+          -20,
+          1.75,
+          14.75
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ]
+      },
+      {
+        "name": "COL_shop_w_4_jamb",
+        "kind": "box",
+        "position": [
+          -18.7,
+          1.75,
+          20.35
+        ],
+        "halfExtents": [
+          0.4,
+          1.25,
+          1.15
+        ]
+      },
+      {
+        "name": "COL_shop_w_4_side",
+        "kind": "box",
+        "position": [
+          -20,
+          1.75,
+          21.25
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ]
+      },
+      {
+        "name": "COL_shop_w_4_lintel",
+        "kind": "box",
+        "position": [
+          -19.6,
+          3.8,
+          18
+        ],
+        "halfExtents": [
+          1.3,
+          0.8,
+          3.5
+        ]
+      },
+      {
+        "name": "COL_shop_w_4_roof",
+        "kind": "box",
+        "position": [
+          -21.8,
+          4.8,
+          18
+        ],
+        "halfExtents": [
+          3.9,
+          0.175,
+          3.75
+        ]
+      },
+      {
+        "name": "COL_shop_e_1_first_step",
+        "kind": "box",
+        "position": [
+          14.1,
+          0.125,
+          -18
+        ],
+        "halfExtents": [
+          0.4,
+          0.125,
+          2.1
+        ]
+      },
+      {
+        "name": "COL_shop_e_1_porch",
+        "kind": "box",
+        "position": [
+          17,
+          0.25,
+          -18
+        ],
+        "halfExtents": [
+          2.5,
+          0.25,
+          3.8
+        ]
+      },
+      {
+        "name": "COL_shop_e_1_interior_floor",
+        "kind": "box",
+        "position": [
+          20.25,
+          0.25,
+          -18
+        ],
+        "halfExtents": [
+          0.75,
+          0.25,
+          3.25
+        ]
+      },
+      {
+        "name": "COL_shop_e_1_back",
+        "kind": "box",
+        "position": [
+          23,
+          4.5,
+          -18
+        ],
+        "halfExtents": [
+          2,
+          4,
+          3.5
+        ]
+      },
+      {
+        "name": "COL_shop_e_1_jamb",
+        "kind": "box",
+        "position": [
+          18.7,
+          1.75,
+          -20.35
+        ],
+        "halfExtents": [
+          0.4,
+          1.25,
+          1.15
+        ]
+      },
+      {
+        "name": "COL_shop_e_1_side",
+        "kind": "box",
+        "position": [
+          20,
+          1.75,
+          -21.25
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ]
+      },
+      {
+        "name": "COL_shop_e_1_jamb",
+        "kind": "box",
+        "position": [
+          18.7,
+          1.75,
+          -15.65
+        ],
+        "halfExtents": [
+          0.4,
+          1.25,
+          1.15
+        ]
+      },
+      {
+        "name": "COL_shop_e_1_side",
+        "kind": "box",
+        "position": [
+          20,
+          1.75,
+          -14.75
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ]
+      },
+      {
+        "name": "COL_shop_e_1_lintel",
+        "kind": "box",
+        "position": [
+          19.6,
+          3.8,
+          -18
+        ],
+        "halfExtents": [
+          1.3,
+          0.8,
+          3.5
+        ]
+      },
+      {
+        "name": "COL_shop_e_1_roof",
+        "kind": "box",
+        "position": [
+          21.8,
+          4.8,
+          -18
+        ],
+        "halfExtents": [
+          3.9,
+          0.175,
+          3.75
+        ]
+      },
+      {
+        "name": "COL_shop_e_2_first_step",
+        "kind": "box",
+        "position": [
+          14.1,
+          0.125,
+          -9
+        ],
+        "halfExtents": [
+          0.4,
+          0.125,
+          2.1
+        ]
+      },
+      {
+        "name": "COL_shop_e_2_porch",
+        "kind": "box",
+        "position": [
+          17,
+          0.25,
+          -9
+        ],
+        "halfExtents": [
+          2.5,
+          0.25,
+          3.8
+        ]
+      },
+      {
+        "name": "COL_shop_e_2_interior_floor",
+        "kind": "box",
+        "position": [
+          20.25,
+          0.25,
+          -9
+        ],
+        "halfExtents": [
+          0.75,
+          0.25,
+          3.25
+        ]
+      },
+      {
+        "name": "COL_shop_e_2_back",
+        "kind": "box",
+        "position": [
+          23,
+          5.5,
+          -9
+        ],
+        "halfExtents": [
+          2,
+          5,
+          3.5
+        ]
+      },
+      {
+        "name": "COL_shop_e_2_jamb",
+        "kind": "box",
+        "position": [
+          18.7,
+          1.75,
+          -11.35
+        ],
+        "halfExtents": [
+          0.4,
+          1.25,
+          1.15
+        ]
+      },
+      {
+        "name": "COL_shop_e_2_side",
+        "kind": "box",
+        "position": [
+          20,
+          1.75,
+          -12.25
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ]
+      },
+      {
+        "name": "COL_shop_e_2_jamb",
+        "kind": "box",
+        "position": [
+          18.7,
+          1.75,
+          -6.65
+        ],
+        "halfExtents": [
+          0.4,
+          1.25,
+          1.15
+        ]
+      },
+      {
+        "name": "COL_shop_e_2_side",
+        "kind": "box",
+        "position": [
+          20,
+          1.75,
+          -5.75
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ]
+      },
+      {
+        "name": "COL_shop_e_2_lintel",
+        "kind": "box",
+        "position": [
+          19.6,
+          3.8,
+          -9
+        ],
+        "halfExtents": [
+          1.3,
+          0.8,
+          3.5
+        ]
+      },
+      {
+        "name": "COL_shop_e_2_roof",
+        "kind": "box",
+        "position": [
+          21.8,
+          4.8,
+          -9
+        ],
+        "halfExtents": [
+          3.9,
+          0.175,
+          3.75
+        ]
+      },
+      {
+        "name": "COL_shop_e_3_first_step",
+        "kind": "box",
+        "position": [
+          14.1,
+          0.125,
+          9
+        ],
+        "halfExtents": [
+          0.4,
+          0.125,
+          2.1
+        ]
+      },
+      {
+        "name": "COL_shop_e_3_porch",
+        "kind": "box",
+        "position": [
+          17,
+          0.25,
+          9
+        ],
+        "halfExtents": [
+          2.5,
+          0.25,
+          3.8
+        ]
+      },
+      {
+        "name": "COL_shop_e_3_interior_floor",
+        "kind": "box",
+        "position": [
+          20.25,
+          0.25,
+          9
+        ],
+        "halfExtents": [
+          0.75,
+          0.25,
+          3.25
+        ]
+      },
+      {
+        "name": "COL_shop_e_3_back",
+        "kind": "box",
+        "position": [
+          23,
+          4,
+          9
+        ],
+        "halfExtents": [
+          2,
+          3.5,
+          3.5
+        ]
+      },
+      {
+        "name": "COL_shop_e_3_jamb",
+        "kind": "box",
+        "position": [
+          18.7,
+          1.75,
+          6.65
+        ],
+        "halfExtents": [
+          0.4,
+          1.25,
+          1.15
+        ]
+      },
+      {
+        "name": "COL_shop_e_3_side",
+        "kind": "box",
+        "position": [
+          20,
+          1.75,
+          5.75
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ]
+      },
+      {
+        "name": "COL_shop_e_3_jamb",
+        "kind": "box",
+        "position": [
+          18.7,
+          1.75,
+          11.35
+        ],
+        "halfExtents": [
+          0.4,
+          1.25,
+          1.15
+        ]
+      },
+      {
+        "name": "COL_shop_e_3_side",
+        "kind": "box",
+        "position": [
+          20,
+          1.75,
+          12.25
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ]
+      },
+      {
+        "name": "COL_shop_e_3_lintel",
+        "kind": "box",
+        "position": [
+          19.6,
+          3.8,
+          9
+        ],
+        "halfExtents": [
+          1.3,
+          0.8,
+          3.5
+        ]
+      },
+      {
+        "name": "COL_shop_e_3_roof",
+        "kind": "box",
+        "position": [
+          21.8,
+          4.8,
+          9
+        ],
+        "halfExtents": [
+          3.9,
+          0.175,
+          3.75
+        ]
+      },
+      {
+        "name": "COL_shop_e_4_first_step",
+        "kind": "box",
+        "position": [
+          14.1,
+          0.125,
+          18
+        ],
+        "halfExtents": [
+          0.4,
+          0.125,
+          2.1
+        ]
+      },
+      {
+        "name": "COL_shop_e_4_porch",
+        "kind": "box",
+        "position": [
+          17,
+          0.25,
+          18
+        ],
+        "halfExtents": [
+          2.5,
+          0.25,
+          3.8
+        ]
+      },
+      {
+        "name": "COL_shop_e_4_interior_floor",
+        "kind": "box",
+        "position": [
+          20.25,
+          0.25,
+          18
+        ],
+        "halfExtents": [
+          0.75,
+          0.25,
+          3.25
+        ]
+      },
+      {
+        "name": "COL_shop_e_4_back",
+        "kind": "box",
+        "position": [
+          23,
+          5,
+          18
+        ],
+        "halfExtents": [
+          2,
+          4.5,
+          3.5
+        ]
+      },
+      {
+        "name": "COL_shop_e_4_jamb",
+        "kind": "box",
+        "position": [
+          18.7,
+          1.75,
+          15.65
+        ],
+        "halfExtents": [
+          0.4,
+          1.25,
+          1.15
+        ]
+      },
+      {
+        "name": "COL_shop_e_4_side",
+        "kind": "box",
+        "position": [
+          20,
+          1.75,
+          14.75
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ]
+      },
+      {
+        "name": "COL_shop_e_4_jamb",
+        "kind": "box",
+        "position": [
+          18.7,
+          1.75,
+          20.35
+        ],
+        "halfExtents": [
+          0.4,
+          1.25,
+          1.15
+        ]
+      },
+      {
+        "name": "COL_shop_e_4_side",
+        "kind": "box",
+        "position": [
+          20,
+          1.75,
+          21.25
+        ],
+        "halfExtents": [
+          1.25,
+          1.25,
+          0.25
+        ]
+      },
+      {
+        "name": "COL_shop_e_4_lintel",
+        "kind": "box",
+        "position": [
+          19.6,
+          3.8,
+          18
+        ],
+        "halfExtents": [
+          1.3,
+          0.8,
+          3.5
+        ]
+      },
+      {
+        "name": "COL_shop_e_4_roof",
+        "kind": "box",
+        "position": [
+          21.8,
+          4.8,
+          18
+        ],
+        "halfExtents": [
+          3.9,
+          0.175,
+          3.75
+        ]
+      },
+      {
+        "name": "COL_general_first_step",
+        "kind": "box",
+        "position": [
+          -8,
+          0.125,
+          17.8
+        ],
+        "halfExtents": [
+          1.6,
+          0.125,
+          0.4
+        ]
+      },
+      {
+        "name": "COL_general_porch",
+        "kind": "box",
+        "position": [
+          -8,
+          0.25,
+          15.7
+        ],
+        "halfExtents": [
+          2.6,
+          0.25,
+          1.7
+        ]
+      },
+      {
+        "name": "COL_general_back",
+        "kind": "box",
+        "position": [
+          -8,
+          2,
+          13.6
+        ],
+        "halfExtents": [
+          2.6,
+          1.5,
+          0.4
+        ]
+      },
+      {
+        "name": "COL_general_side",
+        "kind": "box",
+        "position": [
+          -10.4,
+          1.7,
+          14.6
+        ],
+        "halfExtents": [
+          0.2,
+          1.2,
+          0.9
+        ]
+      },
+      {
+        "name": "COL_general_side",
+        "kind": "box",
+        "position": [
+          -5.6,
+          1.7,
+          14.6
+        ],
+        "halfExtents": [
+          0.2,
+          1.2,
+          0.9
+        ]
+      },
+      {
+        "name": "COL_general_awning",
+        "kind": "box",
+        "position": [
+          -8,
+          3.1,
+          15.1
+        ],
+        "halfExtents": [
+          2.75,
+          0.125,
+          1.75
+        ]
+      },
+      {
+        "name": "COL_hall_step",
+        "kind": "box",
+        "position": [
+          10,
+          0.125,
+          -23.9
+        ],
+        "halfExtents": [
+          3,
+          0.125,
+          0.4
+        ]
+      },
+      {
+        "name": "COL_hall_plinth",
+        "kind": "box",
+        "position": [
+          10,
+          0.25,
+          -30.8
+        ],
+        "halfExtents": [
+          6.5,
+          0.25,
+          6.5
+        ]
+      },
+      {
+        "name": "COL_hall_main",
+        "kind": "box",
+        "position": [
+          10,
+          6,
+          -32.5
+        ],
+        "halfExtents": [
+          5.5,
+          5.5,
+          4
+        ]
+      },
+      {
+        "name": "COL_hall_front_pier",
+        "kind": "box",
+        "position": [
+          5.5,
+          2.2,
+          -27.5
+        ],
+        "halfExtents": [
+          1,
+          1.7,
+          1
+        ]
+      },
+      {
+        "name": "COL_hall_front_pier",
+        "kind": "box",
+        "position": [
+          14.5,
+          2.2,
+          -27.5
+        ],
+        "halfExtents": [
+          1,
+          1.7,
+          1
+        ]
+      },
+      {
+        "name": "COL_hall_lintel",
+        "kind": "box",
+        "position": [
+          10,
+          4.4,
+          -27.5
+        ],
+        "halfExtents": [
+          5.75,
+          0.5,
+          1.25
+        ]
+      },
+      {
+        "name": "COL_lattice_step",
+        "kind": "box",
+        "position": [
+          0,
+          0.125,
+          -33.6
+        ],
+        "halfExtents": [
+          2.2,
+          0.125,
+          0.4
+        ]
+      },
+      {
+        "name": "COL_lattice_pad",
+        "kind": "box",
+        "position": [
+          0,
+          0.25,
+          -38
+        ],
+        "halfExtents": [
+          4,
+          0.25,
+          4
+        ]
+      },
+      {
+        "name": "COL_lattice_terminal_base",
+        "kind": "cylinder",
+        "position": [
+          0,
+          1.05,
+          -39
+        ],
+        "radius": 0.7,
+        "halfHeight": 0.55
+      },
+      {
+        "name": "COL_lattice_terminal",
+        "kind": "box",
+        "position": [
+          0,
+          1.8,
+          -39
+        ],
+        "halfExtents": [
+          0.65,
+          0.25,
+          0.4
+        ]
+      },
+      {
+        "name": "COL_lattice_column",
+        "kind": "cylinder",
+        "position": [
+          0,
+          3,
+          -41
+        ],
+        "radius": 0.3,
+        "halfHeight": 2.5
+      },
+      {
+        "name": "COL_ring_step_n",
+        "kind": "box",
+        "position": [
+          0,
+          0.125,
+          32.8
+        ],
+        "halfExtents": [
+          2.2,
+          0.125,
+          0.4
+        ]
+      },
+      {
+        "name": "COL_ring_step_s",
+        "kind": "box",
+        "position": [
+          0,
+          0.125,
+          39.4
+        ],
+        "halfExtents": [
+          2.2,
+          0.125,
+          0.4
+        ]
+      },
+      {
+        "name": "COL_ring_pad",
+        "kind": "box",
+        "position": [
+          0,
+          0.25,
+          36.1
+        ],
+        "halfExtents": [
+          6,
+          0.25,
+          2.9
+        ]
+      },
+      {
+        "name": "COL_ring_foot",
+        "kind": "box",
+        "position": [
+          -4.2,
+          0.8,
+          36.1
+        ],
+        "halfExtents": [
+          0.7,
+          0.3,
+          1.5
+        ]
+      },
+      {
+        "name": "COL_ring_-4.2_0",
+        "kind": "box",
+        "position": [
+          -4.2,
+          6.25,
+          36.1
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ring_-4.2_1",
+        "kind": "box",
+        "position": [
+          -4.2,
+          5.894967320028762,
+          37.425000000000004
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0.25881904510252074,
+          0,
+          0,
+          0.9659258262890683
+        ]
+      },
+      {
+        "name": "COL_ring_-4.2_2",
+        "kind": "box",
+        "position": [
+          -4.2,
+          4.925000000000001,
+          38.39496732002876
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0.49999999999999994,
+          0,
+          0,
+          0.8660254037844387
+        ]
+      },
+      {
+        "name": "COL_ring_-4.2_3",
+        "kind": "box",
+        "position": [
+          -4.2,
+          3.6,
+          38.75
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0.7071067811865475,
+          0,
+          0,
+          0.7071067811865476
+        ]
+      },
+      {
+        "name": "COL_ring_-4.2_4",
+        "kind": "box",
+        "position": [
+          -4.2,
+          2.275000000000001,
+          38.39496732002876
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0.8660254037844386,
+          0,
+          0,
+          0.5000000000000001
+        ]
+      },
+      {
+        "name": "COL_ring_-4.2_5",
+        "kind": "box",
+        "position": [
+          -4.2,
+          1.3050326799712377,
+          37.425000000000004
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0.9659258262890683,
+          0,
+          0,
+          0.25881904510252074
+        ]
+      },
+      {
+        "name": "COL_ring_-4.2_6",
+        "kind": "box",
+        "position": [
+          -4.2,
+          0.9500000000000002,
+          36.1
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          1,
+          0,
+          0,
+          6.123233995736766e-17
+        ]
+      },
+      {
+        "name": "COL_ring_-4.2_7",
+        "kind": "box",
+        "position": [
+          -4.2,
+          1.3050326799712373,
+          34.775000000000006
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0.9659258262890683,
+          0,
+          0,
+          -0.25881904510252063
+        ]
+      },
+      {
+        "name": "COL_ring_-4.2_8",
+        "kind": "box",
+        "position": [
+          -4.2,
+          2.274999999999999,
+          33.80503267997124
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0.8660254037844387,
+          0,
+          0,
+          -0.4999999999999998
+        ]
+      },
+      {
+        "name": "COL_ring_-4.2_9",
+        "kind": "box",
+        "position": [
+          -4.2,
+          3.5999999999999996,
+          33.45
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0.7071067811865476,
+          0,
+          0,
+          -0.7071067811865475
+        ]
+      },
+      {
+        "name": "COL_ring_-4.2_10",
+        "kind": "box",
+        "position": [
+          -4.2,
+          4.925000000000001,
+          33.80503267997124
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0.49999999999999994,
+          0,
+          0,
+          -0.8660254037844387
+        ]
+      },
+      {
+        "name": "COL_ring_-4.2_11",
+        "kind": "box",
+        "position": [
+          -4.2,
+          5.894967320028762,
+          34.775
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0.258819045102521,
+          0,
+          0,
+          -0.9659258262890682
+        ]
+      },
+      {
+        "name": "COL_ring_foot",
+        "kind": "box",
+        "position": [
+          4.2,
+          0.8,
+          36.1
+        ],
+        "halfExtents": [
+          0.7,
+          0.3,
+          1.5
+        ]
+      },
+      {
+        "name": "COL_ring_4.2_0",
+        "kind": "box",
+        "position": [
+          4.2,
+          6.25,
+          36.1
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "COL_ring_4.2_1",
+        "kind": "box",
+        "position": [
+          4.2,
+          5.894967320028762,
+          37.425000000000004
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0.25881904510252074,
+          0,
+          0,
+          0.9659258262890683
+        ]
+      },
+      {
+        "name": "COL_ring_4.2_2",
+        "kind": "box",
+        "position": [
+          4.2,
+          4.925000000000001,
+          38.39496732002876
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0.49999999999999994,
+          0,
+          0,
+          0.8660254037844387
+        ]
+      },
+      {
+        "name": "COL_ring_4.2_3",
+        "kind": "box",
+        "position": [
+          4.2,
+          3.6,
+          38.75
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0.7071067811865475,
+          0,
+          0,
+          0.7071067811865476
+        ]
+      },
+      {
+        "name": "COL_ring_4.2_4",
+        "kind": "box",
+        "position": [
+          4.2,
+          2.275000000000001,
+          38.39496732002876
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0.8660254037844386,
+          0,
+          0,
+          0.5000000000000001
+        ]
+      },
+      {
+        "name": "COL_ring_4.2_5",
+        "kind": "box",
+        "position": [
+          4.2,
+          1.3050326799712377,
+          37.425000000000004
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0.9659258262890683,
+          0,
+          0,
+          0.25881904510252074
+        ]
+      },
+      {
+        "name": "COL_ring_4.2_6",
+        "kind": "box",
+        "position": [
+          4.2,
+          0.9500000000000002,
+          36.1
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          1,
+          0,
+          0,
+          6.123233995736766e-17
+        ]
+      },
+      {
+        "name": "COL_ring_4.2_7",
+        "kind": "box",
+        "position": [
+          4.2,
+          1.3050326799712373,
+          34.775000000000006
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0.9659258262890683,
+          0,
+          0,
+          -0.25881904510252063
+        ]
+      },
+      {
+        "name": "COL_ring_4.2_8",
+        "kind": "box",
+        "position": [
+          4.2,
+          2.274999999999999,
+          33.80503267997124
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0.8660254037844387,
+          0,
+          0,
+          -0.4999999999999998
+        ]
+      },
+      {
+        "name": "COL_ring_4.2_9",
+        "kind": "box",
+        "position": [
+          4.2,
+          3.5999999999999996,
+          33.45
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0.7071067811865476,
+          0,
+          0,
+          -0.7071067811865475
+        ]
+      },
+      {
+        "name": "COL_ring_4.2_10",
+        "kind": "box",
+        "position": [
+          4.2,
+          4.925000000000001,
+          33.80503267997124
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0.49999999999999994,
+          0,
+          0,
+          -0.8660254037844387
+        ]
+      },
+      {
+        "name": "COL_ring_4.2_11",
+        "kind": "box",
+        "position": [
+          4.2,
+          5.894967320028762,
+          34.775
+        ],
+        "halfExtents": [
+          0.5,
+          0.48,
+          0.7
+        ],
+        "rotation": [
+          0.258819045102521,
+          0,
+          0,
+          -0.9659258262890682
+        ]
+      },
+      {
+        "name": "COL_mission_plinth",
+        "kind": "box",
+        "position": [
+          -8,
+          0.125,
+          -13
+        ],
+        "halfExtents": [
+          3.5,
+          0.125,
+          1.75
+        ]
+      },
+      {
+        "name": "COL_mission_-10_body",
+        "kind": "box",
+        "position": [
+          -10,
+          0.9,
+          -13.8
+        ],
+        "halfExtents": [
+          0.375,
+          0.65,
+          0.325
+        ]
+      },
+      {
+        "name": "COL_mission_-8_body",
+        "kind": "box",
+        "position": [
+          -8,
+          0.9,
+          -13.8
+        ],
+        "halfExtents": [
+          0.375,
+          0.65,
+          0.325
+        ]
+      },
+      {
+        "name": "COL_mission_-6_body",
+        "kind": "box",
+        "position": [
+          -6,
+          0.9,
+          -13.8
+        ],
+        "halfExtents": [
+          0.375,
+          0.65,
+          0.325
+        ]
+      },
+      {
+        "name": "COL_hill_market_body",
+        "kind": "box",
+        "position": [
+          -5,
+          2.15,
+          -4
+        ],
+        "halfExtents": [
+          0.375,
+          0.65,
+          0.325
+        ]
+      },
+      {
+        "name": "COL_hill_market_body",
+        "kind": "box",
+        "position": [
+          5,
+          2.15,
+          -4
+        ],
+        "halfExtents": [
+          0.375,
+          0.65,
+          0.325
+        ]
+      },
+      {
+        "name": "COL_hill_market_body",
+        "kind": "box",
+        "position": [
+          5,
+          2.15,
+          1
+        ],
+        "halfExtents": [
+          0.375,
+          0.65,
+          0.325
+        ]
+      },
+      {
+        "name": "COL_billboard_post",
+        "kind": "box",
+        "position": [
+          5.4,
+          4.6,
+          5.1
+        ],
+        "halfExtents": [
+          0.175,
+          3.1,
+          0.175
+        ]
+      },
+      {
+        "name": "COL_bench_base",
+        "kind": "box",
+        "position": [
+          -31,
+          0.3,
+          -8
+        ],
+        "halfExtents": [
+          1.2,
+          0.3,
+          0.35
+        ]
+      },
+      {
+        "name": "COL_bench_base",
+        "kind": "box",
+        "position": [
+          -30,
+          0.3,
+          8
+        ],
+        "halfExtents": [
+          1.2,
+          0.3,
+          0.35
+        ]
+      },
+      {
+        "name": "COL_bench_base",
+        "kind": "box",
+        "position": [
+          29,
+          0.3,
+          8
+        ],
+        "halfExtents": [
+          1.2,
+          0.3,
+          0.35
+        ]
+      },
+      {
+        "name": "COL_bench_base",
+        "kind": "box",
+        "position": [
+          28,
+          0.3,
+          -10
+        ],
+        "halfExtents": [
+          1.2,
+          0.3,
+          0.35
+        ]
+      },
+      {
+        "name": "COL_crate",
+        "kind": "box",
+        "position": [
+          -29,
+          0.65,
+          -23
+        ],
+        "halfExtents": [
+          0.65,
+          0.65,
+          0.65
+        ]
+      },
+      {
+        "name": "COL_crate",
+        "kind": "box",
+        "position": [
+          -31,
+          0.65,
+          -22
+        ],
+        "halfExtents": [
+          0.65,
+          0.65,
+          0.65
+        ]
+      },
+      {
+        "name": "COL_crate",
+        "kind": "box",
+        "position": [
+          28,
+          0.65,
+          22
+        ],
+        "halfExtents": [
+          0.65,
+          0.65,
+          0.65
+        ]
+      },
+      {
+        "name": "COL_crate",
+        "kind": "box",
+        "position": [
+          30,
+          0.65,
+          23
+        ],
+        "halfExtents": [
+          0.65,
+          0.65,
+          0.65
+        ]
+      },
+      {
+        "name": "COL_crate",
+        "kind": "box",
+        "position": [
+          29,
+          0.65,
+          -24
+        ],
+        "halfExtents": [
+          0.65,
+          0.65,
+          0.65
+        ]
+      },
+      {
+        "name": "COL_avenue_lamp",
+        "kind": "box",
+        "position": [
+          -35,
+          2.3,
+          -5
+        ],
+        "halfExtents": [
+          0.09,
+          2.3,
+          0.09
+        ]
+      },
+      {
+        "name": "COL_avenue_lamp",
+        "kind": "box",
+        "position": [
+          -35,
+          2.3,
+          5
+        ],
+        "halfExtents": [
+          0.09,
+          2.3,
+          0.09
+        ]
+      },
+      {
+        "name": "COL_avenue_lamp",
+        "kind": "box",
+        "position": [
+          -12,
+          2.3,
+          -25
+        ],
+        "halfExtents": [
+          0.09,
+          2.3,
+          0.09
+        ]
+      },
+      {
+        "name": "COL_avenue_lamp",
+        "kind": "box",
+        "position": [
+          12,
+          2.3,
+          25
+        ],
+        "halfExtents": [
+          0.09,
+          2.3,
+          0.09
+        ]
+      },
+      {
+        "name": "COL_avenue_lamp",
+        "kind": "box",
+        "position": [
+          32,
+          2.3,
+          5
+        ],
+        "halfExtents": [
+          0.09,
+          2.3,
+          0.09
+        ]
+      },
+      {
+        "name": "COL_wreck_plinth_n",
+        "kind": "box",
+        "position": [
+          53,
+          1.5,
+          -7
+        ],
+        "halfExtents": [
+          3.5,
+          1.5,
+          1.5
+        ]
+      },
+      {
+        "name": "COL_wreck_plinth_s",
+        "kind": "box",
+        "position": [
+          54,
+          2,
+          8
+        ],
+        "halfExtents": [
+          3,
+          2,
+          1.5
+        ]
+      },
+      {
+        "name": "COL_wreck_beam_a",
+        "kind": "box",
+        "position": [
+          53,
+          5.2,
+          -6
+        ],
+        "halfExtents": [
+          0.45,
+          4,
+          0.4
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.11971220728891936,
+          0.9928086358538663
+        ]
+      },
+      {
+        "name": "COL_wreck_beam_b",
+        "kind": "box",
+        "position": [
+          55,
+          4.7,
+          7
+        ],
+        "halfExtents": [
+          0.35,
+          4,
+          0.35
+        ],
+        "rotation": [
+          0,
+          0,
+          0.12467473338522769,
+          0.992197667229329
+        ]
+      },
+      {
+        "name": "COL_wreck_crossbeam",
+        "kind": "box",
+        "position": [
+          54,
+          8.5,
+          0
+        ],
+        "halfExtents": [
+          0.5,
+          0.5,
+          7.5
+        ],
+        "rotation": [
+          0.07492970727274234,
+          0,
+          0,
+          0.9971888181122075
+        ]
+      },
+      {
+        "name": "COL_boundary_w",
+        "kind": "box",
+        "position": [
+          -59,
+          1.5,
+          0
+        ],
+        "halfExtents": [
+          1,
+          1.5,
+          45
+        ]
+      },
+      {
+        "name": "COL_boundary_e",
+        "kind": "box",
+        "position": [
+          59,
+          1.5,
+          0
+        ],
+        "halfExtents": [
+          1,
+          1.5,
+          45
+        ]
+      },
+      {
+        "name": "COL_boundary_ns",
+        "kind": "box",
+        "position": [
+          0,
+          2.5,
+          -44.5
+        ],
+        "halfExtents": [
+          60,
+          2.5,
+          0.5
+        ]
+      },
+      {
+        "name": "COL_boundary_ns",
+        "kind": "box",
+        "position": [
+          0,
+          2.5,
+          44.5
+        ],
+        "halfExtents": [
+          60,
+          2.5,
+          0.5
+        ]
+      },
+      {
+        "name": "COL_PROBE_CUBE",
+        "kind": "box",
+        "position": [
+          -52,
+          1,
+          20
+        ],
+        "halfExtents": [
+          1,
+          1,
+          1
+        ]
+      }
+    ],
+    "cameras": [
+      "cam_gate",
+      "cam_avenue",
+      "cam_hill",
+      "cam_grid",
+      "cam_whompah",
+      "cam_hero"
+    ],
+    "scope": "Phase 1 greybox city: capsule walking, gravity, stairs, porches, gate tunnels and camera collision. Concept art, authored world/characters, dialogue, shop and audio remain later phases."
+  },
+  "orbitRadiansPerPixel": -0.003000000000000005,
+  "mainRoute": {
+    "durationMs": 0,
+    "teleportCount": 0,
+    "completed": false
+  },
+  "desktopPixels": {
+    "width": 1920,
+    "height": 1080,
+    "colors": 163,
+    "intensityRange": 234
+  },
+  "captures": [
+    "tools/shots/cam_gate.png",
+    "tools/shots/cam_avenue.png",
+    "tools/shots/cam_hill.png",
+    "tools/shots/cam_grid.png",
+    "tools/shots/cam_whompah.png",
+    "tools/shots/cam_hero.png"
+  ],
+  "result": "FAIL",
+  "failure": "AssertionError [ERR_ASSERTION]: Captures must preserve player pose; tiny ongoing solver rounding is tolerated\n    at file:///Users/carl.draper/Documents/code/ao2/tools/verify-phase1.mjs:319:46",
+  "elapsedMs": 10756,
+  "failureState": {
+    "player": {
+      "x": -42.999996185302734,
+      "y": 0.015098011493682839,
+      "z": 0,
+      "yaw": -1.5707963267948966,
+      "grounded": true,
+      "speed": 0,
+      "velocity": {
+        "x": 0,
+        "y": 0.0000018195714801549911,
+        "z": 0
+      },
+      "collisions": [
+        "COL_ground"
+      ]
+    },
+    "camera": {
+      "active": "cam_follow",
+      "yaw": -1.5707963267948966,
+      "pitch": 0.22,
+      "desiredDistance": 4.2,
+      "distance": 4.2,
+      "obstructed": false,
+      "position": {
+        "x": -47.09876547249128,
+        "y": 2.4316624284333344,
+        "z": 2.509772343999464e-16
+      },
+      "target": {
+        "x": -42.999996185302734,
+        "y": 1.515098011493683,
+        "z": 0
+      }
+    },
+    "state": "play",
+    "activeCamera": "cam_follow",
+    "physics": {
+      "engine": "Rapier 0.20.0",
+      "timestep": 0.01666666753590107,
+      "steps": 573,
+      "bodies": 1,
+      "colliders": 194,
+      "staticColliders": 193,
+      "characterControllers": 1,
+      "ccdBodies": 0,
+      "sensors": 0,
+      "collisionGroups": "default; camera excludes player",
+      "character": {
+        "radius": 0.35,
+        "height": 1.8,
+        "offset": 0.015,
+        "maxStep": 0.3,
+        "minStepWidth": 0.22,
+        "groundSnap": 0.4,
+        "maxSlope": 0.7853981633974483,
+        "walkSpeed": 3.4,
+        "runSpeed": 6,
+        "gravity": -20
+      },
+      "cameraCastRadius": 0.23,
+      "riskyColliders": []
+    },
+    "renderer": {
+      "fps": 14.768321949418478,
+      "frameMs": 50.099999999998545,
+      "draws": 24,
+      "tris": 12724,
+      "geometries": 14,
+      "textures": 3,
+      "width": 1920,
+      "height": 1080,
+      "pixelRatio": 1,
+      "webgl2": true
+    }
+  }
+}

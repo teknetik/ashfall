@@ -1,15 +1,18 @@
 {
   "name": "athen-hill",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "inspect:canvas": "node scripts/inspect-threejs-canvas.mjs"
+    "inspect:canvas": "node scripts/inspect-threejs-canvas.mjs",
+    "verify:phase1": "node tools/verify-phase1.mjs",
+    "verify:physics": "node tools/verify-physics.mjs"
   },
   "dependencies": {
+    "@dimforge/rapier3d-compat": "0.20.0",
     "three": "0.184.0"
   },
   "devDependencies": {
