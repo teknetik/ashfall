@@ -1,0 +1,206 @@
+{
+  "url": "http://127.0.0.1:4173/",
+  "scope": "Phase 0 pipeline only; not the city performance gate",
+  "checks": [
+    "Production GLB loaded with exact ground-centred bounds and 44 triangles",
+    "UI selects a camera and saves an actual 1920x1080 PNG",
+    "Six concurrent captures queue correctly and restore displayed camera, dimensions, DPR and draw counts",
+    "Landmark anchors work and invalid camera/landmark/time values reject",
+    "Desktop, laptop and narrow/mobile canvas and UI checks pass",
+    "Missing GLB and unavailable WebGL2 show errors; endpoint rejects invalid inputs and external origins"
+  ],
+  "errors": [],
+  "initial": {
+    "version": "0.0.1-phase0",
+    "state": "probe",
+    "player": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "yaw": 0
+    },
+    "probe": {
+      "loaded": true,
+      "source": "./assets/probe.glb",
+      "meshName": "PROBE_CUBE",
+      "dimensions": {
+        "x": 2,
+        "y": 2,
+        "z": 2
+      },
+      "bounds": {
+        "min": [
+          -1,
+          0,
+          -1
+        ],
+        "max": [
+          1,
+          2,
+          1
+        ]
+      },
+      "triangles": 44,
+      "animations": []
+    },
+    "cameras": [
+      "cam_gate",
+      "cam_avenue",
+      "cam_hill",
+      "cam_grid",
+      "cam_whompah",
+      "cam_hero"
+    ],
+    "active": "cam_hill",
+    "timeOfDay": 16,
+    "functions": [
+      "function",
+      "function"
+    ]
+  },
+  "performance": {
+    "fps": 31.66672530875057,
+    "renderer": {
+      "fps": 31.471282454759997,
+      "frameMs": 24.899999999999636,
+      "draws": 3,
+      "tris": 90,
+      "geometries": 2,
+      "textures": 3,
+      "width": 1920,
+      "height": 1080,
+      "pixelRatio": 1,
+      "webgl2": true
+    },
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+    "gpu": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (LLVM 10.0.0) (0x0000C0DE)), SwiftShader driver)",
+    "mode": "Chromium automation on this host, idle probe, DPR 1"
+  },
+  "desktopPixels": {
+    "width": 1920,
+    "height": 1080,
+    "colors": 103,
+    "blueSamples": 28202
+  },
+  "captures": [
+    "tools/shots/cam_gate.png",
+    "tools/shots/cam_avenue.png",
+    "tools/shots/cam_hill.png",
+    "tools/shots/cam_grid.png",
+    "tools/shots/cam_whompah.png",
+    "tools/shots/cam_hero.png"
+  ],
+  "namedPixels": {
+    "cam_gate": {
+      "width": 1920,
+      "height": 1080,
+      "colors": 53,
+      "blueSamples": 24133
+    },
+    "cam_avenue": {
+      "width": 1920,
+      "height": 1080,
+      "colors": 61,
+      "blueSamples": 33395
+    },
+    "cam_hill": {
+      "width": 1920,
+      "height": 1080,
+      "colors": 54,
+      "blueSamples": 28202
+    },
+    "cam_grid": {
+      "width": 1920,
+      "height": 1080,
+      "colors": 57,
+      "blueSamples": 34771
+    },
+    "cam_whompah": {
+      "width": 1920,
+      "height": 1080,
+      "colors": 70,
+      "blueSamples": 35208
+    },
+    "cam_hero": {
+      "width": 1920,
+      "height": 1080,
+      "colors": 48,
+      "blueSamples": 80973
+    }
+  },
+  "anchors": {
+    "result": {
+      "west_gate": {
+        "x": -48,
+        "y": 0,
+        "z": 0,
+        "yaw": 0
+      },
+      "hill_tree": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "yaw": 0
+      },
+      "whompah": {
+        "x": 0,
+        "y": 0,
+        "z": 36,
+        "yaw": 0
+      },
+      "grid_kiosk": {
+        "x": 0,
+        "y": 0,
+        "z": -38,
+        "yaw": 0
+      }
+    },
+    "badShot": true,
+    "badAnchor": true,
+    "badHour": true
+  },
+  "responsive": [
+    {
+      "mode": "laptop",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "dimensions": {
+        "width": 1280,
+        "viewport": 1280
+      },
+      "pixelCheck": {
+        "width": 1280,
+        "height": 720,
+        "colors": 105,
+        "blueSamples": 12398
+      }
+    },
+    {
+      "mode": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "dimensions": {
+        "width": 390,
+        "viewport": 390
+      },
+      "pixelCheck": {
+        "width": 390,
+        "height": 844,
+        "colors": 99,
+        "blueSamples": 1167
+      }
+    }
+  ],
+  "endpointRejections": {
+    "unknown_camera": 400,
+    "cross_origin": 403,
+    "wrong_method": 405,
+    "malformed_png": 400
+  },
+  "missingAsset": "fetch for \"http://127.0.0.1:4173/assets/probe.glb\" responded with 404: Not Found",
+  "result": "PASS"
+}
