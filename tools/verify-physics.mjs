@@ -5,7 +5,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
-import { Scene } from 'three';
+import { Group, Scene } from 'three';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const moduleUrl = (source) => `data:text/javascript;base64,${Buffer.from(source).toString('base64')}`;
@@ -31,7 +31,7 @@ function tick(player, ticks, intent, yaw = -Math.PI / 2) {
 async function fixture(colliders, spawn, test) {
   const physics = await Physics.create(colliders);
   const scene = new Scene();
-  const player = new Player(physics, scene, spawn);
+  const player = new Player(physics, scene, spawn, { root: new Group(), update() {}, dispose() {} });
   try { return await test(player, physics); }
   finally {
     player.dispose();
@@ -108,6 +108,6 @@ await fixture([plane, lip], [0, 0, 0], (player) => {
   results.checks.push({ name: 'over-height lip', blocked });
 });
 
-const destination = resolve(root, 'tools/physics-regressions.json');
+const destination = resolve(root, process.env.ATHEN_QA_OUTPUT ?? 'tools/physics-regressions.json');
 await writeFile(destination, `${JSON.stringify(results, null, 2)}\n`);
 console.log(`PASS: ${results.checks.length} controller checks; ${destination}`);

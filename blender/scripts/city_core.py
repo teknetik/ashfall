@@ -149,7 +149,7 @@ def export_world():
             obj.hide_set(False);obj.select_set(True)
     bpy.context.scene['authoredLandmarks']=AUTHORED
     bpy.ops.export_scene.gltf(filepath=str(ROOT/'public/assets/world.glb'),export_format='GLB',
-        use_selection=True,export_yup=True,export_apply=True,export_extras=True,
+        use_selection=True,use_active_scene=True,export_yup=True,export_apply=True,export_extras=True,
         export_animations=False,export_cameras=False,export_lights=False,export_materials='EXPORT')
     (ROOT/'public/assets/world-manifest.json').write_text(json.dumps({'source':'world.glb','landmarks':AUTHORED},indent=2)+'\n')
     report={'landmarks':AUTHORED,'meshes':0,'triangles':0,'colliders':0,'materials':set()}

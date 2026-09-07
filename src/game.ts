@@ -6,6 +6,8 @@ import { Input } from './input';
 import { Physics, FIXED_STEP } from './physics';
 import { Player } from './player';
 import { Atmosphere } from './atmosphere';
+import { CharacterLibrary } from './characters';
+import { NPCSystem } from './npc';
 
 export type GameState = 'boot' | 'play' | 'paused' | 'error';
 export interface FrameMetrics {
@@ -24,6 +26,8 @@ export class Game {
   readonly renderer: WebGLRenderer;
   readonly atmosphere: Atmosphere;
   readonly world = new World();
+  readonly characters = new CharacterLibrary();
+  npcs: NPCSystem | null = null;
   readonly cameras = new Cameras(this.world.scene);
   readonly input: Input;
   player: Player | null = null;
@@ -64,19 +68,22 @@ export class Game {
     };
     this.input.onPause = () => this.pause(this.state !== 'paused');
     this.input.onReset = () => this.reset();
+    this.input.onInteract = () => { if (this.state === 'play') this.npcs?.interact(); };
     this.world.setSun(this.hour);
     this.atmosphere = new Atmosphere(this.renderer, this.world.scene, this.world.sun.position);
     this.resize();
     window.addEventListener('resize', this.resize);
     canvas.addEventListener('webglcontextlost', this.contextLost);
-    this.ready = this.world.load().then(async () => {
+    this.ready = Promise.all([this.world.load(), this.characters.load()]).then(async () => {
       if (this.disposed) return;
       if (this.state === 'error') throw new Error(this.error);
       const physics = await Physics.create(this.world.colliderDefs);
       if (this.disposed) { physics.dispose(); return; }
       if (this.error) { physics.dispose(); throw new Error(this.error); }
       this.physics = physics;
-      this.player = new Player(physics, this.world.scene, LANDMARKS.west_gate);
+      this.player = new Player(physics, this.world.scene, LANDMARKS.west_gate,
+        this.characters.create({ id: 'player_colonist', kind: 'player' }));
+      this.npcs = new NPCSystem(this.world.scene, this.characters, this.canvas.parentElement!);
       this.cameras.attach(physics, this.player);
       this.cameras.update(0, true);
       this.state = 'play';
@@ -222,6 +229,9 @@ export class Game {
       }
       this.cameras.update(dt);
     } else this.accumulator = 0;
+    this.npcs?.update(this.state === 'play' && !document.hidden ? dt : 0,
+      this.player ? { position: this.player.position, yaw: this.player.snapshot.yaw } : null);
+    this.npcs?.projectLabels(this.cameras.active, this.canvas, this.state === 'play');
     this.render();
     if (time - this.sampleStart >= 500) {
       this.metrics.fps = this.sampleFrames * 1000 / (time - this.sampleStart);
@@ -265,6 +275,8 @@ export class Game {
     this.canvas.removeEventListener('webglcontextlost', this.contextLost);
     this.input.dispose();
     this.player?.dispose();
+    this.npcs?.dispose();
+    this.characters.dispose();
     this.physics?.dispose();
     this.atmosphere.dispose();
     this.world.dispose();

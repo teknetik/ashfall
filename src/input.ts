@@ -10,6 +10,7 @@ export class Input {
   onPause: () => void = () => {};
   onReset: () => void = () => {};
   onMove: () => void = () => {};
+  onInteract: () => void = () => {};
 
   constructor(private canvas: HTMLCanvasElement) {
     const options = { signal: this.abort.signal };
@@ -23,6 +24,11 @@ export class Input {
         return;
       }
       if (event.target instanceof HTMLElement && event.target.closest('select, input, textarea, button, summary')) return;
+      if (event.code === 'KeyE') {
+        event.preventDefault();
+        if (!event.repeat) this.onInteract();
+        return;
+      }
       if (['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ShiftLeft', 'ShiftRight'].includes(event.code)) {
         event.preventDefault();
         this.keys.add(event.code);

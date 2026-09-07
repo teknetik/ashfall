@@ -8,8 +8,11 @@ import type { World } from './world';
 
 export interface AthenDebug {
   readonly version: string;
-  readonly phase: 3;
+  readonly phase: 4;
   readonly world: World['assets'];
+  readonly characters: Game['characters']['diagnostics'];
+  readonly playerAnimation: import('./characters').CharacterInstance['diagnostics'] | null;
+  readonly npcs: import('./npc').NPCSystem['diagnostics'] | null;
   readonly state: GameState;
   readonly player: Player['snapshot'] | null;
   readonly fps: number;
@@ -46,8 +49,11 @@ declare global {
 
 export function attachDebug(game: Game) {
   const api: AthenDebug = {
-    version: '0.3.0-world', phase: 3,
+    version: '0.4.0-characters', phase: 4,
     get world() { return structuredClone(game.world.assets); },
+    get characters() { return game.characters.diagnostics; },
+    get playerAnimation() { return game.player?.character.diagnostics ?? null; },
+    get npcs() { return game.npcs?.diagnostics ?? null; },
     get state() { return game.state; },
     get player() { return game.player?.snapshot ?? null; },
     get fps() { return game.metrics.fps; },
@@ -74,7 +80,7 @@ export function attachDebug(game: Game) {
     get activeCamera() { return game.cameras.active.name; },
     get landmark() { return game.landmark; },
     get error() { return game.error; },
-    scope: 'Phase 3 authored world in progress: frozen concepts, Blender meshes and separate collision. Characters, dialogue, shop, audio and final beauty acceptance remain later phases.',
+    scope: 'Phase 4 characters in progress: rigged colonist, four NPCs and three ambient walkers. Dialogue, commerce, audio and final beauty acceptance remain pending.',
     nearbyColliders: (radius = 3) => {
       if (!Number.isFinite(radius) || radius <= 0 || radius > 150) throw new Error('Radius must be greater than 0 and at most 150 metres.');
       return game.player && game.physics ? game.physics.nearby(game.player.position, radius) : [];

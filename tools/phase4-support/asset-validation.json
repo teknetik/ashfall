@@ -1,0 +1,267 @@
+{
+  "assets": {
+    "player": {
+      "source": "/assets/player.glb",
+      "bytes": 3650340,
+      "triangles": 8278,
+      "meshes": 2,
+      "bones": 19,
+      "materials": [
+        "MAT_body",
+        "MAT_cloth"
+      ],
+      "textures": [
+        {
+          "name": "colonist_atlas",
+          "width": 1254,
+          "height": 1254
+        }
+      ],
+      "bounds": {
+        "min": [
+          -0.5300000239134384,
+          -0.001000009945691106,
+          -0.13599999248981476
+        ],
+        "max": [
+          0.5300000239134384,
+          1.7949999570846558,
+          0.23238154887169546
+        ]
+      },
+      "clips": [
+        {
+          "name": "idle",
+          "duration": 2.0416667461395264,
+          "tracks": 57
+        },
+        {
+          "name": "walk",
+          "duration": 1.0416666269302368,
+          "tracks": 57
+        },
+        {
+          "name": "run",
+          "duration": 0.7916666865348816,
+          "tracks": 57
+        },
+        {
+          "name": "talk",
+          "duration": 2.0416667461395264,
+          "tracks": 57
+        }
+      ]
+    },
+    "npc": {
+      "source": "/assets/npcs.glb",
+      "bytes": 3520400,
+      "triangles": 5034,
+      "meshes": 2,
+      "bones": 19,
+      "materials": [
+        "MAT_body",
+        "MAT_cloth"
+      ],
+      "textures": [
+        {
+          "name": "colonist_atlas",
+          "width": 1254,
+          "height": 1254
+        }
+      ],
+      "bounds": {
+        "min": [
+          -0.5300000239134384,
+          -0.001000009945691106,
+          -0.13599999248981476
+        ],
+        "max": [
+          0.5300000239134384,
+          1.7949999570846558,
+          0.23399992146968834
+        ]
+      },
+      "clips": [
+        {
+          "name": "idle",
+          "duration": 2.0416667461395264,
+          "tracks": 57
+        },
+        {
+          "name": "walk",
+          "duration": 1.0416666269302368,
+          "tracks": 57
+        },
+        {
+          "name": "run",
+          "duration": 0.7916666865348816,
+          "tracks": 57
+        },
+        {
+          "name": "talk",
+          "duration": 2.0416667461395264,
+          "tracks": 57
+        }
+      ]
+    }
+  },
+  "animationChecks": [
+    {
+      "kind": "player",
+      "clip": "idle",
+      "maxRootDrift": 0.007965110009813925,
+      "minFeet": -0.0009999227784268515,
+      "maxFeet": -0.0009999227784268515
+    },
+    {
+      "kind": "player",
+      "clip": "walk",
+      "maxRootDrift": 0.014722219098671047,
+      "minFeet": -0.014897251344868766,
+      "maxFeet": 0.03504322994639861
+    },
+    {
+      "kind": "player",
+      "clip": "run",
+      "maxRootDrift": 0.012850052432884148,
+      "minFeet": -0.017628193370916513,
+      "maxFeet": 0.08856766401222947
+    },
+    {
+      "kind": "player",
+      "clip": "talk",
+      "maxRootDrift": 0.014934580220663213,
+      "minFeet": -0.0009999227784268515,
+      "maxFeet": -0.000999921742688712
+    },
+    {
+      "kind": "npc",
+      "clip": "idle",
+      "maxRootDrift": 0.007965110009813925,
+      "minFeet": -0.0009999227784268515,
+      "maxFeet": -0.0009999227784268515
+    },
+    {
+      "kind": "npc",
+      "clip": "walk",
+      "maxRootDrift": 0.014722219098671047,
+      "minFeet": -0.014897251344868766,
+      "maxFeet": 0.03504322994639861
+    },
+    {
+      "kind": "npc",
+      "clip": "run",
+      "maxRootDrift": 0.012850052432884148,
+      "minFeet": -0.017628193370916513,
+      "maxFeet": 0.08856766401222947
+    },
+    {
+      "kind": "npc",
+      "clip": "talk",
+      "maxRootDrift": 0.014934580220663213,
+      "minFeet": -0.0009999227784268515,
+      "maxFeet": -0.000999921742688712
+    }
+  ],
+  "actors": [
+    {
+      "id": "player_0",
+      "kind": "player",
+      "animation": "idle",
+      "speed": 0,
+      "playbackRate": 1,
+      "time": 0.3,
+      "triangles": 8278,
+      "bones": 19,
+      "bounds": {
+        "min": [
+          -2.0156674822180554,
+          -0.0009999227784266295,
+          -0.18999411922929665
+        ],
+        "max": [
+          -1.0019203722766483,
+          1.7951513523583547,
+          0.276857287224688
+        ]
+      }
+    },
+    {
+      "id": "player_1",
+      "kind": "player",
+      "animation": "walk",
+      "speed": 3.4,
+      "playbackRate": 1,
+      "time": 0.3,
+      "triangles": 8278,
+      "bones": 19,
+      "bounds": {
+        "min": [
+          -0.9633525002069407,
+          0.03531132582582226,
+          -0.4727967476738412
+        ],
+        "max": [
+          -0.026477442704986198,
+          1.7949999570846558,
+          0.7236943639458066
+        ]
+      }
+    },
+    {
+      "id": "player_2",
+      "kind": "player",
+      "animation": "run",
+      "speed": 6,
+      "playbackRate": 1,
+      "time": 0.3,
+      "triangles": 8278,
+      "bones": 19,
+      "bounds": {
+        "min": [
+          0.07560167973649512,
+          0.0799083625688727,
+          -0.5843815728317441
+        ],
+        "max": [
+          0.9859776263403903,
+          1.7949999570846558,
+          0.7269303907187129
+        ]
+      }
+    },
+    {
+      "id": "player_3",
+      "kind": "player",
+      "animation": "talk",
+      "speed": 0,
+      "playbackRate": 1,
+      "time": 0.3,
+      "triangles": 8278,
+      "bones": 19,
+      "bounds": {
+        "min": [
+          0.9550675323107688,
+          -0.0009999227784266295,
+          -0.18209100679155657
+        ],
+        "max": [
+          1.9950837368219618,
+          1.7949999570846558,
+          0.2834979760470885
+        ]
+      }
+    }
+  ],
+  "errors": [],
+  "renderer": {
+    "calls": 15,
+    "triangles": 48216
+  },
+  "browserErrors": [
+    "warning: [.WebGL-0x11c004d7200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "warning: [.WebGL-0x11c004d7200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "warning: [.WebGL-0x11c004d7200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "warning: [.WebGL-0x11c004d7200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+  ]
+}

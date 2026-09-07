@@ -1,11 +1,12 @@
 import RAPIER from '@dimforge/rapier3d-compat';
-import { BoxGeometry, CapsuleGeometry, Group, Mesh, MeshStandardMaterial, type Scene, Vector3 } from 'three';
+import { Group, type Scene, Vector3 } from 'three';
 import { CHARACTER, FIXED_STEP, Physics } from './physics';
+import type { CharacterInstance } from './characters';
 
 export interface MoveIntent { forward: number; right: number; run: boolean }
 export type FootPosition = readonly [number, number, number];
 
-/** A capsule is deliberately a Phase 1 scale marker; character assets arrive later. */
+/** The authored visual follows the existing capsule; animation never drives physics. */
 export class Player {
   readonly model = new Group();
   readonly position = new Vector3();
@@ -21,7 +22,7 @@ export class Player {
   private collisions: string[] = [];
   private disposed = false;
 
-  constructor(readonly physics: Physics, scene: Scene, spawn: FootPosition) {
+  constructor(readonly physics: Physics, scene: Scene, spawn: FootPosition, readonly character: CharacterInstance) {
     this.body = physics.world.createRigidBody(
       RAPIER.RigidBodyDesc.kinematicPositionBased()
         .setTranslation(spawn[0], spawn[1] + CHARACTER.height / 2 + CHARACTER.offset, spawn[2])
@@ -39,23 +40,10 @@ export class Player {
     this.controller.setMinSlopeSlideAngle(CHARACTER.maxSlope + 0.05);
     this.controller.setApplyImpulsesToDynamicBodies(false);
 
-    this.model.name = 'CHR_player_greybox';
-    const body = new Mesh(
-      new CapsuleGeometry(CHARACTER.radius, CHARACTER.height - 2 * CHARACTER.radius, 6, 12),
-      new MeshStandardMaterial({ color: 0x8b2e2e, roughness: 1, metalness: 0 }),
-    );
-    body.name = 'CHR_player_capsule';
-    body.position.y = CHARACTER.height / 2;
-    body.castShadow = true;
-    body.receiveShadow = true;
-    this.model.add(body);
-    const visor = new Mesh(
-      new BoxGeometry(0.36, 0.12, 0.055),
-      new MeshStandardMaterial({ color: 0x3ec7c2, roughness: 0.9, emissive: 0x102623 }),
-    );
-    visor.name = 'CHR_player_forward_marker';
-    visor.position.set(0, 1.43, -0.335);
-    this.model.add(visor);
+    this.model.name = 'CHR_player_colonist';
+    // Blender exports +Z forward; the established controller and camera use -Z.
+    character.root.rotation.y = Math.PI;
+    this.model.add(character.root);
     scene.add(this.model);
     this.teleport(spawn);
   }
@@ -103,6 +91,7 @@ export class Player {
       this.yaw += difference * (1 - Math.exp(-16 * dt));
     }
     this.sync();
+    this.character.update(dt, { speed: Math.hypot(this.actualVelocity.x, this.actualVelocity.z) });
   }
 
   teleport(position: FootPosition) {
@@ -117,6 +106,7 @@ export class Player {
     this.collisions = [];
     this.physics.step(FIXED_STEP);
     this.sync();
+    this.character.update(0, { speed: 0 });
   }
 
   private sync() {
@@ -141,5 +131,7 @@ export class Player {
     this.disposed = true;
     this.physics.world.removeCharacterController(this.controller);
     this.physics.world.removeRigidBody(this.body);
+    this.character.dispose();
+    this.model.removeFromParent();
   }
 }

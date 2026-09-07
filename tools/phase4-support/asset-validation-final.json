@@ -1,0 +1,679 @@
+{
+  "assets": {
+    "npc": {
+      "source": "/assets/npcs.glb",
+      "bytes": 3501488,
+      "triangles": 5262,
+      "meshes": 2,
+      "bones": 19,
+      "materials": [
+        "MAT_body",
+        "MAT_cloth"
+      ],
+      "textures": [
+        {
+          "name": "colonist_atlas",
+          "width": 1254,
+          "height": 1254
+        }
+      ],
+      "bounds": {
+        "min": [
+          -0.5300000239134384,
+          -0.001000009945691106,
+          -0.13599999248981476
+        ],
+        "max": [
+          0.5300000239134384,
+          1.7949999570846558,
+          0.23399992146968834
+        ]
+      },
+      "clips": [
+        {
+          "name": "idle",
+          "duration": 2.0416667461395264,
+          "tracks": 57
+        },
+        {
+          "name": "walk",
+          "duration": 1.0416666269302368,
+          "tracks": 57
+        },
+        {
+          "name": "run",
+          "duration": 0.7916666865348816,
+          "tracks": 57
+        },
+        {
+          "name": "talk",
+          "duration": 2.0416667461395264,
+          "tracks": 57
+        }
+      ]
+    },
+    "player": {
+      "source": "/assets/player.glb",
+      "bytes": 3797336,
+      "triangles": 12648,
+      "meshes": 2,
+      "bones": 19,
+      "materials": [
+        "MAT_body",
+        "MAT_cloth"
+      ],
+      "textures": [
+        {
+          "name": "colonist_atlas",
+          "width": 1254,
+          "height": 1254
+        }
+      ],
+      "bounds": {
+        "min": [
+          -0.5300000239134384,
+          -0.001000009945691106,
+          -0.13599999248981476
+        ],
+        "max": [
+          0.5300000239134384,
+          1.7949999570846558,
+          0.23238154887169546
+        ]
+      },
+      "clips": [
+        {
+          "name": "idle",
+          "duration": 2.0416667461395264,
+          "tracks": 57
+        },
+        {
+          "name": "walk",
+          "duration": 1.0416666269302368,
+          "tracks": 57
+        },
+        {
+          "name": "run",
+          "duration": 0.7916666865348816,
+          "tracks": 57
+        },
+        {
+          "name": "talk",
+          "duration": 2.0416667461395264,
+          "tracks": 57
+        }
+      ]
+    }
+  },
+  "animationChecks": [
+    {
+      "kind": "player",
+      "clip": "idle",
+      "maxRootDrift": 0,
+      "minFeet": -0.008965048620724544,
+      "maxFeet": 0.006895420726351534
+    },
+    {
+      "kind": "player",
+      "clip": "walk",
+      "maxRootDrift": 0,
+      "minFeet": -0.02539435854457553,
+      "maxFeet": 0.03940340208856678
+    },
+    {
+      "kind": "player",
+      "clip": "run",
+      "maxRootDrift": 0,
+      "minFeet": -0.02022251126767017,
+      "maxFeet": 0.09847080237089754
+    },
+    {
+      "kind": "player",
+      "clip": "talk",
+      "maxRootDrift": 0,
+      "minFeet": -0.015934493685770976,
+      "maxFeet": 0.0138038155593211
+    },
+    {
+      "kind": "npc",
+      "clip": "idle",
+      "maxRootDrift": 0,
+      "minFeet": -0.008965048620724544,
+      "maxFeet": 0.006895420726351534
+    },
+    {
+      "kind": "npc",
+      "clip": "walk",
+      "maxRootDrift": 0,
+      "minFeet": -0.02539435854457553,
+      "maxFeet": 0.03940340208856678
+    },
+    {
+      "kind": "npc",
+      "clip": "run",
+      "maxRootDrift": 0,
+      "minFeet": -0.02022251126767017,
+      "maxFeet": 0.09847080237089754
+    },
+    {
+      "kind": "npc",
+      "clip": "talk",
+      "maxRootDrift": 0,
+      "minFeet": -0.015934493685770976,
+      "maxFeet": 0.0138038155593211
+    }
+  ],
+  "actors": [
+    {
+      "id": "player_0",
+      "kind": "player",
+      "animation": "idle",
+      "speed": 0,
+      "playbackRate": 1,
+      "time": 0.3,
+      "triangles": 12648,
+      "bones": 19,
+      "poseSpace": "bone-local",
+      "pose": [
+        {
+          "name": "hips",
+          "position": [
+            0,
+            0.9079441666203792,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "name": "head",
+          "position": [
+            0,
+            0.11000001430511475,
+            0
+          ],
+          "quaternion": [
+            0,
+            0.0090425880362415,
+            2.910496507505095e-12,
+            0.9999591149650103
+          ]
+        },
+        {
+          "name": "upper_arm.R",
+          "position": [
+            1.1627451890205975e-8,
+            0.16278819739818573,
+            7.459215112248785e-8
+          ],
+          "quaternion": [
+            -0.3380015790462494,
+            0.3758029341697693,
+            -0.23653486371040344,
+            0.8298062086105347
+          ]
+        },
+        {
+          "name": "forearm.R",
+          "position": [
+            -6.383684336697115e-8,
+            0.3138471245765686,
+            -1.2235513047187396e-8
+          ],
+          "quaternion": [
+            -0.08154445141553879,
+            0.11676999926567078,
+            -0.0874103307723999,
+            0.9859384894371033
+          ]
+        },
+        {
+          "name": "thigh.L",
+          "position": [
+            0.11000000685453415,
+            0.020000101998448372,
+            -1.4469053732923953e-9
+          ],
+          "quaternion": [
+            0.9992908239364624,
+            0.024714648723602295,
+            0.024714091792702675,
+            0.014009624719619751
+          ]
+        },
+        {
+          "name": "thigh.R",
+          "position": [
+            -0.11000000685453415,
+            0.020000101998448372,
+            -1.4469053732923953e-9
+          ],
+          "quaternion": [
+            0.9992908239364624,
+            -0.024714648723602295,
+            -0.024714091792702675,
+            0.014009624719619751
+          ]
+        }
+      ],
+      "bounds": {
+        "min": [
+          -2.0133198180621945,
+          0.006944267683810415,
+          -0.19076675229218565
+        ],
+        "max": [
+          -0.9995727081207875,
+          1.803026635249605,
+          0.26926792723592596
+        ]
+      }
+    },
+    {
+      "id": "player_1",
+      "kind": "player",
+      "animation": "walk",
+      "speed": 3.4,
+      "playbackRate": 1,
+      "time": 0.3,
+      "triangles": 12648,
+      "bones": 19,
+      "poseSpace": "bone-local",
+      "pose": [
+        {
+          "name": "hips",
+          "position": [
+            0,
+            0.8985555280844357,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "name": "head",
+          "position": [
+            0,
+            0.11000001430511475,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "name": "upper_arm.R",
+          "position": [
+            1.1627451890205975e-8,
+            0.16278819739818573,
+            7.459215112248785e-8
+          ],
+          "quaternion": [
+            -0.28173315133546944,
+            0.2529872568465607,
+            -0.3078779997068436,
+            0.8728316083921058
+          ]
+        },
+        {
+          "name": "forearm.R",
+          "position": [
+            -6.383684336697115e-8,
+            0.3138471245765686,
+            -1.2235513047187396e-8
+          ],
+          "quaternion": [
+            -0.015316473320126534,
+            0.08425658196210861,
+            -0.11810264736413956,
+            0.9893018007278442
+          ]
+        },
+        {
+          "name": "thigh.L",
+          "position": [
+            0.11000000685453415,
+            0.020000101998448372,
+            -1.4469053732923953e-9
+          ],
+          "quaternion": [
+            -0.9685349290914451,
+            -0.01743529400377677,
+            -0.03029244092319372,
+            0.2464111800948691
+          ]
+        },
+        {
+          "name": "thigh.R",
+          "position": [
+            -0.11000000685453415,
+            0.020000101998448372,
+            -1.4469053732923953e-9
+          ],
+          "quaternion": [
+            0.9612465023519411,
+            -0.030292432222452214,
+            -0.017434136957008694,
+            0.2734658683177337
+          ]
+        }
+      ],
+      "bounds": {
+        "min": [
+          -0.9637793630295646,
+          0.0338668777521159,
+          -0.47141681621361803
+        ],
+        "max": [
+          -0.026904305527609806,
+          1.7935555090109494,
+          0.7250742954060297
+        ]
+      }
+    },
+    {
+      "id": "player_2",
+      "kind": "player",
+      "animation": "run",
+      "speed": 6,
+      "playbackRate": 1,
+      "time": 0.3,
+      "triangles": 12648,
+      "bones": 19,
+      "poseSpace": "bone-local",
+      "pose": [
+        {
+          "name": "hips",
+          "position": [
+            0,
+            0.887394511974972,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "name": "head",
+          "position": [
+            0,
+            0.11000001430511475,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "name": "upper_arm.R",
+          "position": [
+            1.1627451890205975e-8,
+            0.16278819739818573,
+            7.459215112248785e-8
+          ],
+          "quaternion": [
+            -0.2520834840631701,
+            0.191522651101866,
+            -0.3394971981110319,
+            0.8857283332346474
+          ]
+        },
+        {
+          "name": "forearm.R",
+          "position": [
+            -6.383684336697115e-8,
+            0.3138471245765686,
+            -1.2235513047187396e-8
+          ],
+          "quaternion": [
+            0.1660405546426773,
+            -0.007297064643353224,
+            -0.19803859293460846,
+            0.966001033782959
+          ]
+        },
+        {
+          "name": "thigh.L",
+          "position": [
+            0.11000000685453415,
+            0.020000101998448372,
+            -1.4469053732923953e-9
+          ],
+          "quaternion": [
+            -0.9480672298399375,
+            -0.015187883760061152,
+            -0.03147943006892946,
+            0.31614380888138166
+          ]
+        },
+        {
+          "name": "thigh.R",
+          "position": [
+            -0.11000000685453415,
+            0.020000101998448372,
+            -1.4469053732923953e-9
+          ],
+          "quaternion": [
+            0.9388320011188389,
+            -0.031479274815703846,
+            -0.015186550249000211,
+            0.34259733428975125
+          ]
+        }
+      ],
+      "bounds": {
+        "min": [
+          0.07187650562216058,
+          0.06730289838570248,
+          -0.5723390976319072
+        ],
+        "max": [
+          0.9822524522260558,
+          1.7823944929014857,
+          0.7389728659185498
+        ]
+      }
+    },
+    {
+      "id": "player_3",
+      "kind": "player",
+      "animation": "talk",
+      "speed": 0,
+      "playbackRate": 1,
+      "time": 0.3,
+      "triangles": 12648,
+      "bones": 19,
+      "poseSpace": "bone-local",
+      "pose": [
+        {
+          "name": "hips",
+          "position": [
+            0,
+            0.914895296021939,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "name": "head",
+          "position": [
+            0,
+            0.11000001430511475,
+            0
+          ],
+          "quaternion": [
+            0,
+            0.03616275821539834,
+            0,
+            0.9993459135445817
+          ]
+        },
+        {
+          "name": "upper_arm.R",
+          "position": [
+            1.1627451890205975e-8,
+            0.16278819739818573,
+            7.459215112248785e-8
+          ],
+          "quaternion": [
+            -0.3578784098024426,
+            0.42169474149822733,
+            -0.20672590437744545,
+            0.807069383169344
+          ]
+        },
+        {
+          "name": "forearm.R",
+          "position": [
+            -6.383684336697115e-8,
+            0.3138471245765686,
+            -1.2235513047187396e-8
+          ],
+          "quaternion": [
+            -0.11372595711930318,
+            0.1323903650451938,
+            -0.07220503411120163,
+            0.982000830432184
+          ]
+        },
+        {
+          "name": "thigh.L",
+          "position": [
+            0.11000000685453415,
+            0.020000101998448372,
+            -1.4469053732923953e-9
+          ],
+          "quaternion": [
+            0.9992908239364624,
+            0.024714648723602295,
+            0.024714091792702675,
+            0.014009624719619751
+          ]
+        },
+        {
+          "name": "thigh.R",
+          "position": [
+            -0.11000000685453415,
+            0.020000101998448372,
+            -1.4469053732923953e-9
+          ],
+          "quaternion": [
+            0.9992908239364624,
+            -0.024714648723602295,
+            -0.024714091792702675,
+            0.014009624719619751
+          ]
+        }
+      ],
+      "bounds": {
+        "min": [
+          0.9594694022417757,
+          0.013895397085370034,
+          -0.19710959506420445
+        ],
+        "max": [
+          1.9994856067529687,
+          1.8098952769484526,
+          0.2692679272359258
+        ]
+      }
+    }
+  ],
+  "errors": [],
+  "renderer": {
+    "calls": 15,
+    "triangles": 66380
+  },
+  "browserErrors": [
+    "warning: [.WebGL-0x124004d6c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "warning: [.WebGL-0x124004d6c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "warning: [.WebGL-0x124004d6c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "warning: [.WebGL-0x124004d6c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+  ],
+  "tintChecks": {
+    "playerRegion": {
+      "bounds": [
+        0,
+        0,
+        298,
+        650
+      ],
+      "changedPixels": 0,
+      "maxChannelDelta": 0
+    },
+    "miraFace": {
+      "bounds": [
+        403,
+        141,
+        445,
+        189
+      ],
+      "changedPixels": 0,
+      "maxChannelDelta": 0
+    },
+    "linnFace": {
+      "bounds": [
+        654,
+        141,
+        696,
+        189
+      ],
+      "changedPixels": 0,
+      "maxChannelDelta": 0
+    },
+    "residentFace": {
+      "bounds": [
+        906,
+        141,
+        948,
+        189
+      ],
+      "changedPixels": 0,
+      "maxChannelDelta": 0
+    },
+    "miraJacket": {
+      "bounds": [
+        400,
+        223,
+        448,
+        320
+      ],
+      "changedPixels": 4374,
+      "maxChannelDelta": 108
+    }
+  },
+  "tintShader": {
+    "method": "Linear-luminance recolor of MAT_cloth only, normalized to atlas bright fabric value 0.085 with square-root midtone retention and factor clamped to 0..1.",
+    "atlasAndGeometryUnchanged": true,
+    "playerStockMapProgram": true,
+    "variantSharedProgram": "athen-cloth-luminance-v1",
+    "shaderErrors": []
+  },
+  "assetHashes": {
+    "player": "9f26c0baa46cc00e08dc6f7f41eb0f51139b2a71598064d5c650794d99db12a1",
+    "npcs": "a1258b2258227fe936f9331814df5799b71222e65c134dac777b35edc27106e2"
+  },
+  "validationScope": "Isolated real-GLB browser render and full-clip sampling; no performance or phase acceptance claim."
+}
