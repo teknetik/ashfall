@@ -18,8 +18,8 @@ reset is authorized if quota exhaustion prevents progress; none used so far.
 
 - Phase 2: complete. Built-in Codex image generation; eight immutable refs.
 - Phase 3: complete for authored-world integration. See `phase-3.md`; final beauty scores remain Phase 6.
-- Phase 4: complete. Rigged player, four named NPCs and three walkers; real input and 1080p QA pass. See `phase-4.md`.
-- Phase 5: pending. Four NPC dialogues, buy/sell, Lattice Jack and Ring Gate.
+- Phase 4: technical integration verified, visual acceptance reopened by the user. Replace the primitive-looking character with an externally sourced realistic base and detailed armour. See `art-direction-update.md`.
+- Phase 5: implemented, production QA pending. Four NPC dialogues, buy/sell, Lattice Jack and Ring Gate.
 - Phase 6: pending. Fixed-camera comparisons, audio and measured performance.
 - Phase 7: pending. Loading/pause, production QA and static release packaging.
 

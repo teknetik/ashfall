@@ -1,5 +1,10 @@
 # Phase 4 — colonist and townspeople
 
+**Visual acceptance reopened 2026-09-07.** The user rejected the exported
+character when compared with `concept_art/main_male_human_player_character.jpg`.
+The technical evidence below remains useful, but does not establish acceptable
+appearance. External assets are now authorized; see `art-direction-update.md`.
+
 Original Blender geometry and shared material atlas replace the scale capsule.
 Two skinned material families share the same atlas: jacket/sleeves are tintable,
 while skin, hair, cargo trousers, boots and metal retain their original colours.
@@ -47,5 +52,5 @@ The native source is retained unchanged; UVs inset from swatch boundaries.
   All sampled animation cycles have zero horizontal root drift. A walking sole
   can dip about 1 cm below the pavement after player offset; this is an animation
   contact detail, not a capsule/collision failure.
-- Phase 4 accepted. The characters are stylized original geometry; final art
-  comparison, audio and target-laptop performance remain Phase 6 work.
+- Phase 4 technical integration passed. Visual acceptance has since been
+  reopened; the character must be replaced, not relabelled as intentional style.

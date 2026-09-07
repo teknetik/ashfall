@@ -8,11 +8,18 @@ import type { World } from './world';
 
 export interface AthenDebug {
   readonly version: string;
-  readonly phase: 4;
+  readonly phase: 5;
   readonly world: World['assets'];
   readonly characters: Game['characters']['diagnostics'];
   readonly playerAnimation: import('./characters').CharacterInstance['diagnostics'] | null;
   readonly npcs: import('./npc').NPCSystem['diagnostics'] | null;
+  readonly story: Game['story'];
+  readonly inventory: Game['shop']['snapshot'];
+  readonly dialogue: Game['dialogue'];
+  readonly grid: Game['grid'];
+  readonly interaction: Game['nearbyInteraction'];
+  readonly logs: Game['logs'];
+  readonly selectedHotbar: number;
   readonly state: GameState;
   readonly player: Player['snapshot'] | null;
   readonly fps: number;
@@ -49,11 +56,18 @@ declare global {
 
 export function attachDebug(game: Game) {
   const api: AthenDebug = {
-    version: '0.4.0-characters', phase: 4,
+    version: '0.5.0-city-verbs', phase: 5,
     get world() { return structuredClone(game.world.assets); },
     get characters() { return game.characters.diagnostics; },
     get playerAnimation() { return game.player?.character.diagnostics ?? null; },
     get npcs() { return game.npcs?.diagnostics ?? null; },
+    get story() { return game.story; },
+    get inventory() { return game.shop.snapshot; },
+    get dialogue() { return game.dialogue; },
+    get grid() { return game.grid; },
+    get interaction() { return game.nearbyInteraction; },
+    get logs() { return structuredClone(game.logs); },
+    get selectedHotbar() { return game.selectedHotbar; },
     get state() { return game.state; },
     get player() { return game.player?.snapshot ?? null; },
     get fps() { return game.metrics.fps; },
@@ -80,7 +94,7 @@ export function attachDebug(game: Game) {
     get activeCamera() { return game.cameras.active.name; },
     get landmark() { return game.landmark; },
     get error() { return game.error; },
-    scope: 'Phase 4 characters in progress: rigged colonist, four NPCs and three ambient walkers. Dialogue, commerce, audio and final beauty acceptance remain pending.',
+    scope: 'Phase 5 city verbs: four conversations, local buy/sell and Lattice sector connections. Audio and final beauty acceptance remain pending.',
     nearbyColliders: (radius = 3) => {
       if (!Number.isFinite(radius) || radius <= 0 || radius > 150) throw new Error('Radius must be greater than 0 and at most 150 metres.');
       return game.player && game.physics ? game.physics.nearby(game.player.position, radius) : [];

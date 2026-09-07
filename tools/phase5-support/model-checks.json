@@ -1,0 +1,14 @@
+{
+  "result": "PASS",
+  "checks": [
+    "Start with 25 credits and one scrap coil; selling/buying/selling scrap and buying a flask transfers one unit each with the expected balances.",
+    "Insufficient funds and overselling leave credits, inventory and success counters unchanged.",
+    "An exact-price purchase can spend the wallet down to zero; a subsequent purchase fails atomically.",
+    "Unknown, prototype and non-finite IDs fail safely; snapshots/catalogue are immutable and sessions are independent.",
+    "1,000 deterministic varied trades preserve whole nonnegative balances, single-unit transfers, unrelated items and success-only counters.",
+    "All seven original dialogue nodes have exactly two unique choices, valid links, a close action and correct speakers; only Mira opens the shop."
+  ],
+  "transactionAttempts": 1000,
+  "dialogueNodes": 7,
+  "note": "Pure source-model checks only; browser interactions and UI accessibility are separate acceptance checks."
+}

@@ -11,6 +11,7 @@ export class Input {
   onReset: () => void = () => {};
   onMove: () => void = () => {};
   onInteract: () => void = () => {};
+  onHotbar: (index: number) => void = () => {};
 
   constructor(private canvas: HTMLCanvasElement) {
     const options = { signal: this.abort.signal };
@@ -27,6 +28,11 @@ export class Input {
       if (event.code === 'KeyE') {
         event.preventDefault();
         if (!event.repeat) this.onInteract();
+        return;
+      }
+      if (/^Digit[1-6]$/.test(event.code)) {
+        event.preventDefault();
+        if (!event.repeat) this.onHotbar(Number(event.code.slice(-1)) - 1);
         return;
       }
       if (['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ShiftLeft', 'ShiftRight'].includes(event.code)) {

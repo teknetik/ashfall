@@ -1,0 +1,25 @@
+{
+  "result": "PASS",
+  "source": "src/travel.ts",
+  "checks": [
+    "A closed session is inert; a new tunnel stays open before 1.25 seconds and reaches the map at the threshold, hiding its world VFX.",
+    "Invalid/negative deltas cannot corrupt time; exact midpoint and threshold timing work; a very large finite delta clamps to map progress 1.",
+    "Exactly three original routes return their link message; unknown, prototype and non-string IDs fail without changing the selected route or map.",
+    "Snapshots are detached at every exposed nesting level and remain stable across later state changes; caller edits cannot modify the route catalogue or live session.",
+    "The active pulse uses two unshadowed draws, 768 triangles, 28 points and no textures; its opacity stays restrained and the optional camera is unchanged.",
+    "Reduced motion hides all world VFX and leaves particle positions still while preserving travel timing; a live preference change does not restart the transition.",
+    "Twenty-five open/select/restart/cancel cycles clear stale selection and reuse the same scene objects and geometry.",
+    "Disposal before start, during the tunnel and on the map removes only the owned group and releases its instance buffer, two geometries and two materials exactly once; later calls cannot revive it.",
+    "Independent sessions do not share selection or lifecycle ownership."
+  ],
+  "vfxBudget": {
+    "draws": 2,
+    "triangles": 768,
+    "points": 28,
+    "textures": 0
+  },
+  "transitionSeconds": 1.25,
+  "repeatedCycles": 25,
+  "disposedResources": 15,
+  "note": "Actual source-model and Three.js lifecycle checks; browser rendering, controls and OS preference wiring are separate integration checks."
+}
