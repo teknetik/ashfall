@@ -16,7 +16,8 @@ async def main():
             for call in json.load(open(sys.argv[2])):
                 response = await client.call_tool(call['tool'], call['args'])
                 result.append({'tool':call['tool'], 'result':dataclasses.asdict(response)})
-                if response.is_error or (isinstance(response.data, dict) and response.data.get('success') is False):
+                payload = json.loads(response.content[0].text) if response.content and hasattr(response.content[0], 'text') else {}
+                if response.is_error or payload.get('success') is False:
                     break
         else:
             args = json.loads(sys.argv[2]) if len(sys.argv)>2 else {}
