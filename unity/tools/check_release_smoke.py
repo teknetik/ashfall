@@ -5,16 +5,21 @@ import os
 from pathlib import Path
 import subprocess
 import time
+import re
 from PIL import ImageGrab, ImageStat
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / 'evidence' / 'ward-guard' / datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ-release')
+OUT = Path(os.environ['ATHEN_RELEASE_EVIDENCE']) if os.environ.get('ATHEN_RELEASE_EVIDENCE') else ROOT / 'evidence' / 'ward-guard' / datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ-release')
 OUT.mkdir(parents=True)
-mode = next(line.split()[0] for line in subprocess.check_output(['xrandr', '--current'], text=True).splitlines() if '*' in line)
+xrandr_state = subprocess.check_output(['xrandr', '--current'], text=True)
+active = next((line.split()[0] for line in xrandr_state.splitlines() if '*' in line), None)
+mode = active or 'x'.join(re.search(r'current (\d+) x (\d+)', xrandr_state).groups())
+changed_mode = mode != '1920x1080'
 process = None
 report = {'complete': False, 'scope': 'Native release launch, input responsiveness, non-blank rendering, no runtime exceptions. Full city-loop assertions run separately in development.'}
 try:
-    subprocess.run(['xrandr', '--output', 'DP-0', '--mode', '1920x1080'], check=True)
+    if changed_mode:
+        subprocess.run(['xrandr', '--output', 'DP-0', '--mode', '1920x1080'], check=True)
     process = subprocess.Popen([str(ROOT / 'AthenHill/Builds/Linux/AthenHill.x86_64'), '-force-glcore',
         '-screen-fullscreen', '1', '-screen-width', '1920', '-screen-height', '1080',
         '-logFile', str(OUT / 'Player.log'), '--athen-qa', str(OUT)], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
@@ -41,5 +46,6 @@ try:
 finally:
     if process and process.poll() is None:
         process.terminate(); process.wait(timeout=10)
-    subprocess.run(['xrandr', '--output', 'DP-0', '--mode', mode], check=True)
+    if changed_mode:
+        subprocess.run(['xrandr', '--output', 'DP-0', '--mode', mode], check=True)
     (OUT / 'report.json').write_text(json.dumps(report, indent=2))

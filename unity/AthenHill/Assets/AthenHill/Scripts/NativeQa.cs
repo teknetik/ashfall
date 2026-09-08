@@ -12,7 +12,7 @@ namespace AthenHill
  // Explicitly opt-in, development-player-only diagnostics. No command listener in releases.
  public class NativeQa:MonoBehaviour
  {
-  string folder;GameSession session;AthenDebugBridge bridge;UIDocument document;
+  string folder;GameSession session;AthenDebugBridge bridge;UIDocument document;CityAtmosphere atmosphere;
   ProfilerRecorder draws,tris,batches,setPass,mainThread,renderThread;
   readonly List<object> samples=new List<object>();bool profiling;float nextSnapshot;
   readonly FrameTiming[] timings=new FrameTiming[1];
@@ -26,7 +26,7 @@ namespace AthenHill
   }
   void Start()
   {
-   session=FindAnyObjectByType<GameSession>();bridge=FindAnyObjectByType<AthenDebugBridge>();document=FindAnyObjectByType<UIDocument>();
+   session=FindAnyObjectByType<GameSession>();bridge=FindAnyObjectByType<AthenDebugBridge>();document=FindAnyObjectByType<UIDocument>();atmosphere=FindAnyObjectByType<CityAtmosphere>();
    draws=ProfilerRecorder.StartNew(ProfilerCategory.Render,"Draw Calls Count");tris=ProfilerRecorder.StartNew(ProfilerCategory.Render,"Triangles Count");batches=ProfilerRecorder.StartNew(ProfilerCategory.Render,"Batches Count");setPass=ProfilerRecorder.StartNew(ProfilerCategory.Render,"SetPass Calls Count");mainThread=ProfilerRecorder.StartNew(ProfilerCategory.Internal,"Main Thread");renderThread=ProfilerRecorder.StartNew(ProfilerCategory.Internal,"Render Thread");
    QualitySettings.vSyncCount=0;Application.targetFrameRate=-1;
    Write("environment.json",new{unity=Application.unityVersion,os=SystemInfo.operatingSystem,gpu=SystemInfo.graphicsDeviceName,api=SystemInfo.graphicsDeviceType.ToString(),driver=SystemInfo.graphicsDeviceVersion,cpu=SystemInfo.processorType,quality=QualitySettings.names[QualitySettings.GetQualityLevel()],width=Screen.width,height=Screen.height,vsync=QualitySettings.vSyncCount,targetFrameRate=Application.targetFrameRate,drawCounter=draws.Valid,triangleCounter=tris.Valid,mainThreadCounter=mainThread.Valid,renderThreadCounter=renderThread.Valid,actorCount=FindObjectsByType<ActorAnimation>().Length});
@@ -68,7 +68,16 @@ namespace AthenHill
   void Snapshot()
   {
    var p=session.player;var sound=FindAnyObjectByType<CityAudio>();
-   Write("snapshot.json",new{frame=Time.frameCount,width=Screen.width,height=Screen.height,session=new{state=session.State.ToString(),session.visitedHill,spoken=session.Spoken.ToArray(),session.boughtFlask,session.soldScrap,session.linked,session.muted,session.reducedMotion,session.notice,session.selectedDestination,gridProgress=session.GridProgress,credits=session.Shop?.Credits,quantities=session.catalog.items.ToDictionary(i=>i.id,i=>session.Shop?.Quantity(i.id)),focused=(document.rootVisualElement.focusController.focusedElement as VisualElement)?.name},player=new{position=new[]{p.transform.position.x,p.transform.position.y,p.transform.position.z},grounded=p.Grounded,speed=p.Speed},audio=sound?new{sound.StepCount,sound.ClickCount,paused=AudioListener.pause,volume=AudioListener.volume}:null,camera=new{overlaps=Physics.OverlapSphere(bridge.follow.transform.position,.20f,bridge.follow.worldMask,QueryTriggerInteraction.Ignore).Select(x=>x.name).ToArray()},fps=bridge.fps,draws=draws.Valid?draws.LastValue:-1,triangles=tris.Valid?tris.LastValue:-1});
+   var mouse=UnityEngine.InputSystem.Mouse.current;
+   if(mouse!=null&&document.rootVisualElement.panel!=null)
+   {
+    var screen=mouse.position.ReadValue();screen.y=Screen.height-screen.y;
+    var panelPoint=RuntimePanelUtils.ScreenToPanel(document.rootVisualElement.panel,screen);
+    var picked=document.rootVisualElement.panel.Pick(panelPoint);
+    var slot=document.rootVisualElement.Q<Button>("slot1");
+    Write("pointer.json",new{screenX=screen.x,screenY=screen.y,panelX=panelPoint.x,panelY=panelPoint.y,picked=picked?.name,pickedType=picked?.GetType().Name,overUi=session.input.PointerOverUi?.Invoke(),slotBounds=new[]{slot.worldBound.x,slot.worldBound.y,slot.worldBound.width,slot.worldBound.height}});
+   }
+   Write("snapshot.json",new{atmosphere=atmosphere?new{windTime=Shader.GetGlobalFloat("_AthenAtmosphereTime"),dustParticles=atmosphere.driftingDust?atmosphere.driftingDust.particleCount:0,dustPlaying=atmosphere.driftingDust&&atmosphere.driftingDust.isPlaying}:null,frame=Time.frameCount,width=Screen.width,height=Screen.height,session=new{state=session.State.ToString(),session.visitedHill,spoken=session.Spoken.ToArray(),session.boughtFlask,session.soldScrap,session.linked,session.muted,session.reducedMotion,session.notice,session.selectedDestination,gridProgress=session.GridProgress,credits=session.Shop?.Credits,quantities=session.catalog.items.ToDictionary(i=>i.id,i=>session.Shop?.Quantity(i.id)),focused=(document.rootVisualElement.focusController.focusedElement as VisualElement)?.name},player=new{position=new[]{p.transform.position.x,p.transform.position.y,p.transform.position.z},grounded=p.Grounded,speed=p.Speed},audio=sound?new{sound.StepCount,sound.ClickCount,sound.TradeCount,sound.UnavailableCount,sound.TravelOpenCount,sound.TravelLinkCount,paused=AudioListener.pause,volume=AudioListener.volume,sources=FindObjectsByType<AudioSource>(FindObjectsSortMode.InstanceID).Select(a=>new{name=a.name,clip=a.clip?a.clip.name:null,playing=a.isPlaying,time=a.time,a.volume,a.spatialBlend,a.loop,group=a.outputAudioMixerGroup?a.outputAudioMixerGroup.name:null}).ToArray()}:null,camera=new{yaw=bridge.follow.yaw,pitch=bridge.follow.pitch,boom=bridge.follow.boom,distance=bridge.follow.Distance,firstPerson=bridge.follow.FirstPerson,playerHidden=bridge.follow.PlayerHidden,position=new[]{bridge.follow.transform.position.x,bridge.follow.transform.position.y,bridge.follow.transform.position.z},overlaps=Physics.OverlapSphere(bridge.follow.transform.position,.20f,bridge.follow.worldMask,QueryTriggerInteraction.Ignore).Select(x=>x.name).ToArray()},fps=bridge.fps,draws=draws.Valid?draws.LastValue:-1,triangles=tris.Valid?tris.LastValue:-1});
   }
   void OnDestroy(){draws.Dispose();tris.Dispose();batches.Dispose();setPass.Dispose();mainThread.Dispose();renderThread.Dispose();}
  }

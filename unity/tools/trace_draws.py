@@ -1,11 +1,13 @@
 """Count real OpenGL draw submissions independently of Unity's empty counters."""
-import asyncio,json,os,pathlib,subprocess,time,sys,signal
-R=pathlib.Path(__file__).resolve().parents[1];Q=R/'evidence/U4/gl-trace';Q.mkdir(parents=True,exist_ok=True)
-TRACE=pathlib.Path('/tmp/athen-apitrace/athen.trace');WRAPPER='/tmp/athen-apitrace/usr/lib/x86_64-linux-gnu/apitrace/wrappers/glxtrace.so'
+import asyncio,json,os,pathlib,subprocess,time,sys,signal,re
+R=pathlib.Path(__file__).resolve().parents[1];Q=pathlib.Path(os.environ.get('ATHEN_TRACE_EVIDENCE',R/'evidence/U4/gl-trace'));Q.mkdir(parents=True,exist_ok=True)
+TRACE=pathlib.Path(os.environ.get('ATHEN_TRACE_FILE','/tmp/athen-apitrace/athen.trace'));WRAPPER='/tmp/athen-apitrace/usr/lib/x86_64-linux-gnu/apitrace/wrappers/glxtrace.so'
 async def main():
  original=subprocess.check_output(['xrandr','--current'],text=True)
- mode=next(line.split()[0] for line in original.splitlines() if '*' in line)
- subprocess.run(['xrandr','--output','DP-0','--mode','1920x1080'],check=True)
+ active=next((line.split()[0] for line in original.splitlines() if '*' in line),None)
+ mode=active or 'x'.join(re.search(r'current (\d+) x (\d+)',original).groups())
+ changed_mode=mode!='1920x1080'
+ if changed_mode:subprocess.run(['xrandr','--output','DP-0','--mode','1920x1080'],check=True)
  for name in ['snapshot.json','ack.json','command.json']:(Q/name).unlink(missing_ok=True)
  env=dict(os.environ,LD_PRELOAD=WRAPPER,TRACE_FILE=str(TRACE));log=open(Q/'player.log','w')
  p=subprocess.Popen([str(R/'AthenHill/Builds/LinuxDevelopment/AthenHill.x86_64'),'-force-glcore','-screen-fullscreen','1','-screen-width','1920','-screen-height','1080','-logFile',str(Q/'Player.log'),'--athen-qa',str(Q)],env=env,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
@@ -36,9 +38,10 @@ async def main():
   p.wait(timeout=10);(Q/'phases.json').write_text(json.dumps(phases,indent=2))
  finally:
   if p.poll() is None:p.terminate();p.wait(timeout=10)
-  log.close();subprocess.run(['xrandr','--output','DP-0','--mode',mode],check=True)
+  log.close()
+  if changed_mode:subprocess.run(['xrandr','--output','DP-0','--mode',mode],check=True)
  dump=subprocess.check_output(['/tmp/athen-apitrace/usr/bin/apitrace','dump','--color=never','--grep=^(gl(Draw(Arrays|Elements|RangeElements)|MultiDraw).*|glXSwapBuffers|eglSwapBuffers)$',str(TRACE)],text=True);(Q/'draw-calls.txt').write_text(dump)
- import re,collections
+ import collections
  frames=[];count=0;logical=0
  for line in dump.splitlines():
   if 'SwapBuffers(' in line:frames.append({'apiDrawSubmissions':count,'logicalDraws':logical});count=logical=0

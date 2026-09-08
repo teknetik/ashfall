@@ -26,6 +26,7 @@ namespace AthenHill
   public readonly HashSet<string> Spoken=new HashSet<string>();
   public bool visitedHill,boughtFlask,soldScrap,linked;
   public event Action Changed;
+  public event Action<CitySoundCue> SoundRequested;
   public int LogRevision {get;private set;}
   bool ringInside;float noticeTime;
   public bool Complete=>visitedHill&&Spoken.Count==4&&boughtFlask&&soldScrap&&linked;
@@ -45,7 +46,7 @@ namespace AthenHill
     var p=player.transform.position;
     if(!visitedHill&&hillPoint&&new Vector2(p.x-hillPoint.position.x,p.z-hillPoint.position.z).magnitude<hillRadius&&p.y>hillPoint.position.y+hillMinimumHeight){visitedHill=true;Changed?.Invoke();}
     bool inside=NearRing&&p.y>ringPoint.position.y-.2f;
-    if(inside&&!ringInside)Notify("Destination offline. The far ring has gone quiet.","Ring Gate");ringInside=inside;
+    if(inside&&!ringInside){Notify("Destination offline. The far ring has gone quiet.","Ring Gate");SoundRequested?.Invoke(CitySoundCue.Unavailable);}ringInside=inside;
    }
    if(State==CityState.Grid&&GridProgress<1){GridProgress=Mathf.Min(1,GridProgress+Time.deltaTime/Mathf.Max(.01f,catalog.transitionSeconds));Changed?.Invoke();}
    if(noticeTime>0){noticeTime-=Time.unscaledDeltaTime;if(noticeTime<=0){notice="";Changed?.Invoke();}}
@@ -59,8 +60,8 @@ namespace AthenHill
    if(State!=CityState.Play)return;
    var n=Nearest;
    if(n){ActiveNpc=n;dialogueNode="greeting";n.talking=true;Spoken.Add(n.definition.id);SetState(CityState.Dialogue);AddLog(n.definition.displayName,Dialogue.text);}
-   else if(NearLattice){GridProgress=0;selectedDestination="";SetState(CityState.Grid);AddLog("Lattice Jack","Signal acquired. Opening the sector lattice.");}
-   else Notify(NearRing?"Destination offline. The far ring has gone quiet.":"Move closer to a colonist or terminal.",NearRing?"Ring Gate":"System");
+   else if(NearLattice){GridProgress=0;selectedDestination="";SetState(CityState.Grid);AddLog("Lattice Jack","Signal acquired. Opening the sector lattice.");SoundRequested?.Invoke(CitySoundCue.LatticeOpen);}
+   else {Notify(NearRing?"Destination offline. The far ring has gone quiet.":"Move closer to a colonist or terminal.",NearRing?"Ring Gate":"System");SoundRequested?.Invoke(CitySoundCue.Unavailable);}
   }
   public void Choose(int index)
   {
@@ -76,12 +77,12 @@ namespace AthenHill
    bool ok=Shop.Trade(id,buy,out string message);
    if(ok&&buy&&id=="water_flask")boughtFlask=true;
    if(ok&&!buy&&id=="scrap_coil")soldScrap=true;
-   Notify(message,"Mira");return ok;
+   Notify(message,"Mira");SoundRequested?.Invoke(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);return ok;
   }
   public void SelectDestination(int index)
   {
    if(State!=CityState.Grid||GridProgress<1||index<0||index>=catalog.destinations.Length)return;
-   var node=catalog.destinations[index];selectedDestination=node.id;linked=true;Notify("Link established to "+node.name+".","Lattice Jack");
+   var node=catalog.destinations[index];selectedDestination=node.id;linked=true;Notify("Link established to "+node.name+".","Lattice Jack");SoundRequested?.Invoke(CitySoundCue.LatticeLink);
   }
   public void Hotbar(int slot)
   {

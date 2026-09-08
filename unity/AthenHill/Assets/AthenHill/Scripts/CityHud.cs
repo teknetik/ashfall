@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 namespace AthenHill
 {
@@ -17,6 +18,7 @@ namespace AthenHill
   void Start()
   {
    root=GetComponent<UIDocument>().rootVisualElement;
+   session.input.PointerOverUi=PointerOverControls;
    Bind("close",session.Close);Bind("resume",session.Close);Bind("reset",session.ResetPlayer);
    Bind("inventory-button",()=>session.Open(CityState.Inventory));Bind("notes-button",()=>session.Open(CityState.Notes));Bind("pause-button",()=>session.Open(CityState.Paused));Bind("credits-button",()=>session.Open(CityState.Credits));Bind("interaction",session.Interact);
    Bind("quit",()=>Application.Quit());Show("quit",!Application.isEditor);
@@ -27,7 +29,15 @@ namespace AthenHill
    foreach(var npc in session.npcs){var label=new Label(npc.definition.displayName+"\n"+npc.definition.role);label.AddToClassList("nametag");label.pickingMode=PickingMode.Ignore;root.Q("nametags").Add(label);tags.Add(npc,label);}
    session.Changed+=Refresh;Refresh();
   }
-  void OnDestroy(){if(session)session.Changed-=Refresh;}
+  void OnDestroy(){if(session){session.Changed-=Refresh;session.input.PointerOverUi=null;}}
+  bool PointerOverControls()
+  {
+   if(root?.panel==null||Mouse.current==null)return false;
+   var point=Mouse.current.position.ReadValue();point.y=Screen.height-point.y;
+   var element=root.panel.Pick(RuntimePanelUtils.ScreenToPanel(root.panel,point));
+   for(;element!=null;element=element.parent)if(element is Button||element is ScrollView)return true;
+   return false;
+  }
   void Bind(string name,Action action){root.Q<Button>(name).clicked+=action;}
   void Show(string name,bool show){root.Q(name).style.display=show?DisplayStyle.Flex:DisplayStyle.None;}
   void Text(string name,string value){root.Q<Label>(name).text=value;}

@@ -9,6 +9,7 @@ namespace AthenHill
   public Transform visual;
   public ActorAnimation actor;
   [Min(0)] public float walkSpeed=3.4f,runSpeed=6,gravity=22,groundSnap=.4f,turnSpeed=14;
+  [Min(0)] public float jumpHeight=1.2f;
   public LayerMask worldMask=~(1<<8);
   public Transform spawn;
   public bool Grounded {get;private set;}
@@ -26,8 +27,12 @@ namespace AthenHill
    Vector3 right=Vector3.Cross(Vector3.up,forward);
    Vector3 direction=Vector3.ClampMagnitude(forward*move.y+right*move.x,1);
    bool wasGrounded=Grounded||body.isGrounded;
-   vertical=wasGrounded?-2:Mathf.Max(vertical-gravity*dt,-35);
-   body.Move((direction*(input.Run?runSpeed:walkSpeed)+Vector3.up*vertical)*dt);
+   bool jump=input.ConsumeJump();
+   if(wasGrounded&&vertical<=0)vertical=-2;
+   else vertical=Mathf.Max(vertical-gravity*dt,-35);
+   if(jump&&!Blocked&&wasGrounded&&vertical<=0)vertical=Mathf.Sqrt(2*gravity*jumpHeight);
+   var collisions=body.Move((direction*(input.Run?runSpeed:walkSpeed)+Vector3.up*vertical)*dt);
+   if((collisions&CollisionFlags.Above)!=0&&vertical>0)vertical=0;
    Grounded=body.isGrounded;
    if(wasGrounded&&!Grounded&&vertical<=0 && Physics.SphereCast(transform.position+Vector3.up*.55f,.28f,Vector3.down,out var hit,.55f+groundSnap,worldMask,QueryTriggerInteraction.Ignore)&&hit.normal.y>.7f)
    {
@@ -36,7 +41,7 @@ namespace AthenHill
    }
    Speed=Vector3.ProjectOnPlane(transform.position-previous,Vector3.up).magnitude/dt;
    if(direction.sqrMagnitude>.001f)visual.rotation=Quaternion.Slerp(visual.rotation,Quaternion.LookRotation(direction),1-Mathf.Exp(-turnSpeed*dt));
-   actor.SetMotion(Speed,input.Run,Talking);
+   if(actor)actor.SetMotion(Speed,input.Run,Talking);
   }
   public void Teleport(Vector3 feet){if(!body)body=GetComponent<CharacterController>();body.enabled=false;transform.position=feet+Vector3.up*.015f;body.enabled=true;vertical=0;Grounded=false;Physics.SyncTransforms();}
   public void ReturnToGate(){Teleport(spawn.position);}

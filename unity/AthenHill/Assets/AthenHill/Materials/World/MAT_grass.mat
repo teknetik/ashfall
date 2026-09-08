@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: MAT_grass
-  m_Shader: {fileID: -6465566751694194690, guid: b9d29dfa1474148e792ac720cbd45122, type: 3}
+  m_Shader: {fileID: 4800000, guid: 7ec88c317aa54c4a184dd7a2912f0e7f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -29,16 +29,31 @@ Material:
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
-  m_CustomRenderQueue: 2000
+  m_CustomRenderQueue: -1
   stringTagMap:
     MotionVector: User
-    RenderType: Opaque
   disabledShaderPasses:
   - MOTIONVECTORS
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _Geology:
+        m_Texture: {fileID: 2800000, guid: 5d4e551ef5795a8f29199e7764837136, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GroundTex:
+        m_Texture: {fileID: 2800000, guid: 21b25e6707cb638dc904d9887c6daee0, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Noise:
+        m_Texture: {fileID: 2800000, guid: 6301dc6e459be25168badba84e1fbcd1, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RockTex:
+        m_Texture: {fileID: 2800000, guid: 2fed922360615d4b497cde527ab2cd1a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - baseColorTexture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -99,6 +114,7 @@ Material:
     - _QueueControl: 1
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _Scale: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
@@ -119,6 +135,9 @@ Material:
     - roughnessFactor: 0.94
     - transmissionFactor: 0
     m_Colors:
+    - _DryGrass: {r: 0.42999998, g: 0.39999998, b: 0.20999995, a: 1}
+    - _Grass: {r: 0.27999997, g: 0.32999998, b: 0.11999995, a: 1}
+    - _Soil: {r: 0.26999995, g: 0.20999995, b: 0.13999996, a: 1}
     - baseColorFactor: {r: 0.38431367, g: 0.38823524, b: 0.27450976, a: 1}
     - baseColorTexture_Rotation: {r: 0, g: 0, b: 0, a: 0}
     - emissiveFactor: {r: 0, g: 0, b: 0, a: 1}

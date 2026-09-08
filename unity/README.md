@@ -16,13 +16,29 @@ ScriptableObjects, waypoint transforms, Input Actions and UI Builder assets.
 See [EDITING.md](EDITING.md) for the editing workflow. Nothing reconstructs the
 city at runtime. Editor assembly helpers refuse to overwrite an existing scene.
 
+The September 8 atmosphere pass adds drifting cloud layers, a warm dust horizon,
+distant ridge silhouettes, olive ground variation, wind grass and sparse plaza
+dust. These are saved Unity materials, meshes and a ParticleSystem under **City
+Atmosphere**, with Inspector controls documented in [EDITING.md](EDITING.md).
+Reduced Motion freezes wind/clouds and clears dust. Native screenshots and the
+performance/interaction checks are in
+[the atmosphere review](evidence/atmosphere/20260908/acceptance.md).
+
+The mountain and terrain pass replaces the detached mesa blocks with a continuous
+Blender-authored desert basin, layered sandstone shading, and atmospheric depth.
+The hill has detailed soil/gravel ground cover and scattered chipped stone.
+See [terrain evidence](evidence/terrain/20260908/acceptance.md) and the
+[terrain editing controls](EDITING.md#mountains-and-terrain).
+
 ## Controls
 
 | Input | Action |
 | --- | --- |
 | WASD / arrows | Camera-relative movement |
 | Left Shift | Run |
-| Hold right mouse and drag | Orbit camera |
+| Hold left mouse and drag | Look / orbit camera |
+| Mouse wheel up / down | Zoom in to first person / back out |
+| Space | Jump |
 | E | Talk / use nearby terminal |
 | Escape | Close panel / pause |
 | R | Return to West Gate |
@@ -31,9 +47,19 @@ city at runtime. Editor assembly helpers refuse to overwrite an existing scene.
 | 5 / 6 | Inventory / notes |
 | Tab / Enter | Focus / activate UI controls |
 
+The [native controls checks](evidence/controls/20260908/acceptance.md) cover first-person
+zoom, left-drag look, jumping and HUD/modal input handling.
+
 Visit the hill, meet Mira/Torr/Vex/Linn, buy a flask and sell your starting scrap at
 Basic General, then establish a Lattice link. Ring Gate is deliberately offline.
 Pause contains mute, reduced motion, credits and a standalone Quit button. There is no second zone or combat.
+
+The ElevenLabs soundscape adds **Hill at Dusk**, an original 40-second instrumental
+prepared as a 37-second overlapping loop, plus desert wind, localized market
+chatter, distinct Lattice/Ring hums, three footstep variations, terminal feedback,
+trade confirmation, offline feedback and Lattice activation/link effects. Music
+fades in and softens during dialogue and travel; pause and mute affect the mix.
+See [AUDIO.md](AUDIO.md) for source records, editable controls and native checks.
 
 ## Builds and diagnostics
 
@@ -83,5 +109,5 @@ candidate's face/armour remain more stylized than the supplied character concept
 A successful engine port is not a claim that those art requirements are solved.
 
 Original asset notices are retained in the project and available through the pause
-menu. Generated audio uses the supplied mixes; account-specific distribution terms
-still carry the source manifest's caveat. No paid assets were purchased.
+menu. The current soundscape was generated using the project's ElevenLabs account;
+its prompts, source responses and file hashes are retained in `staging/elevenlabs-audio/`.

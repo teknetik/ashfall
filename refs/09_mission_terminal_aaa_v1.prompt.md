@@ -1,0 +1,22 @@
+# Athen Hill — mission terminal concept
+
+Generated with the built-in image generation tool on 2026-09-08.
+
+Output: `09_mission_terminal_aaa_v1.png`
+
+The two user-supplied screenshots were visual design references. This is an original concept proposal, not a game asset or an implementation change.
+
+## Final prompt
+
+Use case: stylized-concept.
+Asset type: premium AAA science-fiction game prop concept art presentation for Athen Hill.
+Primary request: Reimagine the mission terminals in the two supplied reference screenshots as ONE coherent new original AAA mission terminal, recognizable as a descendant of these sturdy early-2000s MMO public kiosks. Create a beautifully art-directed, detailed landscape concept sheet at the highest available resolution.
+Input images: Image 1 is a reference for the squat heavy dark-metal cabinet, thick projecting screen surround, geometric cyan interface, rectangular lower service panel and low sandstone foundation. Image 2 is a reference for the tapered architectural side supports, rust-brown corner fittings and small elevated illuminated wayfinding plaque. These are design references, not screenshots to reproduce. Combine their strongest visual ideas into an original design; do not copy game logos or the old M emblem.
+Subject and construction: One freestanding civic mission kiosk, about 1.6m tall to cabinet top and 1.95m to its small header, 0.85m wide. Weighty dark gunmetal cast-alloy housing; boldly chamfered corners; two broad subtly tapered side buttresses with weathered bronze joint caps; recessed protected display near chest height under a short armored brow. Substantial cabinet below, one believable service door with two horizontal recessed grips echoing reference 1, tamper-proof fasteners, filtered vent, power conduit routed into a chipped stone plinth. Screen angled gently toward a standing user. Small physical confirm keys and a cyan ID reader immediately below the display. Short integrated mast with a small rectangular backlit mission wayfinding plaque bearing a simple original stacked-diamond symbol. Clear large forms, medium structural details, restrained fine details; designed to be modeled and used as a real game prop.
+Interface: deeply recessed smoky glass, controlled teal/cyan emission, an original clean mission interface with four simple geometric panes, local map, route nodes, sparse contract rows. Main screen heading reads exactly "MISSIONS". One small physical stamped label reads "FREE COLUMN". No long paragraphs or invented illegible labels.
+Composition: A polished production concept sheet with a large dominant front three-quarter hero render showing the whole terminal including its base, plus two smaller supporting front and rear elevation renders of THE EXACT SAME design in a narrow secondary area. Clear proportional consistency in all views, same marker, screen, buttresses and base. Hero set on a small patch of pale tiled desert-city pavement, a softly suggested sandstone arch background that fades into a warm neutral presentation-board background. Supporting views isolated on the same neutral field. Generous space around the silhouette; no cropping. A discreet editorial title reads "ATHEN HILL" and beneath it "MISSION TERMINAL". Small view labels only: "FRONT", "REAR". No dense annotation grid.
+Style/medium: accomplished AAA environment-prop concept artist, highly resolved photorealistic 3D paintover, precise industrial design, rich material storytelling, cinematic physical light with beautifully legible form. Modern fidelity with the soul of a worn 2001 science-fiction MMO city.
+Lighting/mood: dry dusty golden afternoon, warm sunlight from upper left, broad cool sky fill, soft but grounded shadows; cyan glow remains localized and does not overwhelm daylight.
+Palette/materials: desaturated gunmetal #3A4149, dusty sandstone #C4A574, oxidized brown bronze fittings, sparse faded red paint #8B2E2E, cyan #3EC7C2. Rough powder-coated armor with abrasion only on exposed edges, brushed worn touch surfaces, accumulated dust in creases, seal gaskets, dark glass with subtle reflected sky. Used and carefully maintained, not ruined.
+Avoid: chrome, glossy plastic, gaming-PC rainbow lights, glowing strips on every edge, floating holographic clutter, ornate random greebles, exposed tangled wires, oversized antennas, robots, characters, weapons, original-game branding, watermarks, copied UI, futuristic smartphone on a pedestal. The terminal must remain the clear subject.
+

@@ -1,13 +1,15 @@
 """Launch the saved Linux player at 1080p and run the same real keyboard checks."""
-import asyncio,json,os,pathlib,subprocess,time,sys,statistics,signal
+import asyncio,json,os,pathlib,subprocess,time,sys,statistics,signal,re
 def interrupted(*args):raise KeyboardInterrupt("Native QA interrupted")
 signal.signal(signal.SIGTERM,interrupted)
 R=pathlib.Path(__file__).resolve().parents[1];QA=R/'evidence/U5/native';QA.mkdir(parents=True,exist_ok=True)
 async def main():
  original=subprocess.check_output(['xrandr','--current'],text=True)
  # The connected QA display supports 1080p. Restore its prior mode after testing.
- mode=next(line.split()[0] for line in original.splitlines() if '*' in line)
- subprocess.run(['xrandr','--output','DP-0','--mode','1920x1080'],check=True)
+ active=next((line.split()[0] for line in original.splitlines() if '*' in line),None)
+ mode=active or 'x'.join(re.search(r'current (\d+) x (\d+)',original).groups())
+ changed_mode=mode!='1920x1080'
+ if changed_mode:subprocess.run(['xrandr','--output','DP-0','--mode','1920x1080'],check=True)
  for name in ['snapshot.json','environment.json','ack.json','qa-error.json','command.json']:(QA/name).unlink(missing_ok=True)
  (QA/'qualification.json').write_text(json.dumps({'complete':False}))
  log=open(QA/'launcher.log','w')
@@ -44,5 +46,6 @@ async def main():
   (QA/'qualification.json').write_text(json.dumps(report,indent=2));print(json.dumps(report,indent=2))
  finally:
   if p.poll() is None:p.terminate();p.wait(timeout=10)
-  log.close();subprocess.run(['xrandr','--output','DP-0','--mode',mode],check=True)
+  log.close()
+  if changed_mode:subprocess.run(['xrandr','--output','DP-0','--mode',mode],check=True)
 asyncio.run(main())
