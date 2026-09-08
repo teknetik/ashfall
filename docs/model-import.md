@@ -1,6 +1,24 @@
-# Unity NPC import and rebuild — 7 September 2026
+# Unity NPC import and rebuild
 
-## Current result: Unity only, travelers and relaxed guards
+## Source fidelity recovery — 8 September 2026
+
+The current guard processor preserves all **38,071 triangles** and **26,859
+vertices**, original UVs, normals, weights, bind matrices and texture bytes. It
+changes only the four relaxed-arm rotations and static animation aliases. The
+previous 5,999-triangle reduction is retired. `ImportWardGuard` no longer enforces
+a 6,000-triangle ceiling. Idle/talk remain static poses needing later animation work.
+
+Use the existing scene and the scoped **Athen Hill/Fidelity** recovery commands
+for this upgrade; keep the four NPC interaction roots and prefab links. Do not
+rerun broad historical installers to update an already edited district.
+[Recovery evidence and remaining limitations](../unity/evidence/fidelity/20260908/README.md)
+record integration, native image checks and RTX 3060 qualification. The yard
+mechanic is an additional fourth ambient walker, separate from the three travelers.
+
+The dated records below describe earlier builds; their hashes, triangle counts
+and performance figures do not qualify the recovered build.
+
+## Historical 7 September result: Unity only, travelers and relaxed guards
 
 Unity is now the sole active game/build target. Browser development, builds and
 tests are retired. The browser sources and shared authoring inputs have not been

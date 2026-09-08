@@ -1,0 +1,74 @@
+{
+  "complete": true,
+  "report": "after-native/report.json",
+  "hardware": {
+    "gpu": "RTX 3060",
+    "vramMiB": 12288,
+    "cpu": "i9-10850K",
+    "driver": "NVIDIA 595.84",
+    "api": "OpenGLCore",
+    "systemMemoryReportedMB": 31974
+  },
+  "realInputWaypoints": 14,
+  "cityLoopChecks": 29,
+  "cpuFrameMs": {
+    "mean": 2.881375015918753,
+    "p50": 2.767615,
+    "p95": 4.102868,
+    "p99": 4.617283,
+    "max": 9.406061
+  },
+  "mainThreadMs": {
+    "mean": 2.8799335631554084,
+    "p50": 2.766115,
+    "p95": 4.098933,
+    "p99": 4.615781,
+    "max": 9.403396
+  },
+  "submittedTrianglesAcrossPasses": {
+    "mean": 433929.88771846954,
+    "p50": 387556,
+    "p95": 858649,
+    "p99": 943857,
+    "max": 961999
+  },
+  "setPass": {
+    "mean": 38.91379310344828,
+    "p50": 37,
+    "p95": 53,
+    "p99": 54,
+    "max": 58
+  },
+  "unavailableCounters": [
+    "GPU frame time (all zero)",
+    "render thread time (-1)",
+    "draw calls and batches (all zero)",
+    "visible-only triangles",
+    "resident texture memory",
+    "peak process RAM",
+    "startup/loading duration"
+  ],
+  "gpuProcessAllocationMiB": 1035,
+  "gpuMemoryScope": "Single nvidia-smi sample for PID 1128945; includes all player GPU allocations, not only textures. Not a peak.",
+  "releaseSmoke": {
+    "complete": true,
+    "scope": "Native release launch, input responsiveness, non-blank rendering, no runtime exceptions. Full city-loop assertions run separately in development."
+  },
+  "runtimeExceptions": false,
+  "shutdownNote": "Development log retains Unity immediate MemoryLeaks shutdown diagnostic (671130 bytes); it is not a peak or runtime residency measurement.",
+  "additionalModalProfile": {
+    "report": "after-verbs/report.json",
+    "timing": {
+      "frames": 11471,
+      "seconds": 29.49000105910001,
+      "averageFps": 388.97930105228954,
+      "p50Ms": 2.323441,
+      "p95Ms": 3.840391,
+      "p99Ms": 4.730485000000001,
+      "maxMs": 114.9253,
+      "hitchesOver33ms": 3,
+      "meets60fpsAndP99": true
+    },
+    "hitchContext": "One 107\u2013115 ms hitch in each of dialogue, shop and travel; the test synchronously captures screenshots in those three states, and the sample does not isolate capture overhead."
+  }
+}

@@ -51,6 +51,7 @@ async def main():
   await goto('ring_gate');s=await expect('Play');assert 'offline' in s['session']['notice']
   await tap('Escape');await expect('Paused');await click('mute');s=await expect('Paused');assert s['session']['muted'];await click('mute')
   await click('reduced-motion');s=await expect('Paused');assert s['session']['reducedMotion']
+  await click('reduced-motion');s=await expect('Paused');assert not s['session']['reducedMotion']
   await click('credits-button');await expect('Credits');await tap('Escape')
   await goto('lattice_jack');await tap('e');await expect('Grid');await asyncio.sleep(1.4);await click('node1');s=await expect('Grid');assert s['session']['selectedDestination']=='drywater_works';await tap('Escape')
   await tap('r');s=await expect('Play');assert abs(s['player']['position'][0]-43)<.1

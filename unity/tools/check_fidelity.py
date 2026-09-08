@@ -24,6 +24,8 @@ assert PHASE in ('baseline', 'restored')
 OUT = Path(os.environ.get('ATHEN_FIDELITY_EVIDENCE', ROOT / 'evidence/fidelity/20260908')) / ('native-' + PHASE)
 PROJECT = Path(os.environ.get('ATHEN_FIDELITY_PROJECT', ROOT / 'AthenHill'))
 BUILD = PROJECT / 'Builds' / ('FidelityBaseline' if PHASE == 'baseline' else 'FidelityReview') / 'AthenHill.x86_64'
+if os.environ.get('ATHEN_FIDELITY_BUILD'):
+    BUILD = Path(os.environ['ATHEN_FIDELITY_BUILD'])
 CAMERAS = ['cam_hill', 'cam_avenue', 'cam_gate', 'cam_terminal', 'cam_fidelity_guard',
            'cam_shop_recovery_close', 'cam_salvage_general', 'cam_fidelity_generator']
 PROFILE = dict(width=1920, height=1080, windowMode=0, preset=2, renderPercent=100,
@@ -39,6 +41,9 @@ def metrics(frames):
                 p99=values[int((len(values)-1)*.99)], maximum=max(values),
                 framesOver33ms=sum(v > 33.33 for v in values),
                 gpuTimingAvailable=any(f['gpuMs'] > 0 for f in frames),
+                meanMainThreadMs=statistics.mean(f['mainMs'] for f in frames) if all(f['mainMs']>=0 for f in frames) else None,
+                meanCpuFrameMs=statistics.mean(f['cpuMs'] for f in frames) if any(f['cpuMs']>0 for f in frames) else None,
+                maxSetPass=max(f['setPass'] for f in frames),
                 maxSubmittedTriangles=max(f['tris'] for f in frames),
                 drawCounterAvailable=any(f['draws'] > 0 for f in frames))
 
@@ -50,6 +55,41 @@ def memory(pid):
                 totalDeviceUsed=gpu.findtext('fb_memory_usage/used'),
                 playerFramebuffer=match[0].findtext('used_memory') if match else None,
                 note='Device total includes Editor and other applications. Player framebuffer comes from the matching process PID.')
+
+async def walkthrough(c, snap):
+    """Record real movement separately, after all timing samples have stopped."""
+    from Xlib import X
+    from Xlib.ext import xtest
+    from settings_test_input import window
+    await c.command({'action':'view','camera':'follow'})
+    await c.command({'action':'reset'})
+    d=focus(); root=d.screen().root; w=window(d); p=root.translate_coords(w,0,0)
+    geometry=w.get_geometry()
+    assert (geometry.width,geometry.height)==(1920,1080)
+    video=await asyncio.create_subprocess_exec('ffmpeg','-hide_banner','-loglevel','error','-y',
+        '-f','x11grab','-framerate','30','-video_size','1920x1080',
+        '-i',f'{os.environ["DISPLAY"]}+{p.x},{p.y}', '-t','26',
+        '-c:v','libx264','-preset','veryfast','-crf','20','-threads','2',
+        '-pix_fmt','yuv420p',str(OUT/'walkthrough.mp4'))
+    try:
+        await asyncio.sleep(1)
+        key(d,'w',True);await asyncio.sleep(9);key(d,'w',False)
+        xtest.fake_input(d,X.MotionNotify,x=p.x+960,y=p.y+540);d.sync()
+        for _ in range(18):
+            xtest.fake_input(d,X.ButtonPress,4);xtest.fake_input(d,X.ButtonRelease,4);d.sync()
+            await asyncio.sleep(.06)
+        await asyncio.sleep(1)
+        assert snap()['camera']['firstPerson'],snap()['camera']
+        await c.command({'action':'capture','name':'first-person-stairs'})
+        key(d,'w',True);await asyncio.sleep(2);key(d,'w',False)
+        await asyncio.sleep(2)
+        for _ in range(18):
+            xtest.fake_input(d,X.ButtonPress,5);xtest.fake_input(d,X.ButtonRelease,5);d.sync()
+            await asyncio.sleep(.06)
+        assert await video.wait()==0,'Walkthrough recording failed'
+    finally:
+        key(d,'w',False)
+        if video.returncode is None: video.terminate();await video.wait()
 
 async def main():
     OUT.mkdir(parents=True, exist_ok=True)
@@ -66,7 +106,7 @@ async def main():
             f'<pref name="AthenHill.Settings.v1.QA.Video" type="string">{encoded}</pref>\n</unity_prefs>\n')
     for name in ('snapshot.json','ack.json','command.json','qa-error.json'):
         (OUT/name).unlink(missing_ok=True)
-    report = dict(phase=PHASE, complete=False, requestedProfile=PROFILE, views=[])
+    report = dict(phase=PHASE, complete=False, requestedProfile=PROFILE, build=str(BUILD), views=[])
     process = None
     try:
         process = subprocess.Popen([str(BUILD), '-force-glcore', '-screen-fullscreen', '0',
@@ -102,9 +142,7 @@ async def main():
             if PHASE=='restored':
                 guards=[a for a in report['actors'] if a['name']=='WardGuard']
                 assert len(guards)==4 and all(a['triangles']==38071 for a in guards),report['actors']
-                # glTF legacy skins have scaled hierarchies; retain BakeMesh data
-                # for diagnosis, but qualify rendered world bounds and captures.
-                assert all(abs(a['rendererLow'])<.05 and 1.76<a['rendererHigh']<1.84 for a in guards),guards
+                assert all(abs(a['meshLow'])<.05 and 1.76<a['meshHigh']<1.84 for a in guards),guards
             for camera in CAMERAS:
                 focus()
                 await c.command({'action':'view','camera':camera}); await asyncio.sleep(1.2)
@@ -136,6 +174,9 @@ async def main():
                 report['cityLoop']=snap()['session']
             report['performancePass']=all(v['averageFps']>=60 and v['p99']<=16.67 for v in report['views'])
             if 'walking' in report: report['performancePass'] &= report['walking']['averageFps']>=60 and report['walking']['p99']<=16.67
+            if '--video' in sys.argv:
+                await walkthrough(c,snap)
+                report['walkthrough']='26 seconds at 30 FPS capture; separate from performance samples; includes real wheel zoom into first person.'
             await c.command({'action':'quit'})
             process.wait(timeout=15)
         log=(OUT/'Player.log').read_text()

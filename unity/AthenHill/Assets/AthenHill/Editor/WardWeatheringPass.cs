@@ -60,6 +60,34 @@ namespace AthenHill.Editor
             EnableDecals();
             Capture("after-editor");
         }
+        [MenuItem("Athen Hill/Weathering/Polish notice placement")]
+        public static void PolishNotices()
+        {
+            if (EditorApplication.isPlaying) throw new Exception("Exit Play first.");
+            var scene=EditorSceneManager.OpenScene(ImportBaseline.ScenePath);
+            var root=GameObject.Find("Ward surface wear");
+            if(!root)throw new Exception("Install wear first.");
+            var projectors=root.GetComponentsInChildren<UnityEngine.Rendering.Universal.DecalProjector>();
+            foreach(var d in projectors)
+            {
+                if(d.name.EndsWith("embedded base dirt")){d.fadeFactor=.8f;EditorUtility.SetDirty(d);continue;}
+                if(d.name.EndsWith("standing scuffs")){d.fadeFactor=.48f;EditorUtility.SetDirty(d);continue;}
+                // Preserve the artwork's 4:3 aspect, with later paper above old paint.
+                if(d.name=="Warden recruitment paper")d.size=new Vector3(.96f,.72f,.15f);
+                else if(d.name=="Karaveen delivery notice")d.size=new Vector3(.8f,.6f,.15f);
+                else if(d.name=="Aquifer maintenance notice")d.size=new Vector3(1.12f,.84f,.18f);
+                else if(d.name=="Factory orders graffiti")
+                {
+                    d.transform.position=new Vector3(46.48f,.79f,-11.75f);
+                    d.size=new Vector3(1.85f,.78f,.15f);
+                }
+                else continue;
+                if(d.name!="Factory orders graffiti")d.material.SetFloat("_DrawOrder",20);
+                EditorUtility.SetDirty(d);EditorUtility.SetDirty(d.material);
+            }
+            EditorSceneManager.MarkSceneDirty(scene);EditorSceneManager.SaveScene(scene);AssetDatabase.SaveAssets();
+            Capture("after-editor");
+        }
         [MenuItem("Athen Hill/Weathering/Build current Linux players")]
         public static void Build()
         {

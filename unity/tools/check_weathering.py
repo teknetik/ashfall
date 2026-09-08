@@ -6,6 +6,8 @@ ATHEN_NATIVE_DIR. No scene state, player preferences or release bridges are chan
 import asyncio, json, os, pathlib, sys, subprocess, math, time
 from native_client import Client
 from desktop_input import focus, key
+from Xlib import X
+from Xlib.ext import xtest
 
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 OUT=pathlib.Path(os.environ['ATHEN_NATIVE_DIR'])
@@ -48,6 +50,30 @@ async def main():
             process=await asyncio.create_subprocess_exec(sys.executable,str(ROOT/'tools/city_loop_check.py'))
             assert await process.wait()==0,'City verbs failed'
             report['routeAndVerbs']=True
+            # Moving proximity review is separate from the timing samples.
+            await c.command({'action':'view','camera':'follow'})
+            await c.command({'action':'goto','landmark':'mission_slab'})
+            await c.command({'action':'cameraYaw','yaw':180})
+            d=focus();root=d.screen().root
+            for wid in root.get_full_property(d.intern_atom('_NET_CLIENT_LIST'),X.AnyPropertyType).value:
+                w=d.create_resource_object('window',wid);pid=w.get_full_property(d.intern_atom('_NET_WM_PID'),X.AnyPropertyType)
+                if pid is not None and int(pid.value[0])==int(os.environ['ATHEN_NATIVE_PID']):
+                    origin=root.translate_coords(w,0,0);break
+            video=await asyncio.create_subprocess_exec('ffmpeg','-hide_banner','-loglevel','error','-y','-f','x11grab','-framerate','30','-video_size','1920x1080','-i',os.environ.get('DISPLAY',':0')+f'+{origin.x},{origin.y}','-t','15','-c:v','libx264','-preset','ultrafast','-crf','22','-pix_fmt','yuv420p',str(OUT/'terminal-walkthrough.mp4'))
+            await asyncio.sleep(3)
+            xtest.fake_input(d,X.MotionNotify,x=origin.x+960,y=origin.y+540);d.sync()
+            for _ in range(18):
+                xtest.fake_input(d,X.ButtonPress,4);xtest.fake_input(d,X.ButtonRelease,4);d.sync();await asyncio.sleep(.08)
+            await asyncio.sleep(2)
+            assert snap()['camera']['firstPerson'],'Real wheel zoom did not enter first person'
+            await c.command({'action':'capture','name':'first-person-terminal'})
+            for k,seconds in [('a',.4),('s',.6),('d',.4)]:
+                key(d,k,True)
+                try:await asyncio.sleep(seconds)
+                finally:key(d,k,False)
+                await asyncio.sleep(1)
+            assert await video.wait()==0,'Walkthrough capture failed'
+            report['walkthrough']='15 seconds, 1920x1080 at 30 FPS video; real strafe and wheel zoom; separate from timing'
         report['complete']=True
     except Exception as e:report['error']=str(e);raise
     finally:

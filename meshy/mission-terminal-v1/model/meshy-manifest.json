@@ -36,7 +36,22 @@
     "shipping_triangles": 7696,
     "ratio": 0.3,
     "error": 0.002,
-    "lock_border": true
+    "lock_border": true,
+    "status": "Historical reduced runtime, superseded by source fidelity recovery on 2026-09-08"
   },
-  "unity_import": "Import mission-terminal-unity.glb with glTFast, normalize its bounds to 1.95 m, add a box collider, and instance it at the three mission slab slots."
+  "unity_import": "Keep the saved MissionTerminal prefab and existing three scene instances. Fidelity recovery uses the full mission-terminal.glb at the existing 1.95 m scale with a derived tangent mesh and supplied PBR maps. The reduced mission-terminal-unity.glb is retained as historical output.",
+  "unity_fidelity_recovery": {
+    "date": "2026-09-08",
+    "source": "mission-terminal.glb",
+    "runtime_triangles": 25656,
+    "runtime_mesh": "Assets/AthenHill/Art/Imported/Meshy/MissionTerminal/MissionTerminalWithTangents.asset",
+    "shader": "Universal Render Pipeline/Lit",
+    "maps": [
+      "Albedo.jpg",
+      "Normal.jpg",
+      "MetallicSmoothness.png"
+    ],
+    "preserves": "Original source GLB; derived tangents; current prefab/scene instance transforms and colliders",
+    "evidence": "unity/evidence/fidelity/20260908/README.md"
+  }
 }

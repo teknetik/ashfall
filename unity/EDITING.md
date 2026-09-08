@@ -187,13 +187,29 @@ Use **cam_whompah** for the unchanged comparison angle and **cam_ring_front** fo
 the frontal inspection. Do not rerun the installer to edit an existing gate;
 it refuses to overwrite the installed prefab instance.
 
+## Meshy source fidelity recovery
+
+The 8 September recovery preserves the full 38,071-triangle guard and
+25,656-triangle terminal. The terminal uses a derived tangent mesh and Lit PBR
+material. Active salvage families and west arches use original mesh UVs and
+full source maps through **Art/Imported/Meshy/Fidelity**. Original exports,
+previous runtime assets, native before/after views and RTX 3060 measurements are
+recorded in [the recovery report](evidence/fidelity/20260908/README.md).
+
+**Athen Hill/Fidelity** contains the scoped migration and review commands. The
+migration is already applied; use saved prefabs/materials and render-chunk controls
+for normal edits. Do not repeatedly run the migration to overwrite later tuning.
+Retain detailed near meshes and source maps when authoring reviewed LODs. The
+old 6k guard cap and district-wide texture atlas are not current quality rules.
+
 ## Post-war salvage
 
 **Post-war salvage** contains 98 editable prefab instances: repaired shop fronts,
 Basic General, Vanguard Hall, the community board, crates, generators, litter and
 industrial scrap. **Prefabs/Salvage** has the eight reusable assets. Their imported
-FBX models and original PBR maps live in **Art/Imported/Meshy/Salvage**; the packed
-runtime textures and UV-remapped mesh copies are in its **Atlas** subfolder.
+FBX models and original PBR maps live in **Art/Imported/Meshy/Salvage**; the older
+packed textures and UV-remapped mesh copies remain in its **Atlas** subfolder
+as recovery sources. Active restored visuals use **Meshy/Fidelity** materials.
 The original Blender objects remain in **AuthoredWorld** with the replaced parts
 inactive. Original shop lettering is reused on seven shop variants.
 
@@ -326,3 +342,38 @@ inspection of the stairs, benches and building sides/backs.
 The accepted **RingGate.prefab** is installed at the **south Ring Gate**. The
 **north Lattice Jack** is a separate travel landmark with its own original model.
 Grounding evidence and native checks are in **evidence/grounding/20260908**.
+
+## Localized Ward surface wear · 8 September 2026
+
+**Ward surface wear** contains editable URP Decal Projectors for terminal-base
+grime, standing scuffs, stair-edge sand, wall runoff and layered notices. Twelve
+small clumps reuse the existing hill-grass geometry; green clumps are confined
+to the aquifer service fitting. These objects add no gameplay collision.
+Keep the stair centers, terminal standing spaces and service lane accessible.
+
+**Art/Weathering** retains the original atlas, notice textures, three material
+variants and editable shaders. The material variants preserve source albedo and
+normals, adding a world-space scalar mask for broad variation. `CopyGltfSurface`
+translates glTFast material properties before using URP Lit. Adjust **Broad dust
+variation**, **Variation per metre** and **Sheltered wall base dirt** in the
+Inspector; originals remain in their previous material folders.
+
+**PC_Renderer → Ward weathering decals** uses Screen Space with Medium normal
+reconstruction. Keep **Intermediate Texture = Always**: the installed URP 17.6
+decal pass otherwise receives a missing color target in fixed-camera captures.
+The existing OpenGL graphics API and URP pipeline remain in use.
+
+Edit projector position, Size, Fade Factor and UV Scale/Bias directly. The
+atlas's four quadrants are sand, foundation grime, scuffs and runoff. Notices
+have separate exact-text SVG sources in `refs/weathering_20260908`; the source
+atlas and generation prompt are there too. `prepare_weathering_assets.py`
+recreates the original vector notices and pins its Lit derivative to URP 17.6.
+It does not change the supplied atlas. Flat paper uses decals; curled paper
+geometry is not included in this pass.
+
+The one-time install command refuses duplicate installation. **Weathering →
+Refresh and capture installed wear** captures the saved scene; **Build current
+Linux players** builds both outputs. Rebuild render chunks after changing source
+material assignments, as with other city edits. Projector-only placement edits
+do not alter those source meshes. Evidence and remaining visual limitations are
+recorded in [the weathering report](evidence/weathering/20260908/README.md).

@@ -7,7 +7,8 @@ else:
 from desktop_input import focus,key
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 CAP=pathlib.Path(os.environ.get('ATHEN_NATIVE_DIR',ROOT/'AthenHill/Captures'));OUT=pathlib.Path(os.environ.get('ATHEN_EVIDENCE',ROOT/'evidence/U2'));OUT.mkdir(exist_ok=True)
-ROUTE=[('west_stair_approach',(12,0,0)),('hill_tree',(4,1.5,0)),('hill_southwest',(4,1.5,4)),('south_stair_top',(0,1.5,4)),('south_stair_bottom',(0,0,12)),('ring_approach',(0,0,31)),('ring_gate',(0,.5,36)),('ring_departure',(0,0,31)),('west_lane_south',(13,0,28)),('west_lane_north',(13,0,-29)),('lattice_approach',(0,0,-31)),('lattice_jack',(0,.5,-36.5))]
+# The accepted Meshy console occupies the old z=36 waypoint. Use its front platform.
+ROUTE=[('west_stair_approach',(12,0,0)),('hill_tree',(4,1.5,0)),('hill_southwest',(4,1.5,4)),('south_stair_top',(0,1.5,4)),('south_stair_bottom',(0,0,12)),('ring_approach',(0,0,31)),('ring_gate',(0,.6,34.15)),('ring_departure',(0,0,31)),('west_lane_south',(13,0,28)),('west_lane_north',(13,0,-29)),('lattice_approach',(0,0,-31)),('lattice_jack',(0,.5,-36.5))]
 if len(sys.argv)>1: ROUTE=json.loads(pathlib.Path(sys.argv[1]).read_text())
 REPORT_NAME=sys.argv[2] if len(sys.argv)>2 else 'keyboard-route.json'
 async def main():

@@ -11,6 +11,8 @@ from PIL import ImageGrab, ImageStat
 ROOT = Path(__file__).resolve().parents[1]
 OUT = Path(os.environ['ATHEN_RELEASE_EVIDENCE']) if os.environ.get('ATHEN_RELEASE_EVIDENCE') else ROOT / 'evidence' / 'ward-guard' / datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ-release')
 OUT.mkdir(parents=True)
+private_config = OUT / 'config'
+private_config.mkdir()
 xrandr_state = subprocess.check_output(['xrandr', '--current'], text=True)
 active = next((line.split()[0] for line in xrandr_state.splitlines() if '*' in line), None)
 mode = active or 'x'.join(re.search(r'current (\d+) x (\d+)', xrandr_state).groups())
@@ -22,7 +24,8 @@ try:
         subprocess.run(['xrandr', '--output', 'DP-0', '--mode', '1920x1080'], check=True)
     process = subprocess.Popen([str(ROOT / 'AthenHill/Builds/Linux/AthenHill.x86_64'), '-force-glcore',
         '-screen-fullscreen', '1', '-screen-width', '1920', '-screen-height', '1080',
-        '-logFile', str(OUT / 'Player.log'), '--athen-qa', str(OUT)], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+        '-logFile', str(OUT / 'Player.log'), '--athen-qa', str(OUT)],
+        env=dict(os.environ, XDG_CONFIG_HOME=str(private_config)), stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
     os.environ['ATHEN_NATIVE_PID'] = str(process.pid)
     from desktop_input import focus, key
     time.sleep(5)

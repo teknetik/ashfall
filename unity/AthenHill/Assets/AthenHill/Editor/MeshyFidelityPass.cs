@@ -238,5 +238,33 @@ namespace AthenHill.Editor
             LinuxBuild.Development(); File.Copy("Captures/linux-build.json", Evidence + "/development-build.json", true);
             LinuxBuild.Release(); File.Copy("Captures/linux-build.json", Evidence + "/release-build.json", true);
         }
+        [MenuItem("Athen Hill/Fidelity/5 Inspect terrain references")]
+        public static void InspectTerrain()
+        {
+            CheckScene();
+            Write("terrain-references.json", EditorSceneManager.GetActiveScene().GetRootGameObjects()
+                .Where(g=>g.name.Contains("Desert") || PrefabUtility.IsPrefabAssetMissing(g))
+                .Select(g=>new { g.name, status=PrefabUtility.GetPrefabInstanceStatus(g).ToString(),
+                    renderers=g.GetComponentsInChildren<Renderer>(true).Length,
+                    colliders=g.GetComponentsInChildren<Collider>(true).Length,
+                    objects=g.GetComponentsInChildren<Transform>(true).Select(t=>new {t.name,components=t.GetComponents<Component>().Where(c=>c).Select(c=>c.GetType().Name)}) }));
+        }
+        [MenuItem("Athen Hill/Fidelity/6 Remove empty retired terrain references")]
+        public static void RemoveEmptyTerrainReferences()
+        {
+            CheckScene();
+            var scene=EditorSceneManager.GetActiveScene();
+            var terrain=scene.GetRootGameObjects().Single(g=>g.name=="Desert Landscape" && !PrefabUtility.IsPrefabAssetMissing(g));
+            if(terrain.GetComponentsInChildren<MeshRenderer>(true).Length!=8) throw new Exception("Expected the eight intact terrain source renderers.");
+            var retired=scene.GetRootGameObjects().Where(g=>g.name.StartsWith("Desert Landscape (Missing Prefab") && PrefabUtility.IsPrefabAssetMissing(g)).ToArray();
+            if(retired.Any(g=>g.transform.childCount!=0 || g.GetComponents<Component>().Length!=1))
+                throw new Exception("A missing terrain reference contains data; inspect it instead of removing it.");
+            var gameplay=DistrictCityPass.GameplaySignature();var physics=PhysicsSignature();
+            if(!File.Exists(Evidence+"/scene-before-terrain-cleanup.unity")) File.Copy(ImportBaseline.ScenePath,Evidence+"/scene-before-terrain-cleanup.unity");
+            foreach(var empty in retired) Undo.DestroyObjectImmediate(empty);
+            if(gameplay!=DistrictCityPass.GameplaySignature() || physics!=PhysicsSignature()) throw new Exception("Terrain cleanup changed gameplay or collision.");
+            EditorSceneManager.SaveScene(scene);
+            Write("terrain-cleanup.json",new { removedEmptyReferences=retired.Length, connectedTerrainRenderers=8, gameplayPreserved=true, collisionPreserved=true });
+        }
     }
 }
