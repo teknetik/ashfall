@@ -10,6 +10,9 @@ namespace AthenHill
         public AudioSource ambience, steps, confirmation, latticeHum, ringHum;
         public AudioSource music, market, travel;
         public AudioClip[] footstepClips;
+        public AudioClip[] musicPlaylist;
+        public string CurrentTrack => activeMusic && activeMusic.clip ? activeMusic.clip.name : "Music unavailable";
+        public int MusicTransitions { get; private set; }
         public AudioClip tradeConfirm, unavailable, latticeOpen, latticeLink;
         [Min(.1f)] public float walkStepDistance = .95f, runStepDistance = 1.45f;
         [Min(.1f)] public float musicFadeSeconds = 3;
@@ -20,7 +23,13 @@ namespace AthenHill
         public int UnavailableCount { get; private set; }
         public int TravelOpenCount { get; private set; }
         public int TravelLinkCount { get; private set; }
-        float distance, musicVolume;
+        float distance, musicVolume, duck = 1, fadeIn, crossfade;
+        int trackIndex;
+        bool transitioning;
+        AudioSource activeMusic, incomingMusic;
+        AudioSource[] levelSources;
+        float[] baseLevels;
+        GameSettings settings;
         CityState previous;
 
         void Start()
@@ -29,7 +38,24 @@ namespace AthenHill
             previous = session.State;
             session.Changed += Changed;
             session.SoundRequested += PlayCue;
-            if (music) { musicVolume = music.volume; music.volume = 0; }
+            settings = session.Settings;
+            levelSources = new[] { ambience, market, latticeHum, ringHum, steps, confirmation, travel };
+            baseLevels = new float[levelSources.Length];
+            for (int i = 0; i < levelSources.Length; i++) if (levelSources[i]) baseLevels[i] = levelSources[i].volume;
+            settings.Changed += ApplyLevels;
+            ApplyLevels();
+            if (music)
+            {
+                musicVolume = music.volume; music.volume = 0; music.Stop(); music.loop = false;
+                if (musicPlaylist != null && musicPlaylist.Length > 0) music.clip = musicPlaylist[0];
+                activeMusic = music;
+                incomingMusic = new GameObject("City music crossfade").AddComponent<AudioSource>();
+                incomingMusic.transform.SetParent(transform, false);
+                incomingMusic.outputAudioMixerGroup = music.outputAudioMixerGroup;
+                incomingMusic.playOnAwake = false; incomingMusic.loop = false;
+                incomingMusic.spatialBlend = 0; incomingMusic.priority = music.priority;
+                if (music.clip) music.Play();
+            }
         }
 
         void OnDestroy()
@@ -37,16 +63,54 @@ namespace AthenHill
             if (!session) return;
             session.Changed -= Changed;
             session.SoundRequested -= PlayCue;
+            if (settings) settings.Changed -= ApplyLevels;
         }
+
+        void ApplyLevels()
+        {
+            for (int i = 0; i < levelSources.Length; i++)
+                if (levelSources[i]) levelSources[i].volume = baseLevels[i] * (i < 4 ? settings.Sound.ambience : settings.Sound.effects);
+            ApplyMusicLevels();
+        }
+
+        void ApplyMusicLevels()
+        {
+            if (!activeMusic) return;
+            float level = musicVolume * settings.Sound.music * duck * fadeIn;
+            activeMusic.volume = level * (transitioning ? 1 - crossfade : 1);
+            incomingMusic.volume = level * (transitioning ? crossfade : 0);
+        }
+
+        public void NextMusic()
+        {
+            if (!activeMusic || transitioning || musicPlaylist == null || musicPlaylist.Length == 0) return;
+            int next = (trackIndex + 1) % musicPlaylist.Length;
+            if (!musicPlaylist[next]) return;
+            trackIndex = next; incomingMusic.clip = musicPlaylist[next]; incomingMusic.volume = 0;
+            incomingMusic.Play(); crossfade = 0; transitioning = true; MusicTransitions++;
+        }
+
+        public void PreviewEffect() => OneShot(confirmation, confirmation ? confirmation.clip : null);
 
         void Update()
         {
-            if (music && !AudioListener.pause)
+            if (activeMusic && !AudioListener.pause)
             {
                 float level = session.State == CityState.Grid ? travelMusicLevel :
                     session.State == CityState.Dialogue || session.State == CityState.Shop ? dialogueMusicLevel : 1;
-                music.volume = Mathf.MoveTowards(music.volume, musicVolume * level,
-                    musicVolume * Time.unscaledDeltaTime / Mathf.Max(.1f, musicFadeSeconds));
+                float delta = Time.unscaledDeltaTime / Mathf.Max(.1f, musicFadeSeconds);
+                duck = Mathf.MoveTowards(duck, level, delta); fadeIn = Mathf.MoveTowards(fadeIn, 1, delta);
+                if (!transitioning && activeMusic.clip && (!activeMusic.isPlaying || activeMusic.clip.length - activeMusic.time <= musicFadeSeconds)) NextMusic();
+                if (transitioning)
+                {
+                    crossfade = Mathf.MoveTowards(crossfade, 1, delta);
+                    if (crossfade >= 1)
+                    {
+                        activeMusic.Stop(); var old = activeMusic; activeMusic = incomingMusic; incomingMusic = old;
+                        transitioning = false;
+                    }
+                }
+                ApplyMusicLevels();
             }
             if (session.State != CityState.Play || !session.player.Grounded || session.player.Speed < .12f)
             { distance = 0; return; }

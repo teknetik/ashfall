@@ -4,10 +4,13 @@ using System.Linq;
 using UnityEngine;
 namespace AthenHill
 {
- public enum CityState { Boot,Play,Dialogue,Shop,Grid,Paused,Inventory,Notes,Credits,Error }
+ public enum CityState { Boot,Play,Dialogue,Shop,Grid,Paused,Inventory,Notes,Credits,Error,Settings }
  public class GameSession:MonoBehaviour
  {
   public CityCatalog catalog;
+  public GameSettings Settings {get;private set;}
+  void Awake(){Settings=GetComponent<GameSettings>();if(!Settings)Settings=gameObject.AddComponent<GameSettings>();}
+  void SettingsChanged(){muted=Settings.Sound.muted;Changed?.Invoke();}
   public GameInput input;
   public PlayerMotor player;
   public FollowCamera follow;
@@ -32,8 +35,8 @@ namespace AthenHill
   public bool Complete=>visitedHill&&Spoken.Count==4&&boughtFlask&&soldScrap&&linked;
   public string Objective=>!visitedHill?"Reach the Hill Tree.":Spoken.Count<4?$"Meet the colonists · {Spoken.Count}/4 conversations":!boughtFlask||!soldScrap?"Buy a flask and sell your scrap at Basic General.":!linked?"Use the Lattice Jack in the north court.":"A place on the hill. City visit complete.";
   public DialogueNode Dialogue=>ActiveNpc?ActiveNpc.definition.nodes.First(x=>x.id==dialogueNode):null;
-  void Start(){AudioListener.volume=muted?0:1;Shop=new ShopModel(catalog.items,catalog.startingCredits);Log.Add("Linn: Meet me on the hill.");SetState(CityState.Play);}
-  void OnDestroy(){Time.timeScale=1;AudioListener.pause=false;AudioListener.volume=1;}
+  void Start(){Settings.Changed+=SettingsChanged;muted=Settings.Sound.muted;Settings.ApplySound();Shop=new ShopModel(catalog.items,catalog.startingCredits);Log.Add("Linn: Meet me on the hill.");SetState(CityState.Play);}
+  void OnDestroy(){if(Settings)Settings.Changed-=SettingsChanged;Time.timeScale=1;AudioListener.pause=false;AudioListener.volume=1;}
   void OnApplicationFocus(bool focused){if(!focused&&State==CityState.Play)SetState(CityState.Paused);}
   void Update()
   {
@@ -92,12 +95,12 @@ namespace AthenHill
    else if(slot==4){if(Nearest)Interact();else Notify("Move close to a colonist to talk.");}
    else Open(slot==5?CityState.Inventory:CityState.Notes);
   }
-  public void Open(CityState state){if(State==CityState.Play||State==CityState.Paused)SetState(state);}
-  public void Close(){if(ActiveNpc)ActiveNpc.talking=false;ActiveNpc=null;GridProgress=0;SetState(CityState.Play);}
+  public void Open(CityState state){if(State==CityState.Play||State==CityState.Paused){if(state==CityState.Settings)Settings.BeginEdit();SetState(state);}}
+  public void Close(){if(State==CityState.Settings){if(Settings.Previewing){Settings.RevertVideo();return;}Settings.EndEdit();SetState(CityState.Paused);return;}if(ActiveNpc)ActiveNpc.talking=false;ActiveNpc=null;GridProgress=0;SetState(CityState.Play);}
   public void ResetPlayer(){Close();player.ReturnToGate();follow.yaw=-90;follow.pitch=17;follow.FixedView=false;}
-  public void ToggleMute(){muted=!muted;AudioListener.volume=muted?0:1;Changed?.Invoke();}
+  public void ToggleMute(){Settings.Sound.muted=!Settings.Sound.muted;Settings.SaveSound();Settings.Flush();}
   public void ToggleReducedMotion(){reducedMotion=!reducedMotion;Changed?.Invoke();}
-  void SetState(CityState state){State=state;input.SetGameplay(state==CityState.Play);player.Blocked=state!=CityState.Play;player.Talking=state==CityState.Dialogue;Time.timeScale=state==CityState.Paused?0:1;AudioListener.pause=state==CityState.Paused;Changed?.Invoke();}
+  void SetState(CityState state){State=state;input.SetGameplay(state==CityState.Play);player.Blocked=state!=CityState.Play;player.Talking=state==CityState.Dialogue;Time.timeScale=state==CityState.Paused||state==CityState.Settings?0:1;AudioListener.pause=state==CityState.Paused;Changed?.Invoke();}
   public void Notify(string text,string speaker="System"){notice=text;noticeTime=4;AddLog(speaker,text);Changed?.Invoke();}
   void AddLog(string speaker,string text){LogRevision++;Log.Add(speaker+": "+text);if(Log.Count>16)Log.RemoveAt(0);Changed?.Invoke();}
  }

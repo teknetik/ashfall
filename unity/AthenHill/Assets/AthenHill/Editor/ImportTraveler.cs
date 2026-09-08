@@ -32,7 +32,7 @@ namespace AthenHill.Editor
         public static void Install()
         {
             if (EditorApplication.isPlaying) throw new Exception("Exit Play before importing NPCs.");
-            var walkers = UnityEngine.Object.FindObjectsByType<AmbientWalker>().OrderBy(w => w.name).ToArray();
+            var walkers = UnityEngine.Object.FindObjectsByType<AmbientWalker>().Where(w => w.name != "npc_yard_mechanic").OrderBy(w => w.name).ToArray();
             if (walkers.Length != 3) throw new Exception("Expected the three existing ambient walkers.");
             var routes = walkers.Select(w => new { walker = w, waypoints = w.waypoints.ToArray(), w.speed, w.phase }).ToArray();
             var talking = UnityEngine.Object.FindObjectsByType<NpcAgent>();

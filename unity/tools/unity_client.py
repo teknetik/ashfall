@@ -1,5 +1,5 @@
 """Call the pinned, local Unity MCP through its real HTTP transport."""
-import asyncio, json, sys, dataclasses
+import asyncio, json, sys, dataclasses, os
 from fastmcp import Client
 
 async def main():
@@ -8,7 +8,7 @@ async def main():
         group = 'testing' if action in ('run_tests','get_test_job') else 'profiling' if action=='manage_profiler' else 'ui' if action=='manage_ui' else None
         if group: await client.call_tool('manage_tools', {'action':'activate','group':group})
         if action not in ('tools', 'resource'):
-            await client.call_tool('set_active_instance', {'instance':'AthenHill@7f7f353bae1a07d0'})
+            await client.call_tool('set_active_instance', {'instance':os.environ.get('ATHEN_UNITY_INSTANCE', 'AthenHill@7f7f353bae1a07d0')})
         if action == 'all-tools':
             for g in ['testing','profiling','ui']: await client.call_tool('manage_tools',{'action':'activate','group':g})
             result = [t.model_dump() for t in await client.list_tools()]

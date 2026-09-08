@@ -1,9 +1,9 @@
-// Derive a bounded runtime mesh from the supplied GLB. Original files are never edited.
+// Preserve the supplied geometry and derive only the requested relaxed standing pose.
+// Original files are never edited. Distance LODs must be separate, reviewed assets.
 import assert from 'node:assert/strict';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { MeshoptSimplifier } from 'meshoptimizer';
 import { Object3D, Quaternion, Vector3 } from 'three';
 
 const root = new URL('../', import.meta.url);
@@ -30,19 +30,8 @@ function array(id) {
 const attributes = Object.fromEntries(Object.entries(primitive.attributes).map(([name, id]) => [name, array(id)]));
 const positions = attributes.POSITION, count = positions.length / 3;
 const indices = Uint32Array.from(array(primitive.indices));
-// Include UVs, normals and a per-bone weight vector in the collapse error.
-// Keep surviving vertices and their original four normalized skin influences.
-const channels = 29, weightedAttributes = new Float32Array(count * channels);
-for (let i = 0; i < count; i++) {
-  weightedAttributes.set(attributes.NORMAL.subarray(i * 3, i * 3 + 3), i * channels);
-  weightedAttributes.set(attributes.TEXCOORD_0.subarray(i * 2, i * 2 + 2), i * channels + 3);
-  for (let k = 0; k < 4; k++) weightedAttributes[i * channels + 5 + attributes.JOINTS_0[i * 4 + k]] += attributes.WEIGHTS_0[i * 4 + k];
-}
-await MeshoptSimplifier.ready;
-const [reduced, error] = MeshoptSimplifier.simplifyWithAttributes(indices, positions, 3,
-  weightedAttributes, channels, [.3, .3, .3, 1, 1, ...Array(24).fill(1)], null, 6000 * 3, .01, ['RegularizeLight']);
-assert(reduced.length <= 6000 * 3, 'Guard exceeds its six-thousand-triangle runtime budget.');
-const [remap, vertexCount] = MeshoptSimplifier.compactMesh(reduced);
+// Keep every source vertex, triangle, UV, normal and skin influence.
+const vertexCount = count;
 const replacements = new Map();
 function replace(id, values, newCount) {
   const a = doc.accessors[id], view = a.bufferView;
@@ -55,14 +44,6 @@ function replace(id, values, newCount) {
     a.max = Array.from({ length: stride }, (_, c) => Math.max(...Array.from({ length: newCount }, (_, i) => values[i * stride + c])));
   }
 }
-for (const [name, id] of Object.entries(primitive.attributes)) {
-  const data = attributes[name], stride = arities[doc.accessors[id].type];
-  const compact = new data.constructor(vertexCount * stride);
-  for (let i = 0; i < count; i++) if (remap[i] < vertexCount) compact.set(data.subarray(i * stride, (i + 1) * stride), remap[i] * stride);
-  replace(id, compact, vertexCount);
-}
-replace(primitive.indices, Uint16Array.from(reduced), reduced.length);
-doc.accessors[primitive.indices].componentType = 5123;
 doc.materials[0].name = 'MAT_guard';
 assert.equal(doc.animations.length, 1);
 const pose = doc.animations[0];
@@ -105,7 +86,7 @@ doc.animations = ['idle', 'walk', 'run', 'talk'].map(name => ({ ...structuredClo
   extras: { staticPose: true, sourceClip: pose.name, fallback: 'relaxed-standing-pose' } }));
 doc.asset.extras = { ...doc.asset.extras, source: 'meshy/ward-guard/model/character-rigged.glb',
   sourceSha256: createHash('sha256').update(raw).digest('hex'), sourceTriangles: indices.length / 3,
-  runtimeTriangles: reduced.length / 3, simplificationError: error,
+  runtimeTriangles: indices.length / 3, simplificationError: 0, geometryPreserved: true,
   armPoses, animationNote: 'Relaxed arms-down pose derived from the supplied rig. Walk/run FBX sources are retained separately.' };
 const chunks = []; let offset = 0;
 for (const [i, view] of doc.bufferViews.entries()) {

@@ -46,6 +46,9 @@ See [terrain evidence](evidence/terrain/20260908/acceptance.md) and the
 | 3 / 4 | Lattice / talk shortcut |
 | 5 / 6 | Inventory / notes |
 | Tab / Enter | Focus / activate UI controls |
+| Drag UI frame, header or bronze grip | Move that panel; position is saved |
+| Ctrl + drag over a UI control | Move its panel without activating the control |
+| Pause → Reset UI positions | Restore the default interface layout |
 
 The [native controls checks](evidence/controls/20260908/acceptance.md) cover first-person
 zoom, left-drag look, jumping and HUD/modal input handling.
@@ -54,12 +57,36 @@ Visit the hill, meet Mira/Torr/Vex/Linn, buy a flask and sell your starting scra
 Basic General, then establish a Lattice link. Ring Gate is deliberately offline.
 Pause contains mute, reduced motion, credits and a standalone Quit button. There is no second zone or combat.
 
-The ElevenLabs soundscape adds **Hill at Dusk**, an original 40-second instrumental
-prepared as a 37-second overlapping loop, plus desert wind, localized market
-chatter, distinct Lattice/Ring hums, three footstep variations, terminal feedback,
-trade confirmation, offline feedback and Lattice activation/link effects. Music
-fades in and softens during dialogue and travel; pause and mute affect the mix.
-See [AUDIO.md](AUDIO.md) for source records, editable controls and native checks.
+The south-court Ring Gate now uses the user's sandstone/gunmetal reference,
+generated through Meshy MCP. Its editable prefab includes the control console,
+cyan lights, open aperture and a walkable approach step. The offline interaction
+and hum are preserved. See [gate source and task records](../meshy/ring-gate-v1/README.md)
+and [native verification](evidence/ring-gate/20260908/acceptance.md).
+
+The post-war city pass replaces eight shop fronts, Basic General, Vanguard Hall,
+the hill notice board and five crates with original Meshy assets. It adds 82
+salvage props: litter, battered crates, generators and industrial scrap. Patched
+awnings, repaired panels and worn surfaces give the district a more lived-in feel.
+Lattice Jack is excluded. See the [reference sheets and source models](../meshy/salvage-20260908/README.md)
+and [screenshots and current native checks](evidence/salvage/20260908/acceptance.md).
+
+The soundtrack alternates the supplied **Dust of the Giants** and **Dust of Alshain**
+with three-second crossfades. The ElevenLabs wind, market, terminal, footstep and
+travel effects remain. Music softens during dialogue and travel.
+
+Open **Esc → Settings · Sound and video**. Sound offers Master, Music, Ambience and
+Effects sliders, mute, an effects preview and a next-track button. Changes are
+immediate and saved. The city pauses while settings are open; audio keeps playing
+so you can hear the mix. Back returns to Pause; Escape again resumes the city.
+
+Video offers monitor resolutions, Windowed or borderless Fullscreen, Low/Medium/High
+presets, render scale, shadows, MSAA, texture quality, post-processing, VSync and a
+frame limit. Individual quality edits select Custom. **Apply video** previews the
+setup for 15 seconds; **Keep changes** saves it. Revert, Escape or the timeout restores
+the previous setup. Closing with unapplied edits discards them. Confirmed settings
+survive relaunch; explicit `-screen-*` launch arguments override a saved display setup.
+The interface remains sharp when reducing render scale.
+See [AUDIO.md](AUDIO.md) for source records and [settings verification](evidence/settings/20260908/acceptance.md).
 
 ## Builds and diagnostics
 
@@ -103,10 +130,10 @@ and Ward Guard rebuilds have separate checks documented in `../docs/model-import
 The first native build exposed a disabled SSAO/stripped-resource initialization
 failure; its blank-frame run is rejected, not performance evidence.
 
-Final likeness to the frozen concepts remains open. The inherited world is sparse,
-the tree lacks the reference's irregular silhouette and grassy mound, and the
-candidate's face/armour remain more stylized than the supplied character concept.
-A successful engine port is not a claim that those art requirements are solved.
+Final likeness to the original frozen city concepts remains open. Later terrain
+and salvage passes add ground detail, repaired buildings and street clutter;
+their dated evidence supersedes the initial sparse-world screenshots. The tree's
+silhouette and the character's likeness remain separate art work from these passes.
 
 Original asset notices are retained in the project and available through the pause
 menu. The current soundscape was generated using the project's ElevenLabs account;

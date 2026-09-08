@@ -11,10 +11,13 @@ async def main():
  async with Client('http://127.0.0.1:18081/mcp',timeout=60) as c:
   await c.call_tool('set_active_instance',{'instance':'AthenHill@7f7f353bae1a07d0'})
   async def snap():
+   if os.environ.get('ATHEN_UI_XVFB'):await c.command({'action':'uiSnapshot'})
    await c.call_tool('execute_menu_item',{'menu_path':'Athen Hill/Diagnostics/Write snapshot'});return json.loads((C/'snapshot.json').read_text())
   async def tap(name,seconds=.08):
    key(d,name,True)
-   try:await asyncio.sleep(seconds)
+   try:
+    await asyncio.sleep(seconds)
+    if os.environ.get('ATHEN_UI_XVFB'):await c.command({'action':'uiSnapshot'})
    finally:key(d,name,False)
    await asyncio.sleep(.15)
   async def goto(name):

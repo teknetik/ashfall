@@ -37,6 +37,7 @@ namespace AthenHill.Editor
    var fileHashes=new Dictionary<string,string>();
    string FileHash(string path){if(!fileHashes.TryGetValue(path,out var hash)){using(var sha=SHA256.Create())hash=File.Exists(path)?Convert.ToBase64String(sha.ComputeHash(File.ReadAllBytes(path))):path;fileHashes[path]=hash;}return hash;}
    text.Append(c.cellDepth.ToString("R",System.Globalization.CultureInfo.InvariantCulture));
+   text.Append('|').Append(c.smallMaterialTriangleLimit);
    foreach(var r in AllSources(c))
    {
     var m=r.GetComponent<MeshFilter>().sharedMesh;
@@ -53,13 +54,25 @@ namespace AthenHill.Editor
    if(EditorApplication.isPlaying)throw new Exception("Exit Play before rebuilding.");
    c.ShowSources(true);
    var sources=AllSources(c).ToArray();var buckets=new Dictionary<(Material,int,int,ShadowCastingMode,bool),List<CombineInstance>>();
+   var familyTriangles=new Dictionary<(Material,ShadowCastingMode,bool),long>();
+   foreach(var r in sources.Where(r=>r.enabled&&r.gameObject.activeInHierarchy))
+   {
+    var mesh=r.GetComponent<MeshFilter>().sharedMesh;
+    for(int sub=0;sub<mesh.subMeshCount;sub++)
+    {
+     var family=(r.sharedMaterials[sub],r.shadowCastingMode,r.receiveShadows);
+     familyTriangles.TryGetValue(family,out var count);familyTriangles[family]=count+mesh.GetIndexCount(sub)/3;
+    }
+   }
    foreach(var r in sources)
    {
     if(!r.enabled||!r.gameObject.activeInHierarchy)continue;
     var mesh=r.GetComponent<MeshFilter>().sharedMesh;var p=c.transform.InverseTransformPoint(r.bounds.center);
     for(int sub=0;sub<mesh.subMeshCount;sub++)
     {
-     var key=(r.sharedMaterials[sub],Mathf.FloorToInt(p.x/c.cellSize),Mathf.FloorToInt((p.z+c.cellDepth*.5f)/c.cellDepth),r.shadowCastingMode,r.receiveShadows);
+     var family=(r.sharedMaterials[sub],r.shadowCastingMode,r.receiveShadows);
+     bool compact=c.smallMaterialTriangleLimit>0&&familyTriangles[family]<=c.smallMaterialTriangleLimit;
+     var key=(r.sharedMaterials[sub],compact?0:Mathf.FloorToInt(p.x/c.cellSize),compact?0:Mathf.FloorToInt((p.z+c.cellDepth*.5f)/c.cellDepth),r.shadowCastingMode,r.receiveShadows);
      if(!buckets.TryGetValue(key,out var list)){list=new List<CombineInstance>();buckets.Add(key,list);}
      list.Add(new CombineInstance{mesh=mesh,subMeshIndex=sub,transform=c.transform.worldToLocalMatrix*r.localToWorldMatrix});
     }

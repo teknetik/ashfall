@@ -7,6 +7,8 @@ namespace AthenHill
   public Transform[] sourceRoots;
   [Min(8)]public float cellSize=64;
   [Min(8)]public float cellDepth=128;
+  [Tooltip("Combine small material families across cells. Larger meshes retain spatial culling; zero disables this optimization.")]
+  [Min(0)]public int smallMaterialTriangleLimit;
   [HideInInspector]public Transform generatedRoot;
   [HideInInspector]public Renderer[] sources;
   [HideInInspector]public bool[] sourceVisibility;

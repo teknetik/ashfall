@@ -48,6 +48,8 @@ namespace AthenHill.Editor
             if (Mathf.Abs(finalBounds.size.y - TargetHeight) > .01f || Mathf.Abs(finalBounds.min.y) > .01f)
                 throw new Exception($"Mission terminal normalization failed: {finalBounds}");
 
+            foreach (var filter in template.GetComponentsInChildren<MeshFilter>(true))
+                filter.sharedMesh = WithTangents(filter.sharedMesh);
             var gameMaterial = ImportMaterial();
             foreach (var renderer in template.GetComponentsInChildren<Renderer>(true))
             {
@@ -140,7 +142,7 @@ namespace AthenHill.Editor
                     shader = gameMaterial.shader.name,
                     baseMap = gameMaterial.GetTexture("_BaseMap") ? gameMaterial.GetTexture("_BaseMap").name : null,
                     normalMap = gameMaterial.GetTexture("_BumpMap") ? gameMaterial.GetTexture("_BumpMap").name : null,
-                    note = "Meshy output has no tangent attribute, so the retained normal atlas is not enabled at runtime."
+                    note = "Missing source tangents are generated on a derived Unity mesh; the supplied normal and metallic/smoothness maps are enabled."
                 },
                 replacedInstances = instances.Select(instance => new
                 {
@@ -169,7 +171,7 @@ namespace AthenHill.Editor
             return bounds;
         }
 
-        static Material ImportMaterial()
+        public static Material ImportMaterial()
         {
             ConfigureTexture(AlbedoPath, true, false, false);
             ConfigureTexture(NormalPath, false, true, false);
@@ -190,22 +192,48 @@ namespace AthenHill.Editor
             var material = AssetDatabase.LoadAssetAtPath<Material>(MaterialPath);
             if (!material)
             {
-                material = new Material(Shader.Find("Universal Render Pipeline/Unlit")) { name = "MissionTerminal" };
+                material = new Material(Shader.Find("Universal Render Pipeline/Lit")) { name = "MissionTerminal" };
                 AssetDatabase.CreateAsset(material, MaterialPath);
             }
-            material.shader = Shader.Find("Universal Render Pipeline/Unlit");
+            material.shader = Shader.Find("Universal Render Pipeline/Lit");
             var baseMap = AssetDatabase.LoadAssetAtPath<Texture2D>(AlbedoPath);
             var normalMap = AssetDatabase.LoadAssetAtPath<Texture2D>(NormalPath);
             if (!baseMap || !normalMap) throw new Exception("Meshy GLB is missing its embedded albedo or normal atlas.");
             material.SetTexture("_BaseMap", baseMap);
             material.SetColor("_BaseColor", Color.white);
-            // Meshy omitted tangents from this prop. Its albedo already contains
-            // the authored wear and soft shading, which stays legible in this alcove.
-            material.DisableKeyword("_NORMALMAP");
-            material.DisableKeyword("_METALLICSPECGLOSSMAP");
+            // Tangents are generated on a derived native mesh; retain the source PBR response.
+            material.SetTexture("_BumpMap", normalMap);
+            material.SetFloat("_BumpScale", 1);
+            material.SetTexture("_MetallicGlossMap", AssetDatabase.LoadAssetAtPath<Texture2D>(MetallicSmoothnessPath));
+            material.SetFloat("_Metallic", 1);
+            material.SetFloat("_Smoothness", 1);
+            material.SetFloat("_Cull", 0); // Preserve the source material's double-sided flag.
+            material.EnableKeyword("_NORMALMAP");
+            material.EnableKeyword("_METALLICSPECGLOSSMAP");
             material.enableInstancing = true;
             EditorUtility.SetDirty(material);
             return material;
+        }
+
+        public static Mesh WithTangents(Mesh source)
+        {
+            if (!source || source.uv.Length != source.vertexCount) throw new Exception("Terminal source UVs are missing.");
+            if (source.tangents.Length == source.vertexCount) return source;
+            const string path = Folder + "/MissionTerminalWithTangents.asset";
+            var mesh = UnityEngine.Object.Instantiate(source);
+            mesh.name = "MissionTerminal_SourceWithTangents";
+            mesh.RecalculateTangents();
+            if (mesh.tangents.Length != mesh.vertexCount) throw new Exception("Terminal tangent generation failed.");
+            var existing = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            if (existing)
+            {
+                EditorUtility.CopySerialized(mesh, existing);
+                UnityEngine.Object.DestroyImmediate(mesh);
+                EditorUtility.SetDirty(existing);
+                return existing;
+            }
+            AssetDatabase.CreateAsset(mesh, path);
+            return mesh;
         }
 
         static void ConfigureTexture(string path, bool srgb, bool normal, bool readable)
@@ -215,9 +243,10 @@ namespace AthenHill.Editor
             if (!importer) throw new Exception("Texture is missing: " + path);
             importer.textureType = normal ? TextureImporterType.NormalMap : TextureImporterType.Default;
             importer.sRGBTexture = srgb;
-            importer.maxTextureSize = 2048;
+            importer.GetSourceTextureWidthAndHeight(out int width, out int height);
+            importer.maxTextureSize = Mathf.NextPowerOfTwo(Mathf.Max(width, height));
             importer.mipmapEnabled = true;
-            importer.anisoLevel = 4;
+            importer.anisoLevel = 8;
             importer.isReadable = readable;
             importer.textureCompression = readable ? TextureImporterCompression.Uncompressed : TextureImporterCompression.CompressedHQ;
             importer.SaveAndReimport();

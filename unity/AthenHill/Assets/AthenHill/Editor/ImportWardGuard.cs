@@ -64,7 +64,7 @@ namespace AthenHill.Editor
             actor.idle.SampleAnimation(actor.animationSource.gameObject, .3f);
             var renderers = rig.GetComponentsInChildren<SkinnedMeshRenderer>();
             int triangles = renderers.Sum(r => r.sharedMesh.triangles.Length / 3);
-            if (triangles > 6000 || renderers.Length != 1) throw new Exception("Guard import exceeds mesh budget.");
+            if (triangles <= 0 || renderers.Length != 1) throw new Exception("Guard import must contain one valid source mesh.");
             foreach (var r in renderers)
             {
                 r.shadowCastingMode = ShadowCastingMode.On;

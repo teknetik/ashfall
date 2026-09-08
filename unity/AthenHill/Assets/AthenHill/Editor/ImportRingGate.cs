@@ -48,8 +48,8 @@ namespace AthenHill.Editor
             var visual = (GameObject)PrefabUtility.InstantiatePrefab(model);
             visual.name = "Meshy ring gate visual";
             visual.transform.SetParent(template.transform, false);
-            // Meshy faces +Z; face the northward approach into the south court.
-            visual.transform.localRotation = Quaternion.Euler(0, 180, 0);
+            // The supplied FBX imports with its control screen facing -Z, toward the city.
+            visual.transform.localRotation = Quaternion.identity;
             var sourceBounds = BoundsOf(template);
             if (sourceBounds.size.y <= .001f) throw new Exception("Empty gate geometry.");
             visual.transform.localScale *= TargetHeight / sourceBounds.size.y;
@@ -70,6 +70,7 @@ namespace AthenHill.Editor
             }
             foreach (var t in template.GetComponentsInChildren<Transform>(true))
                 GameObjectUtility.SetStaticEditorFlags(t.gameObject, StaticEditorFlags.BatchingStatic | StaticEditorFlags.OccludeeStatic | StaticEditorFlags.ReflectionProbeStatic);
+            AddApproachStep(template);
             var prefab = PrefabUtility.SaveAsPrefabAsset(template, PrefabPath);
             UnityEngine.Object.DestroyImmediate(template);
             if (!prefab) throw new Exception("Failed to save RingGate prefab.");
@@ -84,6 +85,7 @@ namespace AthenHill.Editor
             if (chunks) StaticRenderChunksEditor.Rebuild(chunks);
 
             ImportBaseline.Camera("cam_ring_front", new Vector3(0, 3.5f, 23.8f), new Vector3(0, 3.1f, ringPosition.z), 42);
+            PositionDebugDestination(instance);
             if (session.ringPoint.position != ringPosition || !actors.SequenceEqual(session.npcs.Select(n => n.transform.position)))
                 throw new Exception("Gameplay markers or actors changed during visual replacement.");
             SaveReview();
@@ -102,6 +104,26 @@ namespace AthenHill.Editor
             var bounds = renderers[0].bounds;
             foreach (var r in renderers.Skip(1)) bounds.Encapsulate(r.bounds);
             return bounds;
+        }
+
+        static void AddApproachStep(GameObject root)
+        {
+            if (root.transform.Find("Approach step")) return;
+            // Reuse the city's authored stone step. Meshy's first tread is too
+            // shallow for the 0.35 m capsule to stand on before the next riser.
+            var source = GameObject.Find("AuthoredWorld").GetComponentsInChildren<MeshFilter>(true).First(f => f.name == "ENV_ring_step_n");
+            var step = new GameObject("Approach step");
+            step.transform.SetParent(root.transform, false);
+            step.transform.localPosition = new Vector3(0, .145f, -2.8f);
+            step.transform.localScale = new Vector3(1, 1.16f, 1.3f);
+            step.AddComponent<MeshFilter>().sharedMesh = source.sharedMesh;
+            var renderer = step.AddComponent<MeshRenderer>();
+            renderer.sharedMaterial = source.GetComponent<Renderer>().sharedMaterial;
+            renderer.renderingLayerMask = 3u;
+            var collider = step.AddComponent<BoxCollider>();
+            collider.center = source.sharedMesh.bounds.center;
+            collider.size = source.sharedMesh.bounds.size;
+            GameObjectUtility.SetStaticEditorFlags(step, StaticEditorFlags.BatchingStatic | StaticEditorFlags.OccludeeStatic);
         }
 
         static Texture2D Texture(string name, bool srgb, bool normal = false, bool readable = false)
@@ -128,7 +150,12 @@ namespace AthenHill.Editor
             var pixels = mr.GetPixels32();
             for (int i = 0; i < pixels.Length; i++) pixels[i] = new Color32(pixels[i].b, 0, 0, (byte)(255 - pixels[i].g));
             WriteAtlas("MetallicSmoothness", mr.width, mr.height, pixels);
-            var mat = new Material(Shader.Find("Universal Render Pipeline/Lit")) { name = "RingGate", enableInstancing = true };
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(Folder + "/RingGate.mat");
+            if (!mat)
+            {
+                mat = new Material(Shader.Find("Universal Render Pipeline/Lit")) { name = "RingGate", enableInstancing = true };
+                AssetDatabase.CreateAsset(mat, Folder + "/RingGate.mat");
+            }
             mat.SetTexture("_BaseMap", albedo);
             mat.SetColor("_BaseColor", Color.white);
             mat.SetTexture("_BumpMap", normal);
@@ -142,7 +169,7 @@ namespace AthenHill.Editor
             mat.SetColor("_EmissionColor", Color.white * 1.5f);
             mat.EnableKeyword("_EMISSION");
             mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.None;
-            AssetDatabase.CreateAsset(mat, Folder + "/RingGate.mat");
+            EditorUtility.SetDirty(mat);
             return mat;
         }
 
@@ -167,6 +194,8 @@ namespace AthenHill.Editor
             AssetDatabase.SaveAssets();
             EditorSceneManager.MarkSceneDirty(gate.scene);
             EditorSceneManager.SaveOpenScenes();
+            // Prime URP's first render before keeping any batch-mode review frames.
+            PortDiagnostics.Capture("cam_whompah");
             foreach (string camera in new[] { "cam_whompah", "cam_ring_front", "cam_avenue", "cam_hill", "cam_gate" }) PortDiagnostics.Capture(camera);
             var filters = gate.GetComponentsInChildren<MeshFilter>();
             var session = UnityEngine.Object.FindAnyObjectByType<GameSession>();
@@ -180,11 +209,78 @@ namespace AthenHill.Editor
                 tangentCounts = filters.Select(f => f.sharedMesh.tangents.Length),
                 colliders = gate.GetComponentsInChildren<Collider>().Length,
                 apertureBlocked,
+                viewGeometry = new[] { "cam_whompah", "cam_ring_front", "cam_hill", "cam_avenue", "cam_gate" }.Select(name =>
+                {
+                    var camera = GameObject.Find(name).GetComponent<Camera>();
+                    var planes = GeometryUtility.CalculateFrustumPlanes(camera);
+                    var visible = UnityEngine.Object.FindObjectsByType<Renderer>().Where(r => r.enabled && r.gameObject.activeInHierarchy
+                        && r.shadowCastingMode != ShadowCastingMode.ShadowsOnly && GeometryUtility.TestPlanesAABB(planes, r.bounds));
+                    long triangles = visible.Sum(r =>
+                    {
+                        var filter = r.GetComponent<MeshFilter>();
+                        Mesh mesh = r is SkinnedMeshRenderer skin ? skin.sharedMesh : filter ? filter.sharedMesh : null;
+                        return mesh ? (long)mesh.triangles.Length / 3 : 0;
+                    });
+                    return new { camera = name, visibleGeometryTriangles = triangles, gateInFrustum = GeometryUtility.TestPlanesAABB(planes, bounds) };
+                }),
                 ringInteractionPosition = new[] { session.ringPoint.position.x, session.ringPoint.position.y, session.ringPoint.position.z },
+                debugDestination = GameObject.Find("Landmarks").transform.Find("ring_gate").position.ToString("F3"),
                 disabledLegacyParts = GameObject.Find("AuthoredWorld").GetComponentsInChildren<Transform>(true).Count(t => IsLegacy(t.name) && !t.gameObject.activeInHierarchy)
             }, Formatting.Indented));
         }
 
         public static void InstallAndBuild() { Install(); LinuxBuild.Development(); LinuxBuild.Release(); }
+
+        static void PositionDebugDestination(GameObject gate)
+        {
+            // The old debug destination was between two rings. Sample a standing
+            // point on the new platform in front of its control console.
+            Physics.SyncTransforms();
+            var sample = gate.transform.position + new Vector3(0, 10, -1.65f);
+            var hits = Physics.RaycastAll(sample, Vector3.down, 12).Where(h => h.collider.transform.IsChildOf(gate.transform)).OrderByDescending(h => h.point.y).ToArray();
+            if (hits.Length == 0) throw new Exception("No platform beneath the new gate approach.");
+            var destination = GameObject.Find("Landmarks").transform.Find("ring_gate");
+            destination.position = hits[0].point + Vector3.up * .025f;
+        }
+
+        public static void ReviewAndBuild()
+        {
+            EditorSceneManager.OpenScene(ImportBaseline.ScenePath);
+            SaveReview();
+            LinuxBuild.Development();
+            LinuxBuild.Release();
+        }
+
+        public static void ApplyRuntimeMeshAndBuild()
+        {
+            EditorSceneManager.OpenScene(ImportBaseline.ScenePath);
+            AssetDatabase.ImportAsset(ModelPath, ImportAssetOptions.ForceSynchronousImport);
+            var contents = PrefabUtility.LoadPrefabContents(PrefabPath);
+            UnityEngine.Object.DestroyImmediate(contents.transform.Find("Meshy ring gate visual").gameObject);
+            var model = AssetDatabase.LoadAssetAtPath<GameObject>(ModelPath);
+            var visual = (GameObject)PrefabUtility.InstantiatePrefab(model);
+            visual.name = "Meshy ring gate visual";
+            visual.transform.SetParent(contents.transform, false);
+            var bounds = BoundsOf(visual);
+            visual.transform.localScale *= TargetHeight / bounds.size.y;
+            bounds = BoundsOf(visual);
+            visual.transform.localPosition -= new Vector3(bounds.center.x, bounds.min.y, bounds.center.z);
+            var material = MakeMaterial();
+            foreach (var renderer in visual.GetComponentsInChildren<MeshRenderer>())
+            {
+                renderer.sharedMaterials = Enumerable.Repeat(material, renderer.sharedMaterials.Length).ToArray();
+                renderer.shadowCastingMode = ShadowCastingMode.On;
+                renderer.renderingLayerMask = 3u;
+                renderer.gameObject.AddComponent<MeshCollider>().sharedMesh = renderer.GetComponent<MeshFilter>().sharedMesh;
+                GameObjectUtility.SetStaticEditorFlags(renderer.gameObject, StaticEditorFlags.BatchingStatic | StaticEditorFlags.OccludeeStatic);
+            }
+            AddApproachStep(contents);
+            PrefabUtility.SaveAsPrefabAsset(contents, PrefabPath);
+            PrefabUtility.UnloadPrefabContents(contents);
+            PositionDebugDestination(GameObject.Find(RootName));
+            SaveReview();
+            LinuxBuild.Development();
+            LinuxBuild.Release();
+        }
     }
 }

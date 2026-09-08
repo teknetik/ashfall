@@ -162,3 +162,167 @@ prefab Inspector edits for normal tuning; reapplying resets the generated terrai
 Texture prompts and built-in ImageGen provenance are recorded in
 **evidence/terrain/20260908/image-generation.json**. Scalar geology data can be
 rebaked with **unity/tools/make_terrain_surface.py** (NumPy, SciPy, Pillow).
+
+## Meshy ring gate
+
+**Meshy Ring Gate** in the south court is a saved instance of
+**Prefabs/RingGate.prefab**, generated from the user's front/back/right reference
+through Meshy MCP. Its model and editable URP material are under
+**Art/Imported/Meshy/RingGate**. The ring, sandstone clamps, platform, four lights
+and control console share one atlas. The runtime model has 12,009 triangles; the
+original generation, FBX/GLB downloads and task records are retained in
+**meshy/ring-gate-v1** at the repository root.
+
+The prefab uses a static concave MeshCollider so the aperture remains open.
+**Approach step** reuses the city's authored stone step with a box collider,
+giving the player capsule a tread before the generated platform's narrow riser.
+The **Ring interaction** marker and its hum retain their original positions and
+offline behavior. Only the **Landmarks/ring_gate** debug arrival moved to the
+platform in front of the console. NPC roots and waypoint routes are unchanged.
+
+Tune the material's base color, metallic/smoothness, normal strength and emission
+in the Inspector. The original arches and their collision proxies remain
+inactive under **AuthoredWorld** and are excluded from the rebuilt render chunks.
+Use **cam_whompah** for the unchanged comparison angle and **cam_ring_front** for
+the frontal inspection. Do not rerun the installer to edit an existing gate;
+it refuses to overwrite the installed prefab instance.
+
+## Post-war salvage
+
+**Post-war salvage** contains 98 editable prefab instances: repaired shop fronts,
+Basic General, Vanguard Hall, the community board, crates, generators, litter and
+industrial scrap. **Prefabs/Salvage** has the eight reusable assets. Their imported
+FBX models and original PBR maps live in **Art/Imported/Meshy/Salvage**; the packed
+runtime textures and UV-remapped mesh copies are in its **Atlas** subfolder.
+The original Blender objects remain in **AuthoredWorld** with the replaced parts
+inactive. Original shop lettering is reused on seven shop variants.
+
+Select **City Render Chunks → Show Sources for Editing** before moving props or
+editing materials; click **Rebuild Render Chunks** afterwards. Source prefabs and
+colliders stay editable. Small material families of at most 5,000 triangles are
+combined across cells, while large buildings retain spatial batches. Set **Small
+Material Triangle Limit** to zero to disable that optimization.
+
+Trash has no collision. Crates and industrial props use simple boxes; the shop
+and hall shells use static mesh colliders. Basic General deliberately reuses its
+original box collision and walkable porch so the counter can be approached.
+Keep the clear avenue, stair approaches, doors, NPC routes and Lattice exclusion
+area when editing the scatter.
+
+The saved **cam_salvage_shop**, **cam_salvage_general**, **cam_salvage_hall**,
+**cam_salvage_board**, **cam_salvage_yard** and **cam_salvage_wreck** cameras support
+repeatable inspection. **SalvageCityPass.Capture** refreshes editor screenshots;
+**SalvageCityPass.Build** builds both Linux players from the saved scene.
+
+**ImportSalvageAssets.Prepare** is a source import operation: it recreates the
+individual-material prefabs and now fits new imports uniformly. The fidelity
+recovery uses original mesh UVs and full source materials in **Meshy/Fidelity**.
+Do not follow a reimport with **SalvageAtlas.Build**: the legacy packing reduced
+source detail, and the command refuses to overwrite restored fidelity materials.
+Review each updated prefab in place and rebuild render chunks. Do not rerun
+**SalvageCityPass.Install** on the installed scene; it refuses to overwrite it.
+Normal edits use the Inspector and render-chunk rebuild controls above.
+
+Source views, Meshy task records, and native verification are linked from
+[meshy/salvage-20260908/README.md](../meshy/salvage-20260908/README.md).
+
+## Reference-style field interface
+
+The September 8 UI pass remains editable in **UI/CityHUD.uxml** and **CityHUD.uss**.
+Identity, vitals, compass, field notes, utility strip, local log and ten square
+hotbar slots (six illustrated actions and four reserves) share original bevelled frame artwork. Dialogue, shop, field pack,
+notes, sector lattice, pause and credits inherit the same skin. Element names
+remain the binding contract for **CityHud**.
+
+**UI/Art** contains the item PNGs, original interface symbols, three nine-slice
+frames and the bundled font/licence. **HudArtImporter** keeps UI textures sharp,
+without mipmaps or compression; the UI panel allows them in its dynamic atlas.
+The frame SVG sources are retained in **refs/ui_20260908/chrome**. Regenerate them
+with `uv run --with cairosvg python unity/tools/create_ui_chrome.py` from the repo
+root. Item generation sources and prompts are under **refs/ui_20260908/items**.
+
+The compass follows the rendered camera (north is world +Z). Conversation diamonds,
+credits, item counts and notes use live session data. The log scrolls through local
+events; it is not a multiplayer message box. Scrollable modal content preserves
+its header/footer, and inactive HUD controls cannot take focus behind a modal.
+Small windows increase HUD type size and narrow the peripheral panels.
+
+**HudWindowLayout** registers each movable HUD group and the shared modal frame.
+Drag exposed frames/headers or the small bronze grips; Ctrl-drag works from a button
+without activating it. Placement uses translations over the authored USS anchors,
+persists through PlayerPrefs, and adapts to window size. Nameplates retain an offset
+from their NPC. **Pause → Reset UI positions** restores defaults. The hotbar is
+688 × 90 reference pixels with ten approximately 64-pixel square cells.
+Native pointer, persistence and resize checks run with
+`uv run --with python-xlib python unity/tools/check_draggable_ui.py` and save evidence
+under **unity/evidence/ui/20260908/draggable**. Their QA preference namespace keeps
+the player's saved layout intact.
+
+Build via **HudArtImporter.BuildDevelopment** or **BuildRelease** in batch mode,
+or the ordinary Linux build menu. Native UI verification is
+`uv run --with python-xlib python unity/tools/check_ui_reference.py`; evidence is
+saved under **unity/evidence/ui/20260908**. The test restores the previous display
+resolution when finished. PRODUCT.md and DESIGN.md describe the current UI rules.
+
+
+## District shops, gates and yard mechanic · 8 September 2026
+
+**District rebuild** contains seven **inactive, rejected shop candidates** and two
+active copies of the new west gate arch. Their editable prefabs are in **Prefabs/District**;
+raw FBX sources and materials are in **Art/Imported/Meshy/District**. Replaced
+shop instances have been restored under **Post-war salvage**. Relay Works and the
+previous clutter pass remain active. The original walkable porch/step colliders
+remain, supplemented by the restored shop meshes and open gate collision meshes.
+
+The **District/Atlas** material packs eight new buildings beside the complete
+previous salvage atlas, preserving its texels. The eight new types each have a
+padded 1k tile. Shared UV meshes and static render chunks keep draw costs small.
+After editing source transforms, rebuild the render chunks. **Field Supply
+nameplate** reuses the original authored lettering over Meshy's distorted text.
+
+**npc_yard_mechanic** uses **Prefabs/YardMechanic.prefab**, a validated Humanoid
+Avatar, one skinned mesh, and the **YardMechanic** Animator controller. Its
+**Yard mechanic route** is a separate four-point loop at the west service yard.
+Edit that route and its AmbientWalker speed in the Inspector. The original
+four talking NPCs and three roaming travelers retain their models and routes.
+**ActorAnimation** supports this Animator as well as existing legacy Animation
+actors. ImportTraveler excludes the mechanic when refreshing the three travelers.
+
+For deliberate source reimport, **ImportDistrictAssets.Prepare** recreates
+individual materials and prefabs. Preserve full source maps and review each
+candidate in place. The legacy **DistrictAtlas.Apply** refuses to overwrite
+restored fidelity materials; its 1k tiles are no longer the default. Field Supply's
+source geometry faces +X, corrected to +Z by the importer before fitting it.
+The importer now fits uniformly inside the maximum parcel envelope. Do not
+re-enable the rejected 3.5k shop candidates based on that scale correction alone:
+roof geometry, door scale and the 1k atlas allocation failed close-up review.
+Use full source texture resolution and inspect at pedestrian height before
+promoting a revised candidate. **DistrictShopRecovery.RestoreAndBuild** selectively
+restores the previous shops and builds both Linux players, preserving other edits.
+**DistrictCityPass.Install** and **ImportYardMechanic.Install** are one-time
+installers and reject duplicate installation. Normal editing uses the saved
+instances and prefabs. **DistrictCityPass.Build** captures all district cameras
+and builds both Linux players from the current saved scene.
+
+References and input crops: **refs/district_20260908**. Source models, task IDs
+and credit ledger: **meshy/district-20260908**. Dated captures, collision traversal,
+rig validation and runtime reports: **unity/evidence/district/20260908**.
+
+## Prop grounding and complete foundations · 8 September 2026
+
+The six **Hill root stone** objects now contact their local soil, coping or stair
+surface. Both **Plaza bench** assemblies sit with both feet on their local surface.
+The eight shop porches, Basic General porch and Vanguard Hall plinth extend under
+the full building footprint and slightly below the paving. Their matching box
+colliders follow the extended slabs; entrance step edges and heights are retained.
+Covered interior-floor renderers are disabled to avoid overlapping top faces.
+
+**CityGroundingPass.Apply** performs this focused repair on existing source objects
+and rebuilds the editable render chunks. It checks that actor roots, routes and
+interaction markers are unchanged. Normal tuning still uses source transforms and
+the chunk rebuild control. **cam_grounding_*** cameras provide pedestrian-height
+inspection of the stairs, benches and building sides/backs.
+
+The accepted **RingGate.prefab** is installed at the **south Ring Gate**. The
+**north Lattice Jack** is a separate travel landmark with its own original model.
+Grounding evidence and native checks are in **evidence/grounding/20260908**.

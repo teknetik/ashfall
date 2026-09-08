@@ -24,7 +24,7 @@ async def main():
   if s['session']['state']=='Paused':key(d,'Escape',True);await asyncio.sleep(.08);key(d,'Escape',False)
   phases=[]
   async with Client() as c:
-   for name in ['follow','cam_hill','cam_avenue','cam_gate']:
+   for name in json.loads(os.environ.get('ATHEN_TRACE_VIEWS','["follow","cam_hill","cam_avenue","cam_gate"]')):
     await c.command({'action':'view','camera':name});await asyncio.sleep(.5);phases.append({'view':name,'snapshot':json.loads((Q/'snapshot.json').read_text())})
    async def tap(name):
     key(d,name,True);await asyncio.sleep(.06);key(d,name,False);await asyncio.sleep(.15)
@@ -45,7 +45,7 @@ async def main():
  frames=[];count=0;logical=0
  for line in dump.splitlines():
   if 'SwapBuffers(' in line:frames.append({'apiDrawSubmissions':count,'logicalDraws':logical});count=logical=0
-  else:
+  elif re.search(r'\bgl(?:Draw|MultiDraw)',line):
    count+=1;match=re.search(r'drawcount = (\d+)',line,re.I);logical+=int(match.group(1)) if match else 1
  useful=[f for f in frames if f['apiDrawSubmissions']>10]
  report={'tool':'Ubuntu apitrace 11.1','api':'OpenGL 4.5','resolution':[1920,1080],'frames':len(frames),'cityFrames':len(useful),'drawSubmissionHistogram':dict(collections.Counter(f['apiDrawSubmissions'] for f in useful)),'maxApiDrawSubmissions':max(f['apiDrawSubmissions'] for f in useful),'maxLogicalDraws':max(f['logicalDraws'] for f in useful),'traceFile':str(TRACE),'note':'Separate instrumented run for draw counting only; not FPS evidence. Includes world, actors, shadows and native HUD.'}

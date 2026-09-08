@@ -4,7 +4,6 @@ import json
 import math
 import os
 from pathlib import Path
-import statistics
 import subprocess
 import sys
 import time
@@ -103,6 +102,7 @@ async def main():
             returned = snapshot()
             assert returned['player']['grounded']
             assert returned['player']['position'][2] > outside['player']['position'][2] + 2
+            assert math.dist(start, returned['player']['position']) < .45, 'Could not walk back up the platform steps: ' + str(returned['player'])
             assert not returned['camera']['overlaps'], returned['camera']
             report['gateChecks'].append({'check': 'walk-out-and-back', 'start': start, 'outside': outside, 'returned': returned})
             await client.command({'action': 'capture', 'name': 'ring-approach'})
