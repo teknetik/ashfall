@@ -1,0 +1,18 @@
+# Lamp integration handoff
+
+Prepared, not installed. Root owns Unity integration and native acceptance.
+
+1. Save the current Unity scene and wait for compilation. Open `Assets/AthenHill/Scenes/AthenHill.unity` in Edit Mode.
+2. Run `AthenHill.Editor.WardLampPass.Install()` using Unity MCP, or **Athen Hill → Quality → Install authored utility lamps**.
+3. The installer refuses an existing lamp installation, missing source inventory, an unsaved scene or missing variants. It creates ordinary mesh/material/prefab assets and six scene instances, disables only thirty avenue lamp renderers and the four existing Finery fixture renderers, and retains all fifteen existing lamp colliders. It adds real lights and merges those references into the existing `CityLightCircuit` if present. Installing day/night later also discovers the named lights and `LampEmission` material.
+4. Save assets, explicitly rebuild `StaticRenderChunks` through `StaticRenderChunksEditor.Rebuild(chunks)`, save and reopen the scene. The helper leaves this step to the integrator so coupled asset changes can be reviewed together.
+5. Build native Linux and capture matched street/base/head/wall views at noon, dusk and night. The full-night intensity/range values are initial tuning: five street points at 2.6 / 11.5 m; the Finery point at 1.65 / 6.5 m. The clock scales them and source glass emission together. Verify sources cast no opaque bulb shadow, pavement illumination is useful, shadows do not flicker or leak, and runtime frame times remain qualified.
+6. Check first-person proximity and real-input passage around the five original bases and Finery doorway. Lamp overhead projection increases only above four metres; posts and bases keep their original locations. The wall mounting plate is placed against measured masonry at x=16.80, above the protruding door lintel.
+
+Revision 02 source counts: Post 103 parts / 35,699 triangles / 26,227 exported vertices. Wall 73 parts / 26,997 triangles / 19,807 vertices. Six installed placements total 205,492 source triangles. These are detailed near sources; no runtime LODs or distance-cost acceptance are claimed. `buffer-validation.json` records zero zero-area triangles and zero opposed face/vertex normals in both variants. Tangents are calculated from preserved UV0 during installation.
+
+`lamp-family.blend` contains only the authored lamp scene and its dependency data. Other live Blender documents were preserved. `lamp-meshes.json` contains unshifted metre-space geometry; the wall is offset only for the source studio presentation. All maps and geometry are original project work. Procedural PBR sources, 24 full 2048² maps and hashes are retained under `textures/`. There is no directional lighting baked into the base colour.
+
+Source previews `studio-full.png`, `studio-base.png`, `studio-head.png` and `studio-wall.png` were inspected for coherent assembly, base attachment, lens thickness and separate material response. Their Cycles studio lighting is not evidence of the game's appearance. Independent native review is still required; this family has not received AAA visual acceptance.
+
+Revision 02 resolves source construction requests with formed two-point conduit saddles and a sealed, bolted wall feed plate. Dust films use alpha feathering and are excluded from shadow casting; source dirt follows seams and ledges instead of covering entire surfaces. Preserved revision-01 and revision-02 capture folders support independent comparison. The revised Finery mount is (16.801,3.51,-18): its lower plate clears the carved lintel at y3.13. Native audition must also inspect the retained porch awning and courtyard cloth around the fixture; no fit acceptance is inferred from bounds.

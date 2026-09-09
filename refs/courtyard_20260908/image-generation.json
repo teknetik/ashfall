@@ -1,0 +1,41 @@
+{
+  "generations": [
+    {
+      "timestamp": "2026-09-08T16:05:42.776Z",
+      "method": "Built-in image_gen",
+      "prompt": "Use case: illustration-story. Asset type: production albedo artwork for a large rectangular paper poster mounted on a sandstone wall in a native 3D desert colony game. Create ONE portrait poster, full bleed, viewed perfectly flat straight-on, no wall or surrounding scene, no perspective, no cast shadows, no lighting gradients. A beautifully crafted original hand-printed vintage industrial caravan advertisement for the fictional people THE KARAVEEN on desert planet Tir. Ochre yellow aged fibrous paper, faded charcoal/umber ink, restrained terracotta accents. Strong graphic hierarchy: at the top a simple original circular horizon-and-route emblem (not any existing real brand), immediately below large readable title 'KARAVEEN'. Middle: a detailed evocative screen-printed illustration of an improvised six-wheeled caravan cargo hauler carrying stacked crates and tied canvas, small maintenance droid alongside, distant sparse desert ridges. Lower third large bold hand-set block lettering EXACTLY: 'NO TUBE?' on one line and 'WE STILL DELIVER.' beneath. Tiny bottom line EXACTLY: 'WARD \u2022 OUTPOSTS \u2022 OUTER BERMS'. Old pasted paper with irregular scraped-away ink, creases, scuffed corners, faded overlapping print, small edge tears and exposed paper fibers. The artwork should look physically used and richly illustrated, with a strong silhouette readable in a game. Keep all large lettering legible. The poster fills the image rectangle; do not put a beige margin around it, do not include a wall, frame, mockup, photograph or directional light. Portrait aspect 3:4, high-resolution production texture."
+    },
+    {
+      "timestamp": "2026-09-08T16:16:06.914Z",
+      "method": "Built-in image_gen",
+      "prompt": "Use case: illustration-story. Asset type: albedo texture for one hanging cloth banner in a native 3D desert settlement game. Make a single tall narrow rectangular banner, approximately 1:3 aspect, perfectly flat and front-on, filling the entire image, no surrounding scene, no support poles or cast shadows, no perspective, no baked directional light. Deep weathered oxide red coarse woven canvas, sun-bleached terracotta folds, visible patches and hand stitching, abrasions with exposed warm flax fibers, ragged tattered bottom edge. In upper half an original bold cream stencil emblem of a watchtower above three aquifer ripples, simple industrial geometric print with substantial chipped and worn-away ink. Below, very readable large cream block text EXACTLY 'WARD HOLDS.' on two lines. Below that smaller readable cream text EXACTLY 'TAKE YOUR WATCH.' on three lines. Leave the bottom quarter predominantly worn red cloth with repairs. Rich genuine textile detail, old but legible. Artwork only, no logos from real brands, no extra writing, no drop shadows or photographic lighting."
+    },
+    {
+      "timestamp": "2026-09-08T16:26:54.787Z",
+      "method": "Built-in image_gen",
+      "prompt": "Edit this exact production cloth banner texture. Preserve the entire design, all text, colours, woven texture, printed watchtower emblem, stitching, patches and tall narrow aspect. Change only the exposed white background around the torn bottom fringe into genuinely transparent alpha. Keep every red cloth fibre and ragged strand. No white matte or background anywhere outside the cloth. Do not add perspective, shadows, a wall, borders, new text or new folds. Deliver the banner as an RGBA transparent-background texture."
+    },
+    {
+      "timestamp": "2026-09-08T16:35:51.177Z",
+      "method": "Built-in image_gen",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless square 2K PBR base-color texture for a real-time game cloth awning. An original flat scan of coarse sun-bleached brick-red canvas, deep oxidized terracotta dyed cloth with tiny woven fibres, irregular broad faded areas and rubbed thread, a few dark stitched repairs, grounded fine dust. Match worn red desert market awnings. Orthographic fully flat albedo data, fill the whole square edge to edge. Make opposite edges tile seamlessly. Restrained contrast, predominantly muted red with irregular dusty salmon fading; no lettering, no emblems, no objects, no folds, no directional shadows, no baked light or gloss, no border. Visible fabric weave at close range, broader bleaching across half-metre regions."
+    },
+    {
+      "timestamp": "2026-09-08T16:36:04.903Z",
+      "method": "Built-in image_gen",
+      "prompt": "Use case: logo-brand. Asset type: monochrome opacity mask for in-game hand-painted wall graffiti in a worn desert settlement. Exact text across THREE uneven lines: \"THE FACTORIES\" / \"NEVER\" / \"SLEEP.\" All lettering pure white on a pure opaque black background, no grey paper or wall. Each capital hand-painted with a rough half-dry brush, slightly uneven baseline, irregular letter widths and spacing, a few drips below strokes and chipped gaps in the paint. Human angry writing, readable, not typeset font, not stencil. More natural than a perfect logo, no decoration. White corresponds to paint opacity; black corresponds to no paint. Flat orthographic front view with no lighting, no surface relief or shadows. Widescreen rectangular composition, text occupies 80% of area, generous blank black margins, high resolution."
+    }
+  ],
+  "accepted": {
+    "karaveen-poster-v1.png": "Illustrated paper advertisement",
+    "ward-banner-v1.png": "Original banner; UV excludes off-cloth bottom; authored geometry makes torn edge",
+    "canvas-v1.png": "Worn red canvas albedo",
+    "factory-graffiti-mask-v1.png": "White ink coverage packed into alpha for black paint"
+  },
+  "rejected": [
+    {
+      "generation": "banner alpha edit",
+      "reason": "Returned RGB checkerboard, not actual alpha; not installed."
+    }
+  ]
+}

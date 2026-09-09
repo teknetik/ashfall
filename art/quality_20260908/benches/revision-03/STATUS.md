@@ -1,0 +1,1 @@
+Preserved source candidate, 9 September 2026. Unaccepted. Building production takes priority. End-grain tone/ring appearance still needs independent close review; do not install until the source gate and native audition are completed.

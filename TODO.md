@@ -1,11 +1,19 @@
 # Ward — visual quality and RTX 3060 TODO
 
-Updated 8 September 2026 after the user's latest visual review. Production guide:
+Updated 9 September 2026 after the user's latest visual review. Production guide:
 [AGENTS.md](AGENTS.md). Setting: [lore.md](lore.md).
 
 **Highest priority: audit every mesh and its polygon count. The game still looks
 below the requested standard.** Earlier source recovery is completed technical
 work, not acceptance of Vex, the buildings, stones or the overall visuals.
+
+**9 September priority correction:** the user identifies the buildings as by far
+the biggest visible win. The existing audit now feeds three active architecture
+repairs: the seven shared shop shells (representative Relay Works first), Basic
+General, and Vanguard Hall. Finery's material repetition is a separate focused
+repair. Retain completed prop work, but prioritize these building fixes and their
+independent player-height review before further prop polish. See the
+[current building priorities and rejection evidence](unity/evidence/quality/20260909/reviews/buildings-priority-02.md).
 
 Keep native Linux playable on the **RTX 3060 12 GB at native 1920×1080 / 60 FPS**.
 Use measured headroom to improve silhouettes, construction and surface detail.
@@ -29,11 +37,14 @@ task records before duplicating or reverting it.
 
 ## Phase 0 — P0: audit every mesh before further broad replacement
 
-- [ ] Inventory **all active scene meshes**, including Meshy imports, Blender
+- [x] Inventory **all active scene meshes**, including Meshy imports, Blender
   models, primitive/placeholder geometry, characters, buildings, portals, tree,
   rocks, benches, lamps, terminals, foliage and terrain. Map every instance to its
   source mesh/prefab; distinguish unique assets from repeated placements. Record
   inactive/rejected candidates separately so they cannot be mistaken for the game.
+  Recorded before/after scene inventories and a unique-mesh ledger in
+  [the mesh audit](docs/mesh-audit.md). Individual visual review and full
+  source-export comparisons below remain unfinished.
 - [ ] Record **source and actual Unity runtime triangle/vertex counts**, every
   available LOD, reduction percentage, active LOD at normal viewing distances,
   submeshes/material slots and instance counts. Use triangulated counts for
@@ -67,6 +78,24 @@ The earlier [source audit](unity/evidence/fidelity/20260908/source-audit.json) i
 input to this work; it is not completion of this broader scene and visual audit.
 
 ## Phase 1 — P1: improve buildings, Vex and the hero tree
+
+**Started 8 September after “Add localized dirt and wear” finished.** The first
+repair pass replaces Finery's distorted shell with an editable Blender frontage,
+refits the hall uniformly, restores Vex's original PBR maps/tangents/shadows, and
+joins the tree roots with detailed bark. The previous courtyard work is retained.
+See [audit and individual building tasks](docs/mesh-audit.md) and
+[native evidence](unity/evidence/phase1/20260908/README.md). This is progress, not
+completion or acceptance of the whole phase: other buildings, Vex's source/pose
+quality, the tree crown and remaining close-range defects still need work.
+
+**9 September store rollout:** all nine store buildings now have replacement
+frontages in the saved scene: Finery, Basic General, Relay Works, Air + Water,
+Field Supply, Repairs, Salvage, Thread + Hide and Tool Exchange. The six formerly
+staged sources are installed with uniform scale and their original porch routes.
+The Hall remains a separate source/integration task. Material quality, working
+props and individual visual acceptance remain open; installation is not completion
+of Phase 1. See the [per-building ledger](docs/building-repairs-20260909.md) and
+[current native rollout evidence](unity/evidence/phase1/20260909-store-rollout/README.md).
 
 - [ ] **Improve every failed building from the audit.** Start with one complete
   frontage—facade, roof, entrance, ground transition and props—then apply the
