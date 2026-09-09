@@ -1,0 +1,34 @@
+if(UnityEditor.EditorApplication.isPlaying)throw new System.Exception("Edit mode required.");
+var chunks=UnityEngine.Object.FindAnyObjectByType<AthenHill.StaticRenderChunks>();
+var visual=UnityEngine.GameObject.Find("Post-war salvage/Vanguard Hall repaired/Meshy visual");
+var plinth=UnityEngine.GameObject.Find("AuthoredWorld/BLD_hall_plinth");
+var proxy=UnityEngine.GameObject.Find("AuthoredWorld/COL_BLD_hall_plinth").GetComponent<UnityEngine.BoxCollider>();
+var r=visual.GetComponent<UnityEngine.Renderer>();var old=r.bounds;
+var oldScale=visual.transform.localScale;
+if(System.Math.Abs(oldScale.z/oldScale.x-2.4727f)>.03f)throw new System.Exception("Unexpected hall scale; do not apply refit twice.");
+var oldPlinth=plinth.GetComponent<UnityEngine.Renderer>().bounds;
+chunks.ShowSources(true);
+UnityEditor.Undo.RecordObjects(new UnityEngine.Object[]{visual.transform,plinth.transform,proxy,proxy.transform},"Restore hall source proportions");
+visual.transform.localScale=UnityEngine.Vector3.one*oldScale.x;
+var fitted=r.bounds;
+visual.transform.position+=new UnityEngine.Vector3(old.center.x-fitted.center.x,old.min.y-fitted.min.y,old.max.z-fitted.max.z);
+fitted=r.bounds;
+float front=oldPlinth.max.z;float back=fitted.min.z-.55f;float depth=front-back;
+var pr=plinth.GetComponent<UnityEngine.Renderer>();var ps=plinth.transform.localScale;ps.z*=depth/oldPlinth.size.z;plinth.transform.localScale=ps;
+var pb=pr.bounds;
+var target=new UnityEngine.Vector3(oldPlinth.center.x,oldPlinth.center.y,(front+back)*.5f);
+plinth.transform.position+=target-pb.center;
+proxy.transform.SetPositionAndRotation(target,UnityEngine.Quaternion.identity);proxy.transform.localScale=UnityEngine.Vector3.one;
+proxy.center=UnityEngine.Vector3.zero;proxy.size=new UnityEngine.Vector3(oldPlinth.size.x,oldPlinth.size.y,depth);
+UnityEngine.Physics.SyncTransforms();
+UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(visual.transform);
+UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(plinth.transform);
+UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(proxy.transform);
+UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(proxy);
+AthenHill.Editor.StaticRenderChunksEditor.Rebuild(chunks);
+UnityEditor.AssetDatabase.SaveAssets();UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(visual.scene);UnityEditor.SceneManagement.EditorSceneManager.SaveScene(visual.scene);
+System.Func<UnityEngine.Vector3,float[]> v=p=>new[]{p.x,p.y,p.z};
+var report=new{oldScale=v(oldScale),newScale=v(visual.transform.localScale),oldCenter=v(old.center),oldSize=v(old.size),newCenter=v(r.bounds.center),newSize=v(r.bounds.size),
+frontAnchorDelta=r.bounds.max.z-old.max.z,groundDelta=r.bounds.min.y-old.min.y,plinthCenter=v(pr.bounds.center),plinthSize=v(pr.bounds.size),colliderCenter=v(proxy.bounds.center),colliderSize=v(proxy.bounds.size),
+preserved="Hall root, mesh, material, mesh collider and approach-step references; front face and ground height."};
+System.IO.File.WriteAllText("../evidence/phase1/20260908/hall-refit.json",Newtonsoft.Json.JsonConvert.SerializeObject(report,Newtonsoft.Json.Formatting.Indented));return report;

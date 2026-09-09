@@ -1,0 +1,12 @@
+var scene=UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene();
+if(UnityEditor.EditorApplication.isPlaying||scene.isDirty)throw new System.Exception("Read-only audit requires saved scene.");
+System.Func<UnityEngine.Vector3,float[]> v3=v=>new[]{v.x,v.y,v.z};
+System.Func<UnityEngine.Vector4,float[]> v4=v=>new[]{v.x,v.y,v.z,v.w};
+System.Func<UnityEngine.Vector2,float[]> v2=v=>new[]{v.x,v.y};
+var rs=UnityEngine.Object.FindObjectsByType<UnityEngine.Renderer>(UnityEngine.FindObjectsInactive.Include,UnityEngine.FindObjectsSortMode.None).Where(r=>r.gameObject.scene.IsValid()).ToArray();
+var ms=rs.Select(r=>{var s=r as UnityEngine.SkinnedMeshRenderer;var f=r.GetComponent<UnityEngine.MeshFilter>();return s?s.sharedMesh:f?f.sharedMesh:null;}).Where(m=>m).Distinct().ToArray();
+var fbx=ms.Where(m=>UnityEditor.AssetDatabase.GetAssetPath(m).EndsWith(".fbx")).Select(m=>new{path=UnityEditor.AssetDatabase.GetAssetPath(m),name=m.name,positions=m.vertices.Select(v3).ToArray(),normals=m.normals.Select(v3).ToArray(),tangents=m.tangents.Select(v4).ToArray(),uv=m.uv.Select(v2).ToArray(),indices=m.triangles,submeshes=m.subMeshCount}).ToArray();
+var mats=rs.SelectMany(r=>r.sharedMaterials).Where(m=>m).Distinct().Select(m=>new{path=UnityEditor.AssetDatabase.GetAssetPath(m),name=m.name,shader=m.shader.name,properties=Enumerable.Range(0,UnityEditor.ShaderUtil.GetPropertyCount(m.shader)).Select(i=>{var p=UnityEditor.ShaderUtil.GetPropertyName(m.shader,i);var t=UnityEditor.ShaderUtil.GetPropertyType(m.shader,i);return new{property=p,type=t.ToString(),value=t==UnityEditor.ShaderUtil.ShaderPropertyType.Color?(object)new[]{m.GetColor(p).r,m.GetColor(p).g,m.GetColor(p).b,m.GetColor(p).a}:t==UnityEditor.ShaderUtil.ShaderPropertyType.Vector?(object)v4(m.GetVector(p)):t==UnityEditor.ShaderUtil.ShaderPropertyType.Float||t==UnityEditor.ShaderUtil.ShaderPropertyType.Range?(object)m.GetFloat(p):null};}).ToArray()}).ToArray();
+var outpath=System.IO.Path.GetFullPath("../evidence/quality/20260908/audit/runtime-buffers-and-materials.json");
+System.IO.File.WriteAllText(outpath,Newtonsoft.Json.JsonConvert.SerializeObject(new{capturedUtc=System.DateTime.UtcNow.ToString("o"),fbx,mats},Newtonsoft.Json.Formatting.None));
+return new{outpath,fbxMeshes=fbx.Length,materials=mats.Length,dirtyAfter=scene.isDirty};

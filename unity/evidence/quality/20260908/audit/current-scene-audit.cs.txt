@@ -1,0 +1,29 @@
+var scene=UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene();
+if(UnityEditor.EditorApplication.isPlaying||scene.isDirty) throw new System.Exception("Audit requires clean saved edit scene.");
+System.Func<UnityEngine.Transform,string> path=t=>{var names=new System.Collections.Generic.List<string>();while(t){names.Add(t.name);t=t.parent;}names.Reverse();return string.Join("/",names.ToArray());};
+System.Func<UnityEngine.Vector3,float[]> vec=v=>new[]{v.x,v.y,v.z};
+var chunks=UnityEngine.Object.FindAnyObjectByType<AthenHill.StaticRenderChunks>();
+var visibility=new System.Collections.Generic.Dictionary<UnityEngine.Renderer,bool>();
+for(int i=0;i<chunks.sources.Length;i++)if(chunks.sources[i])visibility[chunks.sources[i]]=chunks.sourceVisibility[i];
+var renderers=UnityEngine.Object.FindObjectsByType<UnityEngine.Renderer>(UnityEngine.FindObjectsInactive.Include,UnityEngine.FindObjectsSortMode.None).Where(r=>r.gameObject.scene.IsValid()).ToArray();
+System.Func<UnityEngine.Renderer,UnityEngine.Mesh> meshOf=r=>{var s=r as UnityEngine.SkinnedMeshRenderer;var f=r.GetComponent<UnityEngine.MeshFilter>();return s?s.sharedMesh:f?f.sharedMesh:null;};
+var rows=renderers.Where(r=>meshOf(r)).Select(r=>{var mesh=meshOf(r);bool batched=visibility.ContainsKey(r);return new{
+path=path(r.transform),active=r.gameObject.activeInHierarchy,enabled=r.enabled,sourceVisible=batched?visibility[r]:r.enabled,batched,generated=r.transform.IsChildOf(chunks.generatedRoot),
+meshId=mesh.GetEntityId().ToString(),meshPath=UnityEditor.AssetDatabase.GetAssetPath(mesh),meshName=mesh.name,prefab=UnityEditor.PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(r.gameObject),
+position=vec(r.transform.position),scale=vec(r.transform.lossyScale),rotation=vec(r.transform.eulerAngles),center=vec(r.bounds.center),size=vec(r.bounds.size),
+materials=r.sharedMaterials.Select(m=>m?m.GetEntityId().ToString():"").ToArray(),skin=r is UnityEngine.SkinnedMeshRenderer,shadow=r.shadowCastingMode.ToString()};}).ToArray();
+var meshes=renderers.Select(meshOf).Where(m=>m).Distinct().Select(m=>new{id=m.GetEntityId().ToString(),path=UnityEditor.AssetDatabase.GetAssetPath(m),name=m.name,vertices=m.vertexCount,
+triangles=Enumerable.Range(0,m.subMeshCount).Where(i=>m.GetTopology(i)==UnityEngine.MeshTopology.Triangles).Sum(i=>(long)m.GetIndexCount(i)/3),submeshes=m.subMeshCount,readable=m.isReadable,
+normals=m.HasVertexAttribute(UnityEngine.Rendering.VertexAttribute.Normal),tangents=m.HasVertexAttribute(UnityEngine.Rendering.VertexAttribute.Tangent),uv0=m.HasVertexAttribute(UnityEngine.Rendering.VertexAttribute.TexCoord0),uv1=m.HasVertexAttribute(UnityEngine.Rendering.VertexAttribute.TexCoord1),
+center=vec(m.bounds.center),size=vec(m.bounds.size)}).ToArray();
+var mats=renderers.SelectMany(r=>r.sharedMaterials).Where(m=>m).Distinct().Select(m=>new{id=m.GetEntityId().ToString(),name=m.name,path=UnityEditor.AssetDatabase.GetAssetPath(m),shader=m.shader.name,keywords=m.shaderKeywords,
+textures=m.GetTexturePropertyNames().Select(p=>{var t=m.GetTexture(p);return new{property=p,name=t?t.name:null,path=t?UnityEditor.AssetDatabase.GetAssetPath(t):null,width=t?t.width:0,height=t?t.height:0,scale=new[]{m.GetTextureScale(p).x,m.GetTextureScale(p).y}};}).ToArray(),
+smoothness=m.HasProperty("_Smoothness")?m.GetFloat("_Smoothness"):-1,metallic=m.HasProperty("_Metallic")?m.GetFloat("_Metallic"):-1}).ToArray();
+var colliders=UnityEngine.Object.FindObjectsByType<UnityEngine.Collider>(UnityEngine.FindObjectsInactive.Include,UnityEngine.FindObjectsSortMode.None).Where(c=>c.gameObject.scene.IsValid()).Select(c=>new{
+path=path(c.transform),active=c.gameObject.activeInHierarchy,c.enabled,type=c.GetType().Name,center=vec(c.bounds.center),size=vec(c.bounds.size),c.isTrigger}).ToArray();
+var report=new{scene=scene.path,capturedUtc=System.DateTime.UtcNow.ToString("o"),fingerprint=chunks.sourceFingerprint,instances=rows,meshes,materials=mats,colliders,
+actors=UnityEngine.Object.FindObjectsByType<AthenHill.ActorAnimation>(UnityEngine.FindObjectsSortMode.None).Select(a=>new{path=path(a.transform),position=vec(a.transform.position)}).ToArray(),
+lods=UnityEngine.Object.FindObjectsByType<UnityEngine.LODGroup>(UnityEngine.FindObjectsInactive.Include,UnityEngine.FindObjectsSortMode.None).Select(l=>new{path=path(l.transform),lods=l.GetLODs().Select(d=>new{height=d.screenRelativeTransitionHeight,renderers=d.renderers.Where(r=>r).Select(r=>path(r.transform)).ToArray()}).ToArray()}).ToArray(),
+cameras=UnityEngine.Object.FindObjectsByType<UnityEngine.Camera>(UnityEngine.FindObjectsSortMode.None).Select(c=>new{c.name,position=vec(c.transform.position),rotation=vec(c.transform.eulerAngles),c.fieldOfView}).ToArray()};
+var output=System.IO.Path.GetFullPath("../evidence/quality/20260908/audit/current-scene-audit.json");System.IO.File.WriteAllText(output,Newtonsoft.Json.JsonConvert.SerializeObject(report,Newtonsoft.Json.Formatting.Indented));
+return new{output,instances=rows.Length,uniqueMeshes=meshes.Length,materials=mats.Length,colliders=colliders.Length};

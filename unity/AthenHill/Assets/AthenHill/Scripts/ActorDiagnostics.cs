@@ -28,7 +28,9 @@ namespace AthenHill
    var skins=a.GetComponentsInChildren<SkinnedMeshRenderer>();
    var points=skins.SelectMany(WorldSkin).ToArray();
    var anim=a.humanoidAnimator;
-   return new{name=a.name,position=V(a.transform.position),a.CurrentClip,humanoid=anim&&anim.isHuman,normalizedTime=anim?anim.GetCurrentAnimatorStateInfo(0).normalizedTime:0,
+   return new{name=a.name,position=V(a.transform.position),a.CurrentClip,airPhase=a.AirPhase.ToString(),a.AirTime,a.ImpactSpeed,
+    clipTime=a.animationSource&&a.animationSource[a.CurrentClip]!=null?a.animationSource[a.CurrentClip].time:0,
+    humanoid=anim&&anim.isHuman,normalizedTime=anim?anim.GetCurrentAnimatorStateInfo(0).normalizedTime:0,
     leftFoot=anim&&anim.isHuman?V(a.transform.InverseTransformPoint(anim.GetBoneTransform(HumanBodyBones.LeftFoot).position)):null,
     rightFoot=anim&&anim.isHuman?V(a.transform.InverseTransformPoint(anim.GetBoneTransform(HumanBodyBones.RightFoot).position)):null,
     meshLow=points.Length>0?points.Min(p=>p.y)-a.transform.position.y:0,meshHigh=points.Length>0?points.Max(p=>p.y)-a.transform.position.y:0,

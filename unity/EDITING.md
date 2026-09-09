@@ -377,3 +377,31 @@ Linux players** builds both outputs. Rebuild render chunks after changing source
 material assignments, as with other city edits. Projector-only placement edits
 do not alter those source meshes. Evidence and remaining visual limitations are
 recorded in [the weathering report](evidence/weathering/20260908/README.md).
+
+## Phase 1 frontage, hall, Vex and roots · 8 September 2026
+
+**Phase 1 Finery frontage** is a saved prefab with separate construction, windows,
+door, roof, services and entrance-light groups. Mesh assets are in
+**Art/Phase1/Finery**. The original Finery Meshy renderer/collider remain disabled
+under **Post-war salvage/BLD_shop_w_01 repaired**. Its existing three sign objects
+remain there; they have offset mesh pivots, so fit their renderer bounds rather
+than assuming Transform.position is their visible centre. Porch, steps, canopy,
+notices and prior courtyard props are preserved. The closed shop has one fitted
+box proxy; opening an enterable interior is a separate gameplay/layout task.
+
+The hall visual uses uniform scale 756.518. Its front edge stays at z−26.55 and
+base y0.5; its source plinth and matching collider fit the reduced depth. The
+previous transform and scene are preserved in the dated evidence.
+
+Vex alone overrides the guard's mesh with **VexSurface/WardGuardTangents.asset**
+and uses **OriginalPBR/VexOriginalPBR.mat**. The clone preserves skinning and UVs.
+Do not assign **Candidate4K/VexCandidate4K.mat**: that audition introduced unwanted
+markings and was rejected. The other guards retain their original assignments.
+
+**Phase 1 tree roots** uses **Art/Phase1/Tree/TreeRoots.prefab**, with closed root
+geometry and full 4K bark. The original trunk/roots remain hidden source objects;
+existing collision and upper crown remain. Show sources before editing and rebuild
+render chunks afterward. Do not revive disabled root renderers or shadow proxies
+without reviewing overlaps. Saved Blender sources, exact import recipes, original
+and final scene snapshots, and limitations are linked from
+[the Phase 1 report](evidence/phase1/20260908/README.md).

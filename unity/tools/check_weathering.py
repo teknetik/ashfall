@@ -12,6 +12,7 @@ from Xlib.ext import xtest
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 OUT=pathlib.Path(os.environ['ATHEN_NATIVE_DIR'])
 VIEWS=['cam_hill','cam_avenue','cam_gate','cam_grid','cam_whompah','cam_hero','cam_terminal','cam_wear_terminal','cam_wear_steps','cam_wear_wall']
+VIEWS += [v for v in os.environ.get('ATHEN_EXTRA_VIEWS','').split(',') if v]
 
 def stats(frames):
     values=sorted(f['dt']*1000 for f in frames)
@@ -41,6 +42,8 @@ async def main():
         if sys.argv[1]=='after':
             await c.command({'action':'view','camera':'follow'});await c.command({'action':'reset'})
             route=[['west_stair_approach',[12,0,0]],['hill_tree',[4,1.5,0]],['north_stair_top',[0,1.5,-4]],['north_stair_bottom',[0,0,-12]],['mission_slab',[8,.25,-12.4]],['terminal_stand_1',[10,.25,-12.6]],['terminal_stand_3',[6,.25,-12.6]],['slab_departure',[8,0,-10.8]],['clear_lane',[12,0,-10.8]],['north_lane',[12,0,-23]],['service_lane',[33,0,-23]],['wall_approach',[44.5,0,-15]],['notices',[44.5,0,-10.5]],['leak_corner',[44.5,0,-7.4]]]
+            if os.environ.get('ATHEN_ROUTE_FILE'):
+                route=json.loads(pathlib.Path(os.environ['ATHEN_ROUTE_FILE']).read_text())
             routepath=OUT/'route.json';routepath.write_text(json.dumps(route));os.environ['ATHEN_EVIDENCE']=str(OUT)
             await c.command({'action':'profileStart'})
             process=await asyncio.create_subprocess_exec(sys.executable,str(ROOT/'tools/walk_route.py'),str(routepath),'walking.json')

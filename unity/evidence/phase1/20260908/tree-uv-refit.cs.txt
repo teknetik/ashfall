@@ -1,0 +1,6 @@
+var chunks=UnityEngine.Object.FindAnyObjectByType<AthenHill.StaticRenderChunks>();chunks.ShowSources(true);
+var mesh=UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Mesh>("Assets/AthenHill/Art/Phase1/Tree/ConnectedRootFlare.asset");
+var data=Newtonsoft.Json.Linq.JObject.Parse(System.IO.File.ReadAllText("../../art/phase1_20260908/tree-root-mesh.json"));
+System.Func<Newtonsoft.Json.Linq.JToken,UnityEngine.Vector3> v=t=>new UnityEngine.Vector3((float)t[0],(float)t[1],(float)t[2]);
+mesh.Clear();mesh.indexFormat=UnityEngine.Rendering.IndexFormat.UInt32;mesh.vertices=data["positions"].Select(v).ToArray();mesh.normals=data["normals"].Select(v).ToArray();mesh.uv=data["uv"].Select(t=>new UnityEngine.Vector2((float)t[0],(float)t[1])).ToArray();mesh.triangles=data["indices"].Select(t=>(int)t).ToArray();mesh.RecalculateBounds();mesh.RecalculateTangents();UnityEditor.EditorUtility.SetDirty(mesh);
+UnityEditor.AssetDatabase.SaveAssets();AthenHill.Editor.StaticRenderChunksEditor.Rebuild(chunks);UnityEditor.SceneManagement.EditorSceneManager.SaveScene(UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene());AthenHill.Editor.PortDiagnostics.Capture("cam_p1_tree_roots");return new{vertices=mesh.vertexCount,triangles=mesh.triangles.Length/3};

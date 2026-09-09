@@ -1,0 +1,36 @@
+# Utility lamps — independent source gate 01
+
+8 September 2026. Reviewer: `visual_critic`, separate from the fixture author. **Decision: suitable for a reversible native audition, with specific construction and material issues still open. No native or AAA acceptance.**
+
+Reviewed the [full family](../../../../../art/quality_20260908/lamps/studio-full.png), [base](../../../../../art/quality_20260908/lamps/studio-base.png), [head](../../../../../art/quality_20260908/lamps/studio-head.png) and [wall fixture](../../../../../art/quality_20260908/lamps/studio-wall.png), together with the [brief](../../../../../art/quality_20260908/lamps/BRIEF.md), [installation handoff](../../../../../art/quality_20260908/lamps/INSTALL.md), [geometry report](../../../../../art/quality_20260908/lamps/geometry-report.json), source manifest and authoring/material recipes. The mentioned `lamps/source/INSTALL.md` path does not exist; the handoff is directly under `lamps/`.
+
+The supplied images are Cycles studio renders. They do not establish URP appearance, actual illumination, scene scale or cost. Creator claims and polygon counts did not determine this decision. No assets, scripts, Editor or Blender state were changed.
+
+## Visual findings
+
+| ID | Observation from supplied source evidence | Decision / correction |
+| --- | --- | --- |
+| LAMP-S01 | The post has a readable assembly: masonry footing, bolted anchor plate, tapered mast, service hatch, neck, hood and protected light capsule. The wall variant shares the head and uses a bolted mounting plate/junction box. The forms are more credible than primitive bars. | Pass to native audition for overall construction. Confirm underside/back and attachments against the saved architecture. |
+| LAMP-S02 | In the base/head views, bronze conduit straps read as thick rectangular tabs projecting from the mast. They have no visible fastener, wrap, formed saddle or weld explaining how they retain the adjacent narrow conduit. | Construction refinement required. Model a plausible small saddle/strap fixing or explicit welded tab appropriate to this design; do not add random bolt detail elsewhere as a substitute. Keep snag-free walking clearance. |
+| LAMP-S03 | The wall fixture's lower feed is a free-ended bent stub in the studio view. The declared wall mounting is at its rear, but no masonry entry or termination is visible. | Reject a visibly dangling/cut feed in the final installation. Terminate it into the wall or a sealed entry, or visibly connect a continuing supply. Show the installed lower-feed contact from the side. A source presentation stub is not a final construction detail. |
+| LAMP-S04 | The hatch/anchor bolts, cage rings, restrained bronze fittings, hood lip and cap gasket supply plausible mechanical scale. The cage and hood retain thickness. The emissive capsule is a solid pale region; the source image cannot establish glass appearance when off or at night. | Suitable direction. Native review must check non-emitting glass, source brightness, cage readability and absence of an opaque bulb shadow. No evidence yet supports final lamp/glass shading. |
+| LAMP-S05 | Close paint/enamel/steel surfaces are exceptionally even. Fine mottling reads as generic material noise; base, collar and rain-hood joints show little accumulated dirt or localized wear. Most exposed fasteners are equally clean. The source recipes confirm broad noise rather than placement-aware grime. | Materials remain below the intended final environmental finish, provisionally 3 in these studio views. Add restrained location-specific dust around base/anchor/collar seams and rain/handling wear where justified. Keep clean broad areas and distinct roughness; blanket rust would also fail. |
+| LAMP-S06 | The family has a consistent utility silhouette and more useful construction than decorative primitive poles. Its enamel/opal glass/paint/metal regions are distinguishable, but some bright hardware looks newly installed beside the dusty cast base. | Native context determines whether deliberate repairs/new parts explain this contrast. Do not claim a fully integrated weathered Ward fixture from the neutral studio appearance alone. |
+
+The [accepted Ward image](../../../../../refs/courtyard_20260908/accepted-target.png) motivates restrained technology, readable worn materials and attached working infrastructure. The previously directly inspected official [Bethesda Akila vendor panels](https://bethesda.net/en-US/news/guide-to-starfields-major-cities) show practical fixtures, brackets and services connected to distinct facade construction. They support the requirement for understandable attachments and environmental integration, not an instruction to copy their lamp shapes. Those panels were not a close hardware/material benchmark, so no precise microtexture equivalence is asserted here.
+
+## Scale and integration checks
+
+Recorded post height is approximately **4.563 m**. Its **0.46 m** base and **0.166 m** mast are plausible street-fixture dimensions, with head projection confined above approximately 4.1 m. The wall fixture spans approximately **0.60 m vertically** and projects **0.61 m** from its local mounting plane; its proposed mount is at 3.42 m. These dimensions support audition, but no human marker or actual building fit appears in the studio renders.
+
+The footprint fits within the handoff's recorded old proxies. That is a preservation claim to test in the native scene, not collision acceptance by arithmetic. Inspect the head's relationship to canopies, roof trim and camera travel; a model can fit its post collider while clipping overhead architecture.
+
+## Required native evidence before acceptance
+
+1. Saved scene/build identity; all five avenue placements and the Finery wall fixture in daylight with a 1.8 m actor. Include side/back of the wall plate, lower feed and neck connections, base-to-paving contact and overhead clearance. Preserve original roots/colliders until fit is verified.
+2. Matched noon/dusk/night captures at route distance and close range. Emission and actual local light must track the clock together. Show off-state glass, shaded mast/base readability, plausible warm local falloff and readable nearby faces/paving. Reject a featureless white bulb, bright floating light pool, false cage/bulb occlusion or obvious wall light leak.
+3. Native close-ups resolving LAMP-S02/03/05: visible retaining hardware, terminated feed and localized dirt/wear. Studio map resolution does not prove native texel density or material channels.
+4. Continuous walk through overlapping lamp influence, around every base and the Finery doorway, plus a dusk switching transition. Inspect shadow acne, flicker, abrupt cutoff and any source/material brightness mismatch. Use reduced motion where applicable and retain the accepted interaction paths.
+5. Separate uncapped performance in the most expensive night state, with all actors/UI/effects and actual render settings. The handoff's point intensity/range values are tuning candidates. Passing an old daytime benchmark does not qualify new night shadows/lights.
+
+The baseline lamp/day-night TODO remains **open**. Source construction is sufficiently coherent to test in context; the missing mechanical terminations, localized weathering and unreviewed native illumination prevent final sign-off.

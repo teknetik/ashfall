@@ -1,0 +1,33 @@
+if(UnityEditor.EditorApplication.isPlaying)throw new System.Exception("Edit mode required.");
+var scene=UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene();
+if(UnityEngine.GameObject.Find("Phase 1 tree roots"))throw new System.Exception("Already installed; edit the saved prefab.");
+var gameplay=AthenHill.Editor.DistrictCityPass.GameplaySignature();
+var chunks=UnityEngine.Object.FindAnyObjectByType<AthenHill.StaticRenderChunks>();
+const string folder="Assets/AthenHill/Art/Phase1/Tree";UnityEditor.AssetDatabase.Refresh(UnityEditor.ImportAssetOptions.ForceSynchronousImport);
+foreach(var path in System.IO.Directory.GetFiles(folder,"*.png")){
+ var importer=(UnityEditor.TextureImporter)UnityEditor.AssetImporter.GetAtPath(path);importer.textureType=path.Contains("nor_gl")?UnityEditor.TextureImporterType.NormalMap:UnityEditor.TextureImporterType.Default;
+ importer.sRGBTexture=path.Contains("_diff_");importer.maxTextureSize=4096;importer.anisoLevel=16;importer.mipmapEnabled=true;importer.streamingMipmaps=true;
+ importer.textureCompression=UnityEditor.TextureImporterCompression.CompressedHQ;importer.SaveAndReimport();
+}
+var mat=new UnityEngine.Material(UnityEngine.Shader.Find("Universal Render Pipeline/Lit"));mat.name="Ward root bark";mat.enableInstancing=true;
+mat.SetTexture("_BaseMap",UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Texture2D>(folder+"/bark_willow_02_diff_4k.png"));mat.SetColor("_BaseColor",UnityEngine.Color.white);
+mat.SetTexture("_BumpMap",UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Texture2D>(folder+"/bark_willow_02_nor_gl_4k.png"));mat.SetFloat("_BumpScale",.85f);mat.EnableKeyword("_NORMALMAP");
+mat.SetTexture("_MetallicGlossMap",UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Texture2D>(folder+"/BarkSmoothness.png"));mat.SetFloat("_Smoothness",.8f);mat.SetFloat("_Metallic",0);mat.EnableKeyword("_METALLICSPECGLOSSMAP");
+UnityEditor.AssetDatabase.CreateAsset(mat,folder+"/RootBark.mat");
+var data=Newtonsoft.Json.Linq.JObject.Parse(System.IO.File.ReadAllText("../../art/phase1_20260908/tree-root-mesh.json"));
+System.Func<Newtonsoft.Json.Linq.JToken,UnityEngine.Vector3> v=t=>new UnityEngine.Vector3((float)t[0],(float)t[1],(float)t[2]);
+var mesh=new UnityEngine.Mesh();mesh.name="Connected root flare";mesh.indexFormat=UnityEngine.Rendering.IndexFormat.UInt32;
+mesh.vertices=data["positions"].Select(v).ToArray();mesh.normals=data["normals"].Select(v).ToArray();mesh.uv=data["uv"].Select(t=>new UnityEngine.Vector2((float)t[0],(float)t[1])).ToArray();mesh.triangles=data["indices"].Select(t=>(int)t).ToArray();mesh.RecalculateBounds();mesh.RecalculateTangents();
+UnityEditor.AssetDatabase.CreateAsset(mesh,folder+"/ConnectedRootFlare.asset");
+chunks.ShowSources(true);
+var target=new UnityEngine.GameObject("Phase 1 tree roots");target.AddComponent<UnityEngine.MeshFilter>().sharedMesh=mesh;
+var renderer=target.AddComponent<UnityEngine.MeshRenderer>();renderer.sharedMaterial=mat;renderer.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.On;renderer.receiveShadows=true;
+var old=UnityEngine.GameObject.Find("AuthoredWorld").GetComponentsInChildren<UnityEngine.MeshRenderer>(true).Where(r=>r.name=="TREE_gnarled_trunk"||r.name.StartsWith("TREE_root_")).ToArray();
+if(old.Length!=12)throw new System.Exception("Unexpected original root family count.");
+foreach(var r in old){r.enabled=false;UnityEditor.EditorUtility.SetDirty(r);UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(r);}
+chunks.sourceRoots=chunks.sourceRoots.Concat(new[]{target.transform}).ToArray();
+UnityEditor.PrefabUtility.SaveAsPrefabAssetAndConnect(target,folder+"/TreeRoots.prefab",UnityEditor.InteractionMode.AutomatedAction);
+UnityEditor.AssetDatabase.SaveAssets();AthenHill.Editor.StaticRenderChunksEditor.Rebuild(chunks);
+if(gameplay!=AthenHill.Editor.DistrictCityPass.GameplaySignature())throw new System.Exception("Gameplay roots changed.");
+UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(scene);UnityEditor.SceneManagement.EditorSceneManager.SaveScene(scene);UnityEditor.AssetDatabase.SaveAssets();
+return new{triangles=mesh.triangles.Length/3,vertices=mesh.vertexCount,oldVisuals=old.Length,gameplayPreserved=true,collidersAdded=0,sourceBark="Poly Haven Bark Willow 02, CC0; 4K OpenGL normals, roughness to smoothness alpha."};

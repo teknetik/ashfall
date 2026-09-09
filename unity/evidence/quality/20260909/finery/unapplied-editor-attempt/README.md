@@ -1,0 +1,1 @@
+The first installation refused its stale 267-part expectation before any scene mutation. These four captures therefore still show the original materials. The retained authored source has 263 parts, plus four retired lamp pieces excluded from this pass. These captures are not after evidence.

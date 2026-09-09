@@ -1,0 +1,43 @@
+if(UnityEditor.EditorApplication.isPlaying)throw new System.Exception("Edit mode required.");
+var scene=UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene();
+if(UnityEngine.GameObject.Find("Phase 1 Finery frontage"))throw new System.Exception("Already installed. Edit the saved prefab instance.");
+var gameplay=AthenHill.Editor.DistrictCityPass.GameplaySignature();
+var chunks=UnityEngine.Object.FindAnyObjectByType<AthenHill.StaticRenderChunks>();
+var oldRoot=UnityEngine.GameObject.Find("Post-war salvage/BLD_shop_w_01 repaired");
+if(!oldRoot)throw new System.Exception("Expected Finery gameplay parcel is missing.");
+var oldVisual=oldRoot.transform.Find("Meshy visual").GetComponent<UnityEngine.MeshRenderer>();
+var source=Newtonsoft.Json.Linq.JArray.Parse(System.IO.File.ReadAllText("../../art/phase1_20260908/finery-mesh-data.json"));
+const string root="Assets/AthenHill/Art/Phase1/Finery";
+System.IO.Directory.CreateDirectory(root+"/Meshes");UnityEditor.AssetDatabase.Refresh(UnityEditor.ImportAssetOptions.ForceSynchronousImport);
+chunks.ShowSources(true);
+var parent=new UnityEngine.GameObject("Phase 1 Finery frontage");
+System.Func<Newtonsoft.Json.Linq.JToken,UnityEngine.Vector3> vec=t=>new UnityEngine.Vector3((float)t[0],(float)t[1],(float)t[2]);
+foreach(var p in source){
+ string name=(string)p["name"],group=(string)p["group"],material=(string)p["material"];
+ var g=parent.transform.Find(group);if(!g){g=new UnityEngine.GameObject(group).transform;g.SetParent(parent.transform,false);}
+ var positions=p["positions"].Select(vec).ToArray();var b=new UnityEngine.Bounds(positions[0],UnityEngine.Vector3.zero);foreach(var v in positions)b.Encapsulate(v);var pivot=b.center;
+ var mesh=new UnityEngine.Mesh();mesh.name=name;mesh.indexFormat=UnityEngine.Rendering.IndexFormat.UInt32;mesh.vertices=positions.Select(v=>v-pivot).ToArray();mesh.normals=p["normals"].Select(vec).ToArray();mesh.uv=p["uv"].Select(t=>new UnityEngine.Vector2((float)t[0],(float)t[1])).ToArray();mesh.triangles=p["indices"].Select(t=>(int)t).ToArray();mesh.RecalculateBounds();mesh.RecalculateTangents();
+ string safe=new string(name.Select(c=>char.IsLetterOrDigit(c)||c=='-'||c=='_'?c:'_').ToArray());
+ UnityEditor.AssetDatabase.CreateAsset(mesh,root+"/Meshes/"+safe+".asset");
+ var go=new UnityEngine.GameObject(name);go.transform.SetParent(g,false);go.transform.position=pivot;go.AddComponent<UnityEngine.MeshFilter>().sharedMesh=mesh;var r=go.AddComponent<UnityEngine.MeshRenderer>();
+ r.sharedMaterial=UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Material>("Assets/AthenHill/Art/Courtyard/Materials/"+material+".mat");if(!r.sharedMaterial)throw new System.Exception("Missing authored material "+material);
+ r.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.On;r.receiveShadows=true;UnityEditor.GameObjectUtility.SetStaticEditorFlags(go,UnityEditor.StaticEditorFlags.BatchingStatic|UnityEditor.StaticEditorFlags.ReflectionProbeStatic);
+}
+// A closed shop shell retains an impassable interior. A fitted proxy replaces
+// the warped old mesh collision while keeping porch/steps and the street clear.
+var collision=new UnityEngine.GameObject("Closed shop collision");collision.transform.SetParent(parent.transform,false);collision.transform.position=new UnityEngine.Vector3(20.93f,3.67f,-18f);var box=collision.AddComponent<UnityEngine.BoxCollider>();box.size=new UnityEngine.Vector3(8.06f,6.34f,7.6f);
+oldVisual.enabled=false;UnityEditor.EditorUtility.SetDirty(oldVisual);UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(oldVisual);
+var oldCollider=oldVisual.GetComponent<UnityEngine.MeshCollider>();if(!oldCollider)throw new System.Exception("Expected original shop collision.");oldCollider.enabled=false;UnityEditor.EditorUtility.SetDirty(oldCollider);UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(oldCollider);
+foreach(var name in new[]{"Reused sign frame","Reused sign face","Original shop name"}){
+ var t=oldRoot.transform.Find(name);var position=t.position;t.position=new UnityEngine.Vector3(position.x-.45f,4.50f,position.z);UnityEditor.EditorUtility.SetDirty(t);UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(t);
+}
+chunks.sourceRoots=chunks.sourceRoots.Concat(new[]{parent.transform}).ToArray();
+UnityEditor.PrefabUtility.SaveAsPrefabAssetAndConnect(parent,root+"/Finery.prefab",UnityEditor.InteractionMode.AutomatedAction);
+AthenHill.Editor.ImportBaseline.Camera("cam_p1_finery_front",new UnityEngine.Vector3(9.8f,1.8f,-18),new UnityEngine.Vector3(17,3.7f,-18),62);
+AthenHill.Editor.ImportBaseline.Camera("cam_p1_finery_door",new UnityEngine.Vector3(14.55f,1.9f,-18),new UnityEngine.Vector3(17,1.8f,-18),68);
+AthenHill.Editor.ImportBaseline.Camera("cam_p1_finery_roof",new UnityEngine.Vector3(10,9,-28),new UnityEngine.Vector3(20.9f,5,-18),60);
+UnityEditor.AssetDatabase.SaveAssets();AthenHill.Editor.StaticRenderChunksEditor.Rebuild(chunks);
+if(gameplay!=AthenHill.Editor.DistrictCityPass.GameplaySignature())throw new System.Exception("Gameplay roots changed.");
+UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(scene);UnityEditor.SceneManagement.EditorSceneManager.SaveScene(scene);UnityEditor.AssetDatabase.SaveAssets();
+var report=new{parts=source.Count,triangles=source.Sum(p=>p["indices"].Count()/3),prefab=root+"/Finery.prefab",gameplayPreserved=true,oldVisualAndColliderRetained=true,porchAndStepsPreserved=true,closedShopCollision=new{center=new[]{box.bounds.center.x,box.bounds.center.y,box.bounds.center.z},size=new[]{box.bounds.size.x,box.bounds.size.y,box.bounds.size.z}}};
+System.IO.File.WriteAllText("../evidence/phase1/20260908/finery-install.json",Newtonsoft.Json.JsonConvert.SerializeObject(report,Newtonsoft.Json.Formatting.Indented));return report;

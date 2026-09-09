@@ -1,0 +1,34 @@
+if(UnityEditor.EditorApplication.isPlaying)throw new System.Exception("Edit mode required.");
+UnityEditor.AssetDatabase.Refresh(UnityEditor.ImportAssetOptions.ForceSynchronousImport);
+var root=UnityEngine.GameObject.Find("Colonists/npc_vex");var skin=root.GetComponentInChildren<UnityEngine.SkinnedMeshRenderer>();
+var source=skin.sharedMesh;const string folder="Assets/AthenHill/Art/Imported/Meshy/VexSurface";
+var meshPath=folder+"/WardGuardTangents.asset";
+var mesh=UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Mesh>(meshPath);
+if(!mesh){
+ mesh=UnityEngine.Object.Instantiate(source);mesh.name="WardGuardTangents";mesh.RecalculateTangents();
+ if(!mesh.vertices.SequenceEqual(source.vertices)||!mesh.normals.SequenceEqual(source.normals)||!mesh.uv.SequenceEqual(source.uv)||!mesh.triangles.SequenceEqual(source.triangles)||!mesh.boneWeights.SequenceEqual(source.boneWeights)||!mesh.bindposes.SequenceEqual(source.bindposes))throw new System.Exception("Tangent construction changed preserved mesh data.");
+ UnityEditor.AssetDatabase.CreateAsset(mesh,meshPath);
+}
+foreach(var label in new[]{"OriginalPBR","Candidate4K"}){
+ string dir=folder+"/"+label;
+ foreach(var name in new[]{"base_color","normal","metallic_smoothness"}){
+  string p=dir+"/"+name+".png";
+  var ti=(UnityEditor.TextureImporter)UnityEditor.AssetImporter.GetAtPath(p);
+  ti.textureType=name=="normal"?UnityEditor.TextureImporterType.NormalMap:UnityEditor.TextureImporterType.Default;
+  ti.sRGBTexture=name=="base_color";ti.mipmapEnabled=true;ti.anisoLevel=8;
+  int w,h;ti.GetSourceTextureWidthAndHeight(out w,out h);ti.maxTextureSize=UnityEngine.Mathf.NextPowerOfTwo(System.Math.Max(w,h));
+  ti.textureCompression=UnityEditor.TextureImporterCompression.CompressedHQ;ti.SaveAndReimport();
+ }
+ string mp=dir+"/Vex"+label+".mat";var mat=UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Material>(mp);
+ if(!mat){mat=new UnityEngine.Material(UnityEngine.Shader.Find("Universal Render Pipeline/Lit"));mat.name="Vex "+label;UnityEditor.AssetDatabase.CreateAsset(mat,mp);}
+ mat.SetTexture("_BaseMap",UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Texture2D>(dir+"/base_color.png"));mat.SetColor("_BaseColor",UnityEngine.Color.white);
+ mat.SetTexture("_BumpMap",UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Texture2D>(dir+"/normal.png"));mat.SetFloat("_BumpScale",1);mat.EnableKeyword("_NORMALMAP");
+ mat.SetTexture("_MetallicGlossMap",UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Texture2D>(dir+"/metallic_smoothness.png"));mat.SetFloat("_Metallic",1);mat.SetFloat("_Smoothness",1);mat.EnableKeyword("_METALLICSPECGLOSSMAP");
+ mat.enableInstancing=true;UnityEditor.EditorUtility.SetDirty(mat);
+}
+UnityEditor.Undo.RecordObject(skin,"Audition Vex source PBR");
+skin.sharedMesh=mesh;skin.sharedMaterial=UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Material>(folder+"/OriginalPBR/VexOriginalPBR.mat");
+skin.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.On;skin.receiveShadows=true;
+UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(skin);
+UnityEditor.AssetDatabase.SaveAssets();UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(root.scene);UnityEditor.SceneManagement.EditorSceneManager.SaveScene(root.scene);
+return new{triangles=mesh.triangles.Length/3,vertices=mesh.vertexCount,tangents=mesh.tangents.Length,variant=skin.sharedMaterial.name,scope="Vex only; existing WardGuard rig/pose and NPC root retained."};

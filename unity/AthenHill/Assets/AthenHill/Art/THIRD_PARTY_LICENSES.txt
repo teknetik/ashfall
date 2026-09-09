@@ -86,6 +86,23 @@ The project adjusts UV scale, normal strength and material response; the
 metal diffuse is adapted into a neutral wear texture using Blender. Original
 downloaded maps are preserved in the source archive.
 
+## Ward terminal courtyard — 8 September 2026
+
+Sandstone Cracks, Sand 03 and Rusty Painted Metal surface maps are Poly Haven
+CC0 assets: https://polyhaven.com/a/sandstone_cracks,
+https://polyhaven.com/a/sand_03 and https://polyhaven.com/a/rusty_painted_metal.
+Rock Boulder Dry and Sand 01 remain in the retained audition source archive.
+Source downloads, hashes and material metadata are recorded in
+refs/courtyard_20260908/materials/download-manifest.json. Runtime materials use
+metre-scale UVs, adjusted tint/normal strength and roughness packed into smoothness.
+
+The illustrated Karaveen poster, Ward watch banner, faded canvas and handwritten
+factory paint mask are original OpenAI image-generation outputs for this project.
+Prompts and accepted originals are retained in refs/courtyard_20260908. Courtyard
+stonework, sand fans, plants, cloth, pipe fittings, paper and drum geometry were
+authored for Ward through Blender; editable source and exports are retained in
+art/courtyard_20260908. No extracted commercial-game artwork was used.
+
 ## Retained audition sources
 
 RehmanPolanski's [Viking beard and moustache](https://static.makehumancommunity.org/assets/assetpacks/bodyparts05.html)
@@ -139,3 +156,89 @@ views and rigged by Meshy, with its supplied walk/run motions. Unity imports it
 as Humanoid. These are project-generated assets, with no extracted game models.
 Task requests, reference provenance, FBX/GLB originals, source textures and SHA-256
 digests are retained in meshy/district-20260908/manifest.json.
+
+## Phase 1 tree bark — 8 September 2026
+
+Bark Willow 02, by Charlotte Baglioni, from Poly Haven:
+https://polyhaven.com/a/bark_willow_02
+CC0 1.0 Universal: https://creativecommons.org/publicdomain/zero/1.0/
+Full 4K diffuse, OpenGL normal, roughness and displacement sources are retained
+under refs/phase1_20260908/materials with source URLs and SHA-256 hashes.
+Unity uses the diffuse and normal maps and a derived roughness-to-smoothness pack.
+The connected root geometry is original project authoring in live Blender MCP;
+untouched original root meshes and the editable .blend are retained.
+
+Vex's original Meshy Ward Guard PBR maps were recovered from source task
+01a07c7c-4d44-7360-9cb7-656e79980f5c. A separate generated 4K retexture was
+rejected for invented markings and is not assigned to the shipping scene.
+See meshy/ward-guard/phase1-20260908 for requests, task IDs and source files.
+
+The Phase 1 Finery frontage and entrance lamp are original Blender-authored
+project geometry. They reuse the courtyard's retained, attributed Poly Haven
+sandstone and painted-metal materials. Editable source, measured dimensions,
+reference and mesh interchange are in art/phase1_20260908. Existing shop lettering
+is retained; no commercial-game model or logo was used.
+
+## Hero tree source and shader — 8 September 2026
+
+Jacaranda Tree by Rico Cilliers, with Rob Tuytel guidance, from Poly Haven:
+https://polyhaven.com/a/jacaranda_tree
+CC0 1.0 Universal: https://creativecommons.org/publicdomain/zero/1.0/
+The complete downloaded Blender source and ten original 4K maps are retained in
+refs/quality_20260908/tree/jacaranda_tree with URL, MD5 and SHA-256 manifest.
+Runtime authoring preserves both supplied LODs; the near source's exact duplicate
+trunk surface is removed using its identical standalone source trunk. Original
+geometry is retained. Source reviews and derived FBX files are in
+art/quality_20260908/tree. Leaf opacity and linear roughness are packed into
+standard Unity channels without adding painted lighting to the albedo.
+
+WardTree shader files derive from the installed Unity URP 17.6.0 Lit shaders.
+com.unity.render-pipelines.universal copyright © 2020 Unity Technologies ApS.
+Licensed under the Unity Companion License for Unity-dependent projects:
+http://www.unity3d.com/legal/licenses/Unity_Companion_License
+The source package licence is retained beside the derivative shaders. Original
+project additions implement wind and modest leaf light transmission.
+
+## Guard movement sources — 8 September 2026
+
+Meshy Idle and Stand_and_Chat animations generated on the existing Ward Guard rig
+01a07c81-2534-7259-af07-0a4df613e278, respectively tasks
+01a082ab-7fe4-7301-b5c9-4cff610300dc and
+01a082a4-2bc8-7549-8e49-5a8fdd1fc1f4. Three preapproved credits each, six total.
+Full source GLBs and the extraction/grounding corrections are retained in
+unity/evidence/quality/20260908/movement; runtime animation-only imports are in
+Art/CharacterMotion/Source. No generated replacement skin or model was assigned.
+
+## Ward utility lamps and plaza benches — 9 September 2026
+
+Utility lamp and plaza bench geometry, metal/rubber maps and timber end grain are
+original project work, with editable Blender sources and export records in
+art/quality_20260908/lamps and art/quality_20260908/benches.
+
+Wooden Planks, photographed by Charlotte Baglioni and processed by Dario Barresi,
+from Poly Haven: https://polyhaven.com/a/wooden_planks
+CC0 1.0 Universal: https://creativecommons.org/publicdomain/zero/1.0/
+The full 4K photographic maps and their source metadata/checksums are retained in
+refs/quality_20260908/benches/wooden_planks. Original albedo and OpenGL normal maps
+are retained unchanged; the runtime metallic/smoothness map uses metallic zero
+and smoothness one minus source roughness. The bench uses selected board interiors
+to avoid importing photographed plank gaps onto its separately modelled slats.
+
+Shared building material sources — 9 September 2026
+Source assets are CC0: https://polyhaven.com/license
+Original full-resolution downloads and source hashes: refs/quality_20260909/building-materials.
+Runtime diffuse and OpenGL normal maps preserve the downloaded PNG bytes; roughness is normalized from its original bit depth and inverted into URP smoothness alpha. Metallic is zero where no metallic map was supplied.
+
+beige_wall_001 — Dimitrios Savva, Rico Cilliers — https://polyhaven.com/a/beige_wall_001
+rock_surface — Amal Kumar — https://polyhaven.com/a/rock_surface
+rough_concrete — Dimitrios Savva — https://polyhaven.com/a/rough_concrete
+rusty_metal_sheet — Amal Kumar — https://polyhaven.com/a/rusty_metal_sheet
+
+Basic General and Relay cloth — 9 September 2026
+Fabric Pattern 07 — Rob Tuytel — https://polyhaven.com/a/fabric_pattern_07
+CC0, verified on the source asset page. Original 4K OpenGL normal and roughness
+maps are retained under refs/quality_20260909/basic-general/materials.
+Basic General's canvas colour maps are original deterministic project artwork;
+source recipes, checksums and the 0.4 m material scale are retained under
+art/quality_20260909/basic-general. Geometry and separately modelled lettering
+are original Blender authoring, with previous versions preserved.

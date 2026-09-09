@@ -1,0 +1,20 @@
+var parent=UnityEngine.GameObject.Find("Phase 1 Finery frontage");if(parent.transform.Find("Entrance light"))throw new System.Exception("Lamp exists.");
+var chunks=UnityEngine.Object.FindAnyObjectByType<AthenHill.StaticRenderChunks>();chunks.ShowSources(true);
+const string root="Assets/AthenHill/Art/Phase1/Finery";
+var source=Newtonsoft.Json.Linq.JArray.Parse(System.IO.File.ReadAllText("../../art/phase1_20260908/finery-lamp-mesh.json"));
+var emission=new UnityEngine.Material(UnityEngine.Shader.Find("Universal Render Pipeline/Lit"));emission.name="Finery lamp diffuser";emission.SetColor("_BaseColor",new UnityEngine.Color(.9f,.8f,.6f));emission.SetColor("_EmissionColor",new UnityEngine.Color(4f,3.0f,1.8f));emission.EnableKeyword("_EMISSION");UnityEditor.AssetDatabase.CreateAsset(emission,root+"/LampEmission.mat");
+System.Func<Newtonsoft.Json.Linq.JToken,UnityEngine.Vector3> vec=t=>new UnityEngine.Vector3((float)t[0],(float)t[1],(float)t[2]);
+foreach(var p in source){
+ string name=(string)p["name"],group=(string)p["group"],material=(string)p["material"];
+ var g=parent.transform.Find(group);if(!g){g=new UnityEngine.GameObject(group).transform;g.SetParent(parent.transform,false);}
+ var positions=p["positions"].Select(vec).ToArray();var b=new UnityEngine.Bounds(positions[0],UnityEngine.Vector3.zero);foreach(var v in positions)b.Encapsulate(v);var pivot=b.center;
+ var mesh=new UnityEngine.Mesh();mesh.name=name;mesh.indexFormat=UnityEngine.Rendering.IndexFormat.UInt32;mesh.vertices=positions.Select(v=>v-pivot).ToArray();mesh.normals=p["normals"].Select(vec).ToArray();mesh.uv=p["uv"].Select(t=>new UnityEngine.Vector2((float)t[0],(float)t[1])).ToArray();mesh.triangles=p["indices"].Select(t=>(int)t).ToArray();mesh.RecalculateBounds();mesh.RecalculateTangents();
+ string safe=new string(name.Select(c=>char.IsLetterOrDigit(c)||c=='-'||c=='_'?c:'_').ToArray());
+ UnityEditor.AssetDatabase.CreateAsset(mesh,root+"/Meshes/"+safe+".asset");
+ var go=new UnityEngine.GameObject(name);go.transform.SetParent(g,false);go.transform.position=pivot;go.AddComponent<UnityEngine.MeshFilter>().sharedMesh=mesh;var r=go.AddComponent<UnityEngine.MeshRenderer>();
+ r.sharedMaterial=material=="LampEmission"?emission:UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Material>("Assets/AthenHill/Art/Courtyard/Materials/"+material+".mat");if(!r.sharedMaterial)throw new System.Exception("Missing authored material "+material);
+ r.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.On;r.receiveShadows=true;UnityEditor.GameObjectUtility.SetStaticEditorFlags(go,UnityEditor.StaticEditorFlags.BatchingStatic|UnityEditor.StaticEditorFlags.ReflectionProbeStatic);
+}
+
+var lamp=new UnityEngine.GameObject("Warm entrance practical");lamp.transform.SetParent(parent.transform.Find("Entrance light"),false);lamp.transform.position=new UnityEngine.Vector3(16.3f,3.015f,-18);var light=lamp.AddComponent<UnityEngine.Light>();light.type=UnityEngine.LightType.Point;light.color=new UnityEngine.Color(1,.85f,.67f);light.intensity=3.5f;light.range=4.4f;light.shadows=UnityEngine.LightShadows.Soft;light.shadowResolution=UnityEngine.Rendering.LightShadowResolution.Medium;
+UnityEditor.PrefabUtility.SaveAsPrefabAssetAndConnect(parent,root+"/Finery.prefab",UnityEditor.InteractionMode.AutomatedAction);UnityEditor.AssetDatabase.SaveAssets();AthenHill.Editor.StaticRenderChunksEditor.Rebuild(chunks);UnityEditor.SceneManagement.EditorSceneManager.SaveScene(UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene());return new{parts=4,practicalLights=1};

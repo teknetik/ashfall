@@ -1,0 +1,23 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+ <!-- THESIS: a lighting instrument beside the live city. OWN-WORLD: inherited bronze frame, charcoal inset, ivory type and cyan focus. STORY: select a time, inspect the result, resume the clock. FIRST VIEWPORT: a 440-pixel panel at the upper right leaves the center and ground visible; presets lead into precise time and playback. FORM: a narrow extension of the accepted Ward interface, with no new identity or animated entrance. -->
+ <Style src="DeveloperTimeMenu.uss" />
+ <ui:VisualElement name="developer-time-overlay">
+  <ui:VisualElement name="developer-time-panel" class="panel">
+   <ui:VisualElement class="developer-time-heading"><ui:Label text="Lighting clock" class="title"/><ui:Button name="developer-time-close" text="Close · F8"/></ui:VisualElement>
+   <ui:Label text="Development controls" class="muted small"/>
+   <ui:ScrollView name="developer-time-scroll" horizontal-scroller-visibility="Hidden">
+    <ui:Label name="developer-time-readout" text="12:00"/>
+    <ui:VisualElement class="developer-time-presets"><ui:Button name="developer-time-dawn" text="Dawn"/><ui:Button name="developer-time-noon" text="Noon"/><ui:Button name="developer-time-dusk" text="Dusk"/><ui:Button name="developer-time-night" text="Night"/></ui:VisualElement>
+    <ui:Slider name="developer-time-slider" label="Time of day" low-value="0" high-value="23.99"/>
+    <ui:FloatField name="developer-time-hour" label="Hour · 0–24" is-delayed="true"/>
+    <ui:Label text="Clock playback" class="developer-time-section"/>
+    <ui:Button name="developer-time-play" text="Resume clock"/>
+    <ui:VisualElement class="developer-time-speeds"><ui:Button name="developer-time-speed1" text="1×"/><ui:Button name="developer-time-speed10" text="10×"/><ui:Button name="developer-time-speed60" text="60×"/></ui:VisualElement>
+    <ui:Label name="developer-time-status" class="small"/>
+    <ui:Label name="developer-time-reflections" class="muted small"/>
+    <ui:Button name="developer-time-reset" text="Reset to authored default"/>
+    <ui:Label text="The player is paused. Lighting can run while this panel is open. Esc returns to the game." class="muted small developer-time-help"/>
+   </ui:ScrollView>
+  </ui:VisualElement>
+ </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,64 @@
+{
+  "status": "Progress review, not visual acceptance",
+  "scale": "0\u20135; target >=4 in every applicable hero/close category",
+  "buildIdentity": "final-build-identity.json",
+  "nativeViews": "verified-native/building-pass-captures.json",
+  "buildings": [
+    {
+      "id": "basic_general",
+      "evidence": [
+        "cam_audit_basic_general_front",
+        "cam_audit_basic_general_door",
+        "cam_audit_basic_general_side_left",
+        "cam_audit_basic_general_side_right",
+        "cam_audit_basic_general_back",
+        "cam_audit_basic_general_roof"
+      ],
+      "compositionSilhouette": 3.5,
+      "scale": 4,
+      "materialDetail": 2.5,
+      "lightingDepth": 2.5,
+      "densityStorytelling": 3,
+      "temporalStability": null,
+      "uiReadability": 4,
+      "findings": [
+        "Readable separate sign; source lettering is no longer mirrored.",
+        "Supported canvas and distinct wall/stock/counter geometry are in place.",
+        "Shelves, signs and broad infill walls remain plain at arm\u2019s length.",
+        "Shade response does not expose enough material variation; no final acceptance.",
+        "First-person porch approach preserves Mira at the counter; its central view is partly obscured by her. The direct diagnostic start overlaps her and is invalid visual evidence."
+      ]
+    },
+    {
+      "id": "relay_works",
+      "evidence": [
+        "cam_audit_relay_works_front",
+        "cam_relay_works_authored_door",
+        "cam_relay_works_authored_back",
+        "cam_relay_works_authored_roof",
+        "cam_relay_works_authored_awning"
+      ],
+      "compositionSilhouette": 3.5,
+      "scale": 4,
+      "materialDetail": 2.5,
+      "lightingDepth": 2.5,
+      "densityStorytelling": 2.5,
+      "temporalStability": null,
+      "uiReadability": 4,
+      "findings": [
+        "Straight metric masonry and roof construction replace the distorted stretched shell.",
+        "Original porch/step colliders and closed-shop behavior retained.",
+        "Revision 04 evaluated export closes the first-person daylight seam; the revision 03 export is retained as a failed intermediate.",
+        "Dark metal and glass lose substantial definition under the awning, especially at first-person door proximity; this still fails close-range material/lighting review.",
+        "Side/back walls remain too plain; no district material-standard acceptance."
+      ]
+    }
+  ],
+  "baselineLimitations": "Initial 67-view operation contains 20 clear Play frames and 47 frames obscured by pause UI. The validity file identifies each. Do not use obscured frames as matched before evidence. Basic General has six clear baseline views; Relay requires its separately dated prior source/native records or a recovered matched baseline.",
+  "phaseStatus": "All ten buildings stay individually open; six store sources and Hall revision remain staged; seven rejected candidates remain inactive.",
+  "motionEvidence": [
+    "verified-native/frontage-motion.json (Relay clip only)",
+    "verified-native/frontage-motion-basic_general.json"
+  ],
+  "temporalLimit": "Two 10-second 1080p/30 FPS real-input first-person clips record local movement; they do not qualify district-wide LOD, foliage or temporal stability."
+}

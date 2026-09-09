@@ -1,0 +1,17 @@
+# Utility lamps — independent source gate 02
+
+9 September 2026. Reviewer: `visual_critic`, separate from the author. **Decision: revision 02 is ready for reversible native audition. No native, illumination, performance or AAA acceptance.** This report supersedes only the source findings S02/S03/S05 in [source gate 01](lamps-source-01.md); its native evidence requirements remain open.
+
+Reviewed the stable revision-02 [full family](../../../../../art/quality_20260908/lamps/revision-02/studio-full.png), [base](../../../../../art/quality_20260908/lamps/revision-02/studio-base.png), [head](../../../../../art/quality_20260908/lamps/revision-02/studio-head.png) and [wall fixture](../../../../../art/quality_20260908/lamps/revision-02/studio-wall.png). These are source studio renders, not Unity captures. The [manifest](../../../../../art/quality_20260908/lamps/revision-02/source-manifest.json) identifies source blend SHA-256 `01638e16f6b1c82b8e5c4b80df47900def7903a452979046f6424050190a49a2` and mesh export SHA-256 `30c9329aa065c49664471f683c0df08e6b19c932b465bc0137e416a566edd671`. Polygon counts and creator scores were not acceptance evidence.
+
+| Earlier defect | Independent revision-02 observation | Source disposition |
+| --- | --- | --- |
+| S02: unexplained plain conduit tabs | Formed saddles now follow the conduit and visibly have two fixing positions. The retaining mechanism reads as an assembly instead of a bronze bar. | Closed for the shown source views. Verify attachment in native side/back views. |
+| S03: cut, dangling wall-feed stub | Feed terminates in a bolted wall entry/flange with a gland. The source now explains a continuing sealed supply. | Closed for source construction; actual masonry intersection and contact remain untested. |
+| S05: generic clean/noisy finish; interim tan dots and tape-like patch | Final revision removes isolated footing dots and the broad tan hood/hatch patch. Dust is low contrast around base/plate seams; small chips and broken seam oxidation are restrained. | The specific dot/tape defect is closed. Finish is sufficiently integrated to audition, with native texel density and sun/shade response unreviewed. |
+
+The main shell, bolted base, access hatch, hood thickness and protective cage remain coherent. These studio views support a construction score of **4** for the displayed assembly and a material score of **3–4**, depending on region. They do not establish a score of 5 against the target. No human is shown, so the roughly 4.56 m post height and 0.60 m wall head height remain dimensional plausibility rather than visually verified scale.
+
+The accepted Ward reference and the previously viewed official [Bethesda Akila vendor panels](https://bethesda.net/en-US/news/guide-to-starfields-major-cities) support visibly attached working infrastructure and integrated wear. Those relatively small official panels cannot establish close hardware or microtexture parity.
+
+The proposed wall origin changed to **Y 3.51 m**. Native audition must show that the feed plate clears the recorded 3.13 m lintel, sits on actual masonry, and avoids both retained awnings. Show all five post placements, base contact and path clearance with an actor. Noon, dusk, night, off-state glass and moving light/shadow evidence are still required by source gate 01. The current integration-01 build explicitly excludes these new lamps, so none of its images accepts this revision.

@@ -1,0 +1,13 @@
+var chunks=UnityEngine.Object.FindAnyObjectByType<AthenHill.StaticRenderChunks>();chunks.ShowSources(true);
+var root=UnityEngine.GameObject.Find("Post-war salvage/BLD_shop_w_01 repaired");
+var rows=new System.Collections.Generic.List<object>();
+foreach(var n in new[]{"Reused sign frame","Reused sign face","Original shop name"}){
+ var t=root.transform.Find(n);var r=t.GetComponent<UnityEngine.MeshRenderer>();var target=new UnityEngine.Vector3(n=="Reused sign frame"?16.72874f:n=="Reused sign face"?16.65f:16.64f,3.72f,-18f);var before=r.bounds.center;
+ t.position+=target-before;UnityEditor.EditorUtility.SetDirty(t);UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(t);
+ if(n=="Original shop name"){
+  var mat=new UnityEngine.Material(UnityEngine.Shader.Find("Universal Render Pipeline/Lit"));mat.name="Finery warm lettering";mat.SetColor("_BaseColor",new UnityEngine.Color(.78f,.66f,.43f));mat.SetFloat("_Metallic",.2f);mat.SetFloat("_Smoothness",.3f);UnityEditor.AssetDatabase.CreateAsset(mat,"Assets/AthenHill/Art/Phase1/Finery/Lettering.mat");r.sharedMaterial=mat;UnityEditor.EditorUtility.SetDirty(r);UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(r);
+ }
+ rows.Add(new{name=n,before=new[]{before.x,before.y,before.z},after=new[]{r.bounds.center.x,r.bounds.center.y,r.bounds.center.z},size=new[]{r.bounds.size.x,r.bounds.size.y,r.bounds.size.z}});
+}
+UnityEditor.AssetDatabase.SaveAssets();AthenHill.Editor.StaticRenderChunksEditor.Rebuild(chunks);UnityEditor.SceneManagement.EditorSceneManager.SaveScene(UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene());
+System.IO.File.WriteAllText("../evidence/phase1/20260908/finery-sign-refit.json",Newtonsoft.Json.JsonConvert.SerializeObject(rows,Newtonsoft.Json.Formatting.Indented));return rows;

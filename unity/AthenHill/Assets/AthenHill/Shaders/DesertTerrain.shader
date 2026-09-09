@@ -20,6 +20,8 @@ Shader "Athen Hill/Desert Terrain"
             HLSLPROGRAM
             #pragma vertex Vert
             #pragma fragment Frag
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
+            #pragma multi_compile_fragment _ _SHADOWS_SOFT _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             TEXTURE2D(_Geology); SAMPLER(sampler_Geology);
             TEXTURE2D(_RockTex); SAMPLER(sampler_RockTex);
@@ -27,6 +29,10 @@ Shader "Athen Hill/Desert Terrain"
             float4 _RockTint,_Sand,_Haze;
             float _DetailScale,_Relief,_HazeDensity;
             CBUFFER_END
+            // CityTimeOfDay owns these globals and restores them on teardown.
+            // x: active clock, y: validity of the retained authored-direction shadow bake.
+            float4 _AthenTerrainTime;
+            float4 _AthenTerrainHazeScale;
             struct Attributes { float4 position:POSITION; float3 normal:NORMAL; float4 light:COLOR; };
             struct Varyings { float4 position:SV_POSITION; float3 world:TEXCOORD0; float3 normal:TEXCOORD1; float2 light:TEXCOORD2; };
             Varyings Vert(Attributes i)
@@ -67,18 +73,31 @@ Shader "Athen Hill/Desert Terrain"
                 float det=dot(dpdx,r1);
                 float3 grad=(ddx(h)*r1+ddy(h)*r2)*sign(det)/max(abs(det),.00001);
                 n=normalize(n-clamp(grad,-.4,.4));
-                Light sun=GetMainLight();
+                // This overload includes URP17.6 shadow-distance fade, including its
+                // screen-space and cascade variants. No lightmap shadow mask is supplied.
+                Light sun=GetMainLight(TransformWorldToShadowCoord(i.world),i.world,half4(1,1,1,1));
                 float ndl=saturate(dot(n,sun.direction));
                 float cavity=lerp(.78,1,macro.r);
-                float3 lighting=SampleSH(n)*cavity*i.light.y+sun.color*ndl*lerp(.25,1,i.light.x);
+                float clockActive=saturate(_AthenTerrainTime.x);
+                float authoredShadowWeight=lerp(1,saturate(_AthenTerrainTime.y),clockActive);
+                float authoredShadow=lerp(1,lerp(.25,1,i.light.x),authoredShadowWeight);
+                // Keep the original noon view exactly, then replace its directional bake
+                // with the live shadow as the sun moves. Beyond URP's shadow distance,
+                // current normal lighting replaces the invalid noon-only cast shadow.
+                float liveShadow=lerp(1,sun.shadowAttenuation,clockActive*(1-authoredShadowWeight));
+                float3 lighting=SampleSH(n)*cavity*i.light.y+sun.color*ndl*authoredShadow*liveShadow;
                 float3 color=albedo*lighting;
                 float3 view=normalize(_WorldSpaceCameraPos-i.world);
                 float3 halfDir=normalize(sun.direction+view);
-                color+=sun.color*pow(saturate(dot(n,halfDir)),18)*.018*ndl;
+                color+=sun.color*pow(saturate(dot(n,halfDir)),18)*.018*ndl*liveShadow;
                 // Exponential depth retains relief nearby and separates the blue-grey rear ranges.
                 float haze=1-exp(-max(0,distanceToCamera-38)*_HazeDensity);
                 haze=saturate(haze+exp(-max(0,i.world.y)*.06)*.11);
-                return half4(lerp(color,_Haze.rgb,haze),1);
+                // Scale each material's existing haze relative to the captured default fog.
+                // The multiplier is computed in the renderer's color space, avoiding a
+                // self-lit beige horizon at night while retaining authored daytime tuning.
+                float3 hazeColor=_Haze.rgb*lerp(float3(1,1,1),_AthenTerrainHazeScale.rgb,clockActive);
+                return half4(lerp(color,hazeColor,haze),1);
             }
             ENDHLSL
         }

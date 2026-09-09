@@ -14,6 +14,8 @@ namespace AthenHill
   public Transform spawn;
   public bool Grounded {get;private set;}
   public float Speed {get;private set;}
+  public float VerticalSpeed => vertical;
+  public bool JumpStarted {get;private set;}
   public bool Blocked,Talking;
   CharacterController body;
   float vertical;
@@ -30,7 +32,8 @@ namespace AthenHill
    bool jump=input.ConsumeJump();
    if(wasGrounded&&vertical<=0)vertical=-2;
    else vertical=Mathf.Max(vertical-gravity*dt,-35);
-   if(jump&&!Blocked&&wasGrounded&&vertical<=0)vertical=Mathf.Sqrt(2*gravity*jumpHeight);
+   JumpStarted=jump&&!Blocked&&wasGrounded&&vertical<=0;
+   if(JumpStarted)vertical=Mathf.Sqrt(2*gravity*jumpHeight);
    var collisions=body.Move((direction*(input.Run?runSpeed:walkSpeed)+Vector3.up*vertical)*dt);
    if((collisions&CollisionFlags.Above)!=0&&vertical>0)vertical=0;
    Grounded=body.isGrounded;
@@ -41,9 +44,10 @@ namespace AthenHill
    }
    Speed=Vector3.ProjectOnPlane(transform.position-previous,Vector3.up).magnitude/dt;
    if(direction.sqrMagnitude>.001f)visual.rotation=Quaternion.Slerp(visual.rotation,Quaternion.LookRotation(direction),1-Mathf.Exp(-turnSpeed*dt));
-   if(actor)actor.SetMotion(Speed,input.Run,Talking);
+   if(actor)actor.SetGroundMotion(Speed,input.Run,Talking,Grounded,vertical,JumpStarted,dt);
+   ActorMotionTrace.Sample(this);
   }
-  public void Teleport(Vector3 feet){if(!body)body=GetComponent<CharacterController>();body.enabled=false;transform.position=feet+Vector3.up*.015f;body.enabled=true;vertical=0;Grounded=false;Physics.SyncTransforms();}
+  public void Teleport(Vector3 feet){if(!body)body=GetComponent<CharacterController>();body.enabled=false;transform.position=feet+Vector3.up*.015f;body.enabled=true;vertical=0;Grounded=false;JumpStarted=false;if(actor)actor.ResetGroundMotion();Physics.SyncTransforms();}
   public void ReturnToGate(){Teleport(spawn.position);}
  }
 }
