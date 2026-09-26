@@ -1,0 +1,19 @@
+var chunks = UnityEngine.Object.FindAnyObjectByType<AthenHill.StaticRenderChunks>();
+if(UnityEngine.GameObject.Find("Reference street joint growth"))throw new System.Exception("Keep existing placements; do not duplicate.");
+var source=UnityEngine.GameObject.Find("Dry joint growth 18");
+if(!source || source.GetComponentsInChildren<UnityEngine.Collider>(true).Length>0)throw new System.Exception("Expected collider-free original joint growth");
+var root=new UnityEngine.GameObject("Reference street joint growth").transform;
+root.SetParent(UnityEngine.GameObject.Find("Reference street thresholds and detail").transform,false);
+chunks.ShowSources(true);
+var positions=new[]{new UnityEngine.Vector3(17.62f,.5f,-5.5f),new UnityEngine.Vector3(17.62f,.5f,-12.52f),new UnityEngine.Vector3(14.2f,0,-5.8f),new UnityEngine.Vector3(14.2f,0,-12.2f),new UnityEngine.Vector3(16.48f,.5f,-14.4f),new UnityEngine.Vector3(16.48f,.5f,-21.4f),new UnityEngine.Vector3(14.18f,0,-14.5f),new UnityEngine.Vector3(14.18f,0,-21.5f)};
+var records=new System.Collections.Generic.List<object>();
+for(int i=0;i<positions.Length;i++){
+ var go=UnityEngine.Object.Instantiate(source);go.name="Reference paving joint growth "+i;go.transform.SetParent(root,false);
+ float scale=i%3==0?.78f:i%3==1?.63f:.9f;go.transform.localScale=UnityEngine.Vector3.one*scale;go.transform.localRotation=UnityEngine.Quaternion.Euler(0,i*47,0);
+ var filter=go.GetComponent<UnityEngine.MeshFilter>();var b=filter.sharedMesh.bounds;var basePoint=b.center-UnityEngine.Vector3.up*b.extents.y;
+ go.transform.position=positions[i]-go.transform.TransformVector(basePoint);go.GetComponent<UnityEngine.MeshRenderer>().enabled=true;
+ records.Add(new{name=go.name,basePosition=new[]{positions[i].x,positions[i].y,positions[i].z},scale,sourceMesh=UnityEditor.AssetDatabase.GetAssetPath(filter.sharedMesh)});
+}
+AthenHill.Editor.StaticRenderChunksEditor.Rebuild(chunks);UnityEditor.SceneManagement.EditorSceneManager.SaveOpenScenes();
+System.IO.File.WriteAllText("/home/teknetik/code/ao2/unity/evidence/reference-street/20260909/joint-growth-placements.json",Newtonsoft.Json.JsonConvert.SerializeObject(records,Newtonsoft.Json.Formatting.Indented));
+return "Placed eight small joint-grown clumps using the retained original mesh and materials; no colliders.";

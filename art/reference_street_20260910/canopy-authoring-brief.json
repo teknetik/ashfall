@@ -1,0 +1,47 @@
+{
+  "revision": "20260910 Finery canopy v1",
+  "status": "Script prepared; live Blender execution and native audition are owned by the root agent",
+  "script": "art/reference_street_20260910/author_finery_canopy_v1.py",
+  "reference": "refs/reference-street/20260909/user-target.png",
+  "nativeBaseline": "unity/evidence/reference-street/20260910/baseline-native-v2/cam_courtyard_facade.png",
+  "sourceSnapshot": "art/reference_street_20260910/canopy-original-source.json",
+  "dimensionsMetres": {
+    "projection": 4.58,
+    "span": 6.5,
+    "minimumMembraneHeightBeforeThickness": 3.363996,
+    "minimumHemHeightBeforeThickness": 3.212168,
+    "canvasThickness": 0.0018,
+    "normalTextureTile": 0.4
+  },
+  "problem": "The current canopy reads as a nearly rigid board with oversized weave, thick cylindrical seams, and detached regularly spaced fibre geometry.",
+  "change": "Author a support-constrained sagging membrane with irregular tension fans, narrow flat-felled seams, short uneven valance, real grommet holes and tied support cord. Keep the existing iron structure and all gameplay collision unchanged.",
+  "geometryOutputs": [
+    "canopy-v1/canopy-parts-v1.json",
+    "canopy-v1/finery-canopy-v1.blend",
+    "canopy-v1/canopy-authoring-manifest-v1.json"
+  ],
+  "materialOutput": "canopy-v1/canopy-material-contract-v1.json",
+  "provenance": {
+    "geometry": "Original deterministic Blender authoring in metres; source script retained",
+    "canvasColour": "Existing original Ward canvas textures from art/quality_20260909/basic-general/textures, retained unchanged",
+    "fabricNormal": "Existing Poly Haven CC0 fabric_pattern_07_nor_gl_4k.jpg, retained unchanged",
+    "rasterEdits": false,
+    "paidExternalGeneration": false
+  },
+  "verificationCompletedBeforeExecution": [
+    "Python syntax compilation",
+    "Sampled mathematical membrane and hem clearance over 52,461 membrane and 651 hem points"
+  ],
+  "requiredNativeReview": [
+    "Matched courtyard facade and reference street views",
+    "Player-height underside, front hem and both spar attachments",
+    "Sun and shade material scale and edge contact",
+    "Measured standalone rendering cost and temporal stability",
+    "Independent visual critic acceptance"
+  ],
+  "limitations": [
+    "The static drape is an authored equilibrium approximation; it is not claimed to be a simulated cloth solve.",
+    "This version does not add wind. If motion is introduced later, pin support boundaries and hardware and retain reduced-motion behavior.",
+    "The final triangle count and Blender buffer checks are emitted only after actual execution."
+  ]
+}

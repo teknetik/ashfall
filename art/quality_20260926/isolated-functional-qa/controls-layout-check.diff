@@ -1,0 +1,46 @@
+--- unity/tools/controls_check.py
++++ controls-layout-check.py
+@@ -92,6 +92,17 @@
+         assert (snap()['width'], snap()['height']) == (1920, 1080)
+         async with Client() as client:
+             await client.command({'action': 'reset'})
++            await client.command({'action': 'uiSnapshot'})
++            layout = json.loads((OUT / 'ui-layout.json').read_text())
++            slot = next(e for e in layout['elements'] if e['name'] == 'slot1')
++            x, y, width, height = slot['bounds']
++            if not slot['visible'] or width <= 0 or height <= 0:
++                raise RuntimeError('Current slot1 is not a visible clickable UI element')
++            slot_center = (round(x + width / 2), round(y + height / 2))
++            (OUT / 'controls-coordinate-correction.json').write_text(json.dumps({
++                'oldAssumedSlot1': [840, 960], 'currentSlot1Bounds': slot['bounds'],
++                'currentSlot1Center': slot_center, 'source': 'Native uiSnapshot',
++                'assertionsModified': False, 'inputDurationsModified': False}, indent=2))
+             await wheel(True, 30)
+             await wheel(False, 6)
+             await asyncio.sleep(.3)
+@@ -109,12 +120,12 @@
+             assert same_camera(turned, snap()['camera']), 'Look continued after release'
+             record('Left-drag look; unheld and right mouse do not rotate', before=baseline, after=turned)
+ 
+-            # Slot 1 is a real HUD button at this verified 1080p layout.
+-            await drag(start=(840, 960), delta=(180, -130))
++            # Use the current slot1 bounds from the runtime UI layout.
++            await drag(start=slot_center, delta=(180, -130))
+             assert same_camera(turned, snap()['camera']), 'Dragging from a HUD button rotated the camera'
+-            await wheel(True, 2, (840, 960))
++            await wheel(True, 2, slot_center)
+             assert same_camera(turned, snap()['camera']), 'Wheel over HUD zoomed the camera'
+-            motion(840, 960)
++            motion(*slot_center)
+             button(1, True)
+             await asyncio.sleep(.07)
+             button(1, False)
+@@ -202,7 +213,7 @@
+             key(d, name, False)
+         button(1, False)
+         button(3, False)
+-        (OUT / 'controls-check.json').write_text(json.dumps(report, indent=2))
++        (OUT / 'controls-layout-check.json').write_text(json.dumps(report, indent=2))
+ 
+ 
+ asyncio.run(main())

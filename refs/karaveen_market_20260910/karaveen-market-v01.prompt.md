@@ -1,0 +1,25 @@
+# Karaveen market concept — v01
+
+Created: 2026-09-10
+Mode: built-in image_gen
+Image: karaveen-market-v01.png
+Reference: reference-courtyard.png (user-supplied native-game screenshot)
+Status: concept for user review; not an accepted reference or an in-game render.
+Supersedes: none. Existing concepts and Unity assets are unchanged.
+
+## Direction
+
+Portable market stalls around the existing caravan vehicle: food, water/provisions, repairs, and artisan trade. Preserve the courtyard identity and keep the truck readable with open pedestrian and unloading approaches. The Karaveen are the nomadic trading people described in lore.md; the pictured vehicle anchors their visiting market.
+
+## Final generation prompt
+
+Use case: stylized-concept
+Asset type: single premium environment concept painting for the native Unity game Ward / Athen Hill.
+Primary request: Generate concept art for market stalls around the Karaveen vehicle shown in the supplied screenshot.
+Input image 1: reference for the exact existing courtyard, vehicle identity, its placement, camera perspective and desert-colony architecture. HUD/interface is not part of the artwork. Use this image as the spatial foundation.
+Scene and composition: A wide landscape 16:9 image at high resolution, a believable player-height three-quarter view closely matching the screenshot. Preserve the yellow weathered heavy Karaveen truck parked in the middle distance, its cab facing toward the viewer and left, its proportions and detailed wheels, roof cargo and machinery. Preserve the low sandstone boundary wall, desert mountains, overhead rust-red structural beam and mature oasis tree on the right. Compose a compact welcoming market around the parked caravan in the existing empty plaza: stalls frame both sides, with a broad clearly open central stone-paved approach leading to the truck. The truck remains visible and is the compositional anchor; do not cover its cab, wheels or recognizable main body with a foreground stall. Leave a practical vehicle departure path to the foreground-left. Do not invent a whole new city or move the location.
+Stall design: Four distinct but related portable trading stalls, human scale, about 2.5–3 metres wide, waist-high counters and 2.3–2.6 metre canopy clearance. They use visibly assembled salvaged steel tube frames, bolted and clamped joints, hinged cargo-case counters and stretched patched canvas with credible seams, tension and attachment points. Nothing floats. Different rooflines and sensible construction, no identical repeated boxes. A produce and street-food stall with small crates of hydroponic greens, hardy vegetables, covered containers and a compact cooking surface; a water and caravan provisions stall with sealed refill canisters and stacked travel packs; a spare-parts repair bench with neatly sorted mechanical components, tools and a tiny restrained cyan diagnostic display; a smaller artisan trade counter with folded woven cloth, ceramic vessels and hand-finished utility goods. These are portable traders visiting Ward, their stock curated rather than mountains of random junk.
+Placement: Use the empty left flank for food/produce and provisions, and space beside the tree to the right for repair and artisan stalls. Keep distinct gaps and clear circulation, loading access and shaded vendor standing space. Awning shapes frame the central vehicle rather than making one huge tent that hides it. Two or three small natural human vendor/customer figures provide scale and quiet activity, wearing practical desert work clothes, not combat poses. All figures have correct anatomy and ground contact.
+Materials and lighting: Sun-warmed mineral stone, ochre painted steel, exposed dull metal at handled edges, believable rubber, patched sand and muted terracotta cloth, a little faded teal cloth, fresh localized greens and cool blue sky/shade. Target contemporary high-end realistic game environment concept fidelity: precise mechanical construction, sharp near-view surface detail, tactile cloth weave, plausible physical material separation, soft sky bounce in shade, coherent sun and contact shadows. Keep the sunny time and readable long shadows of the reference. Localized wear at handles, footings, hinges and rain paths; no uniform muddy grunge. Delicate atmospheric mountain depth without beige fog washing out the market.
+Constraints: This is one cohesive full-frame scene, not a contact sheet, split-screen or blueprint. Market stalls are the new design focus; keep the recognizable Karaveen and existing setting. No new lore, faction emblems or franchises. No large futuristic holograms, neon overload, fantasy bazaar domes, medieval timber village, glossy spaceship kiosks or giant piles of scrap. No UI, HUD, title, captions, border, watermark or text labels. Market goods and construction should explain Ward's food, water, repairs and traveling trade. Render a polished, grounded, richly detailed concept illustration with controlled photographic realism, avoiding low-poly toy-like assets and oversaturated cinematic grading.
+

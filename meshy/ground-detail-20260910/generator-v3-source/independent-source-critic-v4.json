@@ -1,0 +1,56 @@
+{
+  "reviewer": "/root/street_critic",
+  "date": "2026-09-10",
+  "verdict": "HOLD_SOURCE_NOT_READY_FOR_NEAR_OR_NATIVE_ACCEPTANCE",
+  "scope": "Final available materials-v4 source renders of the repaired service assembly, plus separate retained-core diagnostics. Read-only review, no app input. The construction-v2 intermediate has a recorded hidden-hardware issue; final v4 images show the restored root hardware and form the verdict basis.",
+  "imagesReviewed": [
+    "renders/front_oblique-materials-v4.png",
+    "renders/right-materials-v4.png",
+    "renders/connection_close-materials-v4.png",
+    "renders/grille_close-albedo-emission.png",
+    "renders/grille_close-flat-clay.png"
+  ],
+  "addedServiceAssembly": {
+    "constructionVerdict": "ACCEPT_SOURCE_CONSTRUCTION_FOR_RETENTION",
+    "constructionScore": 4,
+    "materialVerdict": "REVISE_MATERIAL_FINISH",
+    "materialScore": 3,
+    "resolved": [
+      "Outer tie ends now meet readable guard sleeves, with load-bearing gussets.",
+      "A connected tray/skid and supported carrier reduce the freestanding rack appearance and give the cooler a coherent attachment.",
+      "Tank endcaps have smooth silhouettes while the intentional rolled seams remain.",
+      "Core proportions remain intact; new tank, continuous copper runs and connected hoses provide a believable service side."
+    ],
+    "remainingMaterialIssues": [
+      "The broad tank, guard and straps still look very smooth and clean beside the core; isolated paint chips provide damage but little fine painted-metal finish or roughness variation.",
+      "Small turquoise oxidation patches recur in a similar way at every coil clamp, creating a stamped contact pattern.",
+      "The new assembly and retained core do not yet share a coherent surface scale or use history. The core's uniform noise should not be copied to solve that mismatch."
+    ],
+    "boundedNextWork": [
+      "Freeze the repaired construction. Retain source and all original core data.",
+      "Give the new painted tank/frame a restrained fine finish and roughness breakup, with stronger wear only at cap handling, strap rub, joints and lower skid contact. Preserve quiet intact paint regions.",
+      "Vary the extent and value of oxidation at cooler contacts; leave some clamps nearly clean and let copper retain its own material response. Avoid increasing broad camouflage-like wear."
+    ]
+  },
+  "retainedMeshyCore": {
+    "constructionVerdict": "REVISE_FOCAL_GRILLE",
+    "constructionScore": 3,
+    "materialVerdict": "REVISE_BAKED_MICROGRID",
+    "materialScore": 3,
+    "diagnosticFindings": [
+      "The pure albedo emission view retains a regular diagonal fabric-like grid across painted panels, white markings and grille surfaces. This establishes a color-map defect; disabling normal alone cannot remove it.",
+      "The flat-clay view separately shows interrupted/overlapping rail sections, abrupt thickness changes near the fan hub and uneven wire-net cells. These are geometry defects independent of texture mapping.",
+      "The new service assembly does not repair these focal core defects."
+    ],
+    "boundedNextWork": [
+      "Create a retained-source derivative for material repair. Isolate solid painted and metal panel regions and suppress the regular high-frequency grid while protecting lettering edges, bolt boundaries and meaningful corrosion shapes; review at the same close camera before any broader treatment.",
+      "If grid removal smears the markings or wear, reauthor only the affected solid panel material and separately project or reconstruct the retained readable markings. Do not blur the entire source texture set or downsample it as a fix.",
+      "Inspect scalar maps separately before carrying their grid into the derivative. Do not assume the emission diagnostic proves every channel has the same defect.",
+      "Repair or replace only the defective focal grille rails and exposed protective mesh with coherent continuous geometry and real openings, preserving fan depth and the useful surrounding core. Reinspect in clay and actual PBR close views."
+    ]
+  },
+  "nativeAcceptance": false,
+  "nearReductionAllowedAsAcceptedSource": false,
+  "nativeAndTemporalScores": null,
+  "handback": "This report permits freezing the repaired assembly geometry and handing Blender back. It does not require further authoring before handback, and it does not lower the reference bar."
+}

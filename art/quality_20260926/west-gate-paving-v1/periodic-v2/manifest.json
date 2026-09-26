@@ -1,0 +1,182 @@
+{
+  "status": "Source complete; independent map review permits reversible native audition with edge-artifact caveat. Native acceptance pending. Work paused at user request.",
+  "candidate": "periodic-v2",
+  "productionTool": "Live Blender MCP, Blender5.2.1 LTS; Cycles CPU tangent-normal bake",
+  "dimensions": [
+    1254,
+    1254
+  ],
+  "repeatMetres": [
+    6,
+    6
+  ],
+  "sourceTexelsPerMetre": 209,
+  "scope": "Single paving material normal-only then normal+roughness; no geometry/UV/albedo changes",
+  "sourceAlbedoSha256": "9d8a4d78479096af5c1e33f98ccffbb5be8336cf232646a2cac25b022d22bc0c",
+  "recipes": [
+    "author_maps_v3.py",
+    "refine_periodic_v2.py",
+    "bake_normal_periodic_v2.py",
+    "validate_periodic.py"
+  ],
+  "files": [
+    {
+      "name": "Albedo-preserved.png",
+      "bytes": 2818327,
+      "sha256": "9d8a4d78479096af5c1e33f98ccffbb5be8336cf232646a2cac25b022d22bc0c",
+      "width": 1254,
+      "height": 1254,
+      "channelDepthBits": 8,
+      "pngColorType": 2
+    },
+    {
+      "name": "Height-metres.exr",
+      "bytes": 18890671,
+      "sha256": "a3f515d5cc677f3beb28d88bbb97c215fe676e13e6bc6bd18d76c704facde6ba"
+    },
+    {
+      "name": "Height-normalized.png",
+      "bytes": 3251058,
+      "sha256": "7c6d825c6b92f96ebfa1e83434ea4344a31608980eec3b304ba43a05892dd479",
+      "width": 1254,
+      "height": 1254,
+      "channelDepthBits": 16,
+      "pngColorType": 2
+    },
+    {
+      "name": "Joint-classification.png",
+      "bytes": 200231,
+      "sha256": "2f35e8e890fa1f24d23b9fa03de4c0b1617618d436d7ba744ad6fd6c57957409",
+      "width": 1254,
+      "height": 1254,
+      "channelDepthBits": 16,
+      "pngColorType": 2
+    },
+    {
+      "name": "Joint-review-overlay.png",
+      "bytes": 2798641,
+      "sha256": "b6b545f382f0d68187efe06075e76d7c6506e025b5db96b4c004ce215c1564a8",
+      "width": 1254,
+      "height": 1254,
+      "channelDepthBits": 8,
+      "pngColorType": 2
+    },
+    {
+      "name": "Corridor-guard.png",
+      "bytes": 48312,
+      "sha256": "aa274d3652e15710691b0e0bfbf6a0efab4e3f1ecd224181fbbf7988bfb7392a",
+      "width": 1254,
+      "height": 1254,
+      "channelDepthBits": 16,
+      "pngColorType": 2
+    },
+    {
+      "name": "Roughness.png",
+      "bytes": 2362450,
+      "sha256": "3cbbdc231184b06f632cd84783fc983390fd13df3bdcfb7dae9c19b06518f6ca",
+      "width": 1254,
+      "height": 1254,
+      "channelDepthBits": 16,
+      "pngColorType": 2
+    },
+    {
+      "name": "MetallicSmoothness.png",
+      "bytes": 2537127,
+      "sha256": "60123bafb2c2b648ca1b544da2f997b7e60cd06691072a64bda4e36a96464fd3",
+      "width": 1254,
+      "height": 1254,
+      "channelDepthBits": 16,
+      "pngColorType": 6
+    },
+    {
+      "name": "Normal-OpenGL.png",
+      "bytes": 5647029,
+      "sha256": "d869b6e420a91026af0e36fe1f2b0ee19e6e4848518301205853dde674f7ecf5",
+      "width": 1254,
+      "height": 1254,
+      "channelDepthBits": 16,
+      "pngColorType": 2
+    },
+    {
+      "name": "Paving-authoring.blend",
+      "bytes": 62549889,
+      "sha256": "b8701ad4defccf085789937c1f3bfb3f06d6d6f4045014eb40b12b36a0c37415"
+    },
+    {
+      "name": "Repeat-normal-inspection.png",
+      "bytes": 3211996,
+      "sha256": "ca9a431cdc613cc1d401f2e1473b1087e1c9f7c31095de57612d48cf1baa2cba",
+      "width": 2508,
+      "height": 2508,
+      "channelDepthBits": 8,
+      "pngColorType": 2
+    },
+    {
+      "name": "source-maps.json",
+      "bytes": 6912,
+      "sha256": "331b6b1e3386f1a9aba83893152387015f3897c92fdfacc0812bf3866cd34685"
+    },
+    {
+      "name": "normal-bake.json",
+      "bytes": 1021,
+      "sha256": "40daeddc8ce39a4969a30b9c88c5da02e8653f6b6b62e078506abd80f5893a1b"
+    },
+    {
+      "name": "normal-physical-validation.json",
+      "bytes": 3266,
+      "sha256": "8bdf7d96033b613ce194d279d5ab5e44d02e1b39b2e14fa983d97cb725975e1e"
+    }
+  ],
+  "import": {
+    "normal": {
+      "file": "Normal-OpenGL.png",
+      "textureType": "NormalMap",
+      "sRGBTexture": false,
+      "convertToNormalMap": false,
+      "flipGreenChannel": false,
+      "convention": "Tangent-space positive X, positive Y, positive Z; RGB encoded0..1",
+      "materialBumpScale": 1
+    },
+    "packed": {
+      "file": "MetallicSmoothness.png",
+      "textureType": "Default",
+      "sRGBTexture": false,
+      "alphaSource": "FromInput",
+      "alphaIsTransparency": false,
+      "channels": {
+        "R": "0: nonmetal",
+        "G": "0: unused",
+        "B": "0: unused",
+        "A": "1 - authored roughness"
+      },
+      "materialWorkflowMode": 1,
+      "materialMetallic": 0,
+      "materialSmoothness": 1,
+      "materialSmoothnessTextureChannel": 0,
+      "enableKeyword": "_METALLICSPECGLOSSMAP",
+      "disableKeyword": "_SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A"
+    },
+    "common": {
+      "maxTextureSize": 2048,
+      "npotScale": "None",
+      "wrapMode": "Repeat",
+      "filterMode": "Trilinear",
+      "anisoLevel": 8,
+      "mipmapEnabled": true,
+      "streamingMipmaps": true,
+      "textureCompression": "HighQuality; record actual native format and inspect result",
+      "sourceResolutionRetained": true
+    },
+    "baseColor": "Keep existing original texture assignment and all tint/tiling/wear fields unchanged"
+  },
+  "limitations": [
+    "This does not create new albedo detail or make source1254 imagery4k.",
+    "Normal-only relief cannot create silhouette displacement, parallax or collider recesses.",
+    "Source bake differs from a discrete analytic gradient near steep joints: p95 error3.175degrees,p99 6.613degrees,max24.1degrees; native relief/orientation must be inspected.",
+    "Opposing edge normals represent sample centers4.78mm apart; measured mismatch is not an exact mathematical seam test.",
+    "Authored technical maps reduce edge mismatch; preserved albedo tiling and actual mip/compression behavior still require native review.",
+    "Prior periodic-candidate exceeded height range and is retained only as rejected source evidence.",
+    "Broad existing world-space wear still modulates smoothness/albedo and is deliberately unchanged."
+  ],
+  "finalMapReview": "unity/evidence/quality/20260926/critic/paving-mask-v2.md"
+}

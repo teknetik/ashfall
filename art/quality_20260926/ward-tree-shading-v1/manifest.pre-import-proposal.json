@@ -1,0 +1,48 @@
+{
+  "status": "staged outside Assets; not imported or compiled",
+  "sourceDirectory": "/home/teknetik/code/ao2/unity/AthenHill/Assets/AthenHill/Shaders/WardTree",
+  "newProperty": {
+    "name": "_WardIndirectTranslucency",
+    "default": 0,
+    "auditionValues": [
+      0,
+      0.15,
+      0.25
+    ],
+    "range": [
+      0,
+      0.5
+    ]
+  },
+  "conditions": {
+    "directTransmission": 0.22,
+    "albedo": "derived edge-padded v1",
+    "shadowDistance": 96,
+    "shadowCascades": 4,
+    "lighting": "matched authored noon",
+    "unchanged": "albedo RGB/alpha, normals, SSAO, sun/sky/exposure, bark, geometry, layout"
+  },
+  "scope": "Forward legacy-probe ambient transmission approximation plus direct-light API correction. Deferred transmission unchanged/unimplemented. No APV/lightmap/screen-space GI ambient-transmission support.",
+  "files": [
+    {
+      "file": "WardTree.shader",
+      "beforeSha256": "8da859b40d5eef7d2cd93241f5f3386e2919c912d8d8cec8a2913a764dc6e579",
+      "candidateSha256": "a107dec602b55ad059a4b826e3aec8b8e600bd4d3af8fee4afb4cca927954fb4"
+    },
+    {
+      "file": "LitInput.hlsl",
+      "beforeSha256": "ec4711af82fb2a6a78d47da699c5617b4c343b86dd747f1fb74d2021b2a7e161",
+      "candidateSha256": "08b4a10182b1473deb0f30992d8dcb4dd33d4f9f0d3bcb347621e8c0b89d4082"
+    },
+    {
+      "file": "LitForwardPass.hlsl",
+      "beforeSha256": "2b47c1f01b569de5636bd9764711e478253726e825cdec9fdc3a49239f4103ca",
+      "candidateSha256": "1c43264ca443e877ea00ccc18c712bc3b1b17b1109006384366c5a4c24d94675"
+    },
+    {
+      "file": "LitDepthNormalsPass.hlsl",
+      "beforeSha256": "183cc35e61b8133a15c1a9e41a9cc75685a50d4bfc1b6dc79047d17a0cfb9c11",
+      "candidateSha256": "a3a26fab331267e90e335699e148dddf9436260b751a9f07b69fab976340842a"
+    }
+  ]
+}

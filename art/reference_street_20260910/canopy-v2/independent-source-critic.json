@@ -1,0 +1,52 @@
+{
+  "reviewer": "Independent street critic; read-only source inspection, no asset or application mutations",
+  "date": "2026-09-10",
+  "reference": "refs/reference-street/20260909/user-target.png",
+  "reviewedImages": ["source-top.png", "source-under.png", "source-hem.png"],
+  "inspectedRecords": ["canopy-authoring-manifest-v2.json", "canopy-material-contract-v2.json", "../render_canopy_v2.py", "../author_finery_canopy_v2.py"],
+  "verdict": "Repair the hem/pocket overlap before native audition. The stronger drape is promising; source images do not establish final material or AAA acceptance.",
+  "scope": {
+    "sourceOnly": true,
+    "nativeAccepted": false,
+    "absentRigidSupportsDeliberatelyExcluded": true,
+    "triangleCountNotAnAcceptanceCriterion": true,
+    "reportedDimensionMetres": {"span": 6.5, "projection": 4.58},
+    "installedProportionsAndClearanceVerified": false
+  },
+  "improvements": [
+    "The membrane now has recognizable tension fans leading toward the front ties and broader asymmetric sag between attachment regions.",
+    "The underside carries coherent fold structure and depth instead of the almost featureless red plane seen in native iteration02.",
+    "Narrow raised seams remain continuous across the drape and the two repair pieces conform to their local cloth shape.",
+    "Hem, eyelets, cords and a rolled pocket create a plausible layered construction at source scale."
+  ],
+  "blockingSourceDefect": {
+    "location": "source-hem.png, across the top of the hanging valance directly beneath the rolled pocket; small related angular ridges on the upper membrane near this overlap",
+    "observation": "Sharp black horizontal and wedge-shaped slits recur along the pocket/valance meeting line. They read as separated or intersecting layers rather than soft folded cloth shadow. The center-to-right strip and the slit left of the left visible tie are especially clear.",
+    "causeStatus": "Root reports a top-hem/pocket endpoint height mismatch. The images independently confirm the visible defect, but this review did not measure or prove that exact cause.",
+    "boundedFix": "Align the pocket and valance meeting geometry and preserve a coherent folded overlap with thickness. Re-render the same hem and underside cameras before installation; check the full span, not only one corrected tie."
+  },
+  "otherSourceRisks": [
+    {
+      "area": "Material scale and cloth response",
+      "observation": "The broad diagonal checker repetition from native iteration02 is not conspicuous in these isolated views. However, the cloth still reads smooth and softly reflective along large ridge highlights, with weak fine weave and little visible local age at seams or the hem.",
+      "nextCheck": "In Unity, verify the intended 2.8 m color tile and 0.4 m normal tile at player height in sun and shade. Inspect both top and underside. Keep localized abrasion/fading tied to hems, seams and tension points; do not compensate with another uniformly strong pattern."
+    },
+    {
+      "area": "Repair patches",
+      "observation": "At this coverage the patches read as clean raised rectangles. Their conforming shape is useful, but stitched attachment and material age are not yet visually convincing in the rendered overview.",
+      "nextCheck": "Review a closer native patch edge for visible attachment, edge wear and appropriate contrast. Do not infer missing stitches solely from the 1200x800 source overview."
+    },
+    {
+      "area": "Valance tears/openings",
+      "observation": "A few uncovered openings between the ties have very regular square or triangular contours, visible in top/underside views. They can read as geometric cutouts instead of worn cloth tears.",
+      "nextCheck": "Confirm these are intentional openings, preserve any functional eyelet holes, and make exposed tear edges convincingly irregular/frayed where appropriate. They are distinct from the long pocket-overlap defect."
+    }
+  ],
+  "materialReviewLimits": {
+    "sourceRenderer": "Cycles, 24 samples with denoising, 1200x800, AgX, isolated studio light/sky",
+    "actualMapsConnected": "render_canopy_v2.py connects the existing Canvas_BaseColor map with UV scale 1/7 and weave normal with unscaled material UVs, strength 0.23.",
+    "sourceRuntimeDifference": "The source review connects texture color directly to the Principled base color. It does not multiply the different CanopyRed/CanopySeam/CanopyRepair tint values recorded in the Unity material contract, and it uses a shared cloth roughness. Source patch/material contrast therefore is not an exact preview of installed Unity material response.",
+    "consequence": "The images can reveal bad geometry and broad material repetition, but cannot approve the shipping URP material, detail-normal transform, compression/mips, sun/shade readability or temporal stability. Fine weave may also be reduced by this source render's resolution and denoising."
+  },
+  "nextDecision": "V3 can proceed to controlled native audition after matching source hem/underside views show the overlap defects resolved. Keep the improved folds and retained rigid supports. Final family acceptance requires the actual installed native material and motion evidence."
+}

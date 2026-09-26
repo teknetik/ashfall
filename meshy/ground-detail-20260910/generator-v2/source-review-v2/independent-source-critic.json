@@ -1,0 +1,145 @@
+{
+  "reviewerRole": "Independent visual critic; no Blender/Unity operation or asset authoring",
+  "reviewDate": "2026-09-10",
+  "verdict": "HOLD: revise source construction, side design and material treatment before near/runtime derivation",
+  "sourceDirectory": "meshy/ground-detail-20260910/generator-v2",
+  "taskId": "01a08ad7-d563-7043-89bc-bf138e742318",
+  "brief": "meshy/ground-detail-20260910/generator-v2/authoring-brief.md",
+  "references": [
+    "refs/salvage_20260908/generator/front.png",
+    "refs/salvage_20260908/generator/side.png",
+    "refs/salvage_20260908/generator/back.png"
+  ],
+  "sourceEvidence": [
+    "renders/front-source-source.png",
+    "renders/back-source-source.png",
+    "renders/left-source-source.png",
+    "renders/right-source-source.png",
+    "renders/top_oblique-source-source.png",
+    "renders/grille_close-source-source.png",
+    "renders/top_fittings_close-source-source.png",
+    "renders/rear_panel_close-source-source.png",
+    "source-topology-fit.json",
+    "renders/grille_close-source-source.json"
+  ],
+  "scope": {
+    "fullSourceOnly": true,
+    "runtimeDerivativeReviewed": false,
+    "nativeReviewed": false,
+    "referenceInterpretation": "The front/back reference details and the brief's functional tank/coil side are the comparison target. Source render quality is separate from final Unity material/lighting acceptance.",
+    "countsAreNotVisualAcceptance": true
+  },
+  "settings": {
+    "renderer": "Cycles",
+    "samples": 24,
+    "device": "GPU",
+    "resolution": [
+      1400,
+      1100
+    ],
+    "viewTransform": "AgX",
+    "exposure": 0,
+    "material": "Original PBR maps via Principled;4K color/normal and2K metallic/roughness recorded in source-topology-fit.json.",
+    "closeGrilleCamera": {
+      "position": [
+        0.12,
+        -1.4,
+        0.76
+      ],
+      "target": [
+        0,
+        -0.24,
+        0.6
+      ],
+      "type": "PERSP",
+      "framing": 70
+    },
+    "caution": "Close crops are diagnostic authored views; native player camera, compression, mips, lighting and material response remain untested."
+  },
+  "sourceTechnicalContext": {
+    "fullFbxTriangles": 1927842,
+    "glbTrianglesReportedByAuthor": 1945352,
+    "countCaveat": "The author reports an intrinsic delivered-format difference; the full FBX was used for these renders. Neither count is used as a quality score.",
+    "fittedUnityXYZMetres": [
+      1.265093638,
+      1.099999983,
+      0.50791244
+    ],
+    "canonicalUnityXYZMetres": [
+      1.6,
+      1.1,
+      0.95
+    ],
+    "uniformScale": 0.665552567,
+    "fitAssessment": "One uniform factor preserves the delivered shape. The visibly shallow depth is therefore a source shape issue, not evidence of a bad nonuniform fit. Do not stretch depth to meet the collider.",
+    "topologyRecorded": {
+      "finitePositions": true,
+      "degenerateTriangles": 0,
+      "boundaryEdges": 226,
+      "moreThanTwoFaceEdges": 281,
+      "components": 2
+    },
+    "topologyCaution": "These are diagnostic counts, not automatic proof of visible holes. The small rear component's role is not independently resolved from these exterior renders."
+  },
+  "scoresOutOfFive": {
+    "frontAndBackSilhouette": 4,
+    "wholeObjectProportionsAndReferenceDesign": 3,
+    "constructionAtCloseRange": 3,
+    "materialDetailAndSeparation": 3,
+    "sourceGroundContact": 4,
+    "sourceMarkingReadability": 4,
+    "nativeLighting": null,
+    "temporalStability": null,
+    "performance": null
+  },
+  "strengths": [
+    "Front and rear preserve the reference's large construction hierarchy: protective tube frame, silencer, panel borders, bolts, rear vent and recessed front grille.",
+    "The lifting-eye and exhaust apertures are visibly open. Grille/fan spaces and lower skid recesses are not simply painted on a closed box.",
+    "Front/rear lettering remains recognizable and not obviously zigzagged like the rejected crate mapping.",
+    "The skids make plausible source-floor contact in the whole-object views.",
+    "Good front/back regions are useful source material to preserve through a deliberate repair."
+  ],
+  "blockers": [
+    {
+      "id": "missing_side_construction",
+      "evidence": [
+        "renders/left-source-source.png",
+        "renders/right-source-source.png",
+        "renders/top_oblique-source-source.png",
+        "refs/salvage_20260908/generator/side.png"
+      ],
+      "finding": "Neither side contains the reference's strapped ochre tank and copper cooling coil. Both sides instead contain a narrow dark mechanical assembly, removing the functional/color structure specified in the brief.",
+      "consequence": "The source reads like a shallow radiator enclosure rather than the intended more substantial field generator; the nominal detail count does not repair that design omission.",
+      "boundedFix": "Reauthor a credible side bay with the tank, connections, straps and separated copper coil, or regenerate a consistent deeper source while retaining useful front/back regions. Author frame/enclosure depth deliberately rather than stretching axes."
+    },
+    {
+      "id": "grille_and_fitting_construction",
+      "evidence": [
+        "renders/grille_close-source-source.png",
+        "renders/top_fittings_close-source-source.png"
+      ],
+      "finding": "Several horizontal grille rails have variable thickness, blobby interruptions and abrupt changes around the fan hub; the internal mesh has a softened net-like shape. Mounting plates, bolts and eyelet surround show similarly softened irregular edges at close range.",
+      "consequence": "The source looks convincing from the broad front view but loses manufactured construction clarity in a close inspection. This is already present before reduction.",
+      "boundedFix": "Rebuild the most exposed rails and their attachment edges with coherent section thickness; keep fan/mesh clearly behind the grille. Clean key mounting/eyelet interfaces without erasing deliberate damage. Preserve genuinely open apertures."
+    },
+    {
+      "id": "metal_material_microstructure",
+      "evidence": [
+        "renders/grille_close-source-source.png",
+        "renders/rear_panel_close-source-source.png",
+        "renders/top_fittings_close-source-source.png"
+      ],
+      "finding": "A regular fine diagonal/grid texture reads like woven fabric over painted metal, white lettering, tubes and panel faces. Dense bright wear is distributed across many surfaces, reducing distinction among painted steel, bare metal, rubber and dust.",
+      "consequence": "High nominal map resolution is not giving the expected metal surface structure at close range.",
+      "boundedFix": "Identify which source maps contain the fabric-like grid and replace or attenuate it selectively. Restore separate smooth/coarse metal regions, localized edge/contact wear and rubber response. Preserve the recognizable painted marks and inspect the same close views under identical lights."
+    }
+  ],
+  "recommendation": {
+    "sourceApprovedForNearDerivation": false,
+    "sourceApprovedForNativeAudition": false,
+    "preserveOriginals": true,
+    "nextStep": "Resolve the side volume/design and exposed grille/material issues before deriving or baking a new runtime mesh. Reinspect front, both sides, back and these same close views; only then compare a derivative in matched positions/material lighting.",
+    "alternatives": "The thin source could support a different compact-machine design, but that would require a deliberate revised art brief and contact/collider review; it is not an automatic substitute for the current field-generator target.",
+    "nativeGate": "After source and derivative review, audition one saved generator instance at uniform scale with the retained gameplay root, evaluate the actual collider/contact fit, then native sun/shade and motion. No broad rollout from this source review."
+  }
+}

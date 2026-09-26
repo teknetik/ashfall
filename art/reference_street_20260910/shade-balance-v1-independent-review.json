@@ -1,0 +1,73 @@
+{
+  "reviewer": "/root/street_critic",
+  "date": "2026-09-10",
+  "verdict": "ALLOW_BOUNDED_NATIVE_AUDITION_ONLY",
+  "artAccepted": false,
+  "scope": "Read-only plausibility review of staged ShadeBalancePass.cs against native iteration03 evidence and the current saved scene. No app input, scene mutation, rendered candidate or final lighting score.",
+  "sources": [
+    "art/reference_street_20260910/ShadeBalancePass.cs",
+    "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/WardReferenceDaylight.asset",
+    "unity/AthenHill/Assets/AthenHill/Scripts/DayNightLightingProfile.cs",
+    "unity/AthenHill/Assets/AthenHill/Scripts/CityTimeOfDay.cs",
+    "unity/AthenHill/Assets/AthenHill/Scripts/CityLightCircuit.cs",
+    "unity/AthenHill/Assets/AthenHill/Scenes/AthenHill.unity",
+    "unity/AthenHill/Assets/AthenHill/Art/Quality/Lamps/WardUtilityWall.prefab",
+    "art/reference_street_20260910/canopy-v3/canopy-parts-v3.json"
+  ],
+  "nativeEvidenceReopened": [
+    "unity/evidence/reference-street/20260910/iteration-03-native/asset-pass-cam_canopy_under-hour-12-end.png",
+    "unity/evidence/reference-street/20260910/iteration-03-native/critic-motion-03/asset-pass-cam_canopy_under-hour-16/dense-01.png",
+    "unity/evidence/reference-street/20260910/iteration-03-native/asset-pass-cam_ground_crate-hour-16-end.png"
+  ],
+  "visualBasis": [
+    "At hour16 the crate front, reinforcement and painted surface collapse toward a common dark value despite retained mapping. Its placement and form remain readable, but material separation is weaker than at noon.",
+    "The hour16 canopy underside is nearly black outside a strong warm practical-light patch. This prevents a useful close judgment of cloth wear and exaggerates the angular appearance of some folds.",
+    "At noon the underside is already a broad, dark, largely featureless red surface. The staged afternoon-only key change cannot resolve this noon issue. New cloth binding should be inspected under the unchanged noon lighting before deciding whether an additional illumination change is needed."
+  ],
+  "curveScope": {
+    "changedKeyHour": 17.5,
+    "changedFields": ["ambientSky", "ambientEquator", "ambientGround", "fillIntensity"],
+    "actualInterpolatedInfluence": "12 < hour < 19, because the existing smoothstep interpolation blends the modified 17.5 key with the retained noon and 19 keys.",
+    "noonAndNight": "Noon and times at/after19 through the unchanged overnight/morning keys retain their previous frame values.",
+    "hour16WeightToward175": 0.8174305034,
+    "hour16Before": {"ambientSky": [0.184771, 0.223899, 0.309376], "ambientEquator": [0.231119, 0.188858, 0.157468], "ambientGround": [0.119294, 0.097904, 0.07695], "fillIntensity": 0.106514},
+    "hour16After": {"ambientSky": [0.31556, 0.39556, 0.50556], "ambientEquator": [0.361908, 0.340083, 0.296431], "ambientGround": [0.25417, 0.216431, 0.170954], "fillIntensity": 0.171908},
+    "interpretation": "The stronger cool sky and warm ground/equator are a reasonable controlled audition for readable late-day shade. These numbers are not rendered proof or an appearance approval."
+  },
+  "practicalLightInvestigation": {
+    "sourceStateCaveat": "These are current saved-scene values, not a fresh runtime diagnostic of the immutable iteration03 build. The staged pass does not modify this light.",
+    "name": "Lamp warm Finery entrance light",
+    "gameObjectFileId": 396452334,
+    "lightFileId": 396452336,
+    "type": "Point, serialized m_Type2",
+    "worldPositionInferredFromSerializedParentTransform": [16.387, 3.49, -18],
+    "range": 6.5,
+    "authoredIntensity": 1.65,
+    "color": [1, 0.76, 0.48],
+    "softShadows": true,
+    "shadowStrength": 0.82,
+    "shadowBias": 0.03,
+    "shadowNormalBias": 0.08,
+    "shapeRadius": 0.025,
+    "nearestRetainedCanopyV3Vertex": [16.237864, 3.875422, -17.989115],
+    "distanceToNearestVertexMetres": 0.413413,
+    "verticalGapToClosestXZVertexMetres": 0.437598,
+    "computedIntensityAtNoonBeforeDistanceCulling": 0.066,
+    "computedIntensityAt16BeforeDistanceCulling": 1.075952,
+    "conclusion": "A close omnidirectional practical plausibly produces the concentrated warm underside patch. A point light has no spotlight cone edge, so the angular bands cannot be diagnosed as a cone cutoff. Fold normals, self-shadowing and bias remain possible contributors; no geometry hole or shadow bug is established by this read-only evidence. Ambient adjustment leaves the source of the patch intact."
+  },
+  "fillInvestigation": {
+    "type": "Unshadowed directional Sky fill",
+    "serializedEmittedForwardDirectionApprox": [0.329293, -0.76835, 0.548821],
+    "inference": "It shines downward and mainly assists suitably oriented exterior faces. Raising its intensity alone is not a physical lower-hemisphere bounce solution for downward-facing cloth. Because it has no shadows, excessive strength can also flatten covered recesses."
+  },
+  "boundedNativeChecks": [
+    "Compare the same crate, trash, scrap-back, canopy-top, canopy-under and reference-wide cameras at noon,16,17.5,18.25 and night. Include18.25 because the revised key also influences the approach to19.",
+    "Require readable material differences in shade while sunlit stone and metal retain their existing exposure and the warm sun/cool shade distinction. Check dark joints, handle cavities and prop/ground contact for loss of depth from broad ambient and unshadowed fill.",
+    "Inspect the canopy underside with the actual new cloth maps at unchanged noon. Do not bake light into color, lift cloth into emission, or exaggerate normal/texture contrast to conceal insufficient illumination.",
+    "At16 and night inspect the close lamp patch in successive native frames. If hard angular bands persist, use an isolated operator-controlled lamp-shadow comparison to separate shadow behavior from surface normals before changing geometry or broad scene lighting.",
+    "Reconfirm actual reflection capture completion after time changes. The pass preserves reflection strength but updated ambient/fill can still alter captured content."
+  ],
+  "scores": null,
+  "reasonScoresUnavailable": "No native image with ShadeBalance applied exists in this review. Final focused reference acceptance remains pending."
+}

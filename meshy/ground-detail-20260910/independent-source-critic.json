@@ -1,0 +1,77 @@
+{
+  "reviewerRole": "Independent visual critic; no asset or scene authoring",
+  "reviewDate": "2026-09-10",
+  "scope": "Blender source comparison renders only. These are neither native Unity acceptance nor evidence of runtime cost or motion stability.",
+  "reviewedCandidates": [
+    "trash/source-review-front.png",
+    "trash/source-review-back.png",
+    "scrap/source-review-front.png",
+    "scrap/source-review-back.png",
+    "crate/source-review-front.png",
+    "crate/source-review-back.png"
+  ],
+  "reviewedReferences": [
+    "refs/salvage_20260908/trash/front.png",
+    "refs/salvage_20260908/trash/back.png",
+    "refs/salvage_20260908/scrap/front.png",
+    "refs/salvage_20260908/scrap/back.png",
+    "refs/salvage_20260908/crate/front.png",
+    "refs/salvage_20260908/crate/back.png"
+  ],
+  "geometryAuditInspected": "meshy/ground-detail-20260910/topology-audit.json",
+  "generalFinding": "The candidates add real object construction rather than merely smoothing the original silhouettes. Resolved rims, recessed handles, hose coils, fabric folds and corrugation are visible. Increased polygon count is supporting provenance only; conspicuous holes and fused or pinched surfaces remain rejection defects regardless of total triangles.",
+  "assets": [
+    {
+      "family": "scrap",
+      "verdict": "Warrants native audition with local topology inspection; not yet accepted for shipping",
+      "confirmedImprovements": [
+        "Both barrels have curved shells and readable rolled rims instead of conspicuous large planar facets.",
+        "The elbow has a curved bend and flange; the cable or hose forms separate rounded coils with ties.",
+        "The strap buckle and corrugated sheet thickness and waviness are geometrically readable."
+      ],
+      "remainingConcerns": [
+        "The upright drum back has a broad patch with soft irregular joins; verify that its shading reads as an attached repair rather than swollen or fused geometry.",
+        "The strap crosses the corrugated sheet as a broad smooth span. Inspect the contact and thickness from oblique native views so the assembly does not read as a fused single surface.",
+        "Thin corrugated sheet margins and coil interstices need moving backface and shadow inspection. The audit reports open and overshared edges; counts alone do not localize a visible failure."
+      ],
+      "sourceHardDefectConfirmed": "No conspicuous missing face is confirmed at this render size. The above local areas still require topology and native inspection."
+    },
+    {
+      "family": "crate",
+      "verdict": "Warrants native audition after visible local punctures are repaired",
+      "confirmedImprovements": [
+        "The front handhold is a convincing recessed opening with a shaped frame and fasteners.",
+        "Lid straps, corner protectors, chipped rim detail and smaller surface dents resolve construction that was largely textured onto the original.",
+        "The silhouette remains a coherent portable hard case rather than an inflated freeform shape."
+      ],
+      "remainingConcerns": [
+        "In source-review-front.png the right side panel has two conspicuous black punctures, one in its upper middle region and one low on the face. A tiny dark lid mark also needs verification. They do not match intentional hardware or the supplied reference.",
+        "Some broad lid and rear-panel areas have soft swollen or pinched shading. Retain restrained wear and denting while checking for warped surface reconstruction.",
+        "The broad rear patch differs from the reference's more regular strapped rear face. A credible repair is an acceptable setting variation, but its edge attachment and material distinction must survive native close-up review."
+      ],
+      "sourceHardDefectConfirmed": "Black puncture-like defects are visible on the right side. The image does not by itself determine whether missing triangles, overlap or normals cause them; inspect and repair the actual cause."
+    },
+    {
+      "family": "trash",
+      "verdict": "Repair before native installation; current source remains a focal geometry rejection",
+      "confirmedImprovements": [
+        "The former faceted mound now separates into recognizable sacks, a plastic jug, cans, corrugated cardboard, fabric and stones.",
+        "The open can and folded fabric have meaningful internal and edge structure.",
+        "The silhouette contains many believable small debris shapes rather than a handful of pyramidal planes."
+      ],
+      "remainingConcerns": [
+        "Multiple sharp black triangular holes or severe pinches cover both sack masses. These are visible from both review angles and break the fabric's otherwise continuous volume.",
+        "The jug crown in source-review-back.png has a large sharp black void or collapsed section. Additional thin dark triangles appear nearby. The reference jug is dented but continuous around its moulded handle and body.",
+        "A thin irregular mat joins much of the debris base. Confirm thickness and ground embedding from low native views so it does not read as a torn flat island sitting above the street.",
+        "Some cardboard and cloth fragments remain fused into adjacent objects. Preserve the new folds and can rims while repairing loss instead of covering the entire pile with a smooth skin."
+      ],
+      "sourceHardDefectConfirmed": "The repeated triangular sack defects and jug collapse are conspicuous source-image defects. The topology audit's unusually high overshared-edge count corroborates the need to inspect topology, but does not establish the individual causes."
+    }
+  ],
+  "nextReviewEvidence": [
+    "Repair comparison source views for trash sacks/jug and crate side punctures, with opaque clay or normal visualization if needed to distinguish geometry from texture or shading errors.",
+    "Native player-height sun and shade views of each auditioned asset, with a human scale context and clear ground contact.",
+    "A slow oblique native moving pass that exposes thin edges, backsides, contact shadows and near-to-far LOD changes."
+  ],
+  "acceptance": "No candidate is accepted as final or AAA from these source renders. Scrap is a strong audition candidate; crate requires local repair; trash requires substantial targeted topology repair."
+}

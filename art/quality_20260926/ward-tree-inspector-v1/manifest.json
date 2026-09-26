@@ -1,0 +1,61 @@
+{
+  "status": "Imported and compiled in live Unity; resolved custom editor and Lit keyword preservation verified. Four-control pointer-level visual inspection remains unverified while desktop locked.",
+  "reason": "Installed URP17.6 LitShader renders only explicitly enumerated standard Lit properties; Ward wind/flutter/direct/ambient are hidden in normal Inspector",
+  "class": "AthenHill.Editor.WardTreeShaderGUI",
+  "intendedEditorPath": "Assets/AthenHill/Editor/WardTreeShaderGUI.cs",
+  "shaderPath": "Assets/AthenHill/Shaders/WardTree/WardTree.shader",
+  "shaderBeforeSha256": "a107dec602b55ad059a4b826e3aec8b8e600bd4d3af8fee4afb4cca927954fb4",
+  "shaderCandidateSha256": "15af92d2b626016efc11769f0cfb3624a17306f4baef4ffbece55bca27a18b8a",
+  "editorCandidateSha256": "490afb79df06da59c41ae4b0ec62917a75cce6fd5fb3bbfe940e33bf959c3de2",
+  "dependency": "Pinned internal UnityEditor.Rendering.Universal.ShaderGUI.LitShader instantiated from public BaseShaderGUI assembly; ordinary ShaderGUI public callbacks delegated",
+  "fields": [
+    {
+      "property": "_WardWindStrength",
+      "range": [
+        0,
+        0.3
+      ]
+    },
+    {
+      "property": "_WardLeafFlutter",
+      "range": [
+        0,
+        0.04
+      ]
+    },
+    {
+      "property": "_WardTranslucency",
+      "range": [
+        0,
+        0.5
+      ]
+    },
+    {
+      "property": "_WardIndirectTranslucency",
+      "range": [
+        0,
+        0.5
+      ]
+    }
+  ],
+  "validationPending": [
+    "Pointer-level visual placement of all four controls in leaf and bark Inspectors",
+    "Native build after .15 material save and shader custom editor registration"
+  ],
+  "sourceEvidence": [
+    "Library/PackageCache/com.unity.render-pipelines.universal@b9a66914c09e/Editor/ShaderGUI/Shaders/LitShader.cs",
+    "Library/PackageCache/com.unity.render-pipelines.universal@b9a66914c09e/Editor/ShaderGUI/BaseShaderGUI.cs",
+    "Library/PackageCache/com.unity.render-pipelines.universal@b9a66914c09e/Editor/ShaderGUI/ShadingModels/LitDetailGUI.cs",
+    "Unity6000.6 installed UnityEditor.CoreModule.xml ShaderGUI public callbacks"
+  ],
+  "stagedStatus": "Prepared outside Assets; not imported, compiled or visually verified; do not apply during current build/timing",
+  "validationCompleted": [
+    "Unity imported Editor class and shader registration with zero shader messages",
+    "MaterialEditor.customShaderGUI resolved AthenHill.Editor.WardTreeShaderGUI",
+    "ValidateMaterial preserved existing Lit keywords on cloned leaf material",
+    "Mixed multi-material transmission property correctly edited both clones; isolated Undo restored distinct original values",
+    "Normal Inspector opened via Editor menu; no matching console warnings/errors",
+    "Saved leaf ambient .15, scene remains clean"
+  ],
+  "evidenceRoot": "unity/evidence/quality/20260926/tree-inspector-apply-result.json and tree-inspector-verify-result.json"
+}

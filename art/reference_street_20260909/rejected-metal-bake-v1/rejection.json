@@ -1,0 +1,66 @@
+{
+  "utc": "2026-09-09T18:55:52.163035+00:00",
+  "status": "Rejected; rebake required",
+  "reason": "Unused AgedSteel slot on the bake plane selected a photographic input as an additional Cycles bake target; circular dependency warnings and duplicate bake completions observed",
+  "correction": "One material slot; source image pixels reloaded from originals verified against pre-bake disk hashes",
+  "originalDiskInputsUnchanged": true,
+  "verifiedInputs": [
+    {
+      "file": "/home/teknetik/code/ao2/refs/quality_20260909/building-materials/rusty_metal_sheet/rusty_metal_sheet_diff_4k.png",
+      "sha256": "b6cb2479d9036626acad12cb897c4f4f48d8d358dd3b91ea9572ee42ea150620",
+      "matchesAuthoredInput": true,
+      "reloadedImages": [
+        "rusty_metal_sheet_diff_4k.png"
+      ]
+    },
+    {
+      "file": "/home/teknetik/code/ao2/refs/quality_20260909/building-materials/rusty_metal_sheet/rusty_metal_sheet_disp_4k.png",
+      "sha256": "746a22c6b6d51187b501c3d5aa9b3450af9ee81e04385536d2ddede95d6b5558",
+      "matchesAuthoredInput": true,
+      "reloadedImages": []
+    },
+    {
+      "file": "/home/teknetik/code/ao2/refs/quality_20260909/building-materials/rusty_metal_sheet/rusty_metal_sheet_nor_gl_4k.png",
+      "sha256": "8b7815cbafe5e97f19c2ca28640c466dac3462b58400b97a608747509b01ec08",
+      "matchesAuthoredInput": true,
+      "reloadedImages": [
+        "rusty_metal_sheet_nor_gl_4k.png"
+      ]
+    },
+    {
+      "file": "/home/teknetik/code/ao2/refs/quality_20260909/building-materials/rusty_metal_sheet/rusty_metal_sheet_rough_4k.png",
+      "sha256": "d116c9c497bf825d706220b8d9361f5261e27080cbb6a42c6ec24ccc56379e5b",
+      "matchesAuthoredInput": true,
+      "reloadedImages": []
+    }
+  ],
+  "archived": [
+    {
+      "family": "ShutterSteel",
+      "files": [
+        {
+          "file": "BaseColor.png",
+          "sha256": "095f8bcf73b26ce661e10823a19e6c9a166f8c15707453d66dbf58ee050dbd3e"
+        },
+        {
+          "file": "Metallic.png",
+          "sha256": "c9ebfd540aaf37a4453530e60ad8435b66d1e066558a53d0aabbd1fde93f0844"
+        },
+        {
+          "file": "Normal.png",
+          "sha256": "686a1ed20766cb1edcacc91c6593a655d6a168ef8777f95ff89b0b8f8351ec96"
+        },
+        {
+          "file": "Roughness.png",
+          "sha256": "59b22fbfec5d80f1267e09dd9e74105caa380bf4b5b51ec5e492239fec3a20af"
+        },
+        {
+          "file": "bake.json",
+          "sha256": "5004831dc9d81be2eeb3b1e8d340e52698cd993c92cdde21a7e2c76f3ba85164"
+        }
+      ]
+    }
+  ],
+  "correctedBakeScript": "author_metal_materials.py",
+  "correctedSourceBlend": "metal-studio-v2.blend"
+}

@@ -1,0 +1,24 @@
+{
+  "utc": "2026-09-10T07:15:26.530733+00:00",
+  "staged_helper": "art/reference_street_20260910/GroundDetailPass.cs",
+  "staged_sha256": "7ad2fee3ea3a214570550c9deda32fc21cd2e672fbfe9325116cb3337ae3a661",
+  "original_helper_sha256": "affcbd203c7c8e3347b12511c243e66d03570fb9e51ec728c0e3db51abb2e80c",
+  "currently_copied_unity_helper_sha256": "affcbd203c7c8e3347b12511c243e66d03570fb9e51ec728c0e3db51abb2e80c",
+  "unity_helper_modified_by_this_task": false,
+  "offline_compile": {
+    "result": "passed",
+    "compiler": "Unity bundled .NET SDK 8.0.318 Roslyn",
+    "references": "Installed Unity 6000.6.0f1 and current game/Editor assemblies",
+    "csharp_version": "9.0"
+  },
+  "new_methods": [
+    "Prepare(string family, string revision = \"v1\", string sourceFolderOverride = null)",
+    "BindExistingSourceContract(string family, string revision, string sourceFolderOverride = null)",
+    "DryRunSelected(string[] families, string revision = \"v1\", string reportName = null)",
+    "AuditionSelected(string[] families, string revision = \"v1\")",
+    "RolloutSelected(string[] families, string revision, string independentNativeReviewPath)"
+  ],
+  "contract": "SourceContract.json records the actual immutable source directory and five input SHA-256 values. Every subsequent candidate check validates both external input and retained Unity copy. Existing wrappers retained. Selected-family operation reports avoid family-set collisions; rollout checks each selected family has an audition at that revision.",
+  "source_decision": "First trash candidate rejected; original topology report retained, no native visual acceptance asserted.",
+  "pending": "Root copies revised helper when Editor assembly reload is safe; execute preparation/dry-run only after repaired/regenerated source review."
+}

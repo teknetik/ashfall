@@ -1,0 +1,19 @@
+# Weathered plaster V1 — staged material audition
+
+`WeatheredPlasterPass.cs` is Editor-only and has no automatic entry point. Root owns the live Unity instance and copies it to `Assets/AthenHill/Editor/` when ready. Invoke `AthenHill.Editor.WeatheredPlasterPass.Apply()` through the existing Unity MCP. This staged helper has not been executed.
+
+The material audit is saved at `unity/evidence/reference-street/20260910/plaster-material-audit/material-audit.json`, with actual render-chunk/source-mesh evidence beside it. The current maps and tangents are valid. Smooth beige painted plaster is the main reason for the broad clean walls. The current three-metre photograph is also enlarged to four metres by its material/UV combination.
+
+The explicit `weathered-plaster-v1-contract.json` identifies **35 distinct current source renderers**: the eight masonry V3 replacements are included in that count; the other 27 keep their existing meshes. Their combined 125,094 vertices and 41,698 triangles match the installed plaster render chunk. Every source has a measured four-metre median UV0 tile. This installer validates the actual transformed UV scale again before changing assignments.
+
+The proposed material clones `HeroLimePlaster` into a new `WeatheredPlasterV1` folder. It uses the complete retained CC0 `painted_plaster_wall` 4K diffuse, OpenGL normal and roughness set. Its two-metre photograph uses `_BaseMap` scale `(2,2)` over the existing four-metre UV0; installed URP Lit applies this transformed UV to all three maps. Normal strength starts at `1`. The reviewed linear tint is `(0.92, 0.86, 0.76, 1)`, a modest warm mineral cast that preserves the photographic variation. Tint and source repetition still require native review.
+
+Packing writes a separate RGBA32 PNG and verifies every decoded output pixel: RGB zero, alpha `255 - decoded source roughness R`. It retains the full 4096×4096 source dimensions. Metallic is zero, smoothness multiplier is one, normal and packed maps import linearly, and the normal's green channel is unchanged. Diffuse and normal copies remain byte-identical to their original files. Source displacement is retained and hash-checked but is not introduced into the runtime material in this pass.
+
+The installer requires a clean single saved AthenHill scene, Edit mode, full texture quality, fresh render chunks, the original material hash/GUID and all 35 expected mesh hashes. It verifies existing normals/tangents and preserves them. It assigns only the registered source roster, records prefab overrides, explicitly rebuilds chunks and saves. All pre-existing source transforms, colliders, nine actors and four ambient routes are checked before and after. Original maps, materials, meshes and GUIDs remain untouched.
+
+Evidence is written to a fresh `weathered-plaster-v1-install` folder, including the previous scene, UV measurements, packing proof, source assignments and before/after gameplay signatures. Existing new assets or evidence stop a repeat invocation. A failed attempt keeps partial outputs and the previous scene for inspection; there is no destructive automatic cleanup.
+
+Root owns localized weathering separately. This helper creates no procedural grunge, wear films, extra geometry or collider changes. Author runoff at actual coping/sill/downpipe contact origins and selected wall feet. After installation, capture matched wide and pedestrian views at hours 12 and 16, then inspect close motion for repetition, harsh normals and shimmering. This material audition does not claim native art or performance acceptance.
+
+Offline validation used Unity 6000.6's installed Roslyn compiler and current project assemblies: zero errors and zero warnings. The response file and output assembly are temporary diagnostics under `/tmp`; `weathered-plaster-v1-compiler-check.json` records the staged source/contract hashes. No live Unity, Blender or native input calls were used for this authoring preparation.

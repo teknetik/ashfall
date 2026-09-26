@@ -1,0 +1,9 @@
+# Masonry v3 — topology and material-coordinate repair
+
+V3 supersedes the v1 and v2 masonry derivatives for the same eight existing wall regions. It retains their wear outlines, existing construction envelopes, material textures/tints, and 386 detail objects. It includes the closed-source and T-junction repair described in `hero-masonry-v2-repair.md`.
+
+The v2 material-coordinate audit found 6,156 degenerate UV triangles across 386 detail objects because front-plane projection had also been applied to perpendicular side and bevel faces. V3 uses dominant-face metric projection. The front-face coordinates still use the same four-metre convention and original stone offsets; perpendicular faces receive usable coordinates. Stone/chamfer ngons use weighted-centroid fans to avoid float-precision slivers where their closed T-junctions have nearly collinear vertices. The failed first UV-guard attempt and its diagnosis are retained separately.
+
+The final set has 8 replacements, 386 additions and 98,628 triangles. All 394 authoring objects are closed, consistently oriented solids with positive signed volume; all 22 Boolean differences preserve their input bounds and reduce volume. The material UV guard reports zero degenerate triangles. See the v3 geometry proof, UV proof and v2/v3 UV diagnosis JSON files.
+
+The isolated Cycles source review is 1600×1100 with 24 samples. It checks these parts in isolation, not the complete native scene. Thin dark strips remain at exposed outer layer ends; the disappearance of measured UV degeneracy does not prove that those strips were caused by UVs. The complete assembly and native player-height views must still be reviewed. The manifest retains pre-v1 source paths as provenance; the Unity replacement operation must separately guard the actual currently installed meshes.

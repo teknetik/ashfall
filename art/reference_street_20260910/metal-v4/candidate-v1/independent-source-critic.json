@@ -1,0 +1,49 @@
+{
+  "reviewer": "/root/street_critic",
+  "date": "2026-09-10",
+  "verdict": "REVISE_MATERIAL_BEFORE_NATIVE_AUDITION",
+  "scope": "Source-only review of all six candidate-v1 preview frames. Bronze hardware is placeholder context and excluded from replacement judgment. Door preview uses a layered shader; staged standard-Lit composited per-leaf mapping has not been rendered or accepted in this review.",
+  "sourcesRead": ["recipe-used.json", "color-readback-guard.json", "previews/manifest.json"],
+  "imagesReviewed": [
+    "previews/field-albedo.png", "previews/field-soft-left.png", "previews/field-soft-right.png",
+    "previews/finery-albedo.png", "previews/finery-soft-left.png", "previews/finery-soft-right.png"
+  ],
+  "native03ContextReopened": [
+    "unity/evidence/reference-street/20260910/iteration-03-native/cam_audit_field_supply_front.png",
+    "unity/evidence/reference-street/20260910/iteration-03-native/cam_audit_finery_door.png"
+  ],
+  "scores": {"materialDetail": 3, "localizedWearAndStory": 3, "nativeLighting": null, "temporalStability": null},
+  "improvements": [
+    "The quieter painted coating and fine scratches are a stronger material direction than native03's broad, soft orange corrosion islands.",
+    "Opposed soft light moves the specular response and reads the slat and door depth without a uniform shiny color highlight remaining in the albedo view.",
+    "Large areas of intact dark paint are useful and should be retained."
+  ],
+  "remainingBlockers": [
+    {
+      "issue": "An identifiable diagonal smear and bright scratch cluster repeat across Finery door leaves and through the shutter rows. The regular low-frequency banding makes the material feel tiled.",
+      "evidence": "Visible in albedo and both lighting directions. The recipe records a translation-only quilt repeating at0.8 by1m, consistent with the observed rhythm.",
+      "boundedFix": "Break or remove the identifiable recurring macro scuff motifs while keeping correctly scaled fine grain and normal orientation. Use distinct source regions or separately authored sparse markings where needed; do not stretch the material or blur all fine surface detail."
+    },
+    {
+      "issue": "Door handling wear appears as three similar short dashes beside each handle, with mirrored placement on the Finery leaves. It reads as a small symbol-like pattern rather than accumulated handling.",
+      "boundedFix": "Give each leaf an asymmetric rubbed/chipped zone tied to its actual handle reach and edge, with varied smaller scrapes and a restrained roughness shift. Vary coverage and location between leaves. Keep the bronze placeholder outside this pass."
+    },
+    {
+      "issue": "Shutter lip wear is mostly thin straight ochre segments with abrupt ends. The sparse marks are correctly near edges but still look stamped onto otherwise uniform strips.",
+      "boundedFix": "Break the segments into irregular chipped and rubbed edges with varied lengths and discontinuities. Keep stronger wear near working lips, lift handles and lower contact areas; preserve quiet upper paint."
+    },
+    {
+      "issue": "The doors have limited visible use history at hinges, kick edges and lower joints after removing the old all-over corrosion.",
+      "boundedFix": "Add restrained local corrosion or dust at the relevant joints and lower edges, with worn paint transitions appropriate to those sites. Do not restore broad orange islands across every panel."
+    }
+  ],
+  "technicalReadbackScope": {
+    "recordedSixSourceReadbackGuardsPassed": true,
+    "interpretation": "The saved guard reports explicit sRGB decoding for source color and raw numeric channels for source normal/roughness within its tolerance. These checks support the source-data handling, not the rendered art quality or Unity import.",
+    "normalKeyword": "Existing material normal keywords were already enabled. No disabled-normal explanation or keyword fix is justified by this review."
+  },
+  "mappingLimit": "The planned per-leaf composited Lit path and48 duplicated vertices with unchanged triangles are implementation facts, not appearance evidence. Review actual resulting front maps and edge/depth behavior before native acceptance. Verify that the source-preview wear placement is preserved and no side faces receive stretched front projections.",
+  "nextGate": "Re-render the revised source at the same six views, then inspect the actual composited material result. When repeated motifs and stamped wear are resolved, audition the native doors/shutter under matched noon and afternoon light with the existing graffiti and surrounding architecture.",
+  "nativeAccepted": false,
+  "wholeGameAAA": false
+}

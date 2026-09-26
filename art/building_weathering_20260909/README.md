@@ -68,7 +68,9 @@ V3 build, linked below.
 - New chip, crack, paper, rust and stain geometry: authored in Blender for this pass.
 - The shutter's two lettering lines use converted DejaVu Sans Condensed Bold
   glyphs, perturbed and clipped across individual slats. The relevant font
-  copyright and license are retained in `DejaVu-LICENSE.txt`.
+  copyright and license are retained in `DejaVu-LICENSE.txt`. A build callback
+  copies this notice beside each player as `WEATHERING-FONT-LICENSE.txt`; both
+  current player distributions include it.
 - No Meshy task, external purchase, new faction history or gameplay system was
   created in this pass.
 

@@ -1,0 +1,37 @@
+{
+  "reviewer": "/root/street_critic",
+  "date": "2026-09-10",
+  "verdict": "READY_FOR_NATIVE_AUDITION",
+  "scope": "Source readiness only: actual candidate maps on retained V3 geometry, compared with rejected weathering-v1. No native render, final focused reference acceptance or temporal qualification is granted.",
+  "contractsRead": ["material-authoring-contract.json", "preview-bindings.json"],
+  "imagesReviewed": [
+    "renders/top-sun.png", "renders/hem-sun.png", "renders/repair-sun.png", "renders/under-sun.png",
+    "renders/top-opposed.png", "renders/hem-opposed.png", "renders/repair-opposed.png",
+    "renders/top-albedo.png", "renders/hem-albedo.png", "renders/repair-albedo.png"
+  ],
+  "sourceScores": {
+    "retainedConstruction": 4,
+    "clothMaterialAtReviewedDistance": 4,
+    "weatheredStorytellingAgainstReference": 3,
+    "nativeLighting": null,
+    "temporalStability": null
+  },
+  "resolvedV1Blockers": [
+    "Broad cloudy albedo islands no longer dominate the membrane. The sun/opposed pair now reads primarily through the authored sag and folds, with quiet intact cloth between them.",
+    "The near-continuous pale lower hem and long fuzzy seam bands are removed. The previous repeated dark runoff stripes are no longer conspicuous.",
+    "Running stitches track the exact existing patch contours, visibly supply an attachment cue, and change their highlight/shade response under opposed light. They do not look like a continuous bright border.",
+    "The fine cotton texture remains subtle at whole-canopy coverage and visible at close range. No oversized weave was introduced.",
+    "No new focal hole, repaired-pocket slit or material-boundary misalignment is established in the reviewed views."
+  ],
+  "remainingNativeReviewPoints": [
+    "Wear is now very restrained relative to the visibly aged user reference. It may need a little more localized abrasion or exposure fading after actual courtyard lighting and mip selection are seen. This remaining use-history gap does not require another source iteration before native audition.",
+    "Check that patch stitches and fine cotton survive native close range without sparkling or turning into a dashed bright outline. Do not enlarge the weave to make threads individually visible in wide views.",
+    "Inspect noon underside separately from afternoon shade. The material source render does not resolve the previously dark native underside or diagnose the lamp's angular lighting patch.",
+    "Compare top, hem, repair and underside at noon,16 and17.5, with the installed supports and rigid fittings present. Preserve the intended rough cloth response in both sun and shade.",
+    "If stronger wear is needed, add it only at selected ties, exposed hem segments and repair edges. Do not restore v1's all-over cloudy variation or continuous pale band."
+  ],
+  "preserve": ["V3 geometry", "existing UV and collider contract", "0.3m cotton source scale", "retained previous materials and maps"],
+  "readinessRationale": "The rejected source artifacts have been repaired sufficiently to make the next meaningful decision in the real native scene. The remaining weathered-reference gap and lighting/motion behavior are still open, so this is not final acceptance.",
+  "nativeAccepted": false,
+  "wholeGameAAA": false
+}

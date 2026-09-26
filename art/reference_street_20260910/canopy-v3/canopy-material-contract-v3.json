@@ -1,0 +1,131 @@
+{
+  "textureScale": [
+    0.142857142857,
+    0.142857142857
+  ],
+  "detailScale": [
+    7,
+    7
+  ],
+  "detailAlbedoScale": 0,
+  "detailNormalNote": "Installed URP Lit supports independent detail UV scale; primary color repeats every 2.8 m, woven normal every 0.4 m.",
+  "uvConvention": "UV0 is fabric-distance metres divided by 0.4; base map ST=1/7 gives 2.8 m color tile; DetailAlbedoMap ST=7 restores 0.4 m normal scale after base transform.",
+  "textureReuse": "Original full-resolution imported maps retained unchanged. Independent detail normal avoids repeating the broad color pattern every 0.4 m.",
+  "materials": {
+    "CanopyRed": {
+      "shader": "Universal Render Pipeline/Lit",
+      "baseMap": "Assets/AthenHill/Art/Phase1/BasicGeneral/Revision03/Textures/Canvas_BaseColor.png",
+      "baseColor": [
+        0.94,
+        0.9,
+        0.84,
+        1
+      ],
+      "normalMap": "Assets/AthenHill/Art/Phase1/BasicGeneral/Revision03/Textures/fabric_pattern_07_nor_gl_4k.jpg",
+      "normalScale": 0.23,
+      "metallic": 0,
+      "smoothness": 0.13,
+      "cull": 2
+    },
+    "CanopySeam": {
+      "shader": "Universal Render Pipeline/Lit",
+      "baseMap": "Assets/AthenHill/Art/Phase1/BasicGeneral/Revision03/Textures/Canvas_BaseColor.png",
+      "baseColor": [
+        0.78,
+        0.78,
+        0.73,
+        1
+      ],
+      "normalMap": "Assets/AthenHill/Art/Phase1/BasicGeneral/Revision03/Textures/fabric_pattern_07_nor_gl_4k.jpg",
+      "normalScale": 0.21,
+      "metallic": 0,
+      "smoothness": 0.12,
+      "cull": 2
+    },
+    "CanopyRepair": {
+      "shader": "Universal Render Pipeline/Lit",
+      "baseMap": "Assets/AthenHill/Art/Phase1/BasicGeneral/Revision03/Textures/Canvas_BaseColor.png",
+      "baseColor": [
+        0.68,
+        0.72,
+        0.69,
+        1
+      ],
+      "normalMap": "Assets/AthenHill/Art/Phase1/BasicGeneral/Revision03/Textures/fabric_pattern_07_nor_gl_4k.jpg",
+      "normalScale": 0.19,
+      "metallic": 0,
+      "smoothness": 0.11,
+      "cull": 2
+    },
+    "CanopyThread": {
+      "shader": "Universal Render Pipeline/Lit",
+      "baseColor": [
+        0.33,
+        0.21,
+        0.125,
+        1
+      ],
+      "metallic": 0,
+      "smoothness": 0.1,
+      "cull": 2
+    },
+    "CanopyRope": {
+      "shader": "Universal Render Pipeline/Lit",
+      "baseColor": [
+        0.24,
+        0.175,
+        0.105,
+        1
+      ],
+      "metallic": 0,
+      "smoothness": 0.08,
+      "cull": 2
+    },
+    "CanopyEyelet": {
+      "shader": "Universal Render Pipeline/Lit",
+      "baseColor": [
+        0.155,
+        0.125,
+        0.081,
+        1
+      ],
+      "metallic": 0.68,
+      "smoothness": 0.32,
+      "cull": 2
+    }
+  },
+  "disableObsoleteSourcePaths": [
+    "Courtyard reference pass/Canopy/Stitched panel seam 0.29",
+    "Courtyard reference pass/Canopy/Stitched panel seam 0.66",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 0",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 1",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 2",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 3",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 4",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 5",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 6",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 7",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 8",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 9",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 10",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 11",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 12",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 13",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 14",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 15",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 16",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 17",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 18",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 19",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 20",
+    "Courtyard reference pass/Canopy/Frayed canvas fibre 21"
+  ],
+  "preserveSourcePaths": [
+    "Courtyard reference pass/Awning hardware/Canopy side spar 0",
+    "Courtyard reference pass/Awning hardware/Canopy side spar 1",
+    "Courtyard reference pass/Awning hardware/Canopy diagonal brace 0",
+    "Courtyard reference pass/Awning hardware/Canopy diagonal brace 1",
+    "Courtyard reference pass/Awning hardware/Outer canopy crossbar"
+  ],
+  "runtimeMotion": "This source revision is static drape. If wind is introduced, pin all support boundaries and hardware, move only the free hem by millimetres, and keep reduced-motion behavior. Do not apply the original unpinned whole-mesh wind shader blindly."
+}

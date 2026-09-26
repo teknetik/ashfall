@@ -1,0 +1,74 @@
+{
+  "scope": "Pure numeric tests of staged topology code using synthetic meshes. No Blender instance, Meshy job, Unity call or imported asset mutation. Blender API compatibility and live source audit are still unexecuted.",
+  "numericTests": [
+    {
+      "name": "closed outward cube",
+      "rawBoundaryEdges": 0,
+      "proxyBoundaryEdges": 0,
+      "components": 1,
+      "signedVolume": 1.0,
+      "pass": true
+    },
+    {
+      "name": "open two-triangle plane",
+      "rawBoundaryEdges": 4,
+      "proxyBoundaryEdges": 4,
+      "components": 1,
+      "signedVolume": 0.0,
+      "pass": true
+    },
+    {
+      "name": "two separated closed cubes",
+      "rawBoundaryEdges": 0,
+      "proxyBoundaryEdges": 0,
+      "components": 2,
+      "signedVolume": 2.0,
+      "pass": true
+    },
+    {
+      "name": "UV seam split closed cube",
+      "rawBoundaryEdges": 36,
+      "proxyBoundaryEdges": 0,
+      "components": 1,
+      "signedVolume": 1.0,
+      "pass": true
+    },
+    {
+      "name": "inward cube reports negative volume",
+      "rawBoundaryEdges": 0,
+      "proxyBoundaryEdges": 0,
+      "components": 1,
+      "signedVolume": -1.0,
+      "pass": true
+    }
+  ],
+  "stagedScriptSyntaxPassed": 7,
+  "scripts": {
+    "inspect_generator_v2_source.py": "83c353a00e68f7073b3123433b2e0b6ce02e3af801ad86b0d1cb3c5639339516",
+    "render_generator_v2_review.py": "29216905f85a096da1e8a7611800bdf4cdc2037b21835a9b905087e6e6de251b",
+    "finish_generator_v2_rebake.py": "aa774b9a4b6fc0932639cc73d86e3b61cfe4d7680a040e56070dffc5effa390a",
+    "prepare_generator_v2_near.py": "058df1649efa2e7e1e9fd897c8ae7df2efcd2e41c856f1e1583bd9b5d2fff5cc",
+    "generator_v2_review_common.py": "c017397008210d1f390e826b1a58cabf39a3d76a419ccb80b6ed66a8840967e0",
+    "prepare_generator_v2_rebake.py": "7e1b5ac47b16aa95b00ff86374eea3595824c8cdb67a966ac78043c9dc27efd4",
+    "bake_generator_v2_channel.py": "ddb6f7701609bea36e38c09e223f57f561885a61ab19554763b85a5652b3f584"
+  },
+  "glbMetadataOnlyFitPrediction": {
+    "rawUnityXYZAssumed": [
+      1.900817,
+      1.652762,
+      0.763144
+    ],
+    "canonicalUnityXYZ": [
+      1.6,
+      1.1,
+      0.95
+    ],
+    "uniformFactor": 0.6655525719976622,
+    "predictedSize": [
+      1.2650936432468802,
+      1.1,
+      0.5079124520045839
+    ],
+    "actualFbxOrientationAndFitUnverified": true
+  }
+}

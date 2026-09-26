@@ -1,0 +1,93 @@
+--- before/WardTree.shader
++++ candidate/WardTree.shader
+@@ -6,6 +6,7 @@
+         _WardWindStrength("Crown sway in metres", Range(0, .3)) = .07
+         _WardLeafFlutter("Leaf flutter in metres", Range(0, .04)) = 0
+         _WardTranslucency("Leaf light transmission", Range(0, .5)) = 0
++        _WardIndirectTranslucency("Leaf ambient transmission (legacy probes)", Range(0, .5)) = 0
+         // Specular vs Metallic workflow
+         _WorkflowMode("WorkflowMode", Float) = 1.0
+ 
+--- before/LitInput.hlsl
++++ candidate/LitInput.hlsl
+@@ -36,6 +36,7 @@
+ half _WardWindStrength;
+ half _WardLeafFlutter;
+ half _WardTranslucency;
++half _WardIndirectTranslucency;
+ CBUFFER_END
+ 
+ // NOTE: Do not ifdef the properties for dots instancing, but ifdef the actual usage.
+--- before/LitForwardPass.hlsl
++++ candidate/LitForwardPass.hlsl
+@@ -255,7 +255,7 @@
+ 
+     InputData inputData;
+     InitializeInputData(input, surfaceData.normalTS, inputData);
+-    if (_WardTranslucency > 0) inputData.normalWS *= IS_FRONT_VFACE(face, 1.0h, -1.0h);
++    if (_WardTranslucency > 0 || _WardIndirectTranslucency > 0) inputData.normalWS *= IS_FRONT_VFACE(face, 1.0h, -1.0h);
+     SETUP_DEBUG_TEXTURE_DATA(inputData, UNDO_TRANSFORM_TEX(input.uv, _BaseMap));
+ 
+ #if defined(_DBUFFER)
+@@ -265,11 +265,37 @@
+     InitializeBakedGIData(input, inputData);
+ 
+     half4 color = UniversalFragmentPBR(inputData, surfaceData);
+-    if (_WardTranslucency > 0)
++    if (_WardTranslucency > 0 || _WardIndirectTranslucency > 0)
+     {
+-        Light canopySun = GetMainLight(TransformWorldToShadowCoord(inputData.positionWS));
+-        half backLight = saturate(dot(-canopySun.direction, inputData.normalWS));
+-        color.rgb += surfaceData.albedo * canopySun.color * backLight * canopySun.shadowAttenuation * _WardTranslucency;
++        AmbientOcclusionFactor canopyAO = CreateAmbientOcclusionFactor(inputData, surfaceData);
++        if (_WardTranslucency > 0)
++        {
++            // Match URP's direct-light shadow fade, mixed mask, cookies and SSAO.
++            // inputData.shadowCoord also supports the screen-space shadow variant.
++            Light canopySun = GetMainLight(inputData, CalculateShadowMask(inputData), canopyAO);
++#ifdef _LIGHT_LAYERS
++            if (IsMatchingLightLayer(canopySun.layerMask, GetMeshRenderingLayer()))
++#endif
++            {
++                half backLight = saturate(dot(-canopySun.direction, inputData.normalWS));
++                color.rgb += surfaceData.albedo * canopySun.color * backLight
++                    * canopySun.distanceAttenuation * canopySun.shadowAttenuation * _WardTranslucency;
++            }
++        }
++
++#if !defined(LIGHTMAP_ON) && !defined(DYNAMICLIGHTMAP_ON) && !defined(PROBE_VOLUMES_L1) && !defined(PROBE_VOLUMES_L2) && !defined(_SCREEN_SPACE_IRRADIANCE)
++        // Thin-leaf approximation for the current Forward + legacy-probe path.
++        // Incident diffuse light from the opposite hemisphere passes through the
++        // leaf tint. Evaluate SH per pixel because interpolated vertex SH was
++        // evaluated on the front face. Retain occlusion; this is not emission.
++        // Other GI modes require their own two-sided sampling and remain unchanged.
++        if (_WardIndirectTranslucency > 0)
++        {
++            half3 oppositeIrradiance = max(half3(0, 0, 0), SampleSH(-inputData.normalWS));
++            color.rgb += surfaceData.albedo * oppositeIrradiance
++                * canopyAO.indirectAmbientOcclusion * _WardIndirectTranslucency;
++        }
++#endif
+     }
+     color.rgb = MixFog(color.rgb, inputData.fogCoord);
+     color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent());
+--- before/LitDepthNormalsPass.hlsl
++++ candidate/LitDepthNormalsPass.hlsl
+@@ -130,7 +130,7 @@
+ 
+     #if defined(_GBUFFER_NORMALS_OCT)
+         float3 normalWS = normalize(input.normalWS);
+-        if (_WardTranslucency > 0) normalWS *= IS_FRONT_VFACE(face, 1.0, -1.0);
++        if (_WardTranslucency > 0 || _WardIndirectTranslucency > 0) normalWS *= IS_FRONT_VFACE(face, 1.0, -1.0);
+         float2 octNormalWS = PackNormalOctQuadEncode(normalWS);           // values between [-1, +1], must use fp32 on some platforms
+         float2 remappedOctNormalWS = saturate(octNormalWS * 0.5 + 0.5);   // values between [ 0,  1]
+         half3 packedNormalWS = PackFloat2To888(remappedOctNormalWS);      // values between [ 0,  1]
+@@ -152,7 +152,7 @@
+             float3 normalWS = input.normalWS;
+         #endif
+ 
+-        if (_WardTranslucency > 0) normalWS *= IS_FRONT_VFACE(face, 1.0, -1.0);
++        if (_WardTranslucency > 0 || _WardIndirectTranslucency > 0) normalWS *= IS_FRONT_VFACE(face, 1.0, -1.0);
+         outNormalWS = half4(NormalizeNormalPerPixel(normalWS), 0.0);
+     #endif
+ 

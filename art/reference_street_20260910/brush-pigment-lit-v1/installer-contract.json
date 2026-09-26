@@ -1,0 +1,145 @@
+{
+  "schema": 1,
+  "revision": "brush-pigment-lit-v1",
+  "sourceMeshExport": "art/reference_street_20260909/brush-graffiti-meshes-v3.json",
+  "sourceMeshSha256": "8e9ea95371d31359e50bee2077f36555e6eb50340706895e2b513ccc7f9a7802",
+  "sourceContract": "art/reference_street_20260910/brush-pigment-v1/authoring-contract.json",
+  "sourceContractSha256": "c59b5639b3ab9c6985884781c6e197602d40b22b6769862627b5f57a9b3b9a3d",
+  "sourceMapRecords": [
+    {
+      "channel": "BaseColor",
+      "file": "art/reference_street_20260910/brush-pigment-v1/BaseColor.png",
+      "sha256": "5b044afc6779896dce3f3e2a42ed0ac1a5d4d4e6c14d41b39c404e381b378fd0",
+      "size": [
+        4096,
+        4096
+      ],
+      "bitDepth": 8,
+      "colorSpace": "sRGB"
+    },
+    {
+      "channel": "Roughness",
+      "file": "art/reference_street_20260910/brush-pigment-v1/Roughness.png",
+      "sha256": "28e02d1c7ab37b233715dfd41190acba3bfcf45898051f2d703c0db58e420c73",
+      "size": [
+        4096,
+        4096
+      ],
+      "bitDepth": 8,
+      "colorSpace": "raw scalar"
+    },
+    {
+      "channel": "Opacity",
+      "file": "art/reference_street_20260910/brush-pigment-v1/Opacity.png",
+      "sha256": "2543fd685fdda0d1e344401db8d8ff96f6318fb00e0568bbe90e7d1c4f2495f9",
+      "size": [
+        4096,
+        4096
+      ],
+      "bitDepth": 8,
+      "colorSpace": "raw scalar"
+    }
+  ],
+  "packedMaps": [
+    {
+      "file": "BaseRGBA.png",
+      "sha256": "ade9b4264051ae5eee9cbf3e007e514f7e6a57c9d0bb7b761061a95435df5c3a",
+      "size": [
+        4096,
+        4096
+      ],
+      "channels": "RGB=source encoded sRGB BaseColor RGB; A=raw Opacity R"
+    },
+    {
+      "file": "MetalSmooth.png",
+      "sha256": "7f1d06c6ac3731e8a63360597ddb87634fa8c1715e1b7c8771172aa94fa027a7",
+      "size": [
+        4096,
+        4096
+      ],
+      "channels": "RGB=0; A=255\u2212raw Roughness R"
+    }
+  ],
+  "targets": [
+    {
+      "path": "Reference street thresholds and detail/Factory brush upper",
+      "text": "THE FACTORIES",
+      "meshAsset": "Assets/AthenHill/Art/ReferenceStreet/20260909/Meshes/brush_graffiti_meshes_v3_000_Factory_brush_upper.asset",
+      "meshGuid": "5d586c4591f3c209d950212742be8c33",
+      "meshSha256": "33705c15d9aed48be17d284dcec0a82a1ada0d2d5bbf9d565380d32502d4d357",
+      "meshMetaSha256": "2a23d48397b4ccaa540066201bdf61ae2dc427810117f84d6769d456a6374ca2",
+      "vertices": 7110,
+      "triangles": 2370,
+      "worldBoundsMin": [
+        17.936001,
+        2.190223,
+        -10.303082
+      ],
+      "worldBoundsMax": [
+        17.936001,
+        2.703239,
+        -7.724425
+      ],
+      "worldPositionToleranceMetres": 3e-05
+    },
+    {
+      "path": "Reference street thresholds and detail/Factory brush lower",
+      "text": "NEVER SLEEP.",
+      "meshAsset": "Assets/AthenHill/Art/ReferenceStreet/20260909/Meshes/brush_graffiti_meshes_v3_001_Factory_brush_lower.asset",
+      "meshGuid": "ecafccbca7c3608d38bdf3c00eefa82d",
+      "meshSha256": "8a4bea57e6c5c3823bc378ca76b716dbb396a969c3d2e82f46abbbba93d894c6",
+      "meshMetaSha256": "8af0c65ce3c9ea7536de0b64e72f6b2825e5a26567789933590330d8cba59e11",
+      "vertices": 6552,
+      "triangles": 2184,
+      "worldBoundsMin": [
+        17.936001,
+        1.662596,
+        -10.246003
+      ],
+      "worldBoundsMax": [
+        17.936001,
+        2.166404,
+        -7.725897
+      ],
+      "worldPositionToleranceMetres": 3e-05
+    }
+  ],
+  "oldMaterial": {
+    "asset": "Assets/AthenHill/Art/ReferenceStreet/20260909/BrushPaint.mat",
+    "sha256": "edd4538618e4f0e7dd03df68b398d1a606777d7b10e4d5fe2a4d94e10ec379aa",
+    "metaSha256": "87880acd89c1ed2bdd080d9ae0d9c4196749fb2520c9fb9f3df3dee4392d2d25"
+  },
+  "observedSavedSceneSha256": "e8ea9bcb13662d01e942384e1b0f723bafcebf1b45df72702f7d5806cd36dc22",
+  "sceneHashIsNotAnExecutionLock": true,
+  "metresPerTile": [
+    2,
+    2
+  ],
+  "sourceUVMetres": 4,
+  "baseMapScale": [
+    2,
+    2
+  ],
+  "baseMapOffset": [
+    0,
+    0
+  ],
+  "baseColor": [
+    1,
+    1,
+    1,
+    1
+  ],
+  "cutoff": 0.45,
+  "cutoffReason": "Sparse opacity losses preserve the original thin strokes and perimeter geometry. Retain the authored .45 threshold for source audition; measured actual-letter coverage is attached. Do not increase chip loss to imitate wear absent in the maps.",
+  "material": "Universal Render Pipeline/Lit; opaque alpha clipping, cull off, metallic R0, smoothness from packed alpha, no normal/displacement/parallax, source shadow casting off retained",
+  "geometryScope": "No mesh, UV, index, normal, tangent, transform, phrase, collider or visibility change; assign one new material to exactly two existing renderers.",
+  "previewSubstrate": {
+    "file": "art/reference_street_20260910/metal-v4/source-inspection-meshes.json",
+    "sha256": "379fa6c868ed42e1d35946975582ce98c92e40dd254898a64fa827706e351ade",
+    "family": "ShutterSteel",
+    "materialFolder": "art/reference_street_20260910/metal-v4/candidate-v1/ShutterSteel"
+  },
+  "sourceAccepted": false,
+  "nativeAccepted": false
+}

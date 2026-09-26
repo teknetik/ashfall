@@ -1,0 +1,47 @@
+--- run_check.py
++++ run_check_zink.py
+@@ -1,4 +1,4 @@
+-"""Run an existing real-XTest check on the private software-rendered QA player.
++"""Run an existing real-XTest check on the private Zink/OpenGL-over-Vulkan QA player.
+ 
+ Changes only the display-specific window focus helper. Assertions and input
+ durations in the existing checks are unmodified. No system configuration changes.
+@@ -14,7 +14,8 @@
+ 
+ ROOT = Path(__file__).resolve().parents[3]
+ CHOICES = {'controls': 'controls_check.py', 'city-loop': 'city_loop_check.py',
+-           'route': 'walk_route.py'}
++           'route': 'walk_route.py',
++           'controls-layout': str(Path(__file__).with_name('controls-layout-check.py'))}
+ 
+ 
+ def main():
+@@ -24,9 +25,8 @@
+     args = parser.parse_args()
+     out = args.evidence.resolve()
+     launch = json.loads((out / 'launch.json').read_text())
+-    if not launch.get('profileVerified') or not any(x in launch['actualRenderer'].lower()
+-                                                  for x in ('llvmpipe', 'softpipe')):
+-        raise RuntimeError('A verified isolated software player is required.')
++    if not launch.get('profileVerified') or not ('zink' in launch['actualRenderer'].lower() and 'nvidia' in launch['actualRenderer'].lower()):
++        raise RuntimeError('A verified isolated Zink player is required.')
+     scoped = launch['scopedEnvironment']
+     if scoped['DISPLAY'] != ':93' or scoped['XAUTHORITY'] != '/tmp/ward-qa-xvfb-20260926/Xauthority':
+         raise RuntimeError('Unexpected display; refusing to send input.')
+@@ -34,6 +34,7 @@
+     os.kill(pid, 0)
+     if str(out) not in Path('/proc/' + str(pid) + '/cmdline').read_bytes().decode().split('\0'):
+         raise RuntimeError('PID no longer belongs to this evidence run.')
++    os.environ.pop('LIBGL_ALWAYS_SOFTWARE', None)
+     os.environ.update(scoped, ATHEN_NATIVE_PID=str(pid))
+     sys.path.insert(0, str(ROOT / 'unity/tools'))
+     import desktop_input
+@@ -63,7 +64,7 @@
+ 
+     desktop_input.focus = focus
+     script = ROOT / 'unity/tools' / CHOICES[args.check]
+-    record = dict(check=args.check, purpose='Software functional checks only',
++    record = dict(check=args.check, purpose='Zink OpenGL-over-Vulkan functional checks; not baseline NVIDIA OpenGL qualification',
+                   script=str(script), sha256=hashlib.sha256(script.read_bytes()).hexdigest(),
+                   assertionsModified=False, inputDurationsModified=False,
+                   input='X11 XTest keyboard/mouse on private display :93', complete=False)

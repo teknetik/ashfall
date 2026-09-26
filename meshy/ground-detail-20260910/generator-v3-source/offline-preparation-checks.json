@@ -1,0 +1,30 @@
+{
+  "scope": "Offline preparation only; no texture filter or app mutation",
+  "scripts": [
+    {
+      "script": "art/reference_street_20260910/inspect_generator_uv_offline.py",
+      "sha256": "2d5f00a8c056eb19ba3601ba49ab57f5c1093b17640925b271b0375944a4166b",
+      "syntax": "passed"
+    },
+    {
+      "script": "art/reference_street_20260910/audit_generator_panel_frequency.py",
+      "sha256": "1a150d06d2afdf1c17f063e9b05c555946d581521ad241dc2342391f9c3188b9",
+      "syntax": "passed"
+    },
+    {
+      "script": "art/reference_street_20260910/stage_generator_service_materials_v5.py",
+      "sha256": "2136b55fc70e4895c2728f22219f87464492bb03413bfe2f91e29b66db0ed28a",
+      "syntax": "passed"
+    }
+  ],
+  "checks": [
+    "All staged script syntax parsed",
+    "Eight localized clamp contacts vary extent and intensity; two unoxidized",
+    "Proposed roughness/metallic bounds stay within 0..1",
+    "Raw FBX triangle order equals live mesh audit, confirmed by executed read-only script"
+  ],
+  "notExecuted": [
+    "stage_generator_service_materials_v5.py"
+  ],
+  "sourceChanged": false
+}

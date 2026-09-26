@@ -1,0 +1,417 @@
+{
+  "version": 4,
+  "status": "STAGED; no Blender execution or Unity integration",
+  "outputRevision": "candidate-v1",
+  "physicalOutputTileMetres": 4,
+  "tilePixels": 4096,
+  "doorProjectionPixelsPerMetre": 2048,
+  "resolutionRationale": "4096 across the existing 4 m tile provides 1024 px/m, matching current source audition. Door masks use 2048 px/m because thin 3\u20135 mm handling scratches need several texels. These are source candidates, not runtime texture ceilings.",
+  "sources": {
+    "coat_color": {
+      "file": "refs/reference-street/20260910/metal-candidates/blue_metal_plate/blue_metal_plate_diff_4k.png",
+      "sha256": "cd7dfc69866c6b67af3e1fe8a17b700fdf24954cebd9fa46d52877ae8af05d64"
+    },
+    "coat_normal": {
+      "file": "refs/reference-street/20260910/metal-candidates/blue_metal_plate/blue_metal_plate_nor_gl_4k.png",
+      "sha256": "fa0e94e8632abc57c098a27f18bcf93dd2018f78b94d88465f0ae9b42761a475"
+    },
+    "coat_roughness": {
+      "file": "refs/reference-street/20260910/metal-candidates/blue_metal_plate/blue_metal_plate_rough_4k.png",
+      "sha256": "ccbe9b62664b7e3e4ef2caf3499f59a6dfe8459643f1ceb68661421414fc80df"
+    },
+    "oxide_color": {
+      "file": "refs/quality_20260909/building-materials/rusty_metal_sheet/rusty_metal_sheet_diff_4k.png",
+      "sha256": "b6cb2479d9036626acad12cb897c4f4f48d8d358dd3b91ea9572ee42ea150620"
+    },
+    "oxide_normal": {
+      "file": "refs/quality_20260909/building-materials/rusty_metal_sheet/rusty_metal_sheet_nor_gl_4k.png",
+      "sha256": "8b7815cbafe5e97f19c2ca28640c466dac3462b58400b97a608747509b01ec08"
+    },
+    "oxide_roughness": {
+      "file": "refs/quality_20260909/building-materials/rusty_metal_sheet/rusty_metal_sheet_rough_4k.png",
+      "sha256": "d116c9c497bf825d706220b8d9361f5261e27080cbb6a42c6ec24ccc56379e5b"
+    }
+  },
+  "coatSourceTileMetres": 2.5,
+  "oxideSourceTileMetres": 2,
+  "coatSourceCropPixels": [
+    1360,
+    384,
+    2896,
+    2432
+  ],
+  "coatQuiltPeriodMetres": [
+    0.8,
+    1.0
+  ],
+  "coatQuiltNote": "Translation-only overlap blending inside verified seam-free crop; no reflection, rotation, warp or rescale. Crop is .9375 x 1.25 m; period .8 x 1 m leaves .1375 x .25 m overlap. Both periods divide 4 m. Repetition remains a source-review gate.",
+  "shutter": {
+    "targets": [
+      "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 0",
+      "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 1",
+      "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 2",
+      "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 3",
+      "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 4",
+      "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 5",
+      "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 6",
+      "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 7",
+      "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 8",
+      "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 9",
+      "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 10",
+      "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 11",
+      "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 12",
+      "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 13",
+      "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 14",
+      "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 15",
+      "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 16",
+      "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 17",
+      "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 18",
+      "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 19"
+    ],
+    "zRange": [
+      -10.68,
+      -7.32
+    ],
+    "yRange": [
+      0.506,
+      3.294
+    ],
+    "firstBottomY": 0.506,
+    "pitchM": 0.14,
+    "slatHeightM": 0.128,
+    "lipSegmentsLocalFromLeftM": [
+      [
+        0.06,
+        0.23
+      ],
+      [
+        0.44,
+        0.55
+      ],
+      [
+        1.13,
+        1.34
+      ],
+      [
+        2.0,
+        2.08
+      ],
+      [
+        2.63,
+        2.91
+      ],
+      [
+        3.13,
+        3.26
+      ]
+    ],
+    "rowSegmentChoices": [
+      [
+        0,
+        4
+      ],
+      [
+        2
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        4
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        0
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        1
+      ],
+      [
+        0,
+        5
+      ],
+      [
+        3
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        2
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        5
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        4
+      ],
+      [
+        0,
+        5
+      ],
+      [
+        2,
+        3
+      ]
+    ],
+    "liftHandles": [
+      {
+        "z": -8.45,
+        "y": 1.32
+      },
+      {
+        "z": -9.55,
+        "y": 1.32
+      }
+    ]
+  },
+  "doors": [
+    {
+      "family": "FieldDoor0",
+      "targets": [
+        "Ward shop architecture/field_supply/Entrance/field_supply Staff door leaf 0",
+        "Ward shop architecture/field_supply/Entrance/field_supply Staff door inset inner 0",
+        "Ward shop architecture/field_supply/Entrance/field_supply Staff door stamped panel 0 0.49",
+        "Ward shop architecture/field_supply/Entrance/field_supply Staff door stamped panel 0 1.49"
+      ],
+      "worldZRange": [
+        -6.3475,
+        -5.9325
+      ],
+      "worldYRange": [
+        0.535,
+        2.715
+      ],
+      "frontX": 17.955,
+      "handle": {
+        "sourcePath": "Ward shop architecture/field_supply/Entrance/field_supply Staff door handle escutcheon 0",
+        "z": -6.264999875,
+        "y": 1.5499999450000002,
+        "bounds": {
+          "min": [
+            17.919,
+            1.36999989,
+            -6.32249975
+          ],
+          "max": [
+            17.953001,
+            1.73,
+            -6.2075
+          ]
+        }
+      },
+      "hinges": [
+        {
+          "sourcePath": "Ward shop architecture/field_supply/Entrance/field_supply Staff door hinge strap 0 0.26",
+          "z": -5.99249935,
+          "y": 0.7599999835
+        },
+        {
+          "sourcePath": "Ward shop architecture/field_supply/Entrance/field_supply Staff door hinge strap 0 1.09",
+          "z": -5.99249935,
+          "y": 1.5899999999999999
+        },
+        {
+          "sourcePath": "Ward shop architecture/field_supply/Entrance/field_supply Staff door hinge strap 0 2.03",
+          "z": -5.99249935,
+          "y": 2.529999915
+        }
+      ],
+      "projectionUse": "Source masks only: future front-facing depth-limited projection/decal required. Never bind as a shared tiled Lit texture."
+    },
+    {
+      "family": "FieldDoor1",
+      "targets": [
+        "Ward shop architecture/field_supply/Entrance/field_supply Staff door leaf 1",
+        "Ward shop architecture/field_supply/Entrance/field_supply Staff door inset inner 1",
+        "Ward shop architecture/field_supply/Entrance/field_supply Staff door stamped panel 1 0.49",
+        "Ward shop architecture/field_supply/Entrance/field_supply Staff door stamped panel 1 1.49"
+      ],
+      "worldZRange": [
+        -6.8075,
+        -6.3925
+      ],
+      "worldYRange": [
+        0.535,
+        2.715
+      ],
+      "frontX": 17.955,
+      "handle": {
+        "sourcePath": "Ward shop architecture/field_supply/Entrance/field_supply Staff door handle escutcheon 1",
+        "z": -6.475,
+        "y": 1.5499999450000002,
+        "bounds": {
+          "min": [
+            17.919,
+            1.36999989,
+            -6.5325
+          ],
+          "max": [
+            17.953001,
+            1.73,
+            -6.4175
+          ]
+        }
+      },
+      "hinges": [
+        {
+          "sourcePath": "Ward shop architecture/field_supply/Entrance/field_supply Staff door hinge strap 1 0.26",
+          "z": -6.7475000000000005,
+          "y": 0.7599999835
+        },
+        {
+          "sourcePath": "Ward shop architecture/field_supply/Entrance/field_supply Staff door hinge strap 1 1.09",
+          "z": -6.7475000000000005,
+          "y": 1.5899999999999999
+        },
+        {
+          "sourcePath": "Ward shop architecture/field_supply/Entrance/field_supply Staff door hinge strap 1 2.03",
+          "z": -6.7475000000000005,
+          "y": 2.529999915
+        }
+      ],
+      "projectionUse": "Source masks only: future front-facing depth-limited projection/decal required. Never bind as a shared tiled Lit texture."
+    },
+    {
+      "family": "FineryDoor0",
+      "targets": [
+        "Phase 1 Finery frontage/Door/Door leaf 0",
+        "Phase 1 Finery frontage/Door/Door inset worn steel 0"
+      ],
+      "worldZRange": [
+        -18.896,
+        -18.0099983
+      ],
+      "worldYRange": [
+        0.53,
+        2.88
+      ],
+      "frontX": 16.9579983,
+      "handle": {
+        "sourcePath": "Phase 1 Finery frontage/Door/Door handle 0",
+        "z": -18.17300065,
+        "y": 1.52,
+        "bounds": {
+          "min": [
+            16.8025,
+            1.375,
+            -18.1955
+          ],
+          "max": [
+            16.8575,
+            1.665,
+            -18.1505013
+          ]
+        }
+      },
+      "hinges": [
+        {
+          "sourcePath": "Phase 1 Finery frontage/Door/Door hinge 0 0.76",
+          "z": -18.793,
+          "y": 0.759999976
+        },
+        {
+          "sourcePath": "Phase 1 Finery frontage/Door/Door hinge 0 2.55",
+          "z": -18.793,
+          "y": 2.55
+        }
+      ],
+      "projectionUse": "Source masks only: future front-facing depth-limited projection/decal required. Never bind as a shared tiled Lit texture."
+    },
+    {
+      "family": "FineryDoor1",
+      "targets": [
+        "Phase 1 Finery frontage/Door/Door leaf 1",
+        "Phase 1 Finery frontage/Door/Door inset worn steel 1"
+      ],
+      "worldZRange": [
+        -17.9900017,
+        -17.104
+      ],
+      "worldYRange": [
+        0.53,
+        2.88
+      ],
+      "frontX": 16.9579983,
+      "handle": {
+        "sourcePath": "Phase 1 Finery frontage/Door/Door handle 1",
+        "z": -17.82699935,
+        "y": 1.52,
+        "bounds": {
+          "min": [
+            16.8025,
+            1.375,
+            -17.8494987
+          ],
+          "max": [
+            16.8575,
+            1.665,
+            -17.8045
+          ]
+        }
+      },
+      "hinges": [
+        {
+          "sourcePath": "Phase 1 Finery frontage/Door/Door hinge 1 0.76",
+          "z": -17.207,
+          "y": 0.759999976
+        },
+        {
+          "sourcePath": "Phase 1 Finery frontage/Door/Door hinge 1 2.55",
+          "z": -17.207,
+          "y": 2.55
+        }
+      ],
+      "projectionUse": "Source masks only: future front-facing depth-limited projection/decal required. Never bind as a shared tiled Lit texture."
+    }
+  ],
+  "preserve": [
+    "All original source/maps/materials",
+    "All 32 source positions/indices/normals/UV0",
+    "No Unity writes, transforms, colliders, 9 actors or 4 routes",
+    "No normal-keyword fix; current materials already enable it"
+  ],
+  "guards": {
+    "registrationSha256": "8d91f20e073187e046074f2cf943e3d89dfa44b725bf0887a640f0c416a6649c",
+    "inspectionMeshesSha256": "379fa6c868ed42e1d35946975582ce98c92e40dd254898a64fa827706e351ade",
+    "savedSceneSha256AtPreparation": "890c352a4ba6c67dcb71374bac7b4d874547ff20030ee91eec8656039f744fa9",
+    "existingMetalMaterialHashes": {
+      "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/FineryLouvreCoatedSteel v3.mat": "d7fc67e62395c655621c66bd943d9d414dc885d83a9db4cb00996b0b5a1ed4a3",
+      "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/FieldCoatedSteel v3.mat": "a828a3f91f30c1962fa3129c81b33f14cd7f7040d6e701ad23dfafb915b36f0e",
+      "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/FineryDoorCoatedSteel v3.mat": "9f9e6bd2d51e6e0d5606dc221d9eaa0ec4670f87dcedc77926b7054c9ce33881",
+      "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/ShutterSteel/ShutterSteel.mat": "32c856c10621f4b049ea5ee3a40b0147be8161d24574f778a274dd76aae5634a",
+      "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/AgedSteel/AgedSteel.mat": "ee227e8d7e16782684ed6b70f94224168a7c36756b41f53786804bf1edde5a49"
+    },
+    "sourceCodeHashes": {
+      "art/reference_street_20260909/author_metal_v3.py": "260be28344a57378e9dc630e729b8756dca820db6a82738c1062789f198c53a4",
+      "art/reference_street_20260909/metal-import-contract.json": "0ce654aaf879b4f2a5f41c423895e6e47b6653f8167b37fe762d7cd61d8ec057",
+      "art/reference_street_20260909/aged-steel-assignment-contract.json": "7c832f7de0eaba8fc94e7f8e8527f6fb9a50edc8d9221b21289e536d5a1a7d96"
+    },
+    "hardwareInspectionSha256": "ccfc45e876269242f6ad23d70e33b437e07be597206c7f9d8756899e658b9334"
+  }
+}

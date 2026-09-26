@@ -1,0 +1,21 @@
+{
+  "purpose": "Fresh opt-in DEBUG native player; source tree geometry and permanent scene unchanged",
+  "enable": {
+    "action": "reviewTreeShadow",
+    "enabled": true
+  },
+  "disable": {
+    "action": "reviewTreeShadow",
+    "enabled": false
+  },
+  "restoreAll": {
+    "action": "reviewReset"
+  },
+  "stateFile": "visual-review-state.json",
+  "constraints": [
+    "Check treeShadow.enabled and shadowTrianglesPerDraw after acknowledgement",
+    "Wait until the next rendered frame after enable/disable before capture or profiling",
+    "Record identical camera, light time, shadow profile, viewport and alpha materials",
+    "Keep animation active during performance comparison; do not claim static camera trials are traversal qualification"
+  ]
+}

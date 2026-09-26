@@ -1,0 +1,53 @@
+{
+  "scope": "Staging/geometry and synthesis-math checks only; live Blender scripts NOT executed",
+  "scripts": [
+    {
+      "file": "/home/teknetik/code/ao2/art/reference_street_20260910/prepare_generator_core_mask_offline.py",
+      "sha256": "15d184597d8941eb19bd271adabe31f03c68358d601eaadf1a5193ce3a9c9824",
+      "syntax": "passed"
+    },
+    {
+      "file": "/home/teknetik/code/ao2/art/reference_street_20260910/author_generator_core_repair.py",
+      "sha256": "f3848f2eb0b61ec2224525df04ec6fc5f87cbb08613dd871704f3c4f1d95416c",
+      "syntax": "passed"
+    },
+    {
+      "file": "/home/teknetik/code/ao2/art/reference_street_20260910/render_generator_core_repair.py",
+      "sha256": "393935bd754ba07b22a45343c7062392ce2c4885f0e8e551d4d3df5a1eee2a8e",
+      "syntax": "passed"
+    },
+    {
+      "file": "/home/teknetik/code/ao2/art/reference_street_20260910/prepare_generator_panel_paint_candidate.py",
+      "sha256": "5b93071ec3203c6b2dd0790a5ebb04fa65b612170708f3b2159e7806ead1fa87",
+      "syntax": "passed"
+    },
+    {
+      "file": "/home/teknetik/code/ao2/art/reference_street_20260910/author_generator_panel_material_candidate.py",
+      "sha256": "0d6075010c961ce70856bd8634e8e9f1b0c920a5ed8255fef1dd41ee9e2e1f80",
+      "syntax": "passed"
+    },
+    {
+      "file": "/home/teknetik/code/ao2/art/reference_street_20260910/render_generator_panel_study.py",
+      "sha256": "52dc370881d678b77017c7a69c4a25e6ee62fd6f236ad9852471c4900bd5637f",
+      "syntax": "passed"
+    }
+  ],
+  "checks": {
+    "exactOutsideMaskAndProtectedScratchPixels": "passed",
+    "syntheticPeriodicRmsBefore": 0.021213415595370353,
+    "syntheticPeriodicRmsAfter": 0.0010054159743106178,
+    "crossClassColorLeak": "none above test tolerance",
+    "sourceCutContainment": "passed for all selected triangle vertices",
+    "sourceFaceComplement": "every original face retained or separately recoverable, no duplicates/loss",
+    "wireRimContact": "sample endpoints meet physical rim"
+  },
+  "notExecuted": [
+    "author_generator_core_repair.py",
+    "render_generator_core_repair.py",
+    "prepare_generator_panel_paint_candidate.py on source textures",
+    "author_generator_panel_material_candidate.py",
+    "render_generator_panel_study.py"
+  ],
+  "sourceAccepted": false,
+  "nativeAccepted": false
+}

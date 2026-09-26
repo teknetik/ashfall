@@ -1,0 +1,63 @@
+{
+  "created_utc": "2026-09-10T16:41:37.554715+00:00",
+  "purpose": "Temporary isolated Blender MCP authoring environment for artisan stall structure only; no Unity integration",
+  "status": "ready; read-only get_scene_info verified",
+  "blender": {
+    "version": "4.5.13 LTS",
+    "source": "https://download.blender.org/release/Blender4.5/blender-4.5.13-linux-x64.tar.xz",
+    "checksum_source": "https://download.blender.org/release/Blender4.5/blender-4.5.13.sha256",
+    "archive_sha256": "da4e69b06b75b9e642d106496c50e7e240218b411d2f6e18271c1d1d819cef91",
+    "checksum_verified": true,
+    "executable": "/tmp/ward-blender-mcp-20260910/blender-4.5.13-linux-x64/blender",
+    "license": "Blender archive includes its GPL license and dependency notices; tooling only, not shipped game content"
+  },
+  "mcp": {
+    "package": "blender-mcp==1.6.4",
+    "python_sdk": "mcp==1.30.0",
+    "venv": "/tmp/ward-blender-mcp-20260910/venv",
+    "package_metadata_source": "https://pypi.org/pypi/blender-mcp/1.6.4/json",
+    "wheel_sha256": "2e935cc3f78df5d2be12192b970f92753a00b3a50c442b6338c3100102a133c5",
+    "addon_commit": "6e99eb5a442b83766a5796975ec7bb5bfc791341",
+    "addon_source": "https://raw.githubusercontent.com/ahujasid/blender-mcp/6e99eb5a442b83766a5796975ec7bb5bfc791341/addon.py",
+    "addon_sha256": "bba60831f5f89a74deda0294b131668a086cf46eb35a6a01abbd0d21d9e92630",
+    "addon_matching_evidence": "No published git tags were returned. Selected latest official repository commit before PyPI release 2026-06-11T13:21:21Z. Its src/blender_mcp/server.py matches installed wheel server.py byte for byte.",
+    "matching_server_sha256": "e2d609bf9c948199b0e9604ed1b82c6ead0a990b419b5926ea1e64f968905b49",
+    "telemetry": "DISABLE_TELEMETRY=true; startup verified warning confirms disabled",
+    "protocol": "Official MCP stdio client/server; server relays to official addon local socket. Client never hand-rolls raw socket authoring.",
+    "client": "/home/teknetik/code/ao2/art/karaveen_artisan_20260910/mcp_client.py",
+    "listener": "127.0.0.1:9876",
+    "upstream_receive_timeout_seconds": 180,
+    "license": "MIT; installed distribution retains LICENSE"
+  },
+  "session": {
+    "pid": 268836,
+    "display": ":0",
+    "background": false,
+    "factory_startup": true,
+    "startup_scene": "Scene with default Cube, Camera and Light",
+    "initial_filepath": "",
+    "isolated_settings": {
+      "BLENDER_USER_CONFIG": "/tmp/ward-blender-mcp-20260910/config",
+      "BLENDER_USER_SCRIPTS": "/tmp/ward-blender-mcp-20260910/scripts",
+      "BLENDER_USER_DATAFILES": "/tmp/ward-blender-mcp-20260910/datafiles",
+      "XDG_CACHE_HOME": "/tmp/ward-blender-mcp-20260910/cache",
+      "XDG_CONFIG_HOME": "/tmp/ward-blender-mcp-20260910/xdg-config",
+      "XDG_DATA_HOME": "/tmp/ward-blender-mcp-20260910/xdg-data",
+      "XDG_STATE_HOME": "/tmp/ward-blender-mcp-20260910/xdg-state"
+    },
+    "log": "/tmp/ward-blender-mcp-20260910/blender.log",
+    "launcher": "/tmp/ward-blender-mcp-20260910/launch_blender.py",
+    "addon_initializer": "/tmp/ward-blender-mcp-20260910/start_addon.py",
+    "readonly_receipt": "/home/teknetik/code/ao2/art/karaveen_artisan_20260910/setup-scene-receipt.json",
+    "existing_blend_files_opened": false,
+    "user_preferences_saved": false,
+    "authoring_started_by_setup": false
+  },
+  "restoration_notes": [
+    "Environment lives in /tmp and is disposable. Restore official archive/checksum and pinned addon source before relaunch if removed.",
+    "Use the checked setup-requirements.txt for full dependency version reproduction.",
+    "Blender MCP 1.6.4 permits MCP SDK v2 in its loose dependency metadata, but fails FastMCP import with v2. Explicit mcp==1.30.0 pin was verified.",
+    "The first fresh launch used invalid --noaudio and exited without loading a file. Correct -noaudio flag was verified from Blender --help and successful GUI startup followed.",
+    "Local socket operations require host network access outside the restricted command sandbox. Restoration and read-only scene inspection were approved automatically."
+  ]
+}

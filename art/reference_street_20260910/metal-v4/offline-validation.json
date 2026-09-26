@@ -1,0 +1,95 @@
+{
+  "status": "PASS for offline syntax and isolated synthetic math only; live Blender unexecuted",
+  "scriptSha256": "12b134e1a70555e74d13ecd74a86e7de4968367ffe2b88334527549edbc1fd95",
+  "recipeSha256": "14cbe22650b154e3f3fa9aa97104bef21c7ea3df0289a1df4177f1ef0809cf46",
+  "checks": [
+    "Python AST parse and py_compile",
+    "Synthetic translated-quilt seam continuity",
+    "Metric capsule interior/exterior coverage",
+    "Original PNG first-row raw decoder executes for all six retained16-bit PBR inputs"
+  ],
+  "quiltSeamMaxDifference": {
+    "x": 1.452644121757718e-05,
+    "y": 6.606584431079199e-06
+  },
+  "limits": [
+    "No Blender API, full source map generation or render tested",
+    "No Unity changes/native acceptance",
+    "Original maps retained unchanged"
+  ],
+  "readbackGuard": "Authoring now fails before map generation unless actual Blender pixels match explicit raw PNG numeric normals/roughness and explicit sRGB EOTF color at five top-row samples. Live result pending.",
+  "rawSourceProbe": [
+    {
+      "source": "coat_color",
+      "bitDepth": 16,
+      "rowShape": [
+        4096,
+        4
+      ],
+      "firstRowNumericRange": [
+        0.0865491721980621,
+        0.9999694819562066
+      ]
+    },
+    {
+      "source": "coat_normal",
+      "bitDepth": 16,
+      "rowShape": [
+        4096,
+        3
+      ],
+      "firstRowNumericRange": [
+        0.2813611047531853,
+        0.9999084458686198
+      ]
+    },
+    {
+      "source": "coat_roughness",
+      "bitDepth": 16,
+      "rowShape": [
+        4096,
+        1
+      ],
+      "firstRowNumericRange": [
+        0.15768673228046082,
+        0.8614480811779965
+      ]
+    },
+    {
+      "source": "oxide_color",
+      "bitDepth": 16,
+      "rowShape": [
+        4096,
+        3
+      ],
+      "firstRowNumericRange": [
+        0.0,
+        0.4993057145037003
+      ]
+    },
+    {
+      "source": "oxide_normal",
+      "bitDepth": 16,
+      "rowShape": [
+        4096,
+        4
+      ],
+      "firstRowNumericRange": [
+        0.42612344548714426,
+        1.0
+      ]
+    },
+    {
+      "source": "oxide_roughness",
+      "bitDepth": 16,
+      "rowShape": [
+        4096,
+        1
+      ],
+      "firstRowNumericRange": [
+        0.6103608758678569,
+        0.9508201724269474
+      ]
+    }
+  ]
+}

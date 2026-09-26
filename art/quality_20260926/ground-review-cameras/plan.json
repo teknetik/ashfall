@@ -1,0 +1,213 @@
+{
+  "purpose": "Proposed disabled saved cameras; no scene mutation or native commands performed",
+  "patch": {
+    "x": [
+      42,
+      50
+    ],
+    "z": [
+      -6,
+      6
+    ],
+    "y": 0
+  },
+  "lighting": {
+    "hour": 12,
+    "paused": true
+  },
+  "cameras": [
+    {
+      "name": "cam_ground_gate_threshold",
+      "position": [
+        41.5,
+        1.65,
+        -0.7
+      ],
+      "target": [
+        47.6,
+        1.05,
+        0
+      ],
+      "verticalFov": 55,
+      "role": "Player-height approach showing threshold and both pier contacts",
+      "passOffset": [
+        0,
+        0,
+        1.2
+      ],
+      "enabled": false,
+      "gameObjectActive": true,
+      "aspect": 1.7777777777777777,
+      "nearClip": 0.08,
+      "farClip": 250,
+      "audioListener": false,
+      "tag": "Untagged",
+      "placementVerified": true,
+      "passCommand": {
+        "action": "reviewAssetPass",
+        "camera": "cam_ground_gate_threshold",
+        "offset": [
+          0,
+          0,
+          1.2
+        ],
+        "target": [
+          47.6,
+          1.05,
+          0
+        ],
+        "seconds": 6
+      },
+      "aimDistance": 6.169278726074873,
+      "verificationScope": "13 read-only .20m sphere checks along static/pass positions; source scene clean, no cameras created",
+      "viewRayHits": []
+    },
+    {
+      "name": "cam_ground_gate_paving_close",
+      "position": [
+        44.5,
+        1.65,
+        0
+      ],
+      "target": [
+        45.2,
+        0.02,
+        0.8
+      ],
+      "verticalFov": 50,
+      "role": "Downward pedestrian close-up of stone, joints and surface response",
+      "passOffset": [
+        0.7,
+        0,
+        0
+      ],
+      "enabled": false,
+      "gameObjectActive": true,
+      "aspect": 1.7777777777777777,
+      "nearClip": 0.08,
+      "farClip": 250,
+      "audioListener": false,
+      "tag": "Untagged",
+      "placementVerified": true,
+      "passCommand": {
+        "action": "reviewAssetPass",
+        "camera": "cam_ground_gate_paving_close",
+        "offset": [
+          0.7,
+          0,
+          0
+        ],
+        "target": [
+          45.2,
+          0.02,
+          0.8
+        ],
+        "seconds": 6
+      },
+      "aimDistance": 1.9459958889987419,
+      "verificationScope": "13 read-only .20m sphere checks along static/pass positions; source scene clean, no cameras created",
+      "viewRayHits": [
+        {
+          "collider": "COL_Ground",
+          "distance": 1.96987355,
+          "point": [
+            45.20859,
+            0.0,
+            0.809816
+          ],
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "cam_ground_gate_shaded_pier",
+      "position": [
+        44.3,
+        1.65,
+        -3.7
+      ],
+      "target": [
+        46.32,
+        0.12,
+        -3.2
+      ],
+      "verticalFov": 50,
+      "role": "City-facing negative-Z pier foot, shaded at the authored noon sun",
+      "passOffset": [
+        0,
+        0,
+        0.8
+      ],
+      "enabled": false,
+      "gameObjectActive": true,
+      "aspect": 1.7777777777777777,
+      "nearClip": 0.08,
+      "farClip": 250,
+      "audioListener": false,
+      "tag": "Untagged",
+      "placementVerified": true,
+      "passCommand": {
+        "action": "reviewAssetPass",
+        "camera": "cam_ground_gate_shaded_pier",
+        "offset": [
+          0,
+          0,
+          0.8
+        ],
+        "target": [
+          46.32,
+          0.12,
+          -3.2
+        ],
+        "seconds": 6
+      },
+      "aimDistance": 2.582885982771987,
+      "verificationScope": "13 read-only .20m sphere checks along static/pass positions; source scene clean, no cameras created",
+      "viewRayHits": [
+        {
+          "collider": "District rebuild/District gate/Fitted visual/Meshy visual",
+          "distance": 2.599554,
+          "point": [
+            46.33303,
+            0.110125065,
+            -3.19678521
+          ],
+          "normal": [
+            -0.9786966,
+            -0.0447790138,
+            0.200369462
+          ]
+        },
+        {
+          "collider": "COL_Ground",
+          "distance": 2.785466,
+          "point": [
+            46.47843,
+            0.0,
+            -3.16078424
+          ],
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "pierSurfaceNormalDotTowardSun": -0.3902212544929821,
+      "shadeCaveat": "Pier target face turns away from noon sun; neighboring ground shade ray had no blockers, so surrounding dust shade is not verified"
+    }
+  ],
+  "requiredVerification": [
+    "Read-only .20m overlap check at each camera and samples along proposed pass",
+    "Raycast camera toward target, report first source collider and hit point",
+    "Directional shade ray from pier target toward noon sun; report blocker",
+    "Native baseline frame after saving cameras and rebuilding player, before any paving change"
+  ],
+  "settings": "Copy rendering configuration from existing saved review camera while keeping each new Camera disabled; no gameplay or audio components",
+  "scope": "NativeAssetReview moves only a diagnostic camera; not input traversal or performance qualification",
+  "readOnlyPlacementProbe": "placement-probe.json"
+}

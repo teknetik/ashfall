@@ -1,0 +1,59 @@
+--- launch.py
++++ launch_zink.py
+@@ -1,4 +1,4 @@
+-"""Opt-in software-rendered functional player on the existing private Xvfb.
++"""Opt-in Zink/OpenGL-over-Vulkan functional player on the private Xvfb.
+ 
+ This script does not start a display server or change system/desktop settings.
+ Run only after the coordinating agent has finished GPU timing and handed off.
+@@ -44,10 +44,12 @@
+                '-logFile', str(out / 'Player.log'), '--athen-qa', str(out),
+                '--athen-qa-background']
+     scoped = dict(DISPLAY=DISPLAY_NAME, XAUTHORITY=AUTHORITY,
+-                  LIBGL_ALWAYS_SOFTWARE='1', GALLIUM_DRIVER='llvmpipe',
++                  MESA_LOADER_DRIVER_OVERRIDE='zink', GALLIUM_DRIVER='zink',
++                  ZINK_DESCRIPTORS='lazy', ZINK_DEBUG='compact',
++                  LIBGL_KOPPER_DRI2='true', VK_DRIVER_FILES='/usr/share/vulkan/icd.d/nvidia_icd.json',
+                   __GLX_VENDOR_LIBRARY_NAME='mesa', XDG_CONFIG_HOME=str(out / 'config'),
+                   ATHEN_NATIVE_DIR=str(out), ATHEN_EVIDENCE=str(out), ATHEN_UI_XVFB='1')
+-    record = dict(purpose='Software functional checks only; no art or performance acceptance',
++    record = dict(purpose='Zink OpenGL-over-Vulkan functional checks only; not baseline NVIDIA OpenGL qualification',
+                   command=command, scopedEnvironment=scoped, video=VIDEO, sound=SOUND,
+                   actualRenderer='Unverified until launch', noBatchMode=True)
+     if not args.launch:
+@@ -75,7 +77,9 @@
+     record['buildFiles'] = [dict(path=str(p), bytes=p.stat().st_size, sha256=sha(p))
+                             for p in identity_files if p.is_file()]
+     (out / 'launch.json').write_text(json.dumps(record, indent=2))
+-    child = subprocess.Popen(command, env=dict(os.environ, **scoped),
++    child_env = dict(os.environ, **scoped)
++    child_env.pop('LIBGL_ALWAYS_SOFTWARE', None)
++    child = subprocess.Popen(command, env=child_env,
+                              stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT,
+                              start_new_session=True)
+     (out / 'pid').write_text(str(child.pid))
+@@ -92,12 +96,12 @@
+         environment = json.loads((out / 'environment.json').read_text())
+         renderer = environment.get('gpu', '')
+         record['actualRenderer'] = renderer
+-        if not any(name in renderer.lower() for name in ('llvmpipe', 'softpipe')):
+-            raise RuntimeError('Expected software renderer, received: ' + renderer)
++        if 'zink' not in renderer.lower() or 'nvidia' not in renderer.lower():
++            raise RuntimeError('Expected Zink over NVIDIA Vulkan renderer, received: ' + renderer)
+         if environment.get('isBatchMode'):
+             raise RuntimeError('Real-input functional run must not be in batch mode.')
+         os.environ.update(scoped, ATHEN_NATIVE_PID=str(child.pid))
+-        # First llvmpipe frames may compile shaders for longer than the ordinary
++        # First Zink frames may compile shaders for longer than the ordinary
+         # ten-second QA command timeout. This is startup warmup only: tests keep
+         # their existing command timeouts, input timings and assertions.
+         command_id = uuid.uuid4().hex
+@@ -124,7 +128,7 @@
+                     break
+             time.sleep(.2)
+         else:
+-            raise RuntimeError('Software startup settings command was not acknowledged within 120 seconds.')
++            raise RuntimeError('Zink startup settings command was not acknowledged within 120 seconds.')
+         record['startupSettingsWaitSeconds'] = time.monotonic() - warmup_start
+         settings = json.loads((out / 'settings.json').read_text())
+         actual = {key: settings['video'].get(key) for key in VIDEO}

@@ -1,0 +1,143 @@
+{
+  "utc": "2026-09-10T11:26:09.282643+00:00",
+  "scope": "Read-only source-art research while root owns live native validation. Original provider maps retained under refs; only temporary display thumbnails/crops made under /tmp. No source art authored, Unity/Blender/native input, Assets edits, helper or importer changes.",
+  "outcome": "No candidate is suitable as an unmodified whole-tile replacement on all existing metal. The seam-free central field of blue_metal_plate is the strongest starting source for quiet painted-steel panels and selected shutter coating. Preserve its real fine scratches, author localized wear against actual hardware, and audition its much smoother roughness. Retain green_metal_rust as a secondary reference/source for selected chip-and-runoff regions only. Reject rusty_painted_metal for existing flat doors and modeled shutter slats because its corrugation is integral to the maps.",
+  "provenance": {
+    "license": "CC0-1.0",
+    "licenseUrl": "https://polyhaven.com/license",
+    "provider": "Poly Haven",
+    "downloadCountMaps": 20,
+    "downloadBytesMaps": 706358544,
+    "verification": "Every complete 4096x4096 original PNG has a verified API MD5, byte count and local SHA256. Provider PNG bit depth retained, including 16-bit color/normal/roughness maps. No source resampling. API metadata and license snapshot retained separately.",
+    "resolutionChoice": "Original provider 4K PBR sets matched to current 4K authoring for this source comparison; not a ceiling. Rusty painted/blue offer 16K and green offers 8K, with original URLs/hashes available in files.json. If a chosen derivative requires more source texels, retain the appropriate larger provider maps before authoring rather than stretching the selected 4K patch."
+  },
+  "candidates": [
+    {
+      "asset": "blue_metal_plate",
+      "sourcePage": "https://polyhaven.com/a/blue_metal_plate",
+      "manifest": "blue_metal_plate/download-manifest.json",
+      "physicalTileMetres": 2.5,
+      "pixelsPerMetreAt4096": 1638.4,
+      "visualObservation": "The actual diffuse has quiet dark-blue coating, fine dragged/single-line scratches, sparse small chips and broad handling scuffs. Matched normal and roughness carry the same marks. Two strong vertical manufactured panel seams and some horizontal junction lines are present; the full source cannot be blindly tiled across existing door/louvre/slat topology.",
+      "decision": "Preferred conditional source for the calm coating field; reject full-tile generic assignment.",
+      "inspectedCentralRegion": {
+        "coordinateConvention": "Original 4096 PNG, top-left origin, x0,y0,x1,y1; inspection crop only, not a new texture",
+        "pixelBox": [
+          1360,
+          384,
+          2896,
+          2432
+        ],
+        "dimensionsPixels": [
+          1536,
+          2048
+        ],
+        "physicalSizeMetres": [
+          0.9375,
+          1.25
+        ],
+        "finding": "Inspected in diffuse/normal/roughness. Excludes the conspicuous vertical sheet seams and lowest horizontal junction. Fine scratches remain; no broad directional cast shadow or obvious hot specular highlight was seen in this region. This is a source-image inspection, not a neutral-light material render."
+      },
+      "materialUse": "First audition two Finery door leaves and selected shutter coating fields, using existing real dimensions. Recolor only intact blue paint to restrained charcoal while retaining chip/oxide hue; do not multiply the whole map darker indiscriminately. Preserve fine albedo variation and matching normal/roughness. Author actual handle/hinge/meeting-strip and lower-contact wear separately. Never tile the same cropped scratch arrangement visibly across all 20 slats.",
+      "roughnessCaution": "Source roughness median 0.2813 (5th\u201395th 0.2138\u20130.3699), substantially smoother than current v3 median ~0.79. It depicts semi-gloss coating. A direct replacement would change the material class. Preserve it as a control audition; a weathered derivative should add rough coating/dust locally using material-region masks, while allowing handled/burnished zones to remain smoother. Do not raise roughness globally just to suppress light."
+    },
+    {
+      "asset": "green_metal_rust",
+      "sourcePage": "https://polyhaven.com/a/green_metal_rust",
+      "manifest": "green_metal_rust/download-manifest.json",
+      "physicalTileMetres": 1.0,
+      "pixelsPerMetreAt4096": 4096,
+      "visualObservation": "A mostly quiet green coating interrupted by irregular small blisters, scratches, several recognizable puncture/fastener-like spots and short thin downward oxidation runs. This has better cause-and-effect wear than the current noise islands, but its distinctive holes/runs are not the actual shop hardware. The diffuse center crop carries visible highlight/shadow rims on relief while the normal is comparatively soft.",
+      "decision": "Secondary localized weathering reference or selected material-region source after neutral-light verification; do not bind the entire 1 m tile to every door and create repeated false holes.",
+      "materialUse": "Retain photographic chip-edge/runoff shapes only where a real hinge, fastening or damage site justifies them; leave broad panel centers quiet. Use actual 1 m source scale. Prefer flat paint regions for repaint texture after checking residual lighting.",
+      "roughnessCaution": "Median 0.5021 (5th\u201395th 0.4736\u20130.5371), all sampled metallic 0. Color relief shading remains a review concern; measured diffuse-normal correlation is not proof of directional light and cannot clear that concern alone."
+    },
+    {
+      "asset": "rusty_painted_metal",
+      "sourcePage": "https://polyhaven.com/a/rusty_painted_metal",
+      "manifest": "rusty_painted_metal/download-manifest.json",
+      "physicalTileMetres": 2.200000047683716,
+      "pixelsPerMetreAt4096": 1861.8181414643605,
+      "visualObservation": "Actual normal contains strong periodic red/blue vertical slopes from corrugation across the whole tile. Albedo and roughness carry weathering tied to those folds; lower regions show large peeling/corrosion and manufactured screw-like sites.",
+      "decision": "Reject for this existing flat-door/horizontal-slat pass. Do not rotate or enlarge it until ridges approximately fit; that would import false geometry and misalign wear.",
+      "possibleFutureUse": "Retained only for a future intentionally corrugated sheet whose modeled pitch/profile matches the source. It is not a source of generic all-over rust for these focal objects.",
+      "roughnessCaution": "Median 0.8092 (5th\u201395th 0.7803\u20130.9145), all sampled metallic 0. Roughness resembling current material does not make its geometry compatible."
+    },
+    {
+      "asset": "rusty_metal_sheet",
+      "sourcePage": "https://polyhaven.com/a/rusty_metal_sheet",
+      "retainedFolder": "refs/quality_20260909/building-materials/rusty_metal_sheet",
+      "retainedManifestHash": "e438d60720639f7b294541d9f181f18713a2509ac08eea0be891bdff16031b06",
+      "physicalTileMetres": 2.0,
+      "pixelsPerMetreAt4096": 2048,
+      "visualObservation": "Retained original diffuse is much finer than the current synthetic coating-loss field: mottled fine oxidation/speckles and subtle scratches on a light gray sheet, with no large corrugation or conspicuous manufactured seam crossing the inspected tile. It is itself rather uniformly weathered, so full-area reuse would not solve construction-specific wear.",
+      "decision": "Retain as micro-oxide and roughness source inside localized new damage masks, at its actual 2 m scale. It is not a substitute for authored wear placement.",
+      "currentGraphFinding": {
+        "evidence": [
+          "art/reference_street_20260909/author_metal_materials.py",
+          "art/reference_street_20260909/author_metal_v3.py"
+        ],
+        "color": "V3 blends retained photographic oxide color at 0.25 inside a predominantly procedural oxide mix, then mixes paint/oxide by generated periodic wear.",
+        "normal": "Inherited photographic normal-map strength 0.28; v3 adds procedural coating relief.",
+        "roughness": "V3 is largely authored 0.79 paint / 0.96 oxide with limited smoother abrasion; the original roughness photo is not the main final roughness signal.",
+        "scale": "The original image-map nodes use the four-metre bake UV directly; this displays the 2 m source twice as large. This is a source-image scale choice, distinct from the correctly mapped four-metre final mesh material."
+      }
+    }
+  ],
+  "physicalMappingContract": {
+    "existingOutputTileMetres": 4,
+    "internalSourceCoordinates": "Source repetitions across an unchanged 4 m authoring tile = 4 / sourceTileMetres; keep structural/lip wear masks in world metres separately.",
+    "sourceRepetitionsPerOutputTile": {
+      "blue_metal_plate": 1.6,
+      "green_metal_rust": 4,
+      "rusty_painted_metal": 1.8181817787737895,
+      "rusty_metal_sheet": 2
+    },
+    "important": "These factors establish physical sampling only. They do not authorize repeating photographed seams/holes. Use metric source coordinates in a uniquely authored bake or selectively assigned regions; preserve existing mesh UV0 and 14 cm shutter slat registration. A crop retains its original physical dimensions and must not be stretched to fill a 4 m square."
+  },
+  "channelContract": {
+    "retainedMaps": "Diffuse, GL normal, independent 16-bit Rough, AO, Displacement and ARM for every candidate; Green also retains Bump and Spec. DX duplicates omitted because current Unity pipeline uses verified GL normals.",
+    "observedMetallic": "All three candidate ARM blue channels are zero in the systematic every-fourth-texel sample; they represent dielectric paint/oxide. Keep source metal 0, do not assume the word metal means metallic 1. If any genuinely exposed bare-metal accents are separately authored, give them their own semantic mask.",
+    "roughnessPacking": "Keep linear 16-bit Rough original. For a future Unity packed derivative use R=semantic metallic, A=1-Rough with documented quantization; GL normal is linear without a blind green flip. ARM is R=AO,G=roughness,B=metallic; do not bind ARM directly as Unity metallic/smoothness.",
+    "normalMapping": "All current focal metal materials already have _NORMALMAP enabled. This research creates no normal-keyword fix.",
+    "occlusion": "AO retained for provenance and optional independently controlled contact micro-occlusion; do not multiply it into base color to imitate lighting. Displacement is retained as source, not authorization to alter geometry."
+  },
+  "lightingAndAcceptance": {
+    "inspectionResult": "No candidate region is certified free of baked illumination by a thumbnail or channel statistic. Corrugated red and whole blue tiles are rejected on concrete geometric-content mismatch. Green diffuse relief shading is a specific follow-up concern. The selected blue central region has no obvious broad cast shadow/hot highlight in the inspected pixels.",
+    "nextSourceCheck": "On the preserved near source in Blender, use neutral base-color view plus the actual PBR maps under two opposed soft light directions. Reject or repair any fixed directional highlight/shadow pattern that remains in albedo. Do not bake colored/specular lighting into a new base map.",
+    "nativeCheck": "Only after source review, compare matched Field Supply/Finery doors and shutter at noon and correctly completed hour 16 reflection state, including moving first-person views. Existing gameplay roots, meshes, colliders, 9 actors and 4 routes must remain unchanged. This audit makes no native, performance or AAA acceptance claim."
+  },
+  "evidence": {
+    "pixelStatistics": "pixel-statistics.json",
+    "pixelStatisticsSha256": "b60354d340df2cb0023cd9eb2953655a6844ae591eb3e37b42339a9bc6ce74d2",
+    "statisticsLimit": "Sparse systematic sample at 1024x1024; color/normal RGB inspection via 8-bit PIL display conversion, grayscale roughness retains 16-bit numeric sampling. All source PNG bit depths and full-file hashes are separately verified.",
+    "temporaryInspectionDirectory": "/tmp/metal-candidate-inspection-20260910",
+    "inspectionFiles": {
+      "blue-candidate-central-rough.jpg": "e0e69c9aa7961a3567f686b8bbe77793c13c27999a93b30a141bf2b4892ad90f",
+      "blue-candidate-central-region.jpg": "d877d64856606531bab7ea681dd23dd64865677bee6fb37be9846f126e38cb9b",
+      "green_metal_rust_nor_gl-whole.jpg": "5b163f85b2d97d42f925595c07f31d027b08b9922b2fbfecb116ad03ac1025d8",
+      "blue-candidate-central-diff.jpg": "ba63655e7b1f0bec9069209a783af83d6b540e8fcd0f5ad86bed21276d38790b",
+      "blue_metal_plate_nor_gl-whole.jpg": "8b7e851aa0e707e1343b84257824d4a4f99e7ed89e3c9220d7566dcb1019fb5a",
+      "rusty_metal_sheet-inspection.jpg": "b862a1484633f84bef85ae92c04895de3c3eb08e0b2cc455f2cfc492da7f4781",
+      "rusty_painted_metal-inspection.jpg": "5b66e65fb29762870b0908d496cf7a066551e55689af33792a99a0ec5fd2b8a9",
+      "blue_metal_plate_diff-whole.jpg": "7bab47d6a7c12dcdd6cfb19c6b31f7ab844855513ce8a69386d1ff991c8834ac",
+      "rusty_painted_metal_diff-whole.jpg": "935fb7079713f202ce458e7ebe029e387ddcb45dc9cca93d1facb8d9579618ba",
+      "rusty_metal_sheet_rough-whole.jpg": "684634e8501183048fa2ed0e25315c9fee17cfe0bb4fe194b07a3767b2cfcad3",
+      "rusty_painted_metal_nor_gl-whole.jpg": "daea0e7cc0a6a15b86afe33aee7bea697c34773c0b03f9233b1fbff533a63b66",
+      "blue_metal_plate_rough-whole.jpg": "d03f8a3ba7eaa9af4d964a880467dff97a93f5649e3070563151da5e16ff1e63",
+      "blue-candidate-central-nor_gl.jpg": "1191a7d36c51f587a83899bc93f2a886c08a1c45adee39719738c845c9425f09",
+      "green_metal_rust_rough-whole.jpg": "60394d23d3f70496bd1f14b54c3f2109a2a44ce5e6cf3b94d95972f65bdcc4f9",
+      "rusty_painted_metal_rough-whole.jpg": "1592ed31d2d670159f3a088f22f7d26ca7e5fb107279df98667e4feaa3e19ff0",
+      "green_metal_rust-inspection.jpg": "8019732400b46eb80ad736ad1cb056b86bd30b1671e787515eed28a1a9817346",
+      "blue_metal_plate-inspection.jpg": "044e0c2b5c64906b878f8d5fe4b679da3d6fd541a05cb49a0580fb34f39039b4",
+      "rusty_metal_sheet_diff-whole.jpg": "7ef05738a026fe45c180d87c500dc1281763479af997fe104eb9ace25e3c14a7",
+      "rusty_metal_sheet_nor_gl-whole.jpg": "00501d0f2a8fdf98b8272fd90e3b27ac9210b89396214f27c59c9bff5e0b968c",
+      "green_metal_rust_diff-whole.jpg": "dca168c03e63b9a4824fe4ac2c397a2d00acc6486264a4fb2a08a901bb8cfa53"
+    },
+    "sourceCodeHashes": {
+      "art/reference_street_20260909/author_metal_materials.py": "57c7b8d83584b3469a326b1145300d4dae40d788628a36ee85a89bfe623f7b19",
+      "art/reference_street_20260909/author_metal_v3.py": "260be28344a57378e9dc630e729b8756dca820db6a82738c1062789f198c53a4",
+      "unity/evidence/reference-street/20260910/metal-trash-surface-audit/surface-diagnosis.json": "5cbdd7adc47fc8292317215f8b4680a42547787a3a3a7a4ed97feef72bcb183c"
+    }
+  }
+}

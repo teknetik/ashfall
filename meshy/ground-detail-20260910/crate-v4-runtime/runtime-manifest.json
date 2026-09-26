@@ -1,0 +1,112 @@
+{
+  "source": "meshy/ground-detail-20260910/crate-v3",
+  "sourceRetained": true,
+  "previousRuntime": "meshy/ground-detail-20260910/crate-v3-runtime",
+  "previousDefect": "Strong reduction preserved surface shape but interpolated original UVs displaced straight stencil paint into triangular wedges.",
+  "nearTriangles": 100000,
+  "geometry": "Exact retained 100000-triangle v3 runtime geometry; new non-overlapping Smart Project UV0",
+  "method": "High-to-low selected-to-active Cycles reprojection of original full source PBR onto final runtime UV layout; albedo/metal/rough emit bakes exclude lighting, normal bake tangent +X/+Y/+Z includes source normal texture and full source surface normal.",
+  "settings": {
+    "source": "crate-v3/model.fbx",
+    "runtimeGeometry": "crate-v3-runtime/model.fbx",
+    "sourceTriangles": 1953204,
+    "runtimeTriangles": 100000,
+    "geometryUnchanged": true,
+    "uv": "Blender Smart Project, 66 degrees, island margin .004, area weight .5",
+    "bake": "Cycles selected-to-active, emission-only color/scalars, tangent normal +X/+Y/+Z",
+    "resolution": [
+      4096,
+      4096
+    ],
+    "samples": 8,
+    "cageExtrusionSourceUnits": 0.006,
+    "maxRayDistanceSourceUnits": 0.02,
+    "marginPixels": 24,
+    "sourcePbrOriginalsRetained": true,
+    "visualAcceptance": false
+  },
+  "bakes": [
+    {
+      "channel": "base_color",
+      "seconds": 18.277780055999756,
+      "dimensions": [
+        4096,
+        4096
+      ],
+      "path": "/home/teknetik/code/ao2/meshy/ground-detail-20260910/crate-v4-runtime/model_textures/base_color.png",
+      "method": "emission projection without scene lighting",
+      "colorspace": "sRGB"
+    },
+    {
+      "channel": "metallic",
+      "seconds": 17.505914449691772,
+      "dimensions": [
+        4096,
+        4096
+      ],
+      "path": "/home/teknetik/code/ao2/meshy/ground-detail-20260910/crate-v4-runtime/model_textures/metallic.png",
+      "method": "emission projection without scene lighting",
+      "colorspace": "Non-Color"
+    },
+    {
+      "channel": "roughness",
+      "seconds": 20.46855592727661,
+      "dimensions": [
+        4096,
+        4096
+      ],
+      "path": "/home/teknetik/code/ao2/meshy/ground-detail-20260910/crate-v4-runtime/model_textures/roughness.png",
+      "method": "emission projection without scene lighting",
+      "colorspace": "Non-Color"
+    },
+    {
+      "channel": "normal",
+      "seconds": 27.989649057388306,
+      "dimensions": [
+        4096,
+        4096
+      ],
+      "path": "/home/teknetik/code/ao2/meshy/ground-detail-20260910/crate-v4-runtime/model_textures/normal.png",
+      "method": "source normal including source normal texture to target tangent basis",
+      "colorspace": "Non-Color"
+    }
+  ],
+  "sha256": {
+    "model.fbx": "6022470a2352d9068391bf3f51d33709cbeb4dbcc462f8c665cb226d1503f90f",
+    "model_textures/base_color.png": "7874db33d82c14e5ef77b91cdb65ac601ce4ab872babe8b93e739f707896dc21",
+    "model_textures/metallic.png": "ba35eaed347e319b0a30060e76c5efe77554b200c6407522401383c21518e449",
+    "model_textures/normal.png": "6ddadf5cf84e5ce77091fef5b749f0a61deba3e963fdb90a0388410abf35a87b",
+    "model_textures/roughness.png": "2c6a22ac14970eef34615d395a038cecc530afb4292d119b5d1f4cb70d66f4df"
+  },
+  "sourceMapsRetainedFullResolution": true,
+  "runtimeMapDimensions": [
+    4096,
+    4096
+  ],
+  "normal": "Tangent GL +Y",
+  "visualAcceptance": false,
+  "requires": "Matched full source/runtime material review and native player-height moving review",
+  "sourceMapDimensions": {
+    "base_color": [
+      4096,
+      4096
+    ],
+    "emission": [
+      2048,
+      2048
+    ],
+    "metallic": [
+      2048,
+      2048
+    ],
+    "normal": [
+      4096,
+      4096
+    ],
+    "roughness": [
+      2048,
+      2048
+    ]
+  },
+  "resolutionNote": "Original base color and normal are 4096\u00b2; scalar metallic/roughness and unused emission are2048\u00b2. Derivative maps are4096\u00b2 for the new UV atlas; scalar bake size is resampling, not new source detail."
+}

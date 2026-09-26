@@ -1,0 +1,187 @@
+{
+  "method": "Explicit bounded source-pixel donor translation; identical repair weights/coordinates for color,normal,roughness. No source file writes, scale/orientation changes or global filtering.",
+  "repairs": [
+    {
+      "name": "long bright horizontal scratch",
+      "pointsPixels": [
+        [
+          1545,
+          1155
+        ],
+        [
+          1790,
+          1157
+        ],
+        [
+          2165,
+          1150
+        ],
+        [
+          2290,
+          1157
+        ]
+      ],
+      "radiusPixels": 11,
+      "featherPixels": 5,
+      "donorOffsetPixels": [
+        0,
+        135
+      ],
+      "rationale": "Recognizable source scratch recurring through every candidate-v1 crop; donor is adjacent intact same-panel paint, at identical pixel scale.",
+      "affectedPixels": 24642,
+      "fullyReplacedPixels": 9144
+    },
+    {
+      "name": "upper bright oval chip",
+      "pointsPixels": [
+        [
+          2036,
+          747
+        ],
+        [
+          2038,
+          759
+        ]
+      ],
+      "radiusPixels": 12,
+      "featherPixels": 5,
+      "donorOffsetPixels": [
+        -95,
+        120
+      ],
+      "rationale": "Distinct white chip repeats as a recognizable mark; replace only its bounded footprint.",
+      "affectedPixels": 1303,
+      "fullyReplacedPixels": 319
+    },
+    {
+      "name": "right bright oval chip",
+      "pointsPixels": [
+        [
+          2554,
+          929
+        ],
+        [
+          2553,
+          942
+        ]
+      ],
+      "radiusPixels": 12,
+      "featherPixels": 5,
+      "donorOffsetPixels": [
+        -110,
+        125
+      ],
+      "rationale": "Distinct recurring pale chip in the old source window.",
+      "affectedPixels": 1332,
+      "fullyReplacedPixels": 334
+    },
+    {
+      "name": "upper diagonal drag cluster",
+      "pointsPixels": [
+        [
+          1675,
+          1890
+        ],
+        [
+          1950,
+          1758
+        ],
+        [
+          2285,
+          1585
+        ]
+      ],
+      "radiusPixels": 62,
+      "featherPixels": 18,
+      "donorOffsetPixels": [
+        0,
+        300
+      ],
+      "rationale": "Broad diagonal macro smear is separate from fine paint grain; adjacent lower paint supplies paired intact color/normal/roughness without any rescale.",
+      "affectedPixels": 129201,
+      "fullyReplacedPixels": 66445
+    },
+    {
+      "name": "lower diagonal drag cluster",
+      "pointsPixels": [
+        [
+          2250,
+          2160
+        ],
+        [
+          2590,
+          2020
+        ],
+        [
+          2980,
+          1820
+        ]
+      ],
+      "radiusPixels": 55,
+      "featherPixels": 18,
+      "donorOffsetPixels": [
+        -450,
+        40
+      ],
+      "rationale": "Second identifiable diagonal smear; translation toward center-left avoids the photographed panel seam.",
+      "affectedPixels": 134406,
+      "fullyReplacedPixels": 64347
+    },
+    {
+      "name": "square pale remnant",
+      "pointsPixels": [
+        [
+          2688,
+          2560
+        ]
+      ],
+      "radiusPixels": 34,
+      "featherPixels": 9,
+      "donorOffsetPixels": [
+        -240,
+        -120
+      ],
+      "rationale": "Recognizable square pale remnant enters the lower windows; remove this local motif rather than blurring all coating.",
+      "affectedPixels": 5785,
+      "fullyReplacedPixels": 1993
+    },
+    {
+      "name": "left isolated pale remnant",
+      "pointsPixels": [
+        [
+          1618,
+          2436
+        ]
+      ],
+      "radiusPixels": 29,
+      "featherPixels": 8,
+      "donorOffsetPixels": [
+        130,
+        -65
+      ],
+      "rationale": "Isolated pale peeling remnant would recur in the lower-left photo sample.",
+      "affectedPixels": 4281,
+      "fullyReplacedPixels": 1389
+    },
+    {
+      "name": "lower paper-like remnant",
+      "pointsPixels": [
+        [
+          2568,
+          2870
+        ]
+      ],
+      "radiusPixels": 48,
+      "featherPixels": 10,
+      "donorOffsetPixels": [
+        -210,
+        -180
+      ],
+      "rationale": "Exclude the source remnant that reads as a photographed sticker/paper fragment instead of generic intact coating.",
+      "affectedPixels": 10545,
+      "fullyReplacedPixels": 4569
+    }
+  ],
+  "outsideFootprintsUnchanged": true,
+  "donorsReadFromUnmodifiedSourceArrays": true
+}

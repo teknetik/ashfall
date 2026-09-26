@@ -1,0 +1,44 @@
+{
+  "source": "brush-graffiti-v1.blend",
+  "meshExport": "brush-graffiti-meshes-v1.json",
+  "coordinateConvention": "Unity world metres, +Y up; Blender is (x,-z,y)",
+  "phrase": [
+    "THE FACTORIES",
+    "NEVER SLEEP."
+  ],
+  "parts": 2,
+  "triangles": 4276,
+  "target": "Field Supply existing rolled shutter",
+  "replace": "Disable old visual objects whose material is BuildingWeathering/20260909/Materials/GraffitiSolid.mat under Field Supply and Finery weathering/field_supply; retain old meshes/objects for recovery",
+  "transform": "Create group at identity; positions are already world space. Do not apply old source transforms again.",
+  "material": {
+    "key": "BrushPaint",
+    "shader": "Universal Render Pipeline/Lit",
+    "baseColor": [
+      0.73,
+      0.66,
+      0.53,
+      1
+    ],
+    "metallic": 0,
+    "smoothness": 0.08,
+    "baseMap": null,
+    "normalMap": null,
+    "metallicGlossMap": null,
+    "cull": 0,
+    "emission": [
+      0,
+      0,
+      0
+    ],
+    "renderQueue": "opaque",
+    "note": "Do not clone WardPlaster; its inherited base map darkens the lettering"
+  },
+  "preservation": "Old lettering source, scene objects, phrase, slat geometry and all colliders retained",
+  "sourceInput": {
+    "file": "/home/teknetik/code/ao2/art/building_weathering_20260909/unity-source.json",
+    "sha256": "a30f32ed329e991ac605a6d92a65792d5547ebaf192e1ee019895cf88b9a3275"
+  },
+  "license": "Original stroke geometry authored in this project; no font or external image dependencies",
+  "reviewStatus": "Candidate source only; inspect readability and slat gaps in saved native player"
+}

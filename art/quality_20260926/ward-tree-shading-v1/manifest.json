@@ -1,0 +1,108 @@
+{
+  "status": "Shader files applied/imported with no ShaderUtil messages. Editor shade batch inconclusive because anomalous non-monotonic output may reflect same-callback material/mip state. Native per-frame audition pending.",
+  "sourceDirectory": "/home/teknetik/code/ao2/unity/AthenHill/Assets/AthenHill/Shaders/WardTree",
+  "newProperty": {
+    "name": "_WardIndirectTranslucency",
+    "default": 0,
+    "auditionValues": [
+      0,
+      0.15,
+      0.25
+    ],
+    "range": [
+      0,
+      0.5
+    ]
+  },
+  "conditions": {
+    "directTransmission": 0.22,
+    "albedo": "derived edge-padded v1",
+    "shadowDistance": 48,
+    "shadowCascades": 2,
+    "lighting": "matched authored noon",
+    "unchanged": "albedo RGB/alpha, normals, SSAO, sun/sky/exposure, bark, geometry, layout",
+    "scope": "Actual editor-leaf-shade-v1 response audition; this shadow profile is not performance-qualified",
+    "captureMethod": "Editor PortDiagnostics.Capture into1920x1080 ARGB32 RenderTexture; native gameplay MSAA/temporal behavior not established",
+    "directTransmissionEvidence": "Existing leaf material retained0.22; audition command changes only ambient control and BaseMap"
+  },
+  "scope": "Forward legacy-probe ambient transmission approximation plus direct-light API correction. Deferred transmission unchanged/unimplemented. No APV/lightmap/screen-space GI ambient-transmission support.",
+  "files": [
+    {
+      "file": "WardTree.shader",
+      "beforeSha256": "8da859b40d5eef7d2cd93241f5f3386e2919c912d8d8cec8a2913a764dc6e579",
+      "candidateSha256": "a107dec602b55ad059a4b826e3aec8b8e600bd4d3af8fee4afb4cca927954fb4"
+    },
+    {
+      "file": "LitInput.hlsl",
+      "beforeSha256": "ec4711af82fb2a6a78d47da699c5617b4c343b86dd747f1fb74d2021b2a7e161",
+      "candidateSha256": "08b4a10182b1473deb0f30992d8dcb4dd33d4f9f0d3bcb347621e8c0b89d4082"
+    },
+    {
+      "file": "LitForwardPass.hlsl",
+      "beforeSha256": "2b47c1f01b569de5636bd9764711e478253726e825cdec9fdc3a49239f4103ca",
+      "candidateSha256": "1c43264ca443e877ea00ccc18c712bc3b1b17b1109006384366c5a4c24d94675"
+    },
+    {
+      "file": "LitDepthNormalsPass.hlsl",
+      "beforeSha256": "183cc35e61b8133a15c1a9e41a9cc75685a50d4bfc1b6dc79047d17a0cfb9c11",
+      "candidateSha256": "a3a26fab331267e90e335699e148dddf9436260b751a9f07b69fab976340842a"
+    }
+  ],
+  "proposalHistory": {
+    "manifest": "manifest.pre-import-proposal.json",
+    "readme": "README.pre-import-proposal.md",
+    "manifestSha256": "5ea28f00ecba005f128c02afb676f6b318c7b66473e9867b9676816d0e00974b",
+    "proposedShadowDistance": 96,
+    "proposedShadowCascades": 4,
+    "disposition": "Actual first shader-response audition used48m/2 cascades after longer/full-source-caster profiles failed native frame-time target."
+  },
+  "validation": {
+    "shaderMessages": [],
+    "shaderEvidence": "unity/evidence/quality/20260926/leaf-shade-audition-result.json",
+    "commandEvidence": "unity/evidence/quality/20260926/leaf-shade-audition-command.json",
+    "captureDirectory": "unity/evidence/quality/20260926/editor-leaf-shade-v1",
+    "views": [
+      "cam_hill",
+      "cam_hero",
+      "cam_tree_canopy_below",
+      "cam_tree_canopy_edge"
+    ],
+    "sourceTextureRestored": true,
+    "ambientControlRestored": true,
+    "pipelineSettingsRestored": true,
+    "sceneDirtyAfter": false,
+    "editMode": {
+      "total": 50,
+      "passed": 50,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 6.2971269,
+      "evidence": "unity/evidence/quality/20260926/movement/proxy-reparent/editmode-results.json",
+      "shadowReviewCases": 4,
+      "warningCaveat": "Two clone tests passed while emitting DontSave Transform-before-GameObject warnings. Source order is corrected; focused rerun pending. Shader hashes unchanged."
+    },
+    "remaining": [
+      "Independent shade preference review",
+      "Native rebuilt shader/material/caster visual and timing comparison",
+      "Real-input moving/LOD/shadow-fade/alpha-edge qualification"
+    ],
+    "editorShadeCaveat": "Critic found near-camera triplets effectively tied and hill indirect0 unexpectedly blue/brighter than positive values. The additive positive term alone cannot darken fixed inputs; this batch does not establish an ambient-transmission preference. Native per-frame command/settle comparison required.",
+    "nativeAmbientControl": {
+      "command": "reviewTree",
+      "optionalProperty": "ambientTransmission",
+      "range": [
+        0,
+        0.5
+      ],
+      "restoration": "Independent from direct-transmission dictionary; reviewReset and NativeQa.OnDestroy restore original values",
+      "snapshot": "visual-review-state.json / ambientTransmission",
+      "textureSnapshotFields": [
+        "name",
+        "dimensions",
+        "streamingMipmaps",
+        "loadedMipmapLevel",
+        "desiredMipmapLevel"
+      ]
+    }
+  }
+}

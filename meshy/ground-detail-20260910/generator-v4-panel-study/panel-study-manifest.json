@@ -1,0 +1,62 @@
+{
+  "status": "Authored painted-panel interior source candidate; not accepted or installed",
+  "method": "Same-class and same-UV-chart robust local color fitting. Authored interiors keep class mean linear color. Protected boundaries/scuffs/gutters retain exact source pixels. No global blur/FFT notch.",
+  "originalBaseColorSha256": "d8df166e127e2fd27e7904e69091d54f5b36934906a6b997a250b7b6efc0599f",
+  "originalFilesChanged": false,
+  "dimensions": [
+    4096,
+    4096
+  ],
+  "semanticWorldBoundsBlender": [
+    [
+      -0.44,
+      -0.23,
+      0.693
+    ],
+    [
+      0.235,
+      -0.2,
+      0.812
+    ]
+  ],
+  "semanticPixels": 111461,
+  "authoredInteriorPixels": 74958,
+  "protectedSemanticPixels": 36503,
+  "uvCharts": 23,
+  "classMeanCorrections": [
+    {
+      "class": 1,
+      "linearMeanCorrection": [
+        0.00032781437039375305,
+        0.0005541853606700897,
+        -0.00012861564755439758
+      ],
+      "pixels": 58150
+    },
+    {
+      "class": 3,
+      "linearMeanCorrection": [
+        0.004840180277824402,
+        8.50483775138855e-05,
+        -0.0005094669759273529
+      ],
+      "pixels": 16808
+    }
+  ],
+  "outsideAuthoredMaskChangedPixels": 0,
+  "protectedBoundaryChangedPixels": 0,
+  "meanAbsoluteByteDeltaInAuthoredRGB": 11.823198769088467,
+  "maxByteDelta": 114,
+  "candidateBaseColorSha256": "ada52652959681d81dd2fb3656fa4b7fde79343329c492d75f6f641b9d642c19",
+  "authoringMaskSha256": "e55954aa3564445d02a441fcd9ee31ac3ed619892aac4dc8fb79ebd1245c96a7",
+  "sourceAccepted": false,
+  "nativeAccepted": false,
+  "limitations": [
+    "Automatic paint/ink classes and protected edges require visual mask review; exact pixel preservation does not itself prove semantic classification was right.",
+    "Small glyph strokes and scratches may remain wholly original if they cannot support a safe interior. Their remaining grid is not concealed as fixed.",
+    "Review albedo/marked residual at source texel density; reject lost nonperiodic wear or waxy paint interiors.",
+    "This study has no source normal/roughness edits; the separate live material audition uses fine authored paint normal/roughness only inside its explicit mask."
+  ],
+  "executedUtc": "2026-09-10T13:07:26.850927+00:00",
+  "executionNote": "Executed offline protected source paint study after native04 captures completed; actual live Blender material audition pending."
+}

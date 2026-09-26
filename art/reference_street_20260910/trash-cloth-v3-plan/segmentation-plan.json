@@ -1,0 +1,289 @@
+{
+  "utc": "2026-09-10T12:03:38.829214+00:00",
+  "status": "Read-only source diagnosis and authoring preparation; no semantic mask, cloth material, Blender execution, Unity edits or native acceptance produced.",
+  "decision": "First audition a precisely reviewed sack-only semantic mask with the existing URP Lit UV0 detail path and detailST near10.7\u201310.84. Measured density and median anisotropy do not require a new UV channel. Preserve source geometry, UV0, original macro maps and noncloth values. A dedicated cloth coordinate/shader path is a fallback only if the existing atlas seams remain visible in source/native review.",
+  "observations": [
+    "Native iteration03 retains convincing jug/can silhouettes but both sacks read smooth and plasticky. The near source contains 180,000 triangles; this specific material gap is not evidence that another blanket polycount increase would fix cloth.",
+    "All triangles belong to one connected source mesh. Two unused vertices form no surface. Whole-mesh Select Linked would select the entire pile.",
+    "UV seed region115 covers part of the left sack. Region545 covers much of the central sack and some neighboring corrugated cardboard; automatic whole-region assignment is unsafe. Diagnostic coloured overlays are partial selections, not masks.",
+    "Existing color/normal maps are 4096 square and roughness/metallic are original2048 square. Previous exact audit verified R=metallic and A=1-roughness with no wrong pixels, correct linear masks, normal keyword enabled, BumpScale1 and GL no-green-inversion convention.",
+    "The seed regions have roughly1,260 area-equivalent texels per metre at the prepared .5483162 uniform fit. A1mm weave covers about.85\u20131.47 pixels at4K across their5th\u201395th-percentile density range. These incomplete regions do not establish a complete sack density or directional UV stretch metric.",
+    "Follow-up SVD audit: surface-area-weighted p05/median/p95 density is1070/1290/1435px/m on the left seed region and1030/1267/1440px/m on central. Anisotropy is1.04/1.23/1.87 and1.05/1.27/1.86 respectively. Only3.04%/4.25% of these region areas exceed2:1. This supports a bounded existingUV0 detail audition rather than declaring newUVs mandatory.",
+    "UV seam orientation remains a visible-review risk: cross-region warp-axis rotation after normal parallel transport has median47.6/48.3degrees, while continuous interior edges have median4.15/3.80degrees. Incomplete seed boundaries include noncloth surfaces, so these counts are not proven cloth-to-cloth seam counts. Fine irregular near-square weave may tolerate some rotation; only a completed semantic mask and rendered audition can settle visibility."
+  ],
+  "semanticAuthoring": {
+    "source": "meshy/ground-detail-20260910/trash-v2-runtime/model.fbx",
+    "seedEvidence": "diagnostics/semantic-seeds.json",
+    "reviewEvidence": "diagnostics/seed-uv-regions-top.png",
+    "procedure": [
+      "Import a fresh derivative in the exclusive live Blender session. Verify source SHA, bounds, axis conversion and geometry totals. Blender source review has179,965 triangles versus180,000 in rawFBX/Unity; identify the35 removed degenerate triangles before using index identities.",
+      "Locate each sack using the supplied Blender-coordinate seed centroids and compare closest triangles against the stored UV triplets. Store a new imported-mesh face roster with that mesh hash; rawFBX face IDs are diagnostic only.",
+      "Select each sack body, folds, mouth and exposed side fabric in face/paint space. Use front/back/top/side views to trace material boundaries; exclude cardboard, both jugs, cans and ground. Do not select by luminance, a bounding rectangle or a complete linked UV region.",
+      "Save binary left-sack and central-sack face rosters separately. Review high-contrast coverage renders from all views before texture authoring. Export one combined soft-edge mask only after confirmed boundaries; retain separate IDs for diagnosis.",
+      "Rasterize the reviewed semantic mask into original UV0 only after checking for cloth/noncloth UV overlap and mip/gutter bleed. If a cloth UV footprint aliases a noncloth face, stop and use split material/vertex-mask metadata on a derivative instead of modifying shared UV0 texels."
+    ],
+    "notYetProven": [
+      "Complete sack face rosters",
+      "UV0 overlap and gutter isolation",
+      "Current Unity instance parent scale",
+      "Mask survival across LODs and derived chunks"
+    ]
+  },
+  "sourceMaterial": {
+    "name": "Poly Haven Book Pattern",
+    "license": "CC0",
+    "physicalTileMetres": [
+      0.3,
+      0.3
+    ],
+    "source": "https://polyhaven.com/a/book_pattern",
+    "maps": "refs/reference-street/20260910/cloth-candidates/book_pattern",
+    "pixelInspection": "Fine olive woven cotton with small slubs; plausible fibre source. The olive mean color should not replace the current sacks beige identity. Preserve their broad folds, dirt and existing low-frequency color.",
+    "recipe": [
+      "First use existing UV0 with _DetailAlbedoMap_ST near10.7\u201310.84 and base ST1. AtST10.84, the seed-region median principal tile extents are.266\u00d7.321m(left) and.265\u00d7.335m(central), compared with the0.3m source tile. Recheck actual Unity instance scale before authoring.",
+      "Author neutral fine albedo modulation for the URP detail formula around shader-linear0.5, whose multiplier is2*sample at scale1. Preserve original low-frequency sack color/folds and original base map bytes. If this detail derivative is stored in sRGB, encode linear0.5 correctly; do not assume encoded byte128 is neutral after sRGB decode. Use the reviewed DetailMask alpha to keep excluded surfaces unchanged.",
+      "Use the existing URP Lit detail-normal path on UV0; it retains the imported original tangent basis and built-in detail-normal combination. Keep the base normal and BumpScale unchanged. Start with the cloth source normal at its source scale; judge source/native sun/shade and motion before any cloth-only amplitude adjustment. Never multiply normal RGB.",
+      "Retain current semantic metallic/roughness unchanged for the first albedo+normal detail audition. Built-in URP Lit detail does not have an independently tiled detail-roughness texture. Only if a visible cloth-specific roughness defect remains, author a masked UV0 roughness derivative or deliberate narrow shader extension. Keep all noncloth values unchanged; do not globally boost roughness or normals.",
+      "Retain full source PNGs and original Meshy files. Write new dated derivative maps/mask/mesh/material; never overwrite originals. Displacement source is reference only in this bounded material pass; preserve current geometry."
+    ]
+  },
+  "integration": {
+    "existingUV0Answer": "Existing UV0 can carry a precisely painted semantic DetailMask alpha and independently tiled detail textures once cloth/noncloth overlap and gutter isolation are proven. The same4K atlas cannot bake fine weave sharply at1:1, but detailST near10.7\u201310.84 avoids that baking-density limit while preserving its valid original tangent mapping.",
+    "recommended": "First clone the current Surface material into a new dated candidate, retain shader/BaseMap/BumpMap/MetallicGlossMap and base ST1, add reviewed DetailMask alpha plus correctly neutralized cotton detail albedo and source detail normal. Set shared detailST near10.7\u201310.84, validate URP detail keywords, and preserve all geometry/UVs. Inspect weave rotation at source atlas seams rather than assuming the seams are fatal.",
+    "urpContract": "Installed LitInput.hlsl209\u2013283 multiplies base albedo by detail factor2*sample (neutral shader-linear0.5), blends DetailNormal using the original tangent basis and samples DetailMask.alpha from unchanged baseUV0. Detail textures use transformedUV0*DetailAlbedoMap_ST. LitDepthNormalsPass141\u2013143 uses the same detail coordinates. The current Surface base ST is1 and detail textures are unbound. No built-in detail-roughness or alternateUV selector exists in this installed shader.",
+    "derivedChunkGuard": "The first existingUV0/material-only candidate needs normal guarded ShowSources/Rebuild/save behavior. No chunk extension or new vertex attributes are needed. If a later optional extra-UV path is pursued, test attribute and tangent-basis survival through actual Mesh.CombineMeshes before installation.",
+    "fallback": "Only if completed-mask source/native review shows visible weave seams or unacceptable stretch: preserve UV0, add coherent metric cloth-only coordinates on a derivative and implement their normal basis consistently in forward/depthnormals. A separate dedicated cloth material/atlas is another more invasive fallback. These are alternatives, not prerequisites for the first existingUV0 audition.",
+    "preserve": [
+      "All source geometry positions and triangle connectivity",
+      "Original UV0/maps/material assets",
+      "Noncloth PBR values",
+      "Current colliders/transforms/gameplay roots",
+      "Nine actors/four routes",
+      "Current native/critic evidence"
+    ]
+  },
+  "reviewGates": [
+    "Accept complete geometry semantic masks from source front/back/top and player-height angles, with zero coverage on jugs/cans/cardboard.",
+    "Check originalUV0 overlap and mipped mask edge bleed. Prove outside-mask original maps/values unchanged, including exclusions in semantic-seeds.json.",
+    "Check detailST against actual instance scale, shader-linear neutral albedo, source normal orientation and expected weave density. Inspect cross-island phase/rotation and local anisotropy in the completed sack mask. Judge source/native at player distance; the numerical seam count alone is not a rejection.",
+    "Install one guarded derivative, rebuild source chunks, save/reopen and inspect matched native cam_ground_trash plus moving near views at noon and completedhour16 reflections. Keep diagnostic passes separate from real-input traversal and performance qualification.",
+    "Reject weave sparkle, visible UV orientation breaks, cloth leaking onto jug/can/cardboard, unnaturally sharp overlay folds or washed-out original sack folds."
+  ],
+  "methodLimits": "Flat diagnostic projections sample triangle-centroid albedo. Their faceting is a diagnostic rasterization artifact; they are neither Blender source beauty renders nor native quality evidence. The plan supplies semantic starting points, not an automatically safe authored mask.",
+  "evidence": [
+    {
+      "path": "meshy/ground-detail-20260910/trash-v2/model.fbx",
+      "bytes": 126662764,
+      "sha256": "b7600f98758daea6d39261c52d1aa3af2cf306179f2123542923d1bf87aad770"
+    },
+    {
+      "path": "meshy/ground-detail-20260910/trash-v2-runtime/model.fbx",
+      "bytes": 7854492,
+      "sha256": "a6ffa2ae4281805d76b0da6837f308042d383ac7ec846c26efd491e669105527"
+    },
+    {
+      "path": "meshy/ground-detail-20260910/trash-v2-runtime/runtime-manifest.json",
+      "bytes": 799,
+      "sha256": "85a5b727c3402fcb7e8b93352a8585da95887ecef8f4cb3081217fe89aa306b2"
+    },
+    {
+      "path": "meshy/ground-detail-20260910/trash-v2-runtime/source-geometry-review.json",
+      "bytes": 1105,
+      "sha256": "ce97b15556636cdafa3b1e7fdca616501d131c827f14632245745b43b92bde7a"
+    },
+    {
+      "path": "unity/evidence/reference-street/20260910/ground-detail/prepared-trash-v2.json",
+      "bytes": 3835,
+      "sha256": "1312229ee1836273f51ed0adf1991c23bfbd8fb537459d94f49f2caf32e977ab"
+    },
+    {
+      "path": "unity/evidence/reference-street/20260910/iteration-03-native/cam_ground_trash.png",
+      "bytes": 2962002,
+      "sha256": "96a17000f87a0c4be195e861ba58bc4a961bf5d6ccbd1af113e800f4e0524b9c",
+      "width": 1920,
+      "height": 1080,
+      "bitDepth": 8,
+      "pngColorType": 2
+    },
+    {
+      "path": "unity/evidence/reference-street/20260910/metal-trash-surface-audit/surface-diagnosis.json",
+      "bytes": 37596,
+      "sha256": "5cbdd7adc47fc8292317215f8b4680a42547787a3a3a7a4ed97feef72bcb183c"
+    },
+    {
+      "path": "unity/AthenHill/Assets/AthenHill/Art/Imported/Meshy/GroundDetail/20260910/trash/v2/Surface.mat",
+      "bytes": 4144,
+      "sha256": "2c2edea3bb65babcf9d27f900baaa59f34c47c28e18297685b6f9becd8b3183f"
+    },
+    {
+      "path": "unity/AthenHill/Assets/AthenHill/Art/Imported/Meshy/GroundDetail/20260910/trash/v2/Source/model.fbx.meta",
+      "bytes": 3063,
+      "sha256": "4084580e7f26443da7f63018470fe8be46973dad441b417d1b597994a92375fb"
+    },
+    {
+      "path": "unity/AthenHill/Assets/AthenHill/Art/Imported/Meshy/GroundDetail/20260910/trash/v2/trash.prefab",
+      "bytes": 4833,
+      "sha256": "59b537d91146e10dae4f7cd7f7fa2c9b76528a186d2b82d3ddde64a1b94c7e3a"
+    },
+    {
+      "path": "unity/AthenHill/Library/PackageCache/com.unity.render-pipelines.universal@b9a66914c09e/Shaders/LitInput.hlsl",
+      "bytes": 12179,
+      "sha256": "0a755082971cd052ea2c3595feefb28d5357db6b47ea406f592ce9d9ca40f0a6"
+    },
+    {
+      "path": "unity/AthenHill/Library/PackageCache/com.unity.render-pipelines.universal@b9a66914c09e/Shaders/LitDepthNormalsPass.hlsl",
+      "bytes": 5728,
+      "sha256": "fd80405a213c95ce79db4392c205d11653dcb5a20d6e3628e33705ec7baa2b5b"
+    },
+    {
+      "path": "unity/AthenHill/Assets/AthenHill/Editor/StaticRenderChunksEditor.cs",
+      "bytes": 6944,
+      "sha256": "f57105a29517903eee7b12a2ba7156fc5135bf78ba30488b3e2f7df6e19de846"
+    },
+    {
+      "path": "refs/reference-street/20260910/cloth-candidates/book_pattern/download-manifest.json",
+      "bytes": 1569,
+      "sha256": "81c3756bd87fecb38368aaca7ae52f2d2f5549e4f4871962a0787b7a23668b9d"
+    },
+    {
+      "path": "meshy/ground-detail-20260910/trash-v2-runtime/model_textures/emission.png",
+      "bytes": 198716,
+      "sha256": "ebae952b92843ea310a09b0d2b24cda991a5c6b27ee8dcc30416736dd04c077a",
+      "width": 2048,
+      "height": 2048,
+      "bitDepth": 8,
+      "pngColorType": 2
+    },
+    {
+      "path": "meshy/ground-detail-20260910/trash-v2-runtime/model_textures/base_color.png",
+      "bytes": 28982752,
+      "sha256": "31f29993664313cd747c271a20a62929f92e8ea4e8d4487cf6ae5c06d035797d",
+      "width": 4096,
+      "height": 4096,
+      "bitDepth": 8,
+      "pngColorType": 2
+    },
+    {
+      "path": "meshy/ground-detail-20260910/trash-v2-runtime/model_textures/normal.png",
+      "bytes": 21401337,
+      "sha256": "720dbd27c5e736483c5c29903176e0fda4b50321eddfeca6bd403369c0c25476",
+      "width": 4096,
+      "height": 4096,
+      "bitDepth": 8,
+      "pngColorType": 2
+    },
+    {
+      "path": "meshy/ground-detail-20260910/trash-v2-runtime/model_textures/metallic.png",
+      "bytes": 117019,
+      "sha256": "f590a304098ed18d0509b15a241234a345d4ff556fd0f0568f1ce660d278ee84",
+      "width": 2048,
+      "height": 2048,
+      "bitDepth": 8,
+      "pngColorType": 0
+    },
+    {
+      "path": "meshy/ground-detail-20260910/trash-v2-runtime/model_textures/roughness.png",
+      "bytes": 1804258,
+      "sha256": "4319b1b67976f229ea41034a3303994e11a69ed1b2b9b799ddf7468cd441246d",
+      "width": 2048,
+      "height": 2048,
+      "bitDepth": 8,
+      "pngColorType": 0
+    },
+    {
+      "path": "refs/reference-street/20260910/cloth-candidates/book_pattern/book_pattern_disp_4k.png",
+      "bytes": 27911996,
+      "sha256": "9607e61bdd8ac8d2c763af0f1e8fef93afd37e9eba4e5c21beb5e5b31b19aa49",
+      "width": 4096,
+      "height": 4096,
+      "bitDepth": 16,
+      "pngColorType": 0
+    },
+    {
+      "path": "refs/reference-street/20260910/cloth-candidates/book_pattern/book_pattern_nor_gl_4k.png",
+      "bytes": 23514642,
+      "sha256": "877cb2cebc57d5db25c218a1a10e12ac337ba57fca0177318a94ae6ec8357e91",
+      "width": 4096,
+      "height": 4096,
+      "bitDepth": 8,
+      "pngColorType": 2
+    },
+    {
+      "path": "refs/reference-street/20260910/cloth-candidates/book_pattern/book_pattern_col1_4k.png",
+      "bytes": 30844178,
+      "sha256": "abb83f4360439d8978710ade86d3eecb07d703dd10302f96fd517ceb336dd9ee",
+      "width": 4096,
+      "height": 4096,
+      "bitDepth": 8,
+      "pngColorType": 2
+    },
+    {
+      "path": "refs/reference-street/20260910/cloth-candidates/book_pattern/book_pattern_rough_4k.png",
+      "bytes": 13366190,
+      "sha256": "08f52003f1d6bdeb2c34eafad8df30cb6109872610d64b120351f308d0d43ddb",
+      "width": 4096,
+      "height": 4096,
+      "bitDepth": 8,
+      "pngColorType": 0
+    }
+  ],
+  "diagnosticFiles": [
+    {
+      "path": "diagnostics/front-faceids.png",
+      "sha256": "7d8325d5c9d0aedd5b1b244c0fb2de0d9c5ac6f94100884c8cdfd60bf7fc962d"
+    },
+    {
+      "path": "diagnostics/front-projection.json",
+      "sha256": "091a1dad6b667483ff0ccc523d31a58dd50df2a41fc5995d54d64bed312e7e1b"
+    },
+    {
+      "path": "diagnostics/front.png",
+      "sha256": "585734fbe243fb5d6c0975fc6f6d24a9ea03e05214fb6afdfd7c459321bb3f96"
+    },
+    {
+      "path": "diagnostics/seed-uv-regions-top.png",
+      "sha256": "c8a2d759115c9acd8557f2adb47101056f5840af73e377eacd0966a8a8aa7005"
+    },
+    {
+      "path": "diagnostics/semantic-seeds.json",
+      "sha256": "4c12cac99dea64157cc069c2799e68044df5b65110edfddb866c1e13ff7d5b5b"
+    },
+    {
+      "path": "diagnostics/side-faceids.png",
+      "sha256": "8d39c6f7f03a0c04e09f1fef1f626c3354983e340bd7fea2bbeb80e46c87ca91"
+    },
+    {
+      "path": "diagnostics/side-projection.json",
+      "sha256": "ed337978b53b0a5b215fa0d4b90b5f2a2c442353d8521d0c6dad5f5f07fb597b"
+    },
+    {
+      "path": "diagnostics/side.png",
+      "sha256": "1611c05ac78390412e0b12a8dfee7a2327251539aff0665ec2c1a9397d49e7f9"
+    },
+    {
+      "path": "diagnostics/top-faceids.png",
+      "sha256": "b146e3a7663eb6dcb93fc824c6904e3b6943b1fbf3c61c4b28a1eb5229c19659"
+    },
+    {
+      "path": "diagnostics/top-projection.json",
+      "sha256": "4a1a8d9e7b4b0ae0b9d887021f8c8e3441dffbb9f03d59e0c1344c0095e9526e"
+    },
+    {
+      "path": "diagnostics/top.png",
+      "sha256": "d3652af079539021ae4fef087205cda4313c8dd549aca4a3ba1c63f84f3693f7"
+    },
+    {
+      "path": "diagnostics/topology-audit.json",
+      "sha256": "b7ec4b018eb3a913b86072820f968ca667b555ba7fdac68737e889356fafadbc"
+    },
+    {
+      "path": "diagnostics/uv-anisotropy-audit.json",
+      "sha256": "41e96aa0c90e8463d61ce8c35a00ec29dced98390a928bec77961c6eef56b8d9"
+    },
+    {
+      "path": "diagnostics/uv-region-audit.json",
+      "sha256": "d02ecf3372fa581d01fc2907dcbc8f4e8753978a4c919f816e21cd9c305d5361"
+    }
+  ],
+  "quantitativeFollowUp": "diagnostics/uv-anisotropy-audit.json"
+}

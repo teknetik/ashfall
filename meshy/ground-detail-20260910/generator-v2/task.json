@@ -1,0 +1,95 @@
+{
+  "task_id": "01a08ad7-d563-7043-89bc-bf138e742318",
+  "model": "meshy-7",
+  "api": "multi-image-to-3d",
+  "request": {
+    "ai_model": "meshy-7",
+    "model_type": "standard",
+    "file_paths": [
+      "/home/teknetik/code/ao2/refs/salvage_20260908/generator/front.png",
+      "/home/teknetik/code/ao2/refs/salvage_20260908/generator/side.png",
+      "/home/teknetik/code/ao2/refs/salvage_20260908/generator/back.png"
+    ],
+    "should_remesh": false,
+    "should_texture": true,
+    "enable_pbr": true,
+    "texture_resolution": "4k",
+    "remove_lighting": true,
+    "target_formats": [
+      "glb",
+      "fbx"
+    ],
+    "response_format": "json"
+  },
+  "referenceFiles": {
+    "refs/salvage_20260908/generator/front.png": {
+      "sha256": "6ce7999338e575bdbf43b9f6043947bcec60b97c0f3374bd9a80b58fdf84a03a"
+    },
+    "refs/salvage_20260908/generator/side.png": {
+      "sha256": "a2e4690b494c810c88b05ecd9b5afc6159fb8d8e472098b7df34260fbcff2291"
+    },
+    "refs/salvage_20260908/generator/back.png": {
+      "sha256": "639a2d0fea379c7274021744219f070808ca517b368dfeb6326e965d571a9088"
+    }
+  },
+  "expected_credits": 30,
+  "consumed_credits": 30,
+  "status": "SUCCEEDED",
+  "progress": 100,
+  "createdUtc": "2026-09-10T10:24:21.557756+00:00",
+  "reason": "Existing original generator has 1619 source triangles and visible faceting; generate detailed original geometry from retained references, without service remeshing.",
+  "authorization": "User AGENTS.md preapproval of routine Meshy asset work,8September2026, and current requested ground-asset refinement",
+  "sourcePolicy": "Retain full source FBX/GLB and original map dimensions; author any runtime derivative separately after geometry review.",
+  "nativeAccepted": false,
+  "completedDownloadUtc": "2026-09-10T10:28:48.569570+00:00",
+  "sourceTriangles": 1945352,
+  "sourceVertices": 1094640,
+  "actualMapDimensions": {
+    "base_color": [
+      4096,
+      4096
+    ],
+    "metallic": [
+      2048,
+      2048
+    ],
+    "normal": [
+      4096,
+      4096
+    ],
+    "roughness": [
+      2048,
+      2048
+    ]
+  },
+  "deliveredFormats": [
+    "fbx",
+    "glb"
+  ],
+  "retainedFiles": {
+    "generator-v2/model.fbx": {
+      "bytes": 109767980,
+      "sha256": "a20285618ba776f5e87268e446bee03a6d1a3a51e521497ec61527460e3881d0"
+    },
+    "generator-v2/model.glb": {
+      "bytes": 80815640,
+      "sha256": "b939db818786b43da609e5828c26fac9182a4f050ee85f0e080b480efa501b76"
+    },
+    "generator-v2/model_textures/base_color.png": {
+      "bytes": 19767054,
+      "sha256": "d8df166e127e2fd27e7904e69091d54f5b36934906a6b997a250b7b6efc0599f"
+    },
+    "generator-v2/model_textures/metallic.png": {
+      "bytes": 3664395,
+      "sha256": "469cb23c837fcd15f9e1f6a504af9e02d145be4f9b5c3df1cd3f463e6b8aea34"
+    },
+    "generator-v2/model_textures/normal.png": {
+      "bytes": 13486392,
+      "sha256": "5fe7f7c4bebd329026436cb1205f1e881207af7f5416ebd953e6a5060646ee40"
+    },
+    "generator-v2/model_textures/roughness.png": {
+      "bytes": 4005716,
+      "sha256": "7ed6b43f3a385330c14820576b38c60399f52ab3bca5ef9b678981166b0bd659"
+    }
+  }
+}

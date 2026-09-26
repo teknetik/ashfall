@@ -1,0 +1,50 @@
+{
+  "reviewer": "/root/street_critic",
+  "date": "2026-09-10",
+  "verdict": "REVISE_MATERIAL_BEFORE_NATIVE_AUDITION",
+  "scope": "Source audition of actual runtime-map bindings on retained canopy V3 geometry. The source scene deliberately omits installed rigid supports. No Unity/player inspection or geometry mutation occurred in this review.",
+  "contractsRead": ["material-authoring-contract.json", "preview-bindings.json"],
+  "imagesReviewed": [
+    "renders/top-sun.png", "renders/under-sun.png", "renders/hem-sun.png", "renders/repair-sun.png",
+    "renders/top-opposed.png", "renders/under-opposed.png", "renders/hem-opposed.png", "renders/repair-opposed.png",
+    "renders/top-albedo.png", "renders/hem-albedo.png", "renders/repair-albedo.png"
+  ],
+  "comparisonBasis": [
+    "Retained V3 source construction acceptance and native iteration03 material objections: smooth saturated red sheet, weak evidence of cloth wear, plain repair patches, dark noon/afternoon underside.",
+    "refs/reference-street/20260909/user-target.png"
+  ],
+  "scores": {
+    "retainedConstruction": 4,
+    "clothMaterialAtWholeAndCloseViews": 3,
+    "wearAndRepairStorytelling": 3,
+    "nativeLighting": null,
+    "temporalStability": null
+  },
+  "improvements": [
+    "The new fine cotton source avoids the prior oversized towel-like weave. A subtle fabric grain is visible in the close hem and repair views.",
+    "Independent seam, valance and repair regions produce intentional material variation, and the exact patch boundaries align with the existing forms.",
+    "The repaired V3 front pocket/hem remains continuous in these views. No new focal hole or slit is established."
+  ],
+  "blockingMaterialFindings": [
+    {
+      "finding": "Broad cloudy mottling dominates nearly the whole membrane, competing with the actual sag and folds.",
+      "evidence": "The same soft light/dark islands remain in top-albedo, establishing that they are authored color variation rather than only lighting. Opposed lighting changes real fold shadows but leaves the broad cloudy impression.",
+      "boundedFix": "Reduce the broad fade/noise amplitude substantially and preserve larger quiet intact red areas. Concentrate stronger bleaching on exposed edges and selected worn fold/attachment areas; avoid replacing one uniform noise scale with another."
+    },
+    {
+      "finding": "The hem has a near-continuous pale lower band and repeated dark vertical drips. Long seam abrasion reads as consistently pale fuzzy lines, including conspicuous stripes from below.",
+      "evidence": "Hem-albedo makes the continuous pale strip and repeated runoff pattern especially clear; under-sun/opposed show the seam bands dominating the shaded cloth.",
+      "boundedFix": "Break wear into irregular sections with variation in extent and intensity, leaving unworn gaps. Localize runoff beneath relevant attachment/seam or drainage sites and vary length/width. Keep the existing chart alignment and material regions."
+    },
+    {
+      "finding": "The repair patches remain plain applied squares with a pale contour and little evidence of how they are attached.",
+      "evidence": "Repair sun/opposed/albedo views show the boundary clearly but no readable stitch construction. The light-facing contour also makes the patch lip feel thick.",
+      "boundedFix": "Use restrained texture/normal stitch rows and broken fibre abrasion along the existing exact patch contours, with a modest dye-lot difference. This review does not establish a geometry defect requiring new patch meshes. Avoid a continuous bright outline."
+    }
+  ],
+  "weaveScaleGuidance": "Do not enlarge the physical weave merely to show individual threads over a6.5m canopy. Its subtle close-view presence is preferable to giant woven geometry. First remove the dominating macro cloud pattern, then judge the fine normal/roughness response in close opposed light and the actual native pixel coverage. A high normal strength or high-contrast baked yarn highlights should not compensate for lighting weakness.",
+  "geometryDirective": "Retain canopy V3 geometry, UVs, supports and collider contract. Missing rigid supports in this isolated source render are intentional, not a final omission.",
+  "lightingLimit": "These source lights cannot resolve the previously observed native noon underside deficit or validate the staged afternoon shade change. After the material revision, inspect matched native noon/16/17.5 shade and close lamp views separately, including successive frames.",
+  "acceptance": {"sourceMaterial": false, "native": false, "wholeGameAAA": false},
+  "nextGate": "Re-render top/hem/repair under sun, opposed light and albedo after the bounded material revision. If broad cloud and uniform banding are removed while real cloth and repair construction remain readable, proceed to a native audition."
+}

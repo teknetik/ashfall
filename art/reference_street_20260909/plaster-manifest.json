@@ -1,0 +1,102 @@
+{
+  "created": "2026-09-09",
+  "blender": "4.5.13 LTS",
+  "reference": "/home/teknetik/Downloads/Codex Image Sep 9, 2026, 07_38_57 PM.png",
+  "sourceBlend": "art/reference_street_20260909/reference-plaster-studio-v1.blend",
+  "supersedes": "Plaster material assignment only, on the listed 35 existing source renderers.",
+  "targetSourcePaths": [
+    "Ward shop architecture/field_supply/Masonry shell/field_supply Front masonry segment 0 0",
+    "Ward shop architecture/field_supply/Masonry shell/field_supply Front masonry segment 0 1",
+    "Ward shop architecture/field_supply/Masonry shell/field_supply Front masonry segment 0 2",
+    "Ward shop architecture/field_supply/Masonry shell/field_supply Front masonry segment 1 1",
+    "Ward shop architecture/field_supply/Masonry shell/field_supply Front masonry segment 1 2",
+    "Ward shop architecture/field_supply/Masonry shell/field_supply Front masonry segment 2 0",
+    "Ward shop architecture/field_supply/Masonry shell/field_supply Front masonry segment 2 1",
+    "Ward shop architecture/field_supply/Masonry shell/field_supply Front masonry segment 2 2",
+    "Ward shop architecture/field_supply/Masonry shell/field_supply Front masonry segment 3 2",
+    "Ward shop architecture/field_supply/Masonry shell/field_supply Front masonry segment 4 0",
+    "Ward shop architecture/field_supply/Masonry shell/field_supply Front masonry segment 4 1",
+    "Ward shop architecture/field_supply/Masonry shell/field_supply Front masonry segment 4 2",
+    "Ward shop architecture/field_supply/Masonry shell/field_supply Rear masonry segment 0 0",
+    "Ward shop architecture/field_supply/Masonry shell/field_supply Full wall return -3.66",
+    "Ward shop architecture/field_supply/Masonry shell/field_supply Full wall return 3.66",
+    "Ward shop architecture/field_supply/Pitched metal roof/field_supply Front gable",
+    "Ward shop architecture/field_supply/Pitched metal roof/field_supply Rear gable",
+    "Phase 1 Finery frontage/Structure/South wall core",
+    "Phase 1 Finery frontage/Structure/North wall core",
+    "Phase 1 Finery frontage/Structure/Rear wall core",
+    "Phase 1 Finery frontage/Structure/Sign fascia",
+    "Phase 1 Finery frontage/Structure/Lower wall pier 0",
+    "Phase 1 Finery frontage/Structure/Lower wall pier 1",
+    "Phase 1 Finery frontage/Structure/Lower wall pier 2",
+    "Phase 1 Finery frontage/Structure/Lower wall pier 3",
+    "Phase 1 Finery frontage/Structure/Window upper infill 0",
+    "Phase 1 Finery frontage/Structure/Window upper infill 1",
+    "Phase 1 Finery frontage/Structure/Upper wall pier 0",
+    "Phase 1 Finery frontage/Structure/Upper wall pier 1",
+    "Phase 1 Finery frontage/Structure/Upper wall pier 2",
+    "Phase 1 Finery frontage/Structure/Upper wall pier 3",
+    "Phase 1 Finery frontage/Roof/Roof parapet side -21.68",
+    "Phase 1 Finery frontage/Roof/Roof parapet side -14.32",
+    "Phase 1 Finery frontage/Roof/Roof parapet end 16.84",
+    "Phase 1 Finery frontage/Roof/Roof parapet end 24.96"
+  ],
+  "tileMetres": 4,
+  "resolution": 4096,
+  "authoring": "Original Blender nodes; no downloaded new resource, generated image, or copied pixels from the user reference.",
+  "sourceAssets": [
+    {
+      "asset": "beige_wall_001",
+      "license": "CC0",
+      "authors": [
+        "Dimitrios Savva",
+        "Rico Cilliers"
+      ],
+      "metadata": "refs/quality_20260909/building-materials/beige_wall_001"
+    },
+    {
+      "asset": "rough_concrete",
+      "license": "CC0",
+      "authors": [
+        "Dimitrios Savva"
+      ],
+      "metadata": "refs/quality_20260909/building-materials/rough_concrete"
+    }
+  ],
+  "materials": {
+    "Plaster": {
+      "shader": "Universal Render Pipeline/Lit",
+      "colorSpace": "sRGB",
+      "normal": "OpenGL tangent +Y; linear import; do not flip green",
+      "roughness": "Linear; pack 1-Roughness into smoothness alpha",
+      "metallic": "0; never treat lime plaster as metal",
+      "textureDirectory": "textures/ReferencePlaster",
+      "uv": "Existing UV0 at four metres; unchanged meshes."
+    },
+    "MineralRunoff": {
+      "shader": "Universal Render Pipeline/Lit",
+      "surface": "Transparent alpha blend",
+      "alphaClip": false,
+      "alpha": "RGBA baked BaseColor alpha",
+      "baseColor": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "metallic": 0,
+      "smoothness": 0.03,
+      "textureDirectory": "textures/MineralRunoff",
+      "castShadows": false,
+      "zwrite": false,
+      "renderQueue": 3000
+    }
+  },
+  "notes": [
+    "All original sources are untouched.",
+    "Current placement meshes are optional transparent material films, never opaque ribbons.",
+    "No gameplay roots, meshes, transforms, routes, colliders or building envelopes are replaced.",
+    "No scene lighting baked into colour or scalar maps.",
+    "Native sun/shade, close-up and temporal review required before visual acceptance."
+  ]
+}
