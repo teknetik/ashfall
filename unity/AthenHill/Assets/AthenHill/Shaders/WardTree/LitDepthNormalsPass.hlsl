@@ -130,7 +130,7 @@ void DepthNormalsFragment(
 
     #if defined(_GBUFFER_NORMALS_OCT)
         float3 normalWS = normalize(input.normalWS);
-        if (_WardTranslucency > 0) normalWS *= IS_FRONT_VFACE(face, 1.0, -1.0);
+        if (_WardTranslucency > 0 || _WardIndirectTranslucency > 0) normalWS *= IS_FRONT_VFACE(face, 1.0, -1.0);
         float2 octNormalWS = PackNormalOctQuadEncode(normalWS);           // values between [-1, +1], must use fp32 on some platforms
         float2 remappedOctNormalWS = saturate(octNormalWS * 0.5 + 0.5);   // values between [ 0,  1]
         half3 packedNormalWS = PackFloat2To888(remappedOctNormalWS);      // values between [ 0,  1]
@@ -152,7 +152,7 @@ void DepthNormalsFragment(
             float3 normalWS = input.normalWS;
         #endif
 
-        if (_WardTranslucency > 0) normalWS *= IS_FRONT_VFACE(face, 1.0, -1.0);
+        if (_WardTranslucency > 0 || _WardIndirectTranslucency > 0) normalWS *= IS_FRONT_VFACE(face, 1.0, -1.0);
         outNormalWS = half4(NormalizeNormalPerPixel(normalWS), 0.0);
     #endif
 

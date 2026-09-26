@@ -18,6 +18,7 @@ namespace AthenHill
   readonly FrameTiming[] timings=new FrameTiming[1];
 #if UNITY_EDITOR || DEBUG
   readonly NativeVisualReview visualReview=new NativeVisualReview();
+  readonly NativeAssetReview assetReview=new NativeAssetReview();
 #endif
   [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
   static void StartIfRequested()
@@ -25,6 +26,9 @@ namespace AthenHill
    if(!Debug.isDebugBuild)return;
    var args=Environment.GetCommandLineArgs();int index=Array.IndexOf(args,"--athen-qa");
    if(index<0||index+1>=args.Length)return;
+   // Opt-in static capture jobs can render without desktop focus. Ordinary QA
+   // and every release keep the normal focus policy; this does not inject input.
+   if(Array.IndexOf(args,"--athen-qa-background")>=0)Application.runInBackground=true;
    var qa=new GameObject("Development QA").AddComponent<NativeQa>();qa.folder=Path.GetFullPath(args[index+1]);Directory.CreateDirectory(qa.folder);
   }
   void Start()
@@ -32,13 +36,14 @@ namespace AthenHill
    session=FindAnyObjectByType<GameSession>();bridge=FindAnyObjectByType<AthenDebugBridge>();document=FindAnyObjectByType<UIDocument>();atmosphere=FindAnyObjectByType<CityAtmosphere>();
    draws=ProfilerRecorder.StartNew(ProfilerCategory.Render,"Draw Calls Count");tris=ProfilerRecorder.StartNew(ProfilerCategory.Render,"Triangles Count");batches=ProfilerRecorder.StartNew(ProfilerCategory.Render,"Batches Count");setPass=ProfilerRecorder.StartNew(ProfilerCategory.Render,"SetPass Calls Count");mainThread=ProfilerRecorder.StartNew(ProfilerCategory.Internal,"Main Thread");renderThread=ProfilerRecorder.StartNew(ProfilerCategory.Internal,"Render Thread");
    // Respect the player’s video settings during settings and performance QA.
-   Write("environment.json",new{unity=Application.unityVersion,os=SystemInfo.operatingSystem,gpu=SystemInfo.graphicsDeviceName,api=SystemInfo.graphicsDeviceType.ToString(),driver=SystemInfo.graphicsDeviceVersion,cpu=SystemInfo.processorType,quality=QualitySettings.names[QualitySettings.GetQualityLevel()],width=Screen.width,height=Screen.height,vsync=QualitySettings.vSyncCount,targetFrameRate=Application.targetFrameRate,drawCounter=draws.Valid,triangleCounter=tris.Valid,mainThreadCounter=mainThread.Valid,renderThreadCounter=renderThread.Valid,actorCount=FindObjectsByType<ActorAnimation>().Length});
+   Write("environment.json",new{unity=Application.unityVersion,os=SystemInfo.operatingSystem,gpu=SystemInfo.graphicsDeviceName,api=SystemInfo.graphicsDeviceType.ToString(),driver=SystemInfo.graphicsDeviceVersion,cpu=SystemInfo.processorType,graphicsMemoryMB=SystemInfo.graphicsMemorySize>0?(int?)SystemInfo.graphicsMemorySize:null,systemMemoryMB=SystemInfo.systemMemorySize>0?(int?)SystemInfo.systemMemorySize:null,quality=QualitySettings.names[QualitySettings.GetQualityLevel()],width=Screen.width,height=Screen.height,vsync=QualitySettings.vSyncCount,targetFrameRate=Application.targetFrameRate,drawCounter=draws.Valid,triangleCounter=tris.Valid,mainThreadCounter=mainThread.Valid,renderThreadCounter=renderThread.Valid,actorCount=FindObjectsByType<ActorAnimation>().Length,runInBackground=Application.runInBackground,isBatchMode=Application.isBatchMode});
   }
   void Write(string name,object value){var path=Path.Combine(folder,name);File.WriteAllText(path+".tmp",JsonConvert.SerializeObject(value,Formatting.Indented));if(File.Exists(path))File.Replace(path+".tmp",path,null);else File.Move(path+".tmp",path);}
   void Update()
   {
 #if UNITY_EDITOR || DEBUG
    if(visualReview.HudHidden&&session.State!=CityState.Dialogue)visualReview.SetHudHidden(document,session,false);
+   assetReview.Tick();
 #endif
    string path=Path.Combine(folder,"command.json");
    if(File.Exists(path))
@@ -48,22 +53,34 @@ namespace AthenHill
      var j=JObject.Parse(File.ReadAllText(path));File.Delete(path);
      switch((string)j["action"])
      {
+      case "memorySnapshot":Write("memory.json",MemorySnapshot());break;
       case "goto":bridge.Goto((string)j["landmark"]);break;
-      case "view":bridge.View((string)j["camera"]);break;
-      case "reset":bridge.ResetPlayer();break;
+      case "view":
+#if UNITY_EDITOR || DEBUG
+       assetReview.Cancel();
+#endif
+       bridge.View((string)j["camera"]);break;
+      case "reset":
+#if UNITY_EDITOR || DEBUG
+       assetReview.Cancel();
+#endif
+       bridge.ResetPlayer();break;
       case "cameraYaw":bridge.follow.yaw=(float)j["yaw"];break;
       case "capture":ScreenCapture.CaptureScreenshot(Path.Combine(folder,Path.GetFileName((string)j["name"])+".png"));break;
       case "profileStart":samples.Clear();profiling=true;break;
       case "profileStop":profiling=false;Write("profile.json",samples);break;
       case "uiSnapshot":UiSnapshot();break;
-      case "settingsSnapshot":Write("settings.json",new{sound=session.Settings.Sound,video=session.Settings.Video,draft=session.Settings.Draft,previewing=session.Settings.Previewing,remaining=session.Settings.SecondsRemaining,renderScale=session.Settings.Pipeline.renderScale,msaa=session.Settings.Pipeline.msaaSampleCount,shadowDistance=session.Settings.Pipeline.shadowDistance,shadowResolution=session.Settings.Pipeline.mainLightShadowmapResolution,textureLimit=QualitySettings.globalTextureMipmapLimit,vSync=QualitySettings.vSyncCount,frameLimit=Application.targetFrameRate,postProcessing=FindAnyObjectByType<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>().renderPostProcessing,track=FindAnyObjectByType<CityAudio>().CurrentTrack,transitions=FindAnyObjectByType<CityAudio>().MusicTransitions,timeScale=Time.timeScale});break;
+      case "settingsSnapshot":Write("settings.json",new{sound=session.Settings.Sound,video=session.Settings.Video,draft=session.Settings.Draft,previewing=session.Settings.Previewing,remaining=session.Settings.SecondsRemaining,renderScale=session.Settings.Pipeline.renderScale,msaa=session.Settings.Pipeline.msaaSampleCount,shadowDistance=session.Settings.Pipeline.shadowDistance,shadowResolution=session.Settings.Pipeline.mainLightShadowmapResolution,shadowCascades=session.Settings.Pipeline.shadowCascadeCount,cascade4Split=new[]{session.Settings.Pipeline.cascade4Split.x,session.Settings.Pipeline.cascade4Split.y,session.Settings.Pipeline.cascade4Split.z},textureLimit=QualitySettings.globalTextureMipmapLimit,vSync=QualitySettings.vSyncCount,frameLimit=Application.targetFrameRate,postProcessing=FindAnyObjectByType<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>().renderPostProcessing,track=FindAnyObjectByType<CityAudio>().CurrentTrack,transitions=FindAnyObjectByType<CityAudio>().MusicTransitions,timeScale=Time.timeScale});break;
       case "actorSnapshot":Write("actors.json",ActorDiagnostics.Snapshot());break;
       case "motionStart":ActorMotionTrace.Begin(session.player);break;
       case "motionStop":Write("motion.json",ActorMotionTrace.End());break;
 #if UNITY_EDITOR || DEBUG
       case "reviewHud":visualReview.SetHudHidden(document,session,(bool)j["hidden"]);Write("visual-review-state.json",visualReview.Snapshot());break;
       case "reviewTree":visualReview.Tree(session,j);Write("visual-review-state.json",visualReview.Snapshot());break;
-      case "reviewReset":visualReview.Restore();Write("visual-review-state.json",visualReview.Snapshot());break;
+      case "reviewTreeShadow":visualReview.TreeShadow(j);Write("visual-review-state.json",visualReview.Snapshot());break;
+      case "reviewReset":assetReview.Cancel();bridge.View("follow");visualReview.Restore();Write("visual-review-state.json",visualReview.Snapshot());break;
+      case "reviewAssetPass":assetReview.Begin(bridge,j);Write("asset-review-state.json",assetReview.Snapshot());break;
+      case "reviewAssetState":Write("asset-review-state.json",assetReview.Snapshot());break;
       case "timeSet":NativeTimeDiagnostics.Clock().SetHour((float)j["hour"]);break;
       case "timePause":NativeTimeDiagnostics.Clock().Paused=(bool)j["paused"];break;
       case "timeSpeed":NativeTimeDiagnostics.Clock().SetSpeed((float)j["speed"]);break;
@@ -79,6 +96,19 @@ namespace AthenHill
     catch(Exception e){Write("qa-error.json",new{error=e.ToString()});Debug.LogException(e);}
    }
    if(Time.unscaledTime>=nextSnapshot){nextSnapshot=Time.unscaledTime+.1f;Snapshot();}
+  }
+  static object MemorySnapshot()
+  {
+   // Unity counters are separate from OS process RSS and driver VRAM residency.
+   // A zero in this nonempty scene is reported as unavailable, not zero cost.
+   long allocated=UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong();
+   long reserved=UnityEngine.Profiling.Profiler.GetTotalReservedMemoryLong();
+   ulong current=Texture.currentTextureMemory,desired=Texture.desiredTextureMemory,total=Texture.totalTextureMemory;
+   return new{utc=DateTime.UtcNow.ToString("O"),frame=Time.frameCount,
+    unityAllocatedBytes=allocated>0?(long?)allocated:null,unityReservedBytes=reserved>0?(long?)reserved:null,
+    textureCurrentBytes=current>0?(ulong?)current:null,textureDesiredBytes=desired>0?(ulong?)desired:null,textureFullResolutionBytes=total>0?(ulong?)total:null,
+    streamingMipmapsActive=QualitySettings.streamingMipmapsActive,
+    scope="Unity allocator and texture counters only. Full-resolution texture memory is theoretical Texture2D/cubemap cost, not total GPU residency. Compare OS RSS and driver VRAM separately; null means unavailable."};
   }
   void LateUpdate()
   {
@@ -143,10 +173,26 @@ namespace AthenHill
                 skyShader = RenderSettings.skybox ? RenderSettings.skybox.shader.name : "",
                 skySunVisibility = RenderSettings.skybox && RenderSettings.skybox.HasProperty("_SunVisibility") ? RenderSettings.skybox.GetFloat("_SunVisibility") : -1,
                 postExposure = clock.CurrentFrame.postExposure,
+                ambient = new {
+                    mode = RenderSettings.ambientMode.ToString(), intensity = RenderSettings.ambientIntensity,
+                    sky = new[] { RenderSettings.ambientSkyColor.r, RenderSettings.ambientSkyColor.g, RenderSettings.ambientSkyColor.b },
+                    equator = new[] { RenderSettings.ambientEquatorColor.r, RenderSettings.ambientEquatorColor.g, RenderSettings.ambientEquatorColor.b },
+                    ground = new[] { RenderSettings.ambientGroundColor.r, RenderSettings.ambientGroundColor.g, RenderSettings.ambientGroundColor.b }
+                },
+                skyFill = clock.skyFill ? new {
+                    clock.skyFill.enabled, clock.skyFill.intensity,
+                    color = new[] { clock.skyFill.color.r, clock.skyFill.color.g, clock.skyFill.color.b },
+                    shadows = clock.skyFill.shadows.ToString()
+                } : null,
+                realtimeReflectionsEnabled = QualitySettings.realtimeReflectionProbes,
                 reflections = reflections ? new { pending = reflections.CapturePending, completed = reflections.CompletedCaptures, failed = reflections.FailedCaptures, status = reflections.Status,
                     lastCaptureLatencyMilliseconds = reflections.LastCaptureLatencyMilliseconds,
                     probes = reflections.probes.Where(p => p.probe).Select(p => new { p.probe.name, mode = p.probe.mode.ToString(), p.probe.intensity, p.probe.resolution,
-                        texture = p.probe.texture ? p.probe.texture.name : "", slicing = p.probe.timeSlicingMode.ToString() }).ToArray() } : null,
+                        texture = p.probe.texture ? p.probe.texture.name : "",
+                        texturePresent = (bool)p.probe.texture,
+                        textureWidth = p.probe.texture ? p.probe.texture.width : 0,
+                        realtimeTextureCreated = p.probe.realtimeTexture && p.probe.realtimeTexture.IsCreated(),
+                        slicing = p.probe.timeSlicingMode.ToString() }).ToArray() } : null,
                 circuits = UnityEngine.Object.FindObjectsByType<CityLightCircuit>().Select(c => new { c.name, strength = c.CurrentStrength, activeLights = c.ActiveLights, shadowLights = c.ActiveShadowLights,
                     fixtures = c.practicalLights.Where(l => l).Select(l => new { l.name, l.enabled, l.intensity, l.range, shadows = l.shadows.ToString() }).ToArray() }).ToArray()
             };

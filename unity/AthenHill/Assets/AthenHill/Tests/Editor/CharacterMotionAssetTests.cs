@@ -1,12 +1,44 @@
 using System.Linq;
 using NUnit.Framework;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace AthenHill.Tests
 {
     public class CharacterMotionAssetTests
     {
+        [Test]
+        public void SavedPlayerShadowProxiesShareTheInterpolatedVisualHierarchy()
+        {
+            // Inspect the persisted scene without replacing the user's open scene.
+            var scene = EditorSceneManager.OpenPreviewScene("Assets/AthenHill/Scenes/AthenHill.unity");
+            try
+            {
+                var players = scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<PlayerMotor>(true)).ToArray();
+                Assert.That(players.Length, Is.EqualTo(1));
+                var player = players[0];
+                Assert.That(player.visual, Is.Not.Null);
+                Assert.That(player.visual.parent, Is.EqualTo(player.transform));
+                Assert.That(PrefabUtility.GetCorrespondingObjectFromSource(player.visual), Is.Not.Null,
+                    "Keep the supplied player prefab editable and connected.");
+                var proxies = player.GetComponentsInChildren<MeshRenderer>(true)
+                    .Where(renderer => renderer.enabled && renderer.gameObject.activeInHierarchy &&
+                        renderer.shadowCastingMode == ShadowCastingMode.ShadowsOnly).ToArray();
+                Assert.That(proxies, Is.Not.Empty, "The current authored shadow proxy must not be lost during hierarchy edits.");
+                foreach (var proxy in proxies)
+                {
+                    Assert.That(proxy.transform.IsChildOf(player.visual), Is.True,
+                        "A shadow-only proxy on the physics root advances at 50 Hz ahead of the interpolated actor.");
+                    Assert.That(proxy.GetComponentsInChildren<Collider>(true), Is.Empty,
+                        "Presentation-only shadow geometry must not move collision with render interpolation.");
+                }
+                Assert.That(player.GetComponent<CharacterController>(), Is.Not.Null);
+            }
+            finally { EditorSceneManager.ClosePreviewScene(scene); }
+        }
+
         [TestCase("Player/idle.anim")]
         [TestCase("Player/jump_takeoff.anim")]
         [TestCase("Player/jump_airborne.anim")]

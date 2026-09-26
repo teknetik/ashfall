@@ -19,6 +19,11 @@ namespace AthenHill.Editor
         static string Repo=>Path.GetFullPath(Path.Combine(Application.dataPath,"../../.."));
         static string Source=>Path.Combine(Repo,"art/building_weathering_20260909");
         static string Evidence=>Path.Combine(Repo,"unity/evidence/building-weathering/20260909");
+        [UnityEditor.Callbacks.PostProcessBuild(100)]
+        public static void CopyFontNotice(BuildTarget target,string playerPath)
+        {
+            File.Copy(Path.Combine(Source,"DejaVu-LICENSE.txt"),Path.Combine(Path.GetDirectoryName(playerPath),"WEATHERING-FONT-LICENSE.txt"),true);
+        }
         sealed class Part {public string name,family,sourcePath,material;public float[][] positions,normals,uv;public int[] indices;public bool castsShadow;}
         sealed class Decal {public string name;public float[] position,size,direction;public int tile;public float opacity,depth;}
         static Vector3 V(float[] p)=>new Vector3(p[0],p[1],p[2]);

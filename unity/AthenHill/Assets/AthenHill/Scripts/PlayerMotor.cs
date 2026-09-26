@@ -19,9 +19,24 @@ namespace AthenHill
   public bool Blocked,Talking;
   CharacterController body;
   float vertical;
+  readonly PlayerRenderPose renderPose=new PlayerRenderPose();
+  Vector3 visualLocalPosition;
+  Transform presentationVisual;
+  float RenderFraction=>PlayerRenderPose.Fraction(Time.timeAsDouble,Time.fixedTimeAsDouble,Time.fixedDeltaTime);
+  public Vector3 RenderPosition=>isActiveAndEnabled?renderPose.Position(RenderFraction):transform.position;
   void Awake(){body=GetComponent<CharacterController>();}
+  void OnEnable()
+  {
+   if(visual&&visual!=transform&&presentationVisual!=visual)
+   {
+    presentationVisual=visual;
+    visualLocalPosition=visual.localPosition;
+   }
+   renderPose.Reset(transform.position,visual?visual.rotation:transform.rotation);
+  }
   void FixedUpdate()
   {
+   RestoreSimulationVisual();
    float dt=Mathf.Min(Time.fixedDeltaTime,.05f);
    var previous=transform.position;
    var move=Blocked?Vector2.zero:input.Move;
@@ -45,9 +60,25 @@ namespace AthenHill
    Speed=Vector3.ProjectOnPlane(transform.position-previous,Vector3.up).magnitude/dt;
    if(direction.sqrMagnitude>.001f)visual.rotation=Quaternion.Slerp(visual.rotation,Quaternion.LookRotation(direction),1-Mathf.Exp(-turnSpeed*dt));
    if(actor)actor.SetGroundMotion(Speed,input.Run,Talking,Grounded,vertical,JumpStarted,dt);
+   renderPose.Record(transform.position,visual?visual.rotation:transform.rotation);
    ActorMotionTrace.Sample(this);
   }
-  public void Teleport(Vector3 feet){if(!body)body=GetComponent<CharacterController>();body.enabled=false;transform.position=feet+Vector3.up*.015f;body.enabled=true;vertical=0;Grounded=false;JumpStarted=false;if(actor)actor.ResetGroundMotion();Physics.SyncTransforms();}
+  void LateUpdate()
+  {
+   if(!presentationVisual)return;
+   // Offset only the visual child. Physics, interactions and QA keep the current root.
+   presentationVisual.localPosition=visualLocalPosition;
+   presentationVisual.position+=RenderPosition-transform.position;
+   presentationVisual.rotation=renderPose.Rotation(RenderFraction);
+  }
+  void RestoreSimulationVisual()
+  {
+   if(!presentationVisual)return;
+   presentationVisual.localPosition=visualLocalPosition;
+   presentationVisual.rotation=renderPose.SimulationRotation;
+  }
+  void OnDisable(){RestoreSimulationVisual();}
+  public void Teleport(Vector3 feet){if(!body)body=GetComponent<CharacterController>();RestoreSimulationVisual();body.enabled=false;transform.position=feet+Vector3.up*.015f;body.enabled=true;vertical=0;Speed=0;Grounded=false;JumpStarted=false;renderPose.Reset(transform.position,visual?visual.rotation:transform.rotation);if(actor)actor.ResetGroundMotion();Physics.SyncTransforms();}
   public void ReturnToGate(){Teleport(spawn.position);}
  }
 }

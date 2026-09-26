@@ -255,7 +255,7 @@ void LitPassFragment(
 
     InputData inputData;
     InitializeInputData(input, surfaceData.normalTS, inputData);
-    if (_WardTranslucency > 0) inputData.normalWS *= IS_FRONT_VFACE(face, 1.0h, -1.0h);
+    if (_WardTranslucency > 0 || _WardIndirectTranslucency > 0) inputData.normalWS *= IS_FRONT_VFACE(face, 1.0h, -1.0h);
     SETUP_DEBUG_TEXTURE_DATA(inputData, UNDO_TRANSFORM_TEX(input.uv, _BaseMap));
 
 #if defined(_DBUFFER)
@@ -265,11 +265,37 @@ void LitPassFragment(
     InitializeBakedGIData(input, inputData);
 
     half4 color = UniversalFragmentPBR(inputData, surfaceData);
-    if (_WardTranslucency > 0)
+    if (_WardTranslucency > 0 || _WardIndirectTranslucency > 0)
     {
-        Light canopySun = GetMainLight(TransformWorldToShadowCoord(inputData.positionWS));
-        half backLight = saturate(dot(-canopySun.direction, inputData.normalWS));
-        color.rgb += surfaceData.albedo * canopySun.color * backLight * canopySun.shadowAttenuation * _WardTranslucency;
+        AmbientOcclusionFactor canopyAO = CreateAmbientOcclusionFactor(inputData, surfaceData);
+        if (_WardTranslucency > 0)
+        {
+            // Match URP's direct-light shadow fade, mixed mask, cookies and SSAO.
+            // inputData.shadowCoord also supports the screen-space shadow variant.
+            Light canopySun = GetMainLight(inputData, CalculateShadowMask(inputData), canopyAO);
+#ifdef _LIGHT_LAYERS
+            if (IsMatchingLightLayer(canopySun.layerMask, GetMeshRenderingLayer()))
+#endif
+            {
+                half backLight = saturate(dot(-canopySun.direction, inputData.normalWS));
+                color.rgb += surfaceData.albedo * canopySun.color * backLight
+                    * canopySun.distanceAttenuation * canopySun.shadowAttenuation * _WardTranslucency;
+            }
+        }
+
+#if !defined(LIGHTMAP_ON) && !defined(DYNAMICLIGHTMAP_ON) && !defined(PROBE_VOLUMES_L1) && !defined(PROBE_VOLUMES_L2) && !defined(_SCREEN_SPACE_IRRADIANCE)
+        // Thin-leaf approximation for the current Forward + legacy-probe path.
+        // Incident diffuse light from the opposite hemisphere passes through the
+        // leaf tint. Evaluate SH per pixel because interpolated vertex SH was
+        // evaluated on the front face. Retain occlusion; this is not emission.
+        // Other GI modes require their own two-sided sampling and remain unchanged.
+        if (_WardIndirectTranslucency > 0)
+        {
+            half3 oppositeIrradiance = max(half3(0, 0, 0), SampleSH(-inputData.normalWS));
+            color.rgb += surfaceData.albedo * oppositeIrradiance
+                * canopyAO.indirectAmbientOcclusion * _WardIndirectTranslucency;
+        }
+#endif
     }
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
     color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent());

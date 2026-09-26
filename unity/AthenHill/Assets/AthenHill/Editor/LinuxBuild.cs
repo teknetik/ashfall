@@ -24,6 +24,7 @@ namespace AthenHill.Editor
    var result=BuildPipeline.BuildPlayer(new BuildPlayerOptions{scenes=new[]{scene},locationPathName=output,target=BuildTarget.StandaloneLinux64,options=development?BuildOptions.Development:BuildOptions.None});
    Directory.CreateDirectory("Captures");File.WriteAllText("Captures/linux-build.json",JsonConvert.SerializeObject(new{development,result=result.summary.result.ToString(),errors=result.summary.totalErrors,warnings=result.summary.totalWarnings,seconds=result.summary.totalTime.TotalSeconds,bytes=result.summary.totalSize,path=result.summary.outputPath},Formatting.Indented));
    if(result.summary.result!=BuildResult.Succeeded)throw new Exception("Linux build failed. Inspect build report and Console.");
+   File.Copy("Assets/AthenHill/UI/Art/FONT-LICENSE.txt",Path.Combine(Path.GetDirectoryName(output),"UI-FONT-LICENSE.txt"),true);
   }
  }
 }

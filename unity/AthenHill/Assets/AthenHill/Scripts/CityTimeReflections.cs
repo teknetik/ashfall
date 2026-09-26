@@ -45,6 +45,7 @@ namespace AthenHill
         DefaultReflectionMode originalDefaultMode;
         Texture originalDefaultTexture;
         float originalDefaultIntensity;
+        bool originalRealtimeReflectionProbes;
         bool initialized;
 
         void OnEnable()
@@ -54,6 +55,7 @@ namespace AthenHill
             originalDefaultMode = RenderSettings.defaultReflectionMode;
             originalDefaultTexture = RenderSettings.customReflectionTexture;
             originalDefaultIntensity = RenderSettings.reflectionIntensity;
+            originalRealtimeReflectionProbes = QualitySettings.realtimeReflectionProbes;
             for (int i = 0; i < probes.Length; i++)
             {
                 var binding = probes[i]; var p = binding?.probe; if (!p) continue;
@@ -120,6 +122,9 @@ namespace AthenHill
                 }
                 startedAt = Time.realtimeSinceStartup; state.lastStarted = startedAt;
                 requestedHour = clock.Hour; requestedSun = clock.SunVisibility;
+                // The quality tiers retain authored cubemaps with realtime capture disabled.
+                // RenderProbe also needs this global switch; otherwise its request never finishes.
+                QualitySettings.realtimeReflectionProbes = true;
                 renderId = p.RenderProbe();
                 if (renderId < 0) { FailedCaptures++; Status = "Reflection capture rejected"; if (FailedCaptures == 1) Debug.LogWarning(Status, this); break; }
                 inFlight = index; nextIndex = (index + 1) % states.Length;
@@ -141,7 +146,9 @@ namespace AthenHill
                 p.customBakedTexture = state.customTexture;
             }
             RenderSettings.defaultReflectionMode = originalDefaultMode; RenderSettings.customReflectionTexture = originalDefaultTexture;
-            RenderSettings.reflectionIntensity = originalDefaultIntensity; inFlight = -1; states = null;
+            RenderSettings.reflectionIntensity = originalDefaultIntensity;
+            QualitySettings.realtimeReflectionProbes = originalRealtimeReflectionProbes;
+            inFlight = -1; states = null;
         }
     }
 }

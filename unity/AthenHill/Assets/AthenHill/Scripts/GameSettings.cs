@@ -111,6 +111,15 @@ namespace AthenHill
         public void Flush() => PlayerPrefs.Save();
         public void ResetSound() { Sound = new SoundOptions(); SaveSound(); }
 
+        // Preserve the authored scene default until the player makes a choice.
+        // Reuse the same QA namespace as audio/video so test runs cannot change it.
+        public bool ReadReducedMotion(bool defaultValue) => PlayerPrefs.GetInt(prefix + "ReducedMotion", defaultValue ? 1 : 0) != 0;
+        public void SaveReducedMotion(bool enabled)
+        {
+            PlayerPrefs.SetInt(prefix + "ReducedMotion", enabled ? 1 : 0);
+            Flush();
+        }
+
         public List<Vector2Int> Resolutions()
         {
             int maxW = Mathf.Max(Display.main.systemWidth, Screen.currentResolution.width, Screen.width, Screen.resolutions.Length > 0 ? Screen.resolutions.Max(r => r.width) : 0);

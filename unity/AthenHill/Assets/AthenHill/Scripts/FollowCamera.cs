@@ -16,11 +16,13 @@ namespace AthenHill
   public float Distance=>distance;
   public bool PlayerHidden {get;private set;}
   float distance;
+  PlayerMotor targetMotor;
   Renderer[] playerRenderers;
   ShadowCastingMode[] shadowModes;
   void Awake()
   {
    distance=boom;
+   targetMotor=target?target.GetComponent<PlayerMotor>():null;
    playerRenderers=target?target.GetComponentsInChildren<Renderer>(true):new Renderer[0];
    shadowModes=new ShadowCastingMode[playerRenderers.Length];
    for(int i=0;i<playerRenderers.Length;i++)shadowModes[i]=playerRenderers[i].shadowCastingMode;
@@ -31,7 +33,8 @@ namespace AthenHill
    if(input.Orbit){var delta=input.Look;yaw+=delta.x*sensitivity;pitch=Mathf.Clamp(pitch-delta.y*sensitivity,-80,80);}
    float scroll=input.Zoom;
    if(scroll!=0){boom=Mathf.Clamp(boom-scroll*zoomStep,0,maxBoom);if(boom<.05f)boom=0;}
-   Vector3 focus=target.position+Vector3.up*Mathf.Lerp(firstPersonHeight,targetHeight,Mathf.Clamp01(boom));
+   var targetPosition=targetMotor&&targetMotor.transform==target?targetMotor.RenderPosition:target.position;
+   Vector3 focus=targetPosition+Vector3.up*Mathf.Lerp(firstPersonHeight,targetHeight,Mathf.Clamp01(boom));
    Quaternion rotation=Quaternion.Euler(pitch,yaw,0);
    Vector3 behind=rotation*Vector3.back;
    float wanted=boom;

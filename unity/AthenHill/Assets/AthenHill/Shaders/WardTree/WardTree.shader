@@ -6,6 +6,7 @@ Shader "Athen Hill/Ward Tree"
         _WardWindStrength("Crown sway in metres", Range(0, .3)) = .07
         _WardLeafFlutter("Leaf flutter in metres", Range(0, .04)) = 0
         _WardTranslucency("Leaf light transmission", Range(0, .5)) = 0
+        _WardIndirectTranslucency("Leaf ambient transmission (legacy probes)", Range(0, .5)) = 0
         // Specular vs Metallic workflow
         _WorkflowMode("WorkflowMode", Float) = 1.0
 
@@ -555,5 +556,5 @@ Shader "Athen Hill/Ward Tree"
     }
 
     FallBack "Hidden/Universal Render Pipeline/FallbackError"
-    CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.LitShader"
+    CustomEditor "AthenHill.Editor.WardTreeShaderGUI"
 }

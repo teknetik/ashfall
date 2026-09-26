@@ -9,7 +9,7 @@ namespace AthenHill
  {
   public CityCatalog catalog;
   public GameSettings Settings {get;private set;}
-  void Awake(){Settings=GetComponent<GameSettings>();if(!Settings)Settings=gameObject.AddComponent<GameSettings>();}
+  void Awake(){Settings=GetComponent<GameSettings>();if(!Settings)Settings=gameObject.AddComponent<GameSettings>();reducedMotion=Settings.ReadReducedMotion(reducedMotion);}
   void SettingsChanged(){muted=Settings.Sound.muted;Changed?.Invoke();}
   public GameInput input;
   public PlayerMotor player;
@@ -37,7 +37,10 @@ namespace AthenHill
   public DialogueNode Dialogue=>ActiveNpc?ActiveNpc.definition.nodes.First(x=>x.id==dialogueNode):null;
   void Start(){Settings.Changed+=SettingsChanged;muted=Settings.Sound.muted;Settings.ApplySound();Shop=new ShopModel(catalog.items,catalog.startingCredits);Log.Add("Linn: Meet me on the hill.");SetState(CityState.Play);}
   void OnDestroy(){if(Settings)Settings.Changed-=SettingsChanged;Time.timeScale=1;AudioListener.pause=false;AudioListener.volume=1;}
-  void OnApplicationFocus(bool focused){if(!focused&&State==CityState.Play)SetState(CityState.Paused);}
+  // Do not change session state from OnApplicationFocus. Linux launchers and
+  // window managers can report a transient focus loss while the player window is
+  // still opening, which otherwise starts the game paused with movement disabled.
+  // The explicit Escape and HUD pause controls remain available.
   void Update()
   {
    if(input.Cancel){if(State==CityState.Play)SetState(CityState.Paused);else Close();}
@@ -99,7 +102,7 @@ namespace AthenHill
   public void Close(){if(State==CityState.Settings){if(Settings.Previewing){Settings.RevertVideo();return;}Settings.EndEdit();SetState(CityState.Paused);return;}if(ActiveNpc)ActiveNpc.talking=false;ActiveNpc=null;GridProgress=0;SetState(CityState.Play);}
   public void ResetPlayer(){Close();player.ReturnToGate();follow.yaw=-90;follow.pitch=17;follow.FixedView=false;}
   public void ToggleMute(){Settings.Sound.muted=!Settings.Sound.muted;Settings.SaveSound();Settings.Flush();}
-  public void ToggleReducedMotion(){reducedMotion=!reducedMotion;Changed?.Invoke();}
+  public void ToggleReducedMotion(){reducedMotion=!reducedMotion;Settings.SaveReducedMotion(reducedMotion);Changed?.Invoke();}
   void SetState(CityState state){State=state;input.SetGameplay(state==CityState.Play);player.Blocked=state!=CityState.Play;player.Talking=state==CityState.Dialogue;Time.timeScale=state==CityState.Paused||state==CityState.Settings?0:1;AudioListener.pause=state==CityState.Paused;Changed?.Invoke();}
   public void Notify(string text,string speaker="System"){notice=text;noticeTime=4;AddLog(speaker,text);Changed?.Invoke();}
   void AddLog(string speaker,string text){LogRevision++;Log.Add(speaker+": "+text);if(Log.Count>16)Log.RemoveAt(0);Changed?.Invoke();}

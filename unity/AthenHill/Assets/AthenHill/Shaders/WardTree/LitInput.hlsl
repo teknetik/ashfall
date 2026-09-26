@@ -36,6 +36,7 @@ UNITY_TEXTURE_STREAMING_DEBUG_VARS;
 half _WardWindStrength;
 half _WardLeafFlutter;
 half _WardTranslucency;
+half _WardIndirectTranslucency;
 CBUFFER_END
 
 // NOTE: Do not ifdef the properties for dots instancing, but ifdef the actual usage.
