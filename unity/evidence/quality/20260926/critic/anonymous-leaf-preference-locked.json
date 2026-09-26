@@ -1,0 +1,126 @@
+{
+  "reviewer": "independent visual_critic",
+  "lockedUtc": "2026-09-26T11:32:38.132866+00:00",
+  "mappingSeen": false,
+  "sourceCommandsSeen": false,
+  "candidateImplementationSeen": false,
+  "captureKind": "Direct Unity Editor camera stills, 1920x1080. Same-scene anonymous leaf comparison; not native acceptance.",
+  "identityLimits": "The Ward scene and ARK references are recognizable; only leaf-variant mapping is concealed. No claim of blind cross-game testing.",
+  "reviewInputsOnly": [
+    "cam_hill-A.png",
+    "cam_hill-B.png",
+    "cam_hero-A.png",
+    "cam_hero-B.png",
+    "cam_tree_canopy_below-A.png",
+    "cam_tree_canopy_below-B.png",
+    "cam_tree_canopy_edge-A.png",
+    "cam_tree_canopy_edge-B.png"
+  ],
+  "scoring": "0 missing/broken,1 severe,2 conspicuously artificial,3 credible progress with clear focal weaknesses,4 strong with minor remaining flaws,5 reference matched. Null is unqualified.",
+  "pairs": {
+    "cam_hill": {
+      "preferred": "A",
+      "confidence": "high",
+      "A": {
+        "hueMaterial": 3,
+        "lightingDepth": 3,
+        "silhouetteCoverage": 4,
+        "staticEdges": 2
+      },
+      "B": {
+        "hueMaterial": 2,
+        "lightingDepth": 3,
+        "silhouetteCoverage": 4,
+        "staticEdges": 2
+      },
+      "reason": "A reads as living dark olive/green foliage and separates the oasis tree from the pale mineral basin. B reads silvery/gray with pale exterior clusters. A has a coherent shaded crown and preserves the same visible branch/crown outline.",
+      "remaining": "A is still largely one dark olive family and muted inside; broad lower/inner clusters compress together. Raster edges remain noisy. This does not solve the surrounding paving, basin or sky."
+    },
+    "cam_hero": {
+      "preferred": "B",
+      "confidence": "high",
+      "A": {
+        "hueMaterial": 2,
+        "lightingDepth": 3,
+        "silhouetteCoverage": 4,
+        "staticEdges": 2
+      },
+      "B": {
+        "hueMaterial": 3,
+        "lightingDepth": 3,
+        "silhouetteCoverage": 4,
+        "staticEdges": 2
+      },
+      "reason": "B reduces the washed-out pale fronts and presents green/yellow-green lit leaves against darker olive shade. This is more plausible foliage material than A at this close view. Bark and branch structure remain readable; no new gross silhouette loss is visible.",
+      "remaining": "Dark foliage in the upper half loses separation and reads as dense mottled sheets in places. Fine edge quality remains visibly stepped/noisy, and close leaf-surface detail is not strong enough for the target."
+    },
+    "cam_tree_canopy_below": {
+      "preferred": "A",
+      "confidence": "moderate",
+      "A": {
+        "hueMaterial": 3,
+        "lightingDepth": 2,
+        "silhouetteCoverage": 4,
+        "staticEdges": 2
+      },
+      "B": {
+        "hueMaterial": 2,
+        "lightingDepth": 3,
+        "silhouetteCoverage": 4,
+        "staticEdges": 2
+      },
+      "reason": "A has the better living-leaf hue, but the choice involves a real tradeoff: B reveals more leaf/branch separation in the canopy interior. A compresses that area into murky dark olive. A is the preferred color/material direction, not an accepted final underside.",
+      "remaining": "A fails shaded readability: upper-right and central under-canopy leaf clusters merge. Require a local material/light-response revision and matched below-canopy retest. Do not globally brighten the scene to conceal this."
+    },
+    "cam_tree_canopy_edge": {
+      "preferred": "A",
+      "confidence": "moderate",
+      "A": {
+        "hueMaterial": 3,
+        "lightingDepth": 2,
+        "silhouetteCoverage": 4,
+        "staticEdges": 2
+      },
+      "B": {
+        "hueMaterial": 2,
+        "lightingDepth": 3,
+        "silhouetteCoverage": 4,
+        "staticEdges": 2
+      },
+      "reason": "A removes the chalky gray wash and makes the crown read as foliage. However, B has more tonal readability across the dense upper and right clusters. Neither balances material identity and shaded detail well enough.",
+      "remaining": "A becomes too uniformly dark through broad overlapping leaf patches. Outer leaf/branch contours show no obvious new rectangular halo or missing-crown defect, but alpha/raster stair-stepping remains visible in both. Motion and mip stability are unknown."
+    }
+  },
+  "verdict": "PREFER_GREEN_DIRECTION; REVISE_SHADED_CANOPY; NOT_AAA_ACCEPTED",
+  "globalObservations": [
+    "Better hue is a meaningful visible improvement, but does not establish improved leaf microstructure or natural transmission.",
+    "No obvious new gross shape/coverage loss, rectangular card borders or bright outline halo was observed in these full-resolution stills.",
+    "Dense dark underside/edge clusters are a readability regression relative to the paler variant. Preserve the improved hue while repairing this bounded problem.",
+    "Direct camera capture edge quality cannot establish ordinary native-player AA. No temporal, LOD or perf approval.",
+    "The user-authored orange tree remains unchanged context. No removal or recolor is recommended by this leaf review."
+  ],
+  "aaaComparison": {
+    "preferred": "Official ARK references",
+    "confidence": "high",
+    "references": [
+      "ark-scorched-earth-official-courtyard.jpg",
+      "ark-scorched-earth-store-00.jpg"
+    ],
+    "reason": "ARK still has stronger variation between illuminated leaf faces, warm transmitted light and readable shaded plant interiors, integrated ground layers, and clearer near/middle/far separation. The greener Ward direction closes a color-identity gap but still lacks those material/depth qualities. Palm morphology is not a required Ward target; compare rendering plausibility, not species shape.",
+    "limits": "ARK promotional stills have unknown camera, exposure, render scale, hardware and processing; subjects differ. No performance or animation parity claim."
+  },
+  "nextEvidence": [
+    "Retest the preferred green direction from below and edge with a bounded shaded-leaf response revision. Preserve frontlit hue and existing silhouette.",
+    "Add close leaf sun/backlight/shade and moving native approach/LOD/alpha-edge capture, with unchanged exposure and recorded settings."
+  ],
+  "inputSha256": {
+    "cam_hill-A.png": "6f4bc4bc1ed8fb74025e24e7e5d65db61f2630e65d30ac0ae3341f8844c0bd31",
+    "cam_hill-B.png": "ffffeeae09a44c73e7927eb619159e49f5b73888bdc8c8f6f7dd60649afca890",
+    "cam_hero-A.png": "b4ae32affb0b9a8bcef3776272f4cf05c0cbe5061b3b4f7842cd07bf4408d33a",
+    "cam_hero-B.png": "9d6c476fe1eeacc91d65c570a1f20d264881162d568e20e073a41c61520faf75",
+    "cam_tree_canopy_below-A.png": "599b9e77b986f2651292e7ea3c2ddf5b40f1e0a9dedd2e38b981ac4c93f705e3",
+    "cam_tree_canopy_below-B.png": "e73313c285067f5ea03fd600e649ef3f600579f531474545d76ddbbe83027e3e",
+    "cam_tree_canopy_edge-A.png": "27130c4a3ea25527fde9485b033a73206025e5e93251b753f84b88af33ee7257",
+    "cam_tree_canopy_edge-B.png": "8d9f0afa6de96a287a0402d8a1a06bec09ed63247bde028c0c7fbe49af0b4593"
+  }
+}

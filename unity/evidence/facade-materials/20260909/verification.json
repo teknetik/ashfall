@@ -1,0 +1,106 @@
+{
+  "utc": "2026-09-09T12:06:35.310050+00:00",
+  "complete": true,
+  "scope": "Field Supply and Finery material and geometry refinement, before later Relay/Air + Water rollout",
+  "buildIdentity": "build-identity.json",
+  "reports": [
+    "field_supply-captures.json",
+    "finery-captures.json",
+    "material-lighting.json",
+    "weathering-proximity.json",
+    "traversal-performance.json",
+    "interaction-performance.json",
+    "city-loop.json"
+  ],
+  "releaseSmoke": true,
+  "environment": {
+    "unity": "6000.6.0f1",
+    "os": "Linux 7.0 Ubuntu 24.04 64bit",
+    "gpu": "NVIDIA GeForce RTX 3060/PCIe/SSE2",
+    "api": "OpenGLCore",
+    "driver": "OpenGL 4.5.0 NVIDIA 595.84",
+    "cpu": "Intel(R) Core(TM) i9-10850K CPU @ 3.60GHz",
+    "quality": "PC",
+    "width": 1920,
+    "height": 1080,
+    "vsync": 0,
+    "targetFrameRate": -1,
+    "drawCounter": true,
+    "triangleCounter": true,
+    "mainThreadCounter": true,
+    "renderThreadCounter": false,
+    "actorCount": 9
+  },
+  "traversal": {
+    "frames": 22032,
+    "seconds": 134.47032549231,
+    "averageFps": 163.84283981866284,
+    "p50Ms": 5.046634000000001,
+    "p95Ms": 11.438241260000002,
+    "p99Ms": 13.078579705999998,
+    "maxMs": 206.0933,
+    "hitchesOver33ms": 1,
+    "hitchesOver50ms": 1,
+    "mainMs": {
+      "samples": 22032,
+      "mean": 6.1016139020969495,
+      "p95": 11.4360499,
+      "max": 206.091751
+    },
+    "renderMs": null,
+    "cpuMs": {
+      "samples": 22032,
+      "mean": 6.103711989242919,
+      "p95": 11.438736800000001,
+      "max": 206.094006
+    },
+    "gpuMs": null,
+    "draws": null,
+    "tris": {
+      "samples": 22032,
+      "mean": 8774671.797385622,
+      "p95": 20738837.0,
+      "max": 28112776
+    },
+    "batches": null,
+    "setPass": {
+      "samples": 22032,
+      "mean": 56.45783405954975,
+      "p95": 117.0,
+      "max": 143
+    }
+  },
+  "meetsFrameTimeTarget": true,
+  "interactions": {
+    "frames": 6765,
+    "seconds": 29.48977735131,
+    "averageFps": 229.40152851643975,
+    "p50Ms": 3.9414469999999997,
+    "p95Ms": 8.563478,
+    "p99Ms": 10.5149727,
+    "maxMs": 111.525007
+  },
+  "memoryObservation": {
+    "nativeRssKiB": 2409872,
+    "gpuTotalMiB": 12288,
+    "gpuUsedAllProcessesMiB": 2919,
+    "gpuPerProcessMemory": null,
+    "scope": "Post-capture observation, not a measured traversal peak"
+  },
+  "retainedDefects": [
+    "One 206.09 ms traversal hitch; not a flawless frame-pacing result",
+    "Deep canopy shade limits fine detail at noon",
+    "Shared material tiles can repeat over long walls"
+  ],
+  "visualAssessment": {
+    "reference": "Approved prior weathering concept and first-person natural materials request",
+    "scaleAndConstruction": 4,
+    "surfaceDetail": 4,
+    "localStorytelling": 4,
+    "silhouette": 4,
+    "lightingDepth": 3,
+    "temporalStability": 3,
+    "uiReadability": 4,
+    "notes": "Surface/geometry work improves this local slice. Existing deep shade and one measured hitch remain; no overall AAA or whole-district acceptance asserted."
+  }
+}

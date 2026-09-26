@@ -1,0 +1,9 @@
+[
+  {
+    "tool": "execute_code",
+    "args": {
+      "action": "execute",
+      "code": "var player = UnityEngine.Object.FindAnyObjectByType<AthenHill.PlayerMotor>();\nvar scene = UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene();\nvar proxy = player.visual.Find(\"Player shadow proxy\");\nvar r = proxy.GetComponent<UnityEngine.MeshRenderer>();\nreturn new { playing=UnityEditor.EditorApplication.isPlaying, compiling=UnityEditor.EditorApplication.isCompiling, scene=scene.path, dirty=scene.isDirty,\nroot=UnityEditor.GlobalObjectId.GetGlobalObjectIdSlow(player.transform).ToString(), rootPosition=player.transform.position.ToString(\"R\"),\nvisual=UnityEditor.GlobalObjectId.GetGlobalObjectIdSlow(player.visual).ToString(), visualLocalPosition=player.visual.localPosition.ToString(\"R\"), visualLocalRotation=player.visual.localRotation.ToString(\"R\"), visualScale=player.visual.localScale.ToString(\"R\"),\nproxy=UnityEditor.GlobalObjectId.GetGlobalObjectIdSlow(proxy).ToString(), parent=UnityEditor.GlobalObjectId.GetGlobalObjectIdSlow(proxy.parent).ToString(),\nproxyPosition=proxy.position.ToString(\"R\"), proxyRotation=proxy.rotation.ToString(\"R\"), proxyScale=proxy.lossyScale.ToString(\"R\"),\nlocalPosition=proxy.localPosition.ToString(\"R\"), localRotation=proxy.localRotation.ToString(\"R\"), localScale=proxy.localScale.ToString(\"R\"),\nactive=proxy.gameObject.activeSelf, enabled=r.enabled, shadowCasting=r.shadowCastingMode.ToString(), receiveShadows=r.receiveShadows,\nmaterial=UnityEditor.AssetDatabase.GetAssetPath(r.sharedMaterial), mesh=proxy.GetComponent<UnityEngine.MeshFilter>().sharedMesh.name,\nproxyColliders=proxy.GetComponentsInChildren<UnityEngine.Collider>(true).Length, actors=UnityEngine.Object.FindObjectsByType<AthenHill.ActorAnimation>().Length };\n"
+    }
+  }
+]

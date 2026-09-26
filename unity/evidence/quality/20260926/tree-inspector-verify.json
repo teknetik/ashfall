@@ -1,0 +1,9 @@
+[
+  {
+    "tool": "execute_code",
+    "args": {
+      "action": "execute",
+      "code": "var leaf=AssetDatabase.LoadAssetAtPath<Material>(\"Assets/AthenHill/Art/HeroTree/leaves.mat\");\nvar one=new Material(leaf); var two=new Material(leaf);\none.SetFloat(\"_WardIndirectTranslucency\",0); two.SetFloat(\"_WardIndirectTranslucency\",.25f);\nUndo.IncrementCurrentGroup(); int group=Undo.GetCurrentGroup();\ntry {\nvar objects=new UnityEngine.Object[]{one,two};\nvar prop=MaterialEditor.GetMaterialProperties(objects).Single(p=>p.name==\"_WardIndirectTranslucency\");\nif(!prop.hasMixedValue)throw new Exception(\"Mixed material values not represented\");\nUndo.RecordObjects(objects,\"Verify Ward material property Undo\");\nprop.floatValue=.15f; Undo.FlushUndoRecordObjects();\nif(Mathf.Abs(one.GetFloat(prop.name)-.15f)>.0001f || Mathf.Abs(two.GetFloat(prop.name)-.15f)>.0001f)throw new Exception(\"Multi-material edit failed\");\nUndo.RevertAllDownToGroup(group);\nif(Mathf.Abs(one.GetFloat(prop.name))>.0001f || Mathf.Abs(two.GetFloat(prop.name)-.25f)>.0001f)throw new Exception(\"Material Undo did not restore both values\");\nreturn new { multiEdit=true, mixedValue=true, undoRestored=true, sourceValue=leaf.GetFloat(prop.name), sceneDirty=UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().isDirty };\n} finally { UnityEngine.Object.DestroyImmediate(one);UnityEngine.Object.DestroyImmediate(two); }"
+    }
+  }
+]

@@ -1,0 +1,277 @@
+{
+  "complete": false,
+  "qualification": false,
+  "purpose": "Compare original and transient LOD1 tree shadow casters in matched native views.\n\nAttach only after the owner hands over the new PID and native QA command folder.\nThis never launches a player, injects input, edits the Editor, or qualifies a build.\n",
+  "nativeFolder": "/home/teknetik/code/ao2/unity/evidence/quality/20260926/candidate-native-04-windowed",
+  "pid": 1103618,
+  "warmupSeconds": 3,
+  "sampleSeconds": 12,
+  "pairs": 1,
+  "intervals": [],
+  "note": "Development build04; Runtime.dll d52781641006b6e8a80aee3b42f542b64c4c83fb74c6ca60b640d3cfdd004f21; true1920x1080 verified by parent; direct NVIDIA OpenGL; Editor idle, Blender CPU bake complete/idle, no software players or parallel captures during sampling.",
+  "cameras": [
+    "cam_hill",
+    "cam_avenue"
+  ],
+  "profiles": [
+    [
+      18,
+      1
+    ],
+    [
+      32,
+      1
+    ],
+    [
+      32,
+      2
+    ],
+    [
+      40,
+      2
+    ]
+  ],
+  "limitations": [
+    "Stationary short intervals only; no real-input traversal or functional/visual acceptance.",
+    "Nonpositive timing/counter values are unavailable, never zero cost; valid coverage is reported.",
+    "Latest GPU timestamps may be absent or repeated and lack frame IDs in NativeQa. CPU/main-thread include waits.",
+    "Triangles include all passes; draw calls, batches and SetPass are separate counters.",
+    "Clock fixed at12; animation, nine actors, foliage/dust/audio continue at differing phases.",
+    "Actual viewport comes from snapshots; launch environment and saved video dimensions may be stale.",
+    "Native settings expose cascade4Split but not cascade2Split. The diagnostic does not change splits; current source PC_RPAsset declares cascade2Split0.25, not a live measured field.",
+    "Raw first frame retained; summary omits only its pre-start boundary delta.",
+    "Normal development QA snapshot IO/profiling allocations remain active for both alternatives."
+  ],
+  "build": {
+    "executable": "/home/teknetik/code/ao2/unity/AthenHill/Builds/LinuxDevelopment/AthenHill.x86_64",
+    "sha256": "de3009bc2c3a8a7c25f347c0c0a098a1c49dbbb6ee6ec100562e61fb50cae261",
+    "processStartTicks": "10887605",
+    "assemblySha256": "59d2648df4ee430d39e42cc49003daf3b432ec1fed257f471f65f92a336e43fd",
+    "runtimeAssemblySha256": "d52781641006b6e8a80aee3b42f542b64c4c83fb74c6ca60b640d3cfdd004f21"
+  },
+  "initialSettings": {
+    "sound": {
+      "master": 1.0,
+      "music": 1.0,
+      "ambience": 1.0,
+      "effects": 1.0,
+      "muted": false
+    },
+    "video": {
+      "width": 1896,
+      "height": 2098,
+      "windowMode": 0,
+      "preset": 2,
+      "renderPercent": 100,
+      "shadows": 3,
+      "antiAliasing": 4,
+      "textureLimit": 0,
+      "postProcessing": true,
+      "vSync": false,
+      "frameLimit": 0
+    },
+    "draft": {
+      "width": 1896,
+      "height": 2098,
+      "windowMode": 0,
+      "preset": 2,
+      "renderPercent": 100,
+      "shadows": 3,
+      "antiAliasing": 4,
+      "textureLimit": 0,
+      "postProcessing": true,
+      "vSync": false,
+      "frameLimit": 0
+    },
+    "previewing": false,
+    "remaining": 0,
+    "renderScale": 1.0,
+    "msaa": 4,
+    "shadowDistance": 18.0,
+    "shadowResolution": 4096,
+    "shadowCascades": 1,
+    "cascade4Split": [
+      0.122999988,
+      0.2926,
+      0.535999954
+    ],
+    "textureLimit": 0,
+    "vSync": 0,
+    "frameLimit": -1,
+    "postProcessing": true,
+    "track": "Dust of the Giants",
+    "transitions": 4,
+    "timeScale": 1.0
+  },
+  "initialSnapshot": {
+    "atmosphere": {
+      "windTime": 243.136078,
+      "dustParticles": 54,
+      "dustPlaying": true
+    },
+    "frame": 2625,
+    "width": 2248,
+    "height": 1290,
+    "session": {
+      "state": "Play",
+      "visitedHill": false,
+      "spoken": [],
+      "boughtFlask": false,
+      "soldScrap": false,
+      "linked": false,
+      "muted": false,
+      "reducedMotion": false,
+      "notice": "",
+      "selectedDestination": "",
+      "gridProgress": 0.0,
+      "credits": 25,
+      "quantities": {
+        "water_flask": 0,
+        "medkit": 0,
+        "scrap_coil": 1
+      },
+      "focused": null
+    },
+    "player": {
+      "position": [
+        38.9880028,
+        0.0299999863,
+        -5.62635364e-07
+      ],
+      "grounded": true,
+      "speed": 3.39985037
+    },
+    "audio": {
+      "StepCount": 2,
+      "ClickCount": 0,
+      "TradeCount": 0,
+      "UnavailableCount": 0,
+      "TravelOpenCount": 0,
+      "TravelLinkCount": 0,
+      "paused": false,
+      "volume": 1.0,
+      "sources": [
+        {
+          "name": "City music crossfade",
+          "clip": "Dust of Alshain",
+          "playing": false,
+          "time": 0.0,
+          "volume": 0.0,
+          "spatialBlend": 0.0,
+          "loop": false,
+          "group": "Music"
+        },
+        {
+          "name": "City soundtrack",
+          "clip": "Dust of the Giants",
+          "playing": true,
+          "time": 24.08533,
+          "volume": 0.65,
+          "spatialBlend": 0.0,
+          "loop": false,
+          "group": "Music"
+        },
+        {
+          "name": "Desert wind",
+          "clip": "desert-wind",
+          "playing": true,
+          "time": 14.3866444,
+          "volume": 0.8,
+          "spatialBlend": 0.0,
+          "loop": true,
+          "group": "Ambience"
+        },
+        {
+          "name": "Lattice activation and link",
+          "clip": "lattice-open",
+          "playing": false,
+          "time": 0.0,
+          "volume": 0.7,
+          "spatialBlend": 0.0,
+          "loop": false,
+          "group": "SFX"
+        },
+        {
+          "name": "Lattice hum",
+          "clip": "lattice-hum",
+          "playing": true,
+          "time": 1.386644,
+          "volume": 0.7,
+          "spatialBlend": 1.0,
+          "loop": true,
+          "group": "Ambience"
+        },
+        {
+          "name": "Market murmur",
+          "clip": "market-murmur",
+          "playing": true,
+          "time": 14.8366442,
+          "volume": 0.8,
+          "spatialBlend": 1.0,
+          "loop": true,
+          "group": "Ambience"
+        },
+        {
+          "name": "Ring hum",
+          "clip": "ring-hum",
+          "playing": true,
+          "time": 1.386644,
+          "volume": 0.8,
+          "spatialBlend": 1.0,
+          "loop": true,
+          "group": "Ambience"
+        },
+        {
+          "name": "Stone footsteps",
+          "clip": "stone-step-01",
+          "playing": false,
+          "time": 0.0,
+          "volume": 0.55,
+          "spatialBlend": 0.0,
+          "loop": false,
+          "group": "SFX"
+        },
+        {
+          "name": "Terminal feedback",
+          "clip": "terminal-click",
+          "playing": false,
+          "time": 0.0,
+          "volume": 0.65,
+          "spatialBlend": 0.0,
+          "loop": false,
+          "group": "UI"
+        }
+      ]
+    },
+    "camera": {
+      "yaw": -90.0,
+      "pitch": 17.0,
+      "boom": 4.2,
+      "distance": 4.2,
+      "firstPerson": false,
+      "playerHidden": false,
+      "position": [
+        43.5061951,
+        2.7579608,
+        -6.87853344e-07
+      ],
+      "overlaps": []
+    },
+    "fps": 6.87885571,
+    "draws": 0,
+    "triangles": 30099266
+  },
+  "error": "AssertionError('Actual viewport must be 1920x1080')",
+  "runtimeLog": {
+    "path": "/home/teknetik/code/ao2/unity/evidence/quality/20260926/candidate-native-04-windowed/Player.log",
+    "startByte": 20661,
+    "matchingLines": [],
+    "markers": [
+      "Exception:",
+      "NullReferenceException",
+      "Shader error",
+      "is not supported on this GPU",
+      "Assertion failed"
+    ]
+  }
+}

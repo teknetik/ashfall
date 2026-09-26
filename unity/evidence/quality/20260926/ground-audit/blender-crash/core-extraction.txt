@@ -1,0 +1,690 @@
+           PID: 1005528 (blender)
+           TID: 1005528 (blender)
+           UID: 1000 (teknetik)
+           GID: 1000 (teknetik)
+        Signal: 11 (SEGV) si_code: SI_USER
+     Timestamp: Sat 2026-09-26 13:43:38 BST (2min 9s ago)
+  Command Line: blender
+    Executable: /usr/bin/blender
+ Control Group: /user.slice/user-1000.slice/session-5.scope
+          Unit: session-5.scope
+         Slice: user-1000.slice
+       Session: 5
+     Owner UID: 1000 (teknetik)
+       Boot ID: ded00b0ba6234a7dbd6c0da0ad968982
+    Machine ID: d399a408fa9c4b08b84cf88812aee24a
+      Hostname: dawn
+       Storage: /var/lib/systemd/coredump/core.blender.1000.ded00b0ba6234a7dbd6c0da0ad968982.1005528.1790426618000000.zst (present)
+  Size on Disk: 170.7M
+       Message: Process 1005528 (blender) of user 1000 dumped core.
+                
+                Module libur_loader.so.0 without build-id.
+                Module libintlc.so.5 without build-id.
+                Module libimf.so without build-id.
+                Module libirng.so without build-id.
+                Module libsvml.so without build-id.
+                Module libsycl.so.9 without build-id.
+                Module libcycles_kernel_oneapi_aot.so without build-id.
+                Stack trace of thread 1005528:
+                #0  0x00005fc0f29ff049 n/a (blender + 0x1dea049)
+                #1  0x00005fc0f2ce4335 n/a (blender + 0x20cf335)
+                #2  0x00005fc0f2a08367 n/a (blender + 0x1df3367)
+                #3  0x00005fc0f276598c n/a (blender + 0x1b5098c)
+                #4  0x00005fc0f2766840 n/a (blender + 0x1b51840)
+                #5  0x00005fc0f4be9634 n/a (blender + 0x3fd4634)
+                #6  0x00007f726b7d73bb n/a (libpython3.14.so.1.0 + 0x1d73bb)
+                #7  0x00007f726b7a69e9 _PyObject_MakeTpCall (libpython3.14.so.1.0 + 0x1a69e9)
+                #8  0x00007f726b669ef6 n/a (libpython3.14.so.1.0 + 0x69ef6)
+                #9  0x00007f726b7b9172 n/a (libpython3.14.so.1.0 + 0x1b9172)
+                #10 0x00007f726b8bc2a4 PyEval_EvalCode (libpython3.14.so.1.0 + 0x2bc2a4)
+                #11 0x00007f726b8dfd76 n/a (libpython3.14.so.1.0 + 0x2dfd76)
+                #12 0x00007f726b65dfc1 n/a (libpython3.14.so.1.0 + 0x5dfc1)
+                #13 0x00007f726b7b9172 n/a (libpython3.14.so.1.0 + 0x1b9172)
+                #14 0x00007f726b8bc2a4 PyEval_EvalCode (libpython3.14.so.1.0 + 0x2bc2a4)
+                #15 0x00007f726b90571f n/a (libpython3.14.so.1.0 + 0x30571f)
+                #16 0x00007f726b8fe5c4 n/a (libpython3.14.so.1.0 + 0x2fe5c4)
+                #17 0x00007f726b8dfe3f n/a (libpython3.14.so.1.0 + 0x2dfe3f)
+                #18 0x00007f726b667661 n/a (libpython3.14.so.1.0 + 0x67661)
+                #19 0x00007f726b7e478b n/a (libpython3.14.so.1.0 + 0x1e478b)
+                #20 0x00007f726b83593e n/a (libpython3.14.so.1.0 + 0x23593e)
+                #21 0x00007f726b800741 n/a (libpython3.14.so.1.0 + 0x200741)
+                #22 0x00007f726b6693f9 n/a (libpython3.14.so.1.0 + 0x693f9)
+                #23 0x00007f726b7e478b n/a (libpython3.14.so.1.0 + 0x1e478b)
+                #24 0x00007f726b8359ae n/a (libpython3.14.so.1.0 + 0x2359ae)
+                #25 0x00007f726b875357 PyObject_CallObject (libpython3.14.so.1.0 + 0x275357)
+                #26 0x00005fc0f4bdad4b n/a (blender + 0x3fc5d4b)
+                #27 0x00005fc0f32c464f n/a (blender + 0x26af64f)
+                #28 0x00005fc0f3b76586 n/a (blender + 0x2f61586)
+                #29 0x00005fc0f3b530cb n/a (blender + 0x2f3e0cb)
+                #30 0x00005fc0f266dae6 n/a (blender + 0x1a58ae6)
+                #31 0x00007f7269c27781 n/a (libc.so.6 + 0x27781)
+                #32 0x00007f7269c278b9 __libc_start_main (libc.so.6 + 0x278b9)
+                #33 0x00005fc0f266d4a5 n/a (blender + 0x1a584a5)
+                
+                Stack trace of thread 1005543:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269ca0860 n/a (libc.so.6 + 0xa0860)
+                #3  0x00007f726137e92a _ZN13IlmThread_3_49Semaphore4waitEv (libIlmThread-3_4.so.33 + 0x492a)
+                #4  0x00007f726137fe4a n/a (libIlmThread-3_4.so.33 + 0x5e4a)
+                #5  0x00007f726137e56c n/a (libIlmThread-3_4.so.33 + 0x456c)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005534:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269ca0860 n/a (libc.so.6 + 0xa0860)
+                #3  0x00007f726137e92a _ZN13IlmThread_3_49Semaphore4waitEv (libIlmThread-3_4.so.33 + 0x492a)
+                #4  0x00007f726137fe4a n/a (libIlmThread-3_4.so.33 + 0x5e4a)
+                #5  0x00007f726137e56c n/a (libIlmThread-3_4.so.33 + 0x456c)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005536:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269ca0860 n/a (libc.so.6 + 0xa0860)
+                #3  0x00007f726137e92a _ZN13IlmThread_3_49Semaphore4waitEv (libIlmThread-3_4.so.33 + 0x492a)
+                #4  0x00007f726137fe4a n/a (libIlmThread-3_4.so.33 + 0x5e4a)
+                #5  0x00007f726137e56c n/a (libIlmThread-3_4.so.33 + 0x456c)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005530:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269ca0860 n/a (libc.so.6 + 0xa0860)
+                #3  0x00007f726137e92a _ZN13IlmThread_3_49Semaphore4waitEv (libIlmThread-3_4.so.33 + 0x492a)
+                #4  0x00007f726137fe4a n/a (libIlmThread-3_4.so.33 + 0x5e4a)
+                #5  0x00007f726137e56c n/a (libIlmThread-3_4.so.33 + 0x456c)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005533:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269ca0860 n/a (libc.so.6 + 0xa0860)
+                #3  0x00007f726137e92a _ZN13IlmThread_3_49Semaphore4waitEv (libIlmThread-3_4.so.33 + 0x492a)
+                #4  0x00007f726137fe4a n/a (libIlmThread-3_4.so.33 + 0x5e4a)
+                #5  0x00007f726137e56c n/a (libIlmThread-3_4.so.33 + 0x456c)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005545:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269ca0860 n/a (libc.so.6 + 0xa0860)
+                #3  0x00007f726137e92a _ZN13IlmThread_3_49Semaphore4waitEv (libIlmThread-3_4.so.33 + 0x492a)
+                #4  0x00007f726137fe4a n/a (libIlmThread-3_4.so.33 + 0x5e4a)
+                #5  0x00007f726137e56c n/a (libIlmThread-3_4.so.33 + 0x456c)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005535:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269ca0860 n/a (libc.so.6 + 0xa0860)
+                #3  0x00007f726137e92a _ZN13IlmThread_3_49Semaphore4waitEv (libIlmThread-3_4.so.33 + 0x492a)
+                #4  0x00007f726137fe4a n/a (libIlmThread-3_4.so.33 + 0x5e4a)
+                #5  0x00007f726137e56c n/a (libIlmThread-3_4.so.33 + 0x456c)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005539:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269ca0860 n/a (libc.so.6 + 0xa0860)
+                #3  0x00007f726137e92a _ZN13IlmThread_3_49Semaphore4waitEv (libIlmThread-3_4.so.33 + 0x492a)
+                #4  0x00007f726137fe4a n/a (libIlmThread-3_4.so.33 + 0x5e4a)
+                #5  0x00007f726137e56c n/a (libIlmThread-3_4.so.33 + 0x456c)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005583:
+                #0  0x00007f7269d1e4ed syscall (libc.so.6 + 0x11e4ed)
+                #1  0x00007f727bb3e2ae n/a (libtbb.so.12 + 0x2b2ae)
+                #2  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #3  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005541:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269ca0860 n/a (libc.so.6 + 0xa0860)
+                #3  0x00007f726137e92a _ZN13IlmThread_3_49Semaphore4waitEv (libIlmThread-3_4.so.33 + 0x492a)
+                #4  0x00007f726137fe4a n/a (libIlmThread-3_4.so.33 + 0x5e4a)
+                #5  0x00007f726137e56c n/a (libIlmThread-3_4.so.33 + 0x456c)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005532:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269ca0860 n/a (libc.so.6 + 0xa0860)
+                #3  0x00007f726137e92a _ZN13IlmThread_3_49Semaphore4waitEv (libIlmThread-3_4.so.33 + 0x492a)
+                #4  0x00007f726137fe4a n/a (libIlmThread-3_4.so.33 + 0x5e4a)
+                #5  0x00007f726137e56c n/a (libIlmThread-3_4.so.33 + 0x456c)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005540:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269ca0860 n/a (libc.so.6 + 0xa0860)
+                #3  0x00007f726137e92a _ZN13IlmThread_3_49Semaphore4waitEv (libIlmThread-3_4.so.33 + 0x492a)
+                #4  0x00007f726137fe4a n/a (libIlmThread-3_4.so.33 + 0x5e4a)
+                #5  0x00007f726137e56c n/a (libIlmThread-3_4.so.33 + 0x456c)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005542:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269ca0860 n/a (libc.so.6 + 0xa0860)
+                #3  0x00007f726137e92a _ZN13IlmThread_3_49Semaphore4waitEv (libIlmThread-3_4.so.33 + 0x492a)
+                #4  0x00007f726137fe4a n/a (libIlmThread-3_4.so.33 + 0x5e4a)
+                #5  0x00007f726137e56c n/a (libIlmThread-3_4.so.33 + 0x456c)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005537:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269ca0860 n/a (libc.so.6 + 0xa0860)
+                #3  0x00007f726137e92a _ZN13IlmThread_3_49Semaphore4waitEv (libIlmThread-3_4.so.33 + 0x492a)
+                #4  0x00007f726137fe4a n/a (libIlmThread-3_4.so.33 + 0x5e4a)
+                #5  0x00007f726137e56c n/a (libIlmThread-3_4.so.33 + 0x456c)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005544:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269ca0860 n/a (libc.so.6 + 0xa0860)
+                #3  0x00007f726137e92a _ZN13IlmThread_3_49Semaphore4waitEv (libIlmThread-3_4.so.33 + 0x492a)
+                #4  0x00007f726137fe4a n/a (libIlmThread-3_4.so.33 + 0x5e4a)
+                #5  0x00007f726137e56c n/a (libIlmThread-3_4.so.33 + 0x456c)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005551:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269d20cab epoll_wait (libc.so.6 + 0x120cab)
+                #2  0x00007f7240478569 n/a (libspa-support.so + 0x1d569)
+                #3  0x00007f72404618e9 n/a (libspa-support.so + 0x68e9)
+                #4  0x00007f72440e9f81 n/a (libpipewire-0.3.so.0 + 0x8df81)
+                #5  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #6  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005547:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269ca0860 n/a (libc.so.6 + 0xa0860)
+                #3  0x00007f726137e92a _ZN13IlmThread_3_49Semaphore4waitEv (libIlmThread-3_4.so.33 + 0x492a)
+                #4  0x00007f726137fe4a n/a (libIlmThread-3_4.so.33 + 0x5e4a)
+                #5  0x00007f726137e56c n/a (libIlmThread-3_4.so.33 + 0x456c)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005591:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00007f726a0df971 _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE (libstdc++.so.6 + 0xdf971)
+                #4  0x00007f726c9788ea n/a (libOpenImageIO_Util.so.3.1 + 0x968ea)
+                #5  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #6  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #7  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005571:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00005fc0f343aeac n/a (blender + 0x2825eac)
+                #4  0x00005fc0f385b830 n/a (blender + 0x2c46830)
+                #5  0x00005fc0f385bbdd n/a (blender + 0x2c46bdd)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005552:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00007f726a0df971 _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE (libstdc++.so.6 + 0xdf971)
+                #4  0x00005fc0f2d04931 n/a (blender + 0x20ef931)
+                #5  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #6  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #7  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005546:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269ca0860 n/a (libc.so.6 + 0xa0860)
+                #3  0x00007f726137e92a _ZN13IlmThread_3_49Semaphore4waitEv (libIlmThread-3_4.so.33 + 0x492a)
+                #4  0x00007f726137fe4a n/a (libIlmThread-3_4.so.33 + 0x5e4a)
+                #5  0x00007f726137e56c n/a (libIlmThread-3_4.so.33 + 0x456c)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005586:
+                #0  0x00007f7269d1e4ed syscall (libc.so.6 + 0x11e4ed)
+                #1  0x00007f727bb3e2ae n/a (libtbb.so.12 + 0x2b2ae)
+                #2  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #3  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005565:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00005fc0f343aeac n/a (blender + 0x2825eac)
+                #4  0x00005fc0f385b830 n/a (blender + 0x2c46830)
+                #5  0x00005fc0f385bbdd n/a (blender + 0x2c46bdd)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005593:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00007f726a0df971 _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE (libstdc++.so.6 + 0xdf971)
+                #4  0x00007f726c9788ea n/a (libOpenImageIO_Util.so.3.1 + 0x968ea)
+                #5  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #6  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #7  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005548:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269ca0860 n/a (libc.so.6 + 0xa0860)
+                #3  0x00007f726137e92a _ZN13IlmThread_3_49Semaphore4waitEv (libIlmThread-3_4.so.33 + 0x492a)
+                #4  0x00007f726137fe4a n/a (libIlmThread-3_4.so.33 + 0x5e4a)
+                #5  0x00007f726137e56c n/a (libIlmThread-3_4.so.33 + 0x456c)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005581:
+                #0  0x00007f7269d1e4ed syscall (libc.so.6 + 0x11e4ed)
+                #1  0x00007f727bb3e2ae n/a (libtbb.so.12 + 0x2b2ae)
+                #2  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #3  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005554:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00007f726a0df971 _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE (libstdc++.so.6 + 0xdf971)
+                #4  0x00005fc0f76d6ae3 n/a (blender + 0x6ac1ae3)
+                #5  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #6  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #7  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005549:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269ca0860 n/a (libc.so.6 + 0xa0860)
+                #3  0x00007f726137e92a _ZN13IlmThread_3_49Semaphore4waitEv (libIlmThread-3_4.so.33 + 0x492a)
+                #4  0x00007f726137fe4a n/a (libIlmThread-3_4.so.33 + 0x5e4a)
+                #5  0x00007f726137e56c n/a (libIlmThread-3_4.so.33 + 0x456c)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005579:
+                #0  0x00007f7269d1e4ed syscall (libc.so.6 + 0x11e4ed)
+                #1  0x00007f727bb3e2ae n/a (libtbb.so.12 + 0x2b2ae)
+                #2  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #3  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005599:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00007f726a0df971 _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE (libstdc++.so.6 + 0xdf971)
+                #4  0x00007f726c9788ea n/a (libOpenImageIO_Util.so.3.1 + 0x968ea)
+                #5  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #6  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #7  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005568:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00005fc0f343aeac n/a (blender + 0x2825eac)
+                #4  0x00005fc0f385b830 n/a (blender + 0x2c46830)
+                #5  0x00005fc0f385bbdd n/a (blender + 0x2c46bdd)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005580:
+                #0  0x00007f7269d1e4ed syscall (libc.so.6 + 0x11e4ed)
+                #1  0x00007f727bb3e2ae n/a (libtbb.so.12 + 0x2b2ae)
+                #2  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #3  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005573:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00005fc0f343aeac n/a (blender + 0x2825eac)
+                #4  0x00005fc0f385b830 n/a (blender + 0x2c46830)
+                #5  0x00005fc0f385bbdd n/a (blender + 0x2c46bdd)
+                #6  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #7  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #8  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005585:
+                #0  0x00007f7269d1e4ed syscall (libc.so.6 + 0x11e4ed)
+                #1  0x00007f727bb3e2ae n/a (libtbb.so.12 + 0x2b2ae)
+                #2  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #3  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005601:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00007f726a0df971 _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE (libstdc++.so.6 + 0xdf971)
+                #4  0x00007f726c9788ea n/a (libOpenImageIO_Util.so.3.1 + 0x968ea)
+                #5  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #6  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #7  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005597:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00007f726a0df971 _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE (libstdc++.so.6 + 0xdf971)
+                #4  0x00007f726c9788ea n/a (libOpenImageIO_Util.so.3.1 + 0x968ea)
+                #5  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #6  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #7  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005605:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00007f726a0df971 _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE (libstdc++.so.6 + 0xdf971)
+                #4  0x00007f726c9788ea n/a (libOpenImageIO_Util.so.3.1 + 0x968ea)
+                #5  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #6  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #7  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005553:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269d11365 __poll (libc.so.6 + 0x111365)
+                #2  0x00007f72613e2b6a n/a (libpulse.so.0 + 0x32b6a)
+                #3  0x00007f72613cc661 pa_mainloop_poll (libpulse.so.0 + 0x1c661)
+                #4  0x00007f72613d6793 pa_mainloop_iterate (libpulse.so.0 + 0x26793)
+                #5  0x00007f72613d6861 pa_mainloop_run (libpulse.so.0 + 0x26861)
+                #6  0x00007f72613e7d32 n/a (libpulse.so.0 + 0x37d32)
+                #7  0x00007f724403946f n/a (libpulsecommon-17.0.so + 0x5d46f)
+                #8  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #9  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005595:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00007f726a0df971 _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE (libstdc++.so.6 + 0xdf971)
+                #4  0x00007f726c9788ea n/a (libOpenImageIO_Util.so.3.1 + 0x968ea)
+                #5  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #6  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #7  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005587:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00007f726a0df971 _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE (libstdc++.so.6 + 0xdf971)
+                #4  0x00007f726c9788ea n/a (libOpenImageIO_Util.so.3.1 + 0x968ea)
+                #5  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #6  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #7  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005603:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00007f726a0df971 _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE (libstdc++.so.6 + 0xdf971)
+                #4  0x00007f726c9788ea n/a (libOpenImageIO_Util.so.3.1 + 0x968ea)
+                #5  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #6  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #7  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005576:
+                #0  0x00007f7269d1e4ed syscall (libc.so.6 + 0x11e4ed)
+                #1  0x00007f727bb3e2ae n/a (libtbb.so.12 + 0x2b2ae)
+                #2  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #3  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005635:
+                #0  0x00007f7269d1e4ed syscall (libc.so.6 + 0x11e4ed)
+                #1  0x00007f727bb3e2ae n/a (libtbb.so.12 + 0x2b2ae)
+                #2  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #3  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005600:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00007f726a0df971 _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE (libstdc++.so.6 + 0xdf971)
+                #4  0x00007f726c9788ea n/a (libOpenImageIO_Util.so.3.1 + 0x968ea)
+                #5  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #6  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #7  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005584:
+                #0  0x00007f7269d1e4ed syscall (libc.so.6 + 0x11e4ed)
+                #1  0x00007f727bb3e2ae n/a (libtbb.so.12 + 0x2b2ae)
+                #2  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #3  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005592:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00007f726a0df971 _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE (libstdc++.so.6 + 0xdf971)
+                #4  0x00007f726c9788ea n/a (libOpenImageIO_Util.so.3.1 + 0x968ea)
+                #5  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #6  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #7  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005567:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269d11365 __poll (libc.so.6 + 0x111365)
+                #2  0x00007f72104161f7 n/a (libnvidia-glcore.so.610.57.04 + 0xa161f7)
+                #3  0x00007f72103f53e4 n/a (libnvidia-glcore.so.610.57.04 + 0x9f53e4)
+                #4  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #5  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005639:
+                #0  0x00007f7269d1e4ed syscall (libc.so.6 + 0x11e4ed)
+                #1  0x00007f727bb3e2ae n/a (libtbb.so.12 + 0x2b2ae)
+                #2  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #3  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005638:
+                #0  0x00007f7269d1e4ed syscall (libc.so.6 + 0x11e4ed)
+                #1  0x00007f727bb3e2ae n/a (libtbb.so.12 + 0x2b2ae)
+                #2  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #3  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005578:
+                #0  0x00007f7269d1e4ed syscall (libc.so.6 + 0x11e4ed)
+                #1  0x00007f727bb3e2ae n/a (libtbb.so.12 + 0x2b2ae)
+                #2  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #3  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005589:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00007f726a0df971 _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE (libstdc++.so.6 + 0xdf971)
+                #4  0x00007f726c9788ea n/a (libOpenImageIO_Util.so.3.1 + 0x968ea)
+                #5  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #6  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #7  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1019402:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269d11365 __poll (libc.so.6 + 0x111365)
+                #2  0x00007f72005104cf n/a (_socket.cpython-314-x86_64-linux-gnu.so + 0x64cf)
+                #3  0x00007f720050f0fe n/a (_socket.cpython-314-x86_64-linux-gnu.so + 0x50fe)
+                #4  0x00007f7200518c94 n/a (_socket.cpython-314-x86_64-linux-gnu.so + 0xec94)
+                #5  0x00007f720051a015 n/a (_socket.cpython-314-x86_64-linux-gnu.so + 0x10015)
+                #6  0x00007f726b82bd82 n/a (libpython3.14.so.1.0 + 0x22bd82)
+                #7  0x00007f726b669935 n/a (libpython3.14.so.1.0 + 0x69935)
+                #8  0x00007f726b7e478b n/a (libpython3.14.so.1.0 + 0x1e478b)
+                #9  0x00007f726b8358b1 n/a (libpython3.14.so.1.0 + 0x2358b1)
+                #10 0x00007f726b6693f9 n/a (libpython3.14.so.1.0 + 0x693f9)
+                #11 0x00007f726b7e478b n/a (libpython3.14.so.1.0 + 0x1e478b)
+                #12 0x00007f726b8359ae n/a (libpython3.14.so.1.0 + 0x2359ae)
+                #13 0x00007f726b93cc64 n/a (libpython3.14.so.1.0 + 0x33cc64)
+                #14 0x00007f726b665a85 n/a (libpython3.14.so.1.0 + 0x65a85)
+                #15 0x00007f726b7e478b n/a (libpython3.14.so.1.0 + 0x1e478b)
+                #16 0x00007f726b8359ae n/a (libpython3.14.so.1.0 + 0x2359ae)
+                #17 0x00007f726b93c674 n/a (libpython3.14.so.1.0 + 0x33c674)
+                #18 0x00007f726b93c4ac n/a (libpython3.14.so.1.0 + 0x33c4ac)
+                #19 0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #20 0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005640:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269d11365 __poll (libc.so.6 + 0x111365)
+                #2  0x00007f72005104cf n/a (_socket.cpython-314-x86_64-linux-gnu.so + 0x64cf)
+                #3  0x00007f720050f0fe n/a (_socket.cpython-314-x86_64-linux-gnu.so + 0x50fe)
+                #4  0x00007f720051953b n/a (_socket.cpython-314-x86_64-linux-gnu.so + 0xf53b)
+                #5  0x00007f726b65dfc1 n/a (libpython3.14.so.1.0 + 0x5dfc1)
+                #6  0x00007f726b7e478b n/a (libpython3.14.so.1.0 + 0x1e478b)
+                #7  0x00007f726b8359ae n/a (libpython3.14.so.1.0 + 0x2359ae)
+                #8  0x00007f726b6693f9 n/a (libpython3.14.so.1.0 + 0x693f9)
+                #9  0x00007f726b7e478b n/a (libpython3.14.so.1.0 + 0x1e478b)
+                #10 0x00007f726b8359ae n/a (libpython3.14.so.1.0 + 0x2359ae)
+                #11 0x00007f726b93cc64 n/a (libpython3.14.so.1.0 + 0x33cc64)
+                #12 0x00007f726b65dfc1 n/a (libpython3.14.so.1.0 + 0x5dfc1)
+                #13 0x00007f726b7e478b n/a (libpython3.14.so.1.0 + 0x1e478b)
+                #14 0x00007f726b8359ae n/a (libpython3.14.so.1.0 + 0x2359ae)
+                #15 0x00007f726b93c674 n/a (libpython3.14.so.1.0 + 0x33c674)
+                #16 0x00007f726b93c4ac n/a (libpython3.14.so.1.0 + 0x33c4ac)
+                #17 0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #18 0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005634:
+                #0  0x00007f7269d1e4ed syscall (libc.so.6 + 0x11e4ed)
+                #1  0x00007f727bb3e2ae n/a (libtbb.so.12 + 0x2b2ae)
+                #2  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #3  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005588:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00007f726a0df971 _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE (libstdc++.so.6 + 0xdf971)
+                #4  0x00007f726c9788ea n/a (libOpenImageIO_Util.so.3.1 + 0x968ea)
+                #5  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #6  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #7  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005604:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00007f726a0df971 _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE (libstdc++.so.6 + 0xdf971)
+                #4  0x00007f726c9788ea n/a (libOpenImageIO_Util.so.3.1 + 0x968ea)
+                #5  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #6  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #7  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005637:
+                #0  0x00007f7269d1e4ed syscall (libc.so.6 + 0x11e4ed)
+                #1  0x00007f727bb3e2ae n/a (libtbb.so.12 + 0x2b2ae)
+                #2  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #3  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005633:
+                #0  0x00007f7269d1e4ed syscall (libc.so.6 + 0x11e4ed)
+                #1  0x00007f727bb3e2ae n/a (libtbb.so.12 + 0x2b2ae)
+                #2  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #3  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005594:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00007f726a0df971 _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE (libstdc++.so.6 + 0xdf971)
+                #4  0x00007f726c9788ea n/a (libOpenImageIO_Util.so.3.1 + 0x968ea)
+                #5  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #6  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #7  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005590:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00007f726a0df971 _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE (libstdc++.so.6 + 0xdf971)
+                #4  0x00007f726c9788ea n/a (libOpenImageIO_Util.so.3.1 + 0x968ea)
+                #5  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #6  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #7  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1019418:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269d11365 __poll (libc.so.6 + 0x111365)
+                #2  0x00007f72005104cf n/a (_socket.cpython-314-x86_64-linux-gnu.so + 0x64cf)
+                #3  0x00007f720050f0fe n/a (_socket.cpython-314-x86_64-linux-gnu.so + 0x50fe)
+                #4  0x00007f7200518c94 n/a (_socket.cpython-314-x86_64-linux-gnu.so + 0xec94)
+                #5  0x00007f720051a015 n/a (_socket.cpython-314-x86_64-linux-gnu.so + 0x10015)
+                #6  0x00007f726b82bd82 n/a (libpython3.14.so.1.0 + 0x22bd82)
+                #7  0x00007f726b669935 n/a (libpython3.14.so.1.0 + 0x69935)
+                #8  0x00007f726b7e478b n/a (libpython3.14.so.1.0 + 0x1e478b)
+                #9  0x00007f726b8358b1 n/a (libpython3.14.so.1.0 + 0x2358b1)
+                #10 0x00007f726b6693f9 n/a (libpython3.14.so.1.0 + 0x693f9)
+                #11 0x00007f726b7e478b n/a (libpython3.14.so.1.0 + 0x1e478b)
+                #12 0x00007f726b8359ae n/a (libpython3.14.so.1.0 + 0x2359ae)
+                #13 0x00007f726b93cc64 n/a (libpython3.14.so.1.0 + 0x33cc64)
+                #14 0x00007f726b665a85 n/a (libpython3.14.so.1.0 + 0x65a85)
+                #15 0x00007f726b7e478b n/a (libpython3.14.so.1.0 + 0x1e478b)
+                #16 0x00007f726b8359ae n/a (libpython3.14.so.1.0 + 0x2359ae)
+                #17 0x00007f726b93c674 n/a (libpython3.14.so.1.0 + 0x33c674)
+                #18 0x00007f726b93c4ac n/a (libpython3.14.so.1.0 + 0x33c4ac)
+                #19 0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #20 0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005602:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269c94cd9 n/a (libc.so.6 + 0x94cd9)
+                #2  0x00007f7269c9754c pthread_cond_wait (libc.so.6 + 0x9754c)
+                #3  0x00007f726a0df971 _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE (libstdc++.so.6 + 0xdf971)
+                #4  0x00007f726c9788ea n/a (libOpenImageIO_Util.so.3.1 + 0x968ea)
+                #5  0x00007f726a0ea859 n/a (libstdc++.so.6 + 0xea859)
+                #6  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #7  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                
+                Stack trace of thread 1005550:
+                #0  0x00007f7269ca0952 n/a (libc.so.6 + 0xa0952)
+                #1  0x00007f7269d20cab epoll_wait (libc.so.6 + 0x120cab)
+                #2  0x00007f7240478569 n/a (libspa-support.so + 0x1d569)
+                #3  0x00007f72404618e9 n/a (libspa-support.so + 0x68e9)
+                #4  0x00007f72440e9f81 n/a (libpipewire-0.3.so.0 + 0x8df81)
+                #5  0x00007f7269c980a2 n/a (libc.so.6 + 0x980a2)
+                #6  0x00007f7269d2080c n/a (libc.so.6 + 0x12080c)
+                ELF object binary architecture: AMD x86-64

@@ -1,0 +1,9 @@
+[
+  {
+    "tool": "execute_code",
+    "args": {
+      "action": "execute",
+      "code": "var scene=UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene();if(scene.isDirty || EditorApplication.isPlaying)throw new System.InvalidOperationException(\"Saved Edit mode required\");\nvar m=AssetDatabase.LoadAssetAtPath<Material>(\"Assets/AthenHill/Art/HeroTree/leaves.mat\");\nvar tex=AssetDatabase.LoadAssetAtPath<Texture2D>(\"Assets/AthenHill/Art/Quality20260926/leaves-edge-padded-v1.png\");\nif(!tex || !m || !m.HasProperty(\"_WardIndirectTranslucency\"))throw new System.Exception(\"Candidate assets required\");\nvar old=AssetDatabase.GetAssetPath(m.GetTexture(\"_BaseMap\"));\nif(old!=\"Assets/AthenHill/Art/HeroTree/leaves-albedo.png\")throw new System.Exception(\"Unexpected prior source texture; inspect first\");\nUndo.RecordObject(m,\"Audition repaired leaf texture in native player\");m.SetTexture(\"_BaseMap\",tex);if(m.HasProperty(\"_MainTex\"))m.SetTexture(\"_MainTex\",tex);m.SetFloat(\"_WardIndirectTranslucency\",0);EditorUtility.SetDirty(m);AssetDatabase.SaveAssetIfDirty(m);\nreturn new{previousTexture=old,texture=AssetDatabase.GetAssetPath(m.GetTexture(\"_BaseMap\")),indirect=m.GetFloat(\"_WardIndirectTranslucency\"),direct=m.GetFloat(\"_WardTranslucency\"),sourceSize=new[]{tex.width,tex.height},sceneDirty=scene.isDirty,assetSaved=!EditorUtility.IsDirty(m)};"
+    }
+  }
+]

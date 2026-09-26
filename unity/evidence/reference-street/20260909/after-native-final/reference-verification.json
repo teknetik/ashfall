@@ -1,0 +1,1853 @@
+{
+  "utc": "2026-09-09T20:07:36.959142+00:00",
+  "nativeFolder": "/home/teknetik/code/ao2/unity/evidence/reference-street/20260909/after-native-final",
+  "run": {
+    "startedUtc": "2026-09-09T19:46:32.754381+00:00",
+    "requestedSteps": [
+      "captures",
+      "traversal",
+      "porches",
+      "city-loop",
+      "lighting"
+    ],
+    "steps": [
+      {
+        "step": "captures",
+        "startedUtc": "2026-09-09T19:46:44.525281+00:00",
+        "complete": true,
+        "commands": [
+          {
+            "command": [
+              "/home/teknetik/.cache/uv/archive-v0/C-D_s9RmoL-ZML5S/bin/python",
+              "/home/teknetik/code/ao2/unity/tools/capture_building_pass.py",
+              "/home/teknetik/code/ao2/unity/evidence/reference-street/20260909/after-native-final",
+              "--building",
+              "field_supply",
+              "--report",
+              "field-captures.json",
+              "--extra",
+              "/home/teknetik/code/ao2/unity/evidence/reference-street/20260909/after-native-final/reference-after-extra-cameras.json"
+            ],
+            "startedUtc": "2026-09-09T19:46:44.525580+00:00",
+            "log": "qa-capture-field.log",
+            "finishedUtc": "2026-09-09T19:47:12.134901+00:00",
+            "returncode": 0
+          },
+          {
+            "command": [
+              "/home/teknetik/.cache/uv/archive-v0/C-D_s9RmoL-ZML5S/bin/python",
+              "/home/teknetik/code/ao2/unity/tools/capture_building_pass.py",
+              "/home/teknetik/code/ao2/unity/evidence/reference-street/20260909/after-native-final",
+              "--building",
+              "finery",
+              "--report",
+              "finery-captures.json"
+            ],
+            "startedUtc": "2026-09-09T19:47:12.135015+00:00",
+            "log": "qa-capture-finery.log",
+            "finishedUtc": "2026-09-09T19:47:23.670431+00:00",
+            "returncode": 0
+          }
+        ],
+        "finishedUtc": "2026-09-09T19:47:23.670654+00:00"
+      },
+      {
+        "step": "traversal",
+        "startedUtc": "2026-09-09T19:47:23.670853+00:00",
+        "complete": true,
+        "commands": [
+          {
+            "command": [
+              "/home/teknetik/.cache/uv/archive-v0/C-D_s9RmoL-ZML5S/bin/python",
+              "/home/teknetik/code/ao2/unity/tools/check_building_traversal.py",
+              "--record-warmup"
+            ],
+            "startedUtc": "2026-09-09T19:47:23.801612+00:00",
+            "log": "qa-check_building_traversal.log",
+            "finishedUtc": "2026-09-09T19:51:58.437302+00:00",
+            "returncode": 0
+          }
+        ],
+        "authoringProcessesBeforeMeasurement": [],
+        "finishedUtc": "2026-09-09T19:51:58.437320+00:00"
+      },
+      {
+        "step": "porches",
+        "startedUtc": "2026-09-09T19:51:58.437534+00:00",
+        "complete": false,
+        "commands": [
+          {
+            "command": [
+              "/home/teknetik/.cache/uv/archive-v0/C-D_s9RmoL-ZML5S/bin/python",
+              "/home/teknetik/code/ao2/art/reference_street_20260909/check_reference_proximity.py"
+            ],
+            "startedUtc": "2026-09-09T19:51:58.437763+00:00",
+            "log": "qa-check_reference_proximity.log",
+            "finishedUtc": "2026-09-09T19:53:19.084330+00:00",
+            "returncode": 1
+          }
+        ]
+      }
+    ],
+    "complete": false,
+    "error": "AssertionError('Porch proximity subprocess failed.')",
+    "finishedUtc": "2026-09-09T19:53:19.084365+00:00"
+  },
+  "documents": {
+    "warmup-route.json": {
+      "present": true,
+      "sha256": "9a3e0c7b8515643156b8b43940f045b53258387aa1af38c3e8bd9de1f505660c",
+      "complete": true
+    },
+    "measured-route.json": {
+      "present": true,
+      "sha256": "5a1f6365908eea41ae2ef8f5b14160d1baca19622d0b86c062038294d52f3873",
+      "complete": true
+    },
+    "reference-proximity.json": {
+      "present": true,
+      "sha256": "5a9b426b299bd01ccc69098d039e593f0ca131d3163dd378db37e3441e969fc8",
+      "complete": false
+    },
+    "city-loop.json": {
+      "present": true,
+      "sha256": "a15f0a83b56f62acb417ab2143c7470d598826c191e34961a6672b9107324f53",
+      "complete": true
+    },
+    "reference-lighting.json": {
+      "present": true,
+      "sha256": "ced669c12156891f033ffa01676ea100116aed691a95629e3b45cf287a503b1c",
+      "complete": true
+    },
+    "field-captures.json": {
+      "present": true,
+      "sha256": "d5e8a3a0e9fd538239f7cde086413de0572461015510f8c07ccee42e8080548f",
+      "complete": true
+    },
+    "finery-captures.json": {
+      "present": true,
+      "sha256": "ef16d67aebd52195deebab5f9768f1b13eb26343395dfeaa261d61a5ff893e60",
+      "complete": true
+    },
+    "traversal-performance.json": {
+      "present": true,
+      "sha256": "962937d5002e57feb1f70f38d6423dd616a8834477a34e9bb5d8397cc4d99230",
+      "complete": true
+    },
+    "interaction-performance.json": {
+      "present": true,
+      "sha256": "e7467834786ca02989d6ab37f01dccb0ba16a5deb69f51c7b1ac929eb9d937b7",
+      "complete": true
+    },
+    "settings.json": {
+      "present": true,
+      "sha256": "ca629f1ac975bb415498d431a62ffa346b13697094244d8e1dde0160531b6b26",
+      "complete": null
+    },
+    "environment.json": {
+      "present": true,
+      "sha256": "21b1215e63f5a01b69e6a78a21fd0daf6d39f00dd8344749868f28246d9e7dbe",
+      "complete": null
+    }
+  },
+  "installerPreservation": {
+    "gameplayPreserved": true,
+    "collidersPreserved": true,
+    "gameplayBeforeSha256": null,
+    "gameplayAfterSha256": null,
+    "collisionBeforeSha256": null,
+    "collisionAfterSha256": null,
+    "source": "unity/evidence/reference-street/20260909/installation.json",
+    "scope": "Installer comparisons at installation time; unavailable signature hashes remain null.",
+    "signatureFiles": {
+      "gameplay": {
+        "beforePath": "unity/evidence/reference-street/20260909/gameplay-before.json",
+        "afterPath": "unity/evidence/reference-street/20260909/gameplay-after.json",
+        "beforeSha256": "da020f163174032959a70319e79f37b9ddb81d6b2e5dc39ee34903de5a891237",
+        "afterSha256": "da020f163174032959a70319e79f37b9ddb81d6b2e5dc39ee34903de5a891237",
+        "identical": true
+      },
+      "collision": {
+        "beforePath": "unity/evidence/reference-street/20260909/collision-before.json",
+        "afterPath": "unity/evidence/reference-street/20260909/collision-after.json",
+        "beforeSha256": "dc79cfa664c28b28e7c965926fbd935cb49bdb9c38db3287f016802f4804bebd",
+        "afterSha256": "dc79cfa664c28b28e7c965926fbd935cb49bdb9c38db3287f016802f4804bebd",
+        "identical": true
+      }
+    }
+  },
+  "settings": {
+    "sound": {
+      "master": 1.0,
+      "music": 1.0,
+      "ambience": 1.0,
+      "effects": 1.0,
+      "muted": false
+    },
+    "video": {
+      "width": 1920,
+      "height": 1080,
+      "windowMode": 0,
+      "preset": 2,
+      "renderPercent": 100,
+      "shadows": 3,
+      "antiAliasing": 4,
+      "textureLimit": 0,
+      "postProcessing": true,
+      "vSync": false,
+      "frameLimit": 0
+    },
+    "draft": {
+      "width": 1920,
+      "height": 1080,
+      "windowMode": 0,
+      "preset": 2,
+      "renderPercent": 100,
+      "shadows": 3,
+      "antiAliasing": 4,
+      "textureLimit": 0,
+      "postProcessing": true,
+      "vSync": false,
+      "frameLimit": 0
+    },
+    "previewing": false,
+    "remaining": 0,
+    "renderScale": 1.0,
+    "msaa": 4,
+    "shadowDistance": 18.0,
+    "shadowResolution": 4096,
+    "textureLimit": 0,
+    "vSync": 0,
+    "frameLimit": -1,
+    "postProcessing": true,
+    "track": "Dust of Alshain",
+    "transitions": 3,
+    "timeScale": 1.0
+  },
+  "environment": {
+    "unity": "6000.6.0f1",
+    "os": "Linux 7.0 Ubuntu 24.04 64bit",
+    "gpu": "NVIDIA GeForce RTX 3060/PCIe/SSE2",
+    "api": "OpenGLCore",
+    "driver": "OpenGL 4.5.0 NVIDIA 595.84",
+    "cpu": "Intel(R) Core(TM) i9-10850K CPU @ 3.60GHz",
+    "quality": "PC",
+    "width": 1920,
+    "height": 1080,
+    "vsync": 0,
+    "targetFrameRate": -1,
+    "drawCounter": true,
+    "triangleCounter": true,
+    "mainThreadCounter": true,
+    "renderThreadCounter": false,
+    "actorCount": 9
+  },
+  "measuredProfileMatches": true,
+  "filesUnchangedDuringRun": true,
+  "priorBuildComparisons": {
+    "unity/AthenHill/Packages/manifest.json": true,
+    "unity/AthenHill/Packages/packages-lock.json": true,
+    "unity/AthenHill/ProjectSettings/ProjectVersion.txt": true,
+    "unity/AthenHill/Builds/Linux/AthenHill_Data/Managed/Assembly-CSharp.dll": true,
+    "unity/AthenHill/Builds/LinuxDevelopment/AthenHill_Data/Managed/Assembly-CSharp.dll": true
+  },
+  "walking": {
+    "frames": 23321,
+    "seconds": 134.68482493006985,
+    "averageFps": 173.15239494953178,
+    "p50Ms": 4.259807,
+    "p95Ms": 11.592410500000002,
+    "p99Ms": 13.435867619999993,
+    "maxMs": 27.18334,
+    "hitchesOver33ms": 0,
+    "hitchesOver50ms": 0,
+    "mainMs": {
+      "samples": 23321,
+      "mean": 5.773523254105742,
+      "p95": 11.59084,
+      "max": 27.180348
+    },
+    "renderMs": null,
+    "cpuMs": {
+      "samples": 23321,
+      "mean": 5.775186200505981,
+      "p95": 11.592642,
+      "max": 27.181943
+    },
+    "gpuMs": null,
+    "draws": null,
+    "tris": {
+      "samples": 23321,
+      "mean": 8112666.95977874,
+      "p95": 21728706.0,
+      "max": 28354133
+    },
+    "batches": null,
+    "setPass": {
+      "samples": 23321,
+      "mean": 54.58522361819819,
+      "p95": 116.0,
+      "max": 141
+    },
+    "meetsAverageAndP99Target": true
+  },
+  "modalInteractions": {
+    "frames": 7818,
+    "seconds": 29.246186303469898,
+    "averageFps": 267.3169048052066,
+    "p50Ms": 2.84761202,
+    "p95Ms": 6.940520295999999,
+    "p99Ms": 8.272625269999999,
+    "maxMs": 136.38082100000003,
+    "hitchesOver33ms": 3,
+    "hitchesOver50ms": 3,
+    "mainMs": {
+      "samples": 7818,
+      "mean": 3.7393172102839602,
+      "p95": 6.938744499999999,
+      "max": 136.37893
+    },
+    "renderMs": null,
+    "cpuMs": {
+      "samples": 7818,
+      "mean": 3.7378348456126886,
+      "p95": 6.93804145,
+      "max": 136.381479
+    },
+    "gpuMs": null,
+    "draws": null,
+    "tris": {
+      "samples": 7818,
+      "mean": 3127388.1593757994,
+      "p95": 12080968.0,
+      "max": 21193259
+    },
+    "batches": null,
+    "setPass": {
+      "samples": 7818,
+      "mean": 38.597339473011,
+      "p95": 64.0,
+      "max": 128
+    },
+    "meetsAverageAndP99Target": true
+  },
+  "actorRoutePreservation": {
+    "utc": "2026-09-09T19:39:49.271191+00:00",
+    "scope": "Compare all four saved AmbientWalker components and their complete route chains.\n\nRead-only with respect to Unity: parses the baseline and current scene YAML,\nrecords exact serialized-document hashes and relevant properties, and writes only\nthe dated evidence JSON. Route parent transforms and prefab instance overrides\nare included, so unchanged local waypoints alone cannot imply unchanged routes.\n",
+    "beforeScene": "unity/evidence/reference-street/20260909/before-scene.unity",
+    "afterScene": "unity/AthenHill/Assets/AthenHill/Scenes/AthenHill.unity",
+    "beforeSceneSha256": "6968dc2d30d9b9f9a9192b12263af459e9c1868b1cee02e924faf87982861319",
+    "afterSceneSha256": "b95781410e3cdb71002f4a0e25e6753ba51651071608b3c4a127a103f96877ed",
+    "walkerScriptGuid": "8913cc9e99ba9d411abfe92ceb1a87e5",
+    "beforeWalkerCount": 4,
+    "afterWalkerCount": 4,
+    "sameWalkerComponentIds": true,
+    "actors": [
+      {
+        "componentFileId": "3046503",
+        "gameObjectFileId": "7592763224775730461",
+        "waypointIdsBefore": [
+          "1461667864",
+          "1068526961",
+          "280370583",
+          "229177727"
+        ],
+        "waypointIdsAfter": [
+          "1461667864",
+          "1068526961",
+          "280370583",
+          "229177727"
+        ],
+        "propertiesBefore": {
+          "m_Name": "",
+          "m_Enabled": "1",
+          "m_GameObject": "{fileID: 7592763224775730461}",
+          "m_PrefabInstance": "{fileID: 0}",
+          "m_CorrespondingSourceObject": "{fileID: 0}",
+          "speed": "1.15",
+          "phase": "0.68",
+          "turnLookAhead": "0.18",
+          "turnSharpness": "12",
+          "actor": "{fileID: 1475435306}"
+        },
+        "propertiesAfter": {
+          "m_Name": "",
+          "m_Enabled": "1",
+          "m_GameObject": "{fileID: 7592763224775730461}",
+          "m_PrefabInstance": "{fileID: 0}",
+          "m_CorrespondingSourceObject": "{fileID: 0}",
+          "speed": "1.15",
+          "phase": "0.68",
+          "turnLookAhead": "0.18",
+          "turnSharpness": "12",
+          "actor": "{fileID: 1475435306}"
+        },
+        "sameDependencyIds": true,
+        "serializedDocuments": [
+          {
+            "fileId": "3046503",
+            "unityType": 114,
+            "beforeSha256": "c9dd566fa5dae538506c394168b87dec3133037b95dae1308a304d682ecb091d",
+            "afterSha256": "c9dd566fa5dae538506c394168b87dec3133037b95dae1308a304d682ecb091d",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "",
+              "m_Enabled": "1",
+              "m_GameObject": "{fileID: 7592763224775730461}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "speed": "1.15",
+              "phase": "0.68",
+              "turnLookAhead": "0.18",
+              "turnSharpness": "12",
+              "actor": "{fileID: 1475435306}"
+            },
+            "afterProperties": {
+              "m_Name": "",
+              "m_Enabled": "1",
+              "m_GameObject": "{fileID: 7592763224775730461}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "speed": "1.15",
+              "phase": "0.68",
+              "turnLookAhead": "0.18",
+              "turnSharpness": "12",
+              "actor": "{fileID: 1475435306}"
+            }
+          },
+          {
+            "fileId": "13977708",
+            "unityType": 1,
+            "beforeSha256": "622e1c3e8723ee19f87fbae67d126d9543cc1f68681f816cc8c3ba79a2ae4ba9",
+            "afterSha256": "622e1c3e8723ee19f87fbae67d126d9543cc1f68681f816cc8c3ba79a2ae4ba9",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "npc_walker_03 route",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "npc_walker_03 route",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "13977709",
+            "unityType": 4,
+            "beforeSha256": "28d10ff0a616be8d381de6867e999347b17d8e50049ca8066ad9682ee2163ace",
+            "afterSha256": "28d10ff0a616be8d381de6867e999347b17d8e50049ca8066ad9682ee2163ace",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 13977708}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 13977708}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "229177726",
+            "unityType": 1,
+            "beforeSha256": "b8f875c823fc0bfb9df6d4209790d61551fd9f325a99d081f23d5dc4b3c6a433",
+            "afterSha256": "b8f875c823fc0bfb9df6d4209790d61551fd9f325a99d081f23d5dc4b3c6a433",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "Waypoint 4",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "Waypoint 4",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "229177727",
+            "unityType": 4,
+            "beforeSha256": "f973c7b07d3110648c3688f5d0658d2778cdde457fa2395dbaf1f87551d6e732",
+            "afterSha256": "f973c7b07d3110648c3688f5d0658d2778cdde457fa2395dbaf1f87551d6e732",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 229177726}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 11, y: 0, z: -19}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 13977709}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 229177726}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 11, y: 0, z: -19}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 13977709}"
+            }
+          },
+          {
+            "fileId": "280370582",
+            "unityType": 1,
+            "beforeSha256": "50dc735552d83c14456ffea103f6b9133b1ece7d1d0c332abebe422bb46d0595",
+            "afterSha256": "50dc735552d83c14456ffea103f6b9133b1ece7d1d0c332abebe422bb46d0595",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "Waypoint 3",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "Waypoint 3",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "280370583",
+            "unityType": 4,
+            "beforeSha256": "2985e767f84c65c855b45904740078bf31a5841190d241acfb08504a4b28c1d2",
+            "afterSha256": "2985e767f84c65c855b45904740078bf31a5841190d241acfb08504a4b28c1d2",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 280370582}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 5, y: 0, z: -19}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 13977709}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 280370582}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 5, y: 0, z: -19}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 13977709}"
+            }
+          },
+          {
+            "fileId": "1068526960",
+            "unityType": 1,
+            "beforeSha256": "7f4391577f696f15bef9d090fdd42e7d124d2a0383c36249c62b585c58eb5d06",
+            "afterSha256": "7f4391577f696f15bef9d090fdd42e7d124d2a0383c36249c62b585c58eb5d06",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "Waypoint 2",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "Waypoint 2",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "1068526961",
+            "unityType": 4,
+            "beforeSha256": "52691541b5551ccc07727cea9b8a5541090ff05b24882af31f188fb17996ca0d",
+            "afterSha256": "52691541b5551ccc07727cea9b8a5541090ff05b24882af31f188fb17996ca0d",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 1068526960}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 5, y: 0, z: -23}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 13977709}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 1068526960}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 5, y: 0, z: -23}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 13977709}"
+            }
+          },
+          {
+            "fileId": "1461667863",
+            "unityType": 1,
+            "beforeSha256": "3374f58add0c1d8e19c9c054fc09b9c84d8b8da77ede1a9021f831b62d3c2ac1",
+            "afterSha256": "3374f58add0c1d8e19c9c054fc09b9c84d8b8da77ede1a9021f831b62d3c2ac1",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "Waypoint 1",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "Waypoint 1",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "1461667864",
+            "unityType": 4,
+            "beforeSha256": "db12b8b8ceb0fb4f83bfe12906db2cc579769f97ded86d02a67e7523a5129222",
+            "afterSha256": "db12b8b8ceb0fb4f83bfe12906db2cc579769f97ded86d02a67e7523a5129222",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 1461667863}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 11, y: 0, z: -23}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 13977709}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 1461667863}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 11, y: 0, z: -23}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 13977709}"
+            }
+          },
+          {
+            "fileId": "1934804348",
+            "unityType": 1,
+            "beforeSha256": "d0fb439bb208f7c3cc7d8ae4322275d826c09ac22b3b0429378c9e4ad90d6fe6",
+            "afterSha256": "d0fb439bb208f7c3cc7d8ae4322275d826c09ac22b3b0429378c9e4ad90d6fe6",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "Colonists",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "Colonists",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "1934804349",
+            "unityType": 4,
+            "beforeSha256": "ca41bb9f287737a3a47c061a25384b5ab1e068a91777c61391863ec9beb5cbf8",
+            "afterSha256": "ca41bb9f287737a3a47c061a25384b5ab1e068a91777c61391863ec9beb5cbf8",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 1934804348}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 1934804348}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "3085044384382418885",
+            "unityType": 4,
+            "beforeSha256": "1ef5828cbe0c28139f5a5590858a7c4f8b9dbdb3c29fa0bf87032c1d535ee221",
+            "afterSha256": "1ef5828cbe0c28139f5a5590858a7c4f8b9dbdb3c29fa0bf87032c1d535ee221",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 7592763224775730461}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 11, y: 0, z: -23}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1934804349}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 7592763224775730461}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 11, y: 0, z: -23}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1934804349}"
+            }
+          },
+          {
+            "fileId": "7592763224775730461",
+            "unityType": 1,
+            "beforeSha256": "7baa3f09f764c5b793de11a12017f78889eb8be48702d35bcbfa58dbea44ab74",
+            "afterSha256": "7baa3f09f764c5b793de11a12017f78889eb8be48702d35bcbfa58dbea44ab74",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "npc_walker_03",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "npc_walker_03",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          }
+        ],
+        "allComparedDocumentsIdentical": true
+      },
+      {
+        "componentFileId": "1095515362",
+        "gameObjectFileId": "1095515360",
+        "waypointIdsBefore": [
+          "266151178",
+          "1934260033",
+          "198170082",
+          "725986963"
+        ],
+        "waypointIdsAfter": [
+          "266151178",
+          "1934260033",
+          "198170082",
+          "725986963"
+        ],
+        "propertiesBefore": {
+          "m_Name": "",
+          "m_Enabled": "1",
+          "m_GameObject": "{fileID: 1095515360}",
+          "m_PrefabInstance": "{fileID: 0}",
+          "m_CorrespondingSourceObject": "{fileID: 0}",
+          "speed": "0.85",
+          "phase": "0.1",
+          "turnLookAhead": "0.18",
+          "turnSharpness": "12",
+          "actor": "{fileID: 1095515361}"
+        },
+        "propertiesAfter": {
+          "m_Name": "",
+          "m_Enabled": "1",
+          "m_GameObject": "{fileID: 1095515360}",
+          "m_PrefabInstance": "{fileID: 0}",
+          "m_CorrespondingSourceObject": "{fileID: 0}",
+          "speed": "0.85",
+          "phase": "0.1",
+          "turnLookAhead": "0.18",
+          "turnSharpness": "12",
+          "actor": "{fileID: 1095515361}"
+        },
+        "sameDependencyIds": true,
+        "serializedDocuments": [
+          {
+            "fileId": "198170081",
+            "unityType": 1,
+            "beforeSha256": "9fd47f21d73961b7d642160263dd8043f30b61b54934d7e9d7b625b3523b7d69",
+            "afterSha256": "9fd47f21d73961b7d642160263dd8043f30b61b54934d7e9d7b625b3523b7d69",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "Mechanic waypoint 2",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "Mechanic waypoint 2",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "198170082",
+            "unityType": 4,
+            "beforeSha256": "349e12b533baedcc1fd21c7359893830a80fe226e4746ffbfbaf738263343b99",
+            "afterSha256": "349e12b533baedcc1fd21c7359893830a80fe226e4746ffbfbaf738263343b99",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 198170081}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 38, y: 0, z: -12}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1611894552}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 198170081}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 38, y: 0, z: -12}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1611894552}"
+            }
+          },
+          {
+            "fileId": "266151177",
+            "unityType": 1,
+            "beforeSha256": "c717ee7e7e9f3630d7c4c2992e89dcb5bf48b742e7ece4113cc3c5db9264f41e",
+            "afterSha256": "c717ee7e7e9f3630d7c4c2992e89dcb5bf48b742e7ece4113cc3c5db9264f41e",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "Mechanic waypoint 0",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "Mechanic waypoint 0",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "266151178",
+            "unityType": 4,
+            "beforeSha256": "625cfda26fbb252bb928187001c42372540d158fba8c980929aa0f7e7d90ce3a",
+            "afterSha256": "625cfda26fbb252bb928187001c42372540d158fba8c980929aa0f7e7d90ce3a",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 266151177}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 34, y: 0, z: -16}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1611894552}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 266151177}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 34, y: 0, z: -16}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1611894552}"
+            }
+          },
+          {
+            "fileId": "725986962",
+            "unityType": 1,
+            "beforeSha256": "b47676ec2c3186b415ccdd133ec922f345519221bb9590b018d48831fb93594b",
+            "afterSha256": "b47676ec2c3186b415ccdd133ec922f345519221bb9590b018d48831fb93594b",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "Mechanic waypoint 3",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "Mechanic waypoint 3",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "725986963",
+            "unityType": 4,
+            "beforeSha256": "9b63f382069c1405f918613b695e7b7e10fdfa2b32be8c0c0221742ed2e297cb",
+            "afterSha256": "9b63f382069c1405f918613b695e7b7e10fdfa2b32be8c0c0221742ed2e297cb",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 725986962}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 34, y: 0, z: -12}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1611894552}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 725986962}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 34, y: 0, z: -12}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1611894552}"
+            }
+          },
+          {
+            "fileId": "1095515359",
+            "unityType": 1001,
+            "beforeSha256": "3dc32e13474a7deee46eb1bf6d82f84c060b5804fcde879082da5e3836940bf4",
+            "afterSha256": "3dc32e13474a7deee46eb1bf6d82f84c060b5804fcde879082da5e3836940bf4",
+            "identical": true,
+            "beforeProperties": {},
+            "afterProperties": {}
+          },
+          {
+            "fileId": "1095515360",
+            "unityType": 1,
+            "beforeSha256": "fe0e8db3f88d01e7dbbbc5255563b84b3c2ba55ef13b914dea514b31766f0066",
+            "afterSha256": "fe0e8db3f88d01e7dbbbc5255563b84b3c2ba55ef13b914dea514b31766f0066",
+            "identical": true,
+            "beforeProperties": {
+              "m_PrefabInstance": "{fileID: 1095515359}",
+              "m_CorrespondingSourceObject": "{fileID: 1775901731966952486, guid: cc26bdd5fef20b29a8e05047929abf0f, type: 3}"
+            },
+            "afterProperties": {
+              "m_PrefabInstance": "{fileID: 1095515359}",
+              "m_CorrespondingSourceObject": "{fileID: 1775901731966952486, guid: cc26bdd5fef20b29a8e05047929abf0f, type: 3}"
+            }
+          },
+          {
+            "fileId": "1095515362",
+            "unityType": 114,
+            "beforeSha256": "296fe48343948beeafb0d6b2fa6d5bd326d0b9bece66e4efb81bcbc9bc3aa486",
+            "afterSha256": "296fe48343948beeafb0d6b2fa6d5bd326d0b9bece66e4efb81bcbc9bc3aa486",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "",
+              "m_Enabled": "1",
+              "m_GameObject": "{fileID: 1095515360}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "speed": "0.85",
+              "phase": "0.1",
+              "turnLookAhead": "0.18",
+              "turnSharpness": "12",
+              "actor": "{fileID: 1095515361}"
+            },
+            "afterProperties": {
+              "m_Name": "",
+              "m_Enabled": "1",
+              "m_GameObject": "{fileID: 1095515360}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "speed": "0.85",
+              "phase": "0.1",
+              "turnLookAhead": "0.18",
+              "turnSharpness": "12",
+              "actor": "{fileID: 1095515361}"
+            }
+          },
+          {
+            "fileId": "1611894551",
+            "unityType": 1,
+            "beforeSha256": "0a3174542c7baf866d8f3925ff8d5031c850d6a5b05e0216f0fd5151c529e293",
+            "afterSha256": "0a3174542c7baf866d8f3925ff8d5031c850d6a5b05e0216f0fd5151c529e293",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "Yard mechanic route",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "Yard mechanic route",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "1611894552",
+            "unityType": 4,
+            "beforeSha256": "af5dfbe9997f489e14d13dd88c25dc925c6f6ebd3073ffddc4251e3002f4189a",
+            "afterSha256": "af5dfbe9997f489e14d13dd88c25dc925c6f6ebd3073ffddc4251e3002f4189a",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 1611894551}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 1611894551}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "1934260032",
+            "unityType": 1,
+            "beforeSha256": "019cbf2bb4b6ce13f2dccf8d3feeb15c97ad6d7ca40cac4d755cb9a0b41630f2",
+            "afterSha256": "019cbf2bb4b6ce13f2dccf8d3feeb15c97ad6d7ca40cac4d755cb9a0b41630f2",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "Mechanic waypoint 1",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "Mechanic waypoint 1",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "1934260033",
+            "unityType": 4,
+            "beforeSha256": "6c4d7e4f785f6a3b19155185f4319a082c5948d3bf7b75ad6678293c2a155eb4",
+            "afterSha256": "6c4d7e4f785f6a3b19155185f4319a082c5948d3bf7b75ad6678293c2a155eb4",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 1934260032}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 38, y: 0, z: -16}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1611894552}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 1934260032}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 38, y: 0, z: -16}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1611894552}"
+            }
+          }
+        ],
+        "allComparedDocumentsIdentical": true
+      },
+      {
+        "componentFileId": "1483698651",
+        "gameObjectFileId": "7592763225442691241",
+        "waypointIdsBefore": [
+          "1665416653",
+          "99377548",
+          "1534100851",
+          "497089"
+        ],
+        "waypointIdsAfter": [
+          "1665416653",
+          "99377548",
+          "1534100851",
+          "497089"
+        ],
+        "propertiesBefore": {
+          "m_Name": "",
+          "m_Enabled": "1",
+          "m_GameObject": "{fileID: 7592763225442691241}",
+          "m_PrefabInstance": "{fileID: 0}",
+          "m_CorrespondingSourceObject": "{fileID: 0}",
+          "speed": "0.95",
+          "phase": "0.12",
+          "turnLookAhead": "0.18",
+          "turnSharpness": "12",
+          "actor": "{fileID: 1089792932}"
+        },
+        "propertiesAfter": {
+          "m_Name": "",
+          "m_Enabled": "1",
+          "m_GameObject": "{fileID: 7592763225442691241}",
+          "m_PrefabInstance": "{fileID: 0}",
+          "m_CorrespondingSourceObject": "{fileID: 0}",
+          "speed": "0.95",
+          "phase": "0.12",
+          "turnLookAhead": "0.18",
+          "turnSharpness": "12",
+          "actor": "{fileID: 1089792932}"
+        },
+        "sameDependencyIds": true,
+        "serializedDocuments": [
+          {
+            "fileId": "497088",
+            "unityType": 1,
+            "beforeSha256": "d9cb10f7c6232e50022ca606a62e2eee2918111d7f88db87f4543051723035f1",
+            "afterSha256": "d9cb10f7c6232e50022ca606a62e2eee2918111d7f88db87f4543051723035f1",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "Waypoint 4",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "Waypoint 4",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "497089",
+            "unityType": 4,
+            "beforeSha256": "af6b26cf2814a99014454485d2acdfe233826f468853bc0858a0da3a2ee6e97f",
+            "afterSha256": "af6b26cf2814a99014454485d2acdfe233826f468853bc0858a0da3a2ee6e97f",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 497088}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 38, y: 0, z: -2.5}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 607873696}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 497088}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 38, y: 0, z: -2.5}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 607873696}"
+            }
+          },
+          {
+            "fileId": "99377547",
+            "unityType": 1,
+            "beforeSha256": "2a09d9677e9bb846fd9eb176f8b1922e210721a6fbc8c1b563dd300d7870f712",
+            "afterSha256": "2a09d9677e9bb846fd9eb176f8b1922e210721a6fbc8c1b563dd300d7870f712",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "Waypoint 2",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "Waypoint 2",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "99377548",
+            "unityType": 4,
+            "beforeSha256": "8428eefa724e10ec7351ec02fdac3b8624bf51c2fc498a05c692a1770f00c5ce",
+            "afterSha256": "8428eefa724e10ec7351ec02fdac3b8624bf51c2fc498a05c692a1770f00c5ce",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 99377547}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 16, y: 0, z: -3.5}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 607873696}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 99377547}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 16, y: 0, z: -3.5}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 607873696}"
+            }
+          },
+          {
+            "fileId": "607873695",
+            "unityType": 1,
+            "beforeSha256": "3c402347587b22073fe3de7f0b27d2d8caba04c7a9af5bcabba3c70f01e2b24b",
+            "afterSha256": "3c402347587b22073fe3de7f0b27d2d8caba04c7a9af5bcabba3c70f01e2b24b",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "npc_walker_01 route",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "npc_walker_01 route",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "607873696",
+            "unityType": 4,
+            "beforeSha256": "bd54b9d9adbb7f2e19ddcae77f62bbf67e1706f8151685adbd287217e0a40d35",
+            "afterSha256": "bd54b9d9adbb7f2e19ddcae77f62bbf67e1706f8151685adbd287217e0a40d35",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 607873695}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 607873695}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "1483698651",
+            "unityType": 114,
+            "beforeSha256": "acf38ee123a6e9a4e9b05e7970219b2e13ceefb81d682bbaec62161e8b83c950",
+            "afterSha256": "acf38ee123a6e9a4e9b05e7970219b2e13ceefb81d682bbaec62161e8b83c950",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "",
+              "m_Enabled": "1",
+              "m_GameObject": "{fileID: 7592763225442691241}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "speed": "0.95",
+              "phase": "0.12",
+              "turnLookAhead": "0.18",
+              "turnSharpness": "12",
+              "actor": "{fileID: 1089792932}"
+            },
+            "afterProperties": {
+              "m_Name": "",
+              "m_Enabled": "1",
+              "m_GameObject": "{fileID: 7592763225442691241}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "speed": "0.95",
+              "phase": "0.12",
+              "turnLookAhead": "0.18",
+              "turnSharpness": "12",
+              "actor": "{fileID: 1089792932}"
+            }
+          },
+          {
+            "fileId": "1534100850",
+            "unityType": 1,
+            "beforeSha256": "7e93c2a3fe2a02177156dc357487c0bd257c05192f5b4d2568b2ea728004fc4a",
+            "afterSha256": "7e93c2a3fe2a02177156dc357487c0bd257c05192f5b4d2568b2ea728004fc4a",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "Waypoint 3",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "Waypoint 3",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "1534100851",
+            "unityType": 4,
+            "beforeSha256": "2a27878c4569a3a112e6d19a8ab469883a3481394b510eeec5ae27a805b3e0b9",
+            "afterSha256": "2a27878c4569a3a112e6d19a8ab469883a3481394b510eeec5ae27a805b3e0b9",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 1534100850}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 16, y: 0, z: -2.5}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 607873696}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 1534100850}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 16, y: 0, z: -2.5}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 607873696}"
+            }
+          },
+          {
+            "fileId": "1665416652",
+            "unityType": 1,
+            "beforeSha256": "bad6554439e6c290e84e9580f99ee85c15d6239d1fac348287123d7fb57bd009",
+            "afterSha256": "bad6554439e6c290e84e9580f99ee85c15d6239d1fac348287123d7fb57bd009",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "Waypoint 1",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "Waypoint 1",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "1665416653",
+            "unityType": 4,
+            "beforeSha256": "9f194765db10728ca838a012471698dbc543fd37c1ea23444783979aeefbbdb7",
+            "afterSha256": "9f194765db10728ca838a012471698dbc543fd37c1ea23444783979aeefbbdb7",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 1665416652}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 38, y: 0, z: -3.5}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 607873696}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 1665416652}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 38, y: 0, z: -3.5}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 607873696}"
+            }
+          },
+          {
+            "fileId": "1934804348",
+            "unityType": 1,
+            "beforeSha256": "d0fb439bb208f7c3cc7d8ae4322275d826c09ac22b3b0429378c9e4ad90d6fe6",
+            "afterSha256": "d0fb439bb208f7c3cc7d8ae4322275d826c09ac22b3b0429378c9e4ad90d6fe6",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "Colonists",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "Colonists",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "1934804349",
+            "unityType": 4,
+            "beforeSha256": "ca41bb9f287737a3a47c061a25384b5ab1e068a91777c61391863ec9beb5cbf8",
+            "afterSha256": "ca41bb9f287737a3a47c061a25384b5ab1e068a91777c61391863ec9beb5cbf8",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 1934804348}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 1934804348}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "3085044385317679729",
+            "unityType": 4,
+            "beforeSha256": "bfe07f22eb08e68d39b0147a2f7ae5f23699b290f1f1b471b9557fa715702f41",
+            "afterSha256": "bfe07f22eb08e68d39b0147a2f7ae5f23699b290f1f1b471b9557fa715702f41",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 7592763225442691241}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 38, y: 0, z: -3.5}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1934804349}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 7592763225442691241}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 38, y: 0, z: -3.5}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1934804349}"
+            }
+          },
+          {
+            "fileId": "7592763225442691241",
+            "unityType": 1,
+            "beforeSha256": "1689e95895d38db934cd778fcb4af524a7ae42da7d4ef621a89455d0c8e7dac2",
+            "afterSha256": "1689e95895d38db934cd778fcb4af524a7ae42da7d4ef621a89455d0c8e7dac2",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "npc_walker_01",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "npc_walker_01",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          }
+        ],
+        "allComparedDocumentsIdentical": true
+      },
+      {
+        "componentFileId": "1530762617",
+        "gameObjectFileId": "7592763225498438667",
+        "waypointIdsBefore": [
+          "752440041",
+          "19655979",
+          "1036831759",
+          "498477188"
+        ],
+        "waypointIdsAfter": [
+          "752440041",
+          "19655979",
+          "1036831759",
+          "498477188"
+        ],
+        "propertiesBefore": {
+          "m_Name": "",
+          "m_Enabled": "1",
+          "m_GameObject": "{fileID: 7592763225498438667}",
+          "m_PrefabInstance": "{fileID: 0}",
+          "m_CorrespondingSourceObject": "{fileID: 0}",
+          "speed": "1.05",
+          "phase": "0.47",
+          "turnLookAhead": "0.18",
+          "turnSharpness": "12",
+          "actor": "{fileID: 1761082585}"
+        },
+        "propertiesAfter": {
+          "m_Name": "",
+          "m_Enabled": "1",
+          "m_GameObject": "{fileID: 7592763225498438667}",
+          "m_PrefabInstance": "{fileID: 0}",
+          "m_CorrespondingSourceObject": "{fileID: 0}",
+          "speed": "1.05",
+          "phase": "0.47",
+          "turnLookAhead": "0.18",
+          "turnSharpness": "12",
+          "actor": "{fileID: 1761082585}"
+        },
+        "sameDependencyIds": true,
+        "serializedDocuments": [
+          {
+            "fileId": "19655978",
+            "unityType": 1,
+            "beforeSha256": "c2e845beadac386d66276ea1f7e83f4783630e57a068b42ee7dcb1fa48fbfd20",
+            "afterSha256": "c2e845beadac386d66276ea1f7e83f4783630e57a068b42ee7dcb1fa48fbfd20",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "Waypoint 2",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "Waypoint 2",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "19655979",
+            "unityType": 4,
+            "beforeSha256": "d7b67e1a3fa79302447ad5e34ce957ddd3a7c119e50342000c6b92f8c1012fa7",
+            "afterSha256": "d7b67e1a3fa79302447ad5e34ce957ddd3a7c119e50342000c6b92f8c1012fa7",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 19655978}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: -4, y: 0, z: 22}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1716748741}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 19655978}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: -4, y: 0, z: 22}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1716748741}"
+            }
+          },
+          {
+            "fileId": "498477187",
+            "unityType": 1,
+            "beforeSha256": "c321001346679e63435c53086eb53a625e0260171460549629c333d432cb57be",
+            "afterSha256": "c321001346679e63435c53086eb53a625e0260171460549629c333d432cb57be",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "Waypoint 4",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "Waypoint 4",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "498477188",
+            "unityType": 4,
+            "beforeSha256": "3352cc247cf3aa98cfbd855b3a121dc4224236fa9b843854bb72efe8d8fc1a59",
+            "afterSha256": "3352cc247cf3aa98cfbd855b3a121dc4224236fa9b843854bb72efe8d8fc1a59",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 498477187}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 3, y: 0, z: 28}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1716748741}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 498477187}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 3, y: 0, z: 28}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1716748741}"
+            }
+          },
+          {
+            "fileId": "752440040",
+            "unityType": 1,
+            "beforeSha256": "f9d925e6410f67271da70bdfb2566b5a57ac6ac2a2893c954092f6f5017407aa",
+            "afterSha256": "f9d925e6410f67271da70bdfb2566b5a57ac6ac2a2893c954092f6f5017407aa",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "Waypoint 1",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "Waypoint 1",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "752440041",
+            "unityType": 4,
+            "beforeSha256": "9d54f969f270070e301c8bdb93d42d20e7be1f48ac340ad2be0d72ca34949662",
+            "afterSha256": "9d54f969f270070e301c8bdb93d42d20e7be1f48ac340ad2be0d72ca34949662",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 752440040}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 3, y: 0, z: 22}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1716748741}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 752440040}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 3, y: 0, z: 22}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1716748741}"
+            }
+          },
+          {
+            "fileId": "1036831758",
+            "unityType": 1,
+            "beforeSha256": "283d0d57016b669ca4e11921dda65c2f4d830ae7ec456e9126e569aee6c24d98",
+            "afterSha256": "283d0d57016b669ca4e11921dda65c2f4d830ae7ec456e9126e569aee6c24d98",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "Waypoint 3",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "Waypoint 3",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "1036831759",
+            "unityType": 4,
+            "beforeSha256": "c1fa75f3b218d63b2dbcb558126eebc646a55feec7db264f5293fb6c482ec23e",
+            "afterSha256": "c1fa75f3b218d63b2dbcb558126eebc646a55feec7db264f5293fb6c482ec23e",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 1036831758}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: -4, y: 0, z: 28}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1716748741}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 1036831758}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: -4, y: 0, z: 28}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1716748741}"
+            }
+          },
+          {
+            "fileId": "1530762617",
+            "unityType": 114,
+            "beforeSha256": "09e6c71cf2e28ffd26f2ce1a8ceebf2410017cc9961f3efe3904d15438ba30c2",
+            "afterSha256": "09e6c71cf2e28ffd26f2ce1a8ceebf2410017cc9961f3efe3904d15438ba30c2",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "",
+              "m_Enabled": "1",
+              "m_GameObject": "{fileID: 7592763225498438667}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "speed": "1.05",
+              "phase": "0.47",
+              "turnLookAhead": "0.18",
+              "turnSharpness": "12",
+              "actor": "{fileID: 1761082585}"
+            },
+            "afterProperties": {
+              "m_Name": "",
+              "m_Enabled": "1",
+              "m_GameObject": "{fileID: 7592763225498438667}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "speed": "1.05",
+              "phase": "0.47",
+              "turnLookAhead": "0.18",
+              "turnSharpness": "12",
+              "actor": "{fileID: 1761082585}"
+            }
+          },
+          {
+            "fileId": "1716748740",
+            "unityType": 1,
+            "beforeSha256": "b605b0b4deece993b0a1184ee231fe666475bad79a11c5c60f9561e7eb6f327b",
+            "afterSha256": "b605b0b4deece993b0a1184ee231fe666475bad79a11c5c60f9561e7eb6f327b",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "npc_walker_02 route",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "npc_walker_02 route",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "1716748741",
+            "unityType": 4,
+            "beforeSha256": "56dd83b1052ae16238b32b99d9d0f5daede2c795cf89bd4c01b9e297994ff1d7",
+            "afterSha256": "56dd83b1052ae16238b32b99d9d0f5daede2c795cf89bd4c01b9e297994ff1d7",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 1716748740}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 1716748740}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "1934804348",
+            "unityType": 1,
+            "beforeSha256": "d0fb439bb208f7c3cc7d8ae4322275d826c09ac22b3b0429378c9e4ad90d6fe6",
+            "afterSha256": "d0fb439bb208f7c3cc7d8ae4322275d826c09ac22b3b0429378c9e4ad90d6fe6",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "Colonists",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "Colonists",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "1934804349",
+            "unityType": 4,
+            "beforeSha256": "ca41bb9f287737a3a47c061a25384b5ab1e068a91777c61391863ec9beb5cbf8",
+            "afterSha256": "ca41bb9f287737a3a47c061a25384b5ab1e068a91777c61391863ec9beb5cbf8",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 1934804348}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 1934804348}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+              "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 0}"
+            }
+          },
+          {
+            "fileId": "3085044385272731347",
+            "unityType": 4,
+            "beforeSha256": "83fe7c03b9fb18361f9832b4b2fdebf3b1bb06958fc0ff70d4f80e394aab1f96",
+            "afterSha256": "83fe7c03b9fb18361f9832b4b2fdebf3b1bb06958fc0ff70d4f80e394aab1f96",
+            "identical": true,
+            "beforeProperties": {
+              "m_GameObject": "{fileID: 7592763225498438667}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 3, y: 0, z: 22}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1934804349}"
+            },
+            "afterProperties": {
+              "m_GameObject": "{fileID: 7592763225498438667}",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}",
+              "m_LocalPosition": "{x: 3, y: 0, z: 22}",
+              "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+              "m_LocalScale": "{x: 1, y: 1, z: 1}",
+              "m_Father": "{fileID: 1934804349}"
+            }
+          },
+          {
+            "fileId": "7592763225498438667",
+            "unityType": 1,
+            "beforeSha256": "b1566aa789df67b25d7721ec208d7a091c20f0cea120e4e72f960d3b81cbbdd9",
+            "afterSha256": "b1566aa789df67b25d7721ec208d7a091c20f0cea120e4e72f960d3b81cbbdd9",
+            "identical": true,
+            "beforeProperties": {
+              "m_Name": "npc_walker_02",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            },
+            "afterProperties": {
+              "m_Name": "npc_walker_02",
+              "m_IsActive": "1",
+              "m_PrefabInstance": "{fileID: 0}",
+              "m_CorrespondingSourceObject": "{fileID: 0}"
+            }
+          }
+        ],
+        "allComparedDocumentsIdentical": true
+      }
+    ],
+    "complete": true,
+    "allFourWalkersAndRouteChainsPreserved": true
+  },
+  "playerLog": {
+    "present": true,
+    "sha256": "3cf289da178cbfee71dda2cf3f3f4d4b58796fd61a756ef8438dd1544e9feb6f",
+    "matchedIssues": [],
+    "noMatchedIssues": true
+  },
+  "releaseSmoke": {
+    "complete": true,
+    "scope": "Native release launch, input responsiveness, non-blank rendering, no runtime exceptions. Full city-loop assertions run separately in development."
+  },
+  "memory": {
+    "utc": "2026-09-09T19:47:23.691821+00:00",
+    "pid": 3855803,
+    "memory": {
+      "VmSize": "\t15379684 kB",
+      "VmHWM": "\t 2051880 kB",
+      "VmRSS": "\t 2026548 kB"
+    },
+    "residentTextureBytes": null,
+    "gpuFrameTimeMs": null,
+    "note": "Point observation; GPU process memory includes more than textures.",
+    "gpu": "NVIDIA GeForce RTX 3060",
+    "driver": "595.84",
+    "totalVram": "12288 MiB",
+    "allProcessesGpuMemory": "3943 MiB",
+    "nativeGpuMemory": "3074 MiB"
+  },
+  "visualAcceptance": null,
+  "limitations": [
+    "Visual scores and user acceptance require native image/motion review.",
+    "Timing applies only to this recorded build, process state and route.",
+    "Submitted triangles include render passes; unavailable counters remain null.",
+    "City-loop diagnostic landmark placement is distinct from real traversal.",
+    "No before/after performance delta is inferred from unmatched prior measurements."
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "startedUtc": "2026-09-09T19:43:43.600503+00:00",
+  "requestedSteps": [
+    "captures",
+    "traversal",
+    "porches",
+    "city-loop",
+    "lighting"
+  ],
+  "steps": [
+    {
+      "step": "captures",
+      "startedUtc": "2026-09-09T19:43:56.239753+00:00",
+      "complete": true,
+      "commands": [
+        {
+          "command": [
+            "/home/teknetik/.cache/uv/archive-v0/C-D_s9RmoL-ZML5S/bin/python",
+            "/home/teknetik/code/ao2/unity/tools/capture_building_pass.py",
+            "/home/teknetik/code/ao2/unity/evidence/reference-street/20260909/after-native-v3",
+            "--building",
+            "field_supply",
+            "--report",
+            "field-captures.json",
+            "--extra",
+            "/home/teknetik/code/ao2/unity/evidence/reference-street/20260909/after-native-v3/reference-after-extra-cameras.json"
+          ],
+          "startedUtc": "2026-09-09T19:43:56.240140+00:00",
+          "log": "qa-capture-field.log",
+          "finishedUtc": "2026-09-09T19:44:23.699999+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "/home/teknetik/.cache/uv/archive-v0/C-D_s9RmoL-ZML5S/bin/python",
+            "/home/teknetik/code/ao2/unity/tools/capture_building_pass.py",
+            "/home/teknetik/code/ao2/unity/evidence/reference-street/20260909/after-native-v3",
+            "--building",
+            "finery",
+            "--report",
+            "finery-captures.json"
+          ],
+          "startedUtc": "2026-09-09T19:44:23.700230+00:00",
+          "log": "qa-capture-finery.log",
+          "finishedUtc": "2026-09-09T19:44:35.230169+00:00",
+          "returncode": 0
+        }
+      ],
+      "finishedUtc": "2026-09-09T19:44:35.230474+00:00"
+    },
+    {
+      "step": "traversal",
+      "startedUtc": "2026-09-09T19:44:35.230646+00:00",
+      "complete": false,
+      "commands": [],
+      "authoringProcessesBeforeMeasurement": [
+        {
+          "pid": 1766578,
+          "name": "AssetImportWork",
+          "executable": "Unity"
+        },
+        {
+          "pid": 1766620,
+          "name": "AssetImportWork",
+          "executable": "Unity"
+        }
+      ]
+    }
+  ],
+  "complete": false,
+  "error": "AssertionError(\"Close authoring Unity/Blender processes before timing: [{'pid': 1766578, 'name': 'AssetImportWork', 'executable': 'Unity'}, {'pid': 1766620, 'name': 'AssetImportWork', 'executable': 'Unity'}]\")",
+  "finishedUtc": "2026-09-09T19:44:35.254000+00:00"
+}

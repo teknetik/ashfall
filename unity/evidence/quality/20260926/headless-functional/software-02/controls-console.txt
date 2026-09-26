@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "/home/teknetik/code/ao2/art/quality_20260926/isolated-functional-qa/run_check.py", line 94, in <module>
+    main()
+    ~~~~^^
+  File "/home/teknetik/code/ao2/art/quality_20260926/isolated-functional-qa/run_check.py", line 76, in main
+    runpy.run_path(str(script), run_name='__main__')
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen runpy>", line 294, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/teknetik/code/ao2/unity/tools/controls_check.py", line 208, in <module>
+    asyncio.run(main())
+    ~~~~~~~~~~~^^^^^^^^
+  File "/home/teknetik/.local/share/uv/python/cpython-3.13.15-linux-x86_64-gnu/lib/python3.13/asyncio/runners.py", line 196, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "/home/teknetik/.local/share/uv/python/cpython-3.13.15-linux-x86_64-gnu/lib/python3.13/asyncio/runners.py", line 119, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/home/teknetik/.local/share/uv/python/cpython-3.13.15-linux-x86_64-gnu/lib/python3.13/asyncio/base_events.py", line 726, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/home/teknetik/code/ao2/unity/tools/controls_check.py", line 101, in main
+    assert same_camera(baseline, snap()['camera']), 'Unheld mouse moved the camera'
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Unheld mouse moved the camera

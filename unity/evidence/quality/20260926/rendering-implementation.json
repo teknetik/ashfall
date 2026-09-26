@@ -1,0 +1,63 @@
+{
+  "date": "2026-09-26",
+  "scope": "Hill ground and grass URP light/occlusion integration",
+  "authority": "Current saved Unity shader sources; URP 17.6.0 installed source API. Historical captures are only contextual; new native qualification is pending.",
+  "files": [
+    {
+      "path": "unity/AthenHill/Assets/AthenHill/Shaders/HillGround.shader",
+      "beforeSha256": "f4e9cd9ad87b8c54fc66a3c2b6534d80929490b5c4e62d75cafd60f382837076",
+      "afterSha256": "ac36b6d0eefc1d055a5ce8ec8bdc7464883b9afe0ca2df790e3c7a1edc70db4f"
+    },
+    {
+      "path": "unity/AthenHill/Assets/AthenHill/Shaders/HillGrass.shader",
+      "beforeSha256": "54988d0ba332f6b2c13c00722aab23741f674717fd848fa0ab264b6ab84c9c92",
+      "afterSha256": "0f26d4708ff19014d1a52cb6f6ea8e4f1e679a1fc7522ab6f6bf00e3d1ad4dee"
+    }
+  ],
+  "confirmedSourceDefects": [
+    "Both custom shaders ignored additional lights and SSAO although the saved PC renderer enables them.",
+    "Grass forced 50 percent of sun light through even at complete shadow attenuation.",
+    "Grass had no depth prepass so SSAO/depth consumers could not represent its blade cutouts.",
+    "Ground borrowed URP Lit DepthOnly with a different UnityPerMaterial buffer.",
+    "The original GetMainLight(shadowCoord) overload did not include URP distance-faded main-light shadows."
+  ],
+  "changes": [
+    "Per-pixel additional light loop, local shadow and cookie variants, and correct main-light shadow fade.",
+    "Separate URP screen-space indirect and direct occlusion factors.",
+    "Grass cutout silhouette and wind deformation shared by color, depth and depth-normal passes.",
+    "Ground-specific DepthOnly sharing its forward material layout."
+  ],
+  "preserved": [
+    "Texture inputs and colors",
+    "Grass blade silhouettes and authored broad directional response",
+    "Scene, geometry, colliders, transforms, materials, routes",
+    "Reduced-motion clock source",
+    "Linux OpenGL graphics API and URP pipeline"
+  ],
+  "validation": {
+    "diffCheck": "pass",
+    "unityShaderCompilation": "Root reports refreshed/imported shaders and ShaderUtil.GetShaderMessages returned empty for both. Viewed root Editor hill render: no magenta ground/grass. Shipping player build pending.",
+    "nativeVisualReview": "pending",
+    "performance": "pending",
+    "externalCompiler": "glslang16.4 available, but standalone compilation rejects installed Unity package min16float/wave helper overloads and GLCore macro syntax; no external compilation pass claimed. Attempted only in /tmp/ward-render-shader-audit-20260926, project packages unchanged."
+  },
+  "acceptanceViews": [
+    "Hill soil/grass first-person at noon and dusk",
+    "Tree root ground contact",
+    "Moving hill route under tree shadows",
+    "Grass edges: no filled rectangular depth/AO silhouette",
+    "Existing native gameplay and performance profile"
+  ],
+  "limitations": [
+    "This repairs rendering integration; it does not raise the procedural grass silhouette or soil source art to a contemporary AAA standard.",
+    "No final visual acceptance can be inferred from shader compilation."
+  ],
+  "implementationReferences": [
+    "Library/PackageCache/com.unity.render-pipelines.universal@b9a66914c09e/ShaderLibrary/RealtimeLights.hlsl",
+    "Library/PackageCache/com.unity.render-pipelines.universal@b9a66914c09e/ShaderLibrary/AmbientOcclusion.hlsl",
+    "Library/PackageCache/com.unity.render-pipelines.universal@b9a66914c09e/ShaderLibrary/Lighting.hlsl"
+  ],
+  "officialDocumentation": [
+    "https://docs.unity.com/en-us/engine/6000.0/manual/materials-and-shaders/shaders/writing-custom-shaders-urp/use-built-in-shader-methods/lighting"
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "reviewer": "independent street_critic",
+  "reviewDate": "2026-09-10",
+  "verdict": "REVISE",
+  "aaaAccepted": false,
+  "reference": "refs/reference-street/20260909/user-target.png",
+  "nativeEvidence": "unity/evidence/reference-street/20260910/iteration-04-native",
+  "buildReport": "unity/evidence/reference-street/20260910/iteration-04-build.json",
+  "scope": "Independent offline visual review of finalized native04, focusing on CanopySurfaceV2 and ShadeBalanceV1. Ground, architecture and metal are unchanged context. The old native generator is excluded from new-source approval. No app input or scene mutation by this critic.",
+  "overallScores0to5": {
+    "compositionSilhouette": 3,
+    "scale": 4,
+    "materialDetail": 3,
+    "lightingDepth": 3,
+    "densityStorytelling": 3,
+    "characterAnimation": null,
+    "temporalStability": null,
+    "staticUiReadability": 4
+  },
+  "acceptanceRule": "Every applicable hero and close category must reach at least 4, with no focal hard defect. The partial gains below do not establish overall AAA quality. Null means unqualified, not a pass.",
+  "canopy": {
+    "verdict": "KEEP_GEOMETRY_REVISE_MATERIAL_AND_LOCAL_LIGHT_RESPONSE",
+    "scores0to5": {"constructionSilhouette": 4, "scale": 4, "materialDetail": 3, "lightingDepth": 3, "weatheringStorytelling": 3},
+    "improvements": [
+      "V3 drape, folded seams, patch contours and continuous hem remain intact. No renewed black slit or open-hole defect is visible in reviewed native04 views.",
+      "SurfaceV2 is quieter and less saturated than native03, with the rejected source-v1 cloudy bleaching and uniform pale hem avoided.",
+      "Patch and seam detail remain coherent in the short consecutive-frame samples."
+    ],
+    "remainingDefects": [
+      "Broad fold highlights still read like a smooth coated sheet; the top at hour18.25 is especially glossy across fold ridges. This remains below the weathered cloth reference.",
+      "The noon underside is a broad smooth dark red field with weak cloth identity. At16 and17.5 the entrance lamp produces stable angular bright bands, which become more explicit as ambient light falls at18.25 and0.",
+      "Localized aging is still too quiet at the whole-canopy and frontage views. The reference shows clearer abrasion, faded handling areas and fabric history around seams and repairs."
+    ],
+    "physicalDetailCaveat": "The retained cotton uses a physical0.3m source tile. Submillimetre yarn can be subpixel when a roughly5m canopy fills1920px, so lack of visible individual yarn in a wide view is not proof of missing maps. Do not enlarge the weave solely to make grain visible.",
+    "boundedNextChecks": [
+      "Isolate the local lamp, its shadows, cloth normals and canopy self-shadow in matched native views before prescribing a material or lighting fix. The saved Finery lamp is a point light; the angular bands are not evidence of a spotlight cone.",
+      "Add a player-height near view of the hem, patch and seam with enough pixel coverage to evaluate stitches, localized abrasion and normal response at physical scale.",
+      "Check actual native roughness/specular and composed normal behavior against source appearance. Preserve V3 geometry and the restrained V2 color history while correcting any demonstrated shader issue.",
+      "Only after those checks, audition modest thin-cloth daylight transmission if needed for material identity. Patches and doubled hems should attenuate it; avoid emission or night glow. This is an experiment, not a proven remedy for the angular bands."
+    ]
+  },
+  "shadeBalance": {
+    "verdict": "KEEP_BOUNDED_IMPROVEMENT",
+    "streetReadabilityScore0to5": 4,
+    "localCanopyLightingScore0to5": 3,
+    "findings": [
+      "The16 and17.5 views open shaded stone, paving and props while retaining recess depth, warm sun rims and practical-light contrast. The reviewed views do not show broad color washing.",
+      "The18.25 and0 views preserve the transition to a dark night scene. Noon remains strongly sunlit. There is no observed global noon/night regression in this set; exact03 versus04 comparisons at17.5,18.25 and0 were not available.",
+      "Additional global ambient or sky fill is not justified by the remaining cloth problem. Its broad surface response and local lamp bands need a bounded diagnosis."
+    ],
+    "actualNativeState": {
+      "hour12": {"sunIntensity": 1.7, "sunDirectionY": 0.615661561, "postExposure": -0.18, "ambientSky": [0.43,0.51,0.62], "ambientEquator": [0.46,0.43,0.37], "ambientGround": [0.34,0.29,0.22], "skyFill": 0.27, "lampStrength": 0},
+      "hour16": {"sunIntensity": 0.833523631, "sunDirectionY": 0.1948374, "postExposure": -0.155477092, "ambientSky": [0.315559715,0.395559728,0.505559742], "ambientEquator": [0.361908346,0.340082645,0.296431243], "ambientGround": [0.2541698,0.216431245,0.170954168], "skyFill": 0.171908334, "lampStrength": 0.637595832},
+      "priorNative03Hour16": {"ambientSky": [0.184771,0.223899,0.309376], "ambientEquator": [0.231119,0.188858,0.157468], "ambientGround": [0.119294,0.097904,0.07695], "skyFill": 0.106514},
+      "interpretation": "ShadeBalance changes the17.5 ambient/fill key and therefore its interpolated neighboring hours. Sun, exposure and lamps retain the original curve. Hour16 has about half the noon sun intensity and lower global fill, with a much stronger practical lamp; these are different lighting conditions, not a texture-only comparison. Parameter ratios are not direct pixel-luminance ratios."
+    },
+    "reflectionEvidence": "The separate shade report records five settled transitions with two expected new captures each, zero failures and actual probe textures present. Identity remained unchanged. Reflection bookkeeping is not art acceptance."
+  },
+  "unchangedContext": {
+    "masonry": "Improved native03 mineral grain and construction remain, but sparse sharp spalls and regular exposed courses still read too authored relative to the reference. Overall material/story score3 persists.",
+    "thresholds": "Geometry, material and contact remain4 in reviewed approach views. The recorded route reaches and leaves both porches.",
+    "doorAndShutterMetal": "Material/story score3 persists. The first-person walk shows soft repeated orange corrosion islands and low variation around handling areas. New metal source candidates are not installed or accepted by this native04 review.",
+    "crateV4": "Geometry/mapping and noon material remain4. A7, handles and edges stay coherent in samples. Hour16 dark paint and straps are still close in value; local shade material readability remains3.",
+    "trashV2": "Geometry and contact remain4. Open can rims and jug handles stay intact, and the rear weed does not visibly pierce the pile in reviewed samples. Gray sacks and pale plastic still read soft and poorly differentiated; material score3 persists.",
+    "scrapV1": "Geometry and noon material remain4. Corrugations, barrels, strap and coiled rubber remain distinct and grounded. Hour16 preserves more shape but warm dark metal loses close material separation; shade readability3. The adjacent old crate and faceted rubble are excluded from the new scrap candidate verdict.",
+    "generator": "The old native generator remains context only. Current repaired source work has no native approval from this review."
+  },
+  "evidenceActuallyReviewed": {
+    "shadeStills": {"count": 35, "hours": [12,16,17.5,18.25,0], "cameras": ["cam_reference_street","cam_audit_finery_front","cam_canopy_top","cam_canopy_under","cam_ground_crate","cam_ground_trash","cam_ground_scrap"], "method": "Each image decoded and visually inspected at native1920x1080. All35 were reviewed."},
+    "fixedStills": ["cam_reference_street.png","cam_courtyard_facade.png","cam_audit_finery_front.png","cam_audit_finery_door.png"],
+    "assetPassEndStills": ["asset-pass-cam_canopy_top-hour-12-end.png","asset-pass-cam_canopy_under-hour-12-end.png","asset-pass-cam_canopy_top-hour-16-end.png","asset-pass-cam_canopy_under-hour-16-end.png","asset-pass-cam_ground_crate-hour-16-end.png","asset-pass-cam_ground_trash-hour-16-end.png","asset-pass-cam_ground_scrap_back-hour-16-end.png"],
+    "motion": {
+      "derivedFolder": "iteration-04-native/critic-motion-04",
+      "assetMoviesSampled": 12,
+      "cameras": ["cam_canopy_top","cam_canopy_under","cam_ground_crate","cam_ground_trash","cam_ground_scrap","cam_ground_scrap_back"],
+      "hours": [12,16],
+      "consecutiveFramesPerMovie": 6,
+      "totalConsecutiveFramesViewed": 72,
+      "sampleSeconds": [4.0,4.033333,4.066667,4.1,4.133333,4.166667],
+      "method": "Offline original-resolution FFmpeg extraction, then actual inspection of every successive still. Each burst spans only0.167seconds. This is sampled sequential imagery, not uninterrupted movie playback.",
+      "finding": "No obvious local UV jump, LOD pop, new hole, contact jump, clipping or ghost trail in these short bursts. Lamp bands persist stably. Fine line antialiasing, long-range transitions, foliage shimmer and general animation remain unqualified by this limited sample.",
+      "walkFile": "iteration-first-person.mp4",
+      "walkDurationSeconds": 31.533333,
+      "walkSampleSecondsViewed": [2,6,10,16,22,29],
+      "walkFinding": "Sampled approach and departure views show unobstructed porch access and no obvious camera-through-wall frame. Close shutter and Finery door frames confirm unchanged metal-art weaknesses. Sparse walk samples do not establish full temporal stability."
+    }
+  },
+  "verificationLimits": {
+    "recordedRoute": "iteration-review.json records16 real-input checkpoints, all grounded at rest, reaching both first treads atY0.28 and porches atY0.53 and returning to avenueY0.03. This is the affected threshold route, not all game verbs.",
+    "recordedCaptureStatus": "Primary runner,12 asset passes and35-view shade audition report complete. Reviewed report guards have empty identityChangedPaths and no matching runtime error lines or QA error.",
+    "recordedOverlapCounters": "All12 diagnostic asset passes record zero overlaps. Engine overlap counters do not prove visual temporal stability.",
+    "settings": "Linux native1920x1080, renderScale1/renderPercent100, preset2, MSAA4, textureLimit0, postprocessing on, VSync off, uncapped. Unity6000.6.0f1/OpenGLCore, RTX306012GB, i9-10850K, NVIDIA595.84, nine actors.",
+    "performanceQualified": false,
+    "performanceNote": "These captures do not qualify averageFPS or p99 frame time. Unavailable render counters are not zero cost. Source geometry count, build success and reflection allocation do not raise art scores.",
+    "stopState": "User requested a safe stop. This completed native04 critique preserves REVISE. The newly staged NativeCanopyLightingReview diagnostic was located but not reviewed before the stop; no diagnostic-code approval or blocker finding is claimed."
+  }
+}

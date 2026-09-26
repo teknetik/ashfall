@@ -1,0 +1,263 @@
+{
+  "utc": "2026-09-09T19:24:06.915534+00:00",
+  "nativeFolder": "/home/teknetik/code/ao2/unity/evidence/reference-street/20260909/after-native",
+  "run": {
+    "startedUtc": "2026-09-09T19:23:03.990234+00:00",
+    "requestedSteps": [
+      "captures",
+      "traversal",
+      "porches",
+      "city-loop",
+      "lighting"
+    ],
+    "steps": [
+      {
+        "step": "captures",
+        "startedUtc": "2026-09-09T19:23:15.719548+00:00",
+        "complete": true,
+        "commands": [
+          {
+            "command": [
+              "/home/teknetik/.cache/uv/builds-v0/.tmpUwEFpk/bin/python",
+              "/home/teknetik/code/ao2/unity/tools/capture_building_pass.py",
+              "/home/teknetik/code/ao2/unity/evidence/reference-street/20260909/after-native",
+              "--building",
+              "field_supply",
+              "--report",
+              "field-captures.json",
+              "--extra",
+              "/home/teknetik/code/ao2/unity/evidence/reference-street/20260909/after-native/reference-after-extra-cameras.json"
+            ],
+            "startedUtc": "2026-09-09T19:23:15.720167+00:00",
+            "log": "qa-capture-field.log",
+            "finishedUtc": "2026-09-09T19:23:43.295566+00:00",
+            "returncode": 0
+          },
+          {
+            "command": [
+              "/home/teknetik/.cache/uv/builds-v0/.tmpUwEFpk/bin/python",
+              "/home/teknetik/code/ao2/unity/tools/capture_building_pass.py",
+              "/home/teknetik/code/ao2/unity/evidence/reference-street/20260909/after-native",
+              "--building",
+              "finery",
+              "--report",
+              "finery-captures.json"
+            ],
+            "startedUtc": "2026-09-09T19:23:43.295707+00:00",
+            "log": "qa-capture-finery.log",
+            "finishedUtc": "2026-09-09T19:23:54.920256+00:00",
+            "returncode": 0
+          }
+        ],
+        "finishedUtc": "2026-09-09T19:23:54.920508+00:00"
+      },
+      {
+        "step": "traversal",
+        "startedUtc": "2026-09-09T19:23:54.920685+00:00",
+        "complete": false,
+        "commands": [],
+        "authoringProcessesBeforeMeasurement": [
+          {
+            "pid": 1012442,
+            "name": "AssetImportWork",
+            "executable": "Unity"
+          },
+          {
+            "pid": 1766578,
+            "name": "AssetImportWork",
+            "executable": "Unity"
+          },
+          {
+            "pid": 1766620,
+            "name": "AssetImportWork",
+            "executable": "Unity"
+          },
+          {
+            "pid": 3790841,
+            "name": "Unity Main Thre",
+            "executable": "AthenHill.x86_64"
+          }
+        ]
+      }
+    ],
+    "complete": false,
+    "error": "AssertionError(\"Close authoring Unity/Blender processes before timing: [{'pid': 1012442, 'name': 'AssetImportWork', 'executable': 'Unity'}, {'pid': 1766578, 'name': 'AssetImportWork', 'executable': 'Unity'}, {'pid': 1766620, 'name': 'AssetImportWork', 'executable': 'Unity'}, {'pid': 3790841, 'name': 'Unity Main Thre', 'executable': 'AthenHill.x86_64'}]\")",
+    "finishedUtc": "2026-09-09T19:23:54.943922+00:00"
+  },
+  "documents": {
+    "warmup-route.json": {
+      "present": false,
+      "sha256": null,
+      "complete": null
+    },
+    "measured-route.json": {
+      "present": false,
+      "sha256": null,
+      "complete": null
+    },
+    "weathering-proximity.json": {
+      "present": false,
+      "sha256": null,
+      "complete": null
+    },
+    "city-loop.json": {
+      "present": false,
+      "sha256": null,
+      "complete": null
+    },
+    "reference-lighting.json": {
+      "present": false,
+      "sha256": null,
+      "complete": null
+    },
+    "field-captures.json": {
+      "present": true,
+      "sha256": "2ba658554bf3a15a26c1666953e57bd645c07b7a59b9a6785eaaa84f1f6cadec",
+      "complete": true
+    },
+    "finery-captures.json": {
+      "present": true,
+      "sha256": "e73a5beae24074c16e53dd9ecff01c937830806f5c8fc2b63a09029e58281dbf",
+      "complete": true
+    },
+    "traversal-performance.json": {
+      "present": false,
+      "sha256": null,
+      "complete": null
+    },
+    "interaction-performance.json": {
+      "present": false,
+      "sha256": null,
+      "complete": null
+    },
+    "settings.json": {
+      "present": true,
+      "sha256": "c2faaa9ce43e5ec91c0ccf0f0969b0192281e92f7b6064c95da20741933e5571",
+      "complete": null
+    },
+    "environment.json": {
+      "present": true,
+      "sha256": "21b1215e63f5a01b69e6a78a21fd0daf6d39f00dd8344749868f28246d9e7dbe",
+      "complete": null
+    }
+  },
+  "installerPreservation": {
+    "gameplayPreserved": true,
+    "collidersPreserved": true,
+    "gameplayBeforeSha256": null,
+    "gameplayAfterSha256": null,
+    "collisionBeforeSha256": null,
+    "collisionAfterSha256": null,
+    "source": "unity/evidence/reference-street/20260909/installation.json",
+    "scope": "Installer comparisons at installation time; unavailable signature hashes remain null.",
+    "signatureFiles": {
+      "gameplay": {
+        "beforePath": "unity/evidence/reference-street/20260909/gameplay-before.json",
+        "afterPath": "unity/evidence/reference-street/20260909/gameplay-after.json",
+        "beforeSha256": "da020f163174032959a70319e79f37b9ddb81d6b2e5dc39ee34903de5a891237",
+        "afterSha256": "da020f163174032959a70319e79f37b9ddb81d6b2e5dc39ee34903de5a891237",
+        "identical": true
+      },
+      "collision": {
+        "beforePath": "unity/evidence/reference-street/20260909/collision-before.json",
+        "afterPath": "unity/evidence/reference-street/20260909/collision-after.json",
+        "beforeSha256": "dc79cfa664c28b28e7c965926fbd935cb49bdb9c38db3287f016802f4804bebd",
+        "afterSha256": "dc79cfa664c28b28e7c965926fbd935cb49bdb9c38db3287f016802f4804bebd",
+        "identical": true
+      }
+    }
+  },
+  "settings": {
+    "sound": {
+      "master": 1.0,
+      "music": 1.0,
+      "ambience": 1.0,
+      "effects": 1.0,
+      "muted": false
+    },
+    "video": {
+      "width": 1920,
+      "height": 1080,
+      "windowMode": 0,
+      "preset": 2,
+      "renderPercent": 100,
+      "shadows": 3,
+      "antiAliasing": 4,
+      "textureLimit": 0,
+      "postProcessing": true,
+      "vSync": false,
+      "frameLimit": 0
+    },
+    "draft": {
+      "width": 1920,
+      "height": 1080,
+      "windowMode": 0,
+      "preset": 2,
+      "renderPercent": 100,
+      "shadows": 3,
+      "antiAliasing": 4,
+      "textureLimit": 0,
+      "postProcessing": true,
+      "vSync": false,
+      "frameLimit": 0
+    },
+    "previewing": false,
+    "remaining": 0,
+    "renderScale": 1.0,
+    "msaa": 4,
+    "shadowDistance": 18.0,
+    "shadowResolution": 4096,
+    "textureLimit": 0,
+    "vSync": 0,
+    "frameLimit": -1,
+    "postProcessing": true,
+    "track": "Dust of Alshain",
+    "transitions": 1,
+    "timeScale": 1.0
+  },
+  "environment": {
+    "unity": "6000.6.0f1",
+    "os": "Linux 7.0 Ubuntu 24.04 64bit",
+    "gpu": "NVIDIA GeForce RTX 3060/PCIe/SSE2",
+    "api": "OpenGLCore",
+    "driver": "OpenGL 4.5.0 NVIDIA 595.84",
+    "cpu": "Intel(R) Core(TM) i9-10850K CPU @ 3.60GHz",
+    "quality": "PC",
+    "width": 1920,
+    "height": 1080,
+    "vsync": 0,
+    "targetFrameRate": -1,
+    "drawCounter": true,
+    "triangleCounter": true,
+    "mainThreadCounter": true,
+    "renderThreadCounter": false,
+    "actorCount": 9
+  },
+  "measuredProfileMatches": true,
+  "filesUnchangedDuringRun": true,
+  "priorBuildComparisons": {
+    "unity/AthenHill/Packages/manifest.json": true,
+    "unity/AthenHill/Packages/packages-lock.json": true,
+    "unity/AthenHill/ProjectSettings/ProjectVersion.txt": true,
+    "unity/AthenHill/Builds/Linux/AthenHill_Data/Managed/Assembly-CSharp.dll": true,
+    "unity/AthenHill/Builds/LinuxDevelopment/AthenHill_Data/Managed/Assembly-CSharp.dll": true
+  },
+  "walking": null,
+  "modalInteractions": null,
+  "playerLog": {
+    "present": true,
+    "sha256": "24674f05a34646e1384ae53cf9cad4f1baeaae6db81eb2ed6414766cb5ac7653",
+    "matchedIssues": [],
+    "noMatchedIssues": true
+  },
+  "releaseSmoke": null,
+  "memory": null,
+  "visualAcceptance": null,
+  "limitations": [
+    "Visual scores and user acceptance require native image/motion review.",
+    "Timing applies only to this recorded build, process state and route.",
+    "Submitted triangles include render passes; unavailable counters remain null.",
+    "City-loop diagnostic landmark placement is distinct from real traversal.",
+    "No before/after performance delta is inferred from unmatched prior measurements."
+  ]
+}

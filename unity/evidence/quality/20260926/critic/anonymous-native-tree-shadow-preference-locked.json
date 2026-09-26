@@ -1,0 +1,51 @@
+{
+  "review": "anonymous-native-tree-shadow-review",
+  "date": "2026-09-26",
+  "reviewer": "visual_critic",
+  "lockedBeforeMappingReveal": true,
+  "mappingRead": false,
+  "implementationReadForThisAudition": false,
+  "inspection": "All ten full-frame A/B PNGs inspected. Read only the allowed README and anonymous image files before lock.",
+  "settingsFromReadme": "Native OpenGL 1920x1080, render scale1, MSAA4, 48m/two cascades, ambient transmission0, three-second settling; daylight frozen, wind/actors move.",
+  "cameras": {
+    "cam_hill": {
+      "ranking": [["A", "B"]],
+      "confidence": "moderate for no material whole-picture loss; low for fine shadow equivalence",
+      "finding": "The main crown silhouette and plaza/ground shadow masses remain comparable. No conspicuous missing crown section, large new hole in its grounding shadow, or detached trunk footprint appears. Fine dapple and grass changes cannot be reliably assigned to shadow geometry with wind active."
+    },
+    "cam_hero": {
+      "ranking": [["A", "B"]],
+      "confidence": "moderate for comparable visible quality",
+      "finding": "Main limbs, canopy coverage and shading on the visible trunk remain comparable. No obvious missing large limb shadow or abrupt unshadowed strip is apparent. The ground cast shadow is largely outside this upward view, so it cannot qualify that silhouette."
+    },
+    "cam_tree_canopy_below": {
+      "ranking": [["A", "B"]],
+      "confidence": "moderate for comparable visible quality; low for exact small-leaf shadow fidelity",
+      "finding": "The large trunk and branch structure retains the same plausible self-shading. No severe new light leak, broad shadow hole, stripe or detached self-shadow edge is apparent. Dense dark foliage remains difficult to separate in both and prevents a precise small-shadow audit."
+    },
+    "cam_tree_root_south": {
+      "ranking": [["A", "B"]],
+      "confidence": "moderate; strongest pair for near ground contact",
+      "finding": "Both roots remain connected to the dark soil footprint. Broad branch/canopy shadows across the near paving survive, with comparable soft edges and coverage. No obvious detached base shadow or newly absent major branch footprint is evident. Wind/grass and actor pose differ, so fine dapple and actor-contact differences are not scored as geometry regressions."
+    },
+    "cam_whompah": {
+      "ranking": [["A", "B"]],
+      "confidence": "high for this view's gross visible equivalence; low relevance to the offscreen tree",
+      "finding": "The ring silhouette, complete cast ring shadow, console/base shadowing and surrounding paving appear equivalent. This is a useful unaffected-landmark control; the tree is offscreen, so it cannot establish the detailed fidelity of its shadow caster."
+    }
+  },
+  "overall": "NO_MATERIAL_STATIC_VISUAL_REGRESSION_IDENTIFIED",
+  "visuallyPreferredLabel": null,
+  "exactPixelEquivalenceClaimed": false,
+  "missingMajorLimbOrCrownShadowObserved": false,
+  "detachedRootShadowObserved": false,
+  "temporalStabilityQualified": false,
+  "performanceInferredFromImages": false,
+  "presentationAcceptance": false,
+  "presentationLimit": "Common Development Console overlay at the bottom. Parent identified retained harness error from nonexistent cam_tree_roots before correction to cam_tree_root_south. Not attributed to either anonymous candidate; not clean final presentation evidence.",
+  "scope": "Ties mean no defensible preferred picture in these particular stills, not proof that all shadow geometry is identical or that a reduced representation is safe at every angle/light/distance.",
+  "nextEvidence": "After reveal, keep the candidate eligible for independent cost and temporal evaluation if useful. Inspect camera movement, changing sun angle and cascade transitions, especially near-root paving and fine self-shadows. Use a fresh player for clean presentation evidence. Do not infer a timing pass or promotion from these ties.",
+  "aaaAcceptance": false,
+  "nativeGameplayAcceptance": false,
+  "existingArtLimitations": "Merged shaded leaf clusters, soft bark, stiff triangular grass and repetitive paving remain. This shadow fidelity audition does not address them."
+}

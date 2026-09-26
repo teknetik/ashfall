@@ -72,13 +72,27 @@ elsewhere in Ward remain a separate rollout decision.
 The native QA results and timing summary are recorded in `verification.json`.
 `after-native/environment.json` and `settings.json` record the actual RTX 3060 /
 i9-10850K host, driver, OpenGLCore API, 1920×1080 resolution, rendering settings
-and nine-actor roster. Blender and Unity were closed for the traversal timing.
+and nine-actor roster. Blender was closed for timing. Unity was asked to exit, but later process inspection
+found its original process still resident at approximately 7.2 GiB RSS. These
+measurements passed with the Editor resident; the intended closed-editor condition
+was not established. The record retains that limitation rather than relabeling
+the run.
 The unmeasured warm-up alone was recorded to video; recording stopped before
 the measured pass. Unavailable timing or residency counters remain unavailable.
+
+The 134.69 s measured route averaged **171.38 FPS**, with p50/p95/p99
+**4.88 / 10.99 / 12.96 ms**, maximum **23.23 ms**, and no frames above 33 ms.
+It meets the requested average and p99 criteria under the recorded process condition.
+Native player RSS after traversal was about 1.74 GiB; total GPU memory in use was
+5,473 MiB of 12,288 MiB across all applications, not per-game texture residency.
+GPU and render-thread timing, draw/batch counts and texture residency were unavailable.
 
 Runtime validation includes the saved source/chunk state, both porch approaches,
 the existing district route, first-person zoom and mouse look, the city loop,
 and a release smoke check. Detailed reports distinguish diagnostic placement
-from real keyboard/mouse checks. Timing is scoped to this build and route;
+from real keyboard/mouse checks. All 41 route points, both first-person approaches, 29 city-loop checks and the
+release smoke check passed. Runtime logs contained no exceptions. Moving review
+used sampled frames and real camera/input checks; both full videos are retained.
+Timing is scoped to this build and route;
 there was no matched before-performance measurement under comparable memory
 conditions, so this pass does not claim a before/after performance delta.

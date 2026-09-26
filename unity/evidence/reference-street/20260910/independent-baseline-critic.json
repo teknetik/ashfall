@@ -1,0 +1,72 @@
+{
+  "reviewerRole": "Independent visual critic; no asset or scene authoring",
+  "reviewDate": "2026-09-10",
+  "reference": "refs/reference-street/20260909/user-target.png",
+  "candidateDirectory": "unity/evidence/reference-street/20260910/baseline-native-v2",
+  "reviewedImages": [
+    "cam_reference_street.png",
+    "cam_courtyard_facade.png",
+    "cam_audit_field_supply_door.png",
+    "cam_audit_finery_door.png",
+    "cam_audit_finery_front.png"
+  ],
+  "settingsInspected": "settings.json and environment.json: native 1920x1080, renderScale 1.0, MSAA 4, textureLimit 0, post-processing on, OpenGLCore on RTX 3060. No performance claim is made by this still review.",
+  "verdict": "Reject for the requested reference-level focused street quality. Recognizable reference composition and credible human scale are present, but conspicuous simplified construction and surface treatment remain in the focal buildings and ground.",
+  "scoresOutOfFive": {
+    "compositionAndSilhouette": 3,
+    "humanScaleAndConstruction": 4,
+    "materialDetail": 3,
+    "lightingAndDepth": 3,
+    "densityAndStorytelling": 3,
+    "characterAndAnimation": null,
+    "temporalStability": null,
+    "staticUiReadability": 4
+  },
+  "scoringScope": "The focused Field Supply and Finery street in these native stills. A 4 means strong at the intended viewing distance with minor remaining issues; a 5 means the chosen reference target is met in the reviewed view. Passing every applicable category at 4 or above is necessary but not sufficient if a conspicuous focal defect remains. This does not certify city-wide or whole-game AAA quality.",
+  "prioritizedDefects": [
+    {
+      "priority": 1,
+      "area": "Plaster and masonry construction",
+      "evidence": ["cam_courtyard_facade.png", "cam_audit_field_supply_door.png", "cam_audit_finery_front.png"],
+      "observation": "Pale repeated mottling and separate roundish damage islands dominate. Exposed interiors are uniform rough brown material. Cut edges are thick, abrupt and sometimes straight, reading as cut paper or a second sheet instead of fractured plaster bonded to masonry.",
+      "referenceRequirement": "Thin irregular plaster fracture, connected local crack networks, variable exposure of believable stone courses and mortar, and wear logically concentrated below cornices, at water paths, around openings and near the ground. Large calm plaster regions must retain mineral grain without uniformly distributed camouflage blotches."
+    },
+    {
+      "priority": 2,
+      "area": "Threshold and ground construction",
+      "evidence": ["cam_reference_street.png", "cam_courtyard_facade.png", "cam_audit_field_supply_door.png"],
+      "observation": "Long straight risers and clean slab centers retain a recently machined appearance. Grooves are narrow ruler-straight lines; erosion and gravel occur as small isolated additions. Several adjacent loose fragments have broad triangular or folded-sheet silhouettes.",
+      "referenceRequirement": "A coherent eroded stone landing with irregular chamfers, localized edge losses and variation in slab joints and surface relief; dust, embedded grit and rubble should meet the wall and step naturally. Debris must show actual thickness, fracture faces, rolled rims or other object-specific geometry as appropriate, with no planar impostor appearance at player height. Preserve traversable widths and stable support surfaces."
+    },
+    {
+      "priority": 3,
+      "area": "Canopy and textile behavior",
+      "evidence": ["cam_audit_finery_front.png", "cam_courtyard_facade.png"],
+      "observation": "The canopy has a very long straight front bar, broad simple cloth shape, regularly spaced edge strands and a conspicuously enlarged weave. It reads as a rigid red sheet at close range.",
+      "referenceRequirement": "Cloth tension should resolve at supports, with believable weight, sag, seam structure, edge curling, localized repairs and fraying. Weave must remain at fabric scale. The support structure must plausibly hold the cloth without penetration or unattached spans."
+    },
+    {
+      "priority": 4,
+      "area": "Doors, shutter and painted lettering",
+      "evidence": ["cam_audit_field_supply_door.png", "cam_audit_finery_door.png"],
+      "observation": "The two door faces and metal members share a repetitive soft orange patch pattern with weak relation to handling and construction. Shutter lettering has flat uniform fill and sharp irregular cutout boundaries; dark slat gaps strongly slice every stroke.",
+      "referenceRequirement": "Separate coating, corrosion and bare metal response with wear anchored to lips, fasteners, joints and handling zones. Painted strokes need convincing pigment variation and brush grain at close range. Shutter seams should retain mechanical depth while allowing the phrase to read as paint applied across corrugated steel."
+    },
+    {
+      "priority": 5,
+      "area": "Lighting, color and local composition",
+      "evidence": ["cam_reference_street.png", "cam_courtyard_facade.png"],
+      "observation": "Warm key lighting is coherent, but a uniform beige cast and broad even surfaces weaken local depth. The foreground remains clean and sparsely integrated compared with the reference. Repeated stretched cloud shapes and neighboring planar terrain remain visible contextual limitations.",
+      "referenceRequirement": "Materials must stay distinct under the same sun and cool sky, with credible contact shadows and recess depth. Local prop placement, dry growth and dirt should explain use and drainage. Additional detail must not become random clutter or obscure travel access."
+    }
+  ],
+  "acceptanceEvidenceRequired": [
+    "Same native reference-street and facade camera views at recorded 1920x1080 and renderScale 1.0 settings, plus matched before images where available.",
+    "Player-height close-ups of both door/threshold areas and the actual replaced Meshy ground assets in sunlight and shade; include a human-scale context view.",
+    "A slow moving approach and oblique pass along the facades, canopy, step edges and replaced ground assets, including first-person proximity, to judge shading stability, contact, LOD transitions and clipping.",
+    "The root task's independent checks of real-input access, preserved gameplay, runtime logs and warmed native frame times; still-image scores do not replace those checks."
+  ],
+  "geometryAuditRule": "Higher source or runtime triangle counts are only supporting provenance. They do not establish added detail or quality. Reject smoothed or subdivided versions of the same simplified forms when the intended object still lacks credible construction or thickness.",
+  "newHardFailuresInReviewedStills": [],
+  "limits": "No new moving footage was supplied to this review. Temporal stability, animation, collision and frame-time acceptance remain unassessed here. The existing banner is partially concealed by the right door jamb, a retained local issue that should be checked during the facade pass."
+}

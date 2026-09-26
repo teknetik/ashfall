@@ -1,0 +1,92 @@
+{
+  "startedUtc": "2026-09-09T19:46:32.754381+00:00",
+  "requestedSteps": [
+    "captures",
+    "traversal",
+    "porches",
+    "city-loop",
+    "lighting"
+  ],
+  "steps": [
+    {
+      "step": "captures",
+      "startedUtc": "2026-09-09T19:46:44.525281+00:00",
+      "complete": true,
+      "commands": [
+        {
+          "command": [
+            "/home/teknetik/.cache/uv/archive-v0/C-D_s9RmoL-ZML5S/bin/python",
+            "/home/teknetik/code/ao2/unity/tools/capture_building_pass.py",
+            "/home/teknetik/code/ao2/unity/evidence/reference-street/20260909/after-native-final",
+            "--building",
+            "field_supply",
+            "--report",
+            "field-captures.json",
+            "--extra",
+            "/home/teknetik/code/ao2/unity/evidence/reference-street/20260909/after-native-final/reference-after-extra-cameras.json"
+          ],
+          "startedUtc": "2026-09-09T19:46:44.525580+00:00",
+          "log": "qa-capture-field.log",
+          "finishedUtc": "2026-09-09T19:47:12.134901+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "/home/teknetik/.cache/uv/archive-v0/C-D_s9RmoL-ZML5S/bin/python",
+            "/home/teknetik/code/ao2/unity/tools/capture_building_pass.py",
+            "/home/teknetik/code/ao2/unity/evidence/reference-street/20260909/after-native-final",
+            "--building",
+            "finery",
+            "--report",
+            "finery-captures.json"
+          ],
+          "startedUtc": "2026-09-09T19:47:12.135015+00:00",
+          "log": "qa-capture-finery.log",
+          "finishedUtc": "2026-09-09T19:47:23.670431+00:00",
+          "returncode": 0
+        }
+      ],
+      "finishedUtc": "2026-09-09T19:47:23.670654+00:00"
+    },
+    {
+      "step": "traversal",
+      "startedUtc": "2026-09-09T19:47:23.670853+00:00",
+      "complete": true,
+      "commands": [
+        {
+          "command": [
+            "/home/teknetik/.cache/uv/archive-v0/C-D_s9RmoL-ZML5S/bin/python",
+            "/home/teknetik/code/ao2/unity/tools/check_building_traversal.py",
+            "--record-warmup"
+          ],
+          "startedUtc": "2026-09-09T19:47:23.801612+00:00",
+          "log": "qa-check_building_traversal.log",
+          "finishedUtc": "2026-09-09T19:51:58.437302+00:00",
+          "returncode": 0
+        }
+      ],
+      "authoringProcessesBeforeMeasurement": [],
+      "finishedUtc": "2026-09-09T19:51:58.437320+00:00"
+    },
+    {
+      "step": "porches",
+      "startedUtc": "2026-09-09T19:51:58.437534+00:00",
+      "complete": false,
+      "commands": [
+        {
+          "command": [
+            "/home/teknetik/.cache/uv/archive-v0/C-D_s9RmoL-ZML5S/bin/python",
+            "/home/teknetik/code/ao2/art/reference_street_20260909/check_reference_proximity.py"
+          ],
+          "startedUtc": "2026-09-09T19:51:58.437763+00:00",
+          "log": "qa-check_reference_proximity.log",
+          "finishedUtc": "2026-09-09T19:53:19.084330+00:00",
+          "returncode": 1
+        }
+      ]
+    }
+  ],
+  "complete": false,
+  "error": "AssertionError('Porch proximity subprocess failed.')",
+  "finishedUtc": "2026-09-09T19:53:19.084365+00:00"
+}

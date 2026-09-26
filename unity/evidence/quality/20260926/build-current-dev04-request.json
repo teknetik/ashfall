@@ -1,0 +1,15 @@
+[
+  {
+    "tool": "execute_code",
+    "args": {
+      "action": "execute",
+      "code": "var r=UnityEditor.Build.Reporting.BuildReport.GetLatestReport();if(r==null)throw new Exception(\"No build report\");\nvar messages=r.steps.SelectMany(s=>s.messages.Where(m=>m.type==LogType.Warning || m.type==LogType.Error).Select(m=>new {step=s.name,type=m.type.ToString(),content=m.content})).ToArray();\nSystem.IO.File.WriteAllText(\"/home/teknetik/code/ao2/unity/evidence/quality/20260926/release-build-warnings.json\",Newtonsoft.Json.JsonConvert.SerializeObject(new {output=r.summary.outputPath,warnings=r.summary.totalWarnings,errors=r.summary.totalErrors,messages=messages},Newtonsoft.Json.Formatting.Indented));\nreturn new {warnings=r.summary.totalWarnings,errors=r.summary.totalErrors,recordedMessages=messages.Length,sceneDirty=UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().isDirty};"
+    }
+  },
+  {
+    "tool": "execute_menu_item",
+    "args": {
+      "menu_path": "Athen Hill/Build/Linux development player"
+    }
+  }
+]

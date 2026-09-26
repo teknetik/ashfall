@@ -1,0 +1,38 @@
+{
+  "utc": "2026-09-26T11:28:14.327930+00:00",
+  "status": "unavailable",
+  "complete": false,
+  "testsExecuted": [],
+  "renderer": null,
+  "resolution": null,
+  "reason": "No installed independent virtual display server or lightweight compositor suitable for isolated real-keyboard native QA. Xvfb/Xephyr/Weston/Cage/Sway/Gamescope and lightweight window managers are absent. Installed Xorg only has modesetting/NVIDIA drivers, no dummy driver.",
+  "executables": {
+    "Xvfb": null,
+    "xvfb-run": null,
+    "Xephyr": null,
+    "weston": null,
+    "cage": null,
+    "sway": null,
+    "gamescope": null,
+    "openbox": null,
+    "fluxbox": null,
+    "twm": null,
+    "matchbox-window-manager": null,
+    "Xorg": "/usr/bin/Xorg",
+    "Xwayland": "/usr/bin/Xwayland",
+    "Hyprland": "/usr/bin/Hyprland"
+  },
+  "xorgVideoDrivers": [
+    "modesetting_drv.so",
+    "nvidia_drv.so"
+  ],
+  "historicalHarnesses": [
+    "unity/tools/check_draggable_ui.py uses xvfb-run and ATHEN_UI_XVFB",
+    "unity/tools/settings_test_input.py supports a private X server without a window manager"
+  ],
+  "existingDesktop": "locked; not unlocked, reconfigured, or injected with input",
+  "ownProcessesStarted": [],
+  "sourceChanges": false,
+  "packagesInstalled": false,
+  "limits": "No runtime functional, visual, renderer, or performance qualification from this availability check. Existing live Unity EditMode evidence remains separate."
+}

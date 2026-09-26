@@ -1,0 +1,118 @@
+{
+  "date": "2026-09-26",
+  "scope": "Read-only WardTree source and albedo-edge audit; no tree asset changed",
+  "viewActuallyInspected": "unity/evidence/quality/20260926/editor-shadow-audition/cam_hill-96m4.png",
+  "viewLimitation": "Editor diagnostic comparison, not shipping player or AAA acceptance",
+  "shaderScalarMath": "Custom LitInput.hlsl surface initialization and channel sampling are unchanged from installed URP17.6.0. Additional code adds wind parameters/function. Forward pass differs by wind call, backface normal flip and albedo-tinted transmission.",
+  "confirmedMaterialState": {
+    "albedoSRGB": true,
+    "normalType": true,
+    "normalSRGB": false,
+    "packedSRGB": false,
+    "metallicOpaquePixelsP01P99": [
+      0,
+      0
+    ],
+    "smoothnessOpaquePixelsP01P99": [
+      0,
+      0
+    ],
+    "transmission": 0.22,
+    "occlusionMap": null,
+    "backfaceNormalBranch": "enabled only while transmission>0"
+  },
+  "sourceAlphaBins": [
+    {
+      "alpha": [
+        1,
+        30
+      ],
+      "fractionOfAtlas": 0.0089876056,
+      "medianRGB": [
+        255,
+        255,
+        255
+      ]
+    },
+    {
+      "alpha": [
+        31,
+        89
+      ],
+      "fractionOfAtlas": 0.005533576,
+      "medianRGB": [
+        224,
+        233,
+        140
+      ]
+    },
+    {
+      "alpha": [
+        90,
+        127
+      ],
+      "fractionOfAtlas": 0.0030865669,
+      "medianRGB": [
+        163,
+        172,
+        92
+      ]
+    },
+    {
+      "alpha": [
+        128,
+        191
+      ],
+      "fractionOfAtlas": 0.0055937767,
+      "medianRGB": [
+        142,
+        150,
+        77
+      ]
+    },
+    {
+      "alpha": [
+        192,
+        249
+      ],
+      "fractionOfAtlas": 0.0093150139,
+      "medianRGB": [
+        123,
+        131,
+        63
+      ]
+    },
+    {
+      "alpha": [
+        250,
+        255
+      ],
+      "fractionOfAtlas": 0.2268018126,
+      "medianRGB": [
+        113,
+        128,
+        64
+      ]
+    }
+  ],
+  "newHypothesis": "Very pale RGB in the low-alpha source fringe can contaminate small leaf mips/MSAA edge pixels. A color-dilated candidate retaining the exact alpha is a useful isolated audition. Actual Unity imported mips and matched native captures must establish the effect; alphaIsTransparency is already enabled and may mitigate it.",
+  "otherConfirmedShaderLimitations": [
+    "Transmission uses GetMainLight(shadowCoord) rather than the distance-faded position overload.",
+    "Transmission samples TransformWorldToShadowCoord even under a screen-space shadow variant, which would require screen coordinates.",
+    "Transmission term bypasses AO and main-light distance/culling attenuation.",
+    "No canopy ambient occlusion texture."
+  ],
+  "notEstablished": [
+    "No proof that transmission alone causes the silver appearance.",
+    "No proof that normal orientation/import is wrong.",
+    "No proof that pale alpha fringes are the dominant runtime contributor.",
+    "No AAA or final visual acceptance."
+  ],
+  "nextIsolatedAuditions": [
+    "Read back actual imported leaf mip RGB/alpha.",
+    "At96m shadows compare original albedo with a recovered opaque-color fringe, exact same alpha.",
+    "Transmission0.22 versus0.0001 preserves backface correction.",
+    "Specular and environment reflections off as a diagnostic, same camera/time/exposure.",
+    "Normal-map bypass only after the prior comparisons."
+  ]
+}

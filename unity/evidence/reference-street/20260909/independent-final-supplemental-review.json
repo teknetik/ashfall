@@ -1,0 +1,77 @@
+{
+  "reviewStage": "Completed supplemental native still review of final V3 proximity views and four NPC lighting pairs",
+  "candidateDirectory": "unity/evidence/reference-street/20260909/after-native-final",
+  "reference": "refs/reference-street/20260909/user-target.png",
+  "preservesPriorReviews": [
+    "independent-editor-review.json",
+    "independent-editor-v3-review.json",
+    "independent-native-v3-review.json",
+    "independent-firstperson-review.json"
+  ],
+  "proximityImagesReviewed": [
+    "v3-first-person-field.png",
+    "v3-first-person-field-threshold.png",
+    "v3-first-person-field-joint-growth.png",
+    "v3-first-person-finery.png",
+    "v3-first-person-finery-threshold.png",
+    "v3-first-person-finery-joint-growth.png"
+  ],
+  "characterImagesReviewed": [
+    "cam_motion_npc_mira_close.png",
+    "cam_motion_npc_mira_full.png",
+    "cam_motion_npc_torr_close.png",
+    "cam_motion_npc_torr_full.png",
+    "cam_motion_npc_vex_close.png",
+    "cam_motion_npc_vex_full.png",
+    "cam_motion_npc_linn_close.png",
+    "cam_motion_npc_linn_full.png"
+  ],
+  "method": "Direct visual inspection of the existing fourteen PNGs and character-lighting-review.json. No assets, code, scene or live applications were changed; no GPU workload or video extraction was started.",
+  "result": "No new missing geometry, missing material, gross environmental clipping or large shading failure is confirmed in these final stills. The new Finery joint-growth view closes the earlier missing-image item. Remaining art gaps prevent reference-target acceptance.",
+  "newHardDefectsConfirmedInReviewedStills": [],
+  "proximityFindings": [
+    {
+      "images": ["v3-first-person-field.png", "v3-first-person-finery.png"],
+      "observation": "The charcoal coating, oxide patches and fine scratches remain visible at first-person proximity. Brush meshes are present on the intended shutter slats. The general wear placement remains spatially generic, oxide margins are soft, and the lettering has a uniformly flat fill with sharp cutout edges and strong interruption by the shutter seams. These are persistent quality gaps rather than a newly missing shader or mesh."
+    },
+    {
+      "images": ["v3-first-person-field-threshold.png", "v3-first-person-finery-threshold.png"],
+      "observation": "The lower shutter, door sill, kickplates and surrounding walking tops remain coherent, without a broad open void or large triangular shading patch. Straight dark grooves and clean slab centres still dominate at this distance. The black marks near Finery's right jamb are present in previous captures and are not newly attributed to V3."
+    },
+    {
+      "images": ["v3-first-person-field-joint-growth.png", "v3-first-person-finery-joint-growth.png"],
+      "observation": "Both visible added joint plants meet their wall-base ground areas without an obvious floating gap. They remain sparse and angular at close range; loose rubble silhouettes are conspicuously faceted. Field Supply's lower spall has a thick, even cutout edge and a relatively uniform exposed interior, so the transition into the wall remains less believable than the reference. The Finery view shows a coherent stone corner and planter/window area."
+    }
+  ],
+  "characterLightingFindings": [
+    {
+      "actor": "Mira",
+      "observation": "In the shaded stall view, armour plates remain distinguishable from the dark undersuit and visor. The lit forearm and pouches are bright but retain surface information. Full-body framing shows no obvious missing limb or large floating gap."
+    },
+    {
+      "actor": "Torr",
+      "observation": "The street-facing armour and dark joints remain readable against the mission-terminal area. Boots and body are present without gross environmental intersection in the full view; the still does not establish foot stability during movement."
+    },
+    {
+      "actor": "Vex",
+      "observation": "Strong sunlight retains visible armour texture and visor separation. Side and full views show the retained guard model intact. Coarse panel joins and soft source detail are more conspicuous than in distant street views."
+    },
+    {
+      "actor": "Linn",
+      "observation": "The back/side-lit armour remains readable against the hill and shops. Lower boots are partly occluded by grass, limiting exact ground-contact inspection. The image does not establish a new hard clipping defect."
+    }
+  ],
+  "remainingCharacterLimits": "The four NPCs retain the same supplied helmeted guard model. Similar broad stances, soft source texture detail, coarse hands and armour joins remain quality limitations. These lighting pairs neither expose faces nor demonstrate natural idle, dialogue, turn or locomotion transitions.",
+  "scores": {
+    "closeRangeMaterialDetailOutOfFive": 3,
+    "closeRangeLightingAndDepthOutOfFive": 3,
+    "closeRangeDensityAndStorytellingOutOfFive": 3,
+    "staticUiReadabilityOutOfFive": 4,
+    "characterAnimation": null,
+    "temporalStability": null
+  },
+  "scoreInterpretation": "The supplemental stills do not raise the earlier reference-street art scores. No performance pass or successful input test is substituted for a material, geometry or animation score.",
+  "separateVerification": "The root task owns the final first-person real-input test, warmed native timing, gameplay checks, sampled route evidence and release tests. This report does not independently certify those results. Sparse sampled route frames and these stills do not establish full temporal stability or reference parity.",
+  "outstandingStillCaptureRequestsForThisReview": [],
+  "acceptance": "Supplemental still review is complete. No user acceptance, reference-target completion or whole-game fidelity claim is inferred."
+}

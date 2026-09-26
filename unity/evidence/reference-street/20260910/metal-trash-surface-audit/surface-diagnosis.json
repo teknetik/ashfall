@@ -1,0 +1,833 @@
+{
+  "utc": "2026-09-10T11:11:39.916227+00:00",
+  "scope": "Read-only diagnosis during root-owned Unity integration. No Unity/Blender/native input, Assets edits, source-map changes or new art. Temporary source inspection thumbnails used for viewing only.",
+  "decision": "The shutter and all focal metal families already enable their nonflat normal maps, use correct UV scale and exact PBR packing. Repetitive corrosion is predominantly a shared source-wear problem. Trash retains differentiated masks but lacks fine cloth/plastic material character.",
+  "critic": "unity/evidence/reference-street/20260910/critic-iteration-02.json",
+  "nativeImages": [
+    "cam_reference_street.png",
+    "cam_audit_finery_door.png",
+    "cam_ground_trash.png",
+    "iteration-first-person-field-threshold.png",
+    "iteration-first-person-finery-threshold.png"
+  ],
+  "materialRecords": [
+    {
+      "path": "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/ShutterSteel/ShutterSteel.mat",
+      "sha256": "32c856c10621f4b049ea5ee3a40b0147be8161d24574f778a274dd76aae5634a",
+      "guid": "15911539d305ad701857dd42ba186bff",
+      "normalKeyword": true,
+      "packedKeyword": true,
+      "BumpScale": 1.0,
+      "Metallic": 1.0,
+      "Smoothness": 1.0,
+      "SmoothnessTextureChannel": 0.0
+    },
+    {
+      "path": "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/AgedSteel/AgedSteel.mat",
+      "sha256": "ee227e8d7e16782684ed6b70f94224168a7c36756b41f53786804bf1edde5a49",
+      "guid": "078f3bed0db6b67378a43dc13a3100a2",
+      "normalKeyword": true,
+      "packedKeyword": true,
+      "BumpScale": 1.0,
+      "Metallic": 1.0,
+      "Smoothness": 1.0,
+      "SmoothnessTextureChannel": 0.0
+    },
+    {
+      "path": "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/FieldCoatedSteel v3.mat",
+      "sha256": "a828a3f91f30c1962fa3129c81b33f14cd7f7040d6e701ad23dfafb915b36f0e",
+      "guid": "4fe8b972ef3538729a7b67c4c24fffb3",
+      "normalKeyword": true,
+      "packedKeyword": true,
+      "BumpScale": 1.0,
+      "Metallic": 1.0,
+      "Smoothness": 1.0,
+      "SmoothnessTextureChannel": 0.0
+    },
+    {
+      "path": "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/FineryDoorCoatedSteel v3.mat",
+      "sha256": "9f9e6bd2d51e6e0d5606dc221d9eaa0ec4670f87dcedc77926b7054c9ce33881",
+      "guid": "d85f414b16b0f89cc9d11e128f2eaa15",
+      "normalKeyword": true,
+      "packedKeyword": true,
+      "BumpScale": 1.0,
+      "Metallic": 1.0,
+      "Smoothness": 1.0,
+      "SmoothnessTextureChannel": 0.0
+    },
+    {
+      "path": "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/FineryLouvreCoatedSteel v3.mat",
+      "sha256": "d7fc67e62395c655621c66bd943d9d414dc885d83a9db4cb00996b0b5a1ed4a3",
+      "guid": "1baef7d7c84b007ea958bab014d006e3",
+      "normalKeyword": true,
+      "packedKeyword": true,
+      "BumpScale": 1.0,
+      "Metallic": 1.0,
+      "Smoothness": 1.0,
+      "SmoothnessTextureChannel": 0.0
+    },
+    {
+      "path": "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/BrushPaint.mat",
+      "sha256": "edd4538618e4f0e7dd03df68b398d1a606777d7b10e4d5fe2a4d94e10ec379aa",
+      "guid": "037b07fc2e58ef348ad787284b27dab0",
+      "normalKeyword": false,
+      "packedKeyword": false,
+      "BumpScale": 1.0,
+      "Metallic": 0.0,
+      "Smoothness": 0.08,
+      "SmoothnessTextureChannel": 0.0
+    },
+    {
+      "path": "unity/AthenHill/Assets/AthenHill/Art/Imported/Meshy/GroundDetail/20260910/trash/v2/Surface.mat",
+      "sha256": "2c2edea3bb65babcf9d27f900baaa59f34c47c28e18297685b6f9becd8b3183f",
+      "guid": "b62e9e4cd24ab8392965d33087ee5eb0",
+      "normalKeyword": true,
+      "packedKeyword": true,
+      "BumpScale": 1.0,
+      "Metallic": 1.0,
+      "Smoothness": 1.0,
+      "SmoothnessTextureChannel": 0.0
+    }
+  ],
+  "metal": {
+    "technical": {
+      "shutterNormal": "Current saved ShutterSteel binds its non-flat original 4K normal texture, BumpScale=1, and both _NORMALMAP and _METALLICSPECGLOSSMAP are enabled. It is used by the twenty slats and the saved ShutterSteel render chunk. A preliminary message incorrectly claimed _NORMALMAP was absent after a misread of truncated multi-file output. A direct reread and assertion corrected this before writing the audit or creating a helper; file mtime is unchanged since 2026-09-09T20:38:53+01:00, SHA256 32c856c10621f4b049ea5ee3a40b0147be8161d24574f778a274dd76aae5634a. There is no evidence for a keyword fix.",
+      "doorNormal": "All three coated door/louvre variants have _NORMALMAP and their non-flat normal texture.",
+      "textureImport": "Color is sRGB; normal and packed textures are linear. GL normal has no green inversion. Default platform imports retain 4096 with unoverridden Standalone settings, mips and 8x anisotropy. The .meta legacy top-level 2048 value alone is not a runtime-resolution measurement.",
+      "uvAndTangents": [
+        {
+          "family": "ShutterSteel",
+          "chunk": "unity/AthenHill/Assets/AthenHill/Art/RenderChunks/Chunk_114_ShutterSteel_0_0.asset",
+          "vertices": 11280,
+          "triangles": 3760,
+          "materialScale": 1,
+          "finalMedianTileMetres": 4.0,
+          "surfaceAreaM2": 24.557311628811224,
+          "zeroUvAreaM2": 0.0,
+          "offFourMetreAreaM2": 0.0,
+          "normalsTangentsPresent": true,
+          "normalsTangentsFinite": true,
+          "normalLengthRange": [
+            0.9999999465163069,
+            1.000000222700734
+          ],
+          "tangentLengthRange": [
+            0.9999999371079993,
+            1.0000002075404069
+          ],
+          "maxAbsNormalTangentDot": 1.829100075845247e-07
+        },
+        {
+          "family": "FieldCoatedSteel v3",
+          "chunk": "unity/AthenHill/Assets/AthenHill/Art/RenderChunks/Chunk_113_FieldCoatedSteel v3_0_0.asset",
+          "vertices": 5176,
+          "triangles": 6612,
+          "materialScale": 0.1875,
+          "finalMedianTileMetres": 4.000082044457143,
+          "surfaceAreaM2": 59.96307012273843,
+          "zeroUvAreaM2": 0.0,
+          "offFourMetreAreaM2": 0.0,
+          "normalsTangentsPresent": true,
+          "normalsTangentsFinite": true,
+          "normalLengthRange": [
+            0.9999992787395545,
+            1.0000007814598766
+          ],
+          "tangentLengthRange": [
+            0.9999999968919373,
+            1.0000001809560144
+          ],
+          "maxAbsNormalTangentDot": 1.2590924214350707e-06
+        },
+        {
+          "family": "FineryDoorCoatedSteel v3",
+          "chunk": "unity/AthenHill/Assets/AthenHill/Art/RenderChunks/Chunk_57_FineryDoorCoatedSteel v3_0_0.asset",
+          "vertices": 608,
+          "triangles": 752,
+          "materialScale": 0.25,
+          "finalMedianTileMetres": 4.000047043885628,
+          "surfaceAreaM2": 14.0540589656109,
+          "zeroUvAreaM2": 0.0,
+          "offFourMetreAreaM2": 0.0,
+          "normalsTangentsPresent": true,
+          "normalsTangentsFinite": true,
+          "normalLengthRange": [
+            0.999999591447449,
+            1.0000006193651054
+          ],
+          "tangentLengthRange": [
+            0.9999999652427415,
+            1.0000000398916296
+          ],
+          "maxAbsNormalTangentDot": 3.449417658174525e-07
+        },
+        {
+          "family": "FineryLouvreCoatedSteel v3",
+          "chunk": "unity/AthenHill/Assets/AthenHill/Art/RenderChunks/Chunk_61_FineryLouvreCoatedSteel v3_0_0.asset",
+          "vertices": 28200,
+          "triangles": 9400,
+          "materialScale": 1,
+          "finalMedianTileMetres": 4.0,
+          "surfaceAreaM2": 35.37461787582574,
+          "zeroUvAreaM2": 0.0,
+          "offFourMetreAreaM2": 0.0,
+          "normalsTangentsPresent": true,
+          "normalsTangentsFinite": true,
+          "normalLengthRange": [
+            0.9999999139022416,
+            1.0000000820519461
+          ],
+          "tangentLengthRange": [
+            0.9999999203443818,
+            1.0000000796678892
+          ],
+          "maxAbsNormalTangentDot": 1.0347129064669502e-07
+        }
+      ],
+      "packing": "Both 4096-square packed maps exactly match every source pixel: R=Metallic.R, A=255-Roughness.R, G/B=0. No source or packed channel inversion, alpha-loss or blanket-metallic fault found.",
+      "shadingSource": "V3 authored roughness runs about .79\u2013.96 and metallic is mostly 0 with small bare-abraded values up to .2. These are deliberate coated/oxidized surfaces; raising overall metallic would turn paint/rust into inappropriate metal."
+    },
+    "sourceArtDiagnosis": "The AgedSteel source image visibly scatters similar orange corrosion islands and horizontal scuffs across the entire four-metre tile. In author_metal_v3.py, periodic macro/noise fields named Weather exposure zones/Connected coating losses/Horizontal handling scuffs know neither hinge nor handle positions. All three variants sample this same tile at the same effective size. ShutterSteel adds registered lip bands, but those bands still cover nearly every slat at similar intensity. Mask sparsity statistics do not make that distribution construction-specific.",
+    "assignmentScales": [
+      {
+        "materialVariant": "ShutterSteel",
+        "sourceUVUnitsPerMetre": 0.25,
+        "materialScale": [
+          1,
+          1
+        ],
+        "effectiveTileMetres": 4,
+        "rosterCount": 20,
+        "specialConstraint": "UV V encodes absolute world Y; registered lower/upper slat-lip rows, not an arbitrary repeatable vertical material."
+      },
+      {
+        "materialVariant": "FieldCoatedSteel",
+        "sourceUVUnitsPerMetre": 1.3333333333333333,
+        "materialScale": [
+          0.1875,
+          0.1875
+        ],
+        "effectiveTileMetres": 4,
+        "rosterCount": 37
+      },
+      {
+        "materialVariant": "FineryDoorCoatedSteel",
+        "sourceUVUnitsPerMetre": 1,
+        "materialScale": [
+          0.25,
+          0.25
+        ],
+        "effectiveTileMetres": 4,
+        "rosterCount": 4
+      },
+      {
+        "materialVariant": "FineryLouvreCoatedSteel",
+        "sourceUVUnitsPerMetre": 0.25,
+        "materialScale": [
+          1,
+          1
+        ],
+        "effectiveTileMetres": 4,
+        "rosterCount": 50
+      }
+    ],
+    "proposedBoundedCorrection": {
+      "firstTechnicalStep": "No normal-keyword, channel-packing or UV correction is justified by the current files. Preserve the enabled normal keyword and physical four-metre mapping through the next source-art revision. Do not rescale the registered lip texture.",
+      "authoringStep": "Create new hero door/shutter material revisions with a restrained charcoal paint base and separate authored wear masks tied to each existing object. Reuse retained photographic oxide microstructure only inside those wear masks. Keep old maps and all geometry recoverable.",
+      "focalScope": {
+        "shutter": "Exactly the twenty paths in metal-import-contract.json/ShutterSteel/replaceMaterialOnlyOn.",
+        "fieldDoor": [
+          "Ward shop architecture/field_supply/Entrance/field_supply Staff door steel jamb -1",
+          "Ward shop architecture/field_supply/Entrance/field_supply Staff door steel jamb 1",
+          "Ward shop architecture/field_supply/Entrance/field_supply Staff door leaf 0",
+          "Ward shop architecture/field_supply/Entrance/field_supply Staff door inset inner 0",
+          "Ward shop architecture/field_supply/Entrance/field_supply Staff door stamped panel 0 0.49",
+          "Ward shop architecture/field_supply/Entrance/field_supply Staff door stamped panel 0 1.49",
+          "Ward shop architecture/field_supply/Entrance/field_supply Staff door leaf 1",
+          "Ward shop architecture/field_supply/Entrance/field_supply Staff door inset inner 1",
+          "Ward shop architecture/field_supply/Entrance/field_supply Staff door stamped panel 1 0.49",
+          "Ward shop architecture/field_supply/Entrance/field_supply Staff door stamped panel 1 1.49",
+          "Ward shop architecture/field_supply/Entrance/field_supply Staff door overlapping meeting strip"
+        ],
+        "fineryDoor": [
+          "Phase 1 Finery frontage/Door/Door leaf 0",
+          "Phase 1 Finery frontage/Door/Door inset worn steel 0",
+          "Phase 1 Finery frontage/Door/Door leaf 1",
+          "Phase 1 Finery frontage/Door/Door inset worn steel 1"
+        ]
+      },
+      "wearPlacement": [
+        "Preserve broad quieter coating on door panel centers; place finger/knuckle abrasion around the actual handle plates and touching edges.",
+        "Concentrate small paint loss and dark oxide at hinge mounts, meeting strips, lower corners and selected fasteners; run thin gravity-led stains below failed joints.",
+        "Give the bottom 0.15\u20130.35 m a broken dust/splash zone. Do not repeat the same height/shape around every panel.",
+        "On the shutter, keep physical 14 cm slat registration while interrupting lip corrosion horizontally and varying it by actual exposure; give ground rail and end guides distinct scuff/dirt masks."
+      ],
+      "materialSemantics": "Keep coating and oxide dielectric. Raise metallic only in explicitly identified exposed bare-metal abrasion, with corresponding roughness; never add bright specular shapes to albedo. Use full matched albedo/normal/roughness/metallic derivatives.",
+      "rollout": "Do not automatically replace every support, sign frame and all 50 louvre sources with the focal unique wear map. Their construction requires separate wear placement."
+    }
+  },
+  "lettering": {
+    "technicalSource": "BrushPaint has no base/normal/alpha texture, constant bone color, metallic0 and smoothness.08. V3 glyph geometry adds thicker outlines and sparse whole-strip gaps but all surviving stroke interiors remain fully opaque. Its original source exports every vertex on x=17.936, described as 9 mm in front of the saved slat face.",
+    "cause": "The solid fill and lack of substrate interaction are directly explained by this authoring/material contract, not low texture import resolution.",
+    "targets": [
+      "Reference street thresholds and detail/Factory brush upper",
+      "Reference street thresholds and detail/Factory brush lower"
+    ],
+    "proposedCorrection": "Retain phrase, glyph centerlines, legibility and slat-gap clipping. Author a pigment-coverage mask with directional dry-brush breaks, uneven loading and abrasion at slat lips; use source-coordinate breakup rather than repeated generic grunge. Conform the paint surface to the existing slat front profile with a small verified depth bias so it reads as paint instead of a flat layer 9 mm in front. Preserve old meshes/materials; test alpha edges and depth behavior in motion.",
+    "banner": "The known target is Courtyard reference pass/Wall graphics/Ward watch banner. Inspect the saved right-jamb bounds and move the banner outward from the west-facing facade only enough to clear that projection; verify the current orientation before choosing a numeric offset."
+  },
+  "trashV2": {
+    "provenance": {
+      "meshyTask": "01a08a28-3f9d-74cc-b213-23089d77233e",
+      "requested": "meshy-7, should_remesh=false, PBR=true, texture_resolution=4k, remove_lighting=true",
+      "sourceTriangles": 1829857,
+      "nearTriangles": 180000,
+      "sourceMaps": "meshy/ground-detail-20260910/trash-v2/model_textures",
+      "nearMaps": "meshy/ground-detail-20260910/trash-v2-runtime/model_textures",
+      "actualSuppliedDimensions": "Color/normal4096; metallic/roughness/emission2048. The source masks were never4K, so 2K packing is full source resolution.",
+      "sourceToNearToUnity": "Color, normal, metallic and roughness are byte-identical at all three stages. Emission is retained in source/near only and disabled in the material.",
+      "uvNormalsPolicy": "One retained UV layer; Blender near preparation preserves source UVs/normals. Unity imports normals and computes Mikk tangents. No mesh compression. Actual imported FBX vertex buffers were not extracted in this offline audit."
+    },
+    "technical": "Material enables normal and packed keywords; scale1, tint white, linear masks and no green flip. Every one of 4,194,304 packed pixels equals the original metallic R and 255\u2212roughness R. The metallic map is almost entirely dielectric (95th percentile zero, max132/255); _Metallic=1 is a mask workflow setting and does not make the whole pile metal.",
+    "sourceMaterialDiagnosis": "Small visually selected atlas samples already distinguish a jug body (median roughness121/255\u2248.47) from a sack fold (181/255\u2248.71). The sack sample is metallic0; the jug sample has small generated metallic leakage (mean\u2248.025), so a full semantic ID audit would improve the source. Both normal samples cluster close to flat blue and offer little fine cloth/plastic identity. The fragmented atlas contains broad bright jug bands and fold shading in color, which should be checked for residual baked lighting even though removal was requested. This is a source-art suspicion, not proven light baking.",
+    "manualAtlasSamples": {
+      "jugBodyVisualSample": {
+        "boundsImageNormalizedXYTopLeft": [
+          0.055,
+          0.375,
+          0.12,
+          0.405
+        ],
+        "limit": "Small manual visual atlas sample, not a complete geometry-derived semantic mask.",
+        "base_color": {
+          "channelMean": [
+            154.9679834832984,
+            149.90256378651546,
+            143.1966288672501
+          ],
+          "redP05P50P95": [
+            122.0,
+            154.0,
+            203.0
+          ]
+        },
+        "metallic": {
+          "channelMean": [
+            6.397386909897695,
+            6.397386909897695,
+            6.397386909897695
+          ],
+          "redP05P50P95": [
+            0.0,
+            0.0,
+            28.0
+          ]
+        },
+        "roughness": {
+          "channelMean": [
+            120.95538025391348,
+            120.95538025391348,
+            120.95538025391348
+          ],
+          "redP05P50P95": [
+            112.0,
+            121.0,
+            132.0
+          ]
+        },
+        "normal": {
+          "channelMean": [
+            127.04418833970172,
+            127.25024651793417,
+            253.98822876864293
+          ],
+          "redP05P50P95": [
+            121.0,
+            127.0,
+            133.0
+          ]
+        }
+      },
+      "sackFoldVisualSample": {
+        "boundsImageNormalizedXYTopLeft": [
+          0.09,
+          0.91,
+          0.18,
+          0.958
+        ],
+        "limit": "Small manual visual atlas sample, not a complete geometry-derived semantic mask.",
+        "base_color": {
+          "channelMean": [
+            161.2051048061501,
+            140.91568497317627,
+            122.6330402079531
+          ],
+          "redP05P50P95": [
+            134.0,
+            162.0,
+            186.0
+          ]
+        },
+        "metallic": {
+          "channelMean": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "redP05P50P95": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "roughness": {
+          "channelMean": [
+            179.8062888198758,
+            179.8062888198758,
+            179.8062888198758
+          ],
+          "redP05P50P95": [
+            172.0,
+            181.0,
+            184.0
+          ]
+        },
+        "normal": {
+          "channelMean": [
+            127.02345003041867,
+            127.06462585034014,
+            253.95525689950776
+          ],
+          "redP05P50P95": [
+            119.0,
+            127.0,
+            135.0
+          ]
+        }
+      },
+      "canRibsVisualSample": {
+        "boundsImageNormalizedXYTopLeft": [
+          0.525,
+          0.234,
+          0.555,
+          0.261
+        ],
+        "limit": "Small manual visual atlas sample, not a complete geometry-derived semantic mask.",
+        "base_color": {
+          "channelMean": [
+            133.9000219731927,
+            118.92016406650554,
+            105.7449644766718
+          ],
+          "redP05P50P95": [
+            53.0,
+            141.0,
+            177.0
+          ]
+        },
+        "metallic": {
+          "channelMean": [
+            53.60089418777943,
+            53.60089418777943,
+            53.60089418777943
+          ],
+          "redP05P50P95": [
+            0.0,
+            38.0,
+            119.0
+          ]
+        },
+        "roughness": {
+          "channelMean": [
+            155.8789865871833,
+            155.8789865871833,
+            155.8789865871833
+          ],
+          "redP05P50P95": [
+            134.0,
+            144.0,
+            185.0
+          ]
+        },
+        "normal": {
+          "channelMean": [
+            127.28557826118802,
+            127.06086574379258,
+            253.16348055372447
+          ],
+          "redP05P50P95": [
+            98.0,
+            127.0,
+            157.0
+          ]
+        }
+      }
+    },
+    "proposedBoundedCorrection": {
+      "scope": "Retain successful 180k geometry, root placement, contact and collider proxy. Author a source derivative focused on the two sacks and two jugs; leave the convincing cans/cardboard/loose stones initially unchanged.",
+      "firstAuthoringStep": "In Blender identify sack/plastic/can surfaces on the actual near mesh and save an explicit material-ID mask. Do not derive material identities from image brightness or remesh the successful shapes.",
+      "cloth": "Give sack material a directional 1\u20132 mm weave and seam/edge fibers in a properly scaled normal layer; use a dry rough fabric response (roughness .85\u2013.95 is a starting audition range, not an automatic global remap). Preserve broad folds and concentrate dusty wear at contacts and raised seams.",
+      "plastic": "Keep jug regions metallic0, preserve molded curvature and grips, add subtle directional scratches/handle wear. Existing jug roughness\u2248.47 already gives a smoother response; do not globally lower it for extra shine. Reconcile any painted bright bands against a neutral source render before baking.",
+      "uv": "If the densely fragmented source atlas cannot resolve weave/scratches at the target distance, author derivative cloth/plastic UV regions or a separate metric detail layer without changing positions/indices. Preserve the original atlas and map hashes.",
+      "review": "Use the same cam_ground_trash/short camera pass at noon and at the repaired hour16 reflection state. Distinct material behavior in shade and stable detail in motion must improve before rollout."
+    }
+  },
+  "pixelEvidence": {
+    "AgedSteel": {
+      "BaseColor": {
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGB",
+        "sha256": "e9291222db9b9ea39a08c119133d8ad8176c5f7e8552abfc725796a8d8746c99",
+        "redPercentiles": [
+          27.0,
+          35.0,
+          45.0,
+          89.0,
+          137.0
+        ],
+        "redStd": 16.379334750697264,
+        "unityFileIdentical": true
+      },
+      "Normal": {
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGB",
+        "sha256": "294c7691e6b5129636bd917971cc641c1839db037f14cef387dc2b1606653688",
+        "redPercentiles": [
+          59.0,
+          121.0,
+          128.0,
+          133.0,
+          196.0
+        ],
+        "redStd": 5.187716890052303,
+        "unityFileIdentical": true
+      },
+      "Metallic": {
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGB",
+        "sha256": "ae79ecd72b4e6a51ef9349934f256f09737d57978fc8178400d7725e809f3961",
+        "redPercentiles": [
+          0.0,
+          0.0,
+          0.0,
+          15.0,
+          51.0
+        ],
+        "redStd": 7.88156197896275
+      },
+      "Roughness": {
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGB",
+        "sha256": "22f3c550a56f9e5c894e06d6713aa6743f560e93aaed53d2d4eac76c0a581dd6",
+        "redPercentiles": [
+          201.0,
+          201.0,
+          201.0,
+          220.0,
+          245.0
+        ],
+        "redStd": 7.427825795859409
+      },
+      "WearMask": {
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGB",
+        "sha256": "e6ee2eb7587066894ce9c473b2f2ebabc111a440364aab36f6e8cb46de35108f",
+        "redPercentiles": [
+          0.0,
+          0.0,
+          0.0,
+          122.0,
+          255.0
+        ],
+        "redStd": 45.13423853166163
+      },
+      "packing": {
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "sha256": "7a20d387c3f898102c967a5f6ccf2229fa36352226e4cc250aa6431d7af734d4",
+        "wrongMetalPixels": 0,
+        "wrongSmoothPixels": 0,
+        "nonzeroGB": 0
+      }
+    },
+    "ShutterSteel": {
+      "BaseColor": {
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGB",
+        "sha256": "0176a315e93fd9f21682873abd4596b4146d389ccdf54c54f38766d7fb7d53ef",
+        "redPercentiles": [
+          27.0,
+          36.0,
+          51.0,
+          113.0,
+          137.0
+        ],
+        "redStd": 25.737486370731258,
+        "unityFileIdentical": true
+      },
+      "Normal": {
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGB",
+        "sha256": "12ad57c07d33d4b1f74169fd2693eb1885b8b36c04c45e8456fd70fe16901159",
+        "redPercentiles": [
+          59.0,
+          121.0,
+          128.0,
+          134.0,
+          192.0
+        ],
+        "redStd": 4.806881249828725,
+        "unityFileIdentical": true
+      },
+      "Metallic": {
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGB",
+        "sha256": "886332688e0e8c578c1a58f441495d1473c69ceacfdb84bec996d73dae62cc14",
+        "redPercentiles": [
+          0.0,
+          0.0,
+          0.0,
+          11.0,
+          51.0
+        ],
+        "redStd": 7.206494783975221
+      },
+      "Roughness": {
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGB",
+        "sha256": "d1e2370b7349e7cce0d52fb0920b74bb83920ad7a83633afbe951e14005d69db",
+        "redPercentiles": [
+          201.0,
+          201.0,
+          202.0,
+          243.0,
+          245.0
+        ],
+        "redStd": 14.478023643240409
+      },
+      "WearMask": {
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGB",
+        "sha256": "44b4e061e36f364be87bb5a4967092135dfd5ecbb93e3a6d592a07d249700c1f",
+        "redPercentiles": [
+          0.0,
+          0.0,
+          5.0,
+          245.0,
+          255.0
+        ],
+        "redStd": 84.11976396935661
+      },
+      "packing": {
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "sha256": "3fe319953363de7ae8ee18d3d8e74512b512bfdf7eb35432f7f728b16603187a",
+        "wrongMetalPixels": 0,
+        "wrongSmoothPixels": 0,
+        "nonzeroGB": 0
+      }
+    },
+    "trashV2": {
+      "base_color": {
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGB",
+        "sha256": "31f29993664313cd747c271a20a62929f92e8ea4e8d4487cf6ae5c06d035797d",
+        "redPercentiles": [
+          5.0,
+          97.0,
+          112.0,
+          150.0,
+          184.0,
+          202.0,
+          255.0
+        ],
+        "nearByteIdentical": true,
+        "unityByteIdentical": true,
+        "fractionRedAbove128": 0.8138891458511353
+      },
+      "normal": {
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGB",
+        "sha256": "720dbd27c5e736483c5c29903176e0fda4b50321eddfeca6bd403369c0c25476",
+        "redPercentiles": [
+          47.0,
+          105.0,
+          117.0,
+          127.0,
+          137.0,
+          149.0,
+          205.0
+        ],
+        "nearByteIdentical": true,
+        "unityByteIdentical": true,
+        "fractionRedAbove128": 0.23043924570083618
+      },
+      "metallic": {
+        "size": [
+          2048,
+          2048
+        ],
+        "mode": "L",
+        "sha256": "f590a304098ed18d0509b15a241234a345d4ff556fd0f0568f1ce660d278ee84",
+        "redPercentiles": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          30.0,
+          132.0
+        ],
+        "nearByteIdentical": true,
+        "unityByteIdentical": true,
+        "fractionRedAbove128": 5.9604644775390625e-06
+      },
+      "roughness": {
+        "size": [
+          2048,
+          2048
+        ],
+        "mode": "L",
+        "sha256": "4319b1b67976f229ea41034a3303994e11a69ed1b2b9b799ddf7468cd441246d",
+        "redPercentiles": [
+          83.0,
+          118.0,
+          138.0,
+          169.0,
+          183.0,
+          185.0,
+          196.0
+        ],
+        "nearByteIdentical": true,
+        "unityByteIdentical": true,
+        "fractionRedAbove128": 0.9696576595306396
+      },
+      "emission": {
+        "size": [
+          2048,
+          2048
+        ],
+        "mode": "RGB",
+        "sha256": "ebae952b92843ea310a09b0d2b24cda991a5c6b27ee8dcc30416736dd04c077a",
+        "redPercentiles": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          7.0
+        ],
+        "nearByteIdentical": true,
+        "unityByteIdentical": null,
+        "fractionRedAbove128": 0.0
+      },
+      "packing": {
+        "size": [
+          2048,
+          2048
+        ],
+        "mode": "RGBA",
+        "sha256": "ad39b8b7d403f5418262fdb4526f9119cf006c8196cc272365233d23f953ea9e",
+        "wrongMetalPixels": 0,
+        "wrongSmoothPixels": 0,
+        "nonzeroGB": 0
+      }
+    }
+  },
+  "evidenceHashes": {
+    "unity/evidence/reference-street/20260910/critic-iteration-02.json": "87347dcfec5604b530cc25dd1c06c7232b8fe6f17a8101635ae6782e5256e006",
+    "art/reference_street_20260909/author_metal_v3.py": "260be28344a57378e9dc630e729b8756dca820db6a82738c1062789f198c53a4",
+    "art/reference_street_20260909/author_brush_v3.py": "d05eaf1b56e61f94d34b860d970e1e510332954c12bfbbaaa50c83303016c4f3",
+    "art/reference_street_20260909/metal-v3-manifest.json": "75bb8b0a71d82241c4a920b559b29ed0a585feab20a7a75fe1840d609c1a5b1b",
+    "art/reference_street_20260909/aged-steel-assignment-contract.json": "7c832f7de0eaba8fc94e7f8e8527f6fb9a50edc8d9221b21289e536d5a1a7d96",
+    "art/reference_street_20260909/metal-import-contract.json": "0ce654aaf879b4f2a5f41c423895e6e47b6653f8167b37fe762d7cd61d8ec057",
+    "art/reference_street_20260909/brush-graffiti-manifest-v3.json": "ad48df6feb3bbb1afcab56833c2a9bc6d4e1f5cb427a14203761d3dbb9528c59",
+    "meshy/ground-detail-20260910/trash-v2/task.json": "f93de55f1a7715f3f904a559931f643e4a456fcb5d413fee9eb9dbafe4eb7f83",
+    "meshy/ground-detail-20260910/trash-v2-runtime/runtime-manifest.json": "85a5b727c3402fcb7e8b93352a8585da95887ecef8f4cb3081217fe89aa306b2",
+    "art/reference_street_20260910/GroundDetailPass.cs": "7ad2fee3ea3a214570550c9deda32fc21cd2e672fbfe9325116cb3337ae3a661",
+    "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/ShutterSteel/ShutterSteel.mat": "32c856c10621f4b049ea5ee3a40b0147be8161d24574f778a274dd76aae5634a",
+    "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/AgedSteel/AgedSteel.mat": "ee227e8d7e16782684ed6b70f94224168a7c36756b41f53786804bf1edde5a49",
+    "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/FieldCoatedSteel v3.mat": "a828a3f91f30c1962fa3129c81b33f14cd7f7040d6e701ad23dfafb915b36f0e",
+    "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/FineryDoorCoatedSteel v3.mat": "9f9e6bd2d51e6e0d5606dc221d9eaa0ec4670f87dcedc77926b7054c9ce33881",
+    "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/FineryLouvreCoatedSteel v3.mat": "d7fc67e62395c655621c66bd943d9d414dc885d83a9db4cb00996b0b5a1ed4a3",
+    "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/BrushPaint.mat": "edd4538618e4f0e7dd03df68b398d1a606777d7b10e4d5fe2a4d94e10ec379aa",
+    "unity/AthenHill/Assets/AthenHill/Art/Imported/Meshy/GroundDetail/20260910/trash/v2/Surface.mat": "2c2edea3bb65babcf9d27f900baaa59f34c47c28e18297685b6f9becd8b3183f",
+    "unity/AthenHill/Assets/AthenHill/Art/RenderChunks/Chunk_114_ShutterSteel_0_0.asset": "62a7866ca7409119efecaa0c812d04af57ceb50a08782220d00065cda42d9522",
+    "unity/AthenHill/Assets/AthenHill/Art/RenderChunks/Chunk_113_FieldCoatedSteel v3_0_0.asset": "9897ba97e2bb8a6932cb01a50f1a3a20b66f96f37e801dee0b76bf7030216f54",
+    "unity/AthenHill/Assets/AthenHill/Art/RenderChunks/Chunk_57_FineryDoorCoatedSteel v3_0_0.asset": "62e844d07bb23bd72f0379fff1fbe34d01427aac9dedee7ce95cf12257d16b0c",
+    "unity/AthenHill/Assets/AthenHill/Art/RenderChunks/Chunk_61_FineryLouvreCoatedSteel v3_0_0.asset": "f1f12b03b4f7218116c639ef656f682254699afe552057f690c3802bc8e6436b",
+    "unity/AthenHill/Assets/AthenHill/Art/Imported/Meshy/GroundDetail/20260910/trash/v2/SourceTextures.meta": "5ff7d131ed057ac84646259746ad131e2d0e0fbd1bb13265dca55814501f86e6",
+    "unity/AthenHill/Assets/AthenHill/Art/Imported/Meshy/GroundDetail/20260910/trash/v2/SourceContract.json.meta": "c7074b2751d202265b2189df3a89097c3832287b6c44fba1d692b899337ed63d",
+    "unity/AthenHill/Assets/AthenHill/Art/Imported/Meshy/GroundDetail/20260910/trash/v2/trash.prefab.meta": "7846c3f9b3b33cbbf56c7cad6db96da461e1823358316fef0807ad2806cc78de",
+    "unity/AthenHill/Assets/AthenHill/Art/Imported/Meshy/GroundDetail/20260910/trash/v2/Surface.mat.meta": "267584576735c5dc0b52241ea8ecaaad7980406a28d132f7456a3de384263bf7",
+    "unity/AthenHill/Assets/AthenHill/Art/Imported/Meshy/GroundDetail/20260910/trash/v2/Source.meta": "95a14a104a2e2cf7f223f30c05ff36592b93a20bd67f28ed907e24dc1c3ba696",
+    "unity/AthenHill/Assets/AthenHill/Art/Imported/Meshy/GroundDetail/20260910/trash/v2/MetallicSmoothness.png.meta": "d79cce044c4adf8f0c547b51a274230b5c6166c5fa9cf33bda0fa82486c096f4",
+    "unity/AthenHill/Assets/AthenHill/Art/Imported/Meshy/GroundDetail/20260910/trash/v2/SourceTextures/roughness.png.meta": "cb807473b6e344a79c8bc182a71d9ab1700b07f8e942e6451ec3032726a64cb5",
+    "unity/AthenHill/Assets/AthenHill/Art/Imported/Meshy/GroundDetail/20260910/trash/v2/SourceTextures/metallic.png.meta": "8e1d6d7a58dfc9326a6f37e3b0cd9392daab9a35e412886fb51598e4c0f8e683",
+    "unity/AthenHill/Assets/AthenHill/Art/Imported/Meshy/GroundDetail/20260910/trash/v2/SourceTextures/normal.png.meta": "a7267f55bd373757f29a0617f85c56dc317e978329a71bf30168d28d7c9942c7",
+    "unity/AthenHill/Assets/AthenHill/Art/Imported/Meshy/GroundDetail/20260910/trash/v2/SourceTextures/base_color.png.meta": "8e25657ff1f2c33f5cbabe26ae6f7aa9de6832a4540c15610c1bfa09def1a53e",
+    "unity/AthenHill/Assets/AthenHill/Art/Imported/Meshy/GroundDetail/20260910/trash/v2/Source/model.fbx.meta": "4084580e7f26443da7f63018470fe8be46973dad441b417d1b597994a92375fb",
+    "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/AgedSteel/BaseColor.png.meta": "00cf958c264b1e0e2f85ae0fb9b41a8f32513d764d7cd8529a247248849c36c0",
+    "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/AgedSteel/Normal.png.meta": "5c90d8656a4263669cf83e21a49066a37bac3079d40b9a04381f749f8c72c389",
+    "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/AgedSteel/AgedSteel.mat.meta": "979eae000b0206a0c7afa9d2ecef3ed9befc0f7f0d76ebe54edd104b9888c8c4",
+    "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/AgedSteel/MetalSmooth.png.meta": "4d212da6e5ba5bcd38dde0bda0f61013a1b26b63b5b0177b3162475acca4d176",
+    "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/ShutterSteel/BaseColor.png.meta": "cc0f55ab3dc73d3197f96ba351f4ba4ed621e6d7f8973c8f8459ac11f59e19ae",
+    "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/ShutterSteel/Normal.png.meta": "738ea32604187ba3d06301a388b1725876077950975327e01cbd855a6542f79c",
+    "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/ShutterSteel/ShutterSteel.mat.meta": "9b552b4b864defca1fa1baafc6c805ff198dd8520cec9783365be1911b198dd7",
+    "unity/AthenHill/Assets/AthenHill/Art/ReferenceStreet/20260909/RevisionV3/ShutterSteel/MetalSmooth.png.meta": "06fbea0994973d3f388693332d0c51ec987fad81336ff85a3cdc57b8bed759ba",
+    "unity/evidence/reference-street/20260910/iteration-02-native/cam_reference_street.png": "5d549e9acda10ffc98b5eb9c94f2790d889ec515cdea0d664b9a7e8da6aaaf7e",
+    "unity/evidence/reference-street/20260910/iteration-02-native/cam_audit_finery_door.png": "8db8a136af74bbdf26a4caebf7a0d8681330082bdc76d2d7cf30eaa55128f6b5",
+    "unity/evidence/reference-street/20260910/iteration-02-native/cam_ground_trash.png": "bc11f46e7ce5bcfb5c7eb8d247b4f925c6cf8bb432d0390de11ea9b4b482b6dd",
+    "unity/evidence/reference-street/20260910/iteration-02-native/iteration-first-person-field-threshold.png": "127e3d0996e1564acb9d6cbb4ae31faed8f4a54d1f9ef86910409dbd3a4ef840",
+    "unity/evidence/reference-street/20260910/iteration-02-native/iteration-first-person-finery-threshold.png": "506db9a850b7b6065966b827d75050eb50998883711c6fe7b18200ab03392bcd"
+  },
+  "limits": [
+    "The completed noon native images remain the visual authority; this audit is not a new runtime/temporal/performance pass.",
+    "Hour16 prop captures failed in iteration02, so other-light reflection/material qualification remains pending.",
+    "The three atlas samples are manually located 2D samples, not complete geometry-derived semantic masks.",
+    "No numeric normal-strength or roughness tweak by itself establishes the user-reference quality bar."
+  ]
+}

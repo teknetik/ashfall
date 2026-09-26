@@ -1,0 +1,93 @@
+{
+  "reviewStage": "Independent native V3 fixed-camera still review; additional first-person proximity and moving review pending",
+  "reference": "refs/reference-street/20260909/user-target.png",
+  "candidateDirectory": "unity/evidence/reference-street/20260909/after-native-v3",
+  "baselineDirectory": "unity/evidence/reference-street/20260909/before-native",
+  "earlierRejectedCandidateDirectory": "unity/evidence/reference-street/20260909/after-native",
+  "reviewedCandidateImages": [
+    "cam_reference_street.png",
+    "cam_audit_field_supply_door.png",
+    "cam_audit_finery_door.png",
+    "cam_courtyard_facade.png",
+    "cam_audit_field_supply_side_left.png",
+    "cam_audit_field_supply_roof.png",
+    "cam_audit_finery_front.png",
+    "cam_audit_finery_side_right.png",
+    "cam_avenue.png",
+    "cam_hill.png",
+    "cam_gate.png",
+    "cam_hero.png"
+  ],
+  "directlyComparedBaselineImages": [
+    "cam_audit_field_supply_door.png",
+    "cam_shop_recovery_field.png",
+    "cam_audit_finery_door.png",
+    "cam_gate.png",
+    "cam_hill.png"
+  ],
+  "settingsEvidence": "after-native-v3/settings.json records 1920x1080, renderScale 1.0, MSAA 4, textureLimit 0, postProcessing true, shadowResolution 4096 and shadowDistance 18 metres. This review makes no performance claim.",
+  "comparisonLimit": "The named door, hill and gate camera framing supports native before/after comparison. Lighting and materials are intentionally changed together. The newly added reference-street camera has no claimed matching before-native image. The user reference is a concept image with a different lens/composition and no HUD.",
+  "acceptance": "The native V3 appearance improves the focused street over baseline and the first candidate. The supplied reference target is still not met. No user acceptance or whole-game fidelity qualification is inferred.",
+  "scoresOutOfFive": {
+    "compositionAndSilhouette": 3,
+    "humanScaleAndConstruction": 4,
+    "materialDetail": 3,
+    "lightingAndDepth": 3,
+    "densityAndStorytelling": 3,
+    "characterAndAnimation": null,
+    "temporalStability": null,
+    "uiReadability": 4
+  },
+  "scoreScope": "Scores describe the reference street in the reviewed fixed-camera native stills. UI score concerns static text/control visibility only. Characters, animation, temporal stability, collision and real-input behavior need their own evidence. Scale 4 is supported by coherent existing doors, recesses and porch access, rather than a claim that every construction detail matches the reference.",
+  "nativeImprovementsConfirmed": [
+    "Darker charcoal coating, broken narrow shutter-edge oxidation and smaller face losses survive runtime shading. Both personnel doors and Finery louvres now show coating variation that was absent or excessive in the baseline and too faint in the first candidate.",
+    "The original wider brush phrase remains readable in shade. Its colour is distinct from the metal and it occupies the intended shutter surface.",
+    "No missing triangles or large dark shading defects are visible on the revised porch tops in the reference-street and courtyard captures. Their joints and localized chips add structure without visibly distorting the overall step profiles.",
+    "The new noon direction illuminates the street-facing architecture and improves recess readability. Global gate and hill captures remain coherent, with recognizable materials and a stronger broken-cloud sky."
+  ],
+  "remainingReferenceGaps": [
+    {
+      "priority": "high",
+      "area": "Plaster and exposed masonry",
+      "evidence": ["cam_reference_street.png", "cam_courtyard_facade.png", "cam_audit_finery_side_right.png"],
+      "observation": "Broad pale mottling and isolated spall islands remain dominant. Exposed areas mostly read as shallow, uniform grey-brown patches. The reference has connected failure across courses and corners, stronger substrate construction and more directional grime at drainage points. This is the main remaining facade material gap."
+    },
+    {
+      "priority": "medium",
+      "area": "Coated metal construction wear",
+      "evidence": ["cam_audit_field_supply_door.png", "cam_audit_finery_door.png"],
+      "observation": "The metal is now legible, but the general steel texture distributes chips similarly over broad faces. Specific handle zones, panel borders and post joints need more deliberate wear placement to match the reference's accumulated use. The shutter's dedicated lip mask has better construction alignment."
+    },
+    {
+      "priority": "medium",
+      "area": "Graffiti and shutter profile",
+      "evidence": ["cam_audit_field_supply_door.png", "cam_reference_street.png"],
+      "observation": "The wider strokes improve readability, but broad dark slat gaps repeatedly sever them. Sharp cutouts at stroke boundaries and relatively tidy upright letter arrangement remain visible. The reference has finer seam interruption and more naturally loaded brush strokes. No flicker claim can be made from these stills."
+    },
+    {
+      "priority": "high",
+      "area": "Porch and street foreground",
+      "evidence": ["cam_reference_street.png", "cam_courtyard_facade.png"],
+      "observation": "Porch slabs still have long straight edges and broad clean tops; irregular damage and small grit occupy only localized areas. Sparse wall-base growth and orderly foreground paving are less convincing than the reference's eroded, debris-rich threshold construction. Current clear routes must be retained during any subsequent detailing."
+    },
+    {
+      "priority": "medium",
+      "area": "Lighting, cloud shape and broader district",
+      "evidence": ["cam_reference_street.png", "cam_avenue.png", "cam_hill.png", "cam_hero.png"],
+      "observation": "The street is more readable but still has a uniformly beige cast and flatter separation than the reference. Clouds have stretched repeated-looking wisps rather than volumetric sunlit masses. Existing foliage is conspicuously pale and the broader district still exposes regular facades and empty paving; the street pass does not establish a city-wide fidelity result."
+    },
+    {
+      "priority": "low",
+      "area": "Retained local presentation issues",
+      "evidence": ["cam_audit_finery_door.png", "cam_gate.png"],
+      "observation": "Finery's banner remains partly hidden behind the right jamb, as in baseline. Sparse high-contrast stippling remains visible where the left west-gate wall meets its trims; the baseline also contains stippling there. These views do not establish a new V3 regression, and motion is needed to assess whether overlapping geometry flickers."
+    }
+  ],
+  "newHardDefectsConfirmedInReviewedStillImages": [],
+  "pendingEvidence": [
+    "Additional first-person proximity views at both shop locations",
+    "Moving inspection for shimmer, clipping, flicker, LOD transitions and surface contact",
+    "Real-input traversal and retained gameplay loop",
+    "Separate warmed native performance and runtime-log results"
+  ]
+}

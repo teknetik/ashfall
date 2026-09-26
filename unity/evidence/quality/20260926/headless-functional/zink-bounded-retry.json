@@ -1,0 +1,16 @@
+{
+  "purpose": "Bounded private-Xvfb functional renderer experiment only; no game API/pipeline defaults changed",
+  "zink01": "Invalid: all-black PNG, 7679 recorded Mesa allocation errors; quit acknowledged",
+  "zink02Options": {
+    "ZINK_DESCRIPTORS": "lazy",
+    "ZINK_DEBUG": "compact"
+  },
+  "source": "https://docs.mesa3d.org/drivers/zink.html",
+  "sourceMeaning": {
+    "lazy": "Bind descriptors opportunistically to reduce CPU work",
+    "compact": "Use at most four descriptor sets"
+  },
+  "heapFixGuaranteed": false,
+  "nextGate": "Require image content and no allocation errors before input checks",
+  "retryLimit": "Stop graphics-driver experiments if this second Zink attempt fails"
+}

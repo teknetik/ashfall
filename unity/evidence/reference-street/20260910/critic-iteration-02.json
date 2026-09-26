@@ -1,0 +1,194 @@
+{
+  "reviewerRole": "Independent visual critic; no asset authoring or native application input",
+  "reviewDate": "2026-09-10",
+  "reference": "refs/reference-street/20260909/user-target.png",
+  "baselineDirectory": "unity/evidence/reference-street/20260910/baseline-native-v2",
+  "previousCandidateDirectory": "unity/evidence/reference-street/20260910/iteration-01b-native",
+  "candidateDirectory": "unity/evidence/reference-street/20260910/iteration-02-native",
+  "verdict": "REVISE: major geometry and UV regressions repaired; focused street reference bar still unmet",
+  "scope": {
+    "included": ["Field Supply and Finery masonry v3", "threshold v2", "canopy", "crate v4 single audition", "trash v2 single audition and placement", "scrap v1 single audition"],
+    "excluded": ["The old generator still shown in this build", "unchanged old crate/litter instances elsewhere", "whole district or whole-game AAA parity", "character and animation qualification", "performance qualification"],
+    "sourceEvidenceIsNotNativeAcceptance": true,
+    "geometryCountsAreNotQualityScores": true
+  },
+  "reviewedNativeImages": [
+    "cam_reference_street.png",
+    "cam_courtyard_facade.png",
+    "cam_ground_crate.png",
+    "cam_ground_trash.png",
+    "cam_ground_scrap.png",
+    "cam_audit_finery_front.png",
+    "iteration-first-person-field-threshold.png",
+    "iteration-first-person-finery-threshold.png",
+    "asset-pass-cam_ground_crate-hour-12-end.png",
+    "asset-pass-cam_ground_trash-hour-12-end.png",
+    "asset-pass-cam_ground_scrap_back-hour-12-start.png",
+    "asset-pass-cam_ground_scrap_back-hour-12-end.png",
+    "asset-pass-cam_canopy_top-hour-12-start.png",
+    "asset-pass-cam_canopy_under-hour-12-end.png"
+  ],
+  "settingsInspected": {
+    "evidence": "iteration-02-native/iteration-review.json",
+    "nativeResolution": [1920, 1080],
+    "renderScale": 1.0,
+    "msaa": 4,
+    "textureLimit": 0,
+    "preset": 2,
+    "postProcessing": true,
+    "vSync": false,
+    "frameLimit": -1,
+    "graphicsApi": "OpenGL Core",
+    "gpu": "RTX 3060",
+    "actorCount": 9,
+    "hour": 12,
+    "qualification": "Actual native captures and captured settings; isolated snapshot FPS is not a performance qualification."
+  },
+  "scoresOutOfFive": {
+    "compositionAndSilhouette": 3,
+    "humanScaleAndConstruction": 4,
+    "materialDetail": 3,
+    "lightingAndDepth": 3,
+    "densityAndStorytelling": 3,
+    "characterAndAnimation": null,
+    "temporalStability": null,
+    "staticUiReadability": 4
+  },
+  "scoreInterpretation": "4 means strong at the reviewed distance with minor remaining issues; 5 means the selected reference is met in that view. Null means not qualified, rather than a zero or an inferred pass. Overall street scores are not averages of isolated prop scores.",
+  "familyVerdicts": {
+    "masonry": {
+      "verdict": "Geometry repair passes the reviewed native angles; material/art treatment needs revision",
+      "scores": {"construction": 4, "humanScale": 4, "materialDetail": 3, "lightingAndDepth": 3},
+      "evidence": ["cam_reference_street.png", "cam_courtyard_facade.png", "cam_audit_finery_front.png", "asset-pass-cam_canopy_top-hour-12-start.png"],
+      "resolved": [
+        "The widespread triangular missing-face/background bleed seen in iteration01b is absent in these native views.",
+        "Exposed stone courses now form continuous backing behind the thin plaster layer.",
+        "Human door/window scale and the established two-building massing remain coherent."
+      ],
+      "remaining": [
+        "Large surviving plaster fields read as smooth, uniformly beige planes. The reference has mineral grain, uneven age, small edge loss, hairline cracking and localized water/dirt paths across those same focal regions.",
+        "Damage forms a few large, sharp-edged patches and long revealed strips over regular stone courses. The transition needs finer crumbling and material continuity; increasing the quantity of large holes would not solve it.",
+        "Broad horizontal panel divisions remain unusually crisp and regular through the plaster, especially around the Field Supply facade and Finery upper wall."
+      ],
+      "boundedNextFix": "Keep the repaired topology. Improve plaster albedo/normal/roughness scale and localized wear, with smaller irregular edge chips concentrated near existing damage, trim, drainage and foot contact. Recheck matched wide, Finery front and first-person plaster views. Do not reopen the former topology failure by adding broad cuts."
+    },
+    "thresholds": {
+      "verdict": "Static native surface and construction pass at the reviewed distance; complete motion/light qualification remains separate",
+      "scores": {"construction": 4, "humanScale": 4, "materialDetail": 4, "lightingAndDepth": 4},
+      "evidence": ["cam_reference_street.png", "cam_ground_trash.png", "iteration-first-person-field-threshold.png", "iteration-first-person-finery-threshold.png"],
+      "resolved": [
+        "The side faces no longer show the elongated wood-grain texture stretching seen in iteration01b.",
+        "Top and vertical stone surfaces have a coherent mineral scale, individually eroded edges and readable joints.",
+        "The prominent repeated crack patches and bright edge specks from the former export/material problem are not conspicuous in the repaired stills."
+      ],
+      "remaining": ["The block arrangement and hue are more regular than the reference, but that is a minor issue for this repaired family at the reviewed player distance."],
+      "boundedNextFix": "Retain the repaired threshold assets. Spend the next art work on weaker facade and canopy materials before further threshold remeshing."
+    },
+    "canopy": {
+      "verdict": "Revise",
+      "scores": {"construction": 3, "humanScale": 4, "materialDetail": 3, "lightingAndDepth": 3},
+      "evidence": ["cam_reference_street.png", "asset-pass-cam_canopy_top-hour-12-start.png", "asset-pass-cam_canopy_under-hour-12-end.png", "critic-motion-02/asset-pass-cam_canopy_top-hour-12/dense-01.png", "critic-motion-02/asset-pass-cam_canopy_under-hour-12/dense-01.png"],
+      "strengths": ["Sag, panel seams, ties and support bars now establish a constructed cloth awning.", "No confirmed face loss or obvious local flicker in the reviewed native samples."],
+      "remaining": [
+        "At the top camera the cloth has broad, soft diagonal mottling/repetition that reads at the wrong scale for canvas, with two clean rectangular patches.",
+        "The underside occupies most of the player-height upward view but reads as an almost featureless dark red sheet; visible seam and weave information is weak.",
+        "Long edges, ties and supports remain regular, and the reference has more varied tension, fraying, faded edges and believable repair wear."
+      ],
+      "boundedNextFix": "Revise canvas material scale on both sides, put localized fading and abrasion at seams/ties/front hem, and give repair patches believable stitched or attached edges. Preserve the existing drape/support assembly while making folds respond more clearly to its attachment points."
+    },
+    "doorsShutterAndPaint": {
+      "verdict": "Revise",
+      "scores": {"construction": 4, "materialDetail": 3, "storytellingAndPaint": 3},
+      "evidence": ["cam_reference_street.png", "iteration-first-person-field-threshold.png", "iteration-first-person-finery-threshold.png", "critic-motion-02/threshold-walk/t06.png", "critic-motion-02/threshold-walk/t22.png"],
+      "remaining": [
+        "Soft orange corrosion repeats at similar density across shutter slats, door panels, framing and supporting metal. Wear does not sufficiently follow handles, hinges, joints and lower splash zones.",
+        "The large shutter lettering has solid, uniformly filled strokes at first-person range. It needs pigment breakup, brush/overspray variation and more surface interaction to read as old paint.",
+        "Finery's banner is still partly buried behind the projecting right jamb in the front view."
+      ],
+      "boundedNextFix": "Author localized corrosion and paint wear for the focal door/shutter surfaces, preserve legibility, and move the banner forward enough to clear the jamb. Avoid another uniform grunge overlay."
+    },
+    "crateV4": {
+      "verdict": "Pass the recorded noon native view and short sampled camera motion; retain pending other-light and final qualification",
+      "scores": {"shapeAndConstruction": 4, "materialDetail": 4, "groundContact": 4},
+      "evidence": ["cam_ground_crate.png", "asset-pass-cam_ground_crate-hour-12-end.png", "critic-motion-02/asset-pass-cam_ground_crate-hour-12/dense-01.png"],
+      "resolved": ["White bars, A7 and label shapes remain undistorted; the rejected v3 mapping defect is absent.", "Recessed handle, reinforced edges, straps and panel relief remain readable in the native build.", "Placement and contact shadow are plausible; no confirmed hole, clipping or unsupported floating edge in the reviewed view."],
+      "remaining": ["The shallow transport-case proportions differ from the older crate, but uniform fit and its internal construction make them coherent. No geometry expansion is required merely to match an old bounding box."],
+      "approvalScope": "Single installed v4 audition at recorded near distance and noon lighting only, not broad rollout or whole-family LOD qualification."
+    },
+    "trashV2": {
+      "verdict": "Geometry and placement repair pass; material refinement still below the target",
+      "scores": {"shapeAndConstruction": 4, "materialDetail": 3, "groundContact": 4},
+      "evidence": ["cam_ground_trash.png", "asset-pass-cam_ground_trash-hour-12-end.png", "critic-motion-02/asset-pass-cam_ground_trash-hour-12/dense-01.png"],
+      "resolved": ["Jugs have continuous bodies and open handles, cans have distinct rims/ribs, and the old broad source holes are absent.", "The tall vegetation that visibly intersected the pile/cans in iteration01b has been removed.", "Embedding reduced the raised base/island appearance; loose stones and paper now sit more plausibly at the ground."],
+      "remaining": ["The sacks and jugs still share a pale, softly shaded gray appearance, with broad folds and limited fine material distinction in shade. The can surfaces are more convincing than the cloth/plastic focal surfaces."],
+      "boundedNextFix": "Preserve the successful shapes and placement. Improve the cloth/plastic response and surface detail without adding arbitrary geometry or bright highlights to the base color. Review the same pile in the missing other-light pass before rollout."
+    },
+    "scrapV1": {
+      "verdict": "Pass the reviewed native front/back views and short sampled motion; retain pending other-light and final qualification",
+      "scores": {"shapeAndConstruction": 4, "materialDetail": 4, "groundContact": 4},
+      "evidence": ["cam_ground_scrap.png", "asset-pass-cam_ground_scrap_back-hour-12-start.png", "asset-pass-cam_ground_scrap_back-hour-12-end.png", "critic-motion-02/asset-pass-cam_ground_scrap-hour-12/dense-01.png", "critic-motion-02/asset-pass-cam_ground_scrap_back-hour-12/dense-01.png"],
+      "strengths": ["Drum curvature, rolled rims, corrugation thickness, hose loops, straps, buckle and pipe bends remain distinct at player distance.", "Painted metal, exposed metal and rubber are readable together, with coherent highlight changes in the sampled frames.", "No confirmed missing face or conspicuous floating contact appears at the inspected front/back angles."],
+      "remaining": ["Adjacent old faceted litter in the scene is still weak; it is not evidence that the new scrap candidate itself failed."],
+      "approvalScope": "Single installed scrap audition at recorded near front/back distances and noon lighting only."
+    }
+  },
+  "motionEvidence": {
+    "method": "Decoded native MP4 frames with ffmpeg and visually inspected the resulting full-resolution PNGs. No claim of continuous movie playback or every-frame inspection.",
+    "diagnosticCameraPasses": {
+      "report": "iteration-02-native/asset-passes-report.json",
+      "completedHour": 12,
+      "passNames": ["cam_ground_crate", "cam_ground_trash", "cam_ground_scrap", "cam_ground_scrap_back", "cam_canopy_top", "cam_canopy_under"],
+      "recordedFps": 30,
+      "clipDurationSeconds": 8.533333,
+      "plannedMoveSeconds": 7,
+      "viewedDenseFramesPerMovie": 6,
+      "viewedDenseTimeRangeSeconds": [4.0, 4.166667],
+      "extractedFrames": "iteration-02-native/critic-motion-02/asset-pass-<camera>-hour-12/dense-01.png through dense-06.png",
+      "nativeMotionFrameSamples": {"crate": 631, "trash": 595, "scrapFront": 1217, "scrapBack": 568, "canopyTop": 527, "canopyUnder": 905},
+      "reportedOverlapFrames": 0,
+      "observation": "No obvious new local popping, holes, ghost trails or unstable highlight jumps in the six short successive-frame samples. Material softness and canopy repetition are persistent static defects, not established temporal artifacts.",
+      "limit": "These short bursts plus selected endpoint stills cannot qualify every moment of the clips, far LOD transitions, full gameplay movement or all lighting conditions. Diagnostic cameras move while the player remains stationary."
+    },
+    "thresholdWalk": {
+      "report": "iteration-02-native/iteration-review.json",
+      "movie": "iteration-02-native/iteration-first-person.mp4",
+      "durationSeconds": 32.533333,
+      "viewedFrameTimesSeconds": [2, 6, 10, 16, 22, 29],
+      "frames": "iteration-02-native/critic-motion-02/threshold-walk",
+      "observation": "Samples show actual approach/close view/departure through the affected street and confirm severe focal paint/material weaknesses without the former masonry triangle bleed. The capture report completes the named threshold route; this critic did not independently operate or continuously watch the whole route.",
+      "limit": "Six widely spaced frames are compositional and close-surface evidence, not dense temporal qualification."
+    },
+    "otherLightFailure": {
+      "requestedHour": 16,
+      "capturedPassCount": 0,
+      "captureReportComplete": false,
+      "reflectionState": {"pending": true, "completed": 0, "failed": 1, "status": "Updating Courtyard reflection"},
+      "probeState": "Both runtime reflection probes report empty texture and intensity 0 at the failed transition.",
+      "impact": "The six planned hour16 passes were not captured or reviewed. Existing noon images remain valid for their authored-reflection state. Do not treat this as successful sun/shade or reflection qualification.",
+      "authority": "Recorded terminal report failure, not inferred process liveness from sandbox /proc. Parent owns host process inspection and repair."
+    }
+  },
+  "technicalEvidenceLimits": {
+    "baseReviewComplete": true,
+    "baseReviewIdentityChangedPaths": [],
+    "baseReviewRuntimeErrorPatternMatches": [],
+    "fullPerformanceQualified": false,
+    "routeAuthority": "Parent-owned native runner and recorded checkpoint state; critic images do not independently certify collisions or all gameplay verbs.",
+    "nativeSourceDetail": "Native close views establish retained visible detail; source polygon counts and nearest-surface error metrics do not substitute for visual acceptance."
+  },
+  "highestValueOrder": [
+    "Keep the repaired masonry topology and threshold UV/material export; finish facade plaster grain, localized weathering and smaller edge transitions.",
+    "Improve canopy top/underside canvas material scale, attached repair edges and localized seam/hem fading.",
+    "Replace uniform focal metal corrosion and flat graffiti fill with wear and pigment detail tied to construction; clear the Finery banner from the jamb.",
+    "Retain crate v4 and scrap v1 auditions; refine trash cloth/plastic response. Complete the failed hour16 reflection/capture check before family rollout and final lighting acceptance.",
+    "Audition the new generator separately; the old installed generator is deliberately outside this candidate verdict."
+  ],
+  "acceptance": {
+    "focusedStreetAccepted": false,
+    "allApplicableCategoriesAtLeastFour": false,
+    "newMasonryHardTriangleRegressionResolvedInReviewedViews": true,
+    "newThresholdUvRegressionResolvedInReviewedViews": true,
+    "wholeGameAaaClaim": false,
+    "nextReview": "Use the same native wide and player-height views after the bounded facade/canopy/paint revisions; retain matching material/light settings, complete other-light moving prop passes and required performance/gameplay evidence."
+  }
+}

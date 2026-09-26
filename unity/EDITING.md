@@ -405,3 +405,20 @@ render chunks afterward. Do not revive disabled root renderers or shadow proxies
 without reviewing overlaps. Saved Blender sources, exact import recipes, original
 and final scene snapshots, and limitations are linked from
 [the Phase 1 report](evidence/phase1/20260908/README.md).
+
+## Dust-bowl grade and Karaveen caravan market (26 September 2026)
+
+**Karaveen caravan market** is one prefab instance of **Art/KaraveenMarket/KaraveenMarket.glb**
+at the origin. Each stall is a child (`Stall Produce`, `Stall Pottery Water`, `Stall Scrap Tools`,
+`Stall Cloth Rugs`, `Stall Rations`, `Cookfire`, `Bunting`, `Caravan stock`); move a stall by
+moving that child. `COL_*` children hold the box colliders (renderers disabled). `* Goods`
+children cull by LODGroup. `LIGHT_*` children hold lantern lights, which are listed in the
+*Ward lighting clock* CityLightCircuit so they follow day/night. `SMOKE_chow` holds the
+cookfire flames, embers and smoke. The source and rebuild steps are in
+`art/karaveen_market_20260926/README.md`; the old placeholder stalls remain disabled.
+
+The lighting clock uses **Art/Atmosphere/Dustbowl/WardDustbowl.asset** (default 16:00) and the
+global volume uses **WardDustbowlGrade.asset**. Point them back at WardAfternoonShade /
+AthenHillBeautyVolume to compare. **Windborne dust** holds the dust-sheet and grit particle
+systems; tune them there. Values and originals are recorded in
+`evidence/dustbowl-market/20260926/pass.json`.

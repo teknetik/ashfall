@@ -1,0 +1,1822 @@
+{
+  "utc": "2026-09-09T20:00:19.761045+00:00",
+  "attempts": [
+    {
+      "file": "reference-qa-run.json",
+      "sha256": "f36ee813a082455005d48f383f5b9f576185d04b000ee0f9c8561d0ca8eee1cd",
+      "complete": false,
+      "error": "AssertionError('Porch proximity subprocess failed.')"
+    },
+    {
+      "file": "reference-qa-continuation-v2.json",
+      "sha256": "9c6ef05645afda142b4bd3bafea60be8874cf82e834bca27e5aad99ad8a4d225",
+      "complete": false,
+      "error": "AssertionError('Corrected proximity subprocess failed; evidence retained.')"
+    }
+  ],
+  "walking": {
+    "frames": 23321,
+    "seconds": 134.68482493006985,
+    "averageFps": 173.15239494953178,
+    "p50Ms": 4.259807,
+    "p95Ms": 11.592410500000002,
+    "p99Ms": 13.435867619999993,
+    "maxMs": 27.18334,
+    "hitchesOver33ms": 0,
+    "hitchesOver50ms": 0,
+    "mainMs": {
+      "samples": 23321,
+      "mean": 5.773523254105742,
+      "p95": 11.59084,
+      "max": 27.180348
+    },
+    "renderMs": null,
+    "cpuMs": {
+      "samples": 23321,
+      "mean": 5.775186200505981,
+      "p95": 11.592642,
+      "max": 27.181943
+    },
+    "gpuMs": null,
+    "draws": null,
+    "tris": {
+      "samples": 23321,
+      "mean": 8112666.95977874,
+      "p95": 21728706.0,
+      "max": 28354133
+    },
+    "batches": null,
+    "setPass": {
+      "samples": 23321,
+      "mean": 54.58522361819819,
+      "p95": 116.0,
+      "max": 141
+    },
+    "meetsAverageAndP99Target": true
+  },
+  "proximityV2": {
+    "complete": false,
+    "scope": "Real-input close review of the correctly identified Field Supply and Finery.\n\nV2 corrects only the Finery plant-view waypoint: the first attempt placed it\ninside the pre-existing crate scatter 61. The north-side viewpoint keeps the\nexisting crate and drum planter untouched; all failed first-attempt evidence stays.\n\nDedicated September 9 reference-street check; the historical shared\ncheck_weathering_proximity.py and its earlier evidence remain untouched.\nField Supply is w_02, centered at Z=-9; Finery is w_01, centered at Z=-18.\nTargets are grounded in the retained exact building source and threshold export,\nwith current saved diagnostic-camera positions providing an independent check.\n",
+    "checkpoints": [
+      {
+        "name": "west lane",
+        "intendedPosition": [
+          12,
+          0,
+          0
+        ],
+        "snapshot": {
+          "atmosphere": {
+            "windTime": 810.918335,
+            "dustParticles": 50,
+            "dustPlaying": true
+          },
+          "frame": 102084,
+          "width": 1920,
+          "height": 1080,
+          "session": {
+            "state": "Play",
+            "visitedHill": true,
+            "spoken": [],
+            "boughtFlask": false,
+            "soldScrap": false,
+            "linked": false,
+            "muted": false,
+            "reducedMotion": false,
+            "notice": "",
+            "selectedDestination": "",
+            "gridProgress": 0.0,
+            "credits": 25,
+            "quantities": {
+              "water_flask": 0,
+              "medkit": 0,
+              "scrap_coil": 1
+            },
+            "focused": null
+          },
+          "player": {
+            "position": [
+              12.1280117,
+              0.0299998671,
+              -2.871453e-07
+            ],
+            "grounded": true,
+            "speed": 0.0
+          },
+          "audio": {
+            "StepCount": 674,
+            "ClickCount": 0,
+            "TradeCount": 0,
+            "UnavailableCount": 0,
+            "TravelOpenCount": 0,
+            "TravelLinkCount": 0,
+            "paused": false,
+            "volume": 1.0,
+            "sources": [
+              {
+                "name": "City music crossfade",
+                "clip": "Dust of Alshain",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.0,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "Music"
+              },
+              {
+                "name": "City soundtrack",
+                "clip": "Dust of the Giants",
+                "playing": true,
+                "time": 12.5226526,
+                "volume": 0.65,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "Music"
+              },
+              {
+                "name": "Desert wind",
+                "clip": "desert-wind",
+                "playing": true,
+                "time": 17.17864,
+                "volume": 0.8,
+                "spatialBlend": 0.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Lattice activation and link",
+                "clip": "lattice-open",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.7,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "SFX"
+              },
+              {
+                "name": "Lattice hum",
+                "clip": "lattice-hum",
+                "playing": true,
+                "time": 2.62863946,
+                "volume": 0.7,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Market murmur",
+                "clip": "market-murmur",
+                "playing": true,
+                "time": 2.82863951,
+                "volume": 0.8,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Ring hum",
+                "clip": "ring-hum",
+                "playing": true,
+                "time": 2.62863946,
+                "volume": 0.8,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Stone footsteps",
+                "clip": "stone-step-01",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.55,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "SFX"
+              },
+              {
+                "name": "Terminal feedback",
+                "clip": "terminal-click",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.65,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "UI"
+              }
+            ]
+          },
+          "camera": {
+            "yaw": -89.99988,
+            "pitch": 17.0,
+            "boom": 0.0,
+            "distance": 0.0,
+            "firstPerson": true,
+            "playerHidden": true,
+            "position": [
+              12.1280117,
+              1.67999983,
+              -2.871453e-07
+            ],
+            "overlaps": []
+          },
+          "fps": 122.935921,
+          "draws": 0,
+          "triangles": 16264887
+        }
+      },
+      {
+        "name": "Field Supply avenue approach",
+        "intendedPosition": [
+          12,
+          0,
+          -9.0
+        ],
+        "snapshot": {
+          "atmosphere": {
+            "windTime": 814.2228,
+            "dustParticles": 52,
+            "dustPlaying": true
+          },
+          "frame": 102433,
+          "width": 1920,
+          "height": 1080,
+          "session": {
+            "state": "Play",
+            "visitedHill": true,
+            "spoken": [],
+            "boughtFlask": false,
+            "soldScrap": false,
+            "linked": false,
+            "muted": false,
+            "reducedMotion": false,
+            "notice": "",
+            "selectedDestination": "",
+            "gridProgress": 0.0,
+            "credits": 25,
+            "quantities": {
+              "water_flask": 0,
+              "medkit": 0,
+              "scrap_coil": 1
+            },
+            "focused": null
+          },
+          "player": {
+            "position": [
+              12.0013218,
+              0.0299998671,
+              -8.907096
+            ],
+            "grounded": true,
+            "speed": 0.0
+          },
+          "audio": {
+            "StepCount": 682,
+            "ClickCount": 0,
+            "TradeCount": 0,
+            "UnavailableCount": 0,
+            "TravelOpenCount": 0,
+            "TravelLinkCount": 0,
+            "paused": false,
+            "volume": 1.0,
+            "sources": [
+              {
+                "name": "City music crossfade",
+                "clip": "Dust of Alshain",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.0,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "Music"
+              },
+              {
+                "name": "City soundtrack",
+                "clip": "Dust of the Giants",
+                "playing": true,
+                "time": 15.82932,
+                "volume": 0.65,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "Music"
+              },
+              {
+                "name": "Desert wind",
+                "clip": "desert-wind",
+                "playing": true,
+                "time": 0.613968253,
+                "volume": 0.8,
+                "spatialBlend": 0.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Lattice activation and link",
+                "clip": "lattice-open",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.7,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "SFX"
+              },
+              {
+                "name": "Lattice hum",
+                "clip": "lattice-hum",
+                "playing": true,
+                "time": 5.913968,
+                "volume": 0.7,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Market murmur",
+                "clip": "market-murmur",
+                "playing": true,
+                "time": 6.11396837,
+                "volume": 0.8,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Ring hum",
+                "clip": "ring-hum",
+                "playing": true,
+                "time": 5.913968,
+                "volume": 0.8,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Stone footsteps",
+                "clip": "stone-step-01",
+                "playing": true,
+                "time": 0.0,
+                "volume": 0.55,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "SFX"
+              },
+              {
+                "name": "Terminal feedback",
+                "clip": "terminal-click",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.65,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "UI"
+              }
+            ]
+          },
+          "camera": {
+            "yaw": -179.1851,
+            "pitch": 17.0,
+            "boom": 0.0,
+            "distance": 0.0,
+            "firstPerson": true,
+            "playerHidden": true,
+            "position": [
+              12.0013218,
+              1.67999983,
+              -8.907096
+            ],
+            "overlaps": []
+          },
+          "fps": 97.3187,
+          "draws": 0,
+          "triangles": 19681321
+        }
+      },
+      {
+        "name": "Field Supply first tread",
+        "intendedPosition": [
+          14.15,
+          0.25,
+          -9.0
+        ],
+        "snapshot": {
+          "atmosphere": {
+            "windTime": 815.172363,
+            "dustParticles": 49,
+            "dustPlaying": true
+          },
+          "frame": 102545,
+          "width": 1920,
+          "height": 1080,
+          "session": {
+            "state": "Play",
+            "visitedHill": true,
+            "spoken": [],
+            "boughtFlask": false,
+            "soldScrap": false,
+            "linked": false,
+            "muted": false,
+            "reducedMotion": false,
+            "notice": "",
+            "selectedDestination": "",
+            "gridProgress": 0.0,
+            "credits": 25,
+            "quantities": {
+              "water_flask": 0,
+              "medkit": 0,
+              "scrap_coil": 1
+            },
+            "focused": null
+          },
+          "player": {
+            "position": [
+              14.1073532,
+              0.279999852,
+              -8.998156
+            ],
+            "grounded": true,
+            "speed": 0.0
+          },
+          "audio": {
+            "StepCount": 684,
+            "ClickCount": 0,
+            "TradeCount": 0,
+            "UnavailableCount": 0,
+            "TravelOpenCount": 0,
+            "TravelLinkCount": 0,
+            "paused": false,
+            "volume": 1.0,
+            "sources": [
+              {
+                "name": "City music crossfade",
+                "clip": "Dust of Alshain",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.0,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "Music"
+              },
+              {
+                "name": "City soundtrack",
+                "clip": "Dust of the Giants",
+                "playing": true,
+                "time": 16.78932,
+                "volume": 0.65,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "Music"
+              },
+              {
+                "name": "Desert wind",
+                "clip": "desert-wind",
+                "playing": true,
+                "time": 1.57396829,
+                "volume": 0.8,
+                "spatialBlend": 0.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Lattice activation and link",
+                "clip": "lattice-open",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.7,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "SFX"
+              },
+              {
+                "name": "Lattice hum",
+                "clip": "lattice-hum",
+                "playing": true,
+                "time": 6.873968,
+                "volume": 0.7,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Market murmur",
+                "clip": "market-murmur",
+                "playing": true,
+                "time": 7.07396841,
+                "volume": 0.8,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Ring hum",
+                "clip": "ring-hum",
+                "playing": true,
+                "time": 6.873968,
+                "volume": 0.8,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Stone footsteps",
+                "clip": "stone-step-01",
+                "playing": true,
+                "time": 0.0,
+                "volume": 0.55,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "SFX"
+              },
+              {
+                "name": "Terminal feedback",
+                "clip": "terminal-click",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.65,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "UI"
+              }
+            ]
+          },
+          "camera": {
+            "yaw": 92.4758,
+            "pitch": 17.0,
+            "boom": 0.0,
+            "distance": 0.0,
+            "firstPerson": true,
+            "playerHidden": true,
+            "position": [
+              14.1073532,
+              1.92999983,
+              -8.998156
+            ],
+            "overlaps": []
+          },
+          "fps": 117.156143,
+          "draws": 0,
+          "triangles": 13566110
+        }
+      },
+      {
+        "name": "Field Supply porch arris",
+        "intendedPosition": [
+          15.0,
+          0.5,
+          -9.0
+        ],
+        "snapshot": {
+          "atmosphere": {
+            "windTime": 815.805359,
+            "dustParticles": 50,
+            "dustPlaying": true
+          },
+          "frame": 102625,
+          "width": 1920,
+          "height": 1080,
+          "session": {
+            "state": "Play",
+            "visitedHill": true,
+            "spoken": [],
+            "boughtFlask": false,
+            "soldScrap": false,
+            "linked": false,
+            "muted": false,
+            "reducedMotion": false,
+            "notice": "",
+            "selectedDestination": "",
+            "gridProgress": 0.0,
+            "credits": 25,
+            "quantities": {
+              "water_flask": 0,
+              "medkit": 0,
+              "scrap_coil": 1
+            },
+            "focused": null
+          },
+          "player": {
+            "position": [
+              14.9233513,
+              0.529999852,
+              -8.999842
+            ],
+            "grounded": true,
+            "speed": 0.0
+          },
+          "audio": {
+            "StepCount": 684,
+            "ClickCount": 0,
+            "TradeCount": 0,
+            "UnavailableCount": 0,
+            "TravelOpenCount": 0,
+            "TravelLinkCount": 0,
+            "paused": false,
+            "volume": 1.0,
+            "sources": [
+              {
+                "name": "City music crossfade",
+                "clip": "Dust of Alshain",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.0,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "Music"
+              },
+              {
+                "name": "City soundtrack",
+                "clip": "Dust of the Giants",
+                "playing": true,
+                "time": 17.4079819,
+                "volume": 0.65,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "Music"
+              },
+              {
+                "name": "Desert wind",
+                "clip": "desert-wind",
+                "playing": true,
+                "time": 2.21396828,
+                "volume": 0.8,
+                "spatialBlend": 0.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Lattice activation and link",
+                "clip": "lattice-open",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.7,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "SFX"
+              },
+              {
+                "name": "Lattice hum",
+                "clip": "lattice-hum",
+                "playing": true,
+                "time": 7.51396847,
+                "volume": 0.7,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Market murmur",
+                "clip": "market-murmur",
+                "playing": true,
+                "time": 7.71396828,
+                "volume": 0.8,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Ring hum",
+                "clip": "ring-hum",
+                "playing": true,
+                "time": 7.51396847,
+                "volume": 0.8,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Stone footsteps",
+                "clip": "stone-step-01",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.55,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "SFX"
+              },
+              {
+                "name": "Terminal feedback",
+                "clip": "terminal-click",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.65,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "UI"
+              }
+            ]
+          },
+          "camera": {
+            "yaw": 90.11836,
+            "pitch": 17.0,
+            "boom": 0.0,
+            "distance": 0.0,
+            "firstPerson": true,
+            "playerHidden": true,
+            "position": [
+              14.9233513,
+              2.17999983,
+              -8.999842
+            ],
+            "overlaps": []
+          },
+          "fps": 126.952881,
+          "draws": 0,
+          "triangles": 13410172
+        }
+      },
+      {
+        "name": "Field Supply centered close view",
+        "intendedPosition": [
+          16.35,
+          0.5,
+          -9.0
+        ],
+        "snapshot": {
+          "atmosphere": {
+            "windTime": 816.5191,
+            "dustParticles": 52,
+            "dustPlaying": true
+          },
+          "frame": 102734,
+          "width": 1920,
+          "height": 1080,
+          "session": {
+            "state": "Play",
+            "visitedHill": true,
+            "spoken": [],
+            "boughtFlask": false,
+            "soldScrap": false,
+            "linked": false,
+            "muted": false,
+            "reducedMotion": false,
+            "notice": "",
+            "selectedDestination": "",
+            "gridProgress": 0.0,
+            "credits": 25,
+            "quantities": {
+              "water_flask": 0,
+              "medkit": 0,
+              "scrap_coil": 1
+            },
+            "focused": null
+          },
+          "player": {
+            "position": [
+              16.28335,
+              0.529999852,
+              -8.999992
+            ],
+            "grounded": true,
+            "speed": 0.0
+          },
+          "audio": {
+            "StepCount": 685,
+            "ClickCount": 0,
+            "TradeCount": 0,
+            "UnavailableCount": 0,
+            "TravelOpenCount": 0,
+            "TravelLinkCount": 0,
+            "paused": false,
+            "volume": 1.0,
+            "sources": [
+              {
+                "name": "City music crossfade",
+                "clip": "Dust of Alshain",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.0,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "Music"
+              },
+              {
+                "name": "City soundtrack",
+                "clip": "Dust of the Giants",
+                "playing": true,
+                "time": 18.13331,
+                "volume": 0.65,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "Music"
+              },
+              {
+                "name": "Desert wind",
+                "clip": "desert-wind",
+                "playing": true,
+                "time": 2.91798186,
+                "volume": 0.8,
+                "spatialBlend": 0.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Lattice activation and link",
+                "clip": "lattice-open",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.7,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "SFX"
+              },
+              {
+                "name": "Lattice hum",
+                "clip": "lattice-hum",
+                "playing": true,
+                "time": 0.367981851,
+                "volume": 0.7,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Market murmur",
+                "clip": "market-murmur",
+                "playing": true,
+                "time": 8.417982,
+                "volume": 0.8,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Ring hum",
+                "clip": "ring-hum",
+                "playing": true,
+                "time": 0.367981851,
+                "volume": 0.8,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Stone footsteps",
+                "clip": "stone-step-01",
+                "playing": true,
+                "time": 0.0,
+                "volume": 0.55,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "SFX"
+              },
+              {
+                "name": "Terminal feedback",
+                "clip": "terminal-click",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.65,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "UI"
+              }
+            ]
+          },
+          "camera": {
+            "yaw": 90.00635,
+            "pitch": 17.0,
+            "boom": 0.0,
+            "distance": 0.0,
+            "firstPerson": true,
+            "playerHidden": true,
+            "position": [
+              16.28335,
+              2.17999983,
+              -8.999992
+            ],
+            "overlaps": []
+          },
+          "fps": 135.9919,
+          "draws": 0,
+          "triangles": 6415756
+        }
+      },
+      {
+        "name": "Field Supply joint-growth review",
+        "intendedPosition": [
+          15.95,
+          0.5,
+          -12.0
+        ],
+        "snapshot": {
+          "atmosphere": {
+            "windTime": 825.0837,
+            "dustParticles": 51,
+            "dustPlaying": true
+          },
+          "frame": 104105,
+          "width": 1920,
+          "height": 1080,
+          "session": {
+            "state": "Play",
+            "visitedHill": true,
+            "spoken": [],
+            "boughtFlask": false,
+            "soldScrap": false,
+            "linked": false,
+            "muted": false,
+            "reducedMotion": false,
+            "notice": "",
+            "selectedDestination": "",
+            "gridProgress": 0.0,
+            "credits": 25,
+            "quantities": {
+              "water_flask": 0,
+              "medkit": 0,
+              "scrap_coil": 1
+            },
+            "focused": null
+          },
+          "player": {
+            "position": [
+              15.960434,
+              0.529999852,
+              -11.906106
+            ],
+            "grounded": true,
+            "speed": 0.0
+          },
+          "audio": {
+            "StepCount": 688,
+            "ClickCount": 0,
+            "TradeCount": 0,
+            "UnavailableCount": 0,
+            "TravelOpenCount": 0,
+            "TravelLinkCount": 0,
+            "paused": false,
+            "volume": 1.0,
+            "sources": [
+              {
+                "name": "City music crossfade",
+                "clip": "Dust of Alshain",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.0,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "Music"
+              },
+              {
+                "name": "City soundtrack",
+                "clip": "Dust of the Giants",
+                "playing": true,
+                "time": 26.6879826,
+                "volume": 0.65,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "Music"
+              },
+              {
+                "name": "Desert wind",
+                "clip": "desert-wind",
+                "playing": true,
+                "time": 11.493968,
+                "volume": 0.8,
+                "spatialBlend": 0.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Lattice activation and link",
+                "clip": "lattice-open",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.7,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "SFX"
+              },
+              {
+                "name": "Lattice hum",
+                "clip": "lattice-hum",
+                "playing": true,
+                "time": 1.09396827,
+                "volume": 0.7,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Market murmur",
+                "clip": "market-murmur",
+                "playing": true,
+                "time": 1.14396822,
+                "volume": 0.8,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Ring hum",
+                "clip": "ring-hum",
+                "playing": true,
+                "time": 1.09396827,
+                "volume": 0.8,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Stone footsteps",
+                "clip": "stone-step-01",
+                "playing": true,
+                "time": 0.0,
+                "volume": 0.55,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "SFX"
+              },
+              {
+                "name": "Terminal feedback",
+                "clip": "terminal-click",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.65,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "UI"
+              }
+            ]
+          },
+          "camera": {
+            "yaw": -173.659515,
+            "pitch": 51.9699936,
+            "boom": 0.0,
+            "distance": 0.0,
+            "firstPerson": true,
+            "playerHidden": true,
+            "position": [
+              15.960434,
+              2.17999983,
+              -11.906106
+            ],
+            "overlaps": []
+          },
+          "fps": 98.6539459,
+          "draws": 0,
+          "triangles": 19723122
+        }
+      },
+      {
+        "name": "Field Supply porch return",
+        "intendedPosition": [
+          16.35,
+          0.5,
+          -9.0
+        ],
+        "snapshot": {
+          "atmosphere": {
+            "windTime": 828.2237,
+            "dustParticles": 53,
+            "dustPlaying": true
+          },
+          "frame": 104369,
+          "width": 1920,
+          "height": 1080,
+          "session": {
+            "state": "Play",
+            "visitedHill": true,
+            "spoken": [],
+            "boughtFlask": false,
+            "soldScrap": false,
+            "linked": false,
+            "muted": false,
+            "reducedMotion": false,
+            "notice": "",
+            "selectedDestination": "",
+            "gridProgress": 0.0,
+            "credits": 25,
+            "quantities": {
+              "water_flask": 0,
+              "medkit": 0,
+              "scrap_coil": 1
+            },
+            "focused": null
+          },
+          "player": {
+            "position": [
+              16.33989,
+              0.529999852,
+              -9.075426
+            ],
+            "grounded": true,
+            "speed": 0.0
+          },
+          "audio": {
+            "StepCount": 691,
+            "ClickCount": 0,
+            "TradeCount": 0,
+            "UnavailableCount": 0,
+            "TravelOpenCount": 0,
+            "TravelLinkCount": 0,
+            "paused": false,
+            "volume": 1.0,
+            "sources": [
+              {
+                "name": "City music crossfade",
+                "clip": "Dust of Alshain",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.0,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "Music"
+              },
+              {
+                "name": "City soundtrack",
+                "clip": "Dust of the Giants",
+                "playing": true,
+                "time": 29.8879814,
+                "volume": 0.65,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "Music"
+              },
+              {
+                "name": "Desert wind",
+                "clip": "desert-wind",
+                "playing": true,
+                "time": 14.6726532,
+                "volume": 0.8,
+                "spatialBlend": 0.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Lattice activation and link",
+                "clip": "lattice-open",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.7,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "SFX"
+              },
+              {
+                "name": "Lattice hum",
+                "clip": "lattice-hum",
+                "playing": true,
+                "time": 4.272653,
+                "volume": 0.7,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Market murmur",
+                "clip": "market-murmur",
+                "playing": true,
+                "time": 4.32265329,
+                "volume": 0.8,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Ring hum",
+                "clip": "ring-hum",
+                "playing": true,
+                "time": 4.272653,
+                "volume": 0.8,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Stone footsteps",
+                "clip": "stone-step-01",
+                "playing": true,
+                "time": 0.0,
+                "volume": 0.55,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "SFX"
+              },
+              {
+                "name": "Terminal feedback",
+                "clip": "terminal-click",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.65,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "UI"
+              }
+            ]
+          },
+          "camera": {
+            "yaw": 7.63503265,
+            "pitch": 39.8799858,
+            "boom": 0.0,
+            "distance": 0.0,
+            "firstPerson": true,
+            "playerHidden": true,
+            "position": [
+              16.33989,
+              2.17999983,
+              -9.075426
+            ],
+            "overlaps": []
+          },
+          "fps": 157.129166,
+          "draws": 0,
+          "triangles": 12782380
+        }
+      }
+    ],
+    "views": [
+      {
+        "path": "v2-first-person-field.png",
+        "description": "Field Supply centered on its actual shutter or door.",
+        "snapshot": {
+          "atmosphere": {
+            "windTime": 819.307251,
+            "dustParticles": 55,
+            "dustPlaying": true
+          },
+          "frame": 103237,
+          "width": 1920,
+          "height": 1080,
+          "session": {
+            "state": "Play",
+            "visitedHill": true,
+            "spoken": [],
+            "boughtFlask": false,
+            "soldScrap": false,
+            "linked": false,
+            "muted": false,
+            "reducedMotion": false,
+            "notice": "",
+            "selectedDestination": "",
+            "gridProgress": 0.0,
+            "credits": 25,
+            "quantities": {
+              "water_flask": 0,
+              "medkit": 0,
+              "scrap_coil": 1
+            },
+            "focused": null
+          },
+          "player": {
+            "position": [
+              16.28335,
+              0.529999852,
+              -8.999992
+            ],
+            "grounded": true,
+            "speed": 0.0
+          },
+          "audio": {
+            "StepCount": 685,
+            "ClickCount": 0,
+            "TradeCount": 0,
+            "UnavailableCount": 0,
+            "TravelOpenCount": 0,
+            "TravelLinkCount": 0,
+            "paused": false,
+            "volume": 1.0,
+            "sources": [
+              {
+                "name": "City music crossfade",
+                "clip": "Dust of Alshain",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.0,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "Music"
+              },
+              {
+                "name": "City soundtrack",
+                "clip": "Dust of the Giants",
+                "playing": true,
+                "time": 20.9279823,
+                "volume": 0.65,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "Music"
+              },
+              {
+                "name": "Desert wind",
+                "clip": "desert-wind",
+                "playing": true,
+                "time": 5.712653,
+                "volume": 0.8,
+                "spatialBlend": 0.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Lattice activation and link",
+                "clip": "lattice-open",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.7,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "SFX"
+              },
+              {
+                "name": "Lattice hum",
+                "clip": "lattice-hum",
+                "playing": true,
+                "time": 3.162653,
+                "volume": 0.7,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Market murmur",
+                "clip": "market-murmur",
+                "playing": true,
+                "time": 11.2126532,
+                "volume": 0.8,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Ring hum",
+                "clip": "ring-hum",
+                "playing": true,
+                "time": 3.162653,
+                "volume": 0.8,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Stone footsteps",
+                "clip": "stone-step-01",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.55,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "SFX"
+              },
+              {
+                "name": "Terminal feedback",
+                "clip": "terminal-click",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.65,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "UI"
+              }
+            ]
+          },
+          "camera": {
+            "yaw": 90.0,
+            "pitch": -0.0299966335,
+            "boom": 0.0,
+            "distance": 0.0,
+            "firstPerson": true,
+            "playerHidden": true,
+            "position": [
+              16.28335,
+              2.17999983,
+              -8.999992
+            ],
+            "overlaps": []
+          },
+          "fps": 180.252991,
+          "draws": 0,
+          "triangles": 6407486
+        },
+        "sha256": "5e6f35b258aa325173b8baec75f91215c07e0e85b5ee9b699170320562b29129"
+      },
+      {
+        "path": "v2-first-person-field-threshold.png",
+        "description": "Field Supply near porch surface, joints and retained walking top.",
+        "snapshot": {
+          "atmosphere": {
+            "windTime": 823.613,
+            "dustParticles": 53,
+            "dustPlaying": true
+          },
+          "frame": 103957,
+          "width": 1920,
+          "height": 1080,
+          "session": {
+            "state": "Play",
+            "visitedHill": true,
+            "spoken": [],
+            "boughtFlask": false,
+            "soldScrap": false,
+            "linked": false,
+            "muted": false,
+            "reducedMotion": false,
+            "notice": "",
+            "selectedDestination": "",
+            "gridProgress": 0.0,
+            "credits": 25,
+            "quantities": {
+              "water_flask": 0,
+              "medkit": 0,
+              "scrap_coil": 1
+            },
+            "focused": null
+          },
+          "player": {
+            "position": [
+              16.28335,
+              0.529999852,
+              -8.999992
+            ],
+            "grounded": true,
+            "speed": 0.0
+          },
+          "audio": {
+            "StepCount": 685,
+            "ClickCount": 0,
+            "TradeCount": 0,
+            "UnavailableCount": 0,
+            "TravelOpenCount": 0,
+            "TravelLinkCount": 0,
+            "paused": false,
+            "volume": 1.0,
+            "sources": [
+              {
+                "name": "City music crossfade",
+                "clip": "Dust of Alshain",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.0,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "Music"
+              },
+              {
+                "name": "City soundtrack",
+                "clip": "Dust of the Giants",
+                "playing": true,
+                "time": 25.2373238,
+                "volume": 0.65,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "Music"
+              },
+              {
+                "name": "Desert wind",
+                "clip": "desert-wind",
+                "playing": true,
+                "time": 10.0219727,
+                "volume": 0.8,
+                "spatialBlend": 0.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Lattice activation and link",
+                "clip": "lattice-open",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.7,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "SFX"
+              },
+              {
+                "name": "Lattice hum",
+                "clip": "lattice-hum",
+                "playing": true,
+                "time": 7.471973,
+                "volume": 0.7,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Market murmur",
+                "clip": "market-murmur",
+                "playing": true,
+                "time": 15.5219727,
+                "volume": 0.8,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Ring hum",
+                "clip": "ring-hum",
+                "playing": true,
+                "time": 7.471973,
+                "volume": 0.8,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Stone footsteps",
+                "clip": "stone-step-01",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.55,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "SFX"
+              },
+              {
+                "name": "Terminal feedback",
+                "clip": "terminal-click",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.65,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "UI"
+              }
+            ]
+          },
+          "camera": {
+            "yaw": 90.0,
+            "pitch": 51.9699936,
+            "boom": 0.0,
+            "distance": 0.0,
+            "firstPerson": true,
+            "playerHidden": true,
+            "position": [
+              16.28335,
+              2.17999983,
+              -8.999992
+            ],
+            "overlaps": []
+          },
+          "fps": 183.468445,
+          "draws": 0,
+          "triangles": 7188743
+        },
+        "sha256": "235926594b93d8088ba74917f20ad7bcdb9d52468b9a0b208ab98efcb7c2ff5e"
+      },
+      {
+        "path": "v2-first-person-field-joint-growth.png",
+        "description": "Field Supply localized vegetation and facade/porch edge.",
+        "snapshot": {
+          "atmosphere": {
+            "windTime": 826.755737,
+            "dustParticles": 51,
+            "dustPlaying": true
+          },
+          "frame": 104183,
+          "width": 1920,
+          "height": 1080,
+          "session": {
+            "state": "Play",
+            "visitedHill": true,
+            "spoken": [],
+            "boughtFlask": false,
+            "soldScrap": false,
+            "linked": false,
+            "muted": false,
+            "reducedMotion": false,
+            "notice": "",
+            "selectedDestination": "",
+            "gridProgress": 0.0,
+            "credits": 25,
+            "quantities": {
+              "water_flask": 0,
+              "medkit": 0,
+              "scrap_coil": 1
+            },
+            "focused": null
+          },
+          "player": {
+            "position": [
+              15.960434,
+              0.529999852,
+              -11.906106
+            ],
+            "grounded": true,
+            "speed": 0.0
+          },
+          "audio": {
+            "StepCount": 688,
+            "ClickCount": 0,
+            "TradeCount": 0,
+            "UnavailableCount": 0,
+            "TravelOpenCount": 0,
+            "TravelLinkCount": 0,
+            "paused": false,
+            "volume": 1.0,
+            "sources": [
+              {
+                "name": "City music crossfade",
+                "clip": "Dust of Alshain",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.0,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "Music"
+              },
+              {
+                "name": "City soundtrack",
+                "clip": "Dust of the Giants",
+                "playing": true,
+                "time": 28.415987,
+                "volume": 0.65,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "Music"
+              },
+              {
+                "name": "Desert wind",
+                "clip": "desert-wind",
+                "playing": true,
+                "time": 13.200635,
+                "volume": 0.8,
+                "spatialBlend": 0.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Lattice activation and link",
+                "clip": "lattice-open",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.7,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "SFX"
+              },
+              {
+                "name": "Lattice hum",
+                "clip": "lattice-hum",
+                "playing": true,
+                "time": 2.80063486,
+                "volume": 0.7,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Market murmur",
+                "clip": "market-murmur",
+                "playing": true,
+                "time": 2.85063481,
+                "volume": 0.8,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Ring hum",
+                "clip": "ring-hum",
+                "playing": true,
+                "time": 2.80063486,
+                "volume": 0.8,
+                "spatialBlend": 1.0,
+                "loop": true,
+                "group": "Ambience"
+              },
+              {
+                "name": "Stone footsteps",
+                "clip": "stone-step-01",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.55,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "SFX"
+              },
+              {
+                "name": "Terminal feedback",
+                "clip": "terminal-click",
+                "playing": false,
+                "time": 0.0,
+                "volume": 0.65,
+                "spatialBlend": 0.0,
+                "loop": false,
+                "group": "UI"
+              }
+            ]
+          },
+          "camera": {
+            "yaw": 110.300056,
+            "pitch": 39.8799858,
+            "boom": 0.0,
+            "distance": 0.0,
+            "firstPerson": true,
+            "playerHidden": true,
+            "position": [
+              15.960434,
+              2.17999983,
+              -11.906106
+            ],
+            "overlaps": []
+          },
+          "fps": 9.45167351,
+          "draws": 0,
+          "triangles": 18822378
+        },
+        "sha256": "cc8c3671a63bf51c92b06168a9e1c79f0e17e94de03214329104d6d58718d316"
+      }
+    ],
+    "targets": [
+      {
+        "family": "field",
+        "label": "Field Supply",
+        "centerZ": -9.0,
+        "sourcePath": "Ward shop architecture/field_supply/Workshop shutter/field_supply Rolled shutter slat 0",
+        "porchPath": "AuthoredWorld/BLD_shop_w_02_porch",
+        "close": [
+          16.35,
+          0.5,
+          -9.0
+        ],
+        "plantView": [
+          15.95,
+          0.5,
+          -12.0
+        ],
+        "plantTarget": [
+          17.62,
+          0.7,
+          -12.52
+        ],
+        "sourceBounds": {
+          "min": [
+            17.945,
+            0.506,
+            -10.68
+          ],
+          "max": [
+            18.0050011,
+            0.634,
+            -7.31999969
+          ]
+        },
+        "porchBounds": {
+          "min": [
+            14.5,
+            -0.07999998,
+            -12.8800011
+          ],
+          "max": [
+            25.0800018,
+            0.5,
+            -5.119999
+          ]
+        }
+      },
+      {
+        "family": "finery",
+        "label": "Finery",
+        "centerZ": -18.0,
+        "sourcePath": "Phase 1 Finery frontage/Door/Door threshold cap",
+        "porchPath": "AuthoredWorld/BLD_shop_w_01_porch",
+        "close": [
+          15.7,
+          0.5,
+          -18.0
+        ],
+        "plantView": [
+          15.6,
+          0.5,
+          -15.6
+        ],
+        "plantTarget": [
+          16.48,
+          0.7,
+          -14.4
+        ],
+        "sourceBounds": {
+          "min": [
+            16.565,
+            0.49999997,
+            -19.065
+          ],
+          "max": [
+            17.095,
+            0.539999962,
+            -16.935
+          ]
+        },
+        "porchBounds": {
+          "min": [
+            14.5,
+            -0.07999998,
+            -21.8800011
+          ],
+          "max": [
+            25.0800018,
+            0.5,
+            -14.1199989
+          ]
+        }
+      }
+    ],
+    "sourceSha256": "a30f32ed329e991ac605a6d92a65792d5547ebaf192e1ee019895cf88b9a3275",
+    "thresholdSourceSha256": "1adec50e13d30c4691c74c07ba95696d669c96ad0ebd446affb6f33a56a73d7e",
+    "video": "reference-first-person-v2.mp4",
+    "error": "AssertionError({'position': [14.233139, 0.4064623, -9.002865], 'grounded': True, 'speed': 0.0})",
+    "videoExit": 0
+  },
+  "cityLoop": null,
+  "modalInteractions": null,
+  "lighting": null,
+  "initialEvidenceUnchanged": true,
+  "sourceIdentityStillMatchesMeasuredRun": true,
+  "visualAcceptance": null,
+  "note": "The initial failed test is retained. Walking timing is reused only with unchanged source/build identity; no new walking measurement was run."
+}

@@ -1,0 +1,72 @@
+{
+  "review": "anonymous-native-leaf-shade-review",
+  "date": "2026-09-26",
+  "reviewer": "visual_critic",
+  "lockedBeforeMappingReveal": true,
+  "mappingRead": false,
+  "sourceMetadataOrImplementationRead": false,
+  "evidence": "All twelve randomized native PNGs visually inspected; all PNG headers verified 1920x1080. Linux OpenGL, MSAA4, renderScale1 and 48m/two-cascade settings were provided in the task, not independently read from hidden metadata before lock. Wind/actors animate; exact leaf geometry is not pixel-matched.",
+  "rankingOrder": "Best rank group first; labels within a group are tied",
+  "cameras": {
+    "cam_hill": {
+      "ranking": [["A", "B", "C"]],
+      "confidence": "low confidence in a useful quality difference at this distance",
+      "reason": "All three show a credible green/olive crown with broadly similar separation from the warm background. Small brightness differences do not justify choosing a quality winner. The conspicuous pale blue-gray failure from the earlier Editor hill set does not recur.",
+      "materialPlausibilityAllLabels": 3,
+      "lightingDepthAllLabels": 3
+    },
+    "cam_hero": {
+      "ranking": [["A", "C"], ["B"]],
+      "confidence": "low; a small preference, not a demonstrated major gain",
+      "reason": "A/C modestly lift the upper-left/interior olive foliage relative to B, giving slightly easier local detail reading while retaining dark main limbs and lit/shaded contrast. I cannot reliably split A/C. Dense overlapping clusters still merge; no gross artificial glow appears.",
+      "materialPlausibilityAllLabels": 3,
+      "lightingDepthAllLabels": 3
+    },
+    "cam_tree_canopy_below": {
+      "ranking": [["A", "C"], ["B"]],
+      "confidence": "moderate for the slight lift over B; low for splitting A/C",
+      "reason": "A/C make the broad shaded leaves left of the trunk and around smaller embedded branches slightly easier to read. The change is modest. Dense upper-right bundles remain dark textured masses in every variant. Leaf hue stays olive and the brighter versions do not read as emissive.",
+      "materialPlausibilityAllLabels": 3,
+      "lightingDepthAllLabels": 2
+    },
+    "cam_tree_canopy_edge": {
+      "ranking": [["A", "B"], ["C"]],
+      "confidence": "low; small and partly confounded by moving foliage",
+      "reason": "A/B provide a slight lift of the central/lower leaf field relative to C. I cannot justify a robust A-versus-B winner. Central clusters still flatten into dense sheets of similar tone, with thin branch lines crossing them. No broad glow or obvious silhouette loss appears.",
+      "materialPlausibilityAllLabels": 3,
+      "lightingDepthAllLabels": 2
+    }
+  },
+  "sharedScores": {
+    "silhouetteCoverage": 4,
+    "nativeStaticEdgeQuality": 3,
+    "temporalStability": null,
+    "performance": null
+  },
+  "overall": "MODEST_LOCAL_LIFT_WITHOUT_MATERIAL_FIX",
+  "materiallyFixesDarkClusters": false,
+  "obviousUnnaturalGlowObserved": false,
+  "recommendation": "Treat tied brighter candidates as a modest tuning preference only. This evidence does not justify calling shaded canopy complete or selecting one dose conclusively. Preserve repaired edges. Any further change should target actual leaf-plane and cluster response rather than simply adding more uniform brightness; inspect native sun/shade/backlight and moving foliage before accepting it.",
+  "remainingDefects": [
+    "Dense shaded canopy bundles still lack convincing layered depth and differentiated leaf-plane response.",
+    "Small embedded branches remain hard to distinguish in the thickest clusters.",
+    "Native static edges are cleaner than the prior Editor captures, but leaf-sized detail remains dense and texture-like; motion is unqualified.",
+    "Soft shaded bark and broad district art gaps remain outside this material audition."
+  ],
+  "arkComparison": {
+    "preferredOverall": "Official ARK Scorched Earth references",
+    "reason": "Stronger differentiated foliage response, plant layering and integration into a much more authored environment. The native leaf tuning is a small improvement far below overall parity.",
+    "references": [
+      "https://steamcommunity.com/games/2399830/announcements/detail/4174347361792746505",
+      "https://clan.fastly.steamstatic.com/images/44719856/41798a1b8cae10f220da4e4c94becd5384c83a92.jpg",
+      "https://store.steampowered.com/app/2849450/ARK_Scorched_Earth_Ascended/"
+    ],
+    "localImages": ["ark-scorched-earth-official-courtyard.jpg", "ark-scorched-earth-store-00.jpg"],
+    "identityRecognizable": true,
+    "genuinelyBlindCrossGameComparison": false,
+    "limitations": "Different plant species, composition, lens and lighting; reference settings/hardware/promotional processing unknown. No performance, physics or temporal parity inference."
+  },
+  "aaaAcceptance": false,
+  "finishedCanopyAcceptance": false,
+  "nativeGameplayAcceptance": false
+}

@@ -1,0 +1,29 @@
+Traceback (most recent call last):
+  File "/home/teknetik/code/ao2/art/quality_20260926/isolated-functional-qa/run_check.py", line 94, in <module>
+    main()
+    ~~~~^^
+  File "/home/teknetik/code/ao2/art/quality_20260926/isolated-functional-qa/run_check.py", line 76, in main
+    runpy.run_path(str(script), run_name='__main__')
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen runpy>", line 294, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/teknetik/code/ao2/unity/tools/city_loop_check.py", line 59, in <module>
+    asyncio.run(main())
+    ~~~~~~~~~~~^^^^^^^^
+  File "/home/teknetik/.local/share/uv/python/cpython-3.13.15-linux-x86_64-gnu/lib/python3.13/asyncio/runners.py", line 196, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "/home/teknetik/.local/share/uv/python/cpython-3.13.15-linux-x86_64-gnu/lib/python3.13/asyncio/runners.py", line 119, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/home/teknetik/.local/share/uv/python/cpython-3.13.15-linux-x86_64-gnu/lib/python3.13/asyncio/base_events.py", line 726, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/home/teknetik/code/ao2/unity/tools/city_loop_check.py", line 38, in main
+    await click('choice0');await expect('Dialogue')
+                           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/teknetik/code/ao2/unity/tools/city_loop_check.py", line 32, in expect
+    s=await snap();assert s['session']['state']==state,s['session'];checks.append(s);(O/"city-loop.json").write_text(json.dumps({"complete":False,"checks":checks},indent=2));return s
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'state': 'Play', 'visitedHill': False, 'spoken': ['npc_vex'], 'boughtFlask': False, 'soldScrap': False, 'linked': False, 'muted': False, 'reducedMotion': False, 'notice': '', 'selectedDestination': '', 'gridProgress': 0.0, 'credits': 25, 'quantities': {'water_flask': 0, 'medkit': 0, 'scrap_coil': 1}, 'focused': None}

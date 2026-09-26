@@ -7,6 +7,7 @@ import asyncio,ast,json,os,statistics,sys,time
 from pathlib import Path
 from native_client import Client
 from desktop_input import focus
+from native_memory import snapshot as memory_snapshot
 ROOT=Path(__file__).resolve().parent
 OUT=Path(os.environ['ATHEN_NATIVE_DIR'])
 def percentile(values,p):
@@ -54,12 +55,14 @@ async def main():
    await asyncio.sleep(2)
   report['settingsBeforeWarmup']=report.pop('settings')
   await c.command({'action':'settingsSnapshot'});report['settings']=json.loads((OUT/'settings.json').read_text());assert report['settings']['timeScale']==1
+  report['memoryBeforeMeasuredRoute']=await memory_snapshot(c,OUT)
   print('Measured route begins',flush=True);focus();await c.command({'action':'profileStart'})
   await traverse('measured-route.json');await c.command({'action':'profileStop'})
   data=json.loads((OUT/'profile.json').read_text());(OUT/'traversal-frames.json').write_text(json.dumps(data))
   report['allFrames']=summarize(data);moving=[v for v in data if v['state']=='Play' and v['speed']>1];report['movingFrames']=summarize(moving)
   s=report['allFrames'];report['meetsCurrentFrameTimeTarget']=s['averageFps']>=60 and s['p99Ms']<=16.67
-  report['counterNotes']='Nonpositive timing counters are unavailable and reported as null. Main-thread time includes waits. Resident textures are unavailable. Draw and triangle counters include renderer passes and are not visible geometry.'
+  report['memoryAfterMeasuredRoute']=await memory_snapshot(c,OUT)
+  report['counterNotes']='Nonpositive timing counters are unavailable and reported as null. Main-thread time includes waits. Unity texture/allocator, OS RSS and driver framebuffer memory are separate snapshots outside the measured route. Draw and triangle counters include renderer passes and are not visible geometry.'
   report['complete']=True;print(json.dumps(report['allFrames']),flush=True)
  finally:
   (OUT/'traversal-performance.json').write_text(json.dumps(report,indent=2))

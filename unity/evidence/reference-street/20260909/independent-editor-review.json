@@ -1,0 +1,66 @@
+{
+  "reviewStage": "Independent preliminary review of editor-final images; native verification pending",
+  "reference": "refs/reference-street/20260909/user-target.png",
+  "candidateImages": [
+    "unity/evidence/reference-street/20260909/editor-final/cam_reference_street.png",
+    "unity/evidence/reference-street/20260909/editor-final/cam_courtyard_facade.png"
+  ],
+  "baselineImage": "unity/evidence/facade-materials/20260909/after-native/cam_courtyard_facade.png",
+  "comparisonLimit": "Baseline is a native frame with HUD; candidate is an Editor capture. The courtyard camera supports composition inspection, but this is not a controlled native before/after result. The new reference camera has no claimed matched native baseline in this review.",
+  "acceptance": "No user or production acceptance inferred; the supplied reference target has not been met by these images.",
+  "scoresOutOfFive": {
+    "compositionAndSilhouette": 3,
+    "humanScaleAndConstruction": 4,
+    "materialDetail": 3,
+    "lightingAndDepth": 3,
+    "densityAndStorytelling": 3,
+    "characterAndAnimation": null,
+    "temporalStability": null,
+    "uiReadability": null
+  },
+  "improvementsVisible": [
+    "Front-facing materials and door construction are visible under the new noon illumination; the previous courtyard frame loses these to deep shade.",
+    "Large repeating orange rust blobs have been removed from the shutter and Finery louvres.",
+    "Shutter lettering is legible and visibly irregular instead of regular block lettering.",
+    "The two porches now have explicit stone joints and localized edge losses; paving/porch material response is less strongly veined."
+  ],
+  "remainingReferenceGaps": [
+    {
+      "area": "Coated metal",
+      "observation": "At the supplied Editor viewing distance, the shutter, staff doors, canopy beams and posts look uniformly clean grey. The previous broad rust blobs were excessive, but their removal has left too little visible medium-scale coating loss and edge oxidation compared with the reference.",
+      "nativeCheck": "Inspect shutter lip rust, door/beam paint grain and roughness at first-person distance, then step back. Check actual mip residency before treating missing detail as a texture authoring result."
+    },
+    {
+      "area": "Plaster and exposed masonry",
+      "observation": "Pale repeated mottling and isolated rounded spalls remain prominent. The reference has more connected failure at courses, corners and cornices, exposed masonry structure, and restrained surviving plaster between failures.",
+      "nativeCheck": "Inspect sun/shade close-ups around Field Supply's poster and Finery's upper corner, including transitions between the normal-map hairlines and actual cut edges."
+    },
+    {
+      "area": "Graffiti",
+      "observation": "The new original strokes are readable but thin and angular, closer to a marker than the reference's broader loaded brush. Slat gaps heavily interrupt the thinner strokes.",
+      "nativeCheck": "Check at normal player distance and in movement for disappearance, aliasing and coplanar flicker."
+    },
+    {
+      "area": "Foreground construction and density",
+      "observation": "Stone joints and small chips help, but long straight porch edges, clean post feet and sparse wall-edge vegetation still produce a more orderly foreground than the reference. Finery's Warden banner remains largely hidden behind its right door jamb in this composition; this is retained placement, not a new regression.",
+      "nativeCheck": "Walk both porch edges/first steps and confirm thin visual grooves do not create apparent holes or disagree conspicuously with retained collision."
+    },
+    {
+      "area": "Sky and shadow presentation",
+      "observation": "The new sky has more broken structure but still reads as a flat procedural streak pattern rather than the reference's volumetric cloud masses. Tree shadows add depth but create small high-contrast patches across lettering, doors and paving.",
+      "nativeCheck": "Review moving shadows and cloud drift at 1080p for shimmer, repeating cloud motifs, abrupt time transitions and excessive shadow breakup."
+    }
+  ],
+  "hardDefectsVisibleInTheseStillImages": [],
+  "codeReview": {
+    "fixedEarlierIssues": [
+      "Corrected metal bake enforces one material slot and reloads photographic inputs verified unchanged on disk; rejected first bakes are preserved.",
+      "BrushPaint now uses cull off, so the small reverse-winding brush join triangles are visible from the front.",
+      "New geometry turns shadow casting off for brush paint and mineral runoff.",
+      "AgedSteel variants apply the validated physical UV scales and verify expected source mesh identity.",
+      "BakeReflections now creates new daylight cubemaps, addressing the runtime clock's assumption that default-noon authored reflections are already current."
+    ],
+    "newConfirmedRuntimeRegression": null,
+    "limits": "Read-only code and still-image inspection cannot prove Linux shader behavior, runtime grading, temporal stability, collision, interaction or performance."
+  }
+}

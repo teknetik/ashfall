@@ -1,0 +1,128 @@
+{
+  "reviewerRole": "Independent visual critic; no asset or scene authoring",
+  "reviewDate": "2026-09-10",
+  "reference": "refs/reference-street/20260909/user-target.png",
+  "baselineDirectory": "unity/evidence/reference-street/20260910/baseline-native-v2",
+  "candidateDirectory": "unity/evidence/reference-street/20260910/iteration-01b-native",
+  "verdict": "Reject the focused street iteration. Several additions have useful detail, but the new masonry introduces a conspicuous native rendering failure and the thresholds introduce visibly stretched side mapping. This is not reference-level or AAA acceptance.",
+  "reviewedNativeImages": [
+    "cam_reference_street.png", "cam_courtyard_facade.png", "cam_courtyard_ground.png",
+    "cam_audit_field_supply_door.png", "cam_audit_finery_door.png", "cam_audit_finery_front.png",
+    "cam_ground_trash.png", "cam_ground_scrap.png",
+    "iteration-first-person-field.png", "iteration-first-person-field-threshold.png",
+    "iteration-first-person-finery.png", "iteration-first-person-finery-threshold.png"
+  ],
+  "settingsInspected": "Native 1920x1080, renderScale 1.0, MSAA 4, textureLimit 0, PC preset 2, post-processing on, OpenGLCore on RTX 3060. The iteration report records unchanged captured identity paths and no matched runtime error lines. This review does not qualify performance or the full gameplay loop.",
+  "scoresOutOfFive": {
+    "compositionAndSilhouette": 3,
+    "humanScaleAndConstruction": 2,
+    "materialDetail": 2,
+    "lightingAndDepth": 3,
+    "densityAndStorytelling": 3,
+    "characterAndAnimation": null,
+    "temporalStability": null,
+    "staticUiReadability": 4
+  },
+  "scoreInterpretation": "Scores apply to this focused native street with visible defects included. Four means strong at the intended distance with minor remaining issues; five means the chosen reference is met in that view. A hard focal defect rejects the iteration regardless of averaged scores. Unassessed categories are not passes.",
+  "familyVerdicts": [
+    {
+      "family": "Plaster and exposed masonry",
+      "verdict": "Reject; native hard failure",
+      "score": 1,
+      "evidence": ["cam_courtyard_facade.png", "cam_audit_field_supply_door.png", "cam_audit_finery_front.png"],
+      "observations": [
+        "The Field Supply poster pier, gable and Finery left upper wall show dense sharp triangular facets instead of continuous stone faces. White or background-colored regions show through parts of the pier, while the Finery parapet exposes a conspicuous blue-and-white pattern against the sky.",
+        "This is a visible geometry, overlap or material-coverage failure; the stills do not by themselves identify its precise implementation cause. More texture resolution or color grading cannot resolve it.",
+        "The remaining plaster planes are now very smooth and uniform, with abrupt damage boundaries. Restoring a sound wall is the first requirement; the final material still needs subtle mineral grain, connected localized fractures and restrained runoff instead of either blank paint or uniformly repeated damage."
+      ],
+      "nextBoundedFix": "Inspect the actual exposed-stone faces and backing in opaque clay and wireframe, repair winding/coverage/overlap as appropriate, and verify the same three native views before adding further facade detail. Keep continuous wall volume behind intentionally thin plaster."
+    },
+    {
+      "family": "Stone landings and steps",
+      "verdict": "Promising shape improvement, but reject current close-range mapping",
+      "score": 3,
+      "evidence": ["cam_courtyard_facade.png", "cam_ground_trash.png", "iteration-first-person-field-threshold.png", "iteration-first-person-finery-threshold.png"],
+      "observations": [
+        "Individual stones have better edge loss, rounded chips and readable granular top surfaces than the former broad monolithic risers.",
+        "Long vertical side faces are severely stretched into horizontal brown streaks, reading like wood grain rather than fractured sandstone.",
+        "The same branching crack and surrounding patch repeat in neighboring top slabs at nearly the same placement. Joints remain straight and evenly open, so the material repetition is particularly visible at first-person distance.",
+        "Tiny bright highlights line many slab edges and crack boundaries. Their temporal behavior is unverified, but the dry stone response should be checked against the reference's more subdued mineral roughness.",
+        "The new top surfaces are distinctly orange while nearby doorway stones and older paving are gray-brown. Some variation is credible; the present abrupt boundary needs native sun and shade review after the mapping fix."
+      ],
+      "nextBoundedFix": "Give side and end faces undistorted physical-scale mapping; vary source regions across adjacent slabs and tune dry-stone roughness. Keep the existing support surfaces and collision clearance. Inspect both a low side angle and the two first-person threshold views."
+    },
+    {
+      "family": "Finery canopy",
+      "verdict": "Improved drape cue, still below reference",
+      "score": 3,
+      "evidence": ["cam_audit_finery_front.png", "cam_courtyard_facade.png", "critic-motion-samples/frame-05.png", "critic-motion-samples/frame-08.png"],
+      "observations": [
+        "The central underside now has visible sag and the front edge has attachments, improving the impression of cloth weight.",
+        "The very long straight front strip, repeated ties and broad smoothly colored underside still dominate. Local tension at ties, seam construction, varied edge curl and restrained fabric-scale wear are not yet convincing at player height.",
+        "The canopy retains readable shade and plausible overall support placement in these views. Fine support contact and top-surface cloth detail are not fully exposed by the supplied angles."
+      ],
+      "nextBoundedFix": "Refine folds within the actual supported bays, distinguish seam and patched regions, and add restrained edge curling/fray without making the whole textile noisy. Capture an oblique view showing the top cloth and its attachment points as well as the underside."
+    },
+    {
+      "family": "Doors, shutter and painted lettering",
+      "verdict": "Still below reference; retained baseline defect",
+      "score": 3,
+      "evidence": ["cam_audit_field_supply_door.png", "cam_audit_finery_door.png", "iteration-first-person-field.png", "iteration-first-person-finery.png"],
+      "observations": [
+        "The dark steel remains readable and hardware gives useful depth.",
+        "Broad soft orange wear patches repeat across door leaves, slats and members with little relation to handles, joints or sheltered areas.",
+        "Shutter lettering remains uniformly filled flat cutout shapes with sharp irregular outlines; close views lack pigment variation or brush grain, and large dark slat gaps strongly segment the strokes.",
+        "The Finery banner remains partially concealed by the right jamb. Its present placement does not let the complete short message read naturally."
+      ],
+      "nextBoundedFix": "Keep the geometry and text content while giving paint and coating distinct surface response and localized wear. Restore a readable banner placement within the same facade and preserve door access."
+    },
+    {
+      "family": "Trash v2 audition at root 69",
+      "verdict": "Geometry improvement confirmed natively; integration and material refinement required",
+      "score": 3,
+      "evidence": ["cam_ground_trash.png", "cam_audit_finery_front.png"],
+      "observations": [
+        "Sacks, jug handle, cans, cloth and separate stones remain recognizable in the native shade view. The former faceted mound is materially improved and no new triangular sack puncture is apparent.",
+        "The pile is still surrounded by a thin continuous base that reads as an island on the paving. Embedded dust and local contact need refinement.",
+        "Several tall rigid grass blades pass through the cans and central pile. Move or reshape that local growth so it emerges from plausible soil-filled joints rather than object interiors.",
+        "Sacks and stones share a cool gray, soft appearance in shade; can metal and jug plastic separate somewhat, but the supplied reference has stronger fabric grain and object-specific wear.",
+        "The current image supplies one shaded close view. A sunlit counterpart and low oblique motion around the whole pile are still needed before accepting the family."
+      ],
+      "nextBoundedFix": "Refine this single placement's base contact and intersecting vegetation, then capture the same asset in sun and shade with a low oblique pass. Preserve the now coherent detailed geometry."
+    },
+    {
+      "family": "Scrap v1 audition at root 32",
+      "verdict": "Strong static audition; retain for further native review",
+      "score": 4,
+      "evidence": ["cam_ground_scrap.png"],
+      "observations": [
+        "Curved drum shells and rims, corrugated sheets, coiled hose, strap and elbow remain legible in the native sun view. They are clear construction improvements over the original low-detail cluster.",
+        "Painted yellow metal, oxidized sheet and dark hose have useful separation. No conspicuous missing face is confirmed at this view.",
+        "The rear drum patch and strap-to-sheet contact are only partially exposed. A shaded view and low oblique moving pass must test those areas and base contact.",
+        "The nearby old faceted debris remains visible context. This one successful audition does not establish that the ground family has been replaced or accepted across the district."
+      ],
+      "nextBoundedFix": "Keep this candidate and obtain the missing shade, rear-contact and moving evidence before broad rollout."
+    },
+    {
+      "family": "Crate",
+      "verdict": "Excluded from new-candidate verdict",
+      "score": null,
+      "observations": ["The native crate in this iteration is the intentionally retained old crate. The independently reviewed v4 rebaked runtime candidate has not been assessed in these native images."]
+    }
+  ],
+  "motionEvidence": {
+    "file": "iteration-first-person.mp4",
+    "metadataInspected": "33.633333 seconds, 1920x1080, 30 fps, successful encoder exit; SHA256 fd97b0a22f4b6553d75c17fb6e83d1bf6ea1e676133b2c79ba658dd88f1fb89b",
+    "reviewMethod": "Decoded full-size sample frames 01, 03, 05, 07 and 08 from an fps=1/4 extraction into critic-motion-samples. Continuous video playback was not available in this review.",
+    "finding": "Samples confirm first-person proximity, the same facade defect during gameplay, and the simplified canopy underside. No gross camera intersection is visible in these samples. Sparse decoded frames do not prove absence of shimmer, ghosting, popping or animation defects, so temporal stability is not passed.",
+    "coverageGap": "This short approach sequence does not provide a full low oblique inspection around the new trash and scrap assets, nor a clear top-surface and attachment review of the canopy."
+  },
+  "highestValueOrder": [
+    "Repair the new masonry coverage failure and threshold side mapping first; these are native regressions on focal surfaces.",
+    "Finish the focused plaster, stone and textile material/geometry treatment once the surfaces render correctly.",
+    "Correct the trash placement's base and vegetation, complete the crate audition, and obtain missing sun/shade and oblique moving views for the new props.",
+    "Refine retained flat lettering and repetitive metal wear, then run the matched native critic set and full gameplay/performance qualification."
+  ],
+  "acceptance": false,
+  "limits": "No full city, character-animation or performance qualification is claimed. The newer detailed crate is excluded, old contextual props are not silently treated as revised, and source triangle counts are not acceptance evidence. The focused street must be re-reviewed after the identified hard defects are repaired."
+}

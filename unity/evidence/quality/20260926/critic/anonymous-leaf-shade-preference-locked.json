@@ -1,0 +1,63 @@
+{
+  "review": "anonymous-leaf-shade-review",
+  "date": "2026-09-26",
+  "reviewer": "visual_critic",
+  "lockedBeforeMappingReveal": true,
+  "mappingRead": false,
+  "implementationRead": false,
+  "inspection": "All twelve original anonymous PNGs viewed at full-frame 1920x1080. Image hashes read only for evidence identity; mapping, source candidate filenames, parameters and implementation not inspected.",
+  "evidenceType": "Same-scene direct Editor diagnostic renders, not native gameplay acceptance",
+  "rankingOrder": "Best rank group first; labels within a group are tied",
+  "cameras": {
+    "cam_hill": {
+      "ranking": [["A", "B"], ["C"]],
+      "confidence": "high for A/B over C; low for distinguishing A from B",
+      "reason": "A and B retain dark olive living-leaf identity and coherent crown mass. C introduces a pale blue-gray/silver speckled appearance, particularly across upper and right clusters, that weakens the canopy's mass. C exposes more bright fine detail without a corresponding convincing improvement in volumetric leaf/branch separation.",
+      "scores": {
+        "A": {"materialPlausibility": 3, "lightingDepth": 3, "silhouetteCoverage": 4, "staticEdgeQuality": 2},
+        "B": {"materialPlausibility": 3, "lightingDepth": 3, "silhouetteCoverage": 4, "staticEdgeQuality": 2},
+        "C": {"materialPlausibility": 2, "lightingDepth": 2, "silhouetteCoverage": 4, "staticEdgeQuality": 2}
+      }
+    },
+    "cam_hero": {
+      "ranking": [["A", "B", "C"]],
+      "confidence": "low confidence in any separation; no defensible material winner",
+      "reason": "All three preserve olive color, sunlit patches and the same readable main limbs. Dense upper/interior clusters remain similar dark masses. Any small differences are below the level at which I can justify a reliable preferred version in these full-frame images.",
+      "scoresAllLabels": {"materialPlausibility": 3, "lightingDepth": 3, "silhouetteCoverage": 4, "staticEdgeQuality": 2}
+    },
+    "cam_tree_canopy_below": {
+      "ranking": [["A", "B", "C"]],
+      "confidence": "low confidence in any separation; no demonstrated shade-readability improvement",
+      "reason": "The broad shaded clusters at upper left and right remain dark olive and difficult to separate internally in all three. Sky holes and large branches remain legible; small branches embedded in foliage do not gain a clearly meaningful readable layer. No broad glow or gross coverage loss is apparent.",
+      "scoresAllLabels": {"materialPlausibility": 3, "lightingDepth": 2, "silhouetteCoverage": 4, "staticEdgeQuality": 2}
+    },
+    "cam_tree_canopy_edge": {
+      "ranking": [["A", "B", "C"]],
+      "confidence": "low confidence in any separation; no demonstrated shade-readability improvement",
+      "reason": "All three keep the same crown outline and green/olive leaf response. Central shaded fronds still merge into dense textured sheets with tangled thin branch lines. Differences do not support a reliable quality ranking or a claim that the shaded-canopy defect is fixed.",
+      "scoresAllLabels": {"materialPlausibility": 3, "lightingDepth": 2, "silhouetteCoverage": 4, "staticEdgeQuality": 2}
+    }
+  },
+  "overall": "NO_DEMONSTRATED_CLOSE_SHADE_IMPROVEMENT",
+  "recommendation": "Do not promote a shade variant on these images. Retain the repaired edge treatment as an independent earlier preference. After lock/reveal, validate that each intended candidate reached the recorded rendered material, then recapture only if that audit identifies an evidence problem. Otherwise change the shade-response approach rather than claiming a barely visible parameter difference solves it.",
+  "rejectionReasons": [
+    "Shaded leaf clusters still merge, especially below and at canopy edge.",
+    "One hill candidate has visibly poorer pale blue-gray/silver response.",
+    "Fine leaves remain noisy in these direct Editor captures; this cannot determine native MSAA or temporal quality.",
+    "Near bark remains soft and low in readable shaded surface structure.",
+    "No native temporal or performance qualification is established."
+  ],
+  "arkReference": {
+    "preference": "Official ARK Scorched Earth courtyard still looks more finished overall and in differentiated foliage response",
+    "local": "ark-scorched-earth-official-courtyard.jpg",
+    "source": "https://steamcommunity.com/games/2399830/announcements/detail/4174347361792746505",
+    "image": "https://clan.fastly.steamstatic.com/images/44719856/41798a1b8cae10f220da4e4c94becd5384c83a92.jpg",
+    "identityRecognizable": true,
+    "genuinelyBlindCrossGameComparison": false,
+    "limitations": "Different subjects/species, lens, lighting and unknown reference hardware/settings/promotional processing; not a performance, temporal or physics comparison."
+  },
+  "aaaAcceptance": false,
+  "nativeAcceptance": false,
+  "temporalScore": null,
+  "performanceScore": null
+}

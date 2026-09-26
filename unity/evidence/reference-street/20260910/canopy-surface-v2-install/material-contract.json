@@ -1,0 +1,105 @@
+{
+  "revision": 2,
+  "familyContracts": {
+    "Membrane": {
+      "metres": [
+        4.58,
+        6.5
+      ],
+      "resolution": [
+        4096,
+        4096
+      ]
+    },
+    "Valance": {
+      "metres": [
+        0.3,
+        6.5
+      ],
+      "resolution": [
+        512,
+        8192
+      ]
+    },
+    "Seam": {
+      "metres": [
+        2.0,
+        2.0
+      ],
+      "resolution": [
+        2048,
+        2048
+      ]
+    },
+    "Repair": {
+      "metres": [
+        4.8,
+        6.8
+      ],
+      "resolution": [
+        4096,
+        4096
+      ]
+    },
+    "DetailFabric": {
+      "metres": [
+        0.3,
+        0.3
+      ],
+      "resolution": [
+        4096,
+        4096
+      ]
+    }
+  },
+  "originalInputs": {
+    "source": "https://polyhaven.com/a/book_pattern",
+    "license": "CC0",
+    "licenseURL": "https://polyhaven.com/license",
+    "physicalTileMetres": 0.3,
+    "maps": [
+      {
+        "channel": "col1",
+        "file": "book_pattern_col1_4k.png",
+        "size": 30844178,
+        "md5": "1c9ab628cb5cc50567e120dbfe9fe7d4",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/4k/book_pattern/book_pattern_col1_4k.png",
+        "sha256": "abb83f4360439d8978710ade86d3eecb07d703dd10302f96fd517ceb336dd9ee"
+      },
+      {
+        "channel": "nor_gl",
+        "file": "book_pattern_nor_gl_4k.png",
+        "size": 23514642,
+        "md5": "a1b6b0846be9b4c1b889c9c0e97e9ea5",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/4k/book_pattern/book_pattern_nor_gl_4k.png",
+        "sha256": "877cb2cebc57d5db25c218a1a10e12ac337ba57fca0177318a94ae6ec8357e91"
+      },
+      {
+        "channel": "Rough",
+        "file": "book_pattern_rough_4k.png",
+        "size": 13366190,
+        "md5": "fb112b0459f66b7121d7097ac156fad5",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/4k/book_pattern/book_pattern_rough_4k.png",
+        "sha256": "08f52003f1d6bdeb2c34eafad8df30cb6109872610d64b120351f308d0d43ddb"
+      },
+      {
+        "channel": "Displacement",
+        "file": "book_pattern_disp_4k.png",
+        "size": 27911996,
+        "md5": "71dd1e3eaec94131be1b7cfb863c3be9",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/4k/book_pattern/book_pattern_disp_4k.png",
+        "sha256": "9607e61bdd8ac8d2c763af0f1e8fef93afd37e9eba4e5c21beb5e5b31b19aa49"
+      }
+    ]
+  },
+  "normalSource": "book_pattern_nor_gl_4k.png, original bytes, 0.3 m tile",
+  "normalStrengthAudition": 0.48,
+  "detailAlbedoStrengthAudition": 0.6,
+  "supersedes": "canopy-weathering-v1 source material candidate only; V3 geometry remains unchanged",
+  "revisionReason": "Strongly reduce cloudy broad color; interrupt hem/seam wear and runoff; add exact-contour running-stitch pigment and normal relief on existing repair cloth.",
+  "repairNormalMap": "Repair/Normal.png is a tangent-space bake of 0.55 mm running-stitch relief; use as the Repair base normal at strength 1 alongside the same physical cotton detail normal.",
+  "uvContract": "Installed UV0 in metres/.4 remains unchanged. Base ST=.4/mapMetres; detail ST=mapMetres/.3 gives the original .3 m cotton detail after base transform.",
+  "materialAssignment": "Membrane only on original main sheet; Valance only on CanopyRed additions; Seam on existing piping/seam/pocket; Repair on existing repair additions. No geometry or collider changes.",
+  "reviewRequired": "Full cloth, undercloth, hem and patches under opposed light in Blender, then matched native noon/shade and motion.",
+  "scope": "Authoring and material audition only; source maps/UVs, rigid supports, all game roots and current materials retained."
+}

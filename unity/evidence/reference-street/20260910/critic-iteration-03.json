@@ -1,0 +1,551 @@
+{
+  "reviewerRole": "Independent visual critic; no asset authoring or application input",
+  "reviewDate": "2026-09-10",
+  "reference": "refs/reference-street/20260909/user-target.png",
+  "baselineDirectory": "unity/evidence/reference-street/20260910/baseline-native-v2",
+  "previousCandidateDirectory": "unity/evidence/reference-street/20260910/iteration-02-native",
+  "candidateDirectory": "unity/evidence/reference-street/20260910/iteration-03-native",
+  "buildRecord": "unity/evidence/reference-street/20260910/iteration-03b-build.json",
+  "verdict": "REVISE: clear construction and mapping repairs retained; focal materials and shade remain below the chosen reference",
+  "scope": {
+    "included": [
+      "Field Supply and Finery masonry v3 with iteration03 plaster/weathering",
+      "threshold v2",
+      "canopy v3",
+      "banner placement",
+      "crate v4 single audition",
+      "trash v2 single audition",
+      "scrap v1 single audition"
+    ],
+    "excluded": [
+      "Old generator visible in this build; new generator is not yet installed",
+      "Unchanged old prop instances elsewhere",
+      "Whole-district or whole-game AAA parity",
+      "Character/animation qualification",
+      "Performance qualification"
+    ],
+    "sourceEvidenceIsNotNativeAcceptance": true,
+    "geometryCountsAreNotQualityScores": true,
+    "buildNote": "03b superseded the earlier03 build before this capture, including the banner placement repair."
+  },
+  "reviewedNativeImages": [
+    "cam_reference_street.png",
+    "cam_courtyard_facade.png",
+    "cam_audit_field_supply_front.png",
+    "cam_audit_finery_front.png",
+    "cam_audit_field_supply_door.png",
+    "cam_audit_finery_door.png",
+    "cam_ground_trash.png",
+    "cam_ground_crate.png",
+    "cam_ground_scrap.png",
+    "iteration-first-person-field-threshold.png",
+    "iteration-first-person-finery-threshold.png",
+    "asset-pass-cam_canopy_top-hour-12-start.png",
+    "asset-pass-cam_canopy_under-hour-12-end.png",
+    "asset-pass-cam_ground_crate-hour-16-end.png",
+    "asset-pass-cam_ground_trash-hour-16-end.png",
+    "asset-pass-cam_ground_scrap_back-hour-16-end.png"
+  ],
+  "settingsInspected": {
+    "evidence": [
+      "iteration-03-native/iteration-review.json",
+      "iteration-03-native/asset-passes-report.json"
+    ],
+    "nativeResolution": [
+      1920,
+      1080
+    ],
+    "renderScale": 1,
+    "msaa": 4,
+    "textureLimit": 0,
+    "preset": 2,
+    "postProcessing": true,
+    "vSync": false,
+    "frameLimit": -1,
+    "shadowDistanceMetres": 18,
+    "shadowResolution": 4096,
+    "unity": "6000.6.0f1",
+    "api": "OpenGLCore",
+    "gpu": "NVIDIA GeForce RTX3060/PCIe/SSE2",
+    "driver": "OpenGL4.5.0 NVIDIA595.84",
+    "cpu": "Intel Core i9-10850K @3.60GHz",
+    "os": "Linux7.0 Ubuntu24.04 64bit",
+    "quality": "PC",
+    "actorCount": 9,
+    "hoursReviewed": [
+      12,
+      16
+    ],
+    "qualification": "Native images and recorded settings establish this review's scope. Build success, snapshot FPS and mesh counts do not establish art or performance qualification."
+  },
+  "scoresOutOfFive": {
+    "compositionAndSilhouette": 3,
+    "humanScaleAndConstruction": 4,
+    "materialDetail": 3,
+    "lightingAndDepth": 3,
+    "densityAndStorytelling": 3,
+    "characterAndAnimation": null,
+    "temporalStability": null,
+    "staticUiReadability": 4
+  },
+  "scoreInterpretation": "4 means strong at the reviewed viewing distance with minor issues;5 means the selected reference is met in that view. Null means unqualified rather than an inferred pass. Local consecutive-frame observations do not qualify the full moving scene. Overall street scores are not averages of isolated prop scores.",
+  "improvementsSince02": [
+    "The Finery banner now fully clears the jamb in the front view and reads as a complete hanging element.",
+    "New plaster has visible grain and tonal weathering rather than the earlier nearly uniform beige fill.",
+    "The canopy has stronger folds and attachment tension. Broad diagonal material repetition is reduced, and the long V2 pocket/hem slits are absent in the examined native views.",
+    "All twelve noon/16 diagnostic movies completed. Afternoon probes report actual allocated realtime textures and successful captures, so the prior failed transition no longer prevents inspection.",
+    "Masonry continuity, threshold mineral mapping, crate stencil mapping and embedded litter contact remain repaired."
+  ],
+  "familyVerdicts": {
+    "masonry": {
+      "verdict": "Construction repair retained; material and damage treatment still need refinement",
+      "scores": {
+        "construction": 4,
+        "humanScale": 4,
+        "materialDetail": 3,
+        "lightingAndDepth": 3
+      },
+      "evidence": [
+        "cam_reference_street.png",
+        "cam_audit_finery_front.png",
+        "cam_audit_field_supply_door.png",
+        "cam_audit_finery_door.png",
+        "critic-motion-03/asset-pass-cam_canopy_top-hour-12/dense-01.png"
+      ],
+      "resolved": [
+        "No recurrence of iteration01b triangular background bleed in the reviewed views.",
+        "New plaster has subtle fine grain and tonal variation; this is a real improvement over iteration02.",
+        "Stone backing, roof/window recesses and human door scale remain coherent."
+      ],
+      "remaining": [
+        "Large isolated spalls and long exposed strips still have comparatively sharp, sparse boundaries over very regular stone courses.",
+        "Surviving plaster and regular panel divisions remain cleaner and more uniform than the reference; the new texture alone has not supplied the reference's layered cracks, fine edge loss and localized age.",
+        "Coherent construction is stronger than the material transition around the damage."
+      ],
+      "boundedNextFix": "Keep the repaired shell. Add finer crumbling and hairline transitions around existing loss, and stronger localized sediment/drainage continuity beneath trim and near foot contact. Judge these at the same front/door view. Do not solve this by multiplying large holes."
+    },
+    "thresholds": {
+      "verdict": "Pass current static construction/material views; retain pending final motion/light qualification",
+      "scores": {
+        "construction": 4,
+        "humanScale": 4,
+        "materialDetail": 4,
+        "lightingAndDepth": 4
+      },
+      "evidence": [
+        "iteration-first-person-field-threshold.png",
+        "iteration-first-person-finery-threshold.png",
+        "cam_reference_street.png",
+        "cam_ground_trash.png"
+      ],
+      "strengths": [
+        "Eroded individual block edges and joints read as functional thresholds.",
+        "Mineral detail remains correctly scaled across the reviewed surfaces; former elongated side UV streaks have not returned.",
+        "The recorded real-input route reaches both porches and returns to the avenue with grounded checkpoints."
+      ],
+      "remaining": [
+        "Block hue/layout are regular compared with the target, a minor issue for this family.",
+        "Afternoon threshold close-up and full continuous temporal review are not supplied by the noon route."
+      ],
+      "boundedNextFix": "Retain this family while addressing the weaker facade/cloth/metal materials. No further decimation or subdivision is justified by the current visible defects."
+    },
+    "canopy": {
+      "verdict": "Construction improves to4; material remains below target",
+      "scores": {
+        "construction": 4,
+        "humanScale": 4,
+        "materialDetail": 3,
+        "lightingAndDepth": 3
+      },
+      "evidence": [
+        "cam_audit_finery_front.png",
+        "asset-pass-cam_canopy_top-hour-12-start.png",
+        "asset-pass-cam_canopy_under-hour-12-end.png",
+        "critic-motion-03/asset-pass-cam_canopy_top-hour-12/dense-01.png",
+        "critic-motion-03/asset-pass-cam_canopy_under-hour-12/dense-01.png",
+        "critic-motion-03/asset-pass-cam_canopy_top-hour-16/dense-01.png",
+        "critic-motion-03/asset-pass-cam_canopy_under-hour-16/dense-01.png"
+      ],
+      "resolved": [
+        "Stronger drape and folds respond more clearly to attachment points.",
+        "The former long black slit at the rolled pocket/hem overlap is absent.",
+        "The broad diagonal checker-like material repetition from02 is reduced."
+      ],
+      "remaining": [
+        "The top still reads as a smooth, saturated red coated sheet; fine weave, fading and abrasion are weak at this native coverage.",
+        "Two clean rectangular repair patches have weak attachment and wear cues.",
+        "The underside fills most of the upward close view but has very little readable seam/weave detail.",
+        "At16 the underside is nearly black over most of the frame while the local lamp produces a sharply brighter region with angular fold shading. This is an observed appearance issue, not proof of a hole."
+      ],
+      "boundedNextFix": "Preserve V3 geometry and its fixed join. Give cloth independently readable weave/roughness at native distance, and localized fading, dirt and abrasion at seams, ties and front hem. Make patch edges read as attached repairs. Balance shade/lamp illumination so those cues remain visible without washing out the cloth."
+    },
+    "doorsShutterAndPaint": {
+      "verdict": "Revise focal materials and painted storytelling",
+      "scores": {
+        "construction": 4,
+        "materialDetail": 3,
+        "storytellingAndPaint": 3
+      },
+      "evidence": [
+        "cam_audit_field_supply_front.png",
+        "cam_audit_finery_door.png",
+        "critic-motion-03/walk/walk-06.png",
+        "critic-motion-03/walk/walk-22.png"
+      ],
+      "resolved": [
+        "Banner placement no longer has the front-view jamb burial defect."
+      ],
+      "remaining": [
+        "Soft orange corrosion repeats across shutter slats, door panels and frames at similar scale and density.",
+        "Wear remains weakly related to joints, hinges, handled areas and the bottom splash zone.",
+        "The graffiti has uniformly solid filled strokes at very close range; pigment breakup, brush variation and abrasion are absent inside the letters."
+      ],
+      "technicalCaution": "The shutter was unchanged in03. The earlier claim that its normal keyword was disabled was corrected; no disabled-normal root cause is asserted here.",
+      "boundedNextFix": "Use localized paint/corrosion variation that follows construction and contact, retain fine metal response in shade, and add pigment breakup within the graffiti strokes. Preserve letter readability and the fixed banner position."
+    },
+    "crateV4": {
+      "verdict": "Retain geometry and mapping; afternoon presentation needs lighting revision",
+      "scores": {
+        "shapeAndConstruction": 4,
+        "materialDetailNoon": 4,
+        "groundContact": 4,
+        "lightingAndDetailReadabilityAt16": 3
+      },
+      "evidence": [
+        "cam_ground_crate.png",
+        "asset-pass-cam_ground_crate-hour-16-end.png",
+        "critic-motion-03/asset-pass-cam_ground_crate-hour-12/dense-01.png",
+        "critic-motion-03/asset-pass-cam_ground_crate-hour-16/dense-01.png"
+      ],
+      "strengths": [
+        "A7, bars and label forms remain undistorted; the rejected v3 UV zigzags are absent.",
+        "Handle recess, panel relief and reinforced edges remain readable at noon.",
+        "No confirmed new hole, unsupported contact or obvious local UV change in the sampled camera movement."
+      ],
+      "remaining": [
+        "The afternoon face is very dark; most paint/metal distinction and smaller surface wear disappear although the white stencil survives."
+      ],
+      "boundedNextFix": "Keep the mesh/bake. Rebalance scene shade/bounce/reflection contribution in the actual16 view before altering source albedo merely to brighten this object.",
+      "approvalScope": "Single installed v4 at the recorded near view. Noon material/shape pass is not unconditional all-light or LOD acceptance."
+    },
+    "trashV2": {
+      "verdict": "Retain repaired geometry/contact; refine material separation",
+      "scores": {
+        "shapeAndConstruction": 4,
+        "materialDetail": 3,
+        "groundContact": 4,
+        "lightingAndDepth": 3
+      },
+      "evidence": [
+        "cam_ground_trash.png",
+        "asset-pass-cam_ground_trash-hour-16-end.png",
+        "critic-motion-03/asset-pass-cam_ground_trash-hour-12/dense-01.png",
+        "critic-motion-03/asset-pass-cam_ground_trash-hour-16/dense-01.png"
+      ],
+      "strengths": [
+        "Continuous jug bodies, open handles and can rims remain intact.",
+        "The intersecting tall vegetation is absent and the base is embedded plausibly.",
+        "No obvious local hole or silhouette pop appears in the reviewed successive frames."
+      ],
+      "remaining": [
+        "Sacks and jugs still read as softly shaded gray masses, with limited fine surface distinction; cans carry the clearest material detail.",
+        "Darker16 lighting further reduces the separation of cloth, plastic and metal."
+      ],
+      "boundedNextFix": "Retain runtime geometry. Refine localized folds/seams/dirt for sacks and plastic mould/scuff/roughness response for jugs. Confirm masks preserve separate material response, then judge the same noon/16 views."
+    },
+    "scrapV1": {
+      "verdict": "Retain near geometry and source material detail; scene lighting remains a shared presentation issue",
+      "scores": {
+        "shapeAndConstruction": 4,
+        "materialDetailNoon": 4,
+        "groundContact": 4,
+        "lightingAndDetailReadabilityAt16": 3
+      },
+      "evidence": [
+        "cam_ground_scrap.png",
+        "asset-pass-cam_ground_scrap_back-hour-16-end.png",
+        "critic-motion-03/asset-pass-cam_ground_scrap-hour-12/dense-01.png",
+        "critic-motion-03/asset-pass-cam_ground_scrap_back-hour-12/dense-01.png",
+        "critic-motion-03/asset-pass-cam_ground_scrap-hour-16/dense-01.png",
+        "critic-motion-03/asset-pass-cam_ground_scrap_back-hour-16/dense-01.png"
+      ],
+      "strengths": [
+        "Barrel rims/dents, corrugated sheet edges, strap/buckle and hose coils remain distinct from both sides.",
+        "Paint, bare metal and rubber are well separated in noon captures.",
+        "Ground contact is plausible and no confirmed holes or local geometry popping appear."
+      ],
+      "remaining": [
+        "At16 the assembly remains identifiable but darker surfaces lose detail and the strong orange illumination reduces material color separation.",
+        "Nearby older debris has conspicuous planar triangular facets, reducing the quality of the assembled ground view; these are separate from the new scrap object's mesh."
+      ],
+      "boundedNextFix": "Retain the new scrap asset. Address shared shade/lighting balance and replace or remove the few visibly faceted old debris pieces immediately beside this audition without broad district rollout."
+    }
+  },
+  "nativeCaptureValidation": {
+    "iterationReportComplete": true,
+    "assetReportComplete": true,
+    "diagnosticMovieCount": 12,
+    "hours": [
+      12,
+      16
+    ],
+    "identityChangedPaths": [],
+    "runtimePatternScanMatches": [],
+    "qaErrors": null,
+    "limitations": "Completion, identity comparison and logs are read from the captured reports. This critic did not rerun gameplay or independently inspect every runtime log line.",
+    "reflectionAt16": {
+      "pending": false,
+      "completed": 2,
+      "failed": 0,
+      "status": "Reflections current",
+      "skyTexture": {
+        "present": true,
+        "resolution": 128,
+        "realtimeTextureCreated": true
+      },
+      "courtyardTexture": {
+        "present": true,
+        "resolution": 256,
+        "realtimeTextureCreated": true
+      },
+      "interpretation": "The former failed/empty afternoon capture is repaired. The remaining dark shade is assessed from the completed native output, not attributed to the former failure."
+    },
+    "noonReflectionState": "Authored reflections at the default hour; realtimeReflectionsEnabled false before the hour change. Noon and16 are deliberately different recorded lighting states.",
+    "route": {
+      "evidence": "iteration-03-native/iteration-review.json",
+      "method": "Root's real-input first-person approach/return over Field Supply and Finery thresholds.",
+      "checkpointCount": 16,
+      "allRecordedCheckpointsGrounded": true,
+      "observedPlayerElevationsMetres": [
+        0.03,
+        0.28,
+        0.53
+      ],
+      "limitation": "These checkpoints and the six decoded views support local threshold access; they do not qualify every gameplay verb or every intervening collision."
+    },
+    "performanceQualified": false,
+    "performanceNote": "This visual report does not infer60FPS qualification, memory cost or LOD performance from the captures."
+  },
+  "motionReview": {
+    "method": "Decoded original1920x1080 30fps native recordings with ffmpeg. For each of12 asset movies, inspected six consecutive frames beginning4.000seconds, at1/30second spacing through4.166667. Compared visible shapes, UV landmarks, shading, edges and contact across each ordered sequence. Separately inspected the first-person walk at2,6,10,16,22,29seconds.",
+    "evidenceDirectory": "iteration-03-native/critic-motion-03",
+    "assetMovies": [
+      {
+        "camera": "cam_ground_crate",
+        "hour": 12,
+        "file": "asset-pass-cam_ground_crate-hour-12.mp4",
+        "reviewedFrames": 6,
+        "startSeconds": 4,
+        "endSeconds": 4.166666666666667
+      },
+      {
+        "camera": "cam_ground_crate",
+        "hour": 16,
+        "file": "asset-pass-cam_ground_crate-hour-16.mp4",
+        "reviewedFrames": 6,
+        "startSeconds": 4,
+        "endSeconds": 4.166666666666667
+      },
+      {
+        "camera": "cam_ground_trash",
+        "hour": 12,
+        "file": "asset-pass-cam_ground_trash-hour-12.mp4",
+        "reviewedFrames": 6,
+        "startSeconds": 4,
+        "endSeconds": 4.166666666666667
+      },
+      {
+        "camera": "cam_ground_trash",
+        "hour": 16,
+        "file": "asset-pass-cam_ground_trash-hour-16.mp4",
+        "reviewedFrames": 6,
+        "startSeconds": 4,
+        "endSeconds": 4.166666666666667
+      },
+      {
+        "camera": "cam_ground_scrap",
+        "hour": 12,
+        "file": "asset-pass-cam_ground_scrap-hour-12.mp4",
+        "reviewedFrames": 6,
+        "startSeconds": 4,
+        "endSeconds": 4.166666666666667
+      },
+      {
+        "camera": "cam_ground_scrap",
+        "hour": 16,
+        "file": "asset-pass-cam_ground_scrap-hour-16.mp4",
+        "reviewedFrames": 6,
+        "startSeconds": 4,
+        "endSeconds": 4.166666666666667
+      },
+      {
+        "camera": "cam_ground_scrap_back",
+        "hour": 12,
+        "file": "asset-pass-cam_ground_scrap_back-hour-12.mp4",
+        "reviewedFrames": 6,
+        "startSeconds": 4,
+        "endSeconds": 4.166666666666667
+      },
+      {
+        "camera": "cam_ground_scrap_back",
+        "hour": 16,
+        "file": "asset-pass-cam_ground_scrap_back-hour-16.mp4",
+        "reviewedFrames": 6,
+        "startSeconds": 4,
+        "endSeconds": 4.166666666666667
+      },
+      {
+        "camera": "cam_canopy_top",
+        "hour": 12,
+        "file": "asset-pass-cam_canopy_top-hour-12.mp4",
+        "reviewedFrames": 6,
+        "startSeconds": 4,
+        "endSeconds": 4.166666666666667
+      },
+      {
+        "camera": "cam_canopy_top",
+        "hour": 16,
+        "file": "asset-pass-cam_canopy_top-hour-16.mp4",
+        "reviewedFrames": 6,
+        "startSeconds": 4,
+        "endSeconds": 4.166666666666667
+      },
+      {
+        "camera": "cam_canopy_under",
+        "hour": 12,
+        "file": "asset-pass-cam_canopy_under-hour-12.mp4",
+        "reviewedFrames": 6,
+        "startSeconds": 4,
+        "endSeconds": 4.166666666666667
+      },
+      {
+        "camera": "cam_canopy_under",
+        "hour": 16,
+        "file": "asset-pass-cam_canopy_under-hour-16.mp4",
+        "reviewedFrames": 6,
+        "startSeconds": 4,
+        "endSeconds": 4.166666666666667
+      }
+    ],
+    "assetFramesActuallyInspected": 72,
+    "assetMovieDurationSeconds": {
+      "usual": 8.533333,
+      "scrapBackNoon": 8.5
+    },
+    "walkMovieDurationSeconds": 32.533333,
+    "walkFramesActuallyInspected": 6,
+    "findings": [
+      "No obvious local silhouette pop, UV jump, face disappearance or ghost trail in these short asset sequences.",
+      "Canopy repaired seams remain continuous in the samples; folds/material weaknesses remain visible.",
+      "Ground fine-normal pattern is conspicuous in grazing sun. Full traversal playback is still needed to assess whether that pattern shimmers."
+    ],
+    "overlapReport": {
+      "reportedFramesWithOverlap": 0,
+      "perCameraEngineFrameCounts": [
+        {
+          "camera": "cam_ground_crate",
+          "hour": 12,
+          "sampledFrames": 621,
+          "overlappingFrames": 0
+        },
+        {
+          "camera": "cam_ground_trash",
+          "hour": 12,
+          "sampledFrames": 586,
+          "overlappingFrames": 0
+        },
+        {
+          "camera": "cam_ground_scrap",
+          "hour": 12,
+          "sampledFrames": 1222,
+          "overlappingFrames": 0
+        },
+        {
+          "camera": "cam_ground_scrap_back",
+          "hour": 12,
+          "sampledFrames": 559,
+          "overlappingFrames": 0
+        },
+        {
+          "camera": "cam_canopy_top",
+          "hour": 12,
+          "sampledFrames": 528,
+          "overlappingFrames": 0
+        },
+        {
+          "camera": "cam_canopy_under",
+          "hour": 12,
+          "sampledFrames": 899,
+          "overlappingFrames": 0
+        },
+        {
+          "camera": "cam_ground_crate",
+          "hour": 16,
+          "sampledFrames": 713,
+          "overlappingFrames": 0
+        },
+        {
+          "camera": "cam_ground_trash",
+          "hour": 16,
+          "sampledFrames": 676,
+          "overlappingFrames": 0
+        },
+        {
+          "camera": "cam_ground_scrap",
+          "hour": 16,
+          "sampledFrames": 1414,
+          "overlappingFrames": 0
+        },
+        {
+          "camera": "cam_ground_scrap_back",
+          "hour": 16,
+          "sampledFrames": 558,
+          "overlappingFrames": 0
+        },
+        {
+          "camera": "cam_canopy_top",
+          "hour": 16,
+          "sampledFrames": 591,
+          "overlappingFrames": 0
+        },
+        {
+          "camera": "cam_canopy_under",
+          "hour": 16,
+          "sampledFrames": 1073,
+          "overlappingFrames": 0
+        }
+      ],
+      "limitation": "Engine overlap counters are not a visual inspection of every frame and do not establish player traversal."
+    },
+    "temporalScore": null,
+    "limitation": "This was ordered frame inspection, not full uninterrupted movie playback. Only0.1667seconds between first and last inspected frame per asset movie was closely inspected. It cannot certify temporal stability across the full movies, lighting transitions, camera range, LOD changes, foliage, animation or frame pacing."
+  },
+  "priorities": [
+    {
+      "order": 1,
+      "fix": "Focal door/shutter metal and graffiti material wear",
+      "why": "Large, reachable image regions still expose soft repeated corrosion and uniform painted strokes."
+    },
+    {
+      "order": 2,
+      "fix": "Canopy surface and shade readability",
+      "why": "Geometry is repaired; cloth remains too smooth, especially underneath."
+    },
+    {
+      "order": 3,
+      "fix": "Noon/16 shade and practical-light balance",
+      "why": "Successful reflection capture now makes the remaining loss of material information a visible presentation issue."
+    },
+    {
+      "order": 4,
+      "fix": "Trash cloth/plastic distinction",
+      "why": "The repaired mesh has enough shape to expose the remaining soft gray surface treatment."
+    },
+    {
+      "order": 5,
+      "fix": "Fine masonry damage transitions and immediate old debris cleanup",
+      "why": "Sparse sharp spalls and nearby triangular rubble still weaken the assembled street against the chosen reference."
+    }
+  ],
+  "acceptanceGate": "Keep the loop open. Require at least4 in every applicable hero/close category, no focal texture/geometry/contact failures, actual motion coverage and current native route/performance qualification. This report accepts specific repaired aspects only and does not establish whole-game AAA quality."
+}

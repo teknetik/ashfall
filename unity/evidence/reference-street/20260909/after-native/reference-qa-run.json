@@ -1,0 +1,83 @@
+{
+  "startedUtc": "2026-09-09T19:23:03.990234+00:00",
+  "requestedSteps": [
+    "captures",
+    "traversal",
+    "porches",
+    "city-loop",
+    "lighting"
+  ],
+  "steps": [
+    {
+      "step": "captures",
+      "startedUtc": "2026-09-09T19:23:15.719548+00:00",
+      "complete": true,
+      "commands": [
+        {
+          "command": [
+            "/home/teknetik/.cache/uv/builds-v0/.tmpUwEFpk/bin/python",
+            "/home/teknetik/code/ao2/unity/tools/capture_building_pass.py",
+            "/home/teknetik/code/ao2/unity/evidence/reference-street/20260909/after-native",
+            "--building",
+            "field_supply",
+            "--report",
+            "field-captures.json",
+            "--extra",
+            "/home/teknetik/code/ao2/unity/evidence/reference-street/20260909/after-native/reference-after-extra-cameras.json"
+          ],
+          "startedUtc": "2026-09-09T19:23:15.720167+00:00",
+          "log": "qa-capture-field.log",
+          "finishedUtc": "2026-09-09T19:23:43.295566+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "/home/teknetik/.cache/uv/builds-v0/.tmpUwEFpk/bin/python",
+            "/home/teknetik/code/ao2/unity/tools/capture_building_pass.py",
+            "/home/teknetik/code/ao2/unity/evidence/reference-street/20260909/after-native",
+            "--building",
+            "finery",
+            "--report",
+            "finery-captures.json"
+          ],
+          "startedUtc": "2026-09-09T19:23:43.295707+00:00",
+          "log": "qa-capture-finery.log",
+          "finishedUtc": "2026-09-09T19:23:54.920256+00:00",
+          "returncode": 0
+        }
+      ],
+      "finishedUtc": "2026-09-09T19:23:54.920508+00:00"
+    },
+    {
+      "step": "traversal",
+      "startedUtc": "2026-09-09T19:23:54.920685+00:00",
+      "complete": false,
+      "commands": [],
+      "authoringProcessesBeforeMeasurement": [
+        {
+          "pid": 1012442,
+          "name": "AssetImportWork",
+          "executable": "Unity"
+        },
+        {
+          "pid": 1766578,
+          "name": "AssetImportWork",
+          "executable": "Unity"
+        },
+        {
+          "pid": 1766620,
+          "name": "AssetImportWork",
+          "executable": "Unity"
+        },
+        {
+          "pid": 3790841,
+          "name": "Unity Main Thre",
+          "executable": "AthenHill.x86_64"
+        }
+      ]
+    }
+  ],
+  "complete": false,
+  "error": "AssertionError(\"Close authoring Unity/Blender processes before timing: [{'pid': 1012442, 'name': 'AssetImportWork', 'executable': 'Unity'}, {'pid': 1766578, 'name': 'AssetImportWork', 'executable': 'Unity'}, {'pid': 1766620, 'name': 'AssetImportWork', 'executable': 'Unity'}, {'pid': 3790841, 'name': 'Unity Main Thre', 'executable': 'AthenHill.x86_64'}]\")",
+  "finishedUtc": "2026-09-09T19:23:54.943922+00:00"
+}

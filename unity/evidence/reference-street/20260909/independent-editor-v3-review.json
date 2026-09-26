@@ -1,0 +1,58 @@
+{
+  "reviewStage": "Independent still-image review of Editor V3; native V3 scores pending",
+  "reference": "refs/reference-street/20260909/user-target.png",
+  "candidateImages": [
+    "unity/evidence/reference-street/20260909/editor-v3/cam_reference_street.png",
+    "unity/evidence/reference-street/20260909/editor-v3/cam_audit_field_supply_door.png"
+  ],
+  "baselineImages": [
+    "unity/evidence/reference-street/20260909/before-native/cam_audit_field_supply_door.png",
+    "unity/evidence/reference-street/20260909/before-native/cam_shop_recovery_field.png"
+  ],
+  "comparisonLimit": "The close-up camera framing matches, but baseline is native with HUD and V3 is an Editor image. No matched native baseline exists for the new reference-street camera. Scores remain an Editor assessment, not final native acceptance or a controlled exposure comparison.",
+  "acceptance": "No acceptance inferred. V3 improves the focused metal and lettering treatment, but the supplied image's overall material and construction standard is still not met.",
+  "scoresOutOfFive": {
+    "compositionAndSilhouette": 3,
+    "humanScaleAndConstruction": 4,
+    "materialDetail": 3,
+    "lightingAndDepth": 3,
+    "densityAndStorytelling": 3,
+    "characterAndAnimation": null,
+    "temporalStability": null,
+    "uiReadability": null
+  },
+  "improvementsVisible": [
+    "V3 restores visible rust and coating wear to the shutter, personnel doors, canopy and posts without the baseline's large repeating orange islands. The charcoal coating and horizontal oxidation at shutter lips are readable in both reviewed views.",
+    "The widened original brush lettering is substantially more legible than the dark baseline block lettering and has greater stroke weight than the first candidate. The phrase fits within its existing shutter area.",
+    "The new noon treatment reveals the shaded door recess and facade construction, and the porch has visible joints, localized chips and small debris instead of the baseline's strongly veined broad surface."
+  ],
+  "remainingReferenceGaps": [
+    {
+      "area": "Plaster and masonry",
+      "observation": "Broad pale mottling and isolated rounded spalls dominate the walls. Reference failure follows connected cracks, corners, drainage and masonry courses. The visible exposed regions still often read as flat grey-brown patches rather than structurally different substrate.",
+      "nativeCheck": "Review poster surround and Finery corner at first-person height in sun and shade."
+    },
+    {
+      "area": "Metal wear placement",
+      "observation": "The material now reads as weathered metal. Remaining general-door and post wear is distributed across faces rather than strongly tied to physical panel edges, hands and joints; a shared four-metre material cannot provide each mesh's specific contact wear. The shutter is closer to the reference than the other coated parts.",
+      "nativeCheck": "Check close-up texture sharpness and dark-coating readability after runtime mips and reflections."
+    },
+    {
+      "area": "Brush and shutter seams",
+      "observation": "Stroke weight has improved, but broad dark horizontal gaps repeatedly sever the letters. The reference retains clearer brush continuity over a finer shutter profile. The lettering remains relatively tidy and upright, and its silhouette has conspicuous sharp cutouts at close range.",
+      "nativeCheck": "Inspect real-input movement for narrow-stroke disappearance, aliasing or surface flicker; still captures cannot establish temporal stability."
+    },
+    {
+      "area": "Construction and ground contact",
+      "observation": "Long straight porch edges and regular clean slab tops remain prominent. Corner grit and small plants help but are sparse compared with the reference's eroded step edges, rubble and fuller wall-base vegetation. Door frames and repeated stone trim remain unusually uniform.",
+      "nativeCheck": "Review both porches and steps at player height, retaining functional access."
+    },
+    {
+      "area": "Lighting and sky",
+      "observation": "Readable warm/cool separation is improved over baseline, but the scene is still more uniformly beige and flatter than the reference. The clouds read as stretched procedural wisps rather than sunlit masses. Dense leaf shadows over the storefront compete with the material detail.",
+      "nativeCheck": "Review final daylight captures plus moving shadows and cloud drift; do not score those from Editor stills."
+    }
+  ],
+  "hardDefectsVisibleInTheseStillImages": [],
+  "nativeReview": "Pending after-native-v3 captures; preserve this Editor review separately."
+}

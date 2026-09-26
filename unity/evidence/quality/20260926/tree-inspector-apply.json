@@ -1,0 +1,9 @@
+[
+  {
+    "tool": "execute_code",
+    "args": {
+      "action": "execute",
+      "code": "var leaf = AssetDatabase.LoadAssetAtPath<Material>(\"Assets/AthenHill/Art/HeroTree/leaves.mat\");\nif(!leaf || EditorApplication.isPlaying || EditorApplication.isCompiling) throw new Exception(\"Inspect ready material first\");\nvar shader = leaf.shader;\nvar messages = ShaderUtil.GetShaderMessages(shader);\nif(messages.Length != 0) throw new Exception(\"Tree shader has messages\");\nvar editor = UnityEditor.Editor.CreateEditor(leaf) as MaterialEditor;\nvar custom = editor.customShaderGUI;\nif(custom == null || custom.GetType().FullName != \"AthenHill.Editor.WardTreeShaderGUI\") throw new Exception(\"Custom material editor did not resolve\");\nvar clone = new Material(leaf);\nvar keywordsBefore = clone.shaderKeywords.OrderBy(x=>x).ToArray();\ncustom.ValidateMaterial(clone);\nvar keywordsAfter = clone.shaderKeywords.OrderBy(x=>x).ToArray();\nif(!keywordsBefore.SequenceEqual(keywordsAfter)) throw new Exception(\"Keyword validation changed existing material mode\");\nUnityEngine.Object.DestroyImmediate(clone);\nUnityEngine.Object.DestroyImmediate(editor);\nvar before = leaf.GetFloat(\"_WardIndirectTranslucency\");\nUndo.RecordObject(leaf, \"Tune reviewed leaf ambient transmission\");\nleaf.SetFloat(\"_WardIndirectTranslucency\", .15f);\nEditorUtility.SetDirty(leaf);\nAssetDatabase.SaveAssets();\nSelection.activeObject=leaf;\nEditorApplication.ExecuteMenuItem(\"Window/General/Inspector\");\nreturn new { customEditor=\"AthenHill.Editor.WardTreeShaderGUI\", before=before, after=leaf.GetFloat(\"_WardIndirectTranslucency\"), keywordsStable=true, shaderMessages=messages.Length, sceneDirty=UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().isDirty };"
+    }
+  }
+]

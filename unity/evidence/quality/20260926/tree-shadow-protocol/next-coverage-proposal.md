@@ -1,0 +1,13 @@
+# Proposed lower-cost coverage comparison — not run
+
+The build 03 paired run rejects 48 m/two cascades and 96 m/two cascades as a 60 FPS default in the hill and avenue views, even with reduced tree shadow casters. The next bounded comparison should test **32 m/one cascade, 32 m/two cascades and 40 m/two cascades**, with a fresh 18 m/one-cascade control. These are cost hypotheses, not accepted visual profiles.
+
+Wait until the isolated software player and its input tests have exited, the Editor is idle, and the native player's owner explicitly hands over its command stream. No benchmark should overlap the software renderer's CPU load. Root must first review the original/reduced tree caster silhouette pairs; do not turn performance gains into automatic permission to promote the reduced caster.
+
+Use hill and avenue first. For each camera, sample the control and three candidates with original/reduced caster pairs: 16 intervals, each with three seconds warming and 12 seconds sampling, approximately four minutes excluding commands and memory reads. Reverse original/reduced order between profiles to reduce a consistent order bias. The existing external runner requires an explicit profile-list extension before execution; it currently hard-codes 18m1, 48m2 and 96m2. Preserve that original runner copy with its existing evidence. If a candidate remains plausible, repeat its paired samples in reverse order and add the under-canopy view before any decision.
+
+Keep true 1920×1080, render scale 1, four-sample MSAA, 4096 shadow map, full textures, post-processing, all nine actors, normal HUD/effects, fixed daylight, VSync off and no frame cap. Retain command acknowledgments, actual settings/snapshots, build hashes, every raw frame and memory records; copy overwritten native profile files immediately. Preserve the first boundary frame in raw data while excluding only that known preceding-interval delta from summary, as before. Restore shadow/caster/time/camera state and release ownership on success or failure.
+
+Report average FPS and p50/p95/p99/max for every interval. A candidate missing average 60 FPS **or p99 16.67 ms** is not a 60 FPS default; a static interval meeting those values is only eligible for further testing. GPU timing, unavailable counters, and main-thread wait time retain their established limitations. No results here qualify the representative real-input traversal.
+
+One cascade spreads its map across a larger world area as distance increases, so 32m1 needs matched player-height contact, threshold, foliage and moving edge review. Two cascades may preserve near detail but add geometry/submission cost. Evaluate actual native images and motion rather than infer a winner from distance or cascade count.

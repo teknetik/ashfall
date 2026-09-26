@@ -1,0 +1,45 @@
+{
+  "date": "2026-09-11",
+  "defect": "A transient Linux startup focus-loss event changed GameSession to Paused and disabled gameplay input before the player could move.",
+  "fix": "Application focus changes no longer mutate the game session. Escape and the HUD Pause control remain explicit pause controls.",
+  "build": {
+    "path": "unity/AthenHill/Builds/LinuxDevelopment/AthenHill.x86_64",
+    "development": true,
+    "result": "Succeeded",
+    "errors": 0,
+    "warnings": 349,
+    "durationSeconds": 40.42358,
+    "bytes": 4001299157,
+    "graphicsApi": "OpenGLCore",
+    "resolution": [1280, 720]
+  },
+  "realKeyboardVerification": {
+    "escapePressedBeforeMovement": false,
+    "key": "W",
+    "heldSeconds": 2.0,
+    "stateBefore": "Play",
+    "stateAfter": "Play",
+    "audioPausedBefore": false,
+    "audioPausedAfter": false,
+    "positionBefore": [43.0, 0.015, 0.0],
+    "positionAfter": [36.1320038, 0.0299999267, -0.0000009631555],
+    "stepCountAfter": 7,
+    "groundedAfter": true,
+    "runtimeExceptions": 0,
+    "beforeEvidence": "snapshot-before-input.json",
+    "afterEvidence": "snapshot-after-input.json",
+    "playerLog": "Player.log"
+  },
+  "editModeTests": {
+    "total": 34,
+    "passed": 34,
+    "failed": 0,
+    "skipped": 0,
+    "evidence": "editmode-tests.xml"
+  },
+  "buildFolderCleanup": {
+    "visiblePlayableFolder": "LinuxDevelopment",
+    "archivedFolder": "unity/AthenHill/Builds/.archive-20260911",
+    "archivedBuilds": ["FidelityBaseline", "KaraveenRepair", "Linux"]
+  }
+}

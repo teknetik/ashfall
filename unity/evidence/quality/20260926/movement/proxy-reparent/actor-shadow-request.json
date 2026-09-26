@@ -1,0 +1,9 @@
+[
+  {
+    "tool": "execute_code",
+    "args": {
+      "action": "execute",
+      "code": "var scene=UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene();\nvar actors=UnityEngine.Object.FindObjectsByType<AthenHill.ActorAnimation>();\nvar report=new System.Collections.Generic.List<object>();\nforeach(var actor in actors) {\n var renderers=new System.Collections.Generic.List<object>(); long triangles=0;\n foreach(var r in actor.GetComponentsInChildren<UnityEngine.Renderer>(true)) {\n  var skin=r as UnityEngine.SkinnedMeshRenderer;\n  var filter=r.GetComponent<UnityEngine.MeshFilter>();\n  var mesh=skin ? skin.sharedMesh : filter ? filter.sharedMesh : null;\n  long count=0; if(mesh) for(int s=0;s<mesh.subMeshCount;s++) count+=(long)mesh.GetIndexCount(s)/3;\n  triangles+=count;\n  renderers.Add(new { name=r.name,type=r.GetType().Name,active=r.gameObject.activeInHierarchy,enabled=r.enabled,shadows=r.shadowCastingMode.ToString(),receiveShadows=r.receiveShadows,triangles=count,mesh=mesh?mesh.name:null });\n }\n report.Add(new { name=actor.name,triangles=triangles,renderers=renderers });\n}\nreturn new {scene=scene.path,dirty=scene.isDirty,actors=report};\n"
+    }
+  }
+]

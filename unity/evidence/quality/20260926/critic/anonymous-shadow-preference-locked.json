@@ -1,0 +1,72 @@
+{
+  "reviewer": "independent visual_critic",
+  "lockedUtc": "2026-09-26T11:20:01.165598+00:00",
+  "mappingSeen": false,
+  "reviewInputsOnly": [
+    "cam_hill-A.png",
+    "cam_hill-B.png",
+    "cam_avenue-A.png",
+    "cam_avenue-B.png",
+    "cam_hero-A.png",
+    "cam_hero-B.png"
+  ],
+  "sourceCommandsSeen": false,
+  "captureKind": "Direct Unity Editor camera renders; stated 1920x1080; same scene/lens/time; not native player acceptance.",
+  "identityLimits": "Ward scene and previously inspected ARK reference are recognized. Candidate setting mapping not inspected. This is anonymous candidate presentation, not a blind cross-game trial.",
+  "pairs": {
+    "cam_hill": {
+      "preferred": "B",
+      "confidence": "high",
+      "lightingDepth": {
+        "A": 2,
+        "B": 3
+      },
+      "reason": "B restores pronounced tree shade on the plaza and right-hand wall, shaded crown volume and architectural contact. A has an almost uniformly pale hero canopy and much less contact/overlap across the plaza.",
+      "remaining": "Both have gray/pale foliage, highly repetitive broad paving, weak basin/sky depth and conspicuous raster edges. Orange tree retained as scene content; its placement or palette is not permission for removal."
+    },
+    "cam_avenue": {
+      "preferred": "A",
+      "confidence": "high",
+      "lightingDepth": {
+        "A": 3,
+        "B": 2
+      },
+      "reason": "A gives the central tree a darker crown interior, the left street convincing shade, the shop stall a shaded opening and the rear wall an orange-tree shadow. B makes the central canopy uniformly pale and the stall opening/left ground overly exposed.",
+      "remaining": "A still lacks natural leaf color/material richness; distant walls/geology remain flat and pale. Construction repetition and weak ground variation dominate."
+    },
+    "cam_hero": {
+      "preferred": "tie",
+      "confidence": "moderate",
+      "lightingDepth": {
+        "A": 3,
+        "B": 3
+      },
+      "reason": "The near canopy/trunk response is very similar at this framing. Some local shadow differences are visible, but neither has a decisive overall lighting or depth advantage in the full image.",
+      "remaining": "Both have similar gray-green leaf masses, flat individual cluster response, uniformly dark fine branches and bright pale patches; material and depth target remains unmet."
+    }
+  },
+  "overallVerdict": "KEEP_BOUNDED_LIGHTING_GAIN_FOR_FURTHER_NATIVE_AUDITION; AAA_REVISE",
+  "aaaComparison": {
+    "reference": "ark-scorched-earth-official-courtyard.jpg",
+    "preferred": "ARK reference",
+    "confidence": "high",
+    "reason": "ARK retains more varied vegetation shape/color, canopy interior depth, irregular stone/sand transitions and cohesive foreground/middle/background layering. Preferred Ward labels improve shadows but do not close those asset/material/composition gaps.",
+    "conditions": "Reference camera, hardware, settings and promotional processing unknown; scene subjects differ; no performance or temporal judgement."
+  },
+  "unqualified": [
+    "native player material/shader execution",
+    "temporal stability",
+    "shadow transitions in motion",
+    "physics/traversal",
+    "frame-time cost",
+    "AA in ordinary player capture"
+  ],
+  "inputSha256": {
+    "cam_hill-A.png": "3d8b86c8d3c0117328ed8fdec8fc1db27a2245b3dcf134297a16e1f9b756f70d",
+    "cam_hill-B.png": "ffffeeae09a44c73e7927eb619159e49f5b73888bdc8c8f6f7dd60649afca890",
+    "cam_avenue-A.png": "b763c21b7400241a63124a40f20718538237637bbd53a4362336e12102ae1fb3",
+    "cam_avenue-B.png": "43011703d2ba1453fa3ea9db7e20c57dfc9f7984ae23024341dcc956f334b81e",
+    "cam_hero-A.png": "b4ae32affb0b9a8bcef3776272f4cf05c0cbe5061b3b4f7842cd07bf4408d33a",
+    "cam_hero-B.png": "fa1556b039e24390c0902df0f78e86be48e78adeacfdb0a66732ce06f8c2c782"
+  }
+}
