@@ -2,6 +2,9 @@
 
 Open `AthenHill/` in Unity **6000.6.0f1**, then open
 `Assets/AthenHill/Scenes/AthenHill.unity` and press Play.
+The game opens on the Ward arrival menu. Select **Start Game** to enter at West
+Gate, or **Settings** for sound, video and reduced motion. Tab/Enter and the mouse
+operate the menu. Escape returns from settings; it does not start the game.
 The project uses URP **17.6.0**, glTFast **6.20.0** and the supplied **MeshyPlayer**
 in the saved scene. Its idle pose, walk and run come from `meshy/mpc`; see
 [MESHY_PLAYER.md](MESHY_PLAYER.md). The four talking NPCs now use the supplied

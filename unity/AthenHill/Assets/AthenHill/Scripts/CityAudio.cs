@@ -9,6 +9,8 @@ namespace AthenHill
         public GameSession session;
         public AudioSource ambience, steps, confirmation, latticeHum, ringHum;
         public AudioSource music, market, travel;
+        [Tooltip("Surface-aware foot-contact footsteps. When set and enabled it replaces the distance cadence below.")]
+        public FootstepAudio footsteps;
         public AudioClip[] footstepClips;
         public AudioClip[] musicPlaylist;
         public string CurrentTrack => activeMusic && activeMusic.clip ? activeMusic.clip.name : "Music unavailable";
@@ -17,7 +19,8 @@ namespace AthenHill
         [Min(.1f)] public float walkStepDistance = .95f, runStepDistance = 1.45f;
         [Min(.1f)] public float musicFadeSeconds = 3;
         [Range(0, 1)] public float dialogueMusicLevel = .65f, travelMusicLevel = .4f;
-        public int StepCount { get; private set; }
+        public int StepCount => footsteps && footsteps.isActiveAndEnabled ? footsteps.StepCount : distanceSteps;
+        int distanceSteps;
         public int ClickCount { get; private set; }
         public int TradeCount { get; private set; }
         public int UnavailableCount { get; private set; }
@@ -112,6 +115,7 @@ namespace AthenHill
                 }
                 ApplyMusicLevels();
             }
+            if (footsteps && footsteps.isActiveAndEnabled) return;
             if (session.State != CityState.Play || !session.player.Grounded || session.player.Speed < .12f)
             { distance = 0; return; }
             distance += session.player.Speed * Mathf.Min(Time.deltaTime, .1f);
@@ -119,9 +123,9 @@ namespace AthenHill
             if (distance < stride) return;
             distance %= stride;
             if (!steps) return;
-            var clip = footstepClips != null && footstepClips.Length > 0 ? footstepClips[StepCount % footstepClips.Length] : steps.clip;
+            var clip = footstepClips != null && footstepClips.Length > 0 ? footstepClips[distanceSteps % footstepClips.Length] : steps.clip;
             if (!clip) return;
-            steps.pitch = ++StepCount % 2 == 0 ? 1.03f : .97f;
+            steps.pitch = ++distanceSteps % 2 == 0 ? 1.03f : .97f;
             steps.PlayOneShot(clip);
         }
 

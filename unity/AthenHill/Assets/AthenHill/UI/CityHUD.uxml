@@ -1,6 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
  <!-- THESIS: A worn colony field interface frames the city. OWN-WORLD: bronze rails, inset charcoal enamel, ivory lettering and cyan indicators. STORY: locate, meet, trade and connect. FIRST VIEWPORT: identity upper-left, heading centered, notes upper-right; log and illustrated equipment below, open world between. FORM: user-supplied reference composition, 8 September 2026; shared chrome across every menu. -->
  <Style src="CityHUD.uss" />
+ <ui:Template name="StartupMenu" src="StartupMenu.uxml" />
  <ui:VisualElement usage-hints="DynamicColor" name="hud" picking-mode="Ignore">
   <ui:VisualElement usage-hints="DynamicColor" name="identity" class="panel" picking-mode="Ignore">
    <ui:VisualElement usage-hints="DynamicColor" class="identity-heading" picking-mode="Ignore"><ui:VisualElement usage-hints="DynamicColor" class="insignia" picking-mode="Ignore"/><ui:VisualElement usage-hints="DynamicColor" picking-mode="Ignore"><ui:Label usage-hints="DynamicColor" text="COLONIST" class="identity-title"/><ui:Label usage-hints="DynamicColor" text="FREE COLUMN" class="muted identity-faction"/></ui:VisualElement></ui:VisualElement>
@@ -31,6 +32,7 @@
   </ui:VisualElement></ui:VisualElement>
   <ui:VisualElement usage-hints="DynamicColor" name="key-hints" picking-mode="Ignore"><ui:VisualElement usage-hints="DynamicColor" class="hint panel" picking-mode="Ignore"><ui:Label usage-hints="DynamicColor" text="E" class="hint-key"/><ui:Label usage-hints="DynamicColor" text="Interact"/></ui:VisualElement><ui:Button usage-hints="DynamicColor" name="hint-pause" class="hint"><ui:Label usage-hints="DynamicColor" text="Esc" class="hint-key" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" text="Pause" picking-mode="Ignore"/></ui:Button></ui:VisualElement>
  </ui:VisualElement>
+ <ui:Instance template="StartupMenu" name="startup-instance" picking-mode="Ignore" />
  <ui:VisualElement usage-hints="DynamicColor" name="shade">
   <ui:VisualElement usage-hints="DynamicColor" name="modal" class="panel">
    <ui:VisualElement usage-hints="DynamicColor" class="modal-heading"><ui:VisualElement usage-hints="DynamicColor" class="modal-emblem diamond" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="modal-title" class="title"/><ui:Button usage-hints="DynamicColor" name="close" text="Close · Esc"/></ui:VisualElement>
@@ -44,17 +46,49 @@
      <ui:VisualElement usage-hints="DynamicColor" class="trade-row"><ui:VisualElement usage-hints="DynamicColor" class="trade-art scrap-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="item2" class="item-copy"/><ui:Button usage-hints="DynamicColor" name="buy2" text="Buy · 2 cr"/><ui:Button usage-hints="DynamicColor" name="sell2" text="Sell · 1 cr"/></ui:VisualElement>
      <ui:Label usage-hints="DynamicColor" text="Each trade moves one item. Your balance updates immediately." class="small muted trade-help"/>
     </ui:VisualElement>
-    <ui:VisualElement usage-hints="DynamicColor" name="inventory-panel"><ui:Label usage-hints="DynamicColor" name="pack-credit" class="balance"/>
-     <ui:VisualElement usage-hints="DynamicColor" class="trade-row inventory-row"><ui:VisualElement usage-hints="DynamicColor" class="trade-art flask-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="pack-item0" class="item-copy"/><ui:Label usage-hints="DynamicColor" name="quantity0" class="quantity"/></ui:VisualElement>
-     <ui:VisualElement usage-hints="DynamicColor" class="trade-row inventory-row"><ui:VisualElement usage-hints="DynamicColor" class="trade-art medkit-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="pack-item1" class="item-copy"/><ui:Label usage-hints="DynamicColor" name="quantity1" class="quantity"/></ui:VisualElement>
-     <ui:VisualElement usage-hints="DynamicColor" class="trade-row inventory-row"><ui:VisualElement usage-hints="DynamicColor" class="trade-art scrap-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="pack-item2" class="item-copy"/><ui:Label usage-hints="DynamicColor" name="quantity2" class="quantity"/></ui:VisualElement>
+    <ui:VisualElement usage-hints="DynamicColor" name="inventory-panel">
+     <ui:Label usage-hints="DynamicColor" name="pack-credit" class="balance"/>
+     <ui:VisualElement usage-hints="DynamicColor" name="inventory-content" class="inventory-content">
+      <ui:ScrollView name="inventory-scroll" class="inventory-scroll" horizontal-scroller-visibility="Hidden">
+       <ui:VisualElement usage-hints="DynamicColor" name="inventory-grid" class="inventory-grid" />
+       <ui:VisualElement usage-hints="DynamicColor" name="inventory-empty" class="inventory-empty" picking-mode="Ignore">
+        <ui:Label usage-hints="DynamicColor" name="inventory-empty-title" class="body-copy" text="Your field pack is empty." />
+        <ui:Label usage-hints="DynamicColor" name="inventory-empty-subtitle" class="muted" text="Supplies you acquire will appear here." />
+       </ui:VisualElement>
+      </ui:ScrollView>
+      <ui:VisualElement usage-hints="DynamicColor" name="inventory-overview" class="inventory-overview" picking-mode="Ignore">
+       <ui:VisualElement usage-hints="DynamicColor" class="inventory-overview-header" picking-mode="Ignore">
+        <ui:VisualElement usage-hints="DynamicColor" name="inventory-overview-icon" class="inventory-overview-icon" picking-mode="Ignore" />
+        <ui:VisualElement usage-hints="DynamicColor" picking-mode="Ignore">
+         <ui:Label usage-hints="DynamicColor" name="inventory-overview-name" class="inventory-overview-name" text="No item selected." />
+         <ui:Label usage-hints="DynamicColor" name="inventory-overview-quantity" class="muted small" text="" />
+        </ui:VisualElement>
+       </ui:VisualElement>
+       <ui:Label usage-hints="DynamicColor" name="inventory-overview-description" class="inventory-overview-description" text="" />
+      </ui:VisualElement>
+      <ui:VisualElement usage-hints="DynamicColor" name="inventory-details" class="inventory-details panel">
+       <ui:VisualElement usage-hints="DynamicColor" class="modal-heading details-heading">
+        <ui:VisualElement usage-hints="DynamicColor" class="modal-emblem diamond" picking-mode="Ignore" />
+        <ui:Label usage-hints="DynamicColor" name="details-title" class="title" text="Item details" />
+        <ui:Button usage-hints="DynamicColor" name="details-close" text="Close details · Esc" />
+       </ui:VisualElement>
+       <ui:VisualElement usage-hints="DynamicColor" class="details-body">
+        <ui:VisualElement usage-hints="DynamicColor" name="details-icon" class="details-icon" picking-mode="Ignore" />
+        <ui:Label usage-hints="DynamicColor" name="details-quantity" class="muted" text="" />
+        <ui:Label usage-hints="DynamicColor" name="details-prices" class="muted small" text="" />
+        <ui:ScrollView name="details-scroll" horizontal-scroller-visibility="Hidden">
+         <ui:Label usage-hints="DynamicColor" name="details-description" class="body-copy" text="" />
+        </ui:ScrollView>
+       </ui:VisualElement>
+      </ui:VisualElement>
+     </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement usage-hints="DynamicColor" name="grid-panel"><ui:Label usage-hints="DynamicColor" name="grid-status" class="body-copy"/><ui:VisualElement usage-hints="DynamicColor" name="tunnel" picking-mode="Ignore"><ui:VisualElement usage-hints="DynamicColor" name="tunnel-ring0" class="tunnel-ring"/><ui:VisualElement usage-hints="DynamicColor" name="tunnel-ring1" class="tunnel-ring"/><ui:VisualElement usage-hints="DynamicColor" name="tunnel-ring2" class="tunnel-ring"/><ui:VisualElement usage-hints="DynamicColor" name="tunnel-ring3" class="tunnel-ring"/></ui:VisualElement><ui:ProgressBar name="grid-progress" low-value="0" high-value="100"/><ui:VisualElement usage-hints="DynamicColor" name="grid-nodes"><ui:Button usage-hints="DynamicColor" name="node0" text="Crosswind Reach"/><ui:Button usage-hints="DynamicColor" name="node1" text="Drywater Works"/><ui:Button usage-hints="DynamicColor" name="node2" text="Beacon Dunes"/></ui:VisualElement><ui:Label usage-hints="DynamicColor" name="grid-selection" class="body-copy"/></ui:VisualElement>
     <ui:VisualElement usage-hints="DynamicColor" name="pause-panel"><ui:Button usage-hints="DynamicColor" name="resume" text="Return to the city"/><ui:Button usage-hints="DynamicColor" name="reset" text="Return to West Gate"/><ui:Button name="settings-button" text="Settings · Sound and video"/><ui:Button usage-hints="DynamicColor" name="mute" text="Mute audio"/><ui:Button usage-hints="DynamicColor" name="reduced-motion" text="Reduced motion: Off"/><ui:Button usage-hints="DynamicColor" name="reset-ui" text="Reset UI positions"/><ui:Button usage-hints="DynamicColor" name="credits-button" text="Credits and licences"/><ui:Button usage-hints="DynamicColor" name="quit" text="Quit game"/><ui:Label usage-hints="DynamicColor" text="WASD / arrows · Move     Shift · Run     Space · Jump&#10;Left-drag · Look     Wheel · Zoom / first person&#10;E · Interact     1–6 · Hotbar     R · Return to West Gate&#10;Drag frames / headers · Move UI     Ctrl-drag · Move from any control" class="controls-copy muted"/></ui:VisualElement>
     <ui:VisualElement usage-hints="DynamicColor" name="text-panel"><ui:Label usage-hints="DynamicColor" name="panel-text" class="body-copy"/></ui:VisualElement>
    </ui:ScrollView>
    <ui:Label usage-hints="DynamicColor" name="modal-notice" class="feedback"/>
-   <ui:VisualElement usage-hints="DynamicColor" class="modal-footer" picking-mode="Ignore"><ui:Label usage-hints="DynamicColor" text="FREE COLUMN  /  ATHEN HILL" class="small muted"/><ui:Label usage-hints="DynamicColor" text="Tab · Select     Enter · Confirm" class="small muted"/></ui:VisualElement>
+   <ui:VisualElement usage-hints="DynamicColor" class="modal-footer" picking-mode="Ignore"><ui:Label usage-hints="DynamicColor" name="modal-footer-left" text="FREE COLUMN  /  ATHEN HILL" class="small muted"/><ui:Label usage-hints="DynamicColor" name="modal-footer-right" text="Tab · Select     Enter · Confirm" class="small muted"/></ui:VisualElement>
   </ui:VisualElement>
  </ui:VisualElement>
 </ui:UXML>

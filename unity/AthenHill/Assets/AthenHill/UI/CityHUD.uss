@@ -106,6 +106,42 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .trade-row Button { width: 110px; margin-left: 9px; padding: 12px 9px; }
 .trade-help { margin-top: 13px; white-space: normal; }
 .quantity { width: 104px; color: #daca9e; font-size: 21px; -unity-text-align: middle-right; }
+
+/* Inventory: compact grid + stationary overview + inspection subwindow. */
+#inventory-content { flex-direction: row; align-items: stretch; min-height: 420px; max-height: 520px; position: relative; }
+#inventory-scroll { flex-grow: 1; flex-shrink: 1; flex-basis: 0; min-height: 0; margin-right: 18px; }
+#inventory-scroll .unity-scroll-view__content-container { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
+#inventory-grid { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
+.inventory-empty { display: none; flex-direction: column; padding: 10px 0; }
+#inventory-empty-subtitle { font-size: 18px; margin-top: -6px; }
+
+.inventory-tile { width: 84px; height: 84px; margin: 0 10px 10px 0; padding: 8px; justify-content: center; align-items: center; background-image: url("Art/button.png"); }
+.inventory-tile:hover { background-color: #2a3a39; -unity-background-image-tint-color: #d0eeeb; }
+.inventory-tile:focus { background-image: url("Art/button-focus.png"); -unity-background-image-tint-color: #ffffff; }
+.inventory-tile-icon { width: 60px; height: 60px; -unity-background-scale-mode: scale-to-fit; picking-mode: ignore; }
+.inventory-tile-qty { position: absolute; right: 6px; bottom: 6px; padding: 2px 6px; font-size: 14px; color: #eee9dc; background-color: rgba(12,20,19,0.9); border-width: 1px; border-color: #59615a; border-radius: 2px; }
+
+.inventory-overview { width: 260px; flex-shrink: 0; padding-left: 12px; border-left-width: 1px; border-left-color: #535f58; }
+.inventory-overview-header { flex-direction: row; align-items: center; margin-bottom: 10px; }
+.inventory-overview-icon { width: 64px; height: 64px; margin-right: 12px; -unity-background-scale-mode: scale-to-fit; }
+.inventory-overview-name { font-size: 22px; }
+.inventory-overview-description { white-space: normal; font-size: 18px; margin-top: 8px; }
+
+.inventory-details { display: none; position: absolute; left: 50%; top: 20px; width: 390px; height: 430px; margin-left: -195px; padding: 18px 22px 16px; z-index: 10; }
+.details-heading { padding-bottom: 12px; }
+.details-heading #details-close { min-height: 40px; padding: 10px 16px; font-size: 17px; }
+.details-body { flex-direction: column; flex-grow: 1; min-height: 0; margin-top: 12px; }
+.details-icon { width: 120px; height: 120px; align-self: center; margin-bottom: 10px; -unity-background-scale-mode: scale-to-fit; }
+#details-scroll { flex-grow: 1; flex-shrink: 1; min-height: 0; max-height: 190px; margin-top: 8px; }
+#details-scroll .unity-scroll-view__content-viewport { overflow: hidden; }
+#details-description { font-size: 20px; margin-top: 0; margin-bottom: 0; }
+
+/* Small window: stack overview and allow the content to scroll as a whole. */
+.small-window #inventory-content { flex-direction: column; max-height: none; }
+.small-window #inventory-scroll { margin-right: 0; max-height: 360px; }
+.small-window .inventory-overview { width: auto; border-left-width: 0; border-top-width: 1px; border-top-color: #535f58; padding-left: 0; padding-top: 12px; margin-top: 10px; }
+.small-window .inventory-tile { width: 96px; height: 96px; }
+.small-window .inventory-overview-name, .small-window #details-description { font-size: 20px; }
 #grid-nodes { margin-top: 20px; }
 #grid-nodes Button { min-height: 76px; padding: 16px 25px; -unity-text-align: middle-left; font-size: 20px; }
 #pause-panel Button { min-height: 49px; padding: 12px 25px; }
@@ -183,3 +219,33 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .unity-base-dropdown__item { color: #eee9dc; min-height: 33px; font-size: 20px; }
 .unity-base-dropdown__item:hover, .unity-base-dropdown__item:checked { background-color: #294447; }
 .small-window .settings-note, .small-window .settings-actions Button { font-size: 20px; }
+
+/* Outer Berms combat (CombatHud.cs). Cyan marks aim/focus, vitality red marks harm; the center stays open. */
+.crosshair { position: absolute; left: 50%; top: 50%; width: 36px; height: 36px; margin-left: -18px; margin-top: -18px; }
+.crosshair-tick { position: absolute; background-color: rgba(238,233,220,0.85); border-width: 1px; border-color: rgba(12,20,19,0.55); }
+.crosshair-tick.up { left: 17px; top: 2px; width: 2px; height: 9px; }
+.crosshair-tick.down { left: 17px; bottom: 2px; width: 2px; height: 9px; }
+.crosshair-tick.left { top: 17px; left: 2px; width: 9px; height: 2px; }
+.crosshair-tick.right { top: 17px; right: 2px; width: 9px; height: 2px; }
+.crosshair-dot { position: absolute; left: 16px; top: 16px; width: 4px; height: 4px; background-color: #58d5d7; }
+.crosshair.aiming .crosshair-tick { background-color: #58d5d7; }
+.crosshair.aiming .crosshair-tick.up { top: 6px; }
+.crosshair.aiming .crosshair-tick.down { bottom: 6px; }
+.crosshair.aiming .crosshair-tick.left { left: 6px; }
+.crosshair.aiming .crosshair-tick.right { right: 6px; }
+.hit-marker { position: absolute; left: 50%; top: 50%; width: 30px; height: 30px; margin-left: -15px; margin-top: -15px; }
+.hit-marker-stroke { position: absolute; left: 13px; top: 1px; width: 3px; height: 28px; background-color: #eee9dc; }
+.hit-marker-stroke.a { rotate: 45deg; }
+.hit-marker-stroke.b { rotate: -45deg; }
+.hit-marker.kill .hit-marker-stroke { background-color: #c65c4f; width: 4px; }
+.damage-flash { position: absolute; left: 0; top: 0; right: 0; bottom: 0; opacity: 0; border-width: 46px; border-color: rgba(150,38,30,0.55); }
+.berms-objective { border-top-width: 1px; border-color: #65706a; margin-top: 8px; padding-top: 6px; }
+.berms-heading { color: #a48a62; }
+.berms-objective-text { white-space: normal; margin-top: 2px; }
+.enemy-bar { position: absolute; width: 100px; height: 8px; background-color: rgba(12,20,19,0.8); border-width: 1px; border-color: #a48a62; }
+.enemy-bar-fill { height: 100%; width: 100%; background-color: #c65c4f; border-top-width: 1px; border-top-color: #db7d6b; }
+.enemy-bar-name { position: absolute; bottom: 9px; left: -30px; width: 160px; -unity-text-align: lower-center; font-size: 14px; color: #eee9dc; text-shadow: 1px 1px 0 rgba(0,0,0,0.8); }
+.pistol-icon { background-image: url("Art/pistol.png"); }
+.small-window .enemy-bar-name, .small-window .berms-objective-text { font-size: 20px; }
+
+.checkpoint-guidance { position: absolute; width: 170px; padding: 5px; color: rgb(173, 233, 232); background-color: rgba(20, 29, 29, 0.88); border-bottom-width: 2px; border-bottom-color: rgb(77, 170, 174); font-size: 13px; -unity-text-align: middle-center; }

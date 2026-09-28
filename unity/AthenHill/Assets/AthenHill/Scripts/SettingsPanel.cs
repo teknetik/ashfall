@@ -21,15 +21,16 @@ namespace AthenHill
         readonly Dictionary<string, SliderInt> sliders = new Dictionary<string, SliderInt>();
         readonly Dictionary<string, Label> percentages = new Dictionary<string, Label>();
         readonly Dictionary<string, DropdownField> choices = new Dictionary<string, DropdownField>();
-        readonly Toggle mute, vsync, post;
+        readonly Toggle mute, vsync, post, motion;
+        readonly GameSession session;
         readonly IVisualElementScheduledItem ticker;
         List<Vector2Int> resolutions;
         bool video, updating, wasPreviewing;
         CityAudio Audio => UnityEngine.Object.FindAnyObjectByType<CityAudio>();
 
-        public SettingsPanel(VisualElement panel, GameSettings settings)
+        public SettingsPanel(VisualElement panel, GameSettings settings, GameSession session)
         {
-            this.panel = panel; this.settings = settings;
+            this.panel = panel; this.settings = settings; this.session = session;
             var tabs = new VisualElement { name = "settings-tabs" }; tabs.AddToClassList("settings-tabs"); panel.Add(tabs);
             soundTab = Button(tabs, "sound-tab", "Sound", () => SelectTab(false));
             videoTab = Button(tabs, "video-tab", "Video", () => SelectTab(true));
@@ -44,6 +45,9 @@ namespace AthenHill
             Slider(soundPage, "ambience-volume", "Ambience", 0, 100, value => { settings.Sound.ambience = value / 100f; settings.SaveSound(); });
             Slider(soundPage, "effects-volume", "Effects", 0, 100, value => { settings.Sound.effects = value / 100f; settings.SaveSound(); });
             Note(soundPage, "Ambience includes wind, market voices and terminal hums. Effects includes footsteps and interface sounds.");
+            Heading(soundPage, "Accessibility");
+            motion = Toggle(soundPage, "settings-reduced-motion", "Reduced motion", value => { if (session.reducedMotion != value) session.ToggleReducedMotion(); });
+            motion.SetValueWithoutNotify(session.reducedMotion);
             Heading(soundPage, "City soundtrack");
             track = Note(soundPage, ""); track.name = "current-track";
             Note(soundPage, "Dust of the Giants  /  Dust of Alshain");
@@ -124,7 +128,7 @@ namespace AthenHill
             soundTab.EnableInClassList("active-tab", !video); videoTab.EnableInClassList("active-tab", video);
             var s = settings.Sound; var v = settings.Draft;
             Value("master-volume", s.master * 100); Value("music-volume", s.music * 100); Value("ambience-volume", s.ambience * 100); Value("effects-volume", s.effects * 100);
-            mute.SetValueWithoutNotify(s.muted);
+            mute.SetValueWithoutNotify(s.muted); motion.SetValueWithoutNotify(session.reducedMotion);
             resolutions = settings.Resolutions(); choices["resolution"].choices = resolutions.Select(r => r.x + " × " + r.y).ToList();
             ChoiceValue("resolution", resolutions.IndexOf(new Vector2Int(v.width, v.height)));
             ChoiceValue("window-mode", v.windowMode); ChoiceValue("graphics-preset", v.preset);

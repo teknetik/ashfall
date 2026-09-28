@@ -12,6 +12,12 @@ namespace AthenHill
         public AnimationClip jumpTakeoff, jumpAirborne, jumpFall, jumpLanding, jumpLandingMoving;
         [Min(.01f)] public float takeoffSeconds = .12f, landingSeconds = .24f;
         [Range(0,1)] public float idlePhase;
+        [Header("Idle variation")]
+        [Tooltip("Derive the idle/talk start phase from the actor's placement so neighbours never breathe or shift in step.")]
+        public bool randomIdlePhase=true;
+        [Tooltip("Per-instance idle/talk playback rate jitter (0.08 = ±8 %), also derived from placement.")]
+        [Range(0,.25f)] public float idleSpeedJitter=.08f;
+        public float IdleRate {get;private set;}=1;
         [Min(.01f)] public float walkStrideSpeed=1.503112134f, runStrideSpeed=3.610416400f;
         [Min(0)] public float blendSeconds=.15f;
         public string CurrentClip {get;private set;} = "idle";
@@ -30,6 +36,11 @@ namespace AthenHill
         {
             if(initialized)return;
             initialized=true;
+            // Stable per-placement variation: the same actor idles the same way on every run (QA captures repeat).
+            var p=transform.position;
+            float h=Mathf.Abs(Mathf.Sin(p.x*12.9898f+p.z*78.233f+p.y*37.719f)*43758.5453f);
+            float phase=randomIdlePhase?Mathf.Repeat(h,1):idlePhase;
+            IdleRate=1+(Mathf.Repeat(h*7.31f,1)*2-1)*idleSpeedJitter;
             if(humanoidAnimator){SetMotion(0,false,false);return;}
             if(!animationSource) animationSource=GetComponentInChildren<Animation>();
             if(!animationSource)return;
@@ -47,7 +58,7 @@ namespace AthenHill
             }
             SetMotion(0,false,false);
             if(idle && animationSource[idle.name]!=null)
-                animationSource[idle.name].normalizedTime=idlePhase;
+                animationSource[idle.name].normalizedTime=phase;
         }
         public void SetMotion(float speed,bool running,bool talking)
         {
@@ -59,7 +70,7 @@ namespace AthenHill
                 CurrentClip=state;return;
             }
             var clip=talking?talk:speed>.05f?(running?run:walk):idle;
-            PlayLegacy(clip,talking||speed<=.05f?1:speed/Mathf.Max(.01f,running?runStrideSpeed:walkStrideSpeed),!talking&&speed>.05f,false);
+            PlayLegacy(clip,talking||speed<=.05f?IdleRate:speed/Mathf.Max(.01f,running?runStrideSpeed:walkStrideSpeed),!talking&&speed>.05f,false);
         }
 
         public void SetGroundMotion(float speed, bool running, bool talking, bool grounded,

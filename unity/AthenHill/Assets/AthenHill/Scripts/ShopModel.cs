@@ -18,6 +18,19 @@ namespace AthenHill
    quantities=items.ToDictionary(x=>x.Key,x=>x.Value.startingQuantity);Credits=credits;
   }
   public int Quantity(string id)=>id!=null&&quantities.TryGetValue(id,out int q)?q:0;
+  /// Adds found items and credits in one step; nothing changes if either would overflow.
+  public bool Grant(string id,int quantity,int credits,out string message)
+  {
+   if(quantity<0||credits<0){message="Rewards cannot be negative.";return false;}
+   if(quantity>0&&(id==null||!items.ContainsKey(id))){message="That item is not available.";return false;}
+   try
+   {
+    int newCredits=checked(Credits+credits);int newQuantity=quantity>0?checked(Quantity(id)+quantity):0;
+    Credits=newCredits;if(quantity>0)quantities[id]=newQuantity;
+   }
+   catch(OverflowException){message="This reward cannot be added.";return false;}
+   message=$"Received {credits} credits"+(quantity>0?$" and {quantity} × {items[id].name}.":".");return true;
+  }
   public bool Trade(string id,bool buy,out string message)
   {
    if(id==null||!items.TryGetValue(id,out var item)){message="That item is not available.";return false;}

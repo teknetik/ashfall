@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 namespace AthenHill
 {
- public enum CityState { Boot,Play,Dialogue,Shop,Grid,Paused,Inventory,Notes,Credits,Error,Settings }
+ public enum CityState { Boot,Play,Dialogue,Shop,Grid,Paused,Inventory,Notes,Credits,Error,Settings,MainMenu }
  public class GameSession:MonoBehaviour
  {
   public CityCatalog catalog;
@@ -21,6 +21,9 @@ namespace AthenHill
   public float hillRadius=7,hillMinimumHeight=1,latticeRange=3.15f;
   public Vector2 ringHalfSize=new Vector2(5.4f,2.8f);
   public CityState State {get;private set;}=CityState.Boot;
+  public bool HasStarted {get;private set;}
+  public string DetailItemId {get;private set;}
+  CityState settingsReturn=CityState.Paused;
   public ShopModel Shop {get;private set;}
   public NpcAgent ActiveNpc {get;private set;}
   public string dialogueNode="greeting",notice="",selectedDestination="";
@@ -35,7 +38,7 @@ namespace AthenHill
   public bool Complete=>visitedHill&&Spoken.Count==4&&boughtFlask&&soldScrap&&linked;
   public string Objective=>!visitedHill?"Reach the Hill Tree.":Spoken.Count<4?$"Meet the colonists · {Spoken.Count}/4 conversations":!boughtFlask||!soldScrap?"Buy a flask and sell your scrap at Basic General.":!linked?"Use the Lattice Jack in the north court.":"A place on the hill. City visit complete.";
   public DialogueNode Dialogue=>ActiveNpc?ActiveNpc.definition.nodes.First(x=>x.id==dialogueNode):null;
-  void Start(){Settings.Changed+=SettingsChanged;muted=Settings.Sound.muted;Settings.ApplySound();Shop=new ShopModel(catalog.items,catalog.startingCredits);Log.Add("Linn: Meet me on the hill.");SetState(CityState.Play);}
+  void Start(){Settings.Changed+=SettingsChanged;muted=Settings.Sound.muted;Settings.ApplySound();Shop=new ShopModel(catalog.items,catalog.startingCredits);Log.Add("Linn: Meet me on the hill.");SetState(CityState.MainMenu);}
   void OnDestroy(){if(Settings)Settings.Changed-=SettingsChanged;Time.timeScale=1;AudioListener.pause=false;AudioListener.volume=1;}
   // Do not change session state from OnApplicationFocus. Linux launchers and
   // window managers can report a transient focus loss while the player window is
@@ -43,6 +46,7 @@ namespace AthenHill
   // The explicit Escape and HUD pause controls remain available.
   void Update()
   {
+   if(UnityEngine.InputSystem.Keyboard.current?.tabKey.wasPressedThisFrame==true)ToggleInventory();
    if(input.Cancel){if(State==CityState.Play)SetState(CityState.Paused);else Close();}
    if(State==CityState.Play)
    {
@@ -60,13 +64,15 @@ namespace AthenHill
   public NpcAgent Nearest=>npcs.Where(n=>n&&Vector3.Distance(n.transform.position,player.transform.position)<=interactionRange).OrderBy(n=>Vector3.Distance(n.transform.position,player.transform.position)).FirstOrDefault();
   bool NearLattice=>latticePoint&&Vector3.Distance(player.transform.position,latticePoint.position)<latticeRange;
   bool NearRing=>ringPoint&&Mathf.Abs(player.transform.position.x-ringPoint.position.x)<ringHalfSize.x&&Mathf.Abs(player.transform.position.z-ringPoint.position.z)<ringHalfSize.y;
-  public string Prompt=>State!=CityState.Play?"":Nearest?$"E · Talk to {Nearest.definition.displayName}":NearLattice?"E · Use Lattice Jack":NearRing?"E · Check Ring Gate":"";
+  WorldInteractable NearWorld=>player?WorldInteractable.Nearest(player.transform.position):null;
+  public string Prompt=>State!=CityState.Play?"":Nearest?$"E · Talk to {Nearest.definition.displayName}":NearLattice?"E · Use Lattice Jack":NearRing?"E · Check Ring Gate":NearWorld?NearWorld.prompt:"";
   public void Interact()
   {
    if(State!=CityState.Play)return;
    var n=Nearest;
-   if(n){ActiveNpc=n;dialogueNode="greeting";n.talking=true;Spoken.Add(n.definition.id);SetState(CityState.Dialogue);AddLog(n.definition.displayName,Dialogue.text);}
+   if(n){ActiveNpc=n;dialogueNode="greeting";n.talking=true;if(n.countsForCityVisit)Spoken.Add(n.definition.id);SetState(CityState.Dialogue);AddLog(n.definition.displayName,Dialogue.text);}
    else if(NearLattice){GridProgress=0;selectedDestination="";SetState(CityState.Grid);AddLog("Lattice Jack","Signal acquired. Opening the sector lattice.");SoundRequested?.Invoke(CitySoundCue.LatticeOpen);}
+   else if(!NearRing&&NearWorld)NearWorld.Use();
    else {Notify(NearRing?"Destination offline. The far ring has gone quiet.":"Move closer to a colonist or terminal.",NearRing?"Ring Gate":"System");SoundRequested?.Invoke(CitySoundCue.Unavailable);}
   }
   public void Choose(int index)
@@ -98,12 +104,34 @@ namespace AthenHill
    else if(slot==4){if(Nearest)Interact();else Notify("Move close to a colonist to talk.");}
    else Open(slot==5?CityState.Inventory:CityState.Notes);
   }
-  public void Open(CityState state){if(State==CityState.Play||State==CityState.Paused){if(state==CityState.Settings)Settings.BeginEdit();SetState(state);}}
-  public void Close(){if(State==CityState.Settings){if(Settings.Previewing){Settings.RevertVideo();return;}Settings.EndEdit();SetState(CityState.Paused);return;}if(ActiveNpc)ActiveNpc.talking=false;ActiveNpc=null;GridProgress=0;SetState(CityState.Play);}
-  public void ResetPlayer(){Close();player.ReturnToGate();follow.yaw=-90;follow.pitch=17;follow.FixedView=false;}
+  public void StartGame(){if(State!=CityState.MainMenu)return;HasStarted=true;SetState(CityState.Play);}
+  /// Field rewards (Outer Berms patrols): credits and items change together, then the log records it.
+  public void Reward(int credits,string itemId,int quantity,string speaker,string text)
+  {
+   if(!Shop.Grant(itemId,quantity,credits,out string message)){Notify(message);return;}
+   Notify(text,speaker);SoundRequested?.Invoke(CitySoundCue.Trade);
+  }
+  public void ToggleInventory()
+  {
+   if(State==CityState.Play)Open(CityState.Inventory);
+   else if(State==CityState.Inventory){DetailItemId=null;Close();}
+  }
+  public void OpenItemDetails(string id)
+  {
+   if(State!=CityState.Inventory||Shop==null||Shop.Quantity(id)<=0)return;
+   DetailItemId=id;Changed?.Invoke();
+  }
+  public void CloseItemDetails(){if(DetailItemId==null)return;DetailItemId=null;Changed?.Invoke();}
+  public void Open(CityState state)
+  {
+   if(State==CityState.MainMenu){if(state!=CityState.Settings)return;settingsReturn=CityState.MainMenu;Settings.BeginEdit();SetState(state);return;}
+   if(State==CityState.Play||State==CityState.Paused){if(state==CityState.Settings){settingsReturn=CityState.Paused;Settings.BeginEdit();}SetState(state);}
+  }
+  public void Close(){if(State==CityState.Settings){if(Settings.Previewing){Settings.RevertVideo();return;}Settings.EndEdit();SetState(settingsReturn);return;}if(State==CityState.MainMenu||State==CityState.Boot)return;if(State==CityState.Inventory&&DetailItemId!=null){CloseItemDetails();return;}DetailItemId=null;if(ActiveNpc)ActiveNpc.talking=false;ActiveNpc=null;GridProgress=0;SetState(CityState.Play);}
+  public void ResetPlayer(){if(!HasStarted)return;Close();player.ReturnToGate();follow.yaw=-90;follow.pitch=17;follow.FixedView=false;}
   public void ToggleMute(){Settings.Sound.muted=!Settings.Sound.muted;Settings.SaveSound();Settings.Flush();}
   public void ToggleReducedMotion(){reducedMotion=!reducedMotion;Settings.SaveReducedMotion(reducedMotion);Changed?.Invoke();}
-  void SetState(CityState state){State=state;input.SetGameplay(state==CityState.Play);player.Blocked=state!=CityState.Play;player.Talking=state==CityState.Dialogue;Time.timeScale=state==CityState.Paused||state==CityState.Settings?0:1;AudioListener.pause=state==CityState.Paused;Changed?.Invoke();}
+  void SetState(CityState state){State=state;input.SetGameplay(state==CityState.Play);player.Blocked=state!=CityState.Play;player.Talking=state==CityState.Dialogue;Time.timeScale=state==CityState.MainMenu||state==CityState.Paused||state==CityState.Settings?0:1;AudioListener.pause=state==CityState.Paused;Changed?.Invoke();}
   public void Notify(string text,string speaker="System"){notice=text;noticeTime=4;AddLog(speaker,text);Changed?.Invoke();}
   void AddLog(string speaker,string text){LogRevision++;Log.Add(speaker+": "+text);if(Log.Count>16)Log.RemoveAt(0);Changed?.Invoke();}
  }

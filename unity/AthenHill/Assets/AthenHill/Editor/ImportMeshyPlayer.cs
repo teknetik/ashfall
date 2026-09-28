@@ -43,7 +43,9 @@ namespace AthenHill.Editor
             actor.run = clips.Single(c => c.name == "run");
             actor.talk = actor.idle; // Meshy supplied no talk or animated idle clip.
             actor.walkStrideSpeed = 1.6f;
-            actor.runStrideSpeed = 3.5f;
+            // 27 Sep 2026: run playback slowed 15 % (was 3.5) — Carl: legs "scamper". The clip's planted foot moves at
+            // ~4.6 m/s at rate 1, so 6 m/s now plays at 1.46× (foot 6.7 m/s, was 7.9 m/s at 1.71×): less slide, not more.
+            actor.runStrideSpeed = 3.5f / 0.85f;
             foreach (var renderer in rig.GetComponentsInChildren<SkinnedMeshRenderer>())
             {
                 renderer.shadowCastingMode = ShadowCastingMode.On;

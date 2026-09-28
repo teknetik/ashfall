@@ -17,6 +17,10 @@ namespace AthenHill
   public float VerticalSpeed => vertical;
   public bool JumpStarted {get;private set;}
   public bool Blocked,Talking;
+  /// Set by PlayerCombat: aiming slows movement and turns the colonist to the camera heading.
+  public float SpeedScale {get;set;}=1;
+  public bool FaceView {get;set;}
+  public float FaceYaw {get;set;}
   CharacterController body;
   float vertical;
   readonly PlayerRenderPose renderPose=new PlayerRenderPose();
@@ -49,7 +53,7 @@ namespace AthenHill
    else vertical=Mathf.Max(vertical-gravity*dt,-35);
    JumpStarted=jump&&!Blocked&&wasGrounded&&vertical<=0;
    if(JumpStarted)vertical=Mathf.Sqrt(2*gravity*jumpHeight);
-   var collisions=body.Move((direction*(input.Run?runSpeed:walkSpeed)+Vector3.up*vertical)*dt);
+   var collisions=body.Move((direction*(input.Run&&SpeedScale>=1?runSpeed:walkSpeed*SpeedScale)+Vector3.up*vertical)*dt);
    if((collisions&CollisionFlags.Above)!=0&&vertical>0)vertical=0;
    Grounded=body.isGrounded;
    if(wasGrounded&&!Grounded&&vertical<=0 && Physics.SphereCast(transform.position+Vector3.up*.55f,.28f,Vector3.down,out var hit,.55f+groundSnap,worldMask,QueryTriggerInteraction.Ignore)&&hit.normal.y>.7f)
@@ -58,8 +62,9 @@ namespace AthenHill
     if(drop>0&&drop<=groundSnap){body.Move(Vector3.down*(drop+.02f));Grounded=body.isGrounded;}
    }
    Speed=Vector3.ProjectOnPlane(transform.position-previous,Vector3.up).magnitude/dt;
-   if(direction.sqrMagnitude>.001f)visual.rotation=Quaternion.Slerp(visual.rotation,Quaternion.LookRotation(direction),1-Mathf.Exp(-turnSpeed*dt));
-   if(actor)actor.SetGroundMotion(Speed,input.Run,Talking,Grounded,vertical,JumpStarted,dt);
+   if(FaceView)visual.rotation=Quaternion.Slerp(visual.rotation,Quaternion.Euler(0,FaceYaw,0),1-Mathf.Exp(-turnSpeed*1.6f*dt));
+   else if(direction.sqrMagnitude>.001f)visual.rotation=Quaternion.Slerp(visual.rotation,Quaternion.LookRotation(direction),1-Mathf.Exp(-turnSpeed*dt));
+   if(actor)actor.SetGroundMotion(Speed,input.Run&&SpeedScale>=1,Talking,Grounded,vertical,JumpStarted,dt);
    renderPose.Record(transform.position,visual?visual.rotation:transform.rotation);
    ActorMotionTrace.Sample(this);
   }

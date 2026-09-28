@@ -28,6 +28,11 @@ async def main():
     if s['session']['focused']==name:await tap('Return');return
     await tap('Tab')
    raise RuntimeError('Could not keyboard-focus '+name)
+  async def grid_ready():
+   for _ in range(100):
+    if (await snap())['session']['gridProgress']>=.999:return
+    await asyncio.sleep(.1)
+   raise RuntimeError('Lattice did not become ready')
   async def expect(state):
    s=await snap();assert s['session']['state']==state,s['session'];checks.append(s);(O/"city-loop.json").write_text(json.dumps({"complete":False,"checks":checks},indent=2));return s
   if (await snap())['session']['state']=='Paused':await tap('Escape')
@@ -42,7 +47,7 @@ async def main():
   await click('buy0');s=await expect('Shop');assert s['session']['credits']==21 and s['session']['quantities']['water_flask']==1,s['session']
   await click('sell2');s=await expect('Shop');assert s['session']['credits']==22 and s['session']['quantities']['scrap_coil']==0,s['session']
   await c.call_tool('manage_camera',{'action':'screenshot','output_folder':'Captures/U3','screenshot_file_name':'shop'})
-  await tap('Escape');await goto('lattice_jack');await tap('e');await expect('Grid');await asyncio.sleep(1.4);await click('node0');s=await expect('Grid');assert s['session']['linked'];assert s['session']['selectedDestination']=='crosswind_reach'
+  await tap('Escape');await goto('lattice_jack');await tap('e');await expect('Grid');await grid_ready();await click('node0');s=await expect('Grid');assert s['session']['linked'];assert s['session']['selectedDestination']=='crosswind_reach'
   await c.call_tool('manage_camera',{'action':'screenshot','output_folder':'Captures/U3','screenshot_file_name':'lattice'})
   assert s['session']['visitedHill'] and len(s['session']['spoken'])==4 and s['session']['boughtFlask'] and s['session']['soldScrap']
   await tap('Escape');await tap('Escape');s=await expect('Paused');before=s['player']['position'];await tap('w',.4);assert math.dist(before,(await snap())['player']['position'])<.01
@@ -53,7 +58,7 @@ async def main():
   await click('reduced-motion');s=await expect('Paused');assert s['session']['reducedMotion']
   await click('reduced-motion');s=await expect('Paused');assert not s['session']['reducedMotion']
   await click('credits-button');await expect('Credits');await tap('Escape')
-  await goto('lattice_jack');await tap('e');await expect('Grid');await asyncio.sleep(1.4);await click('node1');s=await expect('Grid');assert s['session']['selectedDestination']=='drywater_works';await tap('Escape')
+  await goto('lattice_jack');await tap('e');await expect('Grid');await grid_ready();await click('node1');s=await expect('Grid');assert s['session']['selectedDestination']=='drywater_works';await tap('Escape')
   await tap('r');s=await expect('Play');assert abs(s['player']['position'][0]-43)<.1
   (O/'city-loop.json').write_text(json.dumps({'complete':True,'checks':checks},indent=2));print('PASS: four dialogues, modal input, buy/sell, lattice, all objectives, pause, pack/notes, reset')
 asyncio.run(main())

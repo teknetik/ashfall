@@ -27,6 +27,15 @@ spacing:
 
 The supplied reference is the visual authority. The interface reads as worn colony equipment: bronze rails, clipped corners, inset charcoal enamel and restrained cyan indicators. This applies to every HUD element and every modal.
 
+The startup menu uses original Ward arrival artwork with an ivory Athen Hill title,
+bronze controls and restrained cyan focus. **Start Game** enters the existing West
+Gate spawn; **Settings** opens the shared sound/video panel, including reduced
+motion, and returns to the startup menu. The city HUD stays hidden and gameplay
+stays blocked until Start Game. Escape cannot bypass this screen. Music remains
+active in the menu and settings. The background is menu illustration, not an
+in-game capture. Edit **UI/StartupMenu.uxml** and **UI/StartupMenu.uss** in UI Builder;
+the original artwork and generation prompt are in **UI/MenuArt**.
+
 ## Colors
 
 Cyan identifies focus, interaction and lattice energy. Bronze belongs to structural edges. Warm white carries text; muted text remains readable on opaque dark surfaces. Red and cyan differentiate vitality and nano.

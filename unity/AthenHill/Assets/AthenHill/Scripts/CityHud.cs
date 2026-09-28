@@ -20,12 +20,24 @@ namespace AthenHill
   readonly List<Label> compassLabels=new List<Label>();
   int logRevision=-1, lastPopupFrame=-10;
   int windowWidth,windowHeight;
+  int gameplayCullingMask;
+  CameraClearFlags gameplayClearFlags;
+  bool menuCamera;
   CityState previous=CityState.Boot;
+  // Inventory UI state is local to the HUD; the session owns only the modal state + inspected item id.
+  VisualElement inventoryGrid,inventoryEmpty,inventoryOverviewIcon,inventoryDetails,detailsIcon;
+  ScrollView inventoryScroll;
+  Label inventoryOverviewName,inventoryOverviewQuantity,inventoryOverviewDescription,detailsTitle,detailsQuantity,detailsPrices,detailsDescription,footerLeft,footerRight;
+  Button detailsClose;
+  readonly Dictionary<string,Button> inventoryTiles=new Dictionary<string,Button>();
+  readonly List<string> inventoryIds=new List<string>();
+  string selectedItemId,hoverItemId,lastDetailId;
   void Start()
   {
    root=GetComponent<UIDocument>().rootVisualElement;
+   gameplayCullingMask=worldCamera.cullingMask;gameplayClearFlags=worldCamera.clearFlags;
    windowLayout=new HudWindowLayout(root);
-   settingsPanel=new SettingsPanel(root.Q("settings-panel"),session.Settings);
+   settingsPanel=new SettingsPanel(root.Q("settings-panel"),session.Settings,session);
    foreach(string name in new[]{"identity","compass","objective-box","chat","notice","modal"})windowLayout.Add(root.Q(name),name);
    foreach(string name in new[]{"quickbar","top-actions","interaction","key-hints"})windowLayout.Add(root.Q(name),name,true);
    root.RegisterCallback<GeometryChangedEvent>(_=>UpdateWindowSize());
@@ -33,11 +45,34 @@ namespace AthenHill
    root.Q("objective-box").RegisterCallback<GeometryChangedEvent>(e=>root.Q("top-actions").style.top=e.newRect.yMax+7);
    session.input.PointerOverUi=PointerOverControls;
    session.input.MenuPopupOpen=()=>PopupOpen()||Time.frameCount-lastPopupFrame<=1;
+
+   // Inventory elements (dynamic grid + overview + details overlay).
+   inventoryGrid=root.Q("inventory-grid");
+   inventoryEmpty=root.Q("inventory-empty");
+   inventoryScroll=root.Q<ScrollView>("inventory-scroll");
+   inventoryOverviewIcon=root.Q("inventory-overview-icon");
+   inventoryOverviewName=root.Q<Label>("inventory-overview-name");
+   inventoryOverviewQuantity=root.Q<Label>("inventory-overview-quantity");
+   inventoryOverviewDescription=root.Q<Label>("inventory-overview-description");
+   inventoryDetails=root.Q("inventory-details");
+   detailsIcon=root.Q("details-icon");
+   detailsTitle=root.Q<Label>("details-title");
+   detailsQuantity=root.Q<Label>("details-quantity");
+   detailsPrices=root.Q<Label>("details-prices");
+   detailsDescription=root.Q<Label>("details-description");
+   detailsClose=root.Q<Button>("details-close");
+   footerLeft=root.Q<Label>("modal-footer-left");
+   footerRight=root.Q<Label>("modal-footer-right");
+
+   root.RegisterCallback<KeyDownEvent>(InventoryKeyNav,TrickleDown.TrickleDown);
+
    Bind("close",session.Close);Bind("resume",session.Close);Bind("reset",session.ResetPlayer);
+   Bind("details-close",session.CloseItemDetails);
    Bind("inventory-button",()=>session.Open(CityState.Inventory));Bind("notes-button",()=>session.Open(CityState.Notes));Bind("pause-button",()=>session.Open(CityState.Paused));Bind("credits-button",()=>session.Open(CityState.Credits));Bind("interaction",session.Interact);
    Bind("hint-pause",()=>session.Open(CityState.Paused));
    Bind("quit",()=>Application.Quit());Show("quit",!Application.isEditor);
    Bind("settings-button",()=>session.Open(CityState.Settings));
+   Bind("start-game",session.StartGame);Bind("startup-settings",()=>session.Open(CityState.Settings));
    Bind("mute",session.ToggleMute);Bind("reduced-motion",session.ToggleReducedMotion);
    Bind("reset-ui",()=>{windowLayout.Reset();session.Notify("UI positions reset.");});
    for(int i=0;i<2;i++){int index=i;Bind("choice"+i,()=>session.Choose(index));}
@@ -62,7 +97,109 @@ namespace AthenHill
    }
    session.Changed+=Refresh;Refresh();
   }
-  void OnDestroy(){settingsPanel?.Dispose();windowLayout?.Dispose();if(session){session.Changed-=Refresh;session.input.PointerOverUi=null;session.input.MenuPopupOpen=null;}}
+
+  static readonly string[] itemIconClasses={"flask-icon","medkit-icon","scrap-icon","pack-icon"};
+  void SetItemIcon(VisualElement target,string id)
+  {
+   if(target==null)return;
+   foreach(string c in itemIconClasses)target.RemoveFromClassList(c);
+   if(id=="water_flask")target.AddToClassList("flask-icon");
+   else if(id=="medkit")target.AddToClassList("medkit-icon");
+   else if(id=="scrap_coil")target.AddToClassList("scrap-icon");
+   else target.AddToClassList("pack-icon");
+  }
+
+  void EnsureInventoryGrid(IEnumerable<ItemSpec> items)
+  {
+   inventoryTiles.Clear();inventoryIds.Clear();
+   inventoryGrid?.Clear();
+   if(inventoryGrid==null)return;
+   foreach(var item in items)
+   {
+    int quantity=session.Shop.Quantity(item.id);
+    var tile=new Button{tooltip=$"{item.name} · ×{quantity}"};
+    tile.name="inv-"+item.id;
+    tile.AddToClassList("inventory-tile");
+    var icon=new VisualElement{pickingMode=PickingMode.Ignore};
+    icon.AddToClassList("inventory-tile-icon");
+    SetItemIcon(icon,item.id);
+    tile.Add(icon);
+    var badge=new Label($"×{quantity}");
+    badge.AddToClassList("inventory-tile-qty");
+    badge.pickingMode=PickingMode.Ignore;
+    tile.Add(badge);
+    string id=item.id;
+    tile.RegisterCallback<PointerEnterEvent>(_=>{hoverItemId=id;UpdateInventoryOverview();});
+    tile.RegisterCallback<PointerLeaveEvent>(_=>{if(hoverItemId==id)hoverItemId=null;UpdateInventoryOverview();});
+    tile.RegisterCallback<FocusInEvent>(_=>{selectedItemId=id;UpdateInventoryOverview();});
+    tile.RegisterCallback<ClickEvent>(e=>{selectedItemId=id;UpdateInventoryOverview();if(e.shiftKey)session.OpenItemDetails(id);});
+    tile.RegisterCallback<KeyDownEvent>(e=>{
+     if(e.keyCode==KeyCode.Return||e.keyCode==KeyCode.KeypadEnter){session.OpenItemDetails(id);e.StopPropagation();}
+    });
+    inventoryGrid.Add(tile);
+    inventoryTiles[id]=tile;
+    inventoryIds.Add(id);
+   }
+  }
+
+  void UpdateInventoryOverview()
+  {
+   if(session==null||session.Shop==null||session.catalog==null)return;
+   string id=hoverItemId??selectedItemId;
+   if(string.IsNullOrEmpty(id))
+   {
+    inventoryOverviewName.text="No item selected.";
+    inventoryOverviewQuantity.text="";
+    inventoryOverviewDescription.text="";
+    SetItemIcon(inventoryOverviewIcon,null);
+    return;
+   }
+   var item=session.catalog.items.FirstOrDefault(i=>i!=null&&i.id==id);
+   if(item==null){inventoryOverviewName.text="No item selected.";inventoryOverviewQuantity.text="";inventoryOverviewDescription.text="";SetItemIcon(inventoryOverviewIcon,null);return;}
+   int quantity=session.Shop.Quantity(id);
+   inventoryOverviewName.text=item.name;
+   inventoryOverviewQuantity.text=$"{quantity} carried";
+   inventoryOverviewDescription.text=string.IsNullOrWhiteSpace(item.description)?"No description recorded.":item.description;
+   SetItemIcon(inventoryOverviewIcon,id);
+  }
+
+  void InventoryKeyNav(KeyDownEvent e)
+  {
+   if(session.State!=CityState.Inventory||inventoryIds.Count==0||root?.focusController==null)return;
+   bool detailsOpen=!string.IsNullOrEmpty(session.DetailItemId);
+   if(detailsOpen)return;
+   var focused=root.focusController.focusedElement as VisualElement;
+   if(focused==null||focused.name==null||!focused.name.StartsWith("inv-"))return;
+   string id=focused.name.Substring("inv-".Length);
+   int index=inventoryIds.IndexOf(id);
+   if(index<0)return;
+   int columns=root.ClassListContains("small-window")?3:4;
+   int target=index;
+   switch(e.keyCode)
+   {
+    case KeyCode.LeftArrow:target=index-1;break;
+    case KeyCode.RightArrow:target=index+1;break;
+    case KeyCode.UpArrow:target=index-columns;break;
+    case KeyCode.DownArrow:target=index+columns;break;
+    case KeyCode.Return:
+    case KeyCode.KeypadEnter:session.OpenItemDetails(id);e.StopPropagation();return;
+    default:return;
+   }
+   target=Mathf.Clamp(target,0,inventoryIds.Count-1);
+   string nextId=inventoryIds[target];
+   if(inventoryTiles.TryGetValue(nextId,out var next))next.Focus();
+   e.StopPropagation();
+  }
+  void OnDestroy(){SetMenuCamera(false);settingsPanel?.Dispose();windowLayout?.Dispose();if(session){session.Changed-=Refresh;session.input.PointerOverUi=null;session.input.MenuPopupOpen=null;}}
+  // The opaque arrival artwork needs no city draw/shadow passes behind it.
+  // Keep the saved world loaded, and restore its camera before entering gameplay.
+  void SetMenuCamera(bool enabled)
+  {
+   if(!worldCamera||menuCamera==enabled)return;
+   menuCamera=enabled;
+   worldCamera.cullingMask=enabled?0:gameplayCullingMask;
+   worldCamera.clearFlags=enabled?CameraClearFlags.SolidColor:gameplayClearFlags;
+  }
   bool PopupOpen()=>root?.panel?.visualTree.Q(className:"unity-base-dropdown__container-outer")!=null;
   bool PointerOverControls()
   {
@@ -88,8 +225,13 @@ namespace AthenHill
    if(root==null||session.Shop==null)return;
    bool modal=session.State!=CityState.Play;
    if(previous!=session.State)windowLayout.CancelDrag();
-   root.Q("hud").SetEnabled(!modal);
-   Show("shade",modal);Show("notice",!modal&&!string.IsNullOrEmpty(session.notice));Text("notice",session.notice);Text("modal-notice",session.notice);
+   bool startup=!session.HasStarted;
+   SetMenuCamera(startup);
+   root.Q("hud").SetEnabled(!modal);Show("hud",!startup);
+   Show("startup-screen",startup);Show("startup-content",session.State==CityState.MainMenu);
+   root.Q("startup-content").SetEnabled(session.State==CityState.MainMenu);
+   root.EnableInClassList("startup-settings",startup&&session.State==CityState.Settings);
+   Show("shade",modal&&session.State!=CityState.MainMenu);Show("notice",!modal&&!string.IsNullOrEmpty(session.notice));Text("notice",session.notice);Text("modal-notice",session.notice);
    Text("objective",session.visitedHill&&session.Spoken.Count<4?"Meet the colonists":session.Objective);Text("progress",$"{session.Spoken.Count} / 4 conversations");
    for(int i=0;i<4;i++)root.Q("mark"+i).EnableInClassList("complete",i<session.Spoken.Count);
    Text("credits",$"{session.Shop.Credits} cr");
@@ -98,7 +240,9 @@ namespace AthenHill
    Show("modal-notice",session.State!=CityState.Settings&&!string.IsNullOrEmpty(session.notice));
    bool settingsOpen=session.State==CityState.Settings;
    Show("settings-panel",settingsOpen);Show("modal-scroll",!settingsOpen);root.Q("modal").EnableInClassList("settings-modal",settingsOpen);
-   root.Q<Button>("close").text=settingsOpen?session.Settings.Previewing?"Revert · Esc":"Back · Esc":"Close · Esc";
+   root.Q<Button>("close").text=settingsOpen?session.Settings.Previewing?"Revert · Esc":"Back · Esc":session.State==CityState.Inventory?"Close · Tab / Esc":"Close · Esc";
+   if(footerLeft!=null)footerLeft.text="FREE COLUMN  /  ATHEN HILL";
+   if(footerRight!=null)footerRight.text="Tab · Select     Enter · Confirm";
    Text("modal-title",session.State.ToString());Text("modal-subtitle","");
    if(session.State==CityState.Dialogue){Text("modal-title",session.ActiveNpc.definition.displayName);Text("modal-subtitle",session.Dialogue.title);Text("dialogue-text",session.Dialogue.text);for(int i=0;i<2;i++)root.Q<Button>("choice"+i).text=session.Dialogue.choices[i].label;}
    if(session.State==CityState.Shop)
@@ -117,11 +261,45 @@ namespace AthenHill
    if(session.State==CityState.Inventory)
    {
     Text("modal-title","Field pack");Text("modal-subtitle","Supplies and salvage");Text("pack-credit",$"{session.Shop.Credits} credits");
-    for(int i=0;i<3;i++){var item=session.catalog.items[i];Text("pack-item"+i,item.name+"\n"+item.description);Text("quantity"+i,$"{session.Shop.Quantity(item.id)} carried");}
+    var carried=InventoryView.Items(session.catalog.items,session.Shop).ToList();
+    bool empty=carried.Count==0;
+    inventoryEmpty.style.display=empty?DisplayStyle.Flex:DisplayStyle.None;
+    inventoryGrid.style.display=empty?DisplayStyle.None:DisplayStyle.Flex;
+    if(empty){selectedItemId=null;hoverItemId=null;lastDetailId=null;UpdateInventoryOverview();}
+    else
+    {
+     if(string.IsNullOrEmpty(selectedItemId)||!carried.Any(i=>i.id==selectedItemId))selectedItemId=carried[0].id;
+     EnsureInventoryGrid(carried);
+     UpdateInventoryOverview();
+     if(string.IsNullOrEmpty(session.DetailItemId)&&inventoryTiles.TryGetValue(selectedItemId,out var focus))root.schedule.Execute(focus.Focus);
+    }
+
+    // Details overlay: blocks interaction with the grid while open.
+    bool detailsOpen=!string.IsNullOrEmpty(session.DetailItemId);
+    inventoryDetails.style.display=detailsOpen?DisplayStyle.Flex:DisplayStyle.None;
+    inventoryScroll?.SetEnabled(!detailsOpen);
+    inventoryGrid?.SetEnabled(!detailsOpen);
+    if(detailsOpen)
+    {
+     var item=session.catalog.items.FirstOrDefault(i=>i!=null&&i.id==session.DetailItemId);
+     int quantity=session.Shop.Quantity(session.DetailItemId);
+     detailsTitle.text=item!=null?item.name:"Item details";
+     detailsQuantity.text=$"{quantity} carried";
+     detailsPrices.text=item!=null?$"Basic General list price - Buy {item.buyPrice} cr / Sell {item.sellPrice} cr":"";
+     detailsDescription.text=item!=null&& !string.IsNullOrWhiteSpace(item.description)?item.description:"No description recorded.";
+     SetItemIcon(detailsIcon,session.DetailItemId);
+     if(lastDetailId!=session.DetailItemId){lastDetailId=session.DetailItemId;root.schedule.Execute(()=>detailsClose?.Focus());}
+     if(footerRight!=null)footerRight.text="Esc · Close details     Tab · Close pack";
+    }
+    else
+    {
+     if(lastDetailId!=null){lastDetailId=null;root.schedule.Execute(()=>{if(selectedItemId!=null&&inventoryTiles.TryGetValue(selectedItemId,out var b))b.Focus();});}
+     if(footerRight!=null)footerRight.text="Arrows · Choose     Enter / Shift+click · Inspect     Tab / Esc · Close";
+    }
    }
    if(session.State==CityState.Notes){Text("modal-title","City notes");Text("modal-subtitle","Field journal · Colony district");Text("panel-text",session.Objective+"\n\n"+$"Conversations {session.Spoken.Count}/4 · Flask {(session.boughtFlask?"acquired":"needed")} · Scrap {(session.soldScrap?"sold":"to sell")} · Link {(session.linked?"established":"pending")}"+"\n\n"+session.catalog.notes);}
    if(session.State==CityState.Credits){Text("modal-title","Credits and licences");Text("modal-subtitle","Athen Hill · An original colony city homage");Text("panel-text",session.catalog.credits?session.catalog.credits.text:"Credits unavailable.");}
-   if(previous!=session.State){previous=session.State;root.Q<ScrollView>("modal-scroll").scrollOffset=Vector2.zero;if(modal)root.schedule.Execute(()=>root.Q<Button>(session.State==CityState.Dialogue?"choice0":"close").Focus());else root.focusController?.focusedElement?.Blur();}
+   if(previous!=session.State){previous=session.State;root.Q<ScrollView>("modal-scroll").scrollOffset=Vector2.zero;if(modal)root.schedule.Execute(()=>root.Q<Button>(session.State==CityState.MainMenu?"start-game":session.State==CityState.Dialogue?"choice0":"close").Focus());else root.focusController?.focusedElement?.Blur();}
   }
   void LateUpdate()
   {

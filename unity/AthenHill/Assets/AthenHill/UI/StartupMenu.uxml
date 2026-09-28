@@ -1,0 +1,21 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+ <Style src="StartupMenu.uss" />
+ <ui:VisualElement name="startup-screen">
+  <ui:VisualElement name="startup-backdrop" picking-mode="Ignore" />
+  <ui:VisualElement name="startup-content" picking-mode="Ignore">
+   <ui:VisualElement class="arrival-header" picking-mode="Ignore"><ui:VisualElement class="arrival-beacon" picking-mode="Ignore"/><ui:Label text="TIR  /  WARD" class="arrival-location" picking-mode="Ignore"/></ui:VisualElement>
+   <ui:VisualElement class="arrival-copy" picking-mode="Ignore">
+    <ui:Label text="THE OASIS CITY" class="arrival-eyebrow" picking-mode="Ignore"/>
+    <ui:Label text="ATHEN" class="arrival-title" picking-mode="Ignore"/>
+    <ui:Label text="HILL" class="arrival-title arrival-title-last" picking-mode="Ignore"/>
+    <ui:VisualElement class="arrival-rule" picking-mode="Ignore"/>
+    <ui:Label text="A place to begin again." class="arrival-description" picking-mode="Ignore"/>
+    <ui:VisualElement name="startup-actions">
+     <ui:Button name="start-game" class="arrival-button arrival-primary" tooltip="Enter the city at West Gate"><ui:Label text="Start Game" class="arrival-button-label" picking-mode="Ignore"/><ui:Label text="›" class="arrival-arrow" picking-mode="Ignore"/></ui:Button>
+     <ui:Button name="startup-settings" class="arrival-button" tooltip="Sound, video and accessibility"><ui:Label text="Settings" class="arrival-button-label" picking-mode="Ignore"/><ui:Label text="+" class="arrival-settings-mark" picking-mode="Ignore"/></ui:Button>
+    </ui:VisualElement>
+   </ui:VisualElement>
+   <ui:VisualElement class="arrival-footer" picking-mode="Ignore"><ui:Label text="Tab · Select     Enter · Confirm" class="arrival-help" picking-mode="Ignore"/><ui:VisualElement class="arrival-footer-rule" picking-mode="Ignore"/><ui:Label text="WARD  /  ATHEN HILL" class="arrival-build" picking-mode="Ignore"/></ui:VisualElement>
+  </ui:VisualElement>
+ </ui:VisualElement>
+</ui:UXML>

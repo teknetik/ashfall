@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6422668666592308639}
   - component: {fileID: 5800076529913839490}
+  - component: {fileID: 50281917905850239}
   m_Layer: 0
   m_Name: WardGuard
   m_TagString: Untagged
@@ -47,10 +48,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.ActorAnimation
   animationSource: {fileID: 3483395588864142140}
   humanoidAnimator: {fileID: 0}
-  idle: {fileID: 7400000, guid: f6c33d790ba7d9b978c8381f3560ee48, type: 2}
+  idle: {fileID: 7400000, guid: 79b384b87d1dea9d0a2b031529954537, type: 2}
   walk: {fileID: -4832708865683171987, guid: ba150696ab395e528a6c4a8d7cf46846, type: 3}
   run: {fileID: 8291298685565124274, guid: ba150696ab395e528a6c4a8d7cf46846, type: 3}
-  talk: {fileID: 7400000, guid: 80139331eb4fa4bda871a99c21246a27, type: 2}
+  talk: {fileID: 7400000, guid: 539fb5346315e2ef99f213071dfbc808, type: 2}
   jumpTakeoff: {fileID: 0}
   jumpAirborne: {fileID: 0}
   jumpFall: {fileID: 0}
@@ -59,9 +60,38 @@ MonoBehaviour:
   takeoffSeconds: 0.12
   landingSeconds: 0.24
   idlePhase: 0
+  randomIdlePhase: 1
+  idleSpeedJitter: 0.08
   walkStrideSpeed: 1.5031121
   runStrideSpeed: 3.6104164
   blendSeconds: 0.15
+--- !u!114 &50281917905850239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8698359908901728864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8470444e75f51ec1190c802abb264944, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.ActorLookAt
+  actor: {fileID: 5800076529913839490}
+  head: {fileID: 1783617468737503528}
+  neck: {fileID: 8421962187244878754}
+  target: {fileID: 0}
+  focusRadius: 4
+  maxYaw: 45
+  maxPitch: 15
+  restWeight: 0.7
+  focusWeight: 0.9
+  neckShare: 0.35
+  settleSeconds: 0.55
+  glanceInterval: {x: 10, y: 20}
+  glanceYaw: 28
+  glanceHold: 2.4
+  activeDistance: 40
 --- !u!1001 &5773626245924612263
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -911,6 +941,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: -4161369568681901532, guid: ba150696ab395e528a6c4a8d7cf46846, type: 3}
+--- !u!4 &1783617468737503528 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -3971993622488634993, guid: ba150696ab395e528a6c4a8d7cf46846, type: 3}
+  m_PrefabInstance: {fileID: 5773626245924612263}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1844598818001346787 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -3910990755373119420, guid: ba150696ab395e528a6c4a8d7cf46846, type: 3}
@@ -919,5 +954,10 @@ Transform:
 --- !u!111 &3483395588864142140 stripped
 Animation:
   m_CorrespondingSourceObject: {fileID: -2272193907538426981, guid: ba150696ab395e528a6c4a8d7cf46846, type: 3}
+  m_PrefabInstance: {fileID: 5773626245924612263}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8421962187244878754 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648357957732258565, guid: ba150696ab395e528a6c4a8d7cf46846, type: 3}
   m_PrefabInstance: {fileID: 5773626245924612263}
   m_PrefabAsset: {fileID: 0}

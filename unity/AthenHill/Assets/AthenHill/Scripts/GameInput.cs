@@ -16,6 +16,9 @@ namespace AthenHill
   public bool Orbit => GameplayEnabled&&looking;
   public Vector2 Look => Orbit&&!Pressed("Orbit")?gameplay["Look"].ReadValue<Vector2>():Vector2.zero;
   public float Zoom => GameplayEnabled&&!(PointerOverUi?.Invoke()??false)?gameplay["Zoom"].ReadValue<float>():0;
+  /// Unfiltered pointer delta for aim mode, where the camera turns without a left-button drag.
+  public Vector2 RawLook => GameplayEnabled?gameplay["Look"].ReadValue<Vector2>():Vector2.zero;
+  public bool Held(string action) => GameplayEnabled&&gameplay.FindAction(action,false)?.IsPressed()==true;
   public bool Pressed(string action) => GameplayEnabled&&gameplay.FindAction(action,false)?.WasPressedThisFrame()==true;
   public bool Cancel => ui!=null&&ui["Cancel"].WasPressedThisFrame()&&!(MenuPopupOpen?.Invoke()??false);
   void OnEnable(){runtime=Instantiate(definition);gameplay=runtime.FindActionMap("Gameplay",true);ui=runtime.FindActionMap("UI",true);gameplay["Jump"].performed+=QueueJump;ui.Enable();gameplay.Enable();}

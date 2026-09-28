@@ -15,6 +15,13 @@ namespace AthenHill
         [Min(0)] public float fullLightDistance = 28;
         [Min(1)] public float culledLightDistance = 42;
         [Min(0)] public float shadowDistance = 18;
+        /// Fixtures listed here switch off entirely below this circuit strength (daylight), instead of running
+        /// at daytimeStrength; floodlights whose light is invisible in sun should not cost lighting or shadows.
+        public Light[] nightOnlyLights = Array.Empty<Light>();
+        [Range(0, 1)] public float nightOnlyThreshold = .2f;
+        /// Practical shadows are dropped while the circuit is dimmer than this (a 4% lamp casts no visible shadow).
+        [Range(0, 1)] public float shadowStrengthThreshold = .25f;
+        readonly HashSet<Light> nightOnly = new HashSet<Light>();
         public float CurrentStrength { get; private set; }
         public int ActiveLights { get; private set; }
         public int ActiveShadowLights { get; private set; }
@@ -29,6 +36,7 @@ namespace AthenHill
         void OnEnable()
         {
             if (!Application.isPlaying) return;
+            nightOnly.Clear(); foreach (var l in nightOnlyLights) if (l) nightOnly.Add(l);
             lightStates = new LightState[practicalLights.Length];
             for (int i = 0; i < practicalLights.Length; i++)
             {
@@ -74,10 +82,10 @@ namespace AthenHill
                 float distance = viewer ? Vector3.Distance(viewer.position, light.transform.position) : 0;
                 float distanceWeight = 1 - Mathf.SmoothStep(0, 1, Mathf.InverseLerp(fullLightDistance, Mathf.Max(fullLightDistance + 1, culledLightDistance), distance));
                 light.intensity = state.intensity * CurrentStrength * distanceWeight;
-                light.enabled = state.enabled && light.intensity > .002f;
+                light.enabled = state.enabled && light.intensity > .002f && (CurrentStrength >= nightOnlyThreshold || !nightOnly.Contains(light));
                 float shadowWeight = 1 - Mathf.SmoothStep(0, 1, Mathf.InverseLerp(shadowDistance * .75f, Mathf.Max(1, shadowDistance), distance));
                 light.shadowStrength = state.shadowStrength * shadowWeight;
-                light.shadows = shadowWeight > .001f ? state.shadows : LightShadows.None;
+                light.shadows = shadowWeight > .001f && CurrentStrength >= shadowStrengthThreshold ? state.shadows : LightShadows.None;
                 if (light.enabled) { ActiveLights++; if (light.shadows != LightShadows.None) ActiveShadowLights++; }
             }
         }

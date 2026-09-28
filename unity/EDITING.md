@@ -422,3 +422,26 @@ global volume uses **WardDustbowlGrade.asset**. Point them back at WardAfternoon
 AthenHillBeautyVolume to compare. **Windborne dust** holds the dust-sheet and grit particle
 systems; tune them there. Values and originals are recorded in
 `evidence/dustbowl-market/20260926/pass.json`.
+
+## West Gate exit and Warden outpost (26 September 2026)
+
+Everything lives under **Outer Berms → West Gate outpost** (groups Gate, Outpost, Terrain dressing, Scatter,
+Practical lights, Decals, West Gate review cameras). Pieces are ordinary prefab instances from
+`Prefabs/WestGate`; move, rotate or delete them in the scene as usual. Gameplay roots were moved, not replaced:
+Warden Ossa, Warden Rell, Warden arms locker (its cabinet visual is the child *Arms locker visual*), Checkpoint
+field briefing, Range reset control and the respawn point. If you move one, move its **Landmarks** entry
+(`checkpoint_*`) too. Colonists and Wardens win the E prompt within 2.4 m, so keep world interactables at least
+that far from a Warden's stand point (the Edit Mode test `WestGateLandmarksResolveToTheIntendedInteraction` checks this).
+
+- **Materials** are in `Art/WestGate/Materials` (URP Lit, editable; tiling = 1 / metres per repeat). WG_* paints,
+  signs and papers come from `art/west_gate_20260926/make_textures.py`; PH_* are the Poly Haven props.
+- **Berms ground** uses `Art/WestGate/Ground/BermsGround.mat` (shader *Athen Hill/Berms Ground*). Tints,
+  saturation, layer sizes, height-blend depth, packed-ground darkening, macro variation, edge blend and haze are
+  material controls. The splat (`BermsGroundSplat.png`: R road, G sand, B crust, A 1 − compaction) is regenerated
+  by `make_ground_splat.py` from `layout.json`; the previous SandstoneBasin material is recorded in the evidence.
+- **Lights**: West Gate practicals are registered with City Light Circuit as practical *and* night-only lights.
+  City Light Circuit now also drops practical shadows while its strength is below *Shadow Strength Threshold*.
+- **Rebuilding**: *West Gate: build assets* rebuilds prefabs but never overwrites existing materials.
+  *West Gate: install outpost* refuses to run over an installed outpost. The wreck gantry beside the gate is chunked
+  AuthoredWorld content: its new visuals are under Gate/Wreck gantry, the originals are inactive sources; use
+  Show Sources / Rebuild Render Chunks as usual if you change them.
