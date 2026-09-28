@@ -1,0 +1,102 @@
+{
+  "scope": "Native Linux development player, Unity Editor closed, 1920x1080, 100% render scale, uncapped (vSync off), PC quality, OpenGL Core, RTX 3060 12 GB / i9-10850K, driver 610.57.04. Checkpoint route = the unchanged 20.25 s warmed check_checkpoint.py traversal (locker start, four headings). Depot routes from unity/tools/check_depot.py: the nest fight (real F input, QA cameraYaw to face the nearest droid) and a warmed 28 s walk over depot_approach/yard/hall. Desktop apps held ~3.2 GB of the 12 GB VRAM during all runs (Hyprland, quickshell, Electron apps, Nautilus, Steam); a Jellyfin thumbnail ffmpeg was running at nice 10.",
+  "target": {
+    "average_fps_min": 60,
+    "p99_ms_max": 16.67
+  },
+  "checkpoint_route": {
+    "final_with_mip_streaming_run1": {
+      "frames": 4112,
+      "duration_seconds": 20.25,
+      "average_fps": 203.1,
+      "p50_ms": 4.24,
+      "p95_ms": 15.09,
+      "p99_ms": 16.99,
+      "max_ms": 21.28,
+      "hitches_over_50ms": 0,
+      "hitches_over_100ms": 0,
+      "cpu_mean_ms": 4.92,
+      "setpass_mean": 99.1,
+      "submitted_triangles_mean": 2991587
+    },
+    "final_with_mip_streaming_run2": {
+      "frames": 4326,
+      "duration_seconds": 20.24,
+      "average_fps": 213.7,
+      "p50_ms": 4.33,
+      "p95_ms": 14.61,
+      "p99_ms": 16.71,
+      "max_ms": 18.96,
+      "hitches_over_50ms": 0,
+      "hitches_over_100ms": 0,
+      "cpu_mean_ms": 4.68,
+      "setpass_mean": 96.3,
+      "submitted_triangles_mean": 2883806
+    },
+    "same_content_without_streaming": {
+      "frames": 2710,
+      "duration_seconds": 20.3,
+      "average_fps": 133.5,
+      "p50_ms": 5.76,
+      "p95_ms": 9.51,
+      "p99_ms": 102.48,
+      "max_ms": 116.57,
+      "hitches_over_50ms": 51,
+      "hitches_over_100ms": 42,
+      "cpu_mean_ms": 7.49,
+      "setpass_mean": 89.6,
+      "submitted_triangles_mean": 1628859
+    },
+    "west_gate_final_2026-09-27T00:05": {
+      "frames": 4665,
+      "duration_seconds": 20.25,
+      "average_fps": 230.4,
+      "p50_ms": 3.59,
+      "p95_ms": 14.4,
+      "p99_ms": 16.5,
+      "max_ms": 17.62,
+      "hitches_over_50ms": 0,
+      "hitches_over_100ms": 0,
+      "cpu_mean_ms": 4.34,
+      "setpass_mean": 87.3,
+      "submitted_triangles_mean": 2621783
+    },
+    "verdict": "p99 16.99 / 16.71 ms against 16.67: a narrow FAIL of the p99 target (West Gate measured 16.50 at 00:05 under lower desktop VRAM use). Average FPS passes easily. The p99 frames are the east heading into the city (24M submitted triangles), not the depot."
+  },
+  "depot": {
+    "fight_nest_real_input": {
+      "frames": 3772,
+      "duration_seconds": 22.7,
+      "average_fps": 166.1,
+      "p50_ms": 5.93,
+      "p95_ms": 7.62,
+      "p99_ms": 8.64,
+      "max_ms": 11.84,
+      "hitches_over_50ms": 0,
+      "hitches_over_100ms": 0,
+      "cpu_mean_ms": 6.02,
+      "setpass_mean": 71.2,
+      "submitted_triangles_mean": 1262213
+    },
+    "warmed_walk": {
+      "frames": 4863,
+      "duration_seconds": 28.24,
+      "average_fps": 172.2,
+      "p50_ms": 4.87,
+      "p95_ms": 14.15,
+      "p99_ms": 16.0,
+      "max_ms": 18.22,
+      "hitches_over_50ms": 0,
+      "hitches_over_100ms": 0,
+      "cpu_mean_ms": 5.81,
+      "setpass_mean": 106.3,
+      "submitted_triangles_mean": 4492362
+    },
+    "verdict": "PASS: fight p99 8.64 ms, walk p99 16.0 ms, no hitches. An earlier fight sample (native-depot-run2) had one 147 ms frame caused by the QA ScreenCapture PNG encode during profiling; check_depot.py no longer captures while profiling."
+  },
+  "vram_finding": {
+    "symptom": "Without mip streaming the player held 8.35 GiB GPU memory (6.5 GB textures) on top of ~3.2 GB desktop use: 11.8 of 12 GB. Facing the city from the checkpoint the driver paged (GPU 100% busy at 70 W, ~100 ms frames: p99 102 ms, 42 frames over 100 ms); the city loop then ran at 7-88 fps and dropped a quick second Escape (the city-loop pause assertion failed twice).",
+    "fix": "ProjectSettings/QualitySettings.asset, PC level: streamingMipmapsActive 0 -> 1, streamingMipmapsMemoryBudget 512 -> 4096 MB (max level reduction 2, unchanged). Textures resident 6.5 -> 4.2 GB, player GPU memory 8.35 -> 6.71 GiB; the same heading now renders at p50 14.9 / p99 16.0 ms. Near-field sharpness compared against the West Gate locker close-up: no visible loss. Rollback copy: QualitySettings-before-streaming.asset.",
+    "also": "Depot Poly Haven prop textures (32) capped at 1k on Standalone (crane keeps 2k)."
+  }
+}

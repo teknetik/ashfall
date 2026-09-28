@@ -299,7 +299,27 @@ namespace AthenHill
    }
    if(session.State==CityState.Notes){Text("modal-title","City notes");Text("modal-subtitle","Field journal · Colony district");Text("panel-text",session.Objective+"\n\n"+$"Conversations {session.Spoken.Count}/4 · Flask {(session.boughtFlask?"acquired":"needed")} · Scrap {(session.soldScrap?"sold":"to sell")} · Link {(session.linked?"established":"pending")}"+"\n\n"+session.catalog.notes);}
    if(session.State==CityState.Credits){Text("modal-title","Credits and licences");Text("modal-subtitle","Athen Hill · An original colony city homage");Text("panel-text",session.catalog.credits?session.catalog.credits.text:"Credits unavailable.");}
-   if(previous!=session.State){previous=session.State;root.Q<ScrollView>("modal-scroll").scrollOffset=Vector2.zero;if(modal)root.schedule.Execute(()=>root.Q<Button>(session.State==CityState.MainMenu?"start-game":session.State==CityState.Dialogue?"choice0":"close").Focus());else root.focusController?.focusedElement?.Blur();}
+   if(previous!=session.State)
+   {
+    previous=session.State;
+    root.Q<ScrollView>("modal-scroll").scrollOffset=Vector2.zero;
+    if(modal)
+    {
+     // Default modal focus goes to the close/primary button, except Inventory.
+     // Inventory manages its own focus (grid tile or details-close) so Enter inspects items
+     // rather than accidentally closing the modal.
+     if(session.State==CityState.Inventory)
+     {
+      // If the pack is empty there is no tile focus target, so fall back to Close.
+      if(inventoryIds.Count==0)root.schedule.Execute(()=>root.Q<Button>("close").Focus());
+     }
+     else
+     {
+      root.schedule.Execute(()=>root.Q<Button>(session.State==CityState.MainMenu?"start-game":session.State==CityState.Dialogue?"choice0":"close").Focus());
+     }
+    }
+    else root.focusController?.focusedElement?.Blur();
+   }
   }
   void LateUpdate()
   {

@@ -200,6 +200,13 @@ async def main():
             await asyncio.sleep(0.2)
             await capture('inventory-details-shift-click')
 
+            # Close details and inventory before resizing.
+            await tap('Escape')
+            await asyncio.sleep(0.2)
+            assert snapshot()['session']['state'] == 'Inventory'
+            await tap('Escape')
+            await expect_state('Play')
+
             # Small viewport smoke check.
             await cmd(action='resize', width=1280, height=720)
             await asyncio.sleep(1.0)
@@ -207,6 +214,14 @@ async def main():
             await tap('Tab')
             await expect_state('Inventory')
             await capture('inventory-1280x720')
+
+            # Ensure Enter still opens details (focus must land on a tile, not Close).
+            await tap('Return')
+            await asyncio.sleep(0.2)
+            await capture('inventory-1280x720-details-enter')
+            await tap('Escape')
+            await asyncio.sleep(0.2)
+            assert snapshot()['session']['state'] == 'Inventory'
             await tap('Escape')
             await expect_state('Play')
 

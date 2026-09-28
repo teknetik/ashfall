@@ -1,0 +1,14 @@
+{
+  "scale": "0-5 per AGENTS.md section 7; 4 = strong at the intended viewing distance with minor issues. Local review scores, not AAA/GTA6 certification.",
+  "views": ["native/gate-matched.png", "native/post-matched.png", "native/checkpoint-day.png", "native/checkpoint-night.png", "native/locker-before.png", "native/range-overview.png", "editor-review/*.png"],
+  "before": {"composition": 2, "scale": 2, "material_detail": 1, "lighting_depth": 2, "density_storytelling": 2, "character": 1, "ui_readability": 2,
+             "defects": ["floating TextMesh signs z-fighting with geometry", "bus-shelter booth of flat boxes", "blobby 14 m-tile basin shader on the walkable floor (no SSAO/decals/local lights)", "hole cut in the wall with flat end caps", "white self-emissive guard armour"]},
+  "after": {"composition": 4, "scale": 4, "material_detail": 3.5, "lighting_depth": 3.5, "density_storytelling": 4, "character": 3, "ui_readability": 4,
+            "remaining": ["ground reads smooth at 5-15 m (fine gravel detail is lost to mips); no parallax or detail mesh scatter beyond 190 rocks",
+                          "sandbag stacks are procedural and uniform at close range; no fabric seams or ties",
+                          "sliding-gate leaf and container walls are tiling paint without unique wear/edge masks",
+                          "shade canopy is opaque cloth (no weave transparency), static (no wind)",
+                          "Warden armour kit is a material variant of the supplied guard model; stiff source animation remains",
+                          "range target PLATE numbers are still TextMesh from the previous pass",
+                          "night lighting is serviceable but not composed shot-by-shot"]}
+}

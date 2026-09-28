@@ -1,0 +1,55 @@
+{
+  "passed": false,
+  "checks": [
+    "Tutorial prerequisites with real input (locker, draw, three plates)",
+    "Service-road drone put down with real F input (6 shots, 5 s); depot nest armed",
+    "Depot nest spawns two worker droids and one scrap drone at the moved spawn points"
+  ],
+  "droid_states_seen": {
+    "Chase": 9,
+    "Windup": 12,
+    "Recover": 11,
+    "Idle": 475
+  },
+  "knockdowns": 1,
+  "nest_spawn": [
+    {
+      "displayName": "Feral worker droid",
+      "state": "Idle",
+      "health": 100.0,
+      "position": [
+        -82.7707748,
+        0.395126432,
+        -41.46134
+      ]
+    },
+    {
+      "displayName": "Feral worker droid",
+      "state": "Chase",
+      "health": 100.0,
+      "position": [
+        -75.13103,
+        0.1929785,
+        -38.0299644
+      ]
+    },
+    {
+      "displayName": "Feral scrap drone",
+      "state": "Chase",
+      "health": 60.0,
+      "position": [
+        -84.3952255,
+        1.6037693,
+        -36.54289
+      ]
+    }
+  ],
+  "fight": {
+    "shots": 13,
+    "seconds": 150.4,
+    "remaining": 3,
+    "step": "Depot",
+    "player_health": 100.0
+  },
+  "error": "AssertionError([{'displayName': 'Feral worker droid', 'state': 'Idle', 'alive': True, 'health': 100.0, 'position': [-82.62664, 0.5256508, -43.0912552]}, {'displayName': 'Feral worker droid', 'state': 'Idle', 'alive': True, 'health': 100.0, 'position': [-73.32499, 0.140653133, -36.3707771]}, {'displayName': 'Feral scrap drone', 'state': 'Idle', 'alive': True, 'health': 60.0, 'position': [-84.81239, 1.74538827, -34.9574852]}])"
+}

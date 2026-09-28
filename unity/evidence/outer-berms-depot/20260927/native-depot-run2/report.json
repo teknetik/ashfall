@@ -1,0 +1,90 @@
+{
+  "passed": true,
+  "checks": [
+    "Tutorial prerequisites with real input (locker, draw, three plates)",
+    "Service-road drone put down with real F input (5 shots, 5 s); depot nest armed",
+    "Depot nest spawns two worker droids and one scrap drone at the moved spawn points",
+    "Depot nest cleared with real F input (10 shots, 8 s, 0 knock-downs); tutorial step Complete",
+    "Droids telegraphed strikes (Windup state observed during the fight)",
+    "Warmed depot walk profiled",
+    "No runtime exceptions in Player.log"
+  ],
+  "droid_states_seen": {
+    "Chase": 18,
+    "Windup": 5,
+    "Recover": 1,
+    "Idle": 1,
+    "Alert": 1,
+    "Stagger": 3
+  },
+  "knockdowns": 0,
+  "nest_spawn": [
+    {
+      "displayName": "Feral worker droid",
+      "state": "Idle",
+      "health": 100.0,
+      "position": [
+        -81.18189,
+        0.413698077,
+        -42.26006
+      ]
+    },
+    {
+      "displayName": "Feral worker droid",
+      "state": "Idle",
+      "health": 100.0,
+      "position": [
+        -74.57619,
+        0.189858884,
+        -39.5167732
+      ]
+    },
+    {
+      "displayName": "Feral scrap drone",
+      "state": "Idle",
+      "health": 60.0,
+      "position": [
+        -85.741745,
+        1.91543627,
+        -36.7513847
+      ]
+    }
+  ],
+  "fight": {
+    "shots": 10,
+    "seconds": 7.6,
+    "remaining": 0,
+    "step": "Complete",
+    "player_health": 72.9118042
+  },
+  "profiles": {
+    "depot-fight": {
+      "frames": 1259,
+      "duration_seconds": 8.08,
+      "average_fps": 155.8,
+      "p50_ms": 6.08,
+      "p95_ms": 8.08,
+      "p99_ms": 9.06,
+      "max_ms": 147.24,
+      "hitches_over_50ms": 1,
+      "hitches_over_100ms": 1,
+      "cpu_mean_ms": 6.42,
+      "setpass_mean": 80.4,
+      "submitted_triangles_mean": 1369251
+    },
+    "depot-route": {
+      "frames": 4909,
+      "duration_seconds": 28.24,
+      "average_fps": 173.8,
+      "p50_ms": 4.88,
+      "p95_ms": 14.01,
+      "p99_ms": 16.03,
+      "max_ms": 17.91,
+      "hitches_over_50ms": 0,
+      "hitches_over_100ms": 0,
+      "cpu_mean_ms": 5.76,
+      "setpass_mean": 106.3,
+      "submitted_triangles_mean": 4477105
+    }
+  }
+}
