@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a584a25f7a2f6c23a420ed9d0c79f73, type: 3}
+  m_Name: npc_ossa
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.NpcDefinition
+  id: npc_ossa
+  displayName: Warden Ossa
+  role: West Gate watch
+  nodes:
+  - id: greeting
+    title: West Gate watch
+    text: Ossa. West Gate watch. Nobody walks the Berms unarmed. The ARMS LOCKER is under the canopy at the post, left of my issue window; the cyan light on top marks it. Rell keeps the return lane clear.
+    choices:
+    - id: locker
+      label: Where is the locker?
+      next: locker
+      action: 
+    - id: machines
+      label: What are those machines?
+      next: machines
+      action: 
+  - id: locker
+    title: Arms issue
+    text: The green steel cabinet under the shade canopy, next to the crates, with ARMS stencilled on the door and a cyan beacon on top. Walk up to it and press E. Press 7 to draw the pistol outside the walls; it runs on nano charge. The range is across the lane, past the barriers.
+    choices:
+    - id: back
+      label: Tell me about the machines.
+      next: machines
+      action: 
+    - id: leave
+      label: I'll check the locker.
+      next: 
+      action: close
+  - id: machines
+    title: Industrial machines
+    text: The walkers are cargo-handling droids; the hovering ones are inspection and salvage drones. Feral industrial code makes them treat people as obstacles or raw material. The aquifer service droid inside Ward is maintained and loyal. Keep your aim on the hostile machines beyond the range.
+    choices:
+    - id: range
+      label: How do I use the range?
+      next: range
+      action: 
+    - id: leave
+      label: Understood.
+      next: 
+      action: close
+  - id: range
+    title: Safe range practice
+    text: Draw with 7. Hold right mouse to aim, then left click to fire; F fires from the hip. Knock down all three plates. Watch for the loose drone on the service road afterward. If you get hurt, break contact. Vitality recovers and nano refills when you stop firing.
+    choices:
+    - id: back
+      label: Where was the locker?
+      next: locker
+      action: 
+    - id: leave
+      label: I'm ready.
+      next: 
+      action: close

@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a584a25f7a2f6c23a420ed9d0c79f73, type: 3}
+  m_Name: npc_rell
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.NpcDefinition
+  id: npc_rell
+  displayName: Warden Rell
+  role: Checkpoint sentry
+  nodes:
+  - id: greeting
+    title: Checkpoint sentry
+    text: Rell. I'm watching the return lane. Check in with Ossa at the post down the ramp, collect your pistol from the marked locker under the canopy, then try the range across the lane. Keep this gap clear; it is your way back to Ward.
+    choices:
+    - id: safe
+      label: What if the machines chase me?
+      next: safe
+      action: 
+    - id: leave
+      label: I'll speak to Ossa.
+      next: 
+      action: close
+  - id: safe
+    title: Berms patrol
+    text: Don't linger in reach of their clamps. The feral machines signal before they strike. Break contact toward the checkpoint if you need time to recover. Weapons are holstered automatically when you cross back inside Ward.
+    choices:
+    - id: back
+      label: Where do I start?
+      next: greeting
+      action: 
+    - id: leave
+      label: Keep the lane clear. Got it.
+      next: 
+      action: close
