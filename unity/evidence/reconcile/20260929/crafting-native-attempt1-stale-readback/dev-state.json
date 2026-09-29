@@ -1,0 +1,287 @@
+{
+  "schemaVersion": 1,
+  "available": true,
+  "source": "unity",
+  "utc": "2026-09-29T18:16:14.5694450Z",
+  "frame": 2424,
+  "unscaledTime": 46.19952,
+  "build": {
+    "unity": "6000.6.0f1",
+    "version": "0.1.0",
+    "development": true
+  },
+  "session": {
+    "state": "Fabricator",
+    "objective": "Reach the Hill Tree.",
+    "visitedHill": false,
+    "boughtFlask": false,
+    "soldScrap": false,
+    "linked": false,
+    "spoken": [],
+    "selectedDestination": "",
+    "credits": 40,
+    "purchases": 0,
+    "sales": 0
+  },
+  "items": [
+    {
+      "id": "water_flask",
+      "name": "Water Flask",
+      "description": "A dented field flask with a fresh seal and clean water.",
+      "buyPrice": 4,
+      "sellPrice": 2,
+      "startingQuantity": 0,
+      "maxStack": 0,
+      "excludeFromTrade": false,
+      "tags": [
+        "consumable"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "medkit",
+      "name": "Medkit",
+      "description": "A compact pack of sealed dressings and colony first-aid supplies.",
+      "buyPrice": 9,
+      "sellPrice": 4,
+      "startingQuantity": 0,
+      "maxStack": 0,
+      "excludeFromTrade": false,
+      "tags": [
+        "consumable"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "scrap_coil",
+      "name": "Scrap Coil",
+      "description": "A worn induction coil. Someone at the market can still use the copper.",
+      "buyPrice": 2,
+      "sellPrice": 1,
+      "startingQuantity": 1,
+      "maxStack": 0,
+      "excludeFromTrade": false,
+      "tags": [
+        "salvage",
+        "material:conductive"
+      ],
+      "quantity": 3
+    },
+    {
+      "id": "droid_servo_damaged",
+      "name": "Damaged Servo",
+      "description": "A salvaged worker-droid servo, still fit for a field repair.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 10,
+      "excludeFromTrade": true,
+      "tags": [
+        "salvage",
+        "salvage:droid",
+        "component",
+        "component:servo",
+        "tier:1"
+      ],
+      "quantity": 1
+    },
+    {
+      "id": "scrap_alloy",
+      "name": "Scrap Alloy",
+      "description": "Cleaned structural alloy recovered from feral machines.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 30,
+      "excludeFromTrade": true,
+      "tags": [
+        "salvage",
+        "material",
+        "material:metal",
+        "tier:1"
+      ],
+      "quantity": 2
+    },
+    {
+      "id": "nanite_residue",
+      "name": "Nanite Residue",
+      "description": "Recoverable tier-one nanites from a damaged industrial core.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 60,
+      "excludeFromTrade": true,
+      "tags": [
+        "salvage",
+        "nanite",
+        "nanite:tier1"
+      ],
+      "quantity": 1
+    },
+    {
+      "id": "copper_filament",
+      "name": "Copper Filament",
+      "description": "Fine conductor salvaged from a machine winding.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 30,
+      "excludeFromTrade": true,
+      "tags": [
+        "salvage",
+        "material",
+        "material:conductive",
+        "tier:1"
+      ],
+      "quantity": 2
+    },
+    {
+      "id": "micro_capacitor",
+      "name": "Micro Capacitor",
+      "description": "An intact low-voltage component; no schematic is known yet.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 10,
+      "excludeFromTrade": true,
+      "tags": [
+        "salvage",
+        "component",
+        "component:capacitor",
+        "tier:1"
+      ],
+      "quantity": 1
+    },
+    {
+      "id": "grip_stabilised_pistol",
+      "name": "Stabilised Pistol Grip",
+      "description": "A field-fabricated grip that steadies the scrap pistol.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 3,
+      "excludeFromTrade": true,
+      "tags": [
+        "weapon_mod",
+        "weapon_mod:grip"
+      ],
+      "quantity": 1
+    }
+  ],
+  "combat": {
+    "available": true,
+    "hasPistol": true,
+    "armed": true,
+    "aiming": false,
+    "nano": 100.0,
+    "health": 84.0,
+    "maxHealth": 100.0,
+    "Downs": 1,
+    "inBerms": true,
+    "weaponId": "weapon_scrap_pistol",
+    "baseRecoil": 38.0,
+    "recoil": 38.0,
+    "lastKickDegrees": 1.9
+  },
+  "crafting": {
+    "available": true,
+    "knownRecipes": [
+      "recipe_grip_stabilised_pistol"
+    ],
+    "crafts": 1,
+    "gripSlot": null,
+    "lootEvents": 4,
+    "lastLoot": "Salvaged: Damaged Servo ×1, Scrap Alloy ×1, Nanite Residue ×1, Copper Filament ×1",
+    "tutorialStep": "Fit",
+    "stationId": "station_field_fabricator",
+    "fabricatorOpen": true
+  },
+  "tutorial": {
+    "available": true,
+    "step": "Complete",
+    "targetsDown": 0,
+    "targetsTotal": 3
+  },
+  "encounters": [
+    {
+      "key": "First contact · service road",
+      "displayName": "First contact · service road",
+      "spawned": true,
+      "total": 1,
+      "remaining": 0,
+      "cleared": true,
+      "respawnSeconds": 0.0
+    },
+    {
+      "key": "Machine depot nest",
+      "displayName": "Machine depot nest",
+      "spawned": true,
+      "total": 3,
+      "remaining": 0,
+      "cleared": true,
+      "respawnSeconds": 120.0
+    }
+  ],
+  "enemies": [
+    {
+      "name": "Feral scrap drone",
+      "kind": "Hover",
+      "state": "Dead",
+      "health": 0.0,
+      "maxHealth": 60.0,
+      "position": [
+        -74.9979248,
+        -0.938052356,
+        -4.232909
+      ]
+    },
+    {
+      "name": "Feral worker droid",
+      "kind": "Walker",
+      "state": "Dead",
+      "health": 0.0,
+      "maxHealth": 100.0,
+      "position": [
+        -81.16247,
+        0.198449284,
+        -37.9657173
+      ]
+    },
+    {
+      "name": "Feral worker droid",
+      "kind": "Walker",
+      "state": "Dead",
+      "health": 0.0,
+      "maxHealth": 100.0,
+      "position": [
+        -81.6198044,
+        -0.1180858,
+        -30.2312527
+      ]
+    },
+    {
+      "name": "Feral scrap drone",
+      "kind": "Hover",
+      "state": "Dead",
+      "health": 0.0,
+      "maxHealth": 60.0,
+      "position": [
+        -83.17978,
+        0.202130914,
+        -21.9695377
+      ]
+    }
+  ],
+  "clock": {
+    "available": true,
+    "hour": 17.0,
+    "paused": true,
+    "speed": 1.0,
+    "defaultHour": 17.0,
+    "ReducedMotionSpeedLimited": false
+  },
+  "weather": {
+    "available": false,
+    "reason": "No weather system in build"
+  }
+}
