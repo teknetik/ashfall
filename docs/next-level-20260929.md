@@ -39,13 +39,28 @@ Native lookbook `unity/evidence/rendering/20260929/baseline/` (11 review cameras
   shadows. `GameSettings` shadow presets now 45/90/150 m with 2/3/4 cascades. Change log with before values:
   `unity/evidence/rendering/20260929/lighting-v2.json`, `rendering-upgrade.json`.
 
+- Lighting v2 committed `de33de27`. Native: shadows reach across the plaza, haze lifted, lamps light facades at
+  night. FPS fell to 35–46 (4 cascades resubmit the 3 M-tri truck and 3.7 M-tri tree) — LODs in progress.
+- Bug in lighting v2: its palette edits went to `Art/DayNight/WardDayNight.asset`, but the scene clock uses
+  `Art/Atmosphere/Dustbowl/WardDustbowl.asset` (found by the sky agent). Reverted the unused file; palette v3
+  (`Editor/WardPalettePassV3.cs`) now reads the profile from `CityTimeOfDay`. The game starts paused at 17:00.
+- Look v3 committed `e558ed8c`: grade de-stacked (7 warm shifts → neutral base, cool shadows, warm highlights),
+  palette v3, procedural sky v2 (`Shaders/WardSkyV2.shader`, material `Materials/Sky/WardSkyV2.mat`; the old
+  `WardReferenceSky.mat` is untouched for rollback), coverage tuned to a mostly clear sky.
+- Close-up review `unity/evidence/rendering/20260929/closeups-v4/`: reference street holds up; the shop row
+  (Air + Water, Tool Exchange, Repairs, Salvage) still reads as flat boxes — its materials are already 4K PBR, so
+  the gap is architectural depth (trims, reveals, cornices) and un-occluded shade. All four talking NPCs are the
+  same armoured Ward Guard (AGENTS.md says keep role/model assignments unless asked — flagged for Carl).
+- `Editor/MaterialSurvey.cs`: read-only material/texture/tiling survey (batch `--survey-out`).
+
 ## Delegated work in flight
 
 - Gameplay v2 (worktree `ao2-gameplay`): weapon stats/slots, Mk I/II mods, refined components, loot v2 with bad-luck
   protection, physical salvage caches, scrap heaps, Depot Foreman elite, Ossa field orders, salvage selling,
   fabricator UI v2, save/load.
 - Truck and hero-tree LODs + shadow proxies (Blender, `art/optimization_20260929/`).
-- Procedural sky v2 shader (`Shaders/WardSkyV2.shader`).
+- Procedural sky v2 shader — done and installed.
+- Research: APV + Sky Occlusion recipe for time-of-day shade (`docs/apv-sky-occlusion-recipe.md`).
 
 ## Open items
 
