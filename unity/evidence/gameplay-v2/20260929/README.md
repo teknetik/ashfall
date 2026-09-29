@@ -48,3 +48,34 @@ from the brief so drone drops have a Mark II use.
 M1 results: full EditMode suite **99/99 passed** (82 existing incl. updated `CraftingSliceTests` + 17 new in
 `WeaponLoadoutTests` and `RecipeChainTests`). `LinuxBuild.Development` batch build **Succeeded, 0 errors,
 348 warnings**. `ward-crafting.v1.json` regenerated (additive fields; schema id unchanged for the dev UI).
+
+## M2 — loot v2, caches, scrap heaps, Depot Foreman
+
+- `Scripts/Loot/LootBook.cs`: `LootRng` (SplitMix64; the whole state is one 64-bit value, saved as hex),
+  `LootBook` (declared-order rolls, min–max quantities, per table+item consecutive-miss counters with
+  `pityAfter` bad-luck protection, `guaranteeUntilCollected` for story parts), `SalvageContents` (collect what
+  fits in one pack transaction, keep the rest), `SalvageSearch` (search/cancel/respawn clock).
+- `SalvageCache` (prefab `Prefabs/OuterBerms/SalvageCache.prefab`): Meshy industrial-scrap stack at uniform 0.36
+  scale, no collider, emissive beacon + point light + motes coloured by the best rarity inside (Common warm white,
+  Uncommon Ward cyan, Rare amber). E collects; partial collection leaves the rest inside with a notice.
+  Droid caches are ground-snapped at the wreck and despawn when the encounter re-forms (`LootSource.Revived`).
+- `SalvageNode` (prefab `SalvageHeapNode.prefab`, marker light + motes, no mesh): E → 1.2 s search that cancels on
+  >0.6 m movement or any non-Play state; rolls into the pack, leftovers go to a cache beside the heap; respawn 270 s
+  of play time. The HUD shows search progress and a rarity-coloured pickup toast (`CombatHud`).
+- `LootSource` audit fix: a kill is marked paid only when the payout succeeded; otherwise it retries each frame.
+- `FeralDepotForeman.prefab`: prefab **variant** of FeralWorkerDroid — uniform scale 1.3, 400 HP (4×), strike 30,
+  wind-up 1.0 s, chase 2.5, stagger immunity 5 s, crimson optics/eye light, tinted body material
+  `RB_ForemanDroid.mat`, voice pitch 0.78, loot `loot_depot_foreman`. No behaviour fork.
+
+| Table | Entries (min–max, chance, pity) |
+|---|---|
+| loot_feral_scrap_drone | alloy 1–2; nanites 2–3; copper 60% p2; micro capacitor 45% p2; optic lens 30% p3 |
+| loot_feral_worker_droid | servo 1; alloy 1–2; nanites 1–2; copper 65% p2; micro capacitor 20% p4; actuator 6% |
+| loot_depot_foreman | core (until collected once); actuator 1–2; lattice shard 50% p1; alloy 2–4; nanites 3–5; capacitor 1–2 60% p1; servo 50% |
+| loot_scrap_heap | alloy 1–3 90% p1; nanites 1–2 70% p2; copper 1–2 60% p2; capacitor 20% p4; optic 8%; lattice shard 3% |
+| loot_wreck_carcass | alloy 1–3; servo 35% p3; nanites 80% p2; copper 50% p2; capacitor 15% p5; actuator 4%; lattice 2% |
+| loot_drone_wreck | alloy 1–2; capacitor 35% p3; optic 30% p3; nanites 80% p2; copper 50% p2 |
+
+M2 results: EditMode **111/111 passed** (12 new in `LootTests`, including exact SplitMix64 vectors and seeded
+roll assertions). Dev build **Succeeded, 0 errors, 348 warnings**. Scene wiring (cache prefab binding, heap
+placement, Foreman encounter) is done by the M3 installer; until it runs, drops fall back to direct pickup.

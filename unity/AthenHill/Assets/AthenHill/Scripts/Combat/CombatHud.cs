@@ -16,11 +16,15 @@ namespace AthenHill
   CraftingSession crafting;
   public Camera worldCamera;
   [Min(1)]public float enemyBarDistance=32;
+  [Tooltip("Seconds a salvage pickup toast stays on screen.")]
+  [Min(.5f)]public float toastSeconds=4.5f;
   VisualElement root,hud,vitalBar,nanoBar,crosshair,hitMarker,flash,objectiveRow,aimHint;
   Label vitalValue,nanoValue,objective,guidance;
   Button slot7;
   readonly Dictionary<FeralDroid,VisualElement> bars=new Dictionary<FeralDroid,VisualElement>();
-  float hitUntil,flashAlpha;
+  float hitUntil,flashAlpha,toastUntil;
+  VisualElement toast,toastLines,search,searchFill;
+  Label searchLabel;
   void Start()
   {
    root=GetComponent<UIDocument>().rootVisualElement;hud=root.Q("hud");
@@ -47,6 +51,16 @@ namespace AthenHill
     aimHint.Add(new Label("Aim · LMB/F Fire"){pickingMode=PickingMode.Ignore});
    }
    guidance=new Label{pickingMode=PickingMode.Ignore};guidance.AddToClassList("checkpoint-guidance");hud.Add(guidance);
+   // Salvage pickup toast (rarity-coloured lines) and the scrap-heap search progress.
+   toast=Element("panel loot-toast",hud);
+   var toastHeading=new Label("SALVAGE"){pickingMode=PickingMode.Ignore};toastHeading.AddToClassList("small");toastHeading.AddToClassList("loot-toast-heading");toast.Add(toastHeading);
+   toastLines=Element("loot-toast-lines",toast);Show(toast,false);
+   var actions=root.Q("top-actions");
+   if(actions!=null)actions.RegisterCallback<GeometryChangedEvent>(e=>toast.style.top=e.newRect.yMax+8);
+   search=Element("panel search-progress",hud);
+   searchLabel=new Label{pickingMode=PickingMode.Ignore};searchLabel.AddToClassList("search-progress-label");search.Add(searchLabel);
+   searchFill=Element("search-progress-fill",Element("search-progress-track",search));Show(search,false);
+   if(crafting)crafting.Collected+=ShowPickup;
    slot7=root.Q<Button>("slot7");
    if(slot7!=null)slot7.clicked+=()=>combat.ToggleDraw();
    combat.TargetHit+=(_,killed)=>{hitUntil=Time.unscaledTime+(killed?.28f:.14f);hitMarker.EnableInClassList("kill",killed);};
@@ -96,6 +110,10 @@ namespace AthenHill
    slot7?.EnableInClassList("selected",combat.Armed);
    flashAlpha=Mathf.MoveTowards(flashAlpha,0,Time.unscaledDeltaTime*(session.reducedMotion?3:1.6f));
    flash.style.opacity=flashAlpha*(session.reducedMotion?.5f:.85f);
+   if(toast!=null&&toast.style.display==DisplayStyle.Flex&&Time.unscaledTime>toastUntil)Show(toast,false);
+   var heap=SalvageNode.Searching;
+   Show(search,play&&heap);
+   if(play&&heap){searchLabel.text=$"Searching {heap.displayName.ToLowerInvariant()}…";searchFill.style.width=Length.Percent(heap.Progress*100);}
    bool showObjective=tutorial&&tutorial.ShowObjective;
    Show(objectiveRow,showObjective);
    if(showObjective)objective.text=tutorial.Step==BermsStep.Complete&&crafting!=null&&!string.IsNullOrEmpty(crafting.Objective)?crafting.Objective:tutorial.Objective;
@@ -110,7 +128,25 @@ namespace AthenHill
    var mods=model!=null?string.Join(", ",model.Loadout.FittedMods.Select(x=>CraftingText.ItemName(model,x.Value))):"";
    pistolTooltip=$"Draw or holster the scrap pistol · 7 · Damage {combat.Stats.damage:0.#} · Recoil {combat.Stats.recoil:0.#}"+(mods.Length>0?" · "+mods:"");
   }
-  void OnDestroy(){if(combat)combat.StatsChanged-=UpdatePistolTooltip;}
+  void OnDestroy(){if(combat)combat.StatsChanged-=UpdatePistolTooltip;if(crafting)crafting.Collected-=ShowPickup;}
+  static string RarityClass(ItemRarity r)=>r==ItemRarity.Rare?"rarity-rare":r==ItemRarity.Uncommon?"rarity-uncommon":"rarity-common";
+  void ToastLine(string text,params string[] classes)
+  {
+   var line=new Label(text){pickingMode=PickingMode.Ignore};line.AddToClassList("loot-toast-line");
+   foreach(var c in classes)line.AddToClassList(c);
+   toastLines.Add(line);
+  }
+  /// One readable card per pickup: each item in its rarity colour, then anything left behind and new schematics.
+  void ShowPickup(LootPickup pickup)
+  {
+   if(toast==null||crafting.Model==null)return;
+   toastLines.Clear();
+   foreach(var s in pickup.taken){var spec=crafting.Model.Item(s.itemId);ToastLine($"+{s.quantity}  {(spec!=null?spec.name:s.itemId)}",RarityClass(spec!=null?spec.rarity:ItemRarity.Common));}
+   if(pickup.taken.Count==0&&pickup.left.Count==0)ToastLine($"Nothing useful in the {(pickup.source??"heap").ToLowerInvariant()}.","loot-toast-muted");
+   if(pickup.left.Count>0)ToastLine("Pack full · left in the cache: "+string.Join(", ",pickup.left.Select(x=>$"{CraftingText.ItemName(crafting.Model,x.itemId)} ×{x.quantity}")),"loot-toast-warning");
+   foreach(var r in pickup.discovered)ToastLine("Schematic discovered · "+r.name,"loot-toast-schematic");
+   toastUntil=Time.unscaledTime+toastSeconds;Show(toast,true);
+  }
   void UpdateGuidance(bool play)
   {
    var target=tutorial?tutorial.GuidanceTarget:null;

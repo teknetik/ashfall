@@ -12,7 +12,10 @@ namespace AthenHill
   public PlayerCombat combat;
   public BermsTutorial tutorial;
   public Transform fabricator;
+  [Tooltip("Seed for a new game's loot generator. Saved games keep their own generator state.")]
   public int lootSeed=1729;
+  [Tooltip("Physical drop spawned at a droid wreck or beside a searched heap whose leftovers did not fit.")]
+  public SalvageCache cachePrefab;
   [Tooltip("Recipe the post-primer grip tutorial walks through.")]
   public string tutorialRecipeId="recipe_grip_stabilised_pistol";
   public CraftingModel Model {get;private set;}
@@ -36,7 +39,9 @@ namespace AthenHill
    }
   }
   public GameSession Session {get;private set;}
-  System.Random random;
+  public LootBook Loot {get;private set;}
+  /// A pickup (cache or heap) moved items into the pack. Raised after the pack changed.
+  public event Action<LootPickup> Collected;
   IEnumerator Start()
   {
    Session=GetComponent<GameSession>();
@@ -44,7 +49,7 @@ namespace AthenHill
    if(!combat)combat=FindAnyObjectByType<PlayerCombat>();
    if(!tutorial)tutorial=FindAnyObjectByType<BermsTutorial>();
    if(!data){Debug.LogError("Ward crafting data is missing.");yield break;}
-   random=new System.Random(lootSeed);
+   Loot=new LootBook(unchecked((ulong)lootSeed));
    Model=new CraftingModel(data,Session.catalog.items,Session.Shop,()=>combat&&combat.hasPistol);
    if(combat){combat.BindLoadout(Model.Loadout);combat.ShotFired+=OnShot;}
   }
@@ -86,28 +91,59 @@ namespace AthenHill
    Session.Notify(ok?$"{CraftingText.ItemName(Model,itemId)} returned to your pack.":"Cannot remove. "+CraftingText.Reason(reason,Model,null,itemId),"Field Fabricator");
    return ok;
   }
-  public void Salvage(string tableId)
+  LootTable Table(string id)=>data&&data.lootTables!=null?data.lootTables.FirstOrDefault(x=>x.id==id):null;
+  /// Rolls a droid's table and leaves a salvage cache at its wreck. False only when the loot system is not ready,
+  /// so the caller can retry instead of marking the kill paid.
+  public bool DropLoot(string tableId,Vector3 at,Transform parent,out SalvageCache cache,string source=null)
   {
-   if(Model==null||random==null)return;
-   var table=data.lootTables.FirstOrDefault(x=>x.id==tableId);
-   if(table==null)return;
-   LootEvents++;
-   var collected=new List<string>();var left=new List<string>();var discovered=new List<CraftRecipe>();
-   foreach(var entry in table.entries.OrderByDescending(x=>x.chance>=1))
-   {
-    if(entry.chance<1&&random.NextDouble()>=entry.chance)continue;
-    var item=Session.catalog.items.FirstOrDefault(x=>x.id==entry.itemId);
-    if(item==null){left.Add(entry.itemId+" (unknown)");continue;}
-    int quantity=Math.Max(1,entry.minQuantity);
-    if(Session.Shop.TryApply(new[]{new KeyValuePair<string,int>(entry.itemId,quantity)},0,out _))
-    {
-     collected.Add(item.name+" ×"+quantity);
-     discovered.AddRange(Model.Acquire(entry.itemId));
-    }
-    else left.Add(item.name+" ×"+quantity);
-   }
-   LastLoot="Salvaged: "+(collected.Count>0?string.Join(", ",collected):"nothing")+(left.Count>0?" · left behind (pack full): "+string.Join(", ",left):"");
-   Session.Notify(LastLoot+(discovered.Count>0?" "+CraftingText.Discovered(discovered):""),"Field Pack");
+   cache=null;
+   if(Model==null||Loot==null||Session==null||Session.Shop==null)return false;
+   var table=Table(tableId);
+   if(table==null){Debug.LogWarning("Unknown loot table "+tableId+"; nothing dropped.");return true;}
+   var rolled=Loot.Roll(table);LootEvents++;
+   LastLoot="Dropped: "+Describe(rolled);
+   if(rolled.Count==0)return true;
+   if(!cachePrefab){Collect(new SalvageContents(rolled),source,at);return true;}
+   var ground=SalvageCache.Ground(at,cachePrefab.groundMask);
+   cache=Instantiate(cachePrefab,ground,Quaternion.Euler(0,UnityEngine.Random.Range(0,360f),0),parent);
+   cache.name=cachePrefab.name+(string.IsNullOrEmpty(source)?"":" · "+source);
+   cache.Fill(this,rolled,source);
+   return true;
   }
+  /// A searched scrap heap: rolls straight into the pack; anything over a stack cap is left in a cache beside it.
+  public void SearchHeap(string tableId,Vector3 at,Transform parent,string source)
+  {
+   if(Model==null||Loot==null)return;
+   var table=Table(tableId);if(table==null){Debug.LogWarning("Unknown loot table "+tableId);return;}
+   var rolled=Loot.Roll(table);LootEvents++;
+   if(rolled.Count==0){LastLoot="Nothing useful";Session.Notify($"Nothing useful in this {(source??"heap").ToLowerInvariant()}.","Field Pack");Collected?.Invoke(new LootPickup{source=source,position=at});return;}
+   var contents=new SalvageContents(rolled);
+   Collect(contents,source,at);
+   if(!contents.Empty&&cachePrefab)
+   {
+    var cache=Instantiate(cachePrefab,SalvageCache.Ground(at,cachePrefab.groundMask),Quaternion.identity,parent);
+    cache.name=cachePrefab.name+" · "+source;cache.Fill(this,contents.Stacks,source);
+   }
+  }
+  /// Moves what fits from a cache into the pack, reveals schematics for new parts and reports the pickup.
+  public LootPickup Collect(SalvageContents contents,string source,Vector3 at)
+  {
+   var pickup=new LootPickup{source=source,position=at};
+   if(Model==null||contents==null)return pickup;
+   contents.Collect(Session.Shop,out pickup.taken,out pickup.left);
+   foreach(var s in pickup.taken){Loot.MarkCollected(s.itemId);pickup.discovered.AddRange(Model.Acquire(s.itemId));}
+   LastLoot=(pickup.taken.Count>0?"Collected: "+Describe(pickup.taken):"Collected nothing")+(pickup.left.Count>0?" · pack full, left in the cache: "+Describe(pickup.left):"");
+   Session.Notify(LastLoot+(pickup.discovered.Count>0?" "+CraftingText.Discovered(pickup.discovered):""),"Field Pack");
+   Collected?.Invoke(pickup);
+   return pickup;
+  }
+  string Describe(IEnumerable<ItemStack> stacks)=>string.Join(", ",stacks.Select(x=>$"{CraftingText.ItemName(Model,x.itemId)} ×{x.quantity}"));
+ }
+ public class LootPickup
+ {
+  public string source;
+  public Vector3 position;
+  public List<ItemStack> taken=new List<ItemStack>(),left=new List<ItemStack>();
+  public List<CraftRecipe> discovered=new List<CraftRecipe>();
  }
 }

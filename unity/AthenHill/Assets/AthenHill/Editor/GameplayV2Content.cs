@@ -32,6 +32,121 @@ namespace AthenHill.Editor
    Debug.Log($"GAMEPLAY_V2_CONTENT items={city.items.Length} recipes={craft.recipes.Length} mods={craft.modifiers.Length} lootTables={craft.lootTables.Length}");
   }
 
+  const string Prefabs="Assets/AthenHill/Prefabs/OuterBerms/";
+  const string Mats="Assets/AthenHill/Art/OuterBerms/Materials/";
+  public const string CachePrefab=Prefabs+"SalvageCache.prefab",NodePrefab=Prefabs+"SalvageHeapNode.prefab",ForemanPrefab=Prefabs+"FeralDepotForeman.prefab";
+
+  /// Builds the salvage cache, the searchable heap marker and the Depot Foreman prefab variant (plus their materials).
+  /// Batch: -executeMethod AthenHill.Editor.GameplayV2Content.BuildPrefabs -quit
+  public static void BuildPrefabs()
+  {
+   foreach(var path in new[]{CachePrefab,NodePrefab,ForemanPrefab})
+    if(AssetDatabase.LoadAssetAtPath<GameObject>(path)&&!Force)throw new Exception(path+" exists; edit the prefab instead (GAMEPLAY_V2_FORCE=1 rebuilds it).");
+   var beacon=EmissiveMaterial(Mats+"SalvageBeacon.mat");
+   var mote=CopyMaterial("Assets/AthenHill/Art/OuterBerms/BermsSparks.mat","Assets/AthenHill/Art/OuterBerms/SalvageMote.mat",m=>{m.SetColor("_BaseColor",Color.white);if(m.HasProperty("_Color"))m.SetColor("_Color",Color.white);});
+   var foremanBody=CopyMaterial(Mats+"RB_WorkerDroid.mat",Mats+"RB_ForemanDroid.mat",m=>{m.SetColor("_BaseColor",new Color(.78f,.6f,.46f));m.SetColor("_EmissionColor",new Color(1.4f,.18f,.08f));});
+   BuildCache(beacon,mote);BuildNode(mote);BuildForeman(foremanBody);
+   AssetDatabase.SaveAssets();
+   Debug.Log("GAMEPLAY_V2_PREFABS "+string.Join(", ",CachePrefab,NodePrefab,ForemanPrefab));
+  }
+  static Material EmissiveMaterial(string path)
+  {
+   var m=AssetDatabase.LoadAssetAtPath<Material>(path);
+   if(!m){m=new Material(Shader.Find("Universal Render Pipeline/Lit"));AssetDatabase.CreateAsset(m,path);}
+   m.SetColor("_BaseColor",new Color(.16f,.17f,.17f));m.SetFloat("_Metallic",.7f);m.SetFloat("_Smoothness",.55f);
+   m.EnableKeyword("_EMISSION");m.SetColor("_EmissionColor",new Color(1.5f,1.35f,1.1f));
+   m.globalIlluminationFlags=MaterialGlobalIlluminationFlags.RealtimeEmissive;
+   EditorUtility.SetDirty(m);return m;
+  }
+  static Material CopyMaterial(string from,string to,Action<Material> edit)
+  {
+   var m=AssetDatabase.LoadAssetAtPath<Material>(to);
+   if(!m){if(!AssetDatabase.CopyAsset(from,to))throw new Exception("Cannot copy "+from);m=AssetDatabase.LoadAssetAtPath<Material>(to);}
+   edit(m);EditorUtility.SetDirty(m);return m;
+  }
+  static ParticleSystem Motes(Transform parent,string name,Material material,float rate,float lifetime,float speed,float radius,int max)
+  {
+   var go=new GameObject(name,typeof(ParticleSystem));go.transform.SetParent(parent,false);
+   go.transform.localRotation=Quaternion.Euler(-90,0,0);
+   var ps=go.GetComponent<ParticleSystem>();ps.Stop(true,ParticleSystemStopBehavior.StopEmittingAndClear);
+   var main=ps.main;main.loop=true;main.playOnAwake=true;main.startLifetime=lifetime;main.startSpeed=speed;main.startSize=new ParticleSystem.MinMaxCurve(.03f,.06f);
+   main.maxParticles=max;main.simulationSpace=ParticleSystemSimulationSpace.World;main.gravityModifier=-.02f;main.startColor=Color.white;
+   var emission=ps.emission;emission.rateOverTime=rate;
+   var shape=ps.shape;shape.shapeType=ParticleSystemShapeType.Cone;shape.angle=12;shape.radius=radius;
+   var color=ps.colorOverLifetime;color.enabled=true;
+   var g=new Gradient();g.SetKeys(new[]{new GradientColorKey(Color.white,0),new GradientColorKey(Color.white,1)},new[]{new GradientAlphaKey(0,0),new GradientAlphaKey(.9f,.25f),new GradientAlphaKey(0,1)});color.color=g;
+   var r=go.GetComponent<ParticleSystemRenderer>();r.sharedMaterial=material;r.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;r.receiveShadows=false;
+   return ps;
+  }
+  static Light PointLight(Transform parent,string name,Vector3 at,Color color,float intensity,float range)
+  {
+   var l=new GameObject(name,typeof(Light)).GetComponent<Light>();l.transform.SetParent(parent,false);l.transform.localPosition=at;
+   l.type=LightType.Point;l.color=color;l.intensity=intensity;l.range=range;l.shadows=LightShadows.None;
+   return l;
+  }
+  static void BuildCache(Material beacon,Material mote)
+  {
+   var root=new GameObject("SalvageCache");
+   try
+   {
+    var use=root.AddComponent<WorldInteractable>();use.prompt="E · Collect salvage";use.range=2.3f;
+    var cache=root.AddComponent<SalvageCache>();
+    // Visual: the Meshy industrial-scrap stack at uniform 0.36 scale (≈0.65 × 0.45 × 0.4 m), no collider so it never blocks.
+    var scrap=(GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/AthenHill/Prefabs/Salvage/scrap.prefab"));
+    scrap.name="Salvage bundle";scrap.transform.SetParent(root.transform,false);scrap.transform.localScale=Vector3.one*.36f;
+    foreach(var c in scrap.GetComponentsInChildren<Collider>(true))UnityEngine.Object.DestroyImmediate(c);
+    foreach(var r in scrap.GetComponentsInChildren<Renderer>(true))r.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.On;
+    var tag=GameObject.CreatePrimitive(PrimitiveType.Cylinder);tag.name="Salvage beacon";
+    UnityEngine.Object.DestroyImmediate(tag.GetComponent<Collider>());
+    tag.transform.SetParent(root.transform,false);tag.transform.localPosition=new Vector3(.14f,.46f,.04f);tag.transform.localRotation=Quaternion.Euler(0,0,-12);tag.transform.localScale=new Vector3(.045f,.2f,.045f);
+    var tr=tag.GetComponent<MeshRenderer>();tr.sharedMaterial=beacon;tr.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;
+    cache.glowRenderers=new Renderer[]{tr};
+    cache.glowLight=PointLight(root.transform,"Glow light",new Vector3(0,.7f,0),Color.white,1.2f,3.2f);
+    cache.motes=Motes(root.transform,"Motes",mote,6,1.8f,.25f,.25f,20);cache.motes.transform.localPosition=new Vector3(0,.25f,0);
+    PrefabUtility.SaveAsPrefabAsset(root,CachePrefab);
+   }
+   finally{UnityEngine.Object.DestroyImmediate(root);}
+  }
+  static void BuildNode(Material mote)
+  {
+   var root=new GameObject("SalvageHeapNode");
+   try
+   {
+    var use=root.AddComponent<WorldInteractable>();use.prompt="E · Search the scrap heap";use.range=2.6f;
+    var node=root.AddComponent<SalvageNode>();
+    node.readyLight=PointLight(root.transform,"Search marker light",new Vector3(0,1.1f,0),new Color(.45f,.9f,.95f),.55f,2.6f);
+    node.readyMotes=Motes(root.transform,"Search motes",mote,2.5f,2.6f,.18f,.6f,12);node.readyMotes.transform.localPosition=new Vector3(0,.3f,0);
+    var main=node.readyMotes.main;main.startColor=new Color(.55f,.95f,1f,.7f);
+    PrefabUtility.SaveAsPrefabAsset(root,NodePrefab);
+   }
+   finally{UnityEngine.Object.DestroyImmediate(root);}
+  }
+  /// Prefab variant of the feral worker droid: the same behaviour with heavier serialized tuning.
+  static void BuildForeman(Material body)
+  {
+   var source=AssetDatabase.LoadAssetAtPath<GameObject>(Prefabs+"FeralWorkerDroid.prefab");
+   var root=(GameObject)PrefabUtility.InstantiatePrefab(source);
+   try
+   {
+    root.name="FeralDepotForeman";root.transform.localScale=Vector3.one*1.3f;
+    var health=root.GetComponent<Health>();health.max=400;health.regenPerSecond=0;
+    var d=root.GetComponent<FeralDroid>();
+    d.displayName="Depot Foreman";
+    d.wanderSpeed=.8f;d.chaseSpeed=2.5f;d.turnSpeed=5;d.aggroRadius=12;d.leashRadius=22;d.attackRange=2.5f;d.wanderRadius=2.5f;
+    d.alertSeconds=1f;d.windupSeconds=1f;d.recoverSeconds=1.25f;d.staggerSeconds=.15f;d.staggerImmunity=5;
+    d.strikeDamage=30;d.repairPerSecond=5;d.corpseSeconds=20;
+    d.walkStrideSpeed*=1.3f;d.runStrideSpeed*=1.3f;d.footLift*=1.3f;d.footPlant*=1.3f;
+    d.glowCalm=new Color(1.3f,.16f,.08f);d.glowHostile=new Color(4f,.45f,.2f);d.glowWindup=new Color(10f,2.2f,1f);d.hitFlash=3;
+    d.eyeCalm=.7f;d.eyeHostile=3f;
+    if(d.eyeLight)d.eyeLight.color=new Color(1f,.22f,.12f);
+    if(d.voice)d.voice.pitch=.78f;
+    var loot=root.GetComponent<LootSource>();loot.lootTableId="loot_depot_foreman";
+    foreach(var r in root.GetComponentsInChildren<SkinnedMeshRenderer>(true))if(r.sharedMaterial&&r.sharedMaterial.name=="RB_WorkerDroid")r.sharedMaterial=body;
+    PrefabUtility.SaveAsPrefabAsset(root,ForemanPrefab);
+   }
+   finally{UnityEngine.Object.DestroyImmediate(root);}
+  }
+
   static ItemSpec Item(string id,string name,string description,ItemRarity rarity,string icon,int sell,int maxStack,bool tradeable,params string[] tags)=>
    new ItemSpec{id=id,name=name,description=description,rarity=rarity,icon=icon,sellPrice=tradeable?sell:0,buyPrice=0,maxStack=maxStack,excludeFromTrade=!tradeable,sellOnly=tradeable,tags=tags};
 
@@ -119,6 +234,8 @@ namespace AthenHill.Editor
     new LootTable{id="loot_feral_worker_droid",entries=new[]{L("droid_servo_damaged",1,1),L("scrap_alloy",1,2),L("nanite_residue",1,2),L("copper_filament",1,1,.65f,2),L("micro_capacitor",1,1,.2f,4),L("actuator_intact",1,1,.06f)}},
     new LootTable{id="loot_depot_foreman",entries=new[]{L(core,1,1,0,0,true),L("actuator_intact",1,2),L("lattice_shard",1,1,.5f,1),L("scrap_alloy",2,4),L("nanite_residue",3,5),L("micro_capacitor",1,2,.6f,1),L("droid_servo_damaged",1,1,.5f)}},
     new LootTable{id="loot_scrap_heap",entries=new[]{L("scrap_alloy",1,3,.9f,1),L("nanite_residue",1,2,.7f,2),L("copper_filament",1,2,.6f,2),L("micro_capacitor",1,1,.2f,4),L("optic_lens_cracked",1,1,.08f),L("lattice_shard",1,1,.03f)}},
+    new LootTable{id="loot_wreck_carcass",entries=new[]{L("scrap_alloy",1,3),L("droid_servo_damaged",1,1,.35f,3),L("nanite_residue",1,2,.8f,2),L("copper_filament",1,2,.5f,2),L("micro_capacitor",1,1,.15f,5),L("actuator_intact",1,1,.04f),L("lattice_shard",1,1,.02f)}},
+    new LootTable{id="loot_drone_wreck",entries=new[]{L("scrap_alloy",1,2),L("micro_capacitor",1,1,.35f,3),L("optic_lens_cracked",1,1,.3f,3),L("nanite_residue",1,2,.8f,2),L("copper_filament",1,1,.5f,2)}},
    };
    c.slotLabels=new[]{new IdLabel{id="grip",label="Grip"},new IdLabel{id="barrel",label="Barrel"},new IdLabel{id="cell",label="Nano cell"}};
    c.tagLabels=new[]
