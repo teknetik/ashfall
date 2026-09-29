@@ -1,6 +1,16 @@
 # Ward / Athen Hill — Unity production guide
 
-Updated 8 September 2026. This replaces the historical browser MVP guide.
+Updated 28 September 2026. This replaces the historical browser MVP guide.
+
+## Kanban board for Ashfall
+
+For all future Kanban tasks concerning this project (the Ashfall game, including
+Ward / Athen Hill), use the dedicated **Ashfall** Kanban board. Pass
+`board="Ashfall"` explicitly when creating each task, including delegated,
+review, QA and follow-up cards; do not rely on the default/current board.
+Use the same board for task lookups, comments, links, blockers and completion
+so the full task history stays together. Include this board instruction in any
+handoff that may create further Ashfall tasks.
 
 ## 1. Direction and authority
 

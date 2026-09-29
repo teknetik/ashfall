@@ -1,0 +1,889 @@
+{
+  "task": "t_3751e0fd",
+  "date": "2026-09-29",
+  "author": "3d-modeler",
+  "status": "SOURCE-RENDER REVIEWED ONLY. Not Unity-integrated, not native-verified, not accepted.",
+  "target": "Tool Exchange revision 04 (prefab Assets/AthenHill/Art/Quality/StoreArchitecture/Revision04/tool_exchange/tool_exchange.prefab, scene instance at Unity (-20.6, 0.5, 9.0), yaw 90, scale 1): street-facing recessed display and rolling-shutter surround ONLY",
+  "buildingPivotUnity": [
+    -20.6,
+    0.5,
+    9.0
+  ],
+  "buildingYawUnity": 90.0,
+  "coordinateConvention": "Authoring \"A-space\": building-local metres, +X screen-right when viewed from the avenue, +Y up, +Z toward the avenue, origin = building pivot, Y=0 = porch top. GLBs are Y-up in A-space. glTFast imports with an X flip: a part authored at A pivot (px,py,pz) goes to building-local (-px, py, pz) with identity rotation and scale 1. Check by eye: the wrench (red) is in the LEFT pane as seen from the avenue, the bolt cutters in the right pane; the padlock is under the lock box, centre of the shutter.",
+  "interchangeAlternative": "exports/interchange/te-meshes-v1.json: per-material submeshes in A-space relative to each pivot (Unity installer: reflect X, reverse winding, recalc tangents).",
+  "supersedesByNamePrefix": [
+    "tool_exchange Recessed tool display dark recess",
+    "tool_exchange Recessed tool display glass",
+    "tool_exchange Shutter guide rail",
+    "tool_exchange Shutter lift handle"
+  ],
+  "keepUnchanged": [
+    "dressed sills, mineral reveals and mullions of the display (the new glass runs between the existing mullions)",
+    "all shutter slats (20), ground rail, drum casing, recessed backing, masonry reveals",
+    "sign, awning, masonry shell, roof, clerestory, services, porch and steps, all 5 colliders and the Vex interaction root"
+  ],
+  "howToRetire": "Disable (do not delete) the four superseded renderer groups; list is in the review .blend text block te_retired_objects.txt (7 objects).",
+  "measurements": {
+    "minA": [
+      -2.9,
+      0.09,
+      2.03
+    ],
+    "maxA": [
+      2.75,
+      2.75,
+      2.7378
+    ],
+    "totalTris": 17926,
+    "clearances": {
+      "displayFrontMostZ": 2.45,
+      "glassRearFaceZ": 2.543,
+      "gapDisplayToGlassRear_m": 0.093,
+      "displayInsideOpeningXY": true,
+      "displayMaxDepthBehindWallFace_m": 0.42,
+      "shutterHardwareFrontMostZ": 2.7378,
+      "oldRevision04ShutterFrontMostZ": 2.763,
+      "frontClosedShopWallColliderFaceZ": 2.7,
+      "hardwareProtrusionBeyondColliderFace_m": 0.0378,
+      "hardwareProtrusionBeyondOldRevision04_m": -0.0252,
+      "TE_ToolPipeWrench_zRange": [
+        2.0455,
+        2.0805
+      ],
+      "TE_ToolPipeWrench_standoffFromBoardFace_m": 0.0035,
+      "TE_ToolLumpHammer_zRange": [
+        2.045,
+        2.111
+      ],
+      "TE_ToolLumpHammer_standoffFromBoardFace_m": 0.003,
+      "TE_ToolBoltCutters_zRange": [
+        2.0502,
+        2.0968
+      ],
+      "TE_ToolBoltCutters_standoffFromBoardFace_m": 0.0082,
+      "wrench_longestSpan_m": 0.457,
+      "wrench_angularSize_deg_at_2p5m": 5.82,
+      "wrench_angularSize_deg_at_6m": 3.08,
+      "hammer_longestSpan_m": 0.306,
+      "hammer_angularSize_deg_at_2p5m": 3.9,
+      "hammer_angularSize_deg_at_6m": 2.06,
+      "cutters_longestSpan_m": 0.604,
+      "cutters_angularSize_deg_at_2p5m": 7.68,
+      "cutters_angularSize_deg_at_6m": 4.07
+    },
+    "attachments": {
+      "pipeWrench": {
+        "hungOn": "board peg through the 33 mm eyelet",
+        "pegA_xy": [
+          -2.6594206683547386,
+          1.911410112271483
+        ],
+        "boardFaceZ": 2.042
+      },
+      "lumpHammer": {
+        "restsOn": "two curl rest pegs under the haft",
+        "pegsA_xy": [
+          [
+            -1.9646157221224032,
+            1.6810450093523095
+          ],
+          [
+            -1.8246636966258252,
+            1.6847097821154118
+          ]
+        ]
+      },
+      "boltCutters": {
+        "restsOn": "two curl rest pegs under the lower/upper arms (arms rest on the pegs, tag hangs on a twine loop round the lower arm)",
+        "pegsA_xy": [
+          [
+            -1.9908255631981058,
+            1.276961732294549
+          ],
+          [
+            -1.7757153652200905,
+            1.281398693651814
+          ]
+        ]
+      },
+      "pegRail": {
+        "fixedTo": "shadow board face, six countersunk screws",
+        "railCentreY": 1.955,
+        "x": [
+          -2.86,
+          -1.44
+        ]
+      },
+      "benchTools": {
+        "restOn": "bench top y = 0.962",
+        "clampA_xz": [
+          -2.44,
+          2.22
+        ],
+        "whetstoneA_xz": [
+          -1.8,
+          2.235
+        ],
+        "fileA_xz": [
+          -1.74,
+          2.36
+        ]
+      },
+      "displayLamp": {
+        "fixedTo": "soffit y = 2.185 (plate 0.10 x 0.06); lamp head at y 2.010..2.10, x = -1.78; NO light source or emissive in the asset"
+      },
+      "shutterGuides": {
+        "fixedTo": "masonry reveal faces x = -0.70 (left) and x = 2.75 (right); channel retains the slat edges (slat z 2.595..2.655)"
+      },
+      "shutterHardware": {
+        "fixedTo": "front face of the slat surface z = 2.655; handle plates at x = 0.475 and 1.575, lock box x = 1.025, y = 0.82"
+      }
+    }
+  },
+  "parts": [
+    {
+      "part": "TE_BenchTools",
+      "description": "On the bench: whetstone in a timber cradle, cast-iron G-clamp (tag on a twine loop round the T-bar) and a flat file with palm-polished ash handle.",
+      "collisionGuidance": "collider: none.",
+      "pivotAuthoring_A": [
+        -2.15,
+        0.962,
+        2.24
+      ],
+      "pivotUnityLocalToBuilding": [
+        2.15,
+        0.962,
+        2.24
+      ],
+      "orientation": "Identity rotation, uniform scale 1, no part rotated relative to the building. Front faces +Z (avenue).",
+      "sizeMetres_XYZ_A": [
+        1.0392,
+        0.2453,
+        0.3344
+      ],
+      "boundsA": {
+        "min": [
+          -2.5254,
+          0.962,
+          2.0825
+        ],
+        "max": [
+          -1.4862,
+          1.2073,
+          2.4169
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/TE_BenchTools.glb",
+        "tris": 1812,
+        "verts": 979,
+        "materialSlots": [
+          "Timber",
+          "Stone",
+          "Iron",
+          "ToolSteel",
+          "Steel",
+          "Twine",
+          "Paper",
+          "TimberPolished",
+          "Brass"
+        ]
+      },
+      "lod1": null,
+      "qc": {
+        "tris": 1812,
+        "sizeA": [
+          1.0392,
+          0.2453,
+          0.3344
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 80,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Static shadow caster only; use light probes. If baking is required generate UV1 in Unity - never reuse UV0 (metric tiling overlaps)."
+    },
+    {
+      "part": "TE_DisplayCase",
+      "description": "Shadow-board backing (unique 2048 px/m map with painted tool outlines and the ghost of the missing handsaw), timber liners, soffit, shallow bench with skirt, back fence, dust drifts and a palm-polished forearm strip. Sits inside the dressed opening behind the existing glazing, against the existing dark recess plane (z 2.435..2.505).",
+      "collisionGuidance": "collider: none. Static, non-interactable, fully inside the closed shell; no interior is walkable.",
+      "pivotAuthoring_A": [
+        -2.15,
+        0.78,
+        2.45
+      ],
+      "pivotUnityLocalToBuilding": [
+        2.15,
+        0.78,
+        2.45
+      ],
+      "orientation": "Identity rotation, uniform scale 1, no part rotated relative to the building. Front faces +Z (avenue).",
+      "sizeMetres_XYZ_A": [
+        1.5,
+        1.42,
+        0.42
+      ],
+      "boundsA": {
+        "min": [
+          -2.9,
+          0.78,
+          2.03
+        ],
+        "max": [
+          -1.4,
+          2.2,
+          2.45
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/TE_DisplayCase.glb",
+        "tris": 2140,
+        "verts": 1211,
+        "materialSlots": [
+          "Board",
+          "Timber",
+          "TimberPolished",
+          "Sand"
+        ]
+      },
+      "lod1": null,
+      "qc": {
+        "tris": 2140,
+        "sizeA": [
+          1.5,
+          1.42,
+          0.42
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 251,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Static shadow caster only; use light probes. If baking is required generate UV1 in Unity - never reuse UV0 (metric tiling overlaps)."
+    },
+    {
+      "part": "TE_DisplayGlazing",
+      "description": "The same two panes as revision 04 at the same coordinates (z 2.543..2.577) with clear glass, dust film, edge grime, rain streaks, cloth wipe arcs and fingertip prints (unique RGBA map). Replaces the near-black opaque panes.",
+      "collisionGuidance": "collider: none.",
+      "pivotAuthoring_A": [
+        -2.15,
+        0.83,
+        2.543
+      ],
+      "pivotUnityLocalToBuilding": [
+        2.15,
+        0.83,
+        2.543
+      ],
+      "orientation": "Identity rotation, uniform scale 1, no part rotated relative to the building. Front faces +Z (avenue).",
+      "sizeMetres_XYZ_A": [
+        1.435,
+        1.32,
+        0.034
+      ],
+      "boundsA": {
+        "min": [
+          -2.868,
+          0.83,
+          2.543
+        ],
+        "max": [
+          -1.433,
+          2.15,
+          2.577
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/TE_DisplayGlazing.glb",
+        "tris": 88,
+        "verts": 48,
+        "materialSlots": [
+          "Glass"
+        ]
+      },
+      "lod1": null,
+      "qc": {
+        "tris": 88,
+        "sizeA": [
+          1.435,
+          1.32,
+          0.034
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 0,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Static shadow caster only; use light probes. If baking is required generate UV1 in Unity - never reuse UV0 (metric tiling overlaps)."
+    },
+    {
+      "part": "TE_DisplayLamp",
+      "description": "Swan-neck lamp housing (soffit plate, cast neck, enamel-red shade, brass cap). GEOMETRY ONLY: there is no light and no emissive material in the package; a practical light is a game-dev decision.",
+      "collisionGuidance": "collider: none.",
+      "pivotAuthoring_A": [
+        -1.78,
+        2.185,
+        2.15
+      ],
+      "pivotUnityLocalToBuilding": [
+        1.78,
+        2.185,
+        2.15
+      ],
+      "orientation": "Identity rotation, uniform scale 1, no part rotated relative to the building. Front faces +Z (avenue).",
+      "sizeMetres_XYZ_A": [
+        0.192,
+        0.175,
+        0.246
+      ],
+      "boundsA": {
+        "min": [
+          -1.876,
+          2.01,
+          2.12
+        ],
+        "max": [
+          -1.684,
+          2.185,
+          2.366
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/TE_DisplayLamp.glb",
+        "tris": 1066,
+        "verts": 584,
+        "materialSlots": [
+          "ShutterPaint",
+          "Steel",
+          "Iron",
+          "PaintRed",
+          "Brass"
+        ]
+      },
+      "lod1": null,
+      "qc": {
+        "tris": 1066,
+        "sizeA": [
+          0.192,
+          0.175,
+          0.246
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 96,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Static shadow caster only; use light probes. If baking is required generate UV1 in Unity - never reuse UV0 (metric tiling overlaps)."
+    },
+    {
+      "part": "TE_PegRail",
+      "description": "Timber peg rail with six countersunk screws, three rail pegs, the wrench peg, two blank kraft repair tags hung from the empty saw peg, and a cord hank on a spare peg.",
+      "collisionGuidance": "collider: none.",
+      "pivotAuthoring_A": [
+        -2.15,
+        1.955,
+        2.042
+      ],
+      "pivotUnityLocalToBuilding": [
+        2.15,
+        1.955,
+        2.042
+      ],
+      "orientation": "Identity rotation, uniform scale 1, no part rotated relative to the building. Front faces +Z (avenue).",
+      "sizeMetres_XYZ_A": [
+        1.42,
+        0.1961,
+        0.076
+      ],
+      "boundsA": {
+        "min": [
+          -2.86,
+          1.786,
+          2.042
+        ],
+        "max": [
+          -1.44,
+          1.982,
+          2.118
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/TE_PegRail.glb",
+        "tris": 3392,
+        "verts": 1814,
+        "materialSlots": [
+          "Timber",
+          "Steel",
+          "Sand",
+          "Twine",
+          "Paper"
+        ]
+      },
+      "lod1": null,
+      "qc": {
+        "tris": 3392,
+        "sizeA": [
+          1.42,
+          0.196,
+          0.076
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 142,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Static shadow caster only; use light probes. If baking is required generate UV1 in Unity - never reuse UV0 (metric tiling overlaps)."
+    },
+    {
+      "part": "TE_RestPegs",
+      "description": "Four curl rest pegs for the hammer haft and the cutter arms.",
+      "collisionGuidance": "collider: none.",
+      "pivotAuthoring_A": [
+        -2.15,
+        1.5,
+        2.042
+      ],
+      "pivotUnityLocalToBuilding": [
+        2.15,
+        1.5,
+        2.042
+      ],
+      "orientation": "Identity rotation, uniform scale 1, no part rotated relative to the building. Front faces +Z (avenue).",
+      "sizeMetres_XYZ_A": [
+        0.2321,
+        0.4435,
+        0.0645
+      ],
+      "boundsA": {
+        "min": [
+          -1.9993,
+          1.2687,
+          2.042
+        ],
+        "max": [
+          -1.7672,
+          1.7122,
+          2.1065
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/TE_RestPegs.glb",
+        "tris": 760,
+        "verts": 420,
+        "materialSlots": [
+          "Steel"
+        ]
+      },
+      "lod1": null,
+      "qc": {
+        "tris": 760,
+        "sizeA": [
+          0.2321,
+          0.4435,
+          0.0645
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 56,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Static shadow caster only; use light probes. If baking is required generate UV1 in Unity - never reuse UV0 (metric tiling overlaps)."
+    },
+    {
+      "part": "TE_ShutterGuide_L",
+      "description": "Formed steel shutter guide channel on the left masonry reveal: web, rear flange, front flange over the slat edge with return lip, top bracket plate, 11 fixings, and a bare-steel rub plate (0.46 m long, higher on the handle side).",
+      "collisionGuidance": "collider: none. Front-most z 2.722 = 22 mm proud of the front-wall collider face (z 2.70), 41 mm behind the old lift handles (2.763); the wall collider is unchanged.",
+      "pivotAuthoring_A": [
+        -0.7,
+        0.0,
+        2.605
+      ],
+      "pivotUnityLocalToBuilding": [
+        0.7,
+        0.0,
+        2.605
+      ],
+      "orientation": "Identity rotation, uniform scale 1, no part rotated relative to the building. Front faces +Z (avenue).",
+      "sizeMetres_XYZ_A": [
+        0.14,
+        2.66,
+        0.1395
+      ],
+      "boundsA": {
+        "min": [
+          -0.7,
+          0.09,
+          2.5825
+        ],
+        "max": [
+          -0.56,
+          2.75,
+          2.722
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/TE_ShutterGuide_L.glb",
+        "tris": 958,
+        "verts": 505,
+        "materialSlots": [
+          "ShutterPaint",
+          "Steel"
+        ]
+      },
+      "lod1": null,
+      "qc": {
+        "tris": 958,
+        "sizeA": [
+          0.14,
+          2.66,
+          0.1395
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 12,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Static shadow caster only; use light probes. If baking is required generate UV1 in Unity - never reuse UV0 (metric tiling overlaps)."
+    },
+    {
+      "part": "TE_ShutterGuide_R",
+      "description": "Companion channel on the right reveal; rub plate 0.26 m long (used less).",
+      "collisionGuidance": "collider: none.",
+      "pivotAuthoring_A": [
+        2.75,
+        0.0,
+        2.605
+      ],
+      "pivotUnityLocalToBuilding": [
+        -2.75,
+        0.0,
+        2.605
+      ],
+      "orientation": "Identity rotation, uniform scale 1, no part rotated relative to the building. Front faces +Z (avenue).",
+      "sizeMetres_XYZ_A": [
+        0.14,
+        2.66,
+        0.1395
+      ],
+      "boundsA": {
+        "min": [
+          2.61,
+          0.09,
+          2.5825
+        ],
+        "max": [
+          2.75,
+          2.75,
+          2.722
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/TE_ShutterGuide_R.glb",
+        "tris": 958,
+        "verts": 505,
+        "materialSlots": [
+          "ShutterPaint",
+          "Steel"
+        ]
+      },
+      "lod1": null,
+      "qc": {
+        "tris": 958,
+        "sizeA": [
+          0.14,
+          2.66,
+          0.1395
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 12,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Static shadow caster only; use light probes. If baking is required generate UV1 in Unity - never reuse UV0 (metric tiling overlaps)."
+    },
+    {
+      "part": "TE_ShutterHardware",
+      "description": "Two handle plates with brass D-handles (left plate heavily used, right ~half as much), lock box with brass escutcheon, hasp with padlock (closed through a staple) and a kick plate; unique 2048 px/m atlas carries directional hand wear.",
+      "collisionGuidance": "collider: none. Protrudes at most 82.8 mm from the slat face (to z 2.738).",
+      "pivotAuthoring_A": [
+        1.025,
+        0.0,
+        2.655
+      ],
+      "pivotUnityLocalToBuilding": [
+        -1.025,
+        0.0,
+        2.655
+      ],
+      "orientation": "Identity rotation, uniform scale 1, no part rotated relative to the building. Front faces +Z (avenue).",
+      "sizeMetres_XYZ_A": [
+        1.5,
+        0.82,
+        0.0828
+      ],
+      "boundsA": {
+        "min": [
+          0.275,
+          0.1,
+          2.655
+        ],
+        "max": [
+          1.775,
+          0.92,
+          2.7378
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/TE_ShutterHardware.glb",
+        "tris": 2830,
+        "verts": 1487,
+        "materialSlots": [
+          "ShutterFit",
+          "ShutterPaint",
+          "Steel",
+          "Brass"
+        ]
+      },
+      "lod1": null,
+      "qc": {
+        "tris": 2830,
+        "sizeA": [
+          1.5,
+          0.82,
+          0.0828
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 0,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Static shadow caster only; use light probes. If baking is required generate UV1 in Unity - never reuse UV0 (metric tiling overlaps)."
+    },
+    {
+      "part": "TE_ToolBoltCutters",
+      "description": "Bolt cutters (604 mm) with rubber-dipped grips, forged jaws, replaceable bright blades, pivot bolt; rests on two curl pegs; repair tag on a twine loop round the lower arm.",
+      "collisionGuidance": "collider: none.",
+      "pivotAuthoring_A": [
+        -2.075,
+        1.325,
+        2.0559999999999996
+      ],
+      "pivotUnityLocalToBuilding": [
+        2.075,
+        1.325,
+        2.056
+      ],
+      "orientation": "Identity rotation, uniform scale 1, no part rotated relative to the building. Front faces +Z (avenue).",
+      "sizeMetres_XYZ_A": [
+        0.6039,
+        0.1967,
+        0.0466
+      ],
+      "boundsA": {
+        "min": [
+          -2.077,
+          1.1871,
+          2.0502
+        ],
+        "max": [
+          -1.4731,
+          1.3838,
+          2.0968
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/TE_ToolBoltCutters.glb",
+        "tris": 1600,
+        "verts": 838,
+        "materialSlots": [
+          "ToolSteel",
+          "Rubber",
+          "Steel",
+          "Iron",
+          "Twine",
+          "Paper"
+        ]
+      },
+      "lod1": null,
+      "qc": {
+        "tris": 1600,
+        "sizeA": [
+          0.6039,
+          0.1967,
+          0.0466
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 12,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Static shadow caster only; use light probes. If baking is required generate UV1 in Unity - never reuse UV0 (metric tiling overlaps)."
+    },
+    {
+      "part": "TE_ToolLumpHammer",
+      "description": "Lump hammer (306 mm head-to-butt), forged black head with bright struck faces, wedge, palm-polished ash haft; rests on two curl pegs.",
+      "collisionGuidance": "collider: none.",
+      "pivotAuthoring_A": [
+        -2.02,
+        1.695,
+        2.0484999999999998
+      ],
+      "pivotUnityLocalToBuilding": [
+        2.02,
+        1.695,
+        2.0485
+      ],
+      "orientation": "Identity rotation, uniform scale 1, no part rotated relative to the building. Front faces +Z (avenue).",
+      "sizeMetres_XYZ_A": [
+        0.3079,
+        0.1012,
+        0.066
+      ],
+      "boundsA": {
+        "min": [
+          -2.024,
+          1.6514,
+          2.045
+        ],
+        "max": [
+          -1.7161,
+          1.7526,
+          2.111
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/TE_ToolLumpHammer.glb",
+        "tris": 934,
+        "verts": 466,
+        "materialSlots": [
+          "TimberPolished",
+          "Timber",
+          "Steel",
+          "ToolSteel"
+        ]
+      },
+      "lod1": null,
+      "qc": {
+        "tris": 934,
+        "sizeA": [
+          0.3079,
+          0.1012,
+          0.066
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 24,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Static shadow caster only; use light probes. If baking is required generate UV1 in Unity - never reuse UV0 (metric tiling overlaps)."
+    },
+    {
+      "part": "TE_ToolPipeWrench",
+      "description": "Enamel-red pipe wrench (458 mm) hung on a board peg through a real 13 mm bore; cast rib, knurled adjuster, hook-jaw teeth, pivot rivets. Registers with the painted outline.",
+      "collisionGuidance": "collider: none.",
+      "pivotAuthoring_A": [
+        -2.6594206683547386,
+        1.9084101122714832,
+        2.0519999999999996
+      ],
+      "pivotUnityLocalToBuilding": [
+        2.6594,
+        1.9084,
+        2.052
+      ],
+      "orientation": "Identity rotation, uniform scale 1, no part rotated relative to the building. Front faces +Z (avenue).",
+      "sizeMetres_XYZ_A": [
+        0.11,
+        0.4579,
+        0.035
+      ],
+      "boundsA": {
+        "min": [
+          -2.6955,
+          1.4671,
+          2.0455
+        ],
+        "max": [
+          -2.5854,
+          1.925,
+          2.0805
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/TE_ToolPipeWrench.glb",
+        "tris": 1388,
+        "verts": 726,
+        "materialSlots": [
+          "PaintRed",
+          "ToolSteel",
+          "Steel"
+        ]
+      },
+      "lod1": null,
+      "qc": {
+        "tris": 1388,
+        "sizeA": [
+          0.1101,
+          0.4579,
+          0.035
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 28,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Static shadow caster only; use light probes. If baking is required generate UV1 in Unity - never reuse UV0 (metric tiling overlaps)."
+    }
+  ],
+  "textureBudget": {
+    "pngFilesOnDisk": 46,
+    "distinctMapsReferencedByMaterials": 46,
+    "pixelsReferenced": 217326142,
+    "estimatedVRAM_MiB_BC7_withMips": 276.3,
+    "estimatedVRAM_MiB_RGBA32_withMips_ifUncompressed": 1105.4,
+    "residentNote": "Estimate only; nothing measured in Unity. Small-prop families (Twine, Paper, Sand, Stone, Iron, Rubber, ToolSteel, Timber x2, BareSteel x2) are 2048^2 tiling maps used on objects a few centimetres across: game-dev should trial 1024 tiles or shared trims for the smallest ones and use mip streaming. Source maps stay at full resolution."
+  },
+  "triangleTotals": {
+    "lod0": 17926,
+    "replacedRevision04Tris": 686
+  },
+  "lightingNote": "No emissive materials and no lights in the asset. The display is a closed alcove behind glass and will read dark in shade; the lamp is geometry only."
+}

@@ -1,0 +1,473 @@
+{
+  "author": "Original deterministic Ward material synthesis (numpy), Tool Exchange display and shutter hardware",
+  "date": "2026-09-29",
+  "licence": "Project original; no third-party source imagery; no generative-model output",
+  "seed": "per-material seeds 929301-929321 in make_te_textures.py",
+  "normal": "OpenGL +Y tangent space",
+  "packed": "R metallic; A smoothness; G/B zero",
+  "colourSpace": "BaseColor sRGB; Normal + MetalSmooth linear",
+  "materials": [
+    {
+      "material": "TE_Stone",
+      "tileMetres": 0.25,
+      "note": "Fine grey-green sharpening stone with oil slurry stain and polished dished face.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "TE_Stone_BaseColor.png",
+          "sha256": "1337f13a3ee3e3b24338ce7a12b0ad40dbe386c0c12a4b94b60bf01f65721316",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 4762341
+        },
+        "Normal": {
+          "file": "TE_Stone_Normal.png",
+          "sha256": "19a3b2ccf7906106622fdce388d669a7860de2fa655114428071f699b65b6340",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 6276687
+        },
+        "MetalSmooth": {
+          "file": "TE_Stone_MetalSmooth.png",
+          "sha256": "ee5fdcc8f4704b72823a0d4075f3d7350acb3e715a5793ba4daab33a0ffae037",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 3589829
+        }
+      },
+      "variants": {}
+    },
+    {
+      "material": "TE_ToolBoard",
+      "tileMetres": null,
+      "note": "Unique 3072x2908 at 2048 px/m. A-space x = -2.90 + px/2048; y = 0.78 + (2907-row)/2048; u=(x+2.90)/1.5, v=(y-0.78)/1.42. 25 mm perforation grid, painted outlines of the three hung tools plus the missing handsaw (cleaner ghost), hand rub, dust and hardboard chips.",
+      "pxPerMetre": 2048.0,
+      "maps": {
+        "BaseColor": {
+          "file": "TE_ToolBoard_BaseColor.png",
+          "sha256": "718ef777b15be128fcf9638a9ed2feaec34839bf28ac5d71bf2aa4b8520cb1e0",
+          "width": 3072,
+          "height": 2908,
+          "bytes": 5525688
+        },
+        "Normal": {
+          "file": "TE_ToolBoard_Normal.png",
+          "sha256": "e0f2b59d7a2b8038a1c9206f421fc75db4bc3d69a78e96f1817298caccbcbc40",
+          "width": 3072,
+          "height": 2908,
+          "bytes": 8936190
+        },
+        "MetalSmooth": {
+          "file": "TE_ToolBoard_MetalSmooth.png",
+          "sha256": "c844fce059b8eacc24d1aa0fcfef55dab59b64701f09114ee7ffd11ed9d07cde",
+          "width": 3072,
+          "height": 2908,
+          "bytes": 1531507
+        }
+      },
+      "variants": {}
+    },
+    {
+      "material": "TE_ShutterFit",
+      "tileMetres": null,
+      "note": "Unique 4096x1024 at 2048 px/m atlas (2.0 x 0.5 m). Zones in make_te_textures.ATLAS: two handle plates, lock box, hasp, brass escutcheon, kick strip. Directional hand wear: fingertip grasp, thumb knock, left plate used ~2x the right.",
+      "pxPerMetre": 2048.0,
+      "maps": {
+        "BaseColor": {
+          "file": "TE_ShutterFit_BaseColor.png",
+          "sha256": "9c8d7ca5f50ce3fe0133705df920223e39b73b7c320797ef460c4ac377151d03",
+          "width": 4096,
+          "height": 1024,
+          "bytes": 1323880
+        },
+        "Normal": {
+          "file": "TE_ShutterFit_Normal.png",
+          "sha256": "3c3355d176df67456169592d1520bbb4b74c83e47503a0f4afb9dfa48010c7b0",
+          "width": 4096,
+          "height": 1024,
+          "bytes": 3615785
+        },
+        "MetalSmooth": {
+          "file": "TE_ShutterFit_MetalSmooth.png",
+          "sha256": "cedd390a1bda3fc51f44147947283fd01c859bc75eb0c72ccd41beca1026db15",
+          "width": 4096,
+          "height": 1024,
+          "bytes": 6776980
+        }
+      },
+      "variants": {}
+    },
+    {
+      "material": "TE_ToolPaintRed",
+      "tileMetres": 0.5,
+      "note": "Enamel-red pipe-wrench paint over cast steel: chipped to bare metal, rust halos, scratches.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "TE_ToolPaintRed_BaseColor.png",
+          "sha256": "3ddaf80b9c961172111c9343e7acb88578ec6340288f7ffe2cb406ec451b36f6",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 2497987
+        },
+        "Normal": {
+          "file": "TE_ToolPaintRed_Normal.png",
+          "sha256": "4d3b7e26b40827dac648a0acdb15830c5c150db57b9317e2e9cf82491716c1f7",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 5242193
+        },
+        "MetalSmooth": {
+          "file": "TE_ToolPaintRed_MetalSmooth.png",
+          "sha256": "d6fdf4e056d643a28e68d7c68a3dd61277dbf6a6cd25180521a194811d127657",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 1343573
+        }
+      },
+      "variants": {}
+    },
+    {
+      "material": "TE_CastIron",
+      "tileMetres": 0.4,
+      "note": "Dark cast-iron/black-painted frames (clamps, vice jaws): gritty, rust bloom on chips.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "TE_CastIron_BaseColor.png",
+          "sha256": "7e7d0b09b75475d09eb37779879360305590b8aecb3cb5acaea50cb8a815b417",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 1737007
+        },
+        "Normal": {
+          "file": "TE_CastIron_Normal.png",
+          "sha256": "86318116dca220af8f435e2d3d063c71b6bb0c70ac732b47b1d28fa6cdaaffc3",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 6444590
+        },
+        "MetalSmooth": {
+          "file": "TE_CastIron_MetalSmooth.png",
+          "sha256": "90b9743952d9c54ffd1603d050a39515baf2b95de50668cd1b1c7675236a8d52",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 1172645
+        }
+      },
+      "variants": {}
+    },
+    {
+      "material": "TE_ToolSteel",
+      "tileMetres": 0.5,
+      "note": "Oil-blackened drop-forged tool steel with bright worn ridges, pitting.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "TE_ToolSteel_BaseColor.png",
+          "sha256": "9c139b05b6c3a0c03b90e437d97518a8697dfe8971f544f76abf16012551953c",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 3108086
+        },
+        "Normal": {
+          "file": "TE_ToolSteel_Normal.png",
+          "sha256": "9940ae73e16dcd420fa7ce68810537b3984abd04f8f96c5ac56acd69898fe97c",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 3018358
+        },
+        "MetalSmooth": {
+          "file": "TE_ToolSteel_MetalSmooth.png",
+          "sha256": "5fd039f1c2ad70127d13e6031f3f78a03025b82250fceda1c69f8ddc6efea622",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 3046432
+        }
+      },
+      "variants": {}
+    },
+    {
+      "material": "TE_BareSteel",
+      "tileMetres": 0.5,
+      "note": "Brushed bare steel: pegs, screws, file, cutting edges. Brass variant for the padlock body.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "TE_BareSteel_BaseColor.png",
+          "sha256": "a37070a4fe479a54514f1d3a8d5c86364cadcbac48ec6f2fbbe79d69ef56a97d",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 2033935
+        },
+        "Normal": {
+          "file": "TE_BareSteel_Normal.png",
+          "sha256": "c5f01d3756e52d1269c6ed96158ffd0e23b5bb69b54c547954849a4947576a2c",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 843434
+        },
+        "MetalSmooth": {
+          "file": "TE_BareSteel_MetalSmooth.png",
+          "sha256": "e55b854628bbd6099477157ad0cdf24dfb3f243c01d39b7a771a8cbf15ee16dd",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 1887166
+        }
+      },
+      "variants": {
+        "Brass": {
+          "file": "TE_BareSteel_Brass_BaseColor.png",
+          "tintSRGB": [
+            1.12,
+            0.86,
+            0.4
+          ],
+          "paintMasked": false,
+          "sha256": "5cb4b531003786a5a3c9508574121088182ffe51c019e6b9c6bbc7ea8cc13474",
+          "bytes": 1810361
+        }
+      }
+    },
+    {
+      "material": "TE_Timber",
+      "tileMetres": 0.5,
+      "note": "Oiled hardwood: grain along U. Rail, bench top, hammer haft, file handle, alcove lining.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "TE_Timber_BaseColor.png",
+          "sha256": "3612eea1c42a42ba94ebe86acaf77c18f19b41d63e797fe072befa2391ba52ea",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 1545247
+        },
+        "Normal": {
+          "file": "TE_Timber_Normal.png",
+          "sha256": "fb6749e4f1b49d2562893c656b87af5802902ba091d5fd377e579783acd0fe0b",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 662799
+        },
+        "MetalSmooth": {
+          "file": "TE_Timber_MetalSmooth.png",
+          "sha256": "75b6426e7da46a54790c3fdbb5227b7809b446a3e61c84b6017bfcc58f0eb1b3",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 692236
+        }
+      },
+      "variants": {}
+    },
+    {
+      "material": "TE_TimberPolished",
+      "tileMetres": 0.5,
+      "note": "Palm-polished ash: hammer haft grip and file handle where hands hold them. Darker, satin.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "TE_TimberPolished_BaseColor.png",
+          "sha256": "dc8def9deac40316212282a42b173a62b51a3d74e4e89cb46980f599e1446b10",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 1321372
+        },
+        "Normal": {
+          "file": "TE_TimberPolished_Normal.png",
+          "sha256": "da4c1deb0f6ceed9dd23b482675716105981d294b0b8d90825145c5176c46969",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 648817
+        },
+        "MetalSmooth": {
+          "file": "TE_TimberPolished_MetalSmooth.png",
+          "sha256": "c761f694f2f6b19f78a24815635268471c3ff0ef44c700f3eaf2eef93e4cb747",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 651312
+        }
+      },
+      "variants": {}
+    },
+    {
+      "material": "TE_Rubber",
+      "tileMetres": 0.3,
+      "note": "Dipped rubber grips on bolt-cutter handles: fine grain, crazing, dust bloom.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "TE_Rubber_BaseColor.png",
+          "sha256": "21aded63b31ad59abd8c560eea2e984afa4502062576ef8f834f525c3bbd2328",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 4528180
+        },
+        "Normal": {
+          "file": "TE_Rubber_Normal.png",
+          "sha256": "86be3f4b904d87a8b0b0de24eccf6eecaf8fae803c3df6b7a829b086a7679b7a",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 5911483
+        },
+        "MetalSmooth": {
+          "file": "TE_Rubber_MetalSmooth.png",
+          "sha256": "19a7aa5ce0e35b2e944dc0c8bdbe4fa5199ea100d9dd9cc9fc7cba851b5c919c",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 3556675
+        }
+      },
+      "variants": {}
+    },
+    {
+      "material": "TE_Twine",
+      "tileMetres": 0.1,
+      "note": "3-ply twine: repair-tag strings, hasp loop.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "TE_Twine_BaseColor.png",
+          "sha256": "329e3d9ba2f2b74edf9a621ea1337d3341d655bd59f9d6285e8cce7b1a7948ed",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 5419836
+        },
+        "Normal": {
+          "file": "TE_Twine_Normal.png",
+          "sha256": "6130a2c9a8f34e6e22b9942985277d9732d00112d1722714bbd4705ee8f281f5",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 7062266
+        },
+        "MetalSmooth": {
+          "file": "TE_Twine_MetalSmooth.png",
+          "sha256": "591e5c965cbf914953f25ca76332fb04f4745e30c73a6ac0ba12e19bd2ee3a73",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 3116302
+        }
+      },
+      "variants": {}
+    },
+    {
+      "material": "TE_Paper",
+      "tileMetres": 0.35,
+      "note": "Kraft repair-tag paper, rule bands and stamp ring, NO lettering.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "TE_Paper_BaseColor.png",
+          "sha256": "be25ecdea14801d8a250a5245899a6fa16f3029e9f67c5f0fe3eccbcacaf9ec0",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 4151768
+        },
+        "Normal": {
+          "file": "TE_Paper_Normal.png",
+          "sha256": "99eb8752211c6d85f314fe25c0a729c92ae2723ac25bfb13e4fb015c1044668e",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 5887176
+        },
+        "MetalSmooth": {
+          "file": "TE_Paper_MetalSmooth.png",
+          "sha256": "6774a7206688a9c87bed471d6875fa9ac98d292df7d3b0e4ed09aff57d1eaecd",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 3104094
+        }
+      },
+      "variants": {}
+    },
+    {
+      "material": "TE_Sand",
+      "tileMetres": 0.5,
+      "note": "Fine dust for local drifts on the bench and rail top.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "TE_Sand_BaseColor.png",
+          "sha256": "f27427962678a4fe4162101743eca2bd8d47d01852c3bb3db05bf835eab066f0",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 5061652
+        },
+        "Normal": {
+          "file": "TE_Sand_Normal.png",
+          "sha256": "0b7fb0d8be4cce4a77b6229553bf0d5e3912159f3731b5c55141a5f67134c7f2",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 8104548
+        },
+        "MetalSmooth": {
+          "file": "TE_Sand_MetalSmooth.png",
+          "sha256": "8fe92576c4986d4446591462e42173a17079993608017d4e0fbfa92f8865dfc8",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 2105782
+        }
+      },
+      "variants": {}
+    },
+    {
+      "material": "TE_ShutterPaint",
+      "tileMetres": 0.6,
+      "note": "Dark satin painted structural steel for the shutter guide caps, bolts, straps (matches the existing shutter slat tone).",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "TE_ShutterPaint_BaseColor.png",
+          "sha256": "bde022e1a8b1f6bf3e8afcb1edb93eb3ba0904220bed4191058239b4bfdeb9ea",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 2107280
+        },
+        "Normal": {
+          "file": "TE_ShutterPaint_Normal.png",
+          "sha256": "b84f8cc2decec403e3a7880bb49548ffcd8264af51a2826d654f156c40e4e9a0",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 5934318
+        },
+        "MetalSmooth": {
+          "file": "TE_ShutterPaint_MetalSmooth.png",
+          "sha256": "2ffc5a7df33e60aeeecc1b73e1e14d75239d391f4332d07770bef103daea21de",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 1560898
+        }
+      },
+      "variants": {}
+    },
+    {
+      "material": "TE_DisplayGlass",
+      "tileMetres": null,
+      "note": "Unique 2806x2703 RGBA at 2048 px/m; left pane u 0..0.5, right pane u 0.5..1. Alpha = opacity (URP transparent/alpha blend). Dust film, edge grime, rain streaks, wipe arcs, fingertip prints. No text.",
+      "pxPerMetre": 2048.0,
+      "maps": {
+        "BaseColor": {
+          "file": "TE_DisplayGlass_BaseColor.png",
+          "sha256": "c571a1f7c8c02ea405072724edf2d29ab4bf42eada2c1ad05a42df27a0cb235b",
+          "width": 2806,
+          "height": 2703,
+          "bytes": 7146465
+        },
+        "Normal": {
+          "file": "TE_DisplayGlass_Normal.png",
+          "sha256": "c7aa0a4256c105e6377b396aaa4a1d3b5d21f44be6b0a47c68146907b53d1c53",
+          "width": 2806,
+          "height": 2703,
+          "bytes": 369492
+        },
+        "MetalSmooth": {
+          "file": "TE_DisplayGlass_MetalSmooth.png",
+          "sha256": "d74a862a16ed68bfb869875ae57c12c0aec094c58d3635993253399e82678d2d",
+          "width": 2806,
+          "height": 2703,
+          "bytes": 3459871
+        }
+      },
+      "variants": {}
+    }
+  ]
+}

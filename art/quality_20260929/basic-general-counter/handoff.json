@@ -1,0 +1,604 @@
+{
+  "task": "t_84b69b7e",
+  "date": "2026-09-29",
+  "author": "3d-modeler",
+  "status": "SOURCE-RENDER REVIEWED ONLY. Not Unity-integrated, not native-verified, not accepted.",
+  "target": "Basic General authored frontage (scene root \"Basic General authored frontage\", prefab Assets/AthenHill/Art/Phase1/BasicGeneral/Revision03/BasicGeneral.prefab), Mira service recess only",
+  "buildingPivotUnity": [
+    8.0,
+    0.5,
+    15.1
+  ],
+  "frontUnity": [
+    0,
+    0,
+    1
+  ],
+  "coordinateConvention": "Authoring \"A-space\": building-local metres, +X screen-right when viewed from the avenue, +Y up, +Z toward the avenue, origin = building pivot, Y=0 = porch top. GLB files are Y-up in A-space. glTFast imports GLB with an X flip, so a part placed under the building root at local (Ax, Ay, Az) arrives at Unity local (-Ax, Ay, Az) - i.e. the project rule Blender(x,y,z)->Unity(-x,z,-y) with A==(x,z_b,-y_b). Place each part with position (-pivotA.x, pivotA.y, pivotA.z) relative to the building root, identity rotation, scale 1. Verify by checking the counter sits against the rear wall and left/right shelf bays are the correct way round (left bay = olla jar + blue canteen; right bay = copper hanks + spool).",
+  "interchangeAlternative": "exports/interchange/bgc-meshes-v1.json has per-material submeshes in A-space relative to each pivot, in the same layout as the Basic General v3 interchange, for use with the existing Editor-only prepare/install approach (reflect X, reverse winding, regenerate tangents). Prefer this over GLB if you need native .asset meshes + GUID stability.",
+  "supersedesByNamePrefix": [
+    "Sealed goods tin",
+    "Tin rolled lid",
+    "Tin label",
+    "Stock exact label",
+    "Stock shelf",
+    "Counter repair fascia",
+    "Counter inset plate",
+    "Counter plate rivet",
+    "Service ledge",
+    "Counter working lip",
+    "Counter grip paint loss"
+  ],
+  "keepUnchanged": [
+    "Stock recessed cabinet -1.72 / 1.72 (back panels behind the shelves - the new shelves are designed to sit in front of them)",
+    "Supplies service title (wall lettering)",
+    "Sign, awning, masonry, porch, step, all six colliders, Mira root (A 0,0,0.7 = Unity 8,0.5,15.8), rear wall and rear services"
+  ],
+  "howToRetire": "Disable/hide the superseded renderers (keep them in the prefab for rollback); do not delete. The list is also stored in the review .blend text block \"bgc_retired_objects.txt\" (90 objects).",
+  "measurements": {
+    "actor_m": 1.8,
+    "existingKioskWidth_m": 5.5,
+    "existingKioskDepth_m": 3.5,
+    "interactionRange_m": 2.4,
+    "porchTop_A_y": 0.0,
+    "firstStepTop_A_y": -0.25,
+    "counterTopHeight_m": 0.94,
+    "counterTopHeightFractionOfActor": 0.522,
+    "counterWidth_m": 4.245,
+    "counterWidthFractionOfKiosk": 0.772,
+    "shelfHeights_A_y": [
+      1.011,
+      1.491,
+      1.811
+    ],
+    "shelfHeightsFractionOfActor": [
+      0.562,
+      0.828
+    ],
+    "eyeHeight_m": 1.6,
+    "firstPersonHeightInGame_m": 1.65,
+    "overall": {
+      "minA": [
+        -2.1225,
+        -0.0,
+        -1.125
+      ],
+      "maxA": [
+        2.1608,
+        1.825,
+        -0.59
+      ],
+      "frontMostZ": -0.59,
+      "rearMostZ": -1.125,
+      "heightMax": 1.825,
+      "totalTris": 62900
+    },
+    "clearances": {
+      "rearWallFaceZ": -1.1,
+      "maxDepthFromWall_m": 0.51,
+      "depthFromWallByPart_m": {
+        "BGC_Counter": 0.51,
+        "BGC_CounterProps": 0.3974,
+        "BGC_HookRail_L": 0.1578,
+        "BGC_HookRail_R": 0.1536,
+        "BGC_ShelfBay_L": 0.2991,
+        "BGC_ShelfBay_R": 0.2991
+      },
+      "nearestNewGeometryToMiraRoot_m": {
+        "distance_plan": 1.29,
+        "part": "BGC_Counter"
+      },
+      "miraRootToFrontOfDressing_m": 1.29,
+      "newGeometryInsideInteractionCorridor": [],
+      "newVerticesInsidePreservedColliderVolumes": {
+        "AuthoredWorld/COL_BLD_general_back": [
+          [
+            "BGC_Counter",
+            8
+          ],
+          [
+            "BGC_CounterProps",
+            41
+          ],
+          [
+            "BGC_HookRail_L",
+            8
+          ],
+          [
+            "BGC_HookRail_R",
+            8
+          ],
+          [
+            "BGC_ShelfBay_L",
+            64
+          ]
+        ],
+        "AuthoredWorld/COL_BLD_general_awning": [],
+        "AuthoredWorld/COL_BLD_general_side_e": [],
+        "AuthoredWorld/COL_BLD_general_side_w": []
+      },
+      "note": "back collider box (Unity 8,2,13.6 size 5.2x3x0.8) spans A z -1.9..-1.1, i.e. its front face IS the wall face z=-1.10 where the dressing is seated. The vertices counted inside it are the wall-contact backs of the counter/shelves/rails, embedded at most 0.025 m (rearMostZ -1.125) into the wall - visually hidden, no gameplay effect. Nothing enters the awning or side colliders. side_e/side_w colliders (x +-2.4, z -1.4..0.4 in A) sit outboard of |x|=2.2; the counter ends at |x|=2.12."
+    }
+  },
+  "parts": [
+    {
+      "part": "BGC_Counter",
+      "description": "Counter box + steel-clad top with rolled nosing, three bays with raised stiles, service-hatch handle, hasp + closed padlock, 12+7x2 domed fixings, rubber end guards/kick strip and banked dust. Replaces: Counter repair fascia, Counter inset plates + rivets, Service ledge, Counter working lip, Counter grip paint loss.",
+      "collisionGuidance": "collider: none needed (existing back collider already fills the wall). Optional: one BoxCollider 4.24x0.94x0.38 at wall if the kiosk should physically stop the player leaning in - NOT required; the porch collider is upstream of this.",
+      "pivotAuthoring_A": [
+        0,
+        0,
+        -1.1
+      ],
+      "pivotUnityLocalToBuilding": [
+        0,
+        0,
+        -1.1
+      ],
+      "pivotUnityWorld_atBuildingPivot_8_0p5_15p1": [
+        8.0,
+        0.5,
+        14.0
+      ],
+      "orientation": "Identity rotation, uniform scale 1. Front faces +Z (avenue). No part is rotated relative to the building.",
+      "sizeMetres_XYZ_A": [
+        4.245,
+        0.9486,
+        0.51
+      ],
+      "boundsA": {
+        "min": [
+          -2.1225,
+          -0.0,
+          -1.1
+        ],
+        "max": [
+          2.1225,
+          0.9486,
+          -0.59
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/BGC_Counter.glb",
+        "tris": 5884,
+        "verts": 3163,
+        "materialSlots": [
+          "CounterTop",
+          "ShelfPaint",
+          "CounterFace",
+          "Steel",
+          "Brass",
+          "Rubber",
+          "Sand"
+        ]
+      },
+      "lod1": null,
+      "qc": {
+        "tris": 5884,
+        "sizeA": [
+          4.245,
+          0.9486,
+          0.51
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 148,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Set static-shadow-caster only, no lightmap contribution; use light probes. If baking is required, generate UV1 in Unity (Generate Lightmap UVs) - do not reuse UV0 (metric tiling overlaps)."
+    },
+    {
+      "part": "BGC_CounterProps",
+      "description": "Counter-top merchandise: sample flask rack (3 flasks), medkit stack, ledger with tie, closed cash tin with hasp, receipt spike with slips, rubber sale mat with copper hank, brass balance scale, loose slips, dust at the wall line.",
+      "collisionGuidance": "collider: none. Do NOT add mesh colliders; these sit behind the service line at least 1.29 m from Mira's root.",
+      "pivotAuthoring_A": [
+        0,
+        0,
+        -1.1
+      ],
+      "pivotUnityLocalToBuilding": [
+        0,
+        0,
+        -1.1
+      ],
+      "pivotUnityWorld_atBuildingPivot_8_0p5_15p1": [
+        8.0,
+        0.5,
+        14.0
+      ],
+      "orientation": "Identity rotation, uniform scale 1. Front faces +Z (avenue). No part is rotated relative to the building.",
+      "sizeMetres_XYZ_A": [
+        2.6,
+        0.3134,
+        0.3974
+      ],
+      "boundsA": {
+        "min": [
+          -1.3,
+          0.9345,
+          -1.1
+        ],
+        "max": [
+          1.3,
+          1.2478,
+          -0.7026
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/BGC_CounterProps.glb",
+        "tris": 12776,
+        "verts": 6700,
+        "materialSlots": [
+          "ShelfPaint",
+          "Steel",
+          "Enamel_Sand",
+          "Enamel_Wax",
+          "Twine",
+          "Paper",
+          "Enamel_Olive",
+          "Enamel_Blue",
+          "Enamel_Bone",
+          "Enamel_Red",
+          "Webbing_Sand",
+          "Rubber",
+          "ShelfOlive",
+          "Copper",
+          "Brass",
+          "Sand"
+        ]
+      },
+      "lod1": {
+        "glb": "exports/glb/BGC_CounterProps_LOD1.glb",
+        "tris": 5358,
+        "note": "decimated (collapse, material/UV/seam-delimited), reviewed vs LOD0 at 3 / 6 / 12 m - see README"
+      },
+      "qc": {
+        "tris": 12776,
+        "sizeA": [
+          2.6,
+          0.3133,
+          0.3974
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 518,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Set static-shadow-caster only, no lightmap contribution; use light probes. If baking is required, generate UV1 in Unity (Generate Lightmap UVs) - do not reuse UV0 (metric tiling overlaps)."
+    },
+    {
+      "part": "BGC_HookRail_L",
+      "description": "Wall rail with 5 S-hooks: sling canteen, bottle, hung first-aid kit, tag, copper hank (all on twine bights).",
+      "collisionGuidance": "collider: none.",
+      "pivotAuthoring_A": [
+        -0.88,
+        0,
+        -1.1
+      ],
+      "pivotUnityLocalToBuilding": [
+        0.88,
+        0,
+        -1.1
+      ],
+      "pivotUnityWorld_atBuildingPivot_8_0p5_15p1": [
+        8.88,
+        0.5,
+        14.0
+      ],
+      "orientation": "Identity rotation, uniform scale 1. Front faces +Z (avenue). No part is rotated relative to the building.",
+      "sizeMetres_XYZ_A": [
+        0.8174,
+        0.415,
+        0.1588
+      ],
+      "boundsA": {
+        "min": [
+          -1.2817,
+          1.41,
+          -1.101
+        ],
+        "max": [
+          -0.4643,
+          1.825,
+          -0.9422
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/BGC_HookRail_L.glb",
+        "tris": 8162,
+        "verts": 4201,
+        "materialSlots": [
+          "Steel",
+          "ShelfPaint",
+          "Enamel_Sand",
+          "Webbing_Olive",
+          "Twine",
+          "Enamel_Olive",
+          "Enamel_Wax",
+          "Paper",
+          "Enamel_Bone",
+          "Enamel_Red",
+          "Webbing_Sand",
+          "Copper"
+        ]
+      },
+      "lod1": {
+        "glb": "exports/glb/BGC_HookRail_L_LOD1.glb",
+        "tris": 3427,
+        "note": "decimated (collapse, material/UV/seam-delimited), reviewed vs LOD0 at 3 / 6 / 12 m - see README"
+      },
+      "qc": {
+        "tris": 8162,
+        "sizeA": [
+          0.8174,
+          0.415,
+          0.1588
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 144,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Set static-shadow-caster only, no lightmap contribution; use light probes. If baking is required, generate UV1 in Unity (Generate Lightmap UVs) - do not reuse UV0 (metric tiling overlaps)."
+    },
+    {
+      "part": "BGC_HookRail_R",
+      "description": "Wall rail with 5 S-hooks: slate cable coil, roll pack, two copper hanks, tag, red flask.",
+      "collisionGuidance": "collider: none.",
+      "pivotAuthoring_A": [
+        0.88,
+        0,
+        -1.1
+      ],
+      "pivotUnityLocalToBuilding": [
+        -0.88,
+        0,
+        -1.1
+      ],
+      "pivotUnityWorld_atBuildingPivot_8_0p5_15p1": [
+        7.12,
+        0.5,
+        14.0
+      ],
+      "orientation": "Identity rotation, uniform scale 1. Front faces +Z (avenue). No part is rotated relative to the building.",
+      "sizeMetres_XYZ_A": [
+        0.8594,
+        0.4871,
+        0.1546
+      ],
+      "boundsA": {
+        "min": [
+          0.4206,
+          1.3379,
+          -1.101
+        ],
+        "max": [
+          1.28,
+          1.825,
+          -0.9464
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/BGC_HookRail_R.glb",
+        "tris": 9994,
+        "verts": 5132,
+        "materialSlots": [
+          "Steel",
+          "ShelfPaint",
+          "Cable_Slate",
+          "Twine",
+          "Webbing_Sand",
+          "Rubber",
+          "Enamel_Red",
+          "Copper",
+          "Paper",
+          "Enamel_Wax"
+        ]
+      },
+      "lod1": {
+        "glb": "exports/glb/BGC_HookRail_R_LOD1.glb",
+        "tris": 4197,
+        "note": "decimated (collapse, material/UV/seam-delimited), reviewed vs LOD0 at 3 / 6 / 12 m - see README"
+      },
+      "qc": {
+        "tris": 9994,
+        "sizeA": [
+          0.8594,
+          0.4871,
+          0.1546
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 176,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Set static-shadow-caster only, no lightmap contribution; use light probes. If baking is required, generate UV1 in Unity (Generate Lightmap UVs) - do not reuse UV0 (metric tiling overlaps)."
+    },
+    {
+      "part": "BGC_ShelfBay_L",
+      "description": "Left shelf bay stock: 2 steel shelves with rolled lips/down-turns/gussets/back angles, bottle-stop rail, olla jar, 3 flasks/bottles, medkits, roll pack, tags, dust. Replaces the left half of: Stock shelf x3, Sealed goods tin (x6) and lids/labels.",
+      "collisionGuidance": "collider: none. Static, non-interactable.",
+      "pivotAuthoring_A": [
+        -1.72,
+        0,
+        -1.1
+      ],
+      "pivotUnityLocalToBuilding": [
+        1.72,
+        0,
+        -1.1
+      ],
+      "pivotUnityWorld_atBuildingPivot_8_0p5_15p1": [
+        9.72,
+        0.5,
+        14.0
+      ],
+      "orientation": "Identity rotation, uniform scale 1. Front faces +Z (avenue). No part is rotated relative to the building.",
+      "sizeMetres_XYZ_A": [
+        0.74,
+        0.935,
+        0.3241
+      ],
+      "boundsA": {
+        "min": [
+          -2.09,
+          0.84,
+          -1.125
+        ],
+        "max": [
+          -1.35,
+          1.775,
+          -0.8009
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/BGC_ShelfBay_L.glb",
+        "tris": 11606,
+        "verts": 6078,
+        "materialSlots": [
+          "ShelfPaint",
+          "Steel",
+          "Clay",
+          "Enamel_Wax",
+          "Twine",
+          "Enamel_Sand",
+          "Paper",
+          "Enamel_Olive",
+          "Enamel_Blue",
+          "Webbing_Olive",
+          "Enamel_Bone",
+          "Enamel_Red",
+          "Webbing_Sand",
+          "Rubber",
+          "Sand"
+        ]
+      },
+      "lod1": {
+        "glb": "exports/glb/BGC_ShelfBay_L_LOD1.glb",
+        "tris": 4874,
+        "note": "decimated (collapse, material/UV/seam-delimited), reviewed vs LOD0 at 3 / 6 / 12 m - see README"
+      },
+      "qc": {
+        "tris": 11606,
+        "sizeA": [
+          0.74,
+          0.935,
+          0.3241
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 380,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Set static-shadow-caster only, no lightmap contribution; use light probes. If baking is required, generate UV1 in Unity (Generate Lightmap UVs) - do not reuse UV0 (metric tiling overlaps)."
+    },
+    {
+      "part": "BGC_ShelfBay_R",
+      "description": "Right shelf bay: 2 steel shelves, copper wire hanks with twine ties, wire spool, ochre cable coil, canteen, bottles, medkit, tags, dust. Replaces the right half of the same old stock objects.",
+      "collisionGuidance": "collider: none.",
+      "pivotAuthoring_A": [
+        1.72,
+        0,
+        -1.1
+      ],
+      "pivotUnityLocalToBuilding": [
+        -1.72,
+        0,
+        -1.1
+      ],
+      "pivotUnityWorld_atBuildingPivot_8_0p5_15p1": [
+        6.28,
+        0.5,
+        14.0
+      ],
+      "orientation": "Identity rotation, uniform scale 1. Front faces +Z (avenue). No part is rotated relative to the building.",
+      "sizeMetres_XYZ_A": [
+        0.8108,
+        0.908,
+        0.2191
+      ],
+      "boundsA": {
+        "min": [
+          1.35,
+          0.84,
+          -1.02
+        ],
+        "max": [
+          2.1608,
+          1.748,
+          -0.8009
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/BGC_ShelfBay_R.glb",
+        "tris": 14478,
+        "verts": 7511,
+        "materialSlots": [
+          "ShelfPaint",
+          "Steel",
+          "Copper",
+          "Twine",
+          "ShelfOlive",
+          "Enamel_Red",
+          "Enamel_Wax",
+          "Paper",
+          "Enamel_Bone",
+          "Enamel_Olive",
+          "Webbing_Sand",
+          "Cable_Ochre",
+          "Sand"
+        ]
+      },
+      "lod1": {
+        "glb": "exports/glb/BGC_ShelfBay_R_LOD1.glb",
+        "tris": 6080,
+        "note": "decimated (collapse, material/UV/seam-delimited), reviewed vs LOD0 at 3 / 6 / 12 m - see README"
+      },
+      "qc": {
+        "tris": 14478,
+        "sizeA": [
+          0.8108,
+          0.908,
+          0.2191
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 588,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Set static-shadow-caster only, no lightmap contribution; use light probes. If baking is required, generate UV1 in Unity (Generate Lightmap UVs) - do not reuse UV0 (metric tiling overlaps)."
+    }
+  ],
+  "textureBudget": {
+    "pngFilesOnDisk": 53,
+    "distinctMapsReferencedByMaterials": 49,
+    "pixelsReferenced": 199229440,
+    "estimatedVRAM_MiB_BC7_withMips": 253.3,
+    "estimatedVRAM_MiB_RGBA32_withMips_ifUncompressed": 1013.3,
+    "residentNote": "Estimate only. Mip streaming should keep far mips resident only until the player is near Mira. Unity mip streaming / VRAM measurement is game-dev's to verify."
+  },
+  "triangleTotals": {
+    "lod0": 62900,
+    "lod1_where_provided": 29820,
+    "replacedOldStockAndCounterTris_approx": null
+  },
+  "lightingNote": "No emissive materials and no lights are part of the asset. Any local practical light is an integration decision for game-dev (see README section 8)."
+}

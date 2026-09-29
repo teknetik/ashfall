@@ -1,0 +1,485 @@
+{
+  "note": "Unity URP Lit mapping for each TE_ slot. Files are relative to art/quality_20260929/tool-exchange-display/.",
+  "materials": [
+    {
+      "unityMaterialName": "TE_Board",
+      "slot": "Board",
+      "shader": "Universal Render Pipeline/Lit (metallic workflow)",
+      "baseMap": {
+        "file": "textures/TE_ToolBoard_BaseColor.png",
+        "colourSpace": "sRGB",
+        "importer": "Default, sRGB on, mipmaps on, anisotropic >= 8"
+      },
+      "bumpMap": {
+        "file": "textures/TE_ToolBoard_Normal.png",
+        "colourSpace": "linear",
+        "importer": "Normal map (OpenGL / +Y up; do NOT flip green)."
+      },
+      "metallicGlossMap": {
+        "file": "textures/TE_ToolBoard_MetalSmooth.png",
+        "colourSpace": "linear (sRGB OFF)",
+        "channels": "R = metallic, A = smoothness (already 1 - roughness), G/B unused",
+        "urpSetting": "Smoothness Source = Metallic Alpha"
+      },
+      "tilingMetres": null,
+      "uniqueLayoutUV": true,
+      "unityScaleOffset": "Tiling (1,1) offset (0,0). UV0 already carries metric tiling / the unique layout; do not add material tiling.",
+      "emission": null,
+      "alphaMode": "Opaque",
+      "licence": "Project original, procedurally authored 29 Sep 2026 (make_te_textures.py, numpy); no third-party or generative image content",
+      "parentTextureFamily": "TE_ToolBoard",
+      "note": "Unique 3072x2908 @2048 px/m: u=(x+2.90)/1.5, v=(y-0.78)/1.42 (A-space metres)",
+      "sharesNormalAndMetalSmoothWith": null
+    },
+    {
+      "unityMaterialName": "TE_Brass",
+      "slot": "Brass",
+      "shader": "Universal Render Pipeline/Lit (metallic workflow)",
+      "baseMap": {
+        "file": "textures/TE_BareSteel_Brass_BaseColor.png",
+        "colourSpace": "sRGB",
+        "importer": "Default, sRGB on, mipmaps on, anisotropic >= 8"
+      },
+      "bumpMap": {
+        "file": "textures/TE_BareSteel_Normal.png",
+        "colourSpace": "linear",
+        "importer": "Normal map (OpenGL / +Y up; do NOT flip green)."
+      },
+      "metallicGlossMap": {
+        "file": "textures/TE_BareSteel_MetalSmooth.png",
+        "colourSpace": "linear (sRGB OFF)",
+        "channels": "R = metallic, A = smoothness (already 1 - roughness), G/B unused",
+        "urpSetting": "Smoothness Source = Metallic Alpha"
+      },
+      "tilingMetres": 0.5,
+      "uniqueLayoutUV": false,
+      "unityScaleOffset": "Tiling (1,1) offset (0,0). UV0 already carries metric tiling / the unique layout; do not add material tiling.",
+      "emission": null,
+      "alphaMode": "Opaque",
+      "licence": "Project original, procedurally authored 29 Sep 2026 (make_te_textures.py, numpy); no third-party or generative image content",
+      "parentTextureFamily": "TE_BareSteel",
+      "note": "",
+      "sharesNormalAndMetalSmoothWith": "TE_BareSteel"
+    },
+    {
+      "unityMaterialName": "TE_Glass",
+      "slot": "Glass",
+      "shader": "Universal Render Pipeline/Lit (metallic workflow)",
+      "baseMap": {
+        "file": "textures/TE_DisplayGlass_BaseColor.png",
+        "colourSpace": "sRGB",
+        "importer": "Default, sRGB on, mipmaps on, anisotropic >= 8, alpha is transparency"
+      },
+      "bumpMap": {
+        "file": "textures/TE_DisplayGlass_Normal.png",
+        "colourSpace": "linear",
+        "importer": "Normal map (OpenGL / +Y up; do NOT flip green)."
+      },
+      "metallicGlossMap": {
+        "file": "textures/TE_DisplayGlass_MetalSmooth.png",
+        "colourSpace": "linear (sRGB OFF)",
+        "channels": "R = metallic, A = smoothness (already 1 - roughness), G/B unused",
+        "urpSetting": "Smoothness Source = Metallic Alpha"
+      },
+      "tilingMetres": null,
+      "uniqueLayoutUV": true,
+      "unityScaleOffset": "Tiling (1,1) offset (0,0). UV0 already carries metric tiling / the unique layout; do not add material tiling.",
+      "emission": null,
+      "alphaMode": "Transparent (Surface Type = Transparent, Blend = Alpha, ZWrite off, receive shadows off). Base map alpha = film opacity 9..55 percent; render queue after opaque; the existing Revision04 opaque WardGlass panes (near-black, unlit look) are what hides the display today, so this material REPLACES them (hide, do not delete).",
+      "licence": "Project original, procedurally authored 29 Sep 2026 (make_te_textures.py, numpy); no third-party or generative image content",
+      "parentTextureFamily": "TE_DisplayGlass",
+      "note": "Unique RGBA 2806x2703 @2048 px/m; alpha = opacity (URP transparent, alpha blend)",
+      "sharesNormalAndMetalSmoothWith": null
+    },
+    {
+      "unityMaterialName": "TE_Iron",
+      "slot": "Iron",
+      "shader": "Universal Render Pipeline/Lit (metallic workflow)",
+      "baseMap": {
+        "file": "textures/TE_CastIron_BaseColor.png",
+        "colourSpace": "sRGB",
+        "importer": "Default, sRGB on, mipmaps on, anisotropic >= 8"
+      },
+      "bumpMap": {
+        "file": "textures/TE_CastIron_Normal.png",
+        "colourSpace": "linear",
+        "importer": "Normal map (OpenGL / +Y up; do NOT flip green)."
+      },
+      "metallicGlossMap": {
+        "file": "textures/TE_CastIron_MetalSmooth.png",
+        "colourSpace": "linear (sRGB OFF)",
+        "channels": "R = metallic, A = smoothness (already 1 - roughness), G/B unused",
+        "urpSetting": "Smoothness Source = Metallic Alpha"
+      },
+      "tilingMetres": 0.4,
+      "uniqueLayoutUV": false,
+      "unityScaleOffset": "Tiling (1,1) offset (0,0). UV0 already carries metric tiling / the unique layout; do not add material tiling.",
+      "emission": null,
+      "alphaMode": "Opaque",
+      "licence": "Project original, procedurally authored 29 Sep 2026 (make_te_textures.py, numpy); no third-party or generative image content",
+      "parentTextureFamily": "TE_CastIron",
+      "note": "",
+      "sharesNormalAndMetalSmoothWith": null
+    },
+    {
+      "unityMaterialName": "TE_PaintRed",
+      "slot": "PaintRed",
+      "shader": "Universal Render Pipeline/Lit (metallic workflow)",
+      "baseMap": {
+        "file": "textures/TE_ToolPaintRed_BaseColor.png",
+        "colourSpace": "sRGB",
+        "importer": "Default, sRGB on, mipmaps on, anisotropic >= 8"
+      },
+      "bumpMap": {
+        "file": "textures/TE_ToolPaintRed_Normal.png",
+        "colourSpace": "linear",
+        "importer": "Normal map (OpenGL / +Y up; do NOT flip green)."
+      },
+      "metallicGlossMap": {
+        "file": "textures/TE_ToolPaintRed_MetalSmooth.png",
+        "colourSpace": "linear (sRGB OFF)",
+        "channels": "R = metallic, A = smoothness (already 1 - roughness), G/B unused",
+        "urpSetting": "Smoothness Source = Metallic Alpha"
+      },
+      "tilingMetres": 0.5,
+      "uniqueLayoutUV": false,
+      "unityScaleOffset": "Tiling (1,1) offset (0,0). UV0 already carries metric tiling / the unique layout; do not add material tiling.",
+      "emission": null,
+      "alphaMode": "Opaque",
+      "licence": "Project original, procedurally authored 29 Sep 2026 (make_te_textures.py, numpy); no third-party or generative image content",
+      "parentTextureFamily": "TE_ToolPaintRed",
+      "note": "",
+      "sharesNormalAndMetalSmoothWith": null
+    },
+    {
+      "unityMaterialName": "TE_Paper",
+      "slot": "Paper",
+      "shader": "Universal Render Pipeline/Lit (metallic workflow)",
+      "baseMap": {
+        "file": "textures/TE_Paper_BaseColor.png",
+        "colourSpace": "sRGB",
+        "importer": "Default, sRGB on, mipmaps on, anisotropic >= 8"
+      },
+      "bumpMap": {
+        "file": "textures/TE_Paper_Normal.png",
+        "colourSpace": "linear",
+        "importer": "Normal map (OpenGL / +Y up; do NOT flip green)."
+      },
+      "metallicGlossMap": {
+        "file": "textures/TE_Paper_MetalSmooth.png",
+        "colourSpace": "linear (sRGB OFF)",
+        "channels": "R = metallic, A = smoothness (already 1 - roughness), G/B unused",
+        "urpSetting": "Smoothness Source = Metallic Alpha"
+      },
+      "tilingMetres": 0.35,
+      "uniqueLayoutUV": false,
+      "unityScaleOffset": "Tiling (1,1) offset (0,0). UV0 already carries metric tiling / the unique layout; do not add material tiling.",
+      "emission": null,
+      "alphaMode": "Opaque",
+      "licence": "Project original, procedurally authored 29 Sep 2026 (make_te_textures.py, numpy); no third-party or generative image content",
+      "parentTextureFamily": "TE_Paper",
+      "note": "",
+      "sharesNormalAndMetalSmoothWith": null
+    },
+    {
+      "unityMaterialName": "TE_Rubber",
+      "slot": "Rubber",
+      "shader": "Universal Render Pipeline/Lit (metallic workflow)",
+      "baseMap": {
+        "file": "textures/TE_Rubber_BaseColor.png",
+        "colourSpace": "sRGB",
+        "importer": "Default, sRGB on, mipmaps on, anisotropic >= 8"
+      },
+      "bumpMap": {
+        "file": "textures/TE_Rubber_Normal.png",
+        "colourSpace": "linear",
+        "importer": "Normal map (OpenGL / +Y up; do NOT flip green)."
+      },
+      "metallicGlossMap": {
+        "file": "textures/TE_Rubber_MetalSmooth.png",
+        "colourSpace": "linear (sRGB OFF)",
+        "channels": "R = metallic, A = smoothness (already 1 - roughness), G/B unused",
+        "urpSetting": "Smoothness Source = Metallic Alpha"
+      },
+      "tilingMetres": 0.3,
+      "uniqueLayoutUV": false,
+      "unityScaleOffset": "Tiling (1,1) offset (0,0). UV0 already carries metric tiling / the unique layout; do not add material tiling.",
+      "emission": null,
+      "alphaMode": "Opaque",
+      "licence": "Project original, procedurally authored 29 Sep 2026 (make_te_textures.py, numpy); no third-party or generative image content",
+      "parentTextureFamily": "TE_Rubber",
+      "note": "",
+      "sharesNormalAndMetalSmoothWith": null
+    },
+    {
+      "unityMaterialName": "TE_Sand",
+      "slot": "Sand",
+      "shader": "Universal Render Pipeline/Lit (metallic workflow)",
+      "baseMap": {
+        "file": "textures/TE_Sand_BaseColor.png",
+        "colourSpace": "sRGB",
+        "importer": "Default, sRGB on, mipmaps on, anisotropic >= 8"
+      },
+      "bumpMap": {
+        "file": "textures/TE_Sand_Normal.png",
+        "colourSpace": "linear",
+        "importer": "Normal map (OpenGL / +Y up; do NOT flip green)."
+      },
+      "metallicGlossMap": {
+        "file": "textures/TE_Sand_MetalSmooth.png",
+        "colourSpace": "linear (sRGB OFF)",
+        "channels": "R = metallic, A = smoothness (already 1 - roughness), G/B unused",
+        "urpSetting": "Smoothness Source = Metallic Alpha"
+      },
+      "tilingMetres": 0.5,
+      "uniqueLayoutUV": false,
+      "unityScaleOffset": "Tiling (1,1) offset (0,0). UV0 already carries metric tiling / the unique layout; do not add material tiling.",
+      "emission": null,
+      "alphaMode": "Opaque",
+      "licence": "Project original, procedurally authored 29 Sep 2026 (make_te_textures.py, numpy); no third-party or generative image content",
+      "parentTextureFamily": "TE_Sand",
+      "note": "",
+      "sharesNormalAndMetalSmoothWith": null
+    },
+    {
+      "unityMaterialName": "TE_ShutterFit",
+      "slot": "ShutterFit",
+      "shader": "Universal Render Pipeline/Lit (metallic workflow)",
+      "baseMap": {
+        "file": "textures/TE_ShutterFit_BaseColor.png",
+        "colourSpace": "sRGB",
+        "importer": "Default, sRGB on, mipmaps on, anisotropic >= 8"
+      },
+      "bumpMap": {
+        "file": "textures/TE_ShutterFit_Normal.png",
+        "colourSpace": "linear",
+        "importer": "Normal map (OpenGL / +Y up; do NOT flip green)."
+      },
+      "metallicGlossMap": {
+        "file": "textures/TE_ShutterFit_MetalSmooth.png",
+        "colourSpace": "linear (sRGB OFF)",
+        "channels": "R = metallic, A = smoothness (already 1 - roughness), G/B unused",
+        "urpSetting": "Smoothness Source = Metallic Alpha"
+      },
+      "tilingMetres": null,
+      "uniqueLayoutUV": true,
+      "unityScaleOffset": "Tiling (1,1) offset (0,0). UV0 already carries metric tiling / the unique layout; do not add material tiling.",
+      "emission": null,
+      "alphaMode": "Opaque",
+      "licence": "Project original, procedurally authored 29 Sep 2026 (make_te_textures.py, numpy); no third-party or generative image content",
+      "parentTextureFamily": "TE_ShutterFit",
+      "note": "Unique 4096x1024 @2048 px/m atlas, zones in textures/layout.json (2.0 x 0.5 m)",
+      "sharesNormalAndMetalSmoothWith": null
+    },
+    {
+      "unityMaterialName": "TE_ShutterPaint",
+      "slot": "ShutterPaint",
+      "shader": "Universal Render Pipeline/Lit (metallic workflow)",
+      "baseMap": {
+        "file": "textures/TE_ShutterPaint_BaseColor.png",
+        "colourSpace": "sRGB",
+        "importer": "Default, sRGB on, mipmaps on, anisotropic >= 8"
+      },
+      "bumpMap": {
+        "file": "textures/TE_ShutterPaint_Normal.png",
+        "colourSpace": "linear",
+        "importer": "Normal map (OpenGL / +Y up; do NOT flip green)."
+      },
+      "metallicGlossMap": {
+        "file": "textures/TE_ShutterPaint_MetalSmooth.png",
+        "colourSpace": "linear (sRGB OFF)",
+        "channels": "R = metallic, A = smoothness (already 1 - roughness), G/B unused",
+        "urpSetting": "Smoothness Source = Metallic Alpha"
+      },
+      "tilingMetres": 0.6,
+      "uniqueLayoutUV": false,
+      "unityScaleOffset": "Tiling (1,1) offset (0,0). UV0 already carries metric tiling / the unique layout; do not add material tiling.",
+      "emission": null,
+      "alphaMode": "Opaque",
+      "licence": "Project original, procedurally authored 29 Sep 2026 (make_te_textures.py, numpy); no third-party or generative image content",
+      "parentTextureFamily": "TE_ShutterPaint",
+      "note": "",
+      "sharesNormalAndMetalSmoothWith": null
+    },
+    {
+      "unityMaterialName": "TE_Steel",
+      "slot": "Steel",
+      "shader": "Universal Render Pipeline/Lit (metallic workflow)",
+      "baseMap": {
+        "file": "textures/TE_BareSteel_BaseColor.png",
+        "colourSpace": "sRGB",
+        "importer": "Default, sRGB on, mipmaps on, anisotropic >= 8"
+      },
+      "bumpMap": {
+        "file": "textures/TE_BareSteel_Normal.png",
+        "colourSpace": "linear",
+        "importer": "Normal map (OpenGL / +Y up; do NOT flip green)."
+      },
+      "metallicGlossMap": {
+        "file": "textures/TE_BareSteel_MetalSmooth.png",
+        "colourSpace": "linear (sRGB OFF)",
+        "channels": "R = metallic, A = smoothness (already 1 - roughness), G/B unused",
+        "urpSetting": "Smoothness Source = Metallic Alpha"
+      },
+      "tilingMetres": 0.5,
+      "uniqueLayoutUV": false,
+      "unityScaleOffset": "Tiling (1,1) offset (0,0). UV0 already carries metric tiling / the unique layout; do not add material tiling.",
+      "emission": null,
+      "alphaMode": "Opaque",
+      "licence": "Project original, procedurally authored 29 Sep 2026 (make_te_textures.py, numpy); no third-party or generative image content",
+      "parentTextureFamily": "TE_BareSteel",
+      "note": "",
+      "sharesNormalAndMetalSmoothWith": null
+    },
+    {
+      "unityMaterialName": "TE_Stone",
+      "slot": "Stone",
+      "shader": "Universal Render Pipeline/Lit (metallic workflow)",
+      "baseMap": {
+        "file": "textures/TE_Stone_BaseColor.png",
+        "colourSpace": "sRGB",
+        "importer": "Default, sRGB on, mipmaps on, anisotropic >= 8"
+      },
+      "bumpMap": {
+        "file": "textures/TE_Stone_Normal.png",
+        "colourSpace": "linear",
+        "importer": "Normal map (OpenGL / +Y up; do NOT flip green)."
+      },
+      "metallicGlossMap": {
+        "file": "textures/TE_Stone_MetalSmooth.png",
+        "colourSpace": "linear (sRGB OFF)",
+        "channels": "R = metallic, A = smoothness (already 1 - roughness), G/B unused",
+        "urpSetting": "Smoothness Source = Metallic Alpha"
+      },
+      "tilingMetres": 0.25,
+      "uniqueLayoutUV": false,
+      "unityScaleOffset": "Tiling (1,1) offset (0,0). UV0 already carries metric tiling / the unique layout; do not add material tiling.",
+      "emission": null,
+      "alphaMode": "Opaque",
+      "licence": "Project original, procedurally authored 29 Sep 2026 (make_te_textures.py, numpy); no third-party or generative image content",
+      "parentTextureFamily": "TE_Stone",
+      "note": "",
+      "sharesNormalAndMetalSmoothWith": null
+    },
+    {
+      "unityMaterialName": "TE_Timber",
+      "slot": "Timber",
+      "shader": "Universal Render Pipeline/Lit (metallic workflow)",
+      "baseMap": {
+        "file": "textures/TE_Timber_BaseColor.png",
+        "colourSpace": "sRGB",
+        "importer": "Default, sRGB on, mipmaps on, anisotropic >= 8"
+      },
+      "bumpMap": {
+        "file": "textures/TE_Timber_Normal.png",
+        "colourSpace": "linear",
+        "importer": "Normal map (OpenGL / +Y up; do NOT flip green)."
+      },
+      "metallicGlossMap": {
+        "file": "textures/TE_Timber_MetalSmooth.png",
+        "colourSpace": "linear (sRGB OFF)",
+        "channels": "R = metallic, A = smoothness (already 1 - roughness), G/B unused",
+        "urpSetting": "Smoothness Source = Metallic Alpha"
+      },
+      "tilingMetres": 0.5,
+      "uniqueLayoutUV": false,
+      "unityScaleOffset": "Tiling (1,1) offset (0,0). UV0 already carries metric tiling / the unique layout; do not add material tiling.",
+      "emission": null,
+      "alphaMode": "Opaque",
+      "licence": "Project original, procedurally authored 29 Sep 2026 (make_te_textures.py, numpy); no third-party or generative image content",
+      "parentTextureFamily": "TE_Timber",
+      "note": "",
+      "sharesNormalAndMetalSmoothWith": null
+    },
+    {
+      "unityMaterialName": "TE_TimberPolished",
+      "slot": "TimberPolished",
+      "shader": "Universal Render Pipeline/Lit (metallic workflow)",
+      "baseMap": {
+        "file": "textures/TE_TimberPolished_BaseColor.png",
+        "colourSpace": "sRGB",
+        "importer": "Default, sRGB on, mipmaps on, anisotropic >= 8"
+      },
+      "bumpMap": {
+        "file": "textures/TE_TimberPolished_Normal.png",
+        "colourSpace": "linear",
+        "importer": "Normal map (OpenGL / +Y up; do NOT flip green)."
+      },
+      "metallicGlossMap": {
+        "file": "textures/TE_TimberPolished_MetalSmooth.png",
+        "colourSpace": "linear (sRGB OFF)",
+        "channels": "R = metallic, A = smoothness (already 1 - roughness), G/B unused",
+        "urpSetting": "Smoothness Source = Metallic Alpha"
+      },
+      "tilingMetres": 0.5,
+      "uniqueLayoutUV": false,
+      "unityScaleOffset": "Tiling (1,1) offset (0,0). UV0 already carries metric tiling / the unique layout; do not add material tiling.",
+      "emission": null,
+      "alphaMode": "Opaque",
+      "licence": "Project original, procedurally authored 29 Sep 2026 (make_te_textures.py, numpy); no third-party or generative image content",
+      "parentTextureFamily": "TE_TimberPolished",
+      "note": "",
+      "sharesNormalAndMetalSmoothWith": null
+    },
+    {
+      "unityMaterialName": "TE_ToolSteel",
+      "slot": "ToolSteel",
+      "shader": "Universal Render Pipeline/Lit (metallic workflow)",
+      "baseMap": {
+        "file": "textures/TE_ToolSteel_BaseColor.png",
+        "colourSpace": "sRGB",
+        "importer": "Default, sRGB on, mipmaps on, anisotropic >= 8"
+      },
+      "bumpMap": {
+        "file": "textures/TE_ToolSteel_Normal.png",
+        "colourSpace": "linear",
+        "importer": "Normal map (OpenGL / +Y up; do NOT flip green)."
+      },
+      "metallicGlossMap": {
+        "file": "textures/TE_ToolSteel_MetalSmooth.png",
+        "colourSpace": "linear (sRGB OFF)",
+        "channels": "R = metallic, A = smoothness (already 1 - roughness), G/B unused",
+        "urpSetting": "Smoothness Source = Metallic Alpha"
+      },
+      "tilingMetres": 0.5,
+      "uniqueLayoutUV": false,
+      "unityScaleOffset": "Tiling (1,1) offset (0,0). UV0 already carries metric tiling / the unique layout; do not add material tiling.",
+      "emission": null,
+      "alphaMode": "Opaque",
+      "licence": "Project original, procedurally authored 29 Sep 2026 (make_te_textures.py, numpy); no third-party or generative image content",
+      "parentTextureFamily": "TE_ToolSteel",
+      "note": "",
+      "sharesNormalAndMetalSmoothWith": null
+    },
+    {
+      "unityMaterialName": "TE_Twine",
+      "slot": "Twine",
+      "shader": "Universal Render Pipeline/Lit (metallic workflow)",
+      "baseMap": {
+        "file": "textures/TE_Twine_BaseColor.png",
+        "colourSpace": "sRGB",
+        "importer": "Default, sRGB on, mipmaps on, anisotropic >= 8"
+      },
+      "bumpMap": {
+        "file": "textures/TE_Twine_Normal.png",
+        "colourSpace": "linear",
+        "importer": "Normal map (OpenGL / +Y up; do NOT flip green)."
+      },
+      "metallicGlossMap": {
+        "file": "textures/TE_Twine_MetalSmooth.png",
+        "colourSpace": "linear (sRGB OFF)",
+        "channels": "R = metallic, A = smoothness (already 1 - roughness), G/B unused",
+        "urpSetting": "Smoothness Source = Metallic Alpha"
+      },
+      "tilingMetres": 0.1,
+      "uniqueLayoutUV": false,
+      "unityScaleOffset": "Tiling (1,1) offset (0,0). UV0 already carries metric tiling / the unique layout; do not add material tiling.",
+      "emission": null,
+      "alphaMode": "Opaque",
+      "licence": "Project original, procedurally authored 29 Sep 2026 (make_te_textures.py, numpy); no third-party or generative image content",
+      "parentTextureFamily": "TE_Twine",
+      "note": "",
+      "sharesNormalAndMetalSmoothWith": null
+    }
+  ]
+}

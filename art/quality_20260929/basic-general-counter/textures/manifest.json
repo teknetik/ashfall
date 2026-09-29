@@ -1,0 +1,560 @@
+{
+  "author": "Original deterministic Ward material synthesis (numpy), Basic General counter dressing",
+  "date": "2026-09-29",
+  "licence": "Project original; no third-party source imagery",
+  "seed": "per-material seeds 929201-929209, 929101, 929102 in make_textures.py",
+  "normal": "OpenGL +Y tangent space",
+  "packed": "R metallic; A smoothness; G/B zero",
+  "colourSpace": "BaseColor sRGB; Normal + MetalSmooth linear",
+  "materials": [
+    {
+      "material": "BGC_CounterTop",
+      "tileMetres": null,
+      "note": "Unique 4096x512, 966 px/m. Row 0 = counter nosing; x = -2.12..2.12 m. Hand-contact polish, streaks, rings, weld joins, dust.",
+      "pxPerMetre": 966.0,
+      "maps": {
+        "BaseColor": {
+          "file": "BGC_CounterTop_BaseColor.png",
+          "sha256": "3c33783bd747e07f42921b2e69e530250d8985984a0e3019f6bd3d277b985e04",
+          "width": 4096,
+          "height": 512,
+          "bytes": 2073092
+        },
+        "Normal": {
+          "file": "BGC_CounterTop_Normal.png",
+          "sha256": "6233baa59ad07dd3951c4f787c10ecca67edf1212bad51cb1d4ea4522bfdcdaa",
+          "width": 4096,
+          "height": 512,
+          "bytes": 2689596
+        },
+        "MetalSmooth": {
+          "file": "BGC_CounterTop_MetalSmooth.png",
+          "sha256": "023c83e28fd52ac337faa0a4f934bf908864068d4c5abd71d04f3b9fb0b3371c",
+          "width": 4096,
+          "height": 512,
+          "bytes": 2223055
+        }
+      },
+      "variants": {}
+    },
+    {
+      "material": "BGC_Enamel",
+      "tileMetres": 0.3,
+      "note": "Neutral light enamel over steel; tint per use (sand flask, olive flask, bone case, red cross). Chips expose steel, rust halo.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "BGC_Enamel_BaseColor.png",
+          "sha256": "d9705c0d82130ccc87b80540e67ffbde5f5a19d18f44190ea1b61ae9370ebf64",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 3507236
+        },
+        "Normal": {
+          "file": "BGC_Enamel_Normal.png",
+          "sha256": "9fcecbda1a675794e8eb0059c451387168a26303e5e8e96aef5386cddf2ec76b",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 4781850
+        },
+        "MetalSmooth": {
+          "file": "BGC_Enamel_MetalSmooth.png",
+          "sha256": "7990a5cfc6ce368ed78cd8e2a3bc4bdcd2da278bbea2c158e0e7c8177f544c11",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 1168987
+        }
+      },
+      "variants": {
+        "Sand": {
+          "file": "BGC_Enamel_Sand_BaseColor.png",
+          "tintSRGB": [
+            0.78,
+            0.65,
+            0.45
+          ],
+          "paintMasked": true,
+          "sha256": "16b3eb57eec91b270702fe02a2cc9d71a46ee0983fab3abd1597931913251987",
+          "bytes": 2795610
+        },
+        "Olive": {
+          "file": "BGC_Enamel_Olive_BaseColor.png",
+          "tintSRGB": [
+            0.41,
+            0.48,
+            0.3
+          ],
+          "paintMasked": true,
+          "sha256": "558ef4115207eb9a5ef763652d7ffa1a15397a789570cbf687e37fdd6c69b861",
+          "bytes": 2102446
+        },
+        "Blue": {
+          "file": "BGC_Enamel_Blue_BaseColor.png",
+          "tintSRGB": [
+            0.28,
+            0.45,
+            0.62
+          ],
+          "paintMasked": true,
+          "sha256": "37987767f278d620b4a18e554bcbd8f6c687156f5c9a2527a1d4d959713e6d51",
+          "bytes": 2264960
+        },
+        "Red": {
+          "file": "BGC_Enamel_Red_BaseColor.png",
+          "tintSRGB": [
+            0.69,
+            0.14,
+            0.1
+          ],
+          "paintMasked": true,
+          "sha256": "01c1aaf31226217d76ab5b8905391ae738ef5d98a3f71a02e191e9947cc19f5c",
+          "bytes": 1896117
+        },
+        "Bone": {
+          "file": "BGC_Enamel_Bone_BaseColor.png",
+          "tintSRGB": [
+            0.92,
+            0.87,
+            0.72
+          ],
+          "paintMasked": true,
+          "sha256": "2a3fd25c95515cf7948fb28a71889f1a132571c34418bcf12b5c483b15746e8d",
+          "bytes": 3284256
+        },
+        "Wax": {
+          "file": "BGC_Enamel_Wax_BaseColor.png",
+          "tintSRGB": [
+            0.35,
+            0.075,
+            0.05
+          ],
+          "paintMasked": true,
+          "sha256": "87283dfb0018bd58356552c622d45d46129758165b8cc934ae7856b532431268",
+          "bytes": 1283682
+        },
+        "Teal": {
+          "file": "BGC_Enamel_Teal_BaseColor.png",
+          "tintSRGB": [
+            0.28,
+            0.48,
+            0.45
+          ],
+          "paintMasked": true,
+          "sha256": "182300a96f79858d790c345be886f2a0a660b190f77c3a9bff042401cf27bf6d",
+          "bytes": 2177428
+        }
+      }
+    },
+    {
+      "material": "BGC_ShelfPaint",
+      "tileMetres": 0.6,
+      "note": "Satin painted structural steel (shelving, hardware brackets); heavier chipping and rust than enamel.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "BGC_ShelfPaint_BaseColor.png",
+          "sha256": "3df61cb0d5a453466f7f245388fe8220bf9c78431b8d4f6251c51c88261d2239",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 3221372
+        },
+        "Normal": {
+          "file": "BGC_ShelfPaint_Normal.png",
+          "sha256": "3d66ae624e0242469d43ac9edadfe92bb1bbb6dca6471047ccc3e89a1f481201",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 5944737
+        },
+        "MetalSmooth": {
+          "file": "BGC_ShelfPaint_MetalSmooth.png",
+          "sha256": "4caf02501cd8a70b34e964cc1396e6b1704911b7b0c006c7434b3bd82e7aef62",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 1654755
+        }
+      },
+      "variants": {
+        "Bone": {
+          "file": "BGC_ShelfPaint_Bone_BaseColor.png",
+          "tintSRGB": [
+            1.22,
+            1.08,
+            1.0
+          ],
+          "paintMasked": true,
+          "sha256": "da91d300e957104f0a799796688397aa1e434061fbccfc38600861c7f196560a",
+          "bytes": 3253839
+        },
+        "Olive": {
+          "file": "BGC_ShelfPaint_Olive_BaseColor.png",
+          "tintSRGB": [
+            0.62,
+            0.7,
+            0.5
+          ],
+          "paintMasked": true,
+          "sha256": "e9eb398382e1dfee6115c785cfd3b4e1d35f8d377cfbd6111b42b8d8aa1fe9d7",
+          "bytes": 2452732
+        }
+      }
+    },
+    {
+      "material": "BGC_BareSteel",
+      "tileMetres": 0.5,
+      "note": "Brushed bare steel: shelf lips, brackets, latches, hooks, loops. Also tinted brass for fittings.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "BGC_BareSteel_BaseColor.png",
+          "sha256": "9f123941d0fa9d0408e43f57e0c8e3f9c343d7efcdad835562120bb80ed75980",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 1932467
+        },
+        "Normal": {
+          "file": "BGC_BareSteel_Normal.png",
+          "sha256": "1ce8af15138b25dacf886749a9c0ba18a31a1aab2e1a9e5514eb2cc44a74b0dc",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 824862
+        },
+        "MetalSmooth": {
+          "file": "BGC_BareSteel_MetalSmooth.png",
+          "sha256": "efe6b826928121fb995c334e6a9022b8626cd5aa574acfbdfa003a05c8314dfb",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 1824134
+        }
+      },
+      "variants": {
+        "Brass": {
+          "file": "BGC_BareSteel_Brass_BaseColor.png",
+          "tintSRGB": [
+            1.12,
+            0.86,
+            0.4
+          ],
+          "paintMasked": false,
+          "sha256": "a9167f15d5d1dc49a27bdf9068ab544fc3a157e53778cf24931e226644819c52",
+          "bytes": 1721302
+        }
+      }
+    },
+    {
+      "material": "BGC_Rubber",
+      "tileMetres": 0.3,
+      "note": "Dark rubber: corner guards, caps, sale mat, feet. Fine grain, crazing, dust bloom.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "BGC_Rubber_BaseColor.png",
+          "sha256": "139270fc9f863d137377d790800b43c517f2c63742374a61cc3c39beb9a8ee38",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 4686803
+        },
+        "Normal": {
+          "file": "BGC_Rubber_Normal.png",
+          "sha256": "34db7762c5716f6c943d097c11c59f1d2b879d09bb33fdde1362827e5527cd99",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 5911407
+        },
+        "MetalSmooth": {
+          "file": "BGC_Rubber_MetalSmooth.png",
+          "sha256": "412c1c74afe3b06efb6300d1d199ed9739345a0da07b71fa2867d052f6ffdf91",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 3578839
+        }
+      },
+      "variants": {}
+    },
+    {
+      "material": "BGC_Webbing",
+      "tileMetres": 0.12,
+      "note": "Woven twill webbing (straps, roll pack). Tint per use.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "BGC_Webbing_BaseColor.png",
+          "sha256": "7d6ae21cdf589e3b09a3a348d5ba807ac20cf505b5c74f23b63c923312dd20c7",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 5778868
+        },
+        "Normal": {
+          "file": "BGC_Webbing_Normal.png",
+          "sha256": "5e73c75ba9de9238f48049efd0bd1548b9d7e71887484fa3ce8aad653c1abe61",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 5307466
+        },
+        "MetalSmooth": {
+          "file": "BGC_Webbing_MetalSmooth.png",
+          "sha256": "35ea71b3cb19ca1138605a4d6bb127bea88b27ae3fafb5498d9b070c5feb492c",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 2929737
+        }
+      },
+      "variants": {
+        "Olive": {
+          "file": "BGC_Webbing_Olive_BaseColor.png",
+          "tintSRGB": [
+            0.48,
+            0.57,
+            0.42
+          ],
+          "paintMasked": false,
+          "sha256": "a9c473c5be764aace87a371b6f159fed9802e9e935fcbb0187523477c0b71a1e",
+          "bytes": 4495346
+        },
+        "Sand": {
+          "file": "BGC_Webbing_Sand_BaseColor.png",
+          "tintSRGB": [
+            0.9,
+            0.8,
+            0.65
+          ],
+          "paintMasked": false,
+          "sha256": "c39a52abf7f5b8008bd37b985c0b6115017aab1a75981d76e93ff42a2650fb17",
+          "bytes": 5350364
+        }
+      }
+    },
+    {
+      "material": "BGC_CopperWire",
+      "tileMetres": 0.1,
+      "note": "Stranded copper: U round bundle, V along; verdigris and tarnish patches.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "BGC_CopperWire_BaseColor.png",
+          "sha256": "ffef2db0e582f9cdcc2acdad69297c996152741c5eb0425b0140d94d3fcf199c",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 2420383
+        },
+        "Normal": {
+          "file": "BGC_CopperWire_Normal.png",
+          "sha256": "02274fbfc5957dff052b1af7be3406c21fa7bc334c149aa0c1b8cfda85307f15",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 1053017
+        },
+        "MetalSmooth": {
+          "file": "BGC_CopperWire_MetalSmooth.png",
+          "sha256": "09f836a4da24cc89c35590b86f64863900e6ffe5967d42fc2046ce53c984417d",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 2856929
+        }
+      },
+      "variants": {}
+    },
+    {
+      "material": "BGC_CableSheath",
+      "tileMetres": 0.2,
+      "note": "Insulated cable sheath with ribbing; tint per use.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "BGC_CableSheath_BaseColor.png",
+          "sha256": "c1fef89a2297843781cbd2d9c90115c7896cdc595ea6a271923d52e42b84ffb3",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 5461434
+        },
+        "Normal": {
+          "file": "BGC_CableSheath_Normal.png",
+          "sha256": "72fdfa760524114e96a3233819e2af0002beae36bb5c6e7855933e3404d262d7",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 4767975
+        },
+        "MetalSmooth": {
+          "file": "BGC_CableSheath_MetalSmooth.png",
+          "sha256": "ee99d0c89da7d7a450ab7d3973c7a9b1c9a6c94f99e59fb8254367ddb799bb15",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 3444885
+        }
+      },
+      "variants": {
+        "Slate": {
+          "file": "BGC_CableSheath_Slate_BaseColor.png",
+          "tintSRGB": [
+            0.45,
+            0.5,
+            0.6
+          ],
+          "paintMasked": false,
+          "sha256": "5833ec60e458815cdf210290bcab30a01a6541d7ca3fff15814c02f60359d611",
+          "bytes": 4686195
+        },
+        "Ochre": {
+          "file": "BGC_CableSheath_Ochre_BaseColor.png",
+          "tintSRGB": [
+            0.9,
+            0.68,
+            0.33
+          ],
+          "paintMasked": false,
+          "sha256": "487d100fb5b645b60af1882c8324e706e5f2e6455d6501799ebb704dfd093ca4",
+          "bytes": 5031467
+        }
+      }
+    },
+    {
+      "material": "BGC_Twine",
+      "tileMetres": 0.1,
+      "note": "3-ply twine ties.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "BGC_Twine_BaseColor.png",
+          "sha256": "70d2b46dee823446432a63d9abb28d69d1649a7a5a4a7b506d9b1baa808887c5",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 5419986
+        },
+        "Normal": {
+          "file": "BGC_Twine_Normal.png",
+          "sha256": "54b784dce28f51094ecf9feeb658555a9ee78dee81077ee5d7f3ecd58f5f053b",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 7064170
+        },
+        "MetalSmooth": {
+          "file": "BGC_Twine_MetalSmooth.png",
+          "sha256": "e78b9efd62c223517a4d3bc64e2d18c652028529110edd6b2db3496586e80d44",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 3116652
+        }
+      },
+      "variants": {}
+    },
+    {
+      "material": "BGC_Sand",
+      "tileMetres": 0.5,
+      "note": "Fine settled desert dust for local drifts (opaque geometry, no alpha).",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "BGC_Sand_BaseColor.png",
+          "sha256": "ca6f79dac3fc15e8df5a101e186aefd55b613e40ae4270da07029bc372c86d70",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 5063527
+        },
+        "Normal": {
+          "file": "BGC_Sand_Normal.png",
+          "sha256": "5abdbcc0ce8c658c540b7f716a0894680b82f1ae4e2c3e44bf025826f1cc1631",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 8106281
+        },
+        "MetalSmooth": {
+          "file": "BGC_Sand_MetalSmooth.png",
+          "sha256": "a2e567cb2d3512f58dc53e7a1d8b5396f34915aa28e8d25a88be806055ca72f8",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 2106159
+        }
+      },
+      "variants": {}
+    },
+    {
+      "material": "BGC_Clay",
+      "tileMetres": 0.4,
+      "note": "Porous unglazed water-jar ceramic (olla): matte grit, salt bloom, throwing lines. Wet base = darker tint + higher smoothness at material level.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "BGC_Clay_BaseColor.png",
+          "sha256": "a08e86c63f65045ab2200c08bc6e539681fde0ea173831e1ddf08dbbf914b6b5",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 5674672
+        },
+        "Normal": {
+          "file": "BGC_Clay_Normal.png",
+          "sha256": "db7aa742497f0631dfb59bf8b65a8b503fa6e6e38ee1859f02256fa19174e9a9",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 7830259
+        },
+        "MetalSmooth": {
+          "file": "BGC_Clay_MetalSmooth.png",
+          "sha256": "57c48ac10708d162652f5ea8fa052755027ab9a08d268ce04cb1785341fcd3fb",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 2141277
+        }
+      },
+      "variants": {}
+    },
+    {
+      "material": "BGC_Paper",
+      "tileMetres": 0.35,
+      "note": "Kraft label/tag paper with printed rule bands, tally ticks and stamped seal ring; deliberately no lettering.",
+      "pxPerMetre": null,
+      "maps": {
+        "BaseColor": {
+          "file": "BGC_Paper_BaseColor.png",
+          "sha256": "64d466ba65ce85f36ec01bcb7ca409c6908ea513e8ed14a685adae190527a7fe",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 4098065
+        },
+        "Normal": {
+          "file": "BGC_Paper_Normal.png",
+          "sha256": "18562d754453d015024d95ddb068cb3eeeed205fb0807e83073fdfaaa9a1a2d6",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 5887339
+        },
+        "MetalSmooth": {
+          "file": "BGC_Paper_MetalSmooth.png",
+          "sha256": "5d2602708527faab17722c190c1b69389332881f16ebcad616d3b605b10f0c01",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 3103549
+        }
+      },
+      "variants": {}
+    },
+    {
+      "material": "BGC_CounterFace",
+      "tileMetres": null,
+      "note": "Unique 4096x1024, 966 px/m. x = -2.12..2.12 m, row 1023 = porch level. Bays teal|ochre|olive, kick scuffs, bolt rust weeps, plinth dust.",
+      "pxPerMetre": 966.0,
+      "maps": {
+        "BaseColor": {
+          "file": "BGC_CounterFace_BaseColor.png",
+          "sha256": "b098bba6efb8975956e02a760c7d33a630bec9dab4d6d12efb770ee01de18783",
+          "width": 4096,
+          "height": 1024,
+          "bytes": 2118884
+        },
+        "Normal": {
+          "file": "BGC_CounterFace_Normal.png",
+          "sha256": "58220896c7cee70475743c8f78809e14e6e2e9276cce01370f0b455f26e1b28b",
+          "width": 4096,
+          "height": 1024,
+          "bytes": 3482026
+        },
+        "MetalSmooth": {
+          "file": "BGC_CounterFace_MetalSmooth.png",
+          "sha256": "0be3fe43e07e374c7ac3d4f9575bd9db9fee0fafe6d792ac37f8939cf6868b47",
+          "width": 4096,
+          "height": 1024,
+          "bytes": 1345480
+        }
+      },
+      "variants": {}
+    }
+  ]
+}

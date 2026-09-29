@@ -445,3 +445,11 @@ that far from a Warden's stand point (the Edit Mode test `WestGateLandmarksResol
   *West Gate: install outpost* refuses to run over an installed outpost. The wreck gantry beside the gate is chunked
   AuthoredWorld content: its new visuals are under Gate/Wreck gantry, the originals are inactive sources; use
   Show Sources / Rebuild Render Chunks as usual if you change them.
+
+## Air + Water filter bank (29 September 2026)
+
+**Air + Water filter fittings** (under *Ward shop architecture*, a render-chunk source root) is a saved instance of
+`Art/Phase1/AirWater/Filters20260929/AirWaterFilters.prefab`: five parts (three vessel mounts, header with valve/gauge/ISOLATE plate, roof riser),
+uniform scale 1, full-resolution maps, no colliders. The eight 9 Sep manifold/wall-mount/downfeed renderers are disabled, not deleted; canisters,
+retainers, riser clamps/anchors and feed flanges remain. Use Show Sources, edit, then Rebuild Render Chunks. `AirWaterFilterPass` is a one-time
+installer that refuses to run twice. Evidence, rollback scene/chunks and defects: `evidence/airwater-filters/20260929/README.md`.

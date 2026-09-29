@@ -1,0 +1,419 @@
+{
+  "task": "t_bd3d9fe3",
+  "date": "2026-09-29",
+  "author": "3d-modeler",
+  "status": "SOURCE-RENDER REVIEWED ONLY. Not Unity-integrated, not native-verified, not accepted.",
+  "target": "Air + Water revision 04 (prefab Assets/AthenHill/Art/Quality/StoreArchitecture/Revision04/air_water/air_water.prefab, scene instance at Unity (-20.6, 0.5, 9.0), yaw 90, scale 1): the three exterior filter vessels right of the door and their visible connections ONLY",
+  "buildingPivotUnity": [
+    -20.6,
+    0.5,
+    9.0
+  ],
+  "buildingYawUnity": 90.0,
+  "coordinateConvention": "Authoring \"A-space\": building-local metres, +X screen-right when viewed from the avenue, +Y up, +Z toward the avenue, origin = building pivot, Y=0 = porch top. GLBs are Y-up in A-space. glTFast imports with an X flip: a part authored at A pivot (px,py,pz) goes to building-local (-px, py, pz) with identity rotation and scale 1. Check by eye from the avenue: FILTER 1 is nearest the door, FILTER 3 furthest; the red valve lever and gauge are at the far (right) end, the riser drops from the roof beyond them.",
+  "interchangeAlternative": "exports/interchange/aw-meshes-v1.json: per-material submeshes in A-space relative to each pivot (Unity installer: reflect X, reverse winding, recalc tangents).",
+  "supersedesByNamePrefix": [
+    "air_water Filter manifold",
+    "air_water Filter manifold inlet 0.9",
+    "air_water Filter manifold inlet 1.7",
+    "air_water Filter manifold inlet 2.5",
+    "air_water Filter wall mount 0.9",
+    "air_water Filter wall mount 1.7",
+    "air_water Filter wall mount 2.5",
+    "air_water Roof to filter downfeed"
+  ],
+  "keepUnchanged": [
+    "the three canisters (silhouettes, position, 9 Sep surface pass) and their retainer collars",
+    "Feed retaining clamps / stand-offs / masonry anchors on the riser (y 2.4, 3.9, 5.8)",
+    "Vessel feed / Twin vessel cross feed / feed flanges on the roof",
+    "rainwater pipe and its clamps",
+    "facade masonry, door and its surround, awning, sign, roof, all colliders and the interaction roots"
+  ],
+  "howToRetire": "Disable (do not delete) the eight superseded renderers (listed above; text block aw_retired_objects.txt in airwater-filters-source-v1.blend). All 65 bank renderers are already m_Enabled=0 in the saved scene instance because they are baked into render chunks: run Show Sources, disable these eight, install the five prefab modules, then Rebuild Render Chunks.",
+  "labels": {
+    "file": "textures/layout.json",
+    "note": "Plates are baked into UV space of AW_Labels; lettering is FILTER 1/2/3, ISOLATE, SHUT | OPEN only. No lore."
+  },
+  "measurements": {
+    "minA": [
+      0.552,
+      0.107,
+      0.788
+    ],
+    "maxA": [
+      3.2456,
+      7.15,
+      3.23
+    ],
+    "totalTris": 36152,
+    "clearances": {
+      "AW_FeedRiser_frontMostZ": 3.096,
+      "AW_FilterHeader_frontMostZ": 3.05,
+      "AW_FilterMount_1_frontMostZ": 3.23,
+      "AW_FilterMount_2_frontMostZ": 3.23,
+      "AW_FilterMount_3_frontMostZ": 3.23,
+      "vesselSilhouetteFrontZ": 3.18,
+      "collarFrontZ": 3.22,
+      "frontMostVesselMountZ": 3.23,
+      "frontMostVesselMount_beyondCollarFront_m": 0.01,
+      "frontMostHeaderZ": 3.05,
+      "wallPlaneZ": 2.73,
+      "frontClosedShopWallColliderFaceZ": 2.7,
+      "newGeometryLeftMostX": 0.552,
+      "gapDoorRevealRightToNewLeftMost_m": 0.702,
+      "gapDoorLeafRightToNewLeftMost_m": 1.022,
+      "oldBankLeftMostX": 0.55,
+      "newVsOldLeftMost_m": 0.002,
+      "porchWalkZoneStartsAtZ": 3.3,
+      "newGeometryBeyondPorchWalkZone": false,
+      "lowestNewGeometryY": 0.107,
+      "valveLeverHeightY_m": 2.12,
+      "valveAxisHeightY_m": 2.12,
+      "gaugeCentreY_m": 2.262,
+      "reachNote": "lever grip centre is 2.12 m above the porch top (1.8 m figure: standing overhead reach about 2.2 m), on the front of the pipe, ~0.14 m above the vessel 3 cap and clear of it in plan; reachable at full stretch without crossing a vessel; no step is modelled"
+    },
+    "attachments": {
+      "straps": "two hoop straps per vessel (y 0.78/1.50, 0.83/1.56, 0.80/1.53), 40 mm wide x 4.8 mm, wall ears anchored to the plaster with two sleeve anchors each; rubber liner 1.5 mm; tension lug with M8 through-bolt and two nuts",
+      "cradle": "U-cradle plate under the bottom collar (y 0.4785..0.4865) with two wall plates (110 x 124 mm, four anchors each) and gussets to the wall; vessel 2 plates are 30 mm higher (hand-fitted)",
+      "spallPackers": "the two wall plates of vessel 2 straddle the plaster spall (depth 43 mm, z 2.687): a steel packer fills the hollow",
+      "header": "DN60 bronze tube 0.60..2.63 m, three tees, blanked left end with plug, hangers at x 0.745 and 2.10 on 70x100 mm plates (2 anchors)",
+      "isolationValve": "flanged ball valve, flanges x 2.607..2.667 / 2.847..2.893, four M8 through-bolts, red enamel lever along the pipe (OPEN), stem at x 2.76, y 2.12, z 3.01+",
+      "gauge": "bottom-entry pressure gauge at x 2.945 y 2.262, dial 73 mm; needle at 2.6 bar, red limit flag at 4.5 bar; unique 1024 dial map",
+      "isolatePlate": "flat plate 90 x 60 mm on the wall at x 2.84 y 1.905 (two anchors), text ISOLATE / SHUT | OPEN",
+      "riser": "union at the header joint (x 3.09..3.12), 45-degree set is in the header module, riser DN80 at existing axis x 3.18 z 3.03, gasketed flange joint at y 2.94..2.96 with four bolts, roof turn radius 0.12"
+    }
+  },
+  "parts": [
+    {
+      "part": "AW_FeedRiser",
+      "description": "Union at the header joint, elbow, riser at the existing axis (x 3.18, z 3.03) with a gasketed 4-bolt flange joint at y 2.95, roof turns (R 0.12) and an end flange at the existing roof pipe (x 1.7, y 7.08, z 0.80). Existing retaining clamps, stand-offs and masonry anchors on the riser are kept as they are.",
+      "collisionGuidance": "collider: none. Static, non-interactable; all parts lie in front of the wall plane (z 2.73) inside the 3.23 m front line; no walkable interior.",
+      "pivotAuthoring_A": [
+        3.18,
+        2.12,
+        3.03
+      ],
+      "pivotUnityLocalToBuilding": [
+        -3.18,
+        2.12,
+        3.03
+      ],
+      "orientation": "Identity rotation, uniform scale 1, no part rotated relative to the building. Front faces +Z (avenue).",
+      "sizeMetres_XYZ_A": [
+        1.6156,
+        5.1085,
+        2.308
+      ],
+      "boundsA_absolute": {
+        "min": [
+          1.63,
+          2.0415,
+          0.788
+        ],
+        "max": [
+          3.2456,
+          7.15,
+          3.096
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/AW_FeedRiser.glb",
+        "tris": 3566,
+        "verts": 1776,
+        "materialSlots": [
+          "Bronze",
+          "Rubber",
+          "Mineral",
+          "Steel"
+        ]
+      },
+      "lod1": null,
+      "qc": {
+        "tris": 3566,
+        "sizeA": [
+          1.6156,
+          5.1085,
+          2.308
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 60,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Static shadow caster only; use light probes. If baking is required generate UV1 in Unity - never reuse UV0 (metric tiling overlaps)."
+    },
+    {
+      "part": "AW_FilterHeader",
+      "description": "New DN60 header (x 0.552..3.09) replacing the old manifold + wall-mount bars: blanked left end, three tees with dropped bosses, two wall-anchored hangers (rubber-lined / bare), flanged isolation ball valve with red lever (open, along the pipe), bottom-entry pressure gauge (unique dial map, needle 2.6 bar, red limit flag 4.5 bar), 45-degree set to the riser and an ISOLATE plate (SHUT | OPEN) on the wall.",
+      "collisionGuidance": "collider: none. Static, non-interactable; all parts lie in front of the wall plane (z 2.73) inside the 3.23 m front line; no walkable interior.",
+      "pivotAuthoring_A": [
+        1.7,
+        2.12,
+        2.93
+      ],
+      "pivotUnityLocalToBuilding": [
+        -1.7,
+        2.12,
+        2.93
+      ],
+      "orientation": "Identity rotation, uniform scale 1, no part rotated relative to the building. Front faces +Z (avenue).",
+      "sizeMetres_XYZ_A": [
+        2.5613,
+        0.4312,
+        0.32
+      ],
+      "boundsA_absolute": {
+        "min": [
+          0.552,
+          1.875,
+          2.73
+        ],
+        "max": [
+          3.1133,
+          2.3062,
+          3.05
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/AW_FilterHeader.glb",
+        "tris": 9190,
+        "verts": 4762,
+        "materialSlots": [
+          "Bronze",
+          "Mineral",
+          "Paint",
+          "Steel",
+          "Rubber",
+          "ValveRed",
+          "Dial",
+          "Labels"
+        ]
+      },
+      "lod1": null,
+      "qc": {
+        "tris": 9190,
+        "sizeA": [
+          2.5613,
+          0.4312,
+          0.32
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 100,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Static shadow caster only; use light probes. If baking is required generate UV1 in Unity - never reuse UV0 (metric tiling overlaps)."
+    },
+    {
+      "part": "AW_FilterMount_1",
+      "description": "Vessel 1 (x 0.9): two hoop straps (y 0.78 / 1.50) with rubber liners, anchored ears and a tension lug on the right-hand front; U-cradle under the bottom collar with two gusseted wall plates; curved FILTER 1 plate; HOSE outlet (union, elbow, hose tail, rubber hose, worm-drive clamp); inlet UNION with rubber gasket; mineral crust, stalactites and vessel-skin runs.",
+      "collisionGuidance": "collider: none. Static, non-interactable; all parts lie in front of the wall plane (z 2.73) inside the 3.23 m front line; no walkable interior.",
+      "pivotAuthoring_A": [
+        0.9,
+        0.5,
+        2.93
+      ],
+      "pivotUnityLocalToBuilding": [
+        -0.9,
+        0.5,
+        2.93
+      ],
+      "orientation": "Identity rotation, uniform scale 1, no part rotated relative to the building. Front faces +Z (avenue).",
+      "sizeMetres_XYZ_A": [
+        0.6,
+        1.853,
+        0.502
+      ],
+      "boundsA_absolute": {
+        "min": [
+          0.6,
+          0.225,
+          2.728
+        ],
+        "max": [
+          1.2,
+          2.078,
+          3.23
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/AW_FilterMount_1.glb",
+        "tris": 7712,
+        "verts": 4022,
+        "materialSlots": [
+          "Paint",
+          "Rubber",
+          "Steel",
+          "Labels",
+          "Bronze",
+          "Mineral"
+        ]
+      },
+      "lod1": null,
+      "qc": {
+        "tris": 7712,
+        "sizeA": [
+          0.6,
+          1.853,
+          0.502
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 0,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Static shadow caster only; use light probes. If baking is required generate UV1 in Unity - never reuse UV0 (metric tiling overlaps)."
+    },
+    {
+      "part": "AW_FilterMount_2",
+      "description": "Vessel 2 (x 1.7): straps at y 0.83 / 1.56 (left-hand lug on the lower, right on the upper); cradle plates 30 mm higher and bedded on steel packers because they straddle a 43 mm plaster spall; FILTER 2 plate; CAPPED outlet (union, elbow, gasketed cap); bolted gasketed FLANGE inlet with a domed reducer.",
+      "collisionGuidance": "collider: none. Static, non-interactable; all parts lie in front of the wall plane (z 2.73) inside the 3.23 m front line; no walkable interior.",
+      "pivotAuthoring_A": [
+        1.7,
+        0.5,
+        2.93
+      ],
+      "pivotUnityLocalToBuilding": [
+        -1.7,
+        0.5,
+        2.93
+      ],
+      "orientation": "Identity rotation, uniform scale 1, no part rotated relative to the building. Front faces +Z (avenue).",
+      "sizeMetres_XYZ_A": [
+        0.6,
+        1.794,
+        0.543
+      ],
+      "boundsA_absolute": {
+        "min": [
+          1.4,
+          0.27,
+          2.687
+        ],
+        "max": [
+          2.0,
+          2.064,
+          3.23
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/AW_FilterMount_2.glb",
+        "tris": 8238,
+        "verts": 4295,
+        "materialSlots": [
+          "Paint",
+          "Rubber",
+          "Steel",
+          "Labels",
+          "Bronze",
+          "Mineral"
+        ]
+      },
+      "lod1": null,
+      "qc": {
+        "tris": 8238,
+        "sizeA": [
+          0.6,
+          1.794,
+          0.543
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 0,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Static shadow caster only; use light probes. If baking is required generate UV1 in Unity - never reuse UV0 (metric tiling overlaps)."
+    },
+    {
+      "part": "AW_FilterMount_3",
+      "description": "Vessel 3 (x 2.5): straps at y 0.80 / 1.53; FILTER 3 plate; 45-degree drain BEND ending in a gasketed 4-bolt flange (drips at the mouth); inlet union, reducing bush and a capped vent stub.",
+      "collisionGuidance": "collider: none. Static, non-interactable; all parts lie in front of the wall plane (z 2.73) inside the 3.23 m front line; no walkable interior.",
+      "pivotAuthoring_A": [
+        2.5,
+        0.5,
+        2.93
+      ],
+      "pivotUnityLocalToBuilding": [
+        -2.5,
+        0.5,
+        2.93
+      ],
+      "orientation": "Identity rotation, uniform scale 1, no part rotated relative to the building. Front faces +Z (avenue).",
+      "sizeMetres_XYZ_A": [
+        0.6,
+        1.969,
+        0.502
+      ],
+      "boundsA_absolute": {
+        "min": [
+          2.2,
+          0.107,
+          2.728
+        ],
+        "max": [
+          2.8,
+          2.076,
+          3.23
+        ]
+      },
+      "lod0": {
+        "glb": "exports/glb/AW_FilterMount_3.glb",
+        "tris": 7446,
+        "verts": 3893,
+        "materialSlots": [
+          "Paint",
+          "Rubber",
+          "Steel",
+          "Labels",
+          "Bronze",
+          "Mineral"
+        ]
+      },
+      "lod1": null,
+      "qc": {
+        "tris": 7446,
+        "sizeA": [
+          0.6,
+          1.969,
+          0.502
+        ],
+        "uvNaN": 0,
+        "missingUV": 0,
+        "degenerateUVTris": 0,
+        "looseVerts": 0,
+        "nonManifoldEdges": 3,
+        "negativeDeterminant": 0
+      },
+      "qcMatchesSourceSizeAndTriCount": true,
+      "lightmapUV": "None authored. Static shadow caster only; use light probes. If baking is required generate UV1 in Unity - never reuse UV0 (metric tiling overlaps)."
+    }
+  ],
+  "textureBudget": {
+    "pngFilesReferenced": 24,
+    "pixelsReferenced": 84934656,
+    "estimatedVRAM_MiB_BC7_withMips": 108.0,
+    "estimatedVRAM_MiB_RGBA32_withMips_ifUncompressed": 432.0,
+    "residentNote": "Estimate only; nothing measured in Unity. Tiling maps are 2048^2 on fittings a few centimetres to 0.3 m across (texel density 4096-6800 px/m); game-dev should trial 1024 for AW_Rubber / AW_Steel / AW_Mineral and use mip streaming. Source maps stay at full resolution."
+  },
+  "triangleTotals": {
+    "lod0": 36152,
+    "replaced9SepTris": null
+  },
+  "sourceWarnings": [
+    "cradle plate 1.7 -1 touches a spall at [(1.46, 0.36)]",
+    "cradle plate 1.7 1 touches a spall at [(1.94, 0.39)]"
+  ],
+  "lightingNote": "No emissive materials and no lights in the asset. The gauge dial is not emissive."
+}

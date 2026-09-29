@@ -1,0 +1,15 @@
+$ uv run --offline --with ruff ruff check --select E9,F unity/tools/capture_basic_general_sign.py unity/tools/launch_phase1_qa.py unity/tools/test_basic_general_harness.py
+All checks passed!
+exit=0
+
+$ bash -n unity/tools/relaunch_qa.sh
+exit=0
+
+$ python -m py_compile unity/tools/capture_basic_general_sign.py unity/tools/launch_phase1_qa.py unity/tools/test_basic_general_harness.py
+exit=0
+
+$ git diff --check -- unity/tools/launch_phase1_qa.py
+exit=0
+
+Scoped whitespace: PASS (all four code files)
+Repository-wide git diff --check: unrelated pre-existing scene whitespace at 50121, 110383, 131365, 174822; not modified.

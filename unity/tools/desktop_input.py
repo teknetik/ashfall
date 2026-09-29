@@ -3,7 +3,13 @@ from Xlib import X, XK, display, protocol
 from Xlib.ext import xtest
 import time,os
 
-def focus():
+def focus_window():
+    """Return (display, window) for the active Athen Hill player/editor window.
+
+    Many QA scripts capture UI Toolkit bounds in panel coordinates (window client
+    space). To click reliably we also need the actual X11 window object so callers
+    can translate panel coords to root coords.
+    """
     d=display.Display(); root=d.screen().root
     for wid in root.get_full_property(d.intern_atom('_NET_CLIENT_LIST'),X.AnyPropertyType).value:
         w=d.create_resource_object('window',wid)
@@ -12,8 +18,11 @@ def focus():
         if matches:
             root.send_event(protocol.event.ClientMessage(window=w,client_type=d.intern_atom('_NET_ACTIVE_WINDOW'),data=(32,[2,X.CurrentTime,0,0,0])),event_mask=X.SubstructureRedirectMask|X.SubstructureNotifyMask)
             d.sync();time.sleep(.25)
-            return d
+            return d,w
     raise RuntimeError('AthenHill Editor window not found')
+
+def focus():
+    return focus_window()[0]
 
 def key(d,name,down):
     xtest.fake_input(d,X.KeyPress if down else X.KeyRelease,d.keysym_to_keycode(XK.string_to_keysym(name)));d.sync()

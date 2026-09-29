@@ -1,0 +1,7 @@
+"""Run the independently passing real-keyboard city route against the integrated development binary (Air + Water filter pass).
+Same wrapper as evidence/reconcile/20260929/check_city.py; writes into this folder's city-native/."""
+from pathlib import Path
+source = Path('/home/teknetik/code/ao2-crafting/unity/evidence/crafting/20260928/independent-qa/check_city.py')
+text = source.read_text().replace("OUT = pathlib.Path(__file__).resolve().parent", "OUT = pathlib.Path(" + repr(str(Path(__file__).parent)) + ")")
+fake = Path(__file__).resolve().parents[2] / 'crafting/20260928/independent-qa/check_city.py'
+exec(compile(text, str(source), 'exec'), {'__file__': str(fake), '__name__': '__main__'})
