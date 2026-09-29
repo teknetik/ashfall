@@ -21,6 +21,10 @@
 // Everything animated is driven by the global _AthenAtmosphereTime (CityAtmosphere). Reduced Motion
 // stops that clock, which freezes cloud drift, cloud evolution and star twinkle. _CloudSpeed 0 also stops
 // cloud motion. No keywords, no texture arrays, no loops; OpenGLCore via Unity's HLSL cross-compiler.
+//
+// COST (estimated, not yet measured natively): ~700-750 scalar ALU + 8 fetches of one 256^2 texture per
+// clouded day pixel; night adds ~150-250 ALU + 4 explicit-LOD fetches (sun section skipped). Sun, night and
+// ridge sections sit behind uniform branches. Roughly 0.25-0.35 ms for a full-screen 1080p sky on an RTX 3060.
 Shader "Athen Hill/Ward Sky V2"
 {
     Properties
@@ -179,16 +183,6 @@ Shader "Athen Hill/Ward Sky V2"
                     + du * (u.yx * k + float2(vb, vc) - va);
                 return float3(v, g);
             }
-            float GradientNoise(float2 p)
-            {
-                float2 i = floor(p), f = p - i;
-                float2 u = f * f * f * (f * (f * 6.0 - 15.0) + 10.0);
-                float va = dot(Hash22(i) * 2.0 - 1.0, f);
-                float vb = dot(Hash22(i + float2(1, 0)) * 2.0 - 1.0, f - float2(1, 0));
-                float vc = dot(Hash22(i + float2(0, 1)) * 2.0 - 1.0, f - float2(0, 1));
-                float vd = dot(Hash22(i + 1.0) * 2.0 - 1.0, f - 1.0);
-                return lerp(lerp(va, vb, u.x), lerp(vc, vd, u.x), u.y);
-            }
             // AtmosphereNoise was made periodic by bilinearly blending four Perlin samples across each tile,
             // which halves its contrast toward the tile centre: a visible grid every 256 texels. Dividing the
             // deviation by that blend's standard-deviation factor restores uniform contrast (~8 ALU).
@@ -199,7 +193,6 @@ Shader "Athen Hill/Ward Sky V2"
                 return NOISE_MEAN + (n - NOISE_MEAN) * rsqrt(w.x * w.y);
             }
             float4 NoiseTex(float2 uv) { return Destripe(tex2D(_Noise, uv), uv); }
-            float4 NoiseTexLod(float2 uv, float lod) { return Destripe(tex2Dlod(_Noise, float4(uv, 0, lod)), uv); }
 
             // Henyey-Greenstein without 1/(4 pi): its mean over the sphere is exactly 1 (energy neutral).
             float PhaseHG(float mu, float g)
@@ -214,14 +207,6 @@ Shader "Athen Hill/Ward Sky V2"
             {
                 float b = R * mu, c = 2.0 * R * height + height * height;
                 return c / (b + sqrt(b * b + c));
-            }
-
-            // Low-frequency cumulus mass used by the self-shadow sample: the ALU base octave plus the first
-            // texture octave (the finer octaves are zero-mean and omitted). Must mirror the main shape below.
-            float CloudMassLod(float2 q, float lod)
-            {
-                float oct2 = NoiseTexLod(mul(kRotA, q) * 0.126875 + float2(0.21, 0.67), lod).r - NOISE_MEAN;
-                return SHAPE_CENTER + SHAPE_GAIN * (GradientNoise(q) * 0.45 + oct2 * 0.27);
             }
 
             half4 Frag(Varyings i) : SV_Target
@@ -382,20 +367,16 @@ Shader "Athen Hill/Ward Sky V2"
                 cloudA *= _CloudOpacity * smoothstep(0.0, _CloudHorizonFade, d.y);
                 float thickness = saturate(density * THICKNESS_SCALE);
 
-                // Self-shadowing toward the light: one first-order step from the analytic gradient plus one
-                // real sample further along the light's horizontal direction (only where there is cloud).
-                float beer = 1.0;
-                UNITY_BRANCH
-                if (cloudA > 0.002)
-                {
-                    float2 lDir = normalize(L.xz + float2(1e-5, 0));
-                    float slant = clamp(length(L.xz) / max(abs(L.y), 0.05), 0.3, 3.0);
-                    float2 lStep = lDir * (slant * _CloudLightStep);
-                    float nearOD = max(density + dot(shapeGrad, lStep * 0.5), 0.0);
-                    float lod = log2(max(footprint * 32.48, 1.0));
-                    float farOD = max(CloudMassLod(q + lStep * 1.5, lod) - thr, 0.0);
-                    beer = exp(-(max(density, 0.0) * 0.5 + nearOD * 0.6 + farOD * 0.5) * _CloudAbsorption);
-                }
+                // Self-shadowing toward the light, gradient-based: extrapolate the density 0.5 and 1.5 march
+                // steps along the light's horizontal direction with the base octave's analytic gradient and
+                // accumulate optical depth (Beer). In CPU tests this matched a real two-sample march closely
+                // at a fraction of the cost (no extra noise evaluations or fetches). Low light = longer steps.
+                float2 lDir = normalize(L.xz + float2(1e-5, 0));
+                float slant = clamp(length(L.xz) / max(abs(L.y), 0.05), 0.3, 3.0);
+                float slope = dot(shapeGrad, lDir) * (slant * _CloudLightStep);  // density change per step
+                float opticalDepth = max(density, 0.0) * 0.5 + max(density + slope * 0.5, 0.0) * 0.6
+                    + max(density + slope * 1.5, 0.0) * 0.5;
+                float beer = exp(-opticalDepth * _CloudAbsorption);
                 float thin = 1.0 - thickness;
                 // Overhead we see flat, self-shadowed bases; toward the horizon, the lit flanks.
                 float lit = beer * (1.0 - _CloudBaseDarkening * thickness * lerp(0.35, 1.0, saturate(h * 1.8)));
