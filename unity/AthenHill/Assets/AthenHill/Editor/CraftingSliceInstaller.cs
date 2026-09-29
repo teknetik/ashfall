@@ -10,7 +10,7 @@ namespace AthenHill.Editor
  public static class CraftingSliceInstaller
  {
   const string DataPath="Assets/AthenHill/Data/Crafting/WardCrafting.asset";
-  static LootEntry Drop(string id,int count,float chance=1)=>new LootEntry{itemId=id,quantity=count,chance=chance};
+  static LootEntry Drop(string id,int count,float chance=1)=>new LootEntry{itemId=id,minQuantity=count,maxQuantity=count,chance=chance};
   public static void Install()
   {
    if(AssetDatabase.LoadAssetAtPath<CraftingCatalog>(DataPath))throw new Exception("WardCrafting.asset exists; inspect and edit it, do not rerun installer.");
@@ -19,7 +19,7 @@ namespace AthenHill.Editor
    var tutorial=UnityEngine.Object.FindAnyObjectByType<BermsTutorial>();
    if(!session||!tutorial||session.GetComponent<CraftingSession>()||GameObject.Find("Field fabricator"))throw new Exception("Crafting slice already installed or scene references missing.");
    var data=ScriptableObject.CreateInstance<CraftingCatalog>();
-   data.weapons=new[]{new CraftWeapon{id="weapon_scrap_pistol",name="Scrap Pistol",recoil=38,slots=new[]{"grip"}}};
+   data.weapons=new[]{new CraftWeapon{id="weapon_scrap_pistol",name="Scrap Pistol",stats=WeaponStats.ScrapPistol,slots=new[]{"grip"}}};
    data.modifiers=new[]{new CraftModifier{id="mod_grip_stabilised",itemId="grip_stabilised_pistol",slot="grip",weaponIds=new[]{"weapon_scrap_pistol"},effects=new[]{new CraftEffect{stat="recoil",op="add",value=-7}}}};
    data.stations=new[]{new CraftStation{id="station_field_fabricator",name="Warden Field Fabricator"}};
    data.recipes=new[]{new CraftRecipe{id="recipe_grip_stabilised_pistol",name="Stabilised Pistol Grip",stationId="station_field_fabricator",requiresWeaponId="weapon_scrap_pistol",inputs=new[]{new CraftIngredient{kind="tag",id="component:servo",quantity=1},new CraftIngredient{kind="item",id="scrap_alloy",quantity=2},new CraftIngredient{kind="tag",id="nanite:tier1",quantity=5}},outputItemId="grip_stabilised_pistol",outputQuantity=1,unlocks=new[]{new CraftUnlock{type="acquireItem",id="droid_servo_damaged"},new CraftUnlock{type="tutorialStep",id="Fabricate"}}}};
@@ -32,7 +32,7 @@ namespace AthenHill.Editor
    foreach(var item in UnityEngine.Object.FindObjectsByType<WorldInteractable>(FindObjectsSortMode.None))
     if(Vector3.Distance(item.transform.position,position)<4.8f)throw new Exception("Fabricator too close to "+item.name);
    foreach(var npc in session.npcs)if(npc&&Vector3.Distance(npc.transform.position,position)<2.4f)throw new Exception("Fabricator too close to "+npc.name);
-   var crafting=session.gameObject.AddComponent<CraftingSession>();crafting.data=data;crafting.combat=tutorial.combat;crafting.tutorial=tutorial;
+   var crafting=session.gameObject.AddComponent<CraftingSession>();crafting.data=data;crafting.combat=tutorial.combat;
    var outpost=GameObject.Find("Outpost");if(!outpost)throw new Exception("Outpost hierarchy missing.");
    var station=new GameObject("Field fabricator");station.transform.SetParent(outpost.transform,true);station.transform.position=position;
    var visual=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/AthenHill/Prefabs/WestGate/PH_ToolCart.prefab");

@@ -11,8 +11,17 @@
     <ui:VisualElement class="arrival-rule" picking-mode="Ignore"/>
     <ui:Label text="A place to begin again." class="arrival-description" picking-mode="Ignore"/>
     <ui:VisualElement name="startup-actions">
-     <ui:Button name="start-game" class="arrival-button arrival-primary" tooltip="Enter the city at West Gate"><ui:Label text="Start Game" class="arrival-button-label" picking-mode="Ignore"/><ui:Label text="›" class="arrival-arrow" picking-mode="Ignore"/></ui:Button>
+     <ui:Button name="continue-game" class="arrival-button arrival-primary" tooltip="Resume your saved game at West Gate"><ui:VisualElement class="arrival-button-copy" picking-mode="Ignore"><ui:Label text="Continue" class="arrival-button-label" picking-mode="Ignore"/><ui:Label name="continue-summary" class="arrival-button-detail" picking-mode="Ignore"/></ui:VisualElement><ui:Label text="›" class="arrival-arrow" picking-mode="Ignore"/></ui:Button>
+     <ui:Button name="start-game" class="arrival-button arrival-primary" tooltip="Enter the city at West Gate"><ui:Label name="start-game-label" text="Start Game" class="arrival-button-label" picking-mode="Ignore"/><ui:Label text="›" class="arrival-arrow" picking-mode="Ignore"/></ui:Button>
      <ui:Button name="startup-settings" class="arrival-button" tooltip="Sound, video and accessibility"><ui:Label text="Settings" class="arrival-button-label" picking-mode="Ignore"/><ui:Label text="+" class="arrival-settings-mark" picking-mode="Ignore"/></ui:Button>
+    </ui:VisualElement>
+    <ui:VisualElement name="new-game-confirm" class="arrival-confirm">
+     <ui:Label text="Start a new game?" class="arrival-confirm-title" picking-mode="Ignore"/>
+     <ui:Label name="new-game-confirm-text" text="Your saved progress will be replaced. A copy of the old save is kept beside it." class="arrival-confirm-text" picking-mode="Ignore"/>
+     <ui:VisualElement class="arrival-confirm-actions">
+      <ui:Button name="confirm-new-game" class="arrival-button arrival-confirm-button" text="Start new game"/>
+      <ui:Button name="cancel-new-game" class="arrival-button arrival-confirm-button" text="Keep my save · Esc"/>
+     </ui:VisualElement>
     </ui:VisualElement>
    </ui:VisualElement>
    <ui:VisualElement class="arrival-footer" picking-mode="Ignore"><ui:Label text="Tab · Select     Enter · Confirm" class="arrival-help" picking-mode="Ignore"/><ui:VisualElement class="arrival-footer-rule" picking-mode="Ignore"/><ui:Label text="WARD  /  ATHEN HILL" class="arrival-build" picking-mode="Ignore"/></ui:VisualElement>

@@ -453,3 +453,45 @@ that far from a Warden's stand point (the Edit Mode test `WestGateLandmarksResol
 uniform scale 1, full-resolution maps, no colliders. The eight 9 Sep manifold/wall-mount/downfeed renderers are disabled, not deleted; canisters,
 retainers, riser clamps/anchors and feed flanges remain. Use Show Sources, edit, then Rebuild Render Chunks. `AirWaterFilterPass` is a one-time
 installer that refuses to run twice. Evidence, rollback scene/chunks and defects: `evidence/airwater-filters/20260929/README.md`.
+
+## Scavenger's Arc: fabrication, loot and field orders (29 September 2026)
+
+Gameplay v2 content is serialized data; nothing is hard-coded in the scripts. Edit these assets in the Inspector:
+
+- **Data/CityCatalog.asset** — every item. Keep the first three rows (Basic General's stock) and all IDs.
+  `rarity` (Common/Uncommon/Rare) drives loot glow, toast and tile colours; `sellOnly` + `sellPrice` puts raw salvage
+  in Basic General's *Sell salvage* list (Mira never stocks it); `excludeFromTrade` keeps rare parts, refined
+  components and mods out of every trade; `icon` is the USS illustration class (`scrap-icon`, `pistol-icon`, …).
+  `tags` feed tag ingredients (e.g. `nanite:tier1`, `component:capacitor`, `material:conductive`).
+- **Data/Crafting/WardCrafting.asset** — the Scrap Pistol's base `stats`, clamp bounds `minStats`/`maxStats` and slots
+  (grip, barrel, cell); `modifiers` (per mod: slot and effects — stat + `add` or `percent`); `recipes` (inputs by item
+  or tag, `group` Component/MarkI/MarkII, `unlocks`: `acquireItem` or `orderStart`, `lockedHint`); `lootTables`
+  (min/max quantity, chance, `pityAfter` bad-luck protection, `guaranteeUntilCollected` for the Foreman's core);
+  presentation labels for slots, tag ingredients, recipe groups and the fabricator stats table.
+  Effective stat = clamp((base + Σadd) × (1 + Σpercent / 100)). PlayerCombat reads every weapon stat from this; its own
+  damage/range/nano fields are only a fallback. After editing, run `AthenHill.Editor.CraftingDataExporter.Export`
+  to refresh the dev-UI export and validate references.
+- **Data/Crafting/WardFieldOrders.asset** — Ossa's five orders (goal FitMod / CollectItem / CraftFromGroup, target,
+  test-fire flag, encounter to activate, guidance key, brief, radio start/complete lines, credit/item/schematic
+  rewards) and the Field Notes templates (`{brief} {item} {weapon} {recipe} {inputs} {count}`). Orders only move
+  forward; rewards and completion lines fire once.
+- **Prefabs/OuterBerms/SalvageCache.prefab** — the droid drop (glow colours, light intensity, prompt).
+  **SalvageHeapNode.prefab** — search time, respawn time, cancel distance, prompts, marker light/motes.
+  **FeralDepotForeman.prefab** — a prefab *variant* of FeralWorkerDroid: change its overrides (health, strike, wind-up,
+  stagger immunity, optics) there; worker changes flow through.
+- Scene (installed by `GameplayV2Installer`): **CitySession → FieldOrders** (data, guidance targets
+  `fabricator`/`depot`/`foreman`, encounter binding `foreman`), **CitySession → CraftingSession.cachePrefab**,
+  **Outer Berms/Encounters/Depot Foreman · processing hall** (move the spawn child to reposition; respawn 300 s),
+  **Outer Berms/Salvage heaps** (one `Salvage node · …` per searchable prop; move a node with its prop, set its loot
+  table and prompt range per node), Landmarks `berms_foreman_hall` and `berms_scrap_heap`.
+- `GameplayV2Installer.InstallBatch` is one-time: it refuses to run over its own marker (*CitySession/Gameplay v2 ·
+  installed*) or an unsaved scene. `GameplayV2Content.BuildData/BuildOrders/BuildPrefabs` authored the assets once and
+  refuse to overwrite them unless `GAMEPLAY_V2_FORCE=1` (which discards Inspector edits).
+- **CitySession → WardSaveGame**: save file name and (for tools/tests) a folder override. The format is
+  `WardSaveData` version 1 (JsonUtility). When adding saved state, add fields with safe defaults; bump
+  `CurrentVersion` only for incompatible changes (older builds then refuse the file and start a new game).
+  **CraftingSession → Fresh Seed Per New Game** (on) seeds loot per new game; turn it off to always start from
+  *Loot Seed* for repeatable QA. The start menu's Continue / New Game / confirmation live in **UI/StartupMenu.uxml**.
+- UI: the fabricator window and *Sell salvage* list are laid out in **UI/CityHUD.uxml** (`fabricator-panel`,
+  `salvage-list`) and styled in **CityHUD.uss** (sections "Gameplay v2 · …"); `FabricatorPanel` and
+  `SalvageSalePanel` fill them from data. Keep the named elements.

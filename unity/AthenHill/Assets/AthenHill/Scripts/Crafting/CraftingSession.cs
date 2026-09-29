@@ -10,78 +10,110 @@ namespace AthenHill
  {
   public CraftingCatalog data;
   public PlayerCombat combat;
-  public BermsTutorial tutorial;
   public Transform fabricator;
+  [Tooltip("Seed for a new game's loot generator when Fresh Seed Per New Game is off. Saved games keep their own generator state.")]
   public int lootSeed=1729;
+  [Tooltip("Each new game rolls loot from a fresh seed (then saved with the game). Off = always start from Loot Seed (repeatable QA runs).")]
+  public bool freshSeedPerNewGame=true;
+  [Tooltip("Physical drop spawned at a droid wreck or beside a searched heap whose leftovers did not fit.")]
+  public SalvageCache cachePrefab;
   public CraftingModel Model {get;private set;}
   public int LootEvents {get;private set;}
   public string LastLoot {get;private set;}="";
-  public string TutorialStep {get;private set;}="Dormant";
-  public string Objective=>TutorialStep=="Salvage"?$"Salvage parts · Servo {Math.Min(1,Session.Shop.Quantity("droid_servo_damaged"))}/1 · Alloy {Math.Min(2,Session.Shop.Quantity("scrap_alloy"))}/2 · Residue {Math.Min(5,Session.Shop.Quantity("nanite_residue"))}/5":TutorialStep=="Fabricate"?"Use the field fabricator at Ossa's post to make a grip.":TutorialStep=="Fit"?"Fit the stabilised grip to your scrap pistol.":TutorialStep=="TestFire"?"Fire your upgraded pistol in the Outer Berms.":"";
   public GameSession Session {get;private set;}
-  System.Random random;
+  public LootBook Loot {get;private set;}
+  /// A pickup (cache or heap) moved items into the pack. Raised after the pack changed.
+  public event Action<LootPickup> Collected;
   IEnumerator Start()
   {
    Session=GetComponent<GameSession>();
    while(Session.Shop==null)yield return null;
    if(!combat)combat=FindAnyObjectByType<PlayerCombat>();
-   if(!tutorial)tutorial=FindAnyObjectByType<BermsTutorial>();
    if(!data){Debug.LogError("Ward crafting data is missing.");yield break;}
-   random=new System.Random(lootSeed);
+   Loot=new LootBook(freshSeedPerNewGame?unchecked((ulong)DateTime.UtcNow.Ticks):unchecked((ulong)lootSeed));
    Model=new CraftingModel(data,Session.catalog.items,Session.Shop,()=>combat&&combat.hasPistol);
-   if(combat)combat.ShotFired+=OnShot;
+   if(combat)combat.BindLoadout(Model.Loadout);
   }
-  void OnDestroy(){if(combat)combat.ShotFired-=OnShot;}
-  void Update()
+  void OnDestroy(){if(combat)combat.BindLoadout(null);}
+  bool AtStation(out string reason){if(Model==null||Session.State!=CityState.Fabricator){reason="wrong_station";return false;}reason="ok";return true;}
+  public bool Craft(string recipeId,out string reason)
   {
-   if(Model==null||!tutorial||tutorial.Step!=BermsStep.Complete)return;
-   if(TutorialStep=="Dormant"&&Model.KnownRecipes.Count>0)TutorialStep="Salvage";
-   if(TutorialStep=="Salvage"&&Model.CanCraft("recipe_grip_stabilised_pistol","station_field_fabricator",out _))TutorialStep="Fabricate";
-   if(TutorialStep=="Fabricate"&&Model.Crafts>0)TutorialStep="Fit";
-   if(TutorialStep=="Fit"&&Model.GripSlot!=null)TutorialStep="TestFire";
+   if(!AtStation(out reason))return false;
+   var recipe=Model.Recipe(recipeId);
+   bool ok=Model.TryCraft(recipeId,Session.ActiveStationId,out reason);
+   Session.Notify(ok?$"{CraftingText.ItemName(Model,recipe.outputItemId)} fabricated."+(Model.Loadout.Modifier(recipe.outputItemId)!=null?" Fit it to your pistol.":""):"Fabrication failed. "+CraftingText.Reason(reason,Model,recipe),"Field Fabricator");
+   return ok;
   }
-  void OnShot(){if(TutorialStep=="TestFire"&&Model?.GripSlot!=null){TutorialStep="Done";Session.Notify("Stabilised grip tested. Your pistol holds steadier.","Warden Ossa");}}
-  public bool Craft(out string reason)
+  public bool Fit(string itemId,out string reason)
   {
-   if(Model==null||Session.State!=CityState.Fabricator){reason="wrong_station";return false;}
-   bool ok=Model.TryCraft("recipe_grip_stabilised_pistol",Session.ActiveStationId,out reason);
-   if(ok)TutorialStep="Fit";
-   Session.Notify(ok?"Stabilised Pistol Grip crafted. Fit it to your pistol.":"Fabrication failed: "+reason,"Field Fabricator");return ok;
+   if(!AtStation(out reason))return false;
+   var before=Model.Loadout.Stats;
+   bool ok=Model.TryFit(itemId,out reason);
+   var mod=Model.Loadout.Modifier(itemId);
+   Session.Notify(ok?$"{CraftingText.ItemName(Model,itemId)} fitted. {CraftingText.StatChanges(data,before,Model.Loadout.Stats)}":"Cannot fit. "+CraftingText.Reason(reason,Model,null,reason=="stack_full"&&mod!=null?Model.Loadout.Fitted(mod.slot):itemId),"Field Fabricator");
+   return ok;
   }
-  public bool Fit(out string reason)
+  public bool Remove(string slot,out string reason)
   {
-   if(Model==null||Session.State!=CityState.Fabricator){reason="wrong_station";return false;}
-   bool ok=Model.TryFit("grip_stabilised_pistol",out reason);
-   if(ok)TutorialStep="TestFire";
-   Session.Notify(ok?"Stabilised grip fitted. Recoil 38 → 31.":"Cannot fit grip: "+reason,"Field Fabricator");return ok;
+   if(!AtStation(out reason))return false;
+   var itemId=Model.Loadout.Fitted(slot);
+   bool ok=Model.TryRemove(slot,out reason);
+   Session.Notify(ok?$"{CraftingText.ItemName(Model,itemId)} returned to your pack.":"Cannot remove. "+CraftingText.Reason(reason,Model,null,itemId),"Field Fabricator");
+   return ok;
   }
-  public bool Remove(out string reason)
+  LootTable Table(string id)=>data&&data.lootTables!=null?data.lootTables.FirstOrDefault(x=>x.id==id):null;
+  /// Rolls a droid's table and leaves a salvage cache at its wreck. False only when the loot system is not ready,
+  /// so the caller can retry instead of marking the kill paid.
+  public bool DropLoot(string tableId,Vector3 at,Transform parent,out SalvageCache cache,string source=null)
   {
-   if(Model==null||Session.State!=CityState.Fabricator){reason="wrong_station";return false;}
-   bool ok=Model.TryRemove(out reason);
-   Session.Notify(ok?"Stabilised grip returned to your pack.":"Cannot remove grip: "+reason,"Field Fabricator");return ok;
+   cache=null;
+   if(Model==null||Loot==null||Session==null||Session.Shop==null)return false;
+   var table=Table(tableId);
+   if(table==null){Debug.LogWarning("Unknown loot table "+tableId+"; nothing dropped.");return true;}
+   var rolled=Loot.Roll(table);LootEvents++;
+   LastLoot="Dropped: "+Describe(rolled);
+   if(rolled.Count==0)return true;
+   if(!cachePrefab){Collect(new SalvageContents(rolled),source,at);return true;}
+   var ground=SalvageCache.Ground(at,cachePrefab.groundMask);
+   cache=Instantiate(cachePrefab,ground,Quaternion.Euler(0,UnityEngine.Random.Range(0,360f),0),parent);
+   cache.name=cachePrefab.name+(string.IsNullOrEmpty(source)?"":" · "+source);
+   cache.Fill(this,rolled,source);
+   return true;
   }
-  public void Salvage(string tableId)
+  /// A searched scrap heap: rolls straight into the pack; anything over a stack cap is left in a cache beside it.
+  public void SearchHeap(string tableId,Vector3 at,Transform parent,string source)
   {
-   if(Model==null||random==null)return;
-   var table=data.lootTables.FirstOrDefault(x=>x.id==tableId);
-   if(table==null)return;
-   LootEvents++;
-   var collected=new List<string>();var left=new List<string>();
-   foreach(var entry in table.entries.OrderByDescending(x=>x.chance>=1))
+   if(Model==null||Loot==null)return;
+   var table=Table(tableId);if(table==null){Debug.LogWarning("Unknown loot table "+tableId);return;}
+   var rolled=Loot.Roll(table);LootEvents++;
+   if(rolled.Count==0){LastLoot="Nothing useful";Session.Notify($"Nothing useful in this {(source??"heap").ToLowerInvariant()}.","Field Pack");Collected?.Invoke(new LootPickup{source=source,position=at});return;}
+   var contents=new SalvageContents(rolled);
+   Collect(contents,source,at);
+   if(!contents.Empty&&cachePrefab)
    {
-    if(entry.chance<1&&random.NextDouble()>=entry.chance)continue;
-    var item=Session.catalog.items.FirstOrDefault(x=>x.id==entry.itemId);
-    if(item==null){left.Add(entry.itemId+" (unknown)");continue;}
-    if(Session.Shop.TryApply(new[]{new KeyValuePair<string,int>(entry.itemId,entry.quantity)},0,out _))
-    {
-     collected.Add(item.name+" ×"+entry.quantity);
-     if(Model.Acquire(entry.itemId))Session.Notify("Schematic discovered: Stabilised Pistol Grip.","Field Pack");
-    }
-    else left.Add(item.name+" ×"+entry.quantity);
+    var cache=Instantiate(cachePrefab,SalvageCache.Ground(at,cachePrefab.groundMask),Quaternion.identity,parent);
+    cache.name=cachePrefab.name+" · "+source;cache.Fill(this,contents.Stacks,source);
    }
-   LastLoot="Salvaged: "+(collected.Count>0?string.Join(", ",collected):"nothing")+(left.Count>0?" · left behind (pack full): "+string.Join(", ",left):"");
-   Session.Notify(LastLoot,"Field Pack");
   }
+  /// Moves what fits from a cache into the pack, reveals schematics for new parts and reports the pickup.
+  public LootPickup Collect(SalvageContents contents,string source,Vector3 at)
+  {
+   var pickup=new LootPickup{source=source,position=at};
+   if(Model==null||contents==null)return pickup;
+   contents.Collect(Session.Shop,out pickup.taken,out pickup.left);
+   foreach(var s in pickup.taken){Loot.MarkCollected(s.itemId);pickup.discovered.AddRange(Model.Acquire(s.itemId));}
+   LastLoot=(pickup.taken.Count>0?"Collected: "+Describe(pickup.taken):"Collected nothing")+(pickup.left.Count>0?" · pack full, left in the cache: "+Describe(pickup.left):"");
+   Session.Notify(LastLoot+(pickup.discovered.Count>0?" "+CraftingText.Discovered(pickup.discovered):""),"Field Pack");
+   Collected?.Invoke(pickup);
+   return pickup;
+  }
+  string Describe(IEnumerable<ItemStack> stacks)=>string.Join(", ",stacks.Select(x=>$"{CraftingText.ItemName(Model,x.itemId)} ×{x.quantity}"));
+ }
+ public class LootPickup
+ {
+  public string source;
+  public Vector3 position;
+  public List<ItemStack> taken=new List<ItemStack>(),left=new List<ItemStack>();
+  public List<CraftRecipe> discovered=new List<CraftRecipe>();
  }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 namespace AthenHill
@@ -13,17 +14,25 @@ namespace AthenHill
   public PlayerCombat combat;
   public BermsTutorial tutorial;
   CraftingSession crafting;
+  FieldOrders orders;
   public Camera worldCamera;
   [Min(1)]public float enemyBarDistance=32;
+  [Tooltip("Seconds a salvage pickup toast stays on screen.")]
+  [Min(.5f)]public float toastSeconds=4.5f;
+  [Tooltip("Guidance markers show while their target is on screen and within this many metres.")]
+  [Min(5)]public float guidanceRange=60;
   VisualElement root,hud,vitalBar,nanoBar,crosshair,hitMarker,flash,objectiveRow,aimHint;
-  Label vitalValue,nanoValue,objective,guidance;
+  Label vitalValue,nanoValue,objective,guidance,objectiveHeading;
   Button slot7;
   readonly Dictionary<FeralDroid,VisualElement> bars=new Dictionary<FeralDroid,VisualElement>();
-  float hitUntil,flashAlpha;
+  float hitUntil,flashAlpha,toastUntil;
+  VisualElement toast,toastLines,search,searchFill;
+  Label searchLabel;
   void Start()
   {
    root=GetComponent<UIDocument>().rootVisualElement;hud=root.Q("hud");
    crafting=session?session.GetComponent<CraftingSession>():null;
+   orders=session?session.GetComponent<FieldOrders>():null;
    vitalBar=root.Q(className:"vital-bar");nanoBar=root.Q(className:"nano-bar");
    var values=root.Query<Label>(className:"vital-value").ToList();
    if(values.Count>1){vitalValue=values[0];nanoValue=values[1];}
@@ -36,7 +45,7 @@ namespace AthenHill
    flash=Element("damage-flash",root);flash.SendToBack();
    var objectiveBox=root.Q("objective-box");
    objectiveRow=Element("berms-objective",objectiveBox);
-   objectiveRow.Add(new Label("OUTER BERMS"){pickingMode=PickingMode.Ignore});objectiveRow[0].AddToClassList("small");objectiveRow[0].AddToClassList("berms-heading");
+   objectiveHeading=new Label("OUTER BERMS"){pickingMode=PickingMode.Ignore};objectiveHeading.AddToClassList("small");objectiveHeading.AddToClassList("berms-heading");objectiveRow.Add(objectiveHeading);
    objective=new Label{pickingMode=PickingMode.Ignore};objective.AddToClassList("berms-objective-text");objectiveRow.Add(objective);
    var hints=root.Q("key-hints");
    if(hints!=null)
@@ -46,10 +55,21 @@ namespace AthenHill
     aimHint.Add(new Label("Aim · LMB/F Fire"){pickingMode=PickingMode.Ignore});
    }
    guidance=new Label{pickingMode=PickingMode.Ignore};guidance.AddToClassList("checkpoint-guidance");hud.Add(guidance);
+   // Salvage pickup toast (rarity-coloured lines) and the scrap-heap search progress.
+   toast=Element("panel loot-toast",hud);
+   var toastHeading=new Label("SALVAGE"){pickingMode=PickingMode.Ignore};toastHeading.AddToClassList("small");toastHeading.AddToClassList("loot-toast-heading");toast.Add(toastHeading);
+   toastLines=Element("loot-toast-lines",toast);Show(toast,false);
+   var actions=root.Q("top-actions");
+   if(actions!=null)actions.RegisterCallback<GeometryChangedEvent>(e=>toast.style.top=e.newRect.yMax+8);
+   search=Element("panel search-progress",hud);
+   searchLabel=new Label{pickingMode=PickingMode.Ignore};searchLabel.AddToClassList("search-progress-label");search.Add(searchLabel);
+   searchFill=Element("search-progress-fill",Element("search-progress-track",search));Show(search,false);
+   if(crafting)crafting.Collected+=ShowPickup;
    slot7=root.Q<Button>("slot7");
    if(slot7!=null)slot7.clicked+=()=>combat.ToggleDraw();
    combat.TargetHit+=(_,killed)=>{hitUntil=Time.unscaledTime+(killed?.28f:.14f);hitMarker.EnableInClassList("kill",killed);};
    combat.Hurt+=amount=>flashAlpha=Mathf.Clamp01(flashAlpha+amount/30f);
+   combat.StatsChanged+=UpdatePistolTooltip;UpdatePistolTooltip();
    Refresh(true);
   }
   static VisualElement Element(string classes,VisualElement parent)
@@ -81,12 +101,12 @@ namespace AthenHill
    Refresh(false);
    // CityHud disables the reserve slots at start; keep slot 7 in step with the pistol.
    if(slot7!=null&&slot7.enabledSelf!=pistolShown)slot7.SetEnabled(pistolShown);
-   if(slot7!=null&&pistolShown)slot7.tooltip=$"Draw or holster the scrap pistol · 7 · Recoil {combat.RecoilStat:0}"+(crafting?.Model?.GripSlot!=null?" (Stabilised grip)":"");
+   if(slot7!=null&&pistolShown&&slot7.tooltip!=pistolTooltip)slot7.tooltip=pistolTooltip;
    var h=combat.Health;
    if(vitalBar!=null)vitalBar.style.width=Length.Percent(h.Fraction*100);
    if(vitalValue!=null)vitalValue.text=$"{Mathf.CeilToInt(h.Current)} / {Mathf.RoundToInt(h.max)}";
-   if(nanoBar!=null)nanoBar.style.width=Length.Percent(combat.Nano/Mathf.Max(1,combat.nanoMax)*100);
-   if(nanoValue!=null)nanoValue.text=$"{Mathf.FloorToInt(combat.Nano)} / {Mathf.RoundToInt(combat.nanoMax)}";
+   if(nanoBar!=null)nanoBar.style.width=Length.Percent(combat.Nano/Mathf.Max(1,combat.Stats.nanoMax)*100);
+   if(nanoValue!=null)nanoValue.text=$"{Mathf.FloorToInt(combat.Nano)} / {Mathf.RoundToInt(combat.Stats.nanoMax)}";
    bool play=session.State==CityState.Play;
    Show(crosshair,play&&combat.Armed);crosshair.EnableInClassList("aiming",combat.Aiming);
    Show(hitMarker,play&&Time.unscaledTime<hitUntil);
@@ -94,25 +114,62 @@ namespace AthenHill
    slot7?.EnableInClassList("selected",combat.Armed);
    flashAlpha=Mathf.MoveTowards(flashAlpha,0,Time.unscaledDeltaTime*(session.reducedMotion?3:1.6f));
    flash.style.opacity=flashAlpha*(session.reducedMotion?.5f:.85f);
+   if(toast!=null&&toast.style.display==DisplayStyle.Flex&&Time.unscaledTime>toastUntil)Show(toast,false);
+   var heap=SalvageNode.Searching;
+   Show(search,play&&heap);
+   if(play&&heap){searchLabel.text=$"Searching {heap.displayName.ToLowerInvariant()}…";searchFill.style.width=Length.Percent(heap.Progress*100);}
    bool showObjective=tutorial&&tutorial.ShowObjective;
    Show(objectiveRow,showObjective);
-   if(showObjective)objective.text=tutorial.Step==BermsStep.Complete&&crafting!=null&&!string.IsNullOrEmpty(crafting.Objective)?crafting.Objective:tutorial.Objective;
+   bool ordersActive=OrdersActive;
+   if(showObjective)
+   {
+    objective.text=ordersActive&&!string.IsNullOrEmpty(orders.Objective)?orders.Objective:tutorial.Objective;
+    objectiveHeading.text=ordersActive&&!string.IsNullOrEmpty(orders.Heading)?orders.Heading:"OUTER BERMS";
+   }
    UpdateGuidance(play);
    UpdateBars(play);
   }
+  string pistolTooltip="";
+  /// Rebuilt only when the loadout changes, never per frame.
+  void UpdatePistolTooltip()
+  {
+   var model=crafting?crafting.Model:null;
+   var mods=model!=null?string.Join(", ",model.Loadout.FittedMods.Select(x=>CraftingText.ItemName(model,x.Value))):"";
+   pistolTooltip=$"Draw or holster the scrap pistol · 7 · Damage {combat.Stats.damage:0.#} · Recoil {combat.Stats.recoil:0.#}"+(mods.Length>0?" · "+mods:"");
+  }
+  void OnDestroy(){if(combat)combat.StatsChanged-=UpdatePistolTooltip;if(crafting)crafting.Collected-=ShowPickup;}
+  static string RarityClass(ItemRarity r)=>r==ItemRarity.Rare?"rarity-rare":r==ItemRarity.Uncommon?"rarity-uncommon":"rarity-common";
+  void ToastLine(string text,params string[] classes)
+  {
+   var line=new Label(text){pickingMode=PickingMode.Ignore};line.AddToClassList("loot-toast-line");
+   foreach(var c in classes)line.AddToClassList(c);
+   toastLines.Add(line);
+  }
+  /// One readable card per pickup: each item in its rarity colour, then anything left behind and new schematics.
+  void ShowPickup(LootPickup pickup)
+  {
+   if(toast==null||crafting.Model==null)return;
+   toastLines.Clear();
+   foreach(var s in pickup.taken){var spec=crafting.Model.Item(s.itemId);ToastLine($"+{s.quantity}  {(spec!=null?spec.name:s.itemId)}",RarityClass(spec!=null?spec.rarity:ItemRarity.Common));}
+   if(pickup.taken.Count==0&&pickup.left.Count==0)ToastLine($"Nothing useful in the {(pickup.source??"heap").ToLowerInvariant()}.","loot-toast-muted");
+   if(pickup.left.Count>0)ToastLine("Pack full · left in the cache: "+string.Join(", ",pickup.left.Select(x=>$"{CraftingText.ItemName(crafting.Model,x.itemId)} ×{x.quantity}")),"loot-toast-warning");
+   foreach(var r in pickup.discovered)ToastLine("Schematic discovered · "+r.name,"loot-toast-schematic");
+   toastUntil=Time.unscaledTime+toastSeconds;Show(toast,true);
+  }
+  bool OrdersActive=>orders&&orders.Ready&&orders.Progress.Started;
   void UpdateGuidance(bool play)
   {
-   var target=tutorial?tutorial.GuidanceTarget:null;
-   bool fabTarget=tutorial&&tutorial.Step==BermsStep.Complete&&crafting!=null&&crafting.TutorialStep=="Fabricate";
-   if(fabTarget)target=crafting.fabricator;
-   bool visible=play&&target&&tutorial.ShowObjective;
+   Transform target;string label;
+   if(OrdersActive){target=orders.GuidanceTarget;label=orders.GuidanceLabel;}
+   else{target=tutorial?tutorial.GuidanceTarget:null;label=tutorial&&tutorial.Step==BermsStep.TakePistol?"ARMS LOCKER":"WARDEN OSSA";}
+   bool visible=play&&target&&tutorial&&tutorial.ShowObjective;
    if(visible)
    {
     var world=target.position+Vector3.up*1.8f;var vp=worldCamera.WorldToViewportPoint(world);
-    visible=vp.z>0&&vp.x>.05f&&vp.x<.95f&&vp.y>.08f&&vp.y<.92f&&Vector3.Distance(world,combat.transform.position)<35;
+    visible=vp.z>0&&vp.x>.05f&&vp.x<.95f&&vp.y>.08f&&vp.y<.92f&&Vector3.Distance(world,combat.transform.position)<guidanceRange;
     if(visible)
     {
-     guidance.text=(fabTarget?"FIELD FABRICATOR":tutorial.Step==BermsStep.TakePistol?"ARMS LOCKER":"WARDEN OSSA")+$" · {Mathf.CeilToInt(Vector3.Distance(target.position,combat.transform.position))} m";
+     guidance.text=label+$" · {Mathf.CeilToInt(Vector3.Distance(target.position,combat.transform.position))} m";
      var p=RuntimePanelUtils.CameraTransformWorldToPanel(root.panel,world,worldCamera);guidance.style.left=p.x-85;guidance.style.top=p.y-24;
     }
    }

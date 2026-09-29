@@ -84,6 +84,18 @@ namespace AthenHill
    if(!string.IsNullOrEmpty(line))session.Notify(line,radioSpeaker);
    Changed?.Invoke();
   }
+  /// Save restore: puts the primer at a saved step with that step's world state (locker, active encounters,
+  /// raised plates) but without replaying lines or rewards. A completed primer re-forms the depot nest.
+  public void Restore(BermsStep step)
+  {
+   Step=step;lastRemaining=-1;
+   if(locker)locker.enabled=step==BermsStep.TakePistol;
+   foreach(var t in targets)if(t)t.Raise();
+   if(step==BermsStep.FirstContact&&firstContact)firstContact.Activate();
+   if(step==BermsStep.Depot&&depot)depot.Activate();
+   if(step==BermsStep.Complete&&depot){if(depot.respawnSeconds<=0)depot.respawnSeconds=120;depot.Activate();}
+   Changed?.Invoke();
+  }
   void Finish()
   {
    Step=BermsStep.Complete;

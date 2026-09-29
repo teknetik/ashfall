@@ -5,6 +5,16 @@ Open `AthenHill/` in Unity **6000.6.0f1**, then open
 The game opens on the Ward arrival menu. Select **Start Game** to enter at West
 Gate, or **Settings** for sound, video and reduced motion. Tab/Enter and the mouse
 operate the menu. Escape returns from settings; it does not start the game.
+Once a game has been saved the menu offers **Continue** (with a one-line summary of the
+saved field order) and **New Game**, which asks before replacing the save (Escape keeps it).
+Progress autosaves after fabricating, fitting or removing a mod, collecting salvage,
+completing a field order, trading, and on quit, to `ward-save.json` in
+`Application.persistentDataPath` (Linux: `~/.config/unity3d/Free Column/Athen Hill/`).
+A continued game resumes at West Gate with credits, pack, fitted mods, schematics, the
+Berms primer step, field orders and loot luck restored; world drops and heap timers reset.
+An unreadable or newer save is moved aside and a new game starts with a notice.
+Development QA runs with `--athen-qa <dir>` save under `<dir>/save`; `--athen-save-dir <dir>`
+overrides the folder.
 The project uses URP **17.6.0**, glTFast **6.20.0** and the supplied **MeshyPlayer**
 in the saved scene. Its idle pose, walk and run come from `meshy/mpc`; see
 [MESHY_PLAYER.md](MESHY_PLAYER.md). The four talking NPCs now use the supplied
@@ -42,7 +52,9 @@ See [terrain evidence](evidence/terrain/20260908/acceptance.md) and the
 | Hold left mouse and drag | Look / orbit camera |
 | Mouse wheel up / down | Zoom in to first person / back out |
 | Space | Jump |
-| E | Talk / use nearby terminal |
+| E | Talk / use nearby terminal, field fabricator, salvage cache or scrap heap |
+| 7 | Draw / holster the scrap pistol (Outer Berms only) |
+| Hold right mouse · left click / F | Aim · fire (left click while aiming; F fires from the hip) |
 | Escape | Close panel / pause |
 | R | Return to West Gate |
 | 1 / 2 | Flask / medkit information |
@@ -58,7 +70,19 @@ zoom, left-drag look, jumping and HUD/modal input handling.
 
 Visit the hill, meet Mira/Torr/Vex/Linn, buy a flask and sell your starting scrap at
 Basic General, then establish a Lattice link. Ring Gate is deliberately offline.
-Pause contains mute, reduced motion, credits and a standalone Quit button. There is no second zone or combat.
+Pause contains mute, reduced motion, credits and a standalone Quit button.
+
+**Outer Berms and the Scavenger's Arc.** Beyond the market gate, Warden Ossa's combat primer issues the scrap
+pistol; after it, her five field orders (Field Notes shows the current one and a guidance marker) run the loop:
+salvage in the Berms → fabricate at the field fabricator → fit → see the stats change → take on tougher machines.
+Droids leave rarity-lit salvage caches at their wrecks (E collects; a full pack leaves the rest inside) and scrap
+heaps around the depot and service road can be searched (E, hold still ~1 s; they refill after a few minutes).
+The fabricator lists refined components and Mark I/II pistol mods for three slots (grip, barrel, nano cell) with
+have/need parts and a current-vs-preview stats table. The Depot Foreman in the processing hall is the order-4
+elite; its control core reveals the Mark II schematics. Mira at Basic General buys common and uncommon salvage
+(*Sell salvage*); rare parts, components and mods are never traded. See
+[the Gameplay v2 evidence](evidence/gameplay-v2/20260929/README.md) and
+[editing notes](EDITING.md#scavengers-arc-fabrication-loot-and-field-orders-29-september-2026).
 
 The south-court Ring Gate now uses the user's sandstone/gunmetal reference,
 generated through Meshy MCP. Its editable prefab includes the control console,

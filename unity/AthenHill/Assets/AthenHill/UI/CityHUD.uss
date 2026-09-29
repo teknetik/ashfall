@@ -249,3 +249,72 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .small-window .enemy-bar-name, .small-window .berms-objective-text { font-size: 20px; }
 
 .checkpoint-guidance { position: absolute; width: 170px; padding: 5px; color: rgb(173, 233, 232); background-color: rgba(20, 29, 29, 0.88); border-bottom-width: 2px; border-bottom-color: rgb(77, 170, 174); font-size: 13px; -unity-text-align: middle-center; }
+
+/* Gameplay v2 · salvage (CombatHud.cs). Rarity: Common warm white, Uncommon Ward cyan, Rare amber. */
+.rarity-common { color: #eee9dc; }
+.rarity-uncommon { color: #58d5d7; }
+.rarity-rare { color: #e7a94a; }
+.loot-toast { position: absolute; right: 20px; top: 200px; width: 446px; padding: 14px 26px 14px; }
+.loot-toast-heading { color: #a48a62; border-bottom-width: 1px; border-bottom-color: #59615a; padding-bottom: 5px; margin-bottom: 6px; }
+.loot-toast-line { font-size: 20px; white-space: normal; margin: 2px 0; }
+.loot-toast-muted { color: #bcbcad; }
+.loot-toast-warning { color: #db7d6b; font-size: 18px; }
+.loot-toast-schematic { color: #8be6df; font-size: 18px; }
+.compact .loot-toast { width: 380px; }
+.small-window .loot-toast-line, .small-window .loot-toast-warning, .small-window .loot-toast-schematic { font-size: 20px; }
+.search-progress { position: absolute; left: 50%; top: 58%; width: 300px; margin-left: -150px; padding: 12px 20px; }
+.search-progress-label { font-size: 18px; color: #eee9dc; -unity-text-align: middle-center; margin-bottom: 7px; }
+.search-progress-track { height: 10px; background-color: #101a1b; border-width: 1px; border-color: #65706a; }
+.search-progress-fill { height: 100%; width: 0; background-color: #49cbd0; border-top-width: 1px; border-top-color: #86e6df; }
+.small-window .search-progress-label { font-size: 20px; }
+
+/* Gameplay v2 · Basic General salvage list (SalvageSalePanel.cs). */
+.shop-section-heading { color: #a48a62; border-top-width: 1px; border-top-color: #7b8275; padding-top: 12px; margin-top: 10px; }
+.salvage-row { min-height: 84px; padding: 8px 0; }
+.salvage-art { width: 58px; height: 58px; }
+.salvage-row .item-copy { font-size: 19px; }
+.salvage-row Button { width: 132px; }
+
+/* Gameplay v2 · field fabricator (FabricatorPanel.cs). Cyan = ready/focus, bronze = structure, red = short. */
+.fab-row { flex-direction: row; align-items: flex-start; }
+#fab-pistol { border-top-width: 1px; border-top-color: #7b8275; padding-top: 12px; margin-top: 12px; }
+.fab-side { width: 272px; flex-shrink: 0; margin-right: 20px; }
+.fab-main { flex-grow: 1; flex-shrink: 1; min-width: 0; }
+.fab-heading { color: #a48a62; margin-bottom: 6px; }
+.fab-group { color: #bcbcad; margin: 8px 0 3px; }
+.fab-recipe { flex-direction: row; justify-content: space-between; align-items: center; min-height: 38px; padding: 7px 12px; margin: 2px 0; -unity-text-align: middle-left; }
+.fab-recipe-name { flex-shrink: 1; font-size: 17px; white-space: normal; }
+.fab-recipe-state { font-size: 14px; color: #bcbcad; margin-left: 8px; }
+.fab-recipe.locked .fab-recipe-name { color: #8c958b; }
+.fab-recipe.ready .fab-recipe-state { color: #58d5d7; }
+.fab-recipe.fitted .fab-recipe-state { color: #daca9e; }
+.fab-recipe.selected { border-left-width: 3px; border-left-color: #a48a62; }
+.fab-title { font-size: 24px; color: #eee9dc; margin-bottom: 4px; white-space: normal; }
+.fab-description { font-size: 17px; white-space: normal; margin-bottom: 10px; }
+.fab-inputs { margin-bottom: 8px; }
+.fab-input { flex-direction: row; justify-content: space-between; border-bottom-width: 1px; border-bottom-color: #3f4a45; padding: 4px 2px; }
+.fab-input-name { font-size: 18px; flex-shrink: 1; white-space: normal; }
+.fab-input-count { font-size: 18px; margin-left: 12px; }
+.have-ok { color: #8fcf8a; }
+.have-short { color: #db7d6b; }
+.fab-actions { flex-direction: row; flex-wrap: wrap; }
+.fab-actions Button { margin: 4px 8px 4px 0; min-height: 44px; padding: 10px 16px; font-size: 17px; }
+#fabricator-craft { color: #8be6df; }
+.fab-reason { font-size: 17px; white-space: normal; color: #bcbcad; margin-top: 6px; }
+.fab-reason.blocked { color: #db7d6b; }
+.fab-slot { flex-direction: column; align-items: flex-start; min-height: 52px; padding: 8px 12px; margin: 3px 0; }
+.fab-slot-label { color: #a48a62; }
+.fab-slot-mod { font-size: 17px; white-space: normal; }
+.fab-slot.empty .fab-slot-mod { color: #8c958b; }
+.fab-slot.selected { border-left-width: 3px; border-left-color: #58d5d7; }
+.fab-stat-row { flex-direction: row; align-items: center; border-bottom-width: 1px; border-bottom-color: #3f4a45; min-height: 27px; }
+.fab-stat-header { border-bottom-color: #65706a; }
+.fab-stat-header .fab-stat-cell { color: #a48a62; }
+.fab-stat-name { width: 150px; font-size: 17px; }
+.fab-stat-cell { flex-grow: 1; flex-basis: 0; font-size: 17px; -unity-text-align: middle-right; padding-right: 6px; }
+.fab-stat-delta.better { color: #8fcf8a; }
+.fab-stat-delta.worse { color: #db7d6b; }
+.small-window .fab-recipe-name, .small-window .fab-stat-name, .small-window .fab-stat-cell, .small-window .fab-reason, .small-window .fab-description, .small-window .fab-slot-mod { font-size: 20px; }
+.small-window .fab-side { width: 300px; }
+.inventory-tile.tile-uncommon { border-bottom-width: 3px; border-bottom-color: #58d5d7; }
+.inventory-tile.tile-rare { border-bottom-width: 3px; border-bottom-color: #e7a94a; }

@@ -90,8 +90,22 @@ namespace AthenHill
    bool ok=Shop.Trade(id,buy,out string message);
    if(ok&&buy&&id=="water_flask")boughtFlask=true;
    if(ok&&!buy&&id=="scrap_coil")soldScrap=true;
-   Notify(message,"Mira");SoundRequested?.Invoke(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);return ok;
+   Notify(message,"Mira");SoundRequested?.Invoke(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);
+   if(ok)Traded?.Invoke();
+   return ok;
   }
+  /// Basic General's Sell salvage list: one atomic sale of several units of salvage Mira buys but does not stock.
+  public bool SellSalvage(string id,int count)
+  {
+   if(State!=CityState.Shop)return false;
+   string message="Mira does not buy that.";
+   bool ok=ShopModel.BuysAsSalvage(Shop.Spec(id))&&Shop.Sell(id,count,out message);
+   Notify(message,"Mira");SoundRequested?.Invoke(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);
+   if(ok)Traded?.Invoke();
+   return ok;
+  }
+  /// A trade or salvage sale completed (autosave hook).
+  public event Action Traded;
   public void SelectDestination(int index)
   {
    if(State!=CityState.Grid||GridProgress<1||index<0||index>=catalog.destinations.Length)return;
@@ -106,6 +120,16 @@ namespace AthenHill
    else Open(slot==5?CityState.Inventory:CityState.Notes);
   }
   public void StartGame(){if(State!=CityState.MainMenu)return;HasStarted=true;SetState(CityState.Play);}
+  public CityVisitState CaptureCityVisit()=>new CityVisitState{visitedHill=visitedHill,boughtFlask=boughtFlask,soldScrap=soldScrap,linked=linked,spoken=Spoken.OrderBy(x=>x).ToArray(),selectedDestination=selectedDestination};
+  /// Save restore of the city-visit checklist (conversations, flask, scrap sale, lattice link).
+  public void RestoreCityVisit(CityVisitState city)
+  {
+   if(city==null)return;
+   visitedHill=city.visitedHill;boughtFlask=city.boughtFlask;soldScrap=city.soldScrap;linked=city.linked;
+   Spoken.Clear();if(city.spoken!=null)foreach(var id in city.spoken)if(!string.IsNullOrEmpty(id)&&npcs!=null&&npcs.Any(n=>n&&n.definition&&n.definition.id==id))Spoken.Add(id);
+   selectedDestination=city.selectedDestination??"";
+   Changed?.Invoke();
+  }
   /// Field rewards (Outer Berms patrols): credits and items change together, then the log records it.
   public void Reward(int credits,string itemId,int quantity,string speaker,string text)
   {

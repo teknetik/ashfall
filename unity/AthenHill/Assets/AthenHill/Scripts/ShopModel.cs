@@ -13,12 +13,21 @@ namespace AthenHill
   public ShopModel(IEnumerable<ItemSpec> definitions,int credits=25)
   {
    if(credits<0)throw new ArgumentOutOfRangeException(nameof(credits));
-   items=definitions.ToDictionary(x=>x.id,x=>new ItemSpec{id=x.id,name=x.name,description=x.description,buyPrice=x.buyPrice,sellPrice=x.sellPrice,startingQuantity=x.startingQuantity,tags=x.tags==null?null:(string[])x.tags.Clone(),maxStack=x.maxStack,excludeFromTrade=x.excludeFromTrade});
+   items=definitions.ToDictionary(x=>x.id,x=>new ItemSpec{id=x.id,name=x.name,description=x.description,buyPrice=x.buyPrice,sellPrice=x.sellPrice,startingQuantity=x.startingQuantity,tags=x.tags==null?null:(string[])x.tags.Clone(),maxStack=x.maxStack,excludeFromTrade=x.excludeFromTrade,rarity=x.rarity,sellOnly=x.sellOnly,icon=x.icon});
    if(items.Values.Any(x=>x.buyPrice<0||x.sellPrice<0||x.startingQuantity<0||x.maxStack<0||x.maxStack>0&&x.startingQuantity>x.maxStack))throw new ArgumentException("Prices, quantities and caps must be valid.");
    quantities=items.ToDictionary(x=>x.Key,x=>x.Value.startingQuantity);Credits=credits;
   }
   public int Quantity(string id)=>id!=null&&quantities.TryGetValue(id,out int q)?q:0;
   public IReadOnlyCollection<ItemSpec> Definitions=>items.Values;
+  public ItemSpec Spec(string id)=>id!=null&&items.TryGetValue(id,out var item)?item:null;
+  /// How many more of this item the pack can hold (its stack cap), or int.MaxValue when uncapped.
+  public int Room(string id)
+  {
+   var item=Spec(id);if(item==null)return 0;
+   return item.maxStack>0?Math.Max(0,item.maxStack-Quantity(id)):int.MaxValue-Quantity(id);
+  }
+  /// Salvage Mira buys but does not stock: shown in the shop's Sell salvage list while carried.
+  public static bool BuysAsSalvage(ItemSpec item)=>item!=null&&item.sellOnly&&!item.excludeFromTrade&&item.sellPrice>0;
   /// Validate all deltas against one snapshot, then commit once. Duplicate IDs are summed.
   public bool TryApply(IEnumerable<KeyValuePair<string,int>> changes,int creditDelta,out string reason)
   {
@@ -78,13 +87,39 @@ namespace AthenHill
   public bool Trade(string id,bool buy,out string message)
   {
    if(id==null||!items.TryGetValue(id,out var item)){message="That item is not available.";return false;}
+   if(!buy)return Sell(id,1,out message);
    if(item.excludeFromTrade){message="This item is not tradeable.";return false;}
-   int price=buy?item.buyPrice:item.sellPrice;
-   if(buy&&Credits<price){message=$"You need {price-Credits} more credits for {item.name}.";return false;}
-   if(!buy&&Quantity(id)<1){message=$"You have no {item.name} to sell.";return false;}
-   if((buy?Purchases:Sales)==int.MaxValue||!TryApply(new[]{new KeyValuePair<string,int>(id,buy?1:-1)},buy?-price:price,out _)){message="This trade cannot be completed.";return false;}
-   if(buy)Purchases++;else Sales++;
-   message=$"{(buy?"Bought":"Sold")} {item.name} for {price} credit{(price==1?"":"s")}.";return true;
+   if(item.sellOnly){message=$"Mira buys {item.name} but does not stock it.";return false;}
+   int price=item.buyPrice;
+   if(Credits<price){message=$"You need {price-Credits} more credits for {item.name}.";return false;}
+   if(Purchases==int.MaxValue||!TryApply(new[]{new KeyValuePair<string,int>(id,1)},-price,out _)){message="This trade cannot be completed.";return false;}
+   Purchases++;
+   message=$"Bought {item.name} for {price} credit{(price==1?"":"s")}.";return true;
   }
+  /// One atomic sale of several units: every unit and its credits move together, or nothing changes.
+  public bool Sell(string id,int count,out string message)
+  {
+   if(id==null||!items.TryGetValue(id,out var item)){message="That item is not available.";return false;}
+   if(item.excludeFromTrade){message="This item is not tradeable.";return false;}
+   if(count<1){message="Choose at least one item to sell.";return false;}
+   if(Quantity(id)<count){message=Quantity(id)<1?$"You have no {item.name} to sell.":$"You carry only {Quantity(id)} {item.name}.";return false;}
+   long total=(long)item.sellPrice*count;
+   if(total>int.MaxValue||Sales==int.MaxValue||!TryApply(new[]{new KeyValuePair<string,int>(id,-count)},(int)total,out _)){message="This trade cannot be completed.";return false;}
+   Sales++;
+   message=count==1?$"Sold {item.name} for {total} credit{(total==1?"":"s")}.":$"Sold {count} × {item.name} for {total} credits.";return true;
+  }
+  /// Save-game restore: replaces balances in one step. Unknown IDs are ignored; quantities are clamped to caps.
+  public void Restore(int credits,int purchases,int sales,IEnumerable<KeyValuePair<string,int>> carried)
+  {
+   Credits=Math.Max(0,credits);Purchases=Math.Max(0,purchases);Sales=Math.Max(0,sales);
+   foreach(var id in quantities.Keys.ToList())quantities[id]=0;
+   if(carried!=null)foreach(var pair in carried)
+   {
+    if(pair.Key==null||!items.TryGetValue(pair.Key,out var item))continue;
+    int q=Math.Max(0,pair.Value);if(item.maxStack>0)q=Math.Min(q,item.maxStack);
+    quantities[pair.Key]=q;
+   }
+  }
+  public IEnumerable<KeyValuePair<string,int>> Carried=>quantities.Where(x=>x.Value>0);
  }
 }

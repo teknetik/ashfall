@@ -20,75 +20,318 @@ MonoBehaviour:
     buyPrice: 4
     sellPrice: 2
     startingQuantity: 0
-    tags: [consumable]
+    tags:
+    - consumable
+    maxStack: 0
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: flask-icon
   - id: medkit
     name: Medkit
     description: A compact pack of sealed dressings and colony first-aid supplies.
     buyPrice: 9
     sellPrice: 4
     startingQuantity: 0
-    tags: [consumable]
+    tags:
+    - consumable
+    maxStack: 0
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: medkit-icon
   - id: scrap_coil
     name: Scrap Coil
     description: A worn induction coil. Someone at the market can still use the copper.
     buyPrice: 2
     sellPrice: 1
     startingQuantity: 1
-    tags: [salvage, 'material:conductive']
+    tags:
+    - salvage
+    - material:conductive
+    maxStack: 0
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: scrap-icon
   - id: droid_servo_damaged
     name: Damaged Servo
     description: A salvaged worker-droid servo, still fit for a field repair.
     buyPrice: 0
-    sellPrice: 0
+    sellPrice: 3
     startingQuantity: 0
-    tags: [salvage, 'salvage:droid', component, 'component:servo', 'tier:1']
+    tags:
+    - salvage
+    - salvage:droid
+    - component
+    - component:servo
+    - tier:1
     maxStack: 10
-    excludeFromTrade: 1
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 1
+    icon: scrap-icon
   - id: scrap_alloy
     name: Scrap Alloy
     description: Cleaned structural alloy recovered from feral machines.
     buyPrice: 0
-    sellPrice: 0
+    sellPrice: 1
     startingQuantity: 0
-    tags: [salvage, material, 'material:metal', 'tier:1']
+    tags:
+    - salvage
+    - material
+    - material:metal
+    - tier:1
     maxStack: 30
-    excludeFromTrade: 1
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 1
+    icon: scrap-icon
   - id: nanite_residue
     name: Nanite Residue
     description: Recoverable tier-one nanites from a damaged industrial core.
     buyPrice: 0
-    sellPrice: 0
+    sellPrice: 1
     startingQuantity: 0
-    tags: [salvage, nanite, 'nanite:tier1']
+    tags:
+    - salvage
+    - nanite
+    - nanite:tier1
     maxStack: 60
-    excludeFromTrade: 1
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 1
+    icon: scrap-icon
   - id: copper_filament
     name: Copper Filament
     description: Fine conductor salvaged from a machine winding.
     buyPrice: 0
-    sellPrice: 0
+    sellPrice: 1
     startingQuantity: 0
-    tags: [salvage, material, 'material:conductive', 'tier:1']
+    tags:
+    - salvage
+    - material
+    - material:conductive
+    - tier:1
     maxStack: 30
-    excludeFromTrade: 1
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 1
+    icon: scrap-icon
   - id: micro_capacitor
     name: Micro Capacitor
-    description: An intact low-voltage component; no schematic is known yet.
+    description: An intact low-voltage capacitor from a drone's charge bus. Charge cell cores need two.
     buyPrice: 0
-    sellPrice: 0
+    sellPrice: 3
     startingQuantity: 0
-    tags: [salvage, component, 'component:capacitor', 'tier:1']
+    tags:
+    - salvage
+    - component
+    - component:capacitor
+    - tier:1
     maxStack: 10
-    excludeFromTrade: 1
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 1
+    icon: scrap-icon
   - id: grip_stabilised_pistol
     name: Stabilised Pistol Grip
     description: A field-fabricated grip that steadies the scrap pistol.
     buyPrice: 0
     sellPrice: 0
     startingQuantity: 0
-    tags: [weapon_mod, 'weapon_mod:grip']
+    tags:
+    - weapon_mod
+    - weapon_mod:grip
+    - mark:1
     maxStack: 3
     excludeFromTrade: 1
+    rarity: 1
+    sellOnly: 0
+    icon: pistol-icon
+  - id: optic_lens_cracked
+    name: Cracked Optic Lens
+    description: A scrap drone's targeting lens, cracked at the rim but still true at the centre.
+    buyPrice: 0
+    sellPrice: 4
+    startingQuantity: 0
+    tags:
+    - salvage
+    - salvage:drone
+    - component
+    - component:optic
+    - tier:1
+    maxStack: 10
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 1
+    icon: scrap-icon
+  - id: actuator_intact
+    name: Intact Actuator
+    description: A heavy worker-droid joint actuator with its feedback loop unbroken. Rare in the Berms.
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - salvage
+    - salvage:droid
+    - component
+    - component:actuator
+    - tier:2
+    maxStack: 10
+    excludeFromTrade: 1
+    rarity: 2
+    sellOnly: 0
+    icon: scrap-icon
+  - id: lattice_shard
+    name: Quantum Lattice Shard
+    description: A sliver of quantum-stable lattice from Tir's old fabrication cores. It hums against the palm.
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - salvage
+    - lattice
+    - tier:2
+    maxStack: 10
+    excludeFromTrade: 1
+    rarity: 2
+    sellOnly: 0
+    icon: lattice-icon
+  - id: foreman_control_core
+    name: Foreman Control Core
+    description: The depot foreman's command core. Its stored shift schedules include full Mark II pistol schematics.
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - salvage
+    - component
+    - component:control
+    - tier:2
+    - unique
+    maxStack: 1
+    excludeFromTrade: 1
+    rarity: 2
+    sellOnly: 0
+    icon: scrap-icon
+  - id: alloy_plate
+    name: Refined Alloy Plate
+    description: Scrap alloy pressed and nanite-bonded into a true, stress-relieved plate.
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - refined
+    - refined:alloy
+    maxStack: 20
+    excludeFromTrade: 1
+    rarity: 0
+    sellOnly: 0
+    icon: scrap-icon
+  - id: wound_coil
+    name: Wound Copper Coil
+    description: Salvaged conductor rewound on a field jig; the heart of any charge circuit.
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - refined
+    - refined:coil
+    maxStack: 20
+    excludeFromTrade: 1
+    rarity: 0
+    sellOnly: 0
+    icon: scrap-icon
+  - id: charge_cell_core
+    name: Charge Cell Core
+    description: 'Two capacitors and a wound coil sealed in nanite resin: a stable nano-charge store.'
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - refined
+    - refined:cell
+    maxStack: 10
+    excludeFromTrade: 1
+    rarity: 1
+    sellOnly: 0
+    icon: scrap-icon
+  - id: barrel_bored_alloy
+    name: Bored Alloy Barrel
+    description: A refined-alloy barrel bored true on the fabricator. Hits harder and carries further.
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - weapon_mod
+    - weapon_mod:barrel
+    - mark:1
+    maxStack: 3
+    excludeFromTrade: 1
+    rarity: 1
+    sellOnly: 0
+    icon: pistol-icon
+  - id: cell_salvaged_capacitor
+    name: Salvaged Capacitor Cell
+    description: A larger nano cell built around a charge core. More shots before the pistol runs dry.
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - weapon_mod
+    - weapon_mod:cell
+    - mark:1
+    maxStack: 3
+    excludeFromTrade: 1
+    rarity: 1
+    sellOnly: 0
+    icon: pistol-icon
+  - id: grip_gyro_braced
+    name: Gyro-Braced Grip
+    description: A grip braced by a live actuator loop. It fights recoil and nudges your aim onto moving machines.
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - weapon_mod
+    - weapon_mod:grip
+    - mark:2
+    maxStack: 3
+    excludeFromTrade: 1
+    rarity: 2
+    sellOnly: 0
+    icon: pistol-icon
+  - id: barrel_lattice_focused
+    name: Lattice-Focused Barrel
+    description: A lattice shard seats behind a salvaged optic, focusing each nano pulse. Heavy hits, slightly slower cycling.
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - weapon_mod
+    - weapon_mod:barrel
+    - mark:2
+    maxStack: 3
+    excludeFromTrade: 1
+    rarity: 2
+    sellOnly: 0
+    icon: pistol-icon
+  - id: cell_overclocked
+    name: Overclocked Charge Cell
+    description: 'Twin charge cores tuned through a lattice shard: deep reserves, cheap shots, fast refill.'
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - weapon_mod
+    - weapon_mod:cell
+    - mark:2
+    maxStack: 3
+    excludeFromTrade: 1
+    rarity: 2
+    sellOnly: 0
+    icon: pistol-icon
   destinations:
   - id: crosswind_reach
     name: Crosswind Reach

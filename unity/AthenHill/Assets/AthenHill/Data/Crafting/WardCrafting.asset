@@ -15,9 +15,37 @@ MonoBehaviour:
   weapons:
   - id: weapon_scrap_pistol
     name: Scrap Pistol
-    recoil: 38
+    stats:
+      damage: 34
+      fireInterval: 0.28
+      range: 70
+      recoil: 38
+      nanoMax: 100
+      nanoPerShot: 9
+      nanoRegen: 30
+      aimAssist: 3.5
+    minStats:
+      damage: 1
+      fireInterval: 0.08
+      range: 10
+      recoil: 0
+      nanoMax: 20
+      nanoPerShot: 1
+      nanoRegen: 1
+      aimAssist: 0
+    maxStats:
+      damage: 400
+      fireInterval: 2
+      range: 200
+      recoil: 100
+      nanoMax: 400
+      nanoPerShot: 60
+      nanoRegen: 200
+      aimAssist: 12
     slots:
     - grip
+    - barrel
+    - cell
   modifiers:
   - id: mod_grip_stabilised
     itemId: grip_stabilised_pistol
@@ -28,10 +56,138 @@ MonoBehaviour:
     - stat: recoil
       op: add
       value: -7
+  - id: mod_barrel_bored_alloy
+    itemId: barrel_bored_alloy
+    slot: barrel
+    weaponIds:
+    - weapon_scrap_pistol
+    effects:
+    - stat: damage
+      op: percent
+      value: 20
+    - stat: range
+      op: add
+      value: 10
+  - id: mod_cell_salvaged_capacitor
+    itemId: cell_salvaged_capacitor
+    slot: cell
+    weaponIds:
+    - weapon_scrap_pistol
+    effects:
+    - stat: nanoMax
+      op: add
+      value: 35
+    - stat: nanoRegen
+      op: percent
+      value: 15
+  - id: mod_grip_gyro_braced
+    itemId: grip_gyro_braced
+    slot: grip
+    weaponIds:
+    - weapon_scrap_pistol
+    effects:
+    - stat: recoil
+      op: add
+      value: -15
+    - stat: aimAssist
+      op: add
+      value: 1
+  - id: mod_barrel_lattice_focused
+    itemId: barrel_lattice_focused
+    slot: barrel
+    weaponIds:
+    - weapon_scrap_pistol
+    effects:
+    - stat: damage
+      op: percent
+      value: 45
+    - stat: range
+      op: add
+      value: 25
+    - stat: fireInterval
+      op: percent
+      value: 8
+  - id: mod_cell_overclocked
+    itemId: cell_overclocked
+    slot: cell
+    weaponIds:
+    - weapon_scrap_pistol
+    effects:
+    - stat: nanoMax
+      op: add
+      value: 60
+    - stat: nanoPerShot
+      op: add
+      value: -2
+    - stat: nanoRegen
+      op: percent
+      value: 30
   stations:
   - id: station_field_fabricator
     name: Warden Field Fabricator
   recipes:
+  - id: recipe_wound_coil
+    name: Wound Copper Coil
+    stationId: station_field_fabricator
+    requiresWeaponId: 
+    outputItemId: wound_coil
+    inputs:
+    - kind: item
+      id: copper_filament
+      quantity: 2
+    - kind: tag
+      id: material:conductive
+      quantity: 1
+    outputQuantity: 1
+    knownByDefault: 0
+    unlocks:
+    - type: orderStart
+      id: order_keep_charge
+    group: 0
+    lockedHint: Ossa issues this schematic with her Keep the Charge order.
+  - id: recipe_charge_cell_core
+    name: Charge Cell Core
+    stationId: station_field_fabricator
+    requiresWeaponId: 
+    outputItemId: charge_cell_core
+    inputs:
+    - kind: tag
+      id: component:capacitor
+      quantity: 2
+    - kind: item
+      id: wound_coil
+      quantity: 1
+    - kind: tag
+      id: nanite:tier1
+      quantity: 3
+    outputQuantity: 1
+    knownByDefault: 0
+    unlocks:
+    - type: orderStart
+      id: order_keep_charge
+    - type: acquireItem
+      id: micro_capacitor
+    group: 0
+    lockedHint: Recover a micro capacitor from a scrap drone to learn this.
+  - id: recipe_alloy_plate
+    name: Refined Alloy Plate
+    stationId: station_field_fabricator
+    requiresWeaponId: 
+    outputItemId: alloy_plate
+    inputs:
+    - kind: item
+      id: scrap_alloy
+      quantity: 3
+    - kind: tag
+      id: nanite:tier1
+      quantity: 2
+    outputQuantity: 1
+    knownByDefault: 0
+    unlocks:
+    - type: orderStart
+      id: order_bore_true
+    group: 0
+    lockedHint: Ossa issues this schematic with her Bore It True order.
   - id: recipe_grip_stabilised_pistol
     name: Stabilised Pistol Grip
     stationId: station_field_fabricator
@@ -52,34 +208,401 @@ MonoBehaviour:
     unlocks:
     - type: acquireItem
       id: droid_servo_damaged
-    - type: tutorialStep
-      id: Fabricate
+    group: 1
+    lockedHint: Salvage a worker-droid servo at the machine depot to learn this.
+  - id: recipe_cell_salvaged_capacitor
+    name: Salvaged Capacitor Cell
+    stationId: station_field_fabricator
+    requiresWeaponId: weapon_scrap_pistol
+    outputItemId: cell_salvaged_capacitor
+    inputs:
+    - kind: item
+      id: charge_cell_core
+      quantity: 1
+    - kind: item
+      id: scrap_alloy
+      quantity: 2
+    outputQuantity: 1
+    knownByDefault: 0
+    unlocks:
+    - type: orderStart
+      id: order_keep_charge
+    group: 1
+    lockedHint: Ossa issues this schematic with her Keep the Charge order.
+  - id: recipe_barrel_bored_alloy
+    name: Bored Alloy Barrel
+    stationId: station_field_fabricator
+    requiresWeaponId: weapon_scrap_pistol
+    outputItemId: barrel_bored_alloy
+    inputs:
+    - kind: item
+      id: alloy_plate
+      quantity: 2
+    - kind: item
+      id: wound_coil
+      quantity: 1
+    outputQuantity: 1
+    knownByDefault: 0
+    unlocks:
+    - type: orderStart
+      id: order_bore_true
+    group: 1
+    lockedHint: Ossa issues this schematic with her Bore It True order.
+  - id: recipe_grip_gyro_braced
+    name: Gyro-Braced Grip
+    stationId: station_field_fabricator
+    requiresWeaponId: weapon_scrap_pistol
+    outputItemId: grip_gyro_braced
+    inputs:
+    - kind: item
+      id: actuator_intact
+      quantity: 1
+    - kind: item
+      id: alloy_plate
+      quantity: 2
+    outputQuantity: 1
+    knownByDefault: 0
+    unlocks:
+    - type: acquireItem
+      id: foreman_control_core
+    group: 2
+    lockedHint: Ossa thinks the depot foreman's control core still holds Mark II schematics.
+  - id: recipe_barrel_lattice_focused
+    name: Lattice-Focused Barrel
+    stationId: station_field_fabricator
+    requiresWeaponId: weapon_scrap_pistol
+    outputItemId: barrel_lattice_focused
+    inputs:
+    - kind: item
+      id: lattice_shard
+      quantity: 1
+    - kind: item
+      id: alloy_plate
+      quantity: 2
+    - kind: item
+      id: wound_coil
+      quantity: 2
+    - kind: tag
+      id: component:optic
+      quantity: 1
+    outputQuantity: 1
+    knownByDefault: 0
+    unlocks:
+    - type: acquireItem
+      id: foreman_control_core
+    group: 2
+    lockedHint: Ossa thinks the depot foreman's control core still holds Mark II schematics.
+  - id: recipe_cell_overclocked
+    name: Overclocked Charge Cell
+    stationId: station_field_fabricator
+    requiresWeaponId: weapon_scrap_pistol
+    outputItemId: cell_overclocked
+    inputs:
+    - kind: item
+      id: charge_cell_core
+      quantity: 2
+    - kind: item
+      id: lattice_shard
+      quantity: 1
+    outputQuantity: 1
+    knownByDefault: 0
+    unlocks:
+    - type: acquireItem
+      id: foreman_control_core
+    group: 2
+    lockedHint: Ossa thinks the depot foreman's control core still holds Mark II schematics.
   lootTables:
   - id: loot_feral_scrap_drone
     entries:
     - itemId: scrap_alloy
-      quantity: 1
+      minQuantity: 1
+      maxQuantity: 2
       chance: 1
+      pityAfter: 0
+      guaranteeUntilCollected: 0
     - itemId: nanite_residue
-      quantity: 2
+      minQuantity: 2
+      maxQuantity: 3
       chance: 1
+      pityAfter: 0
+      guaranteeUntilCollected: 0
     - itemId: copper_filament
-      quantity: 1
+      minQuantity: 1
+      maxQuantity: 1
       chance: 0.6
+      pityAfter: 2
+      guaranteeUntilCollected: 0
     - itemId: micro_capacitor
-      quantity: 1
-      chance: 0.25
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.45
+      pityAfter: 2
+      guaranteeUntilCollected: 0
+    - itemId: optic_lens_cracked
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.3
+      pityAfter: 3
+      guaranteeUntilCollected: 0
   - id: loot_feral_worker_droid
     entries:
     - itemId: droid_servo_damaged
-      quantity: 1
+      minQuantity: 1
+      maxQuantity: 1
       chance: 1
+      pityAfter: 0
+      guaranteeUntilCollected: 0
     - itemId: scrap_alloy
-      quantity: 1
+      minQuantity: 1
+      maxQuantity: 2
       chance: 1
+      pityAfter: 0
+      guaranteeUntilCollected: 0
     - itemId: nanite_residue
-      quantity: 1
+      minQuantity: 1
+      maxQuantity: 2
       chance: 1
+      pityAfter: 0
+      guaranteeUntilCollected: 0
     - itemId: copper_filament
-      quantity: 1
+      minQuantity: 1
+      maxQuantity: 1
       chance: 0.65
+      pityAfter: 2
+      guaranteeUntilCollected: 0
+    - itemId: micro_capacitor
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.2
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: actuator_intact
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.06
+      pityAfter: 0
+      guaranteeUntilCollected: 0
+  - id: loot_depot_foreman
+    entries:
+    - itemId: foreman_control_core
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0
+      pityAfter: 0
+      guaranteeUntilCollected: 1
+    - itemId: actuator_intact
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 1
+      pityAfter: 0
+      guaranteeUntilCollected: 0
+    - itemId: lattice_shard
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.5
+      pityAfter: 1
+      guaranteeUntilCollected: 0
+    - itemId: scrap_alloy
+      minQuantity: 2
+      maxQuantity: 4
+      chance: 1
+      pityAfter: 0
+      guaranteeUntilCollected: 0
+    - itemId: nanite_residue
+      minQuantity: 3
+      maxQuantity: 5
+      chance: 1
+      pityAfter: 0
+      guaranteeUntilCollected: 0
+    - itemId: micro_capacitor
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.6
+      pityAfter: 1
+      guaranteeUntilCollected: 0
+    - itemId: droid_servo_damaged
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.5
+      pityAfter: 0
+      guaranteeUntilCollected: 0
+  - id: loot_scrap_heap
+    entries:
+    - itemId: scrap_alloy
+      minQuantity: 1
+      maxQuantity: 3
+      chance: 0.9
+      pityAfter: 1
+      guaranteeUntilCollected: 0
+    - itemId: nanite_residue
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.7
+      pityAfter: 2
+      guaranteeUntilCollected: 0
+    - itemId: copper_filament
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.6
+      pityAfter: 2
+      guaranteeUntilCollected: 0
+    - itemId: micro_capacitor
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.2
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: optic_lens_cracked
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.08
+      pityAfter: 0
+      guaranteeUntilCollected: 0
+    - itemId: lattice_shard
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.03
+      pityAfter: 0
+      guaranteeUntilCollected: 0
+  - id: loot_wreck_carcass
+    entries:
+    - itemId: scrap_alloy
+      minQuantity: 1
+      maxQuantity: 3
+      chance: 1
+      pityAfter: 0
+      guaranteeUntilCollected: 0
+    - itemId: droid_servo_damaged
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.35
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: nanite_residue
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.8
+      pityAfter: 2
+      guaranteeUntilCollected: 0
+    - itemId: copper_filament
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.5
+      pityAfter: 2
+      guaranteeUntilCollected: 0
+    - itemId: micro_capacitor
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.15
+      pityAfter: 5
+      guaranteeUntilCollected: 0
+    - itemId: actuator_intact
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.04
+      pityAfter: 0
+      guaranteeUntilCollected: 0
+    - itemId: lattice_shard
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.02
+      pityAfter: 0
+      guaranteeUntilCollected: 0
+  - id: loot_drone_wreck
+    entries:
+    - itemId: scrap_alloy
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 1
+      pityAfter: 0
+      guaranteeUntilCollected: 0
+    - itemId: micro_capacitor
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.35
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: optic_lens_cracked
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.3
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: nanite_residue
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.8
+      pityAfter: 2
+      guaranteeUntilCollected: 0
+    - itemId: copper_filament
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.5
+      pityAfter: 2
+      guaranteeUntilCollected: 0
+  slotLabels:
+  - id: grip
+    label: Grip
+  - id: barrel
+    label: Barrel
+  - id: cell
+    label: Nano cell
+  tagLabels:
+  - id: component:servo
+    label: Any servo
+  - id: nanite:tier1
+    label: Any tier-one nanites
+  - id: material:conductive
+    label: Any conductor (coil or filament)
+  - id: component:capacitor
+    label: Any capacitor
+  - id: component:optic
+    label: Any optic lens
+  groupLabels:
+  - id: Component
+    label: Refined components
+  - id: MarkI
+    label: Mark I pistol mods
+  - id: MarkII
+    label: Mark II pistol mods
+  statLabels:
+  - stat: damage
+    label: Damage
+    format: 0.#
+    unit: 
+    lowerIsBetter: 0
+  - stat: fireInterval
+    label: Fire interval
+    format: 0.00
+    unit: ' s'
+    lowerIsBetter: 1
+  - stat: range
+    label: Range
+    format: 0
+    unit: ' m'
+    lowerIsBetter: 0
+  - stat: recoil
+    label: Recoil
+    format: 0.#
+    unit: 
+    lowerIsBetter: 1
+  - stat: nanoMax
+    label: Nano capacity
+    format: 0
+    unit: 
+    lowerIsBetter: 0
+  - stat: nanoPerShot
+    label: Nano per shot
+    format: 0.#
+    unit: 
+    lowerIsBetter: 1
+  - stat: nanoRegen
+    label: Nano refill
+    format: 0.#
+    unit: /s
+    lowerIsBetter: 0
+  - stat: aimAssist
+    label: Aim assist
+    format: 0.#
+    unit: "\xB0"
+    lowerIsBetter: 0

@@ -2,7 +2,18 @@ using System;
 using UnityEngine;
 namespace AthenHill
 {
- [Serializable] public class ItemSpec {public string id,name;[TextArea]public string description;[Min(0)]public int buyPrice,sellPrice,startingQuantity;public string[] tags;[Min(0)]public int maxStack;public bool excludeFromTrade;}
+ /// Loot presentation tier: Common (warm white), Uncommon (Ward cyan), Rare (amber).
+ public enum ItemRarity { Common, Uncommon, Rare }
+ [Serializable] public class ItemSpec
+ {
+  public string id,name;[TextArea]public string description;[Min(0)]public int buyPrice,sellPrice,startingQuantity;public string[] tags;[Min(0)]public int maxStack;public bool excludeFromTrade;
+  public ItemRarity rarity;
+  [Tooltip("Basic General buys this salvage but does not stock it; it is listed under Sell salvage.")]
+  public bool sellOnly;
+  [Tooltip("USS illustration class (flask-icon, scrap-icon, pistol-icon…). Empty uses the field-pack illustration.")]
+  public string icon;
+  public bool HasTag(string tag)=>tags!=null&&Array.IndexOf(tags,tag)>=0;
+ }
  [Serializable] public class TravelNode {public string id,name;[TextArea] public string description;}
  [CreateAssetMenu(menuName="Athen Hill/City catalog")]
  public class CityCatalog : ScriptableObject
