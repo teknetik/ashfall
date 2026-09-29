@@ -86,6 +86,8 @@ namespace AthenHill.Editor
    {
     var mesh=new Mesh{name=$"Chunk_{index++}_{pair.Key.Item1.name}_{pair.Key.Item2}_{pair.Key.Item3}",indexFormat=IndexFormat.UInt32};mesh.CombineMeshes(pair.Value.ToArray(),true,true);mesh.RecalculateBounds();AssetDatabase.CreateAsset(mesh,folder+"/"+mesh.name+".asset");
     var go=new GameObject(mesh.name);go.transform.SetParent(c.generatedRoot,false);go.AddComponent<MeshFilter>().sharedMesh=mesh;var r=go.AddComponent<MeshRenderer>();r.sharedMaterial=pair.Key.Item1;r.shadowCastingMode=pair.Key.Item4;r.receiveShadows=pair.Key.Item5;
+    // Opaque chunks occlude the sky for the Adaptive Probe Volume bake; they never use lightmaps (no valid UV1).
+    if(pair.Key.Item1&&pair.Key.Item1.renderQueue<(int)RenderQueue.AlphaTest)GameObjectUtility.SetStaticEditorFlags(go,StaticEditorFlags.ContributeGI);r.receiveGI=ReceiveGI.LightProbes;
    }
    c.sources=sources;c.sourceVisibility=sources.Select(r=>r.enabled).ToArray();c.sourceFingerprint=Fingerprint(c);c.ShowSources(false);
    EditorUtility.SetDirty(c);AssetDatabase.SaveAssets();EditorSceneManager.MarkSceneDirty(c.gameObject.scene);EditorSceneManager.SaveOpenScenes();Debug.Log($"Batched {sources.Length} editable renderers into {buckets.Count} material/spatial chunks.");
