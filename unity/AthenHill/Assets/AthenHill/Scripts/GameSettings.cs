@@ -151,8 +151,13 @@ namespace AthenHill
             {
                 runtimePipeline.renderScale = value.renderPercent / 100f;
                 runtimePipeline.msaaSampleCount = value.antiAliasing;
-                runtimePipeline.shadowDistance = value.shadows == 0 ? 0 : value.shadows == 1 ? 12 : 18;
-                runtimePipeline.mainLightShadowmapResolution = value.shadows <= 1 ? 1024 : value.shadows == 2 ? 2048 : 4096;
+                // Sun shadows must reach across a street and the Berms, not stop at the player's feet.
+                runtimePipeline.shadowDistance = value.shadows == 0 ? 0 : value.shadows == 1 ? 45 : value.shadows == 2 ? 90 : 150;
+                runtimePipeline.shadowCascadeCount = value.shadows <= 1 ? 2 : value.shadows == 2 ? 3 : 4;
+                runtimePipeline.cascade2Split = .25f;
+                runtimePipeline.cascade3Split = new Vector2(.1f, .35f);
+                runtimePipeline.cascade4Split = new Vector3(.04f, .12f, .34f);
+                runtimePipeline.mainLightShadowmapResolution = value.shadows <= 1 ? 2048 : 4096;
             }
             QualitySettings.globalTextureMipmapLimit = value.textureLimit;
             QualitySettings.vSyncCount = value.vSync ? 1 : 0;
