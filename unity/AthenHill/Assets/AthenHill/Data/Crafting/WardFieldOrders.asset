@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8c9432b0a646bd05bdb190c36673ec7, type: 3}
+  m_Name: WardFieldOrders
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.FieldOrderSet
+  orders:
+  - id: order_steady_hands
+    title: Steady Hands
+    goal: 0
+    targetItemId: grip_stabilised_pistol
+    targetGroup: 0
+    requireTestFire: 1
+    activateEncounter: 
+    guidance: depot
+    brief: Salvage a worker-droid servo at the machine depot, then steady the scrap pistol with a fabricated grip.
+    startLine: 
+    completeLine: Stabilised grip tested. Your pistol holds steadier.
+    speaker: Warden Ossa
+    rewardCredits: 0
+    rewardItems: []
+    rewardRecipes: []
+  - id: order_keep_charge
+    title: Keep the Charge
+    goal: 0
+    targetItemId: cell_salvaged_capacitor
+    targetGroup: 0
+    requireTestFire: 0
+    activateEncounter: 
+    guidance: depot
+    brief: 'Build a bigger nano cell: wind a copper coil, seal two micro capacitors into a charge core, then fabricate and fit the {item}.'
+    startLine: That pistol runs dry after a dozen shots. I've sent charge-cell schematics to the fabricator. Scrap drones carry micro capacitors, and the scrap heaps hide a few. Wind a coil, seal a core, fit the cell.
+    completeLine: That cell holds a proper charge now. You'll outlast a drone swarm.
+    speaker: Warden Ossa
+    rewardCredits: 20
+    rewardItems: []
+    rewardRecipes: []
+  - id: order_bore_true
+    title: Bore It True
+    goal: 0
+    targetItemId: barrel_bored_alloy
+    targetGroup: 0
+    requireTestFire: 0
+    activateEncounter: 
+    guidance: depot
+    brief: Press scrap alloy into refined plates, wind a coil, then fabricate and fit the {item}.
+    startLine: 'Your barrel is rolled sheet scrap. The fabricator can press alloy into proper plate: three measures of alloy and two of nanites a plate. Bore a true barrel and your shots will hit like they mean it.'
+    completeLine: Now it hits like it means it. The workers won't shrug that off.
+    speaker: Warden Ossa
+    rewardCredits: 25
+    rewardItems: []
+    rewardRecipes: []
+  - id: order_depot_foreman
+    title: The Depot Foreman
+    goal: 1
+    targetItemId: foreman_control_core
+    targetGroup: 0
+    requireTestFire: 0
+    activateEncounter: foreman
+    guidance: foreman
+    brief: Destroy the Depot Foreman in the processing hall and recover the {item} from its wreck.
+    startLine: 'Listen. Something big just woke in the depot''s processing hall: a foreman unit, still running its old shift. It''s slow, but it hits hard and shrugs off a stagger. When its optics flare red, step back. Put it down and bring me its control core.'
+    completeLine: That core still holds its shift schedules, and Mark II pistol schematics with them. They're in the fabricator now.
+    speaker: Warden Ossa
+    rewardCredits: 40
+    rewardItems: []
+    rewardRecipes: []
+  - id: order_mark_two
+    title: Mark II
+    goal: 2
+    targetItemId: 
+    targetGroup: 2
+    requireTestFire: 0
+    activateEncounter: 
+    guidance: foreman
+    brief: Fabricate any Mark II pistol mod. The foreman carries actuators and quantum lattice shards, and its cradle keeps reviving it.
+    startLine: 'Mark II work needs rare parts: intact actuators and quantum lattice shards. The foreman carries both, and its charging cradle keeps reviving it. Build me something Warden-grade.'
+    completeLine: That's Warden-grade work. The Berms are yours to hunt now; the depot always fills up again.
+    speaker: Warden Ossa
+    rewardCredits: 50
+    rewardItems: []
+    rewardRecipes: []
+  gatherFormat: '{brief}
+
+    {recipe}: {inputs}'
+  fabricateFormat: Fabricate the {item} at the field fabricator by Ossa's post.
+  fitFormat: Fit the {item} to your {weapon} at the field fabricator.
+  testFireFormat: Fire your upgraded pistol in the Outer Berms.
+  collectFormat: '{brief}'
+  craftGroupFormat: '{brief}
+
+    Known schematics: {count}'
+  inputFormat: '{name} {have}/{need}'
+  inputSeparator: " \xB7 "
+  freePlayObjective: 'Free hunting: the Depot Foreman re-forms in the processing hall. Recover lattice shards and actuators for the other Mark II mods, and sell surplus salvage to Mira at Basic General.'
+  freePlayGuidance: 
+  nextLineDelay: 4.5

@@ -44,15 +44,37 @@
      <ui:VisualElement usage-hints="DynamicColor" class="trade-row"><ui:VisualElement usage-hints="DynamicColor" class="trade-art flask-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="item0" class="item-copy"/><ui:Button usage-hints="DynamicColor" name="buy0" text="Buy · 4 cr"/><ui:Button usage-hints="DynamicColor" name="sell0" text="Sell · 2 cr"/></ui:VisualElement>
      <ui:VisualElement usage-hints="DynamicColor" class="trade-row"><ui:VisualElement usage-hints="DynamicColor" class="trade-art medkit-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="item1" class="item-copy"/><ui:Button usage-hints="DynamicColor" name="buy1" text="Buy · 9 cr"/><ui:Button usage-hints="DynamicColor" name="sell1" text="Sell · 4 cr"/></ui:VisualElement>
      <ui:VisualElement usage-hints="DynamicColor" class="trade-row"><ui:VisualElement usage-hints="DynamicColor" class="trade-art scrap-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="item2" class="item-copy"/><ui:Button usage-hints="DynamicColor" name="buy2" text="Buy · 2 cr"/><ui:Button usage-hints="DynamicColor" name="sell2" text="Sell · 1 cr"/></ui:VisualElement>
-     <ui:Label usage-hints="DynamicColor" text="Each trade moves one item. Your balance updates immediately." class="small muted trade-help"/>
+     <ui:Label usage-hints="DynamicColor" text="SELL SALVAGE" class="small shop-section-heading"/>
+     <ui:VisualElement usage-hints="DynamicColor" name="salvage-list"/>
+     <ui:Label usage-hints="DynamicColor" name="salvage-empty" class="small muted trade-help"/>
+     <ui:Label usage-hints="DynamicColor" text="Each trade moves one item; Sell all moves a whole stack in one trade. Your balance updates immediately." class="small muted trade-help"/>
     </ui:VisualElement>
     <ui:VisualElement usage-hints="DynamicColor" name="fabricator-panel">
-     <ui:Label usage-hints="DynamicColor" name="fabricator-recipe" class="body-copy"/>
-     <ui:Label usage-hints="DynamicColor" name="fabricator-ingredients" class="body-copy"/>
-     <ui:Label usage-hints="DynamicColor" name="fabricator-stat" class="balance"/>
-     <ui:Button usage-hints="DynamicColor" name="fabricator-craft" text="Craft grip"/>
-     <ui:Button usage-hints="DynamicColor" name="fabricator-fit" text="Fit to pistol"/>
-     <ui:Button usage-hints="DynamicColor" name="fabricator-remove" text="Remove grip"/>
+     <ui:VisualElement usage-hints="DynamicColor" name="fab-top" class="fab-row">
+      <ui:VisualElement usage-hints="DynamicColor" name="fab-recipes" class="fab-side">
+       <ui:Label usage-hints="DynamicColor" text="SCHEMATICS" class="small fab-heading"/>
+       <ui:VisualElement usage-hints="DynamicColor" name="fab-recipe-list"/>
+      </ui:VisualElement>
+      <ui:VisualElement usage-hints="DynamicColor" name="fab-detail" class="fab-main">
+       <ui:Label usage-hints="DynamicColor" name="fabricator-recipe" class="fab-title"/>
+       <ui:Label usage-hints="DynamicColor" name="fab-description" class="muted fab-description"/>
+       <ui:Label usage-hints="DynamicColor" text="PARTS · CARRIED / NEEDED" class="small fab-heading"/>
+       <ui:VisualElement usage-hints="DynamicColor" name="fabricator-ingredients" class="fab-inputs"/>
+       <ui:VisualElement usage-hints="DynamicColor" class="fab-actions">
+        <ui:Button usage-hints="DynamicColor" name="fabricator-craft" text="Fabricate"/>
+        <ui:Button usage-hints="DynamicColor" name="fabricator-fit" text="Fit to pistol"/>
+        <ui:Button usage-hints="DynamicColor" name="fabricator-remove" text="Remove"/>
+       </ui:VisualElement>
+       <ui:Label usage-hints="DynamicColor" name="fab-reason" class="fab-reason"/>
+      </ui:VisualElement>
+     </ui:VisualElement>
+     <ui:VisualElement usage-hints="DynamicColor" name="fab-pistol" class="fab-row">
+      <ui:VisualElement usage-hints="DynamicColor" class="fab-side">
+       <ui:Label usage-hints="DynamicColor" name="fabricator-stat" text="SCRAP PISTOL" class="small fab-heading"/>
+       <ui:VisualElement usage-hints="DynamicColor" name="fab-slots"/>
+      </ui:VisualElement>
+      <ui:VisualElement usage-hints="DynamicColor" name="fab-stats" class="fab-main"/>
+     </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement usage-hints="DynamicColor" name="inventory-panel">
      <ui:Label usage-hints="DynamicColor" name="pack-credit" class="balance"/>

@@ -41,11 +41,15 @@ namespace AthenHill
             try { value = (float)t; return ClockMath.Finite(value) && value >= min && (maxExclusive ? value < max : value <= max); }
             catch (Exception e) when (e is OverflowException || e is ArgumentException) { return false; }
         }
-        static DroidEncounter Encounter(BermsTutorial tutorial, string key)
+        static DroidEncounter Encounter(BermsTutorial tutorial, string key, GameSession session = null)
         {
             if (!tutorial || key == null) return null;
             if (tutorial.firstContact && key == tutorial.firstContact.gameObject.name) return tutorial.firstContact;
             if (tutorial.depot && key == tutorial.depot.gameObject.name) return tutorial.depot;
+            // Field-order encounters (the Depot Foreman) are available once the primer is complete.
+            var orders = session ? session.GetComponent<FieldOrders>() : null;
+            if (orders && tutorial.Step == BermsStep.Complete)
+                foreach (var b in orders.encounters) if (b != null && b.encounter && key == b.encounter.gameObject.name) return b.encounter;
             return null;
         }
         public static Result Execute(JObject command, GameSession session, BermsTutorial tutorial = null, CityTimeOfDay clock = null)
@@ -112,8 +116,8 @@ namespace AthenHill
                 if (!tutorial || session.State != CityState.Play && session.State != CityState.Paused)
                     return Result.Fail("invalid_state", "An active tutorial and Play or Paused are required.");
                 var key = command["key"]?.Type == JTokenType.String ? (string)command["key"] : null;
-                var encounter = Encounter(tutorial, key);
-                if (!encounter || !encounter.isActiveAndEnabled) return Result.Fail("unknown_encounter", "Only the two tutorial-authored encounters are supported.");
+                var encounter = Encounter(tutorial, key, session);
+                if (!encounter || !encounter.isActiveAndEnabled) return Result.Fail("unknown_encounter", "Only the tutorial-authored encounters (and, after the primer, field-order encounters) are supported.");
                 if (action == "dev.encounter.activate")
                 {
                     if (encounter.Spawned) return Result.Fail("already_spawned", "This encounter is already active; reset it instead.");
@@ -143,8 +147,10 @@ namespace AthenHill
             var combat = UnityEngine.Object.FindAnyObjectByType<PlayerCombat>();
             var crafting = session.GetComponent<CraftingSession>();
             var craft = crafting ? crafting.Model : null;
+            var orders = session.GetComponent<FieldOrders>();
             var clock = UnityEngine.Object.FindAnyObjectByType<CityTimeOfDay>();
-            var encounters = tutorial ? new[] { tutorial.firstContact, tutorial.depot }.Where(e => e).Distinct().Select(e => new {
+            var authored = tutorial ? new[] { tutorial.firstContact, tutorial.depot }.Concat(orders ? orders.encounters.Where(b => b != null).Select(b => b.encounter) : Enumerable.Empty<DroidEncounter>()).Where(e => e).Distinct().ToArray() : new DroidEncounter[0];
+            var encounters = tutorial ? authored.Select(e => new {
                 key = e.gameObject.name, e.displayName, spawned = e.Spawned, total = e.Total, remaining = e.Remaining, cleared = e.Cleared, e.respawnSeconds
             }).ToArray() : null;
             object clockState = clock && clock.isActiveAndEnabled ? new { available = true, hour = clock.Hour, paused = clock.Paused, speed = clock.Speed, defaultHour = clock.profile ? clock.profile.defaultHour : 0, clock.ReducedMotionSpeedLimited } : (object)new { available = false, reason = "No active authored day/night controller" };
@@ -154,9 +160,10 @@ namespace AthenHill
                 session = new { state = session.State.ToString(), objective = session.Objective, session.visitedHill, session.boughtFlask, session.soldScrap, session.linked, spoken = session.Spoken.OrderBy(x => x).ToArray(), session.selectedDestination, credits = session.Shop.Credits, purchases = session.Shop.Purchases, sales = session.Shop.Sales },
                 items = session.catalog.items.Select(i => new { i.id, i.name, i.description, i.buyPrice, i.sellPrice, i.startingQuantity, i.maxStack, i.excludeFromTrade, tags = i.tags ?? Array.Empty<string>(), quantity = session.Shop.Quantity(i.id) }).ToArray(),
                 combat = combat ? new { available = true, combat.hasPistol, armed = combat.Armed, aiming = combat.Aiming, nano = combat.Nano, health = combat.Health ? combat.Health.Current : 0, maxHealth = combat.Health ? combat.Health.max : 0, combat.Downs, inBerms = combat.InBerms, weaponId = craft?.Loadout.WeaponId, baseRecoil = craft?.BaseRecoil, recoil = craft?.RecoilStat, stats = StatsObject(combat.Stats), baseStats = StatsObject(combat.BaseStats), lastKickDegrees = combat.LastKickDegrees } : (object)new { available = false },
-                crafting = craft != null ? new { available = true, knownRecipes = craft.KnownRecipes.OrderBy(x => x).ToArray(), crafts = craft.Crafts, gripSlot = craft.Loadout.Fitted("grip"), slots = craft.Loadout.FittedMods.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value), craftCounts = craft.CraftCounts.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value), lootEvents = crafting.LootEvents, lastLoot = crafting.LastLoot, tutorialStep = crafting.TutorialStep, stationId = session.ActiveStationId, fabricatorOpen = session.State == CityState.Fabricator } : (object)new { available = false, reason = "Crafting session not initialized" },
+                crafting = craft != null ? new { available = true, knownRecipes = craft.KnownRecipes.OrderBy(x => x).ToArray(), crafts = craft.Crafts, gripSlot = craft.Loadout.Fitted("grip"), slots = craft.Loadout.FittedMods.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value), craftCounts = craft.CraftCounts.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value), lootEvents = crafting.LootEvents, lastLoot = crafting.LastLoot, tutorialStep = orders ? orders.LegacyGripStep : null, stationId = session.ActiveStationId, fabricatorOpen = session.State == CityState.Fabricator } : (object)new { available = false, reason = "Crafting session not initialized" },
+                fieldOrders = orders && orders.Ready ? new { available = true, index = orders.Progress.Index, total = orders.data.orders.Length, id = orders.Progress.Current?.id, stage = orders.Stage.ToString(), objective = orders.Objective, freePlay = orders.Progress.FreePlay } : (object)new { available = false },
                 tutorial = tutorial ? new { available = true, step = tutorial.Step.ToString(), targetsDown = tutorial.TargetsDown, targetsTotal = tutorial.targets?.Length ?? 0 } : (object)new { available = false },
-                encounters, enemies = (encounters == null ? new FeralDroid[0] : new[] { tutorial.firstContact, tutorial.depot }.Where(e => e).SelectMany(e => e.Droids).Where(d => d).Distinct().ToArray()).Select(d => new { name = d.displayName, kind = d.kind.ToString(), state = d.State.ToString(), health = d.Health ? d.Health.Current : 0, maxHealth = d.Health ? d.Health.max : 0, position = new[] { d.transform.position.x, d.transform.position.y, d.transform.position.z } }).ToArray(),
+                encounters, enemies = (encounters == null ? new FeralDroid[0] : authored.SelectMany(e => e.Droids).Where(d => d).Distinct().ToArray()).Select(d => new { name = d.displayName, kind = d.kind.ToString(), state = d.State.ToString(), health = d.Health ? d.Health.Current : 0, maxHealth = d.Health ? d.Health.max : 0, position = new[] { d.transform.position.x, d.transform.position.y, d.transform.position.z } }).ToArray(),
                 clock = clockState, weather = new { available = false, reason = "No weather system in build" }
             };
         }

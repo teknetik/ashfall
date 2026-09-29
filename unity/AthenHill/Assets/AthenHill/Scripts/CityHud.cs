@@ -16,6 +16,8 @@ namespace AthenHill
   HudWindowLayout windowLayout;
   SettingsPanel settingsPanel;
   CraftingSession crafting;
+  FabricatorPanel fabricator;
+  SalvageSalePanel salvageSale;
   readonly Dictionary<NpcAgent,VisualElement> tags=new Dictionary<NpcAgent,VisualElement>();
   readonly List<VisualElement> compassTicks=new List<VisualElement>();
   readonly List<Label> compassLabels=new List<Label>();
@@ -69,9 +71,8 @@ namespace AthenHill
    root.RegisterCallback<KeyDownEvent>(InventoryKeyNav,TrickleDown.TrickleDown);
 
    Bind("close",session.Close);Bind("resume",session.Close);Bind("reset",session.ResetPlayer);
-   Bind("fabricator-craft",()=>{if(crafting!=null&&crafting.Craft(crafting.tutorialRecipeId,out _))root.Q<Button>("fabricator-fit").Focus();});
-   Bind("fabricator-fit",()=>{var r=crafting?.Model?.Recipe(crafting.tutorialRecipeId);if(r!=null)crafting.Fit(r.outputItemId,out _);});
-   Bind("fabricator-remove",()=>{var r=crafting?.Model?.Recipe(crafting.tutorialRecipeId);var mod=r!=null?crafting.Model.Loadout.Modifier(r.outputItemId):null;if(mod!=null)crafting.Remove(mod.slot,out _);});
+   if(crafting)fabricator=new FabricatorPanel(root,session,crafting);
+   salvageSale=new SalvageSalePanel(root,session);
    Bind("details-close",session.CloseItemDetails);
    Bind("inventory-button",()=>session.Open(CityState.Inventory));Bind("notes-button",()=>session.Open(CityState.Notes));Bind("pause-button",()=>session.Open(CityState.Paused));Bind("credits-button",()=>session.Open(CityState.Credits));Bind("interaction",session.Interact);
    Bind("hint-pause",()=>session.Open(CityState.Paused));
@@ -103,16 +104,19 @@ namespace AthenHill
    session.Changed+=Refresh;Refresh();
   }
 
-  static readonly string[] itemIconClasses={"flask-icon","medkit-icon","scrap-icon","pack-icon"};
+  static readonly string[] itemIconClasses={"flask-icon","medkit-icon","scrap-icon","pack-icon","pistol-icon","lattice-icon"};
+  static readonly string[] rarityClasses={"rarity-common","rarity-uncommon","rarity-rare"};
+  /// Illustration class comes from the item's catalog record (CityCatalog icon); the pack illustration otherwise.
   void SetItemIcon(VisualElement target,string id)
   {
    if(target==null)return;
    foreach(string c in itemIconClasses)target.RemoveFromClassList(c);
-   if(id=="water_flask")target.AddToClassList("flask-icon");
-   else if(id=="medkit")target.AddToClassList("medkit-icon");
-   else if(id=="scrap_coil")target.AddToClassList("scrap-icon");
-   else target.AddToClassList("pack-icon");
+   var item=id!=null?session.Shop?.Spec(id):null;
+   target.AddToClassList(item!=null&&Array.IndexOf(itemIconClasses,item.icon)>=0?item.icon:"pack-icon");
   }
+  /// Outer Berms field order for the Notes journal, when one is running.
+  string FieldOrderNotes(){var orders=session.GetComponent<FieldOrders>();return orders&&orders.Ready&&orders.Progress.Started&&!string.IsNullOrEmpty(orders.Objective)?"\n\n"+(orders.Heading??"OUTER BERMS")+"\n"+orders.Objective:"";}
+  static string RarityName(ItemRarity r)=>r==ItemRarity.Rare?"Rare":r==ItemRarity.Uncommon?"Uncommon":"Common";
 
   void EnsureInventoryGrid(IEnumerable<ItemSpec> items)
   {
@@ -125,6 +129,7 @@ namespace AthenHill
     var tile=new Button{tooltip=$"{item.name} · ×{quantity}"};
     tile.name="inv-"+item.id;
     tile.AddToClassList("inventory-tile");
+    if(item.rarity!=ItemRarity.Common)tile.AddToClassList(item.rarity==ItemRarity.Rare?"tile-rare":"tile-uncommon");
     var icon=new VisualElement{pickingMode=PickingMode.Ignore};
     icon.AddToClassList("inventory-tile-icon");
     SetItemIcon(icon,item.id);
@@ -244,23 +249,7 @@ namespace AthenHill
    Text("credits",$"{session.Shop.Credits} cr");
    if(logRevision!=session.LogRevision){logRevision=session.LogRevision;Text("log",string.Join("\n",session.Log));root.schedule.Execute(()=>{var scroll=root.Q<ScrollView>("log-scroll");scroll.scrollOffset=new Vector2(0,Mathf.Max(0,scroll.verticalScroller.highValue));});}
    Show("dialogue-panel",session.State==CityState.Dialogue);Show("shop-panel",session.State==CityState.Shop);Show("fabricator-panel",session.State==CityState.Fabricator);Show("inventory-panel",session.State==CityState.Inventory);Show("grid-panel",session.State==CityState.Grid);Show("pause-panel",session.State==CityState.Paused);Show("text-panel",session.State==CityState.Notes||session.State==CityState.Credits);
-   if(session.State==CityState.Fabricator&&crafting?.Model!=null)
-   {
-    var model=crafting.Model;
-    var recipe=model.Recipe(crafting.tutorialRecipeId);
-    bool known=recipe!=null&&model.Knows(recipe.id);
-    var mod=recipe!=null?model.Loadout.Modifier(recipe.outputItemId):null;
-    string output=recipe!=null?CraftingText.ItemName(model,recipe.outputItemId):"";
-    Text("fabricator-recipe",known?$"{recipe.name} · known schematic":"No known schematics · "+(recipe!=null?recipe.lockedHint:""));
-    Text("fabricator-ingredients",known?string.Join("  ·  ",recipe.inputs.Select(i=>$"{CraftingText.InputName(model,i)} {model.Available(i)}/{i.quantity}"))+$"\nOutput: {output} ×{recipe.outputQuantity}":"");
-    var preview=mod!=null?model.Loadout.Preview(mod.slot,mod.itemId):model.Loadout.Stats;
-    Text("fabricator-stat",$"{model.Loadout.WeaponName} · "+(mod!=null?CraftingText.StatChanges(model.Data,model.Loadout.Base,preview):""));
-    string craftReason="unknown_recipe";bool canCraft=recipe!=null&&model.CanCraft(recipe.id,session.ActiveStationId,out craftReason);
-    var craftButton=root.Q<Button>("fabricator-craft");craftButton.SetEnabled(canCraft);craftButton.tooltip=canCraft?"Consume parts to fabricate one":CraftingText.Reason(craftReason,model,recipe);
-    bool fitted=mod!=null&&model.Loadout.Fitted(mod.slot)==mod.itemId;
-    var fitButton=root.Q<Button>("fabricator-fit");fitButton.SetEnabled(mod!=null&&session.Shop.Quantity(mod.itemId)>0&&!fitted);fitButton.tooltip="Fit one carried mod to the pistol";
-    root.Q<Button>("fabricator-remove").SetEnabled(mod!=null&&model.Loadout.Fitted(mod.slot)!=null);
-   }
+   if(session.State==CityState.Fabricator)fabricator?.Refresh();
    Show("modal-notice",session.State!=CityState.Settings&&!string.IsNullOrEmpty(session.notice));
    bool settingsOpen=session.State==CityState.Settings;
    Show("settings-panel",settingsOpen);Show("modal-scroll",!settingsOpen);root.Q("modal").EnableInClassList("settings-modal",settingsOpen);
@@ -268,11 +257,12 @@ namespace AthenHill
    if(footerLeft!=null)footerLeft.text="FREE COLUMN  /  ATHEN HILL";
    if(footerRight!=null)footerRight.text="Tab · Select     Enter · Confirm";
    Text("modal-title",session.State.ToString());Text("modal-subtitle","");
-   if(session.State==CityState.Fabricator){Text("modal-title","Field fabricator");Text("modal-subtitle","Warden outpost · Salvage and fit");}
+   if(session.State==CityState.Fabricator){Text("modal-title","Field fabricator");Text("modal-subtitle","Warden outpost · Fabricate parts and fit pistol mods");if(footerRight!=null)footerRight.text="↑↓ · Schematics     Tab · Select     Enter · Confirm";}
    if(session.State==CityState.Dialogue){Text("modal-title",session.ActiveNpc.definition.displayName);Text("modal-subtitle",session.Dialogue.title);Text("dialogue-text",session.Dialogue.text);for(int i=0;i<2;i++)root.Q<Button>("choice"+i).text=session.Dialogue.choices[i].label;}
    if(session.State==CityState.Shop)
    {
     Text("modal-title","Basic General");Text("modal-subtitle","Mira · Supplies and salvage");Text("shop-credit",$"Available balance: {session.Shop.Credits} credits");
+    salvageSale.Refresh();
     for(int i=0;i<3;i++){var item=session.catalog.items[i];Text("item"+i,$"{item.name} · {session.Shop.Quantity(item.id)} carried\n{item.description}");var b=root.Q<Button>("buy"+i);b.text=$"Buy · {item.buyPrice} cr";b.SetEnabled(session.Shop.Credits>=item.buyPrice);var s=root.Q<Button>("sell"+i);s.text=$"Sell · {item.sellPrice} cr";s.SetEnabled(session.Shop.Quantity(item.id)>0);}
    }
    if(session.State==CityState.Grid)
@@ -309,8 +299,10 @@ namespace AthenHill
      var item=session.catalog.items.FirstOrDefault(i=>i!=null&&i.id==session.DetailItemId);
      int quantity=session.Shop.Quantity(session.DetailItemId);
      detailsTitle.text=item!=null?item.name:"Item details";
-     detailsQuantity.text=$"{quantity} carried";
-     detailsPrices.text=item!=null&&!item.excludeFromTrade?$"Basic General list price - Buy {item.buyPrice} cr / Sell {item.sellPrice} cr":"";
+     detailsQuantity.text=item!=null?$"{quantity} carried · {RarityName(item.rarity)}":$"{quantity} carried";
+     foreach(var c in rarityClasses)detailsTitle.RemoveFromClassList(c);
+     if(item!=null&&item.rarity!=ItemRarity.Common)detailsTitle.AddToClassList(rarityClasses[(int)item.rarity]);
+     detailsPrices.text=item!=null&&!item.excludeFromTrade?item.sellOnly?$"Mira at Basic General buys this for {item.sellPrice} cr":$"Basic General list price - Buy {item.buyPrice} cr / Sell {item.sellPrice} cr":item!=null&&item.rarity==ItemRarity.Rare?"Rare part · Mira will not trade it":"";
      detailsDescription.text=item!=null&& !string.IsNullOrWhiteSpace(item.description)?item.description:"No description recorded.";
      if(crafting?.Model!=null&&item!=null){var uses=KnownUses(crafting.Model,item);if(uses.Length>0)detailsDescription.text+="\n\nKnown uses: "+uses+" (Field fabricator)";}
      SetItemIcon(detailsIcon,session.DetailItemId);
@@ -323,7 +315,7 @@ namespace AthenHill
      if(footerRight!=null)footerRight.text="Arrows · Choose     Enter / Shift+click · Inspect     Tab / Esc · Close";
     }
    }
-   if(session.State==CityState.Notes){Text("modal-title","City notes");Text("modal-subtitle","Field journal · Colony district");Text("panel-text",session.Objective+"\n\n"+$"Conversations {session.Spoken.Count}/4 · Flask {(session.boughtFlask?"acquired":"needed")} · Scrap {(session.soldScrap?"sold":"to sell")} · Link {(session.linked?"established":"pending")}"+"\n\n"+session.catalog.notes);}
+   if(session.State==CityState.Notes){Text("modal-title","City notes");Text("modal-subtitle","Field journal · Colony district");Text("panel-text",session.Objective+"\n\n"+$"Conversations {session.Spoken.Count}/4 · Flask {(session.boughtFlask?"acquired":"needed")} · Scrap {(session.soldScrap?"sold":"to sell")} · Link {(session.linked?"established":"pending")}"+"\n\n"+session.catalog.notes+FieldOrderNotes());}
    if(session.State==CityState.Credits){Text("modal-title","Credits and licences");Text("modal-subtitle","Athen Hill · An original colony city homage");Text("panel-text",session.catalog.credits?session.catalog.credits.text:"Credits unavailable.");}
    if(previous!=session.State)
    {
@@ -341,7 +333,8 @@ namespace AthenHill
      }
      else
      {
-      root.schedule.Execute(()=>root.Q<Button>(session.State==CityState.MainMenu?"start-game":session.State==CityState.Dialogue?"choice0":session.State==CityState.Fabricator?"fabricator-craft":"close").Focus());
+      if(session.State==CityState.Fabricator&&fabricator!=null)fabricator.Opened();
+      else root.schedule.Execute(()=>root.Q<Button>(session.State==CityState.MainMenu?"start-game":session.State==CityState.Dialogue?"choice0":session.State==CityState.Fabricator?"fabricator-craft":"close").Focus());
      }
     }
     else root.focusController?.focusedElement?.Blur();

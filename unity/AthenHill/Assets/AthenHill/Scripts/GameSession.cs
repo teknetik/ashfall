@@ -90,8 +90,22 @@ namespace AthenHill
    bool ok=Shop.Trade(id,buy,out string message);
    if(ok&&buy&&id=="water_flask")boughtFlask=true;
    if(ok&&!buy&&id=="scrap_coil")soldScrap=true;
-   Notify(message,"Mira");SoundRequested?.Invoke(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);return ok;
+   Notify(message,"Mira");SoundRequested?.Invoke(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);
+   if(ok)Traded?.Invoke();
+   return ok;
   }
+  /// Basic General's Sell salvage list: one atomic sale of several units of salvage Mira buys but does not stock.
+  public bool SellSalvage(string id,int count)
+  {
+   if(State!=CityState.Shop)return false;
+   string message="Mira does not buy that.";
+   bool ok=ShopModel.BuysAsSalvage(Shop.Spec(id))&&Shop.Sell(id,count,out message);
+   Notify(message,"Mira");SoundRequested?.Invoke(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);
+   if(ok)Traded?.Invoke();
+   return ok;
+  }
+  /// A trade or salvage sale completed (autosave hook).
+  public event Action Traded;
   public void SelectDestination(int index)
   {
    if(State!=CityState.Grid||GridProgress<1||index<0||index>=catalog.destinations.Length)return;

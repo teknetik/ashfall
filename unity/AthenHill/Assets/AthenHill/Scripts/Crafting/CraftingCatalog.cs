@@ -59,9 +59,12 @@ namespace AthenHill
   public LootTable[] lootTables;
   [Header("Presentation")]
   public IdLabel[] slotLabels,tagLabels;
+  [Tooltip("Fabricator list headings by RecipeGroup name (Component, MarkI, MarkII).")]
+  public IdLabel[] groupLabels;
   public StatLabel[] statLabels;
   public string SlotName(string slot)=>Label(slotLabels,slot);
   public string TagName(string tag)=>Label(tagLabels,tag);
+  public string GroupName(RecipeGroup group)=>Label(groupLabels,group.ToString());
   static string Label(IdLabel[] set,string id){if(set!=null)foreach(var x in set)if(x!=null&&x.id==id&&!string.IsNullOrEmpty(x.label))return x.label;return id;}
   public StatLabel Stat(string stat){if(statLabels!=null)foreach(var x in statLabels)if(x!=null&&x.stat==stat)return x;return null;}
  }

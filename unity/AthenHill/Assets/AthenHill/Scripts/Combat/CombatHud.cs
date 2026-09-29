@@ -14,12 +14,15 @@ namespace AthenHill
   public PlayerCombat combat;
   public BermsTutorial tutorial;
   CraftingSession crafting;
+  FieldOrders orders;
   public Camera worldCamera;
   [Min(1)]public float enemyBarDistance=32;
   [Tooltip("Seconds a salvage pickup toast stays on screen.")]
   [Min(.5f)]public float toastSeconds=4.5f;
+  [Tooltip("Guidance markers show while their target is on screen and within this many metres.")]
+  [Min(5)]public float guidanceRange=60;
   VisualElement root,hud,vitalBar,nanoBar,crosshair,hitMarker,flash,objectiveRow,aimHint;
-  Label vitalValue,nanoValue,objective,guidance;
+  Label vitalValue,nanoValue,objective,guidance,objectiveHeading;
   Button slot7;
   readonly Dictionary<FeralDroid,VisualElement> bars=new Dictionary<FeralDroid,VisualElement>();
   float hitUntil,flashAlpha,toastUntil;
@@ -29,6 +32,7 @@ namespace AthenHill
   {
    root=GetComponent<UIDocument>().rootVisualElement;hud=root.Q("hud");
    crafting=session?session.GetComponent<CraftingSession>():null;
+   orders=session?session.GetComponent<FieldOrders>():null;
    vitalBar=root.Q(className:"vital-bar");nanoBar=root.Q(className:"nano-bar");
    var values=root.Query<Label>(className:"vital-value").ToList();
    if(values.Count>1){vitalValue=values[0];nanoValue=values[1];}
@@ -41,7 +45,7 @@ namespace AthenHill
    flash=Element("damage-flash",root);flash.SendToBack();
    var objectiveBox=root.Q("objective-box");
    objectiveRow=Element("berms-objective",objectiveBox);
-   objectiveRow.Add(new Label("OUTER BERMS"){pickingMode=PickingMode.Ignore});objectiveRow[0].AddToClassList("small");objectiveRow[0].AddToClassList("berms-heading");
+   objectiveHeading=new Label("OUTER BERMS"){pickingMode=PickingMode.Ignore};objectiveHeading.AddToClassList("small");objectiveHeading.AddToClassList("berms-heading");objectiveRow.Add(objectiveHeading);
    objective=new Label{pickingMode=PickingMode.Ignore};objective.AddToClassList("berms-objective-text");objectiveRow.Add(objective);
    var hints=root.Q("key-hints");
    if(hints!=null)
@@ -116,7 +120,12 @@ namespace AthenHill
    if(play&&heap){searchLabel.text=$"Searching {heap.displayName.ToLowerInvariant()}…";searchFill.style.width=Length.Percent(heap.Progress*100);}
    bool showObjective=tutorial&&tutorial.ShowObjective;
    Show(objectiveRow,showObjective);
-   if(showObjective)objective.text=tutorial.Step==BermsStep.Complete&&crafting!=null&&!string.IsNullOrEmpty(crafting.Objective)?crafting.Objective:tutorial.Objective;
+   bool ordersActive=OrdersActive;
+   if(showObjective)
+   {
+    objective.text=ordersActive&&!string.IsNullOrEmpty(orders.Objective)?orders.Objective:tutorial.Objective;
+    objectiveHeading.text=ordersActive&&!string.IsNullOrEmpty(orders.Heading)?orders.Heading:"OUTER BERMS";
+   }
    UpdateGuidance(play);
    UpdateBars(play);
   }
@@ -147,19 +156,20 @@ namespace AthenHill
    foreach(var r in pickup.discovered)ToastLine("Schematic discovered · "+r.name,"loot-toast-schematic");
    toastUntil=Time.unscaledTime+toastSeconds;Show(toast,true);
   }
+  bool OrdersActive=>orders&&orders.Ready&&orders.Progress.Started;
   void UpdateGuidance(bool play)
   {
-   var target=tutorial?tutorial.GuidanceTarget:null;
-   bool fabTarget=tutorial&&tutorial.Step==BermsStep.Complete&&crafting!=null&&crafting.TutorialStep=="Fabricate";
-   if(fabTarget)target=crafting.fabricator;
-   bool visible=play&&target&&tutorial.ShowObjective;
+   Transform target;string label;
+   if(OrdersActive){target=orders.GuidanceTarget;label=orders.GuidanceLabel;}
+   else{target=tutorial?tutorial.GuidanceTarget:null;label=tutorial&&tutorial.Step==BermsStep.TakePistol?"ARMS LOCKER":"WARDEN OSSA";}
+   bool visible=play&&target&&tutorial&&tutorial.ShowObjective;
    if(visible)
    {
     var world=target.position+Vector3.up*1.8f;var vp=worldCamera.WorldToViewportPoint(world);
-    visible=vp.z>0&&vp.x>.05f&&vp.x<.95f&&vp.y>.08f&&vp.y<.92f&&Vector3.Distance(world,combat.transform.position)<35;
+    visible=vp.z>0&&vp.x>.05f&&vp.x<.95f&&vp.y>.08f&&vp.y<.92f&&Vector3.Distance(world,combat.transform.position)<guidanceRange;
     if(visible)
     {
-     guidance.text=(fabTarget?"FIELD FABRICATOR":tutorial.Step==BermsStep.TakePistol?"ARMS LOCKER":"WARDEN OSSA")+$" · {Mathf.CeilToInt(Vector3.Distance(target.position,combat.transform.position))} m";
+     guidance.text=label+$" · {Mathf.CeilToInt(Vector3.Distance(target.position,combat.transform.position))} m";
      var p=RuntimePanelUtils.CameraTransformWorldToPanel(root.panel,world,worldCamera);guidance.style.left=p.x-85;guidance.style.top=p.y-24;
     }
    }

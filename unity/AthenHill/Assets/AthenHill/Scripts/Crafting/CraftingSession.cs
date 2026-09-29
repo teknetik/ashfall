@@ -10,34 +10,14 @@ namespace AthenHill
  {
   public CraftingCatalog data;
   public PlayerCombat combat;
-  public BermsTutorial tutorial;
   public Transform fabricator;
   [Tooltip("Seed for a new game's loot generator. Saved games keep their own generator state.")]
   public int lootSeed=1729;
   [Tooltip("Physical drop spawned at a droid wreck or beside a searched heap whose leftovers did not fit.")]
   public SalvageCache cachePrefab;
-  [Tooltip("Recipe the post-primer grip tutorial walks through.")]
-  public string tutorialRecipeId="recipe_grip_stabilised_pistol";
   public CraftingModel Model {get;private set;}
   public int LootEvents {get;private set;}
   public string LastLoot {get;private set;}="";
-  public string TutorialStep {get;private set;}="Dormant";
-  public string Objective
-  {
-   get
-   {
-    var recipe=Model?.Recipe(tutorialRecipeId);if(recipe==null)return "";
-    var output=CraftingText.ItemName(Model,recipe.outputItemId);
-    switch(TutorialStep)
-    {
-     case "Salvage":return "Salvage parts · "+string.Join(" · ",recipe.inputs.Select(i=>$"{CraftingText.InputName(Model,i)} {Math.Min(i.quantity,Model.Available(i))}/{i.quantity}"));
-     case "Fabricate":return $"Use the field fabricator at Ossa's post to make a {output}.";
-     case "Fit":return $"Fit the {output} to your {Model.Loadout.WeaponName}.";
-     case "TestFire":return "Fire your upgraded pistol in the Outer Berms.";
-     default:return "";
-    }
-   }
-  }
   public GameSession Session {get;private set;}
   public LootBook Loot {get;private set;}
   /// A pickup (cache or heap) moved items into the pack. Raised after the pack changed.
@@ -47,24 +27,12 @@ namespace AthenHill
    Session=GetComponent<GameSession>();
    while(Session.Shop==null)yield return null;
    if(!combat)combat=FindAnyObjectByType<PlayerCombat>();
-   if(!tutorial)tutorial=FindAnyObjectByType<BermsTutorial>();
    if(!data){Debug.LogError("Ward crafting data is missing.");yield break;}
    Loot=new LootBook(unchecked((ulong)lootSeed));
    Model=new CraftingModel(data,Session.catalog.items,Session.Shop,()=>combat&&combat.hasPistol);
-   if(combat){combat.BindLoadout(Model.Loadout);combat.ShotFired+=OnShot;}
+   if(combat)combat.BindLoadout(Model.Loadout);
   }
-  void OnDestroy(){if(combat){combat.ShotFired-=OnShot;combat.BindLoadout(null);}}
-  string TutorialOutput=>Model?.Recipe(tutorialRecipeId)?.outputItemId;
-  bool TutorialFitted=>TutorialOutput!=null&&Model.Loadout.FittedMods.Any(x=>x.Value==TutorialOutput);
-  void Update()
-  {
-   if(Model==null||!tutorial||tutorial.Step!=BermsStep.Complete||TutorialStep=="Done")return;
-   if(TutorialStep=="Dormant"&&Model.Knows(tutorialRecipeId))TutorialStep="Salvage";
-   if(TutorialStep=="Salvage"&&Model.CanCraft(tutorialRecipeId,Model.Recipe(tutorialRecipeId).stationId,out _))TutorialStep="Fabricate";
-   if(TutorialStep=="Fabricate"&&Model.CraftCount(tutorialRecipeId)>0)TutorialStep="Fit";
-   if(TutorialStep=="Fit"&&TutorialFitted)TutorialStep="TestFire";
-  }
-  void OnShot(){if(TutorialStep=="TestFire"&&TutorialFitted){TutorialStep="Done";Session.Notify("Stabilised grip tested. Your pistol holds steadier.","Warden Ossa");}}
+  void OnDestroy(){if(combat)combat.BindLoadout(null);}
   bool AtStation(out string reason){if(Model==null||Session.State!=CityState.Fabricator){reason="wrong_station";return false;}reason="ok";return true;}
   public bool Craft(string recipeId,out string reason)
   {

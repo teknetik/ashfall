@@ -152,8 +152,8 @@ namespace AthenHill
   void Snapshot()
   {
    var p=session.player;var sound=FindAnyObjectByType<CityAudio>();var combat=FindAnyObjectByType<PlayerCombat>();var tutorial=FindAnyObjectByType<BermsTutorial>();
-   var crafting=session.GetComponent<CraftingSession>();var model=crafting?crafting.Model:null;
-   Write("crafting.json",new{knownRecipes=model?.KnownRecipes.ToArray(),gripSlot=model?.Loadout.Fitted("grip"),slots=model?.Loadout.FittedMods.ToDictionary(x=>x.Key,x=>x.Value),stats=combat?(object)combat.Stats:null,recoilBase=model?.BaseRecoil,recoilFinal=model?.RecoilStat,lastKickDegrees=combat?combat.LastKickDegrees:0,crafts=model?.Crafts,lootEvents=crafting?crafting.LootEvents:0,lastLoot=crafting?crafting.LastLoot:null,tutorialStep=crafting?crafting.TutorialStep:null,fabricatorOpen=session.State==CityState.Fabricator});
+   var crafting=session.GetComponent<CraftingSession>();var model=crafting?crafting.Model:null;var orders=session.GetComponent<FieldOrders>();
+   Write("crafting.json",new{knownRecipes=model?.KnownRecipes.ToArray(),gripSlot=model?.Loadout.Fitted("grip"),slots=model?.Loadout.FittedMods.ToDictionary(x=>x.Key,x=>x.Value),stats=combat?(object)combat.Stats:null,recoilBase=model?.BaseRecoil,recoilFinal=model?.RecoilStat,lastKickDegrees=combat?combat.LastKickDegrees:0,crafts=model?.Crafts,lootEvents=crafting?crafting.LootEvents:0,lastLoot=crafting?crafting.LastLoot:null,tutorialStep=orders?orders.LegacyGripStep:null,fieldOrder=orders&&orders.Ready?orders.Progress.Index:-1,orderStage=orders?orders.Stage.ToString():null,objective=orders?orders.Objective:null,fabricatorOpen=session.State==CityState.Fabricator});
    var mouse=UnityEngine.InputSystem.Mouse.current;
    if(mouse!=null&&document.rootVisualElement.panel!=null)
    {

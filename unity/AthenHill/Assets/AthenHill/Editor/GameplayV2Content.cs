@@ -32,6 +32,41 @@ namespace AthenHill.Editor
    Debug.Log($"GAMEPLAY_V2_CONTENT items={city.items.Length} recipes={craft.recipes.Length} mods={craft.modifiers.Length} lootTables={craft.lootTables.Length}");
   }
 
+  public const string OrdersPath="Assets/AthenHill/Data/Crafting/WardFieldOrders.asset";
+  /// Ossa's five field orders. Batch: -executeMethod AthenHill.Editor.GameplayV2Content.BuildOrders -quit
+  public static void BuildOrders()
+  {
+   var set=AssetDatabase.LoadAssetAtPath<FieldOrderSet>(OrdersPath);
+   if(set&&!Force)throw new Exception(OrdersPath+" exists; edit it in the Inspector (GAMEPLAY_V2_FORCE=1 rebuilds it).");
+   bool created=!set;if(created)set=ScriptableObject.CreateInstance<FieldOrderSet>();
+   set.orders=new[]
+   {
+    new FieldOrder{id="order_steady_hands",title="Steady Hands",goal=FieldOrderGoal.FitMod,targetItemId="grip_stabilised_pistol",requireTestFire=true,guidance="depot",
+     brief="Salvage a worker-droid servo at the machine depot, then steady the scrap pistol with a fabricated grip.",
+     startLine="",completeLine="Stabilised grip tested. Your pistol holds steadier."},
+    new FieldOrder{id="order_keep_charge",title="Keep the Charge",goal=FieldOrderGoal.FitMod,targetItemId="cell_salvaged_capacitor",guidance="depot",rewardCredits=20,
+     brief="Build a bigger nano cell: wind a copper coil, seal two micro capacitors into a charge core, then fabricate and fit the {item}.",
+     startLine="That pistol runs dry after a dozen shots. I've sent charge-cell schematics to the fabricator. Scrap drones carry micro capacitors, and the scrap heaps hide a few. Wind a coil, seal a core, fit the cell.",
+     completeLine="That cell holds a proper charge now. You'll outlast a drone swarm."},
+    new FieldOrder{id="order_bore_true",title="Bore It True",goal=FieldOrderGoal.FitMod,targetItemId="barrel_bored_alloy",guidance="depot",rewardCredits=25,
+     brief="Press scrap alloy into refined plates, wind a coil, then fabricate and fit the {item}.",
+     startLine="Your barrel is rolled sheet scrap. The fabricator can press alloy into proper plate: three measures of alloy and two of nanites a plate. Bore a true barrel and your shots will hit like they mean it.",
+     completeLine="Now it hits like it means it. The workers won't shrug that off."},
+    new FieldOrder{id="order_depot_foreman",title="The Depot Foreman",goal=FieldOrderGoal.CollectItem,targetItemId="foreman_control_core",activateEncounter="foreman",guidance="foreman",rewardCredits=40,
+     brief="Destroy the Depot Foreman in the processing hall and recover the {item} from its wreck.",
+     startLine="Listen. Something big just woke in the depot's processing hall: a foreman unit, still running its old shift. It's slow, but it hits hard and shrugs off a stagger. When its optics flare red, step back. Put it down and bring me its control core.",
+     completeLine="That core still holds its shift schedules, and Mark II pistol schematics with them. They're in the fabricator now."},
+    new FieldOrder{id="order_mark_two",title="Mark II",goal=FieldOrderGoal.CraftFromGroup,targetGroup=RecipeGroup.MarkII,guidance="foreman",rewardCredits=50,
+     brief="Fabricate any Mark II pistol mod. The foreman carries actuators and quantum lattice shards, and its cradle keeps reviving it.",
+     startLine="Mark II work needs rare parts: intact actuators and quantum lattice shards. The foreman carries both, and its charging cradle keeps reviving it. Build me something Warden-grade.",
+     completeLine="That's Warden-grade work. The Berms are yours to hunt now; the depot always fills up again."},
+   };
+   set.freePlayObjective="Free hunting: the Depot Foreman re-forms in the processing hall. Recover lattice shards and actuators for the other Mark II mods, and sell surplus salvage to Mira at Basic General.";
+   set.freePlayGuidance="";
+   if(created)AssetDatabase.CreateAsset(set,OrdersPath);else EditorUtility.SetDirty(set);
+   AssetDatabase.SaveAssets();
+   Debug.Log("GAMEPLAY_V2_ORDERS "+set.orders.Length+" orders at "+OrdersPath);
+  }
   const string Prefabs="Assets/AthenHill/Prefabs/OuterBerms/";
   const string Mats="Assets/AthenHill/Art/OuterBerms/Materials/";
   public const string CachePrefab=Prefabs+"SalvageCache.prefab",NodePrefab=Prefabs+"SalvageHeapNode.prefab",ForemanPrefab=Prefabs+"FeralDepotForeman.prefab";
@@ -237,6 +272,7 @@ namespace AthenHill.Editor
     new LootTable{id="loot_wreck_carcass",entries=new[]{L("scrap_alloy",1,3),L("droid_servo_damaged",1,1,.35f,3),L("nanite_residue",1,2,.8f,2),L("copper_filament",1,2,.5f,2),L("micro_capacitor",1,1,.15f,5),L("actuator_intact",1,1,.04f),L("lattice_shard",1,1,.02f)}},
     new LootTable{id="loot_drone_wreck",entries=new[]{L("scrap_alloy",1,2),L("micro_capacitor",1,1,.35f,3),L("optic_lens_cracked",1,1,.3f,3),L("nanite_residue",1,2,.8f,2),L("copper_filament",1,1,.5f,2)}},
    };
+   c.groupLabels=new[]{new IdLabel{id="Component",label="Refined components"},new IdLabel{id="MarkI",label="Mark I pistol mods"},new IdLabel{id="MarkII",label="Mark II pistol mods"}};
    c.slotLabels=new[]{new IdLabel{id="grip",label="Grip"},new IdLabel{id="barrel",label="Barrel"},new IdLabel{id="cell",label="Nano cell"}};
    c.tagLabels=new[]
    {

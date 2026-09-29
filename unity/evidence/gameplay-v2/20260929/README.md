@@ -79,3 +79,41 @@ M1 results: full EditMode suite **99/99 passed** (82 existing incl. updated `Cra
 M2 results: EditMode **111/111 passed** (12 new in `LootTests`, including exact SplitMix64 vectors and seeded
 roll assertions). Dev build **Succeeded, 0 errors, 348 warnings**. Scene wiring (cache prefab binding, heap
 placement, Foreman encounter) is done by the M3 installer; until it runs, drops fall back to direct pickup.
+
+## M3 — field orders, economy, fabricator window v2, scene installer
+
+- `Scripts/Orders/`: `FieldOrderSet` (data: goal FitMod/CollectItem/CraftFromGroup, target, test-fire flag,
+  encounter to activate, guidance key, brief, radio lines, rewards; Field Notes templates), pure
+  `FieldOrderProgress` (index only moves forward; `Advance` completes met orders in sequence; objective text is built
+  from the templates plus live recipe have/need), and the `FieldOrders` component (event-driven evaluation, rewards
+  once, completion line then the next briefing after `nextLineDelay`, guidance target/label, Foreman activation).
+  The old `CraftingSession.TutorialStep` is gone, which removes the audit bug (re-crafting/re-fitting after Done no
+  longer resets the step or repeats Ossa's line). `FieldOrders.LegacyGripStep` keeps the dev-bridge/QA field.
+- Orders (`Data/Crafting/WardFieldOrders.asset`): 1 Steady Hands (fit grip + test fire; the primer's closing line
+  briefs it) · 2 Keep the Charge (fit Salvaged Capacitor Cell, +20 cr) · 3 Bore It True (fit Bored Alloy Barrel,
+  +25 cr) · 4 The Depot Foreman (recover the Foreman Control Core; activates the Foreman, +40 cr) · 5 Mark II
+  (fabricate any Mark II mod, +50 cr) · free hunting.
+- Economy: `ShopModel.Sell(id,count)` (atomic multi-unit sale), `sellOnly` salvage can't be bought, Basic General's
+  *Sell salvage* list (`SalvageSalePanel`, Sell 1 / Sell all, rows update in place). Flask purchase and scrap-coil
+  sale are unchanged; Ossa's "the rest of the salvage sells at Basic General" is now true (wording kept).
+- Fabricator window (`FabricatorPanel` + `CityHUD.uxml/.uss`): grouped schematic list with Locked/Ready/Fitted/×n
+  state (↑/↓ moves), have/need rows (green/red), Fabricate/Fit/Remove with worded reasons, three slot cards, and a
+  NOW vs WITH SELECTION stats table with coloured deltas. No literal item IDs or "38 → 31" strings remain in CityHud;
+  inventory icons come from `ItemSpec.icon`, tiles and details show rarity.
+- **Installer** `AthenHill.Editor.GameplayV2Installer.InstallBatch` (run in this worktree; scene committed):
+  sets `CitySession/CraftingSession.cachePrefab`; adds `CitySession/FieldOrders` (guidance fabricator/depot/foreman,
+  encounter `foreman`); creates `Outer Berms/Encounters/Depot Foreman · processing hall` (spawn chosen by capsule
+  clearance: (-81.0, 0.75, -45.8), respawn 300 s); creates `Outer Berms/Salvage heaps` with 9 nodes — 7 on existing
+  depot props (Stripped scrap heap, both Machine debris, Stripped worker droid carcass, Crashed scrap drone,
+  Stripped mining droid carcass, the active Depot litter on the service road) and 2 new Meshy scrap heaps (uniform
+  0.85) at (-88.5, -17.5) and (-78.5, -27.0) ≥4 m off the road; Landmarks `berms_foreman_hall`,
+  `berms_scrap_heap`; and an EditorOnly marker `CitySession/Gameplay v2 · installed (GameplayV2Installer)`. It
+  refuses if the marker/FieldOrders exist or the scene is dirty, verifies render-chunk sources are untouched, and
+  checks nodes stay clear of colonists/Wardens. Scene diff: 1094 lines added, 3 removed (serialization of removed
+  `CraftingSession.tutorial` and re-ordered PlayerCombat fields). Nothing existing moved.
+- Dev bridge: state gains `fieldOrders`, weapon `stats`/`baseStats`, `slots`, `craftCounts`; `dev.encounter.*`
+  accepts the Foreman encounter after the primer.
+
+M3 results: EditMode **128/128 passed** (new: `FieldOrderTests` 7, `ShopSellTests` 5, `GameplayV2SceneTests` 2,
+`HudPanelsTests` 3). Dev build **Succeeded, 0 errors, 348 warnings**. The windows were exercised in EditMode against
+the real UXML and catalogs; they have **not** been seen rendered in a native player (integrator QA).

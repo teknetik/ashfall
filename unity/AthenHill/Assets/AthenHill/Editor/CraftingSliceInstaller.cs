@@ -32,7 +32,7 @@ namespace AthenHill.Editor
    foreach(var item in UnityEngine.Object.FindObjectsByType<WorldInteractable>(FindObjectsSortMode.None))
     if(Vector3.Distance(item.transform.position,position)<4.8f)throw new Exception("Fabricator too close to "+item.name);
    foreach(var npc in session.npcs)if(npc&&Vector3.Distance(npc.transform.position,position)<2.4f)throw new Exception("Fabricator too close to "+npc.name);
-   var crafting=session.gameObject.AddComponent<CraftingSession>();crafting.data=data;crafting.combat=tutorial.combat;crafting.tutorial=tutorial;
+   var crafting=session.gameObject.AddComponent<CraftingSession>();crafting.data=data;crafting.combat=tutorial.combat;
    var outpost=GameObject.Find("Outpost");if(!outpost)throw new Exception("Outpost hierarchy missing.");
    var station=new GameObject("Field fabricator");station.transform.SetParent(outpost.transform,true);station.transform.position=position;
    var visual=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/AthenHill/Prefabs/WestGate/PH_ToolCart.prefab");
