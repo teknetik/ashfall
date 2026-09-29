@@ -53,14 +53,22 @@ Native lookbook `unity/evidence/rendering/20260929/baseline/` (11 review cameras
   same armoured Ward Guard (AGENTS.md says keep role/model assignments unless asked — flagged for Carl).
 - `Editor/MaterialSurvey.cs`: read-only material/texture/tiling survey (batch `--survey-out`).
 
+- Combat FX (`cb693c2c`, `b359055f`): procedural smoke/fire/spark textures, URP particle materials, pooled
+  DroidDeathBurst (flash → sparks, debris, fireball, oily smoke column, burn, embers) and HitFlash prefabs, a scene
+  `Combat FX` director watching droid Health; offline preview renderer `Editor/CombatFxPreview.cs`.
+- Interior-mapped windows (`a4529b66`): `Shaders/WardWindowInterior.shader` on WardGlass (backup kept), world-space
+  rooms with per-room use/blinds/lamps, lit at night through the lamp circuit. Night: clear win; day: tuned.
+- Gameplay v2 merged (`b240a756`) and installed on this scene (`6752fd62`): 136/136 EditMode tests pass.
+- Truck/tree LODs installed (`06f8838c`): 17:30 hill view 48 M → 28 M tris, 38 → 52 FPS.
+- Anti-aliasing (`9da08d6e`): SMAA/TAA options; High preset uses TAA (4× MSAA cost ~2.8 ms): hill view ~58 FPS.
+  Profiling: shadows cost ~7 ms (81 FPS with shadows off); cascades and post-processing barely matter.
+- APV sky occlusion configured (`316738e1`), bake pending a free GPU (Vulkan Editor; recipe in
+  `docs/apv-sky-occlusion-recipe.md`).
+
 ## Delegated work in flight
 
-- Gameplay v2 (worktree `ao2-gameplay`): weapon stats/slots, Mk I/II mods, refined components, loot v2 with bad-luck
-  protection, physical salvage caches, scrap heaps, Depot Foreman elite, Ossa field orders, salvage selling,
-  fabricator UI v2, save/load.
-- Truck and hero-tree LODs + shadow proxies (Blender, `art/optimization_20260929/`).
-- Procedural sky v2 shader — done and installed.
-- Research: APV + Sky Occlusion recipe for time-of-day shade (`docs/apv-sky-occlusion-recipe.md`).
+- Native QA of the gameplay v2 loop (exclusive GPU) → `unity/evidence/gameplay-v2/20260930-native/`.
+- Salvage cache hero prop (OpenAI concept → Meshy → Blender, `art/salvage_cache_20260930/`).
 
 ## Open items
 
