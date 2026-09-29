@@ -54,6 +54,7 @@ namespace AthenHill.Editor
    var tutorial=Single<BermsTutorial>();var combat=Single<PlayerCombat>();
    if(!crafting)throw new InvalidOperationException("CraftingSession missing on "+session.name+"; the crafting slice must be installed first.");
    if(session.GetComponent<FieldOrders>())throw new InvalidOperationException("FieldOrders already exists on "+session.name+"; refusing to add a second.");
+   if(session.GetComponent<WardSaveGame>())throw new InvalidOperationException("WardSaveGame already exists on "+session.name+"; refusing to add a second.");
    var berms=roots.FirstOrDefault(r=>r.name=="Outer Berms")?.transform;if(!berms)throw new InvalidOperationException("'Outer Berms' root missing.");
    var encounters=berms.Find("Encounters");if(!encounters)throw new InvalidOperationException("'Outer Berms/Encounters' missing.");
    if(!tutorial.depot)throw new InvalidOperationException("BermsTutorial has no depot encounter.");
@@ -130,6 +131,9 @@ namespace AthenHill.Editor
    orders.encounters=new[]{new FieldOrders.EncounterBinding{key="foreman",encounter=foreman}};
    if(!crafting.fabricator)throw new InvalidOperationException("CraftingSession.fabricator is not set.");
    record["fieldOrders"]=new{asset=GameplayV2Content.OrdersPath,orders=orderSet.orders.Select(o=>o.id).ToArray()};
+   // 4b. Save game (Continue / New Game, autosave).
+   var save=session.gameObject.AddComponent<WardSaveGame>();
+   record["saveGame"]=new{save.fileName,location="Application.persistentDataPath (development --athen-qa runs: <qa>/save; --athen-save-dir overrides)"};
 
    // 5. QA landmarks (editable markers; moving them does not move gameplay).
    var landmarks=roots.FirstOrDefault(r=>r.name=="Landmarks");
@@ -151,7 +155,7 @@ namespace AthenHill.Editor
    EditorSceneManager.MarkSceneDirty(scene);
    if(!EditorSceneManager.SaveScene(scene))throw new Exception("Saving AthenHill.unity failed.");
    record["created"]=created.Select(t=>Path(t)).ToArray();
-   record["componentsAdded"]=new[]{session.name+"/FieldOrders"};
+   record["componentsAdded"]=new[]{session.name+"/FieldOrders",session.name+"/WardSaveGame"};
    record["fieldsSet"]=new[]{session.name+"/CraftingSession.cachePrefab"};
    return record;
   }

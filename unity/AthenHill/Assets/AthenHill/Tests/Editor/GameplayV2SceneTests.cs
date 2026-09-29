@@ -20,6 +20,7 @@ namespace AthenHill.Tests
     var session=All<GameSession>(scene).Single();var crafting=session.GetComponent<CraftingSession>();
     Assert.That(session.GetComponentsInChildren<Transform>(true).Any(t=>t.name=="Gameplay v2 · installed (GameplayV2Installer)"),"installer marker");
     Assert.That(crafting.cachePrefab,Is.Not.Null);
+    var save=session.GetComponent<WardSaveGame>();Assert.That(save,Is.Not.Null);Assert.That(save.fileName,Is.EqualTo("ward-save.json"));Assert.That(save.directoryOverride,Is.Empty.Or.Null);
     Assert.That(AssetDatabase.GetAssetPath(crafting.cachePrefab),Is.EqualTo("Assets/AthenHill/Prefabs/OuterBerms/SalvageCache.prefab"));
     var orders=session.GetComponent<FieldOrders>();
     Assert.That(orders,Is.Not.Null);Assert.That(orders.data,Is.Not.Null);Assert.That(orders.crafting,Is.EqualTo(crafting));

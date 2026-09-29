@@ -11,8 +11,10 @@ namespace AthenHill
   public CraftingCatalog data;
   public PlayerCombat combat;
   public Transform fabricator;
-  [Tooltip("Seed for a new game's loot generator. Saved games keep their own generator state.")]
+  [Tooltip("Seed for a new game's loot generator when Fresh Seed Per New Game is off. Saved games keep their own generator state.")]
   public int lootSeed=1729;
+  [Tooltip("Each new game rolls loot from a fresh seed (then saved with the game). Off = always start from Loot Seed (repeatable QA runs).")]
+  public bool freshSeedPerNewGame=true;
   [Tooltip("Physical drop spawned at a droid wreck or beside a searched heap whose leftovers did not fit.")]
   public SalvageCache cachePrefab;
   public CraftingModel Model {get;private set;}
@@ -28,7 +30,7 @@ namespace AthenHill
    while(Session.Shop==null)yield return null;
    if(!combat)combat=FindAnyObjectByType<PlayerCombat>();
    if(!data){Debug.LogError("Ward crafting data is missing.");yield break;}
-   Loot=new LootBook(unchecked((ulong)lootSeed));
+   Loot=new LootBook(freshSeedPerNewGame?unchecked((ulong)DateTime.UtcNow.Ticks):unchecked((ulong)lootSeed));
    Model=new CraftingModel(data,Session.catalog.items,Session.Shop,()=>combat&&combat.hasPistol);
    if(combat)combat.BindLoadout(Model.Loadout);
   }

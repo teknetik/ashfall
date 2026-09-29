@@ -5,6 +5,16 @@ Open `AthenHill/` in Unity **6000.6.0f1**, then open
 The game opens on the Ward arrival menu. Select **Start Game** to enter at West
 Gate, or **Settings** for sound, video and reduced motion. Tab/Enter and the mouse
 operate the menu. Escape returns from settings; it does not start the game.
+Once a game has been saved the menu offers **Continue** (with a one-line summary of the
+saved field order) and **New Game**, which asks before replacing the save (Escape keeps it).
+Progress autosaves after fabricating, fitting or removing a mod, collecting salvage,
+completing a field order, trading, and on quit, to `ward-save.json` in
+`Application.persistentDataPath` (Linux: `~/.config/unity3d/Free Column/Athen Hill/`).
+A continued game resumes at West Gate with credits, pack, fitted mods, schematics, the
+Berms primer step, field orders and loot luck restored; world drops and heap timers reset.
+An unreadable or newer save is moved aside and a new game starts with a notice.
+Development QA runs with `--athen-qa <dir>` save under `<dir>/save`; `--athen-save-dir <dir>`
+overrides the folder.
 The project uses URP **17.6.0**, glTFast **6.20.0** and the supplied **MeshyPlayer**
 in the saved scene. Its idle pose, walk and run come from `meshy/mpc`; see
 [MESHY_PLAYER.md](MESHY_PLAYER.md). The four talking NPCs now use the supplied

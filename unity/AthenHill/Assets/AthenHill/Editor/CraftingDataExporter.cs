@@ -30,7 +30,7 @@ namespace AthenHill.Editor
     lootTables=craft.lootTables.Select(t=>new{t.id,entries=t.entries.Select(e=>new{e.itemId,quantity=e.minQuantity,e.minQuantity,maxQuantity=Math.Max(e.minQuantity,e.maxQuantity),e.chance,e.pityAfter,e.guaranteeUntilCollected}).ToArray()}).ToArray(),
     enemies=new[]{new{id="feral_scrap_drone",prefab="Assets/AthenHill/Prefabs/OuterBerms/FeralScrapDrone.prefab",lootTableId="loot_feral_scrap_drone"},new{id="feral_worker_droid",prefab="Assets/AthenHill/Prefabs/OuterBerms/FeralWorkerDroid.prefab",lootTableId="loot_feral_worker_droid"},new{id="depot_foreman",prefab="Assets/AthenHill/Prefabs/OuterBerms/FeralDepotForeman.prefab",lootTableId="loot_depot_foreman"}},
     encounters=new object[]{new{id="first_contact",spawns=new[]{"feral_scrap_drone"},tutorial=true},new{id="machine_depot",spawns=new[]{"feral_worker_droid","feral_worker_droid","feral_scrap_drone"},tutorial=true},new{id="depot_foreman",spawns=new[]{"depot_foreman"},fieldOrder="order_depot_foreman"}},
-    rules=new{allocation="dfs-declared-order;candidates:sellPrice,catalogIndex",statFormula="clamp(round3((base+sumAdd)*(1+sumPercent/100)),minStats,maxStats)",recoilDegreesPerPoint=.05,lootSeed=1729,legacyShopRows=new[]{"water_flask","medkit","scrap_coil"}}
+    rules=new{allocation="dfs-declared-order;candidates:sellPrice,catalogIndex",statFormula="clamp(round3((base+sumAdd)*(1+sumPercent/100)),minStats,maxStats)",recoilDegreesPerPoint=.05,lootSeed=1729,lootRng="splitmix64; chance entries consume one roll each in declared order, ranges one more; pityAfter guarantees the next roll after N consecutive misses",legacyShopRows=new[]{"water_flask","medkit","scrap_coil"}}
    };
    var recipe=craft.recipes.Single(x=>x.id=="recipe_grip_stabilised_pistol");
    var pack=new ShopModel(city.items);
@@ -38,11 +38,12 @@ namespace AthenHill.Editor
    model.Acquire("droid_servo_damaged");
    var initial=new[]{new KeyValuePair<string,int>("droid_servo_damaged",1),new KeyValuePair<string,int>("scrap_alloy",2),new KeyValuePair<string,int>("nanite_residue",5)};
    if(!pack.TryApply(initial,0,out _)||!model.TryCraft(recipe.id,recipe.stationId,out _)||!model.TryFit("grip_stabilised_pistol",out _)||model.RecoilStat!=31)throw new Exception("Runtime parity vector failed");
-   var random=new System.Random(1729);
+   var random=new LootRng(1729);
    var rolls=Enumerable.Range(0,5).Select(_=>random.NextDouble()).ToArray();
-   var vectors=new{schema="ward-crafting-vectors/1",source="Unity Editor: ShopModel, CraftingModel, IngredientAllocator and System.Random",cases=new object[]{
+   var vectors=new{schema="ward-crafting-vectors/2",source="Unity Editor: ShopModel, CraftingModel, IngredientAllocator and LootRng (SplitMix64)",cases=new object[]{
     new{id="starter-craft-fit",input=initial.Select(x=>new{itemId=x.Key,quantity=x.Value}).ToArray(),output=new{servo=pack.Quantity("droid_servo_damaged"),alloy=pack.Quantity("scrap_alloy"),residue=pack.Quantity("nanite_residue"),gripCarried=pack.Quantity("grip_stabilised_pistol"),gripSlot=model.Loadout.Fitted("grip"),recoil=model.RecoilStat,kickDegrees=model.RecoilStat*.05f}},
-    new{id="seed1729-first-five-rolls",values=rolls}
+    new{id="splitmix64-seed1729-first-five-rolls",values=rolls},
+    new{id="loot_feral_scrap_drone-seed1729-first-three-rolls",values=Enumerable.Range(0,1).SelectMany(_=>{var book=new LootBook(1729);var t=craft.lootTables.Single(x=>x.id=="loot_feral_scrap_drone");return Enumerable.Range(0,3).Select(i=>book.Roll(t).Select(s=>new{s.itemId,s.quantity}).ToArray());}).ToArray()}
    }};
    Directory.CreateDirectory(Root);
    File.WriteAllText(Root+"ward-crafting.v1.json",JsonConvert.SerializeObject(records,Json));

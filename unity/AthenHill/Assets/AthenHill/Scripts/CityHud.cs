@@ -16,6 +16,8 @@ namespace AthenHill
   HudWindowLayout windowLayout;
   SettingsPanel settingsPanel;
   CraftingSession crafting;
+  WardSaveGame saveGame;
+  bool hasSave;
   FabricatorPanel fabricator;
   SalvageSalePanel salvageSale;
   readonly Dictionary<NpcAgent,VisualElement> tags=new Dictionary<NpcAgent,VisualElement>();
@@ -78,7 +80,12 @@ namespace AthenHill
    Bind("hint-pause",()=>session.Open(CityState.Paused));
    Bind("quit",()=>Application.Quit());Show("quit",!Application.isEditor);
    Bind("settings-button",()=>session.Open(CityState.Settings));
-   Bind("start-game",session.StartGame);Bind("startup-settings",()=>session.Open(CityState.Settings));
+   saveGame=session.GetComponent<WardSaveGame>();
+   Bind("start-game",StartNewGame);Bind("startup-settings",()=>session.Open(CityState.Settings));
+   Bind("continue-game",()=>{if(saveGame)saveGame.Continue();});
+   Bind("confirm-new-game",()=>{ShowNewGameConfirm(false);if(saveGame)saveGame.NewGame();else session.StartGame();});
+   Bind("cancel-new-game",()=>{ShowNewGameConfirm(false);root.Q<Button>("start-game").Focus();});
+   root.Q("new-game-confirm").RegisterCallback<KeyDownEvent>(e=>{if(e.keyCode==KeyCode.Escape){ShowNewGameConfirm(false);root.Q<Button>("start-game").Focus();e.StopPropagation();}},TrickleDown.TrickleDown);
    Bind("mute",session.ToggleMute);Bind("reduced-motion",session.ToggleReducedMotion);
    Bind("reset-ui",()=>{windowLayout.Reset();session.Notify("UI positions reset.");});
    for(int i=0;i<2;i++){int index=i;Bind("choice"+i,()=>session.Choose(index));}
@@ -116,6 +123,27 @@ namespace AthenHill
   }
   /// Outer Berms field order for the Notes journal, when one is running.
   string FieldOrderNotes(){var orders=session.GetComponent<FieldOrders>();return orders&&orders.Ready&&orders.Progress.Started&&!string.IsNullOrEmpty(orders.Objective)?"\n\n"+(orders.Heading??"OUTER BERMS")+"\n"+orders.Objective:"";}
+  /// Start menu: New Game asks before replacing a save; without a save it simply starts.
+  void StartNewGame()
+  {
+   if(saveGame&&saveGame.HasSave){ShowNewGameConfirm(true);return;}
+   if(saveGame&&saveGame.Ready)saveGame.NewGame();else session.StartGame();
+  }
+  void ShowNewGameConfirm(bool show)
+  {
+   Show("new-game-confirm",show);root.Q("startup-actions").SetEnabled(!show);
+   if(show)root.schedule.Execute(()=>root.Q<Button>("cancel-new-game").Focus());
+  }
+  /// Continue appears (and takes focus) only when a save exists; its line summarises the saved progress.
+  void RefreshStartupSave()
+  {
+   hasSave=saveGame&&saveGame.HasSave;
+   Show("continue-game",hasSave);
+   root.Q<Label>("start-game-label").text=hasSave?"New Game":"Start Game";
+   root.Q<Button>("start-game").EnableInClassList("arrival-primary",!hasSave);
+   if(hasSave)root.Q<Label>("continue-summary").text=saveGame.Summary()??"";
+   ShowNewGameConfirm(false);
+  }
   static string RarityName(ItemRarity r)=>r==ItemRarity.Rare?"Rare":r==ItemRarity.Uncommon?"Uncommon":"Common";
 
   void EnsureInventoryGrid(IEnumerable<ItemSpec> items)
@@ -334,7 +362,11 @@ namespace AthenHill
      else
      {
       if(session.State==CityState.Fabricator&&fabricator!=null)fabricator.Opened();
-      else root.schedule.Execute(()=>root.Q<Button>(session.State==CityState.MainMenu?"start-game":session.State==CityState.Dialogue?"choice0":session.State==CityState.Fabricator?"fabricator-craft":"close").Focus());
+      else
+      {
+       if(session.State==CityState.MainMenu)RefreshStartupSave();
+       root.schedule.Execute(()=>root.Q<Button>(session.State==CityState.MainMenu?hasSave?"continue-game":"start-game":session.State==CityState.Dialogue?"choice0":session.State==CityState.Fabricator?"fabricator-craft":"close").Focus());
+      }
      }
     }
     else root.focusController?.focusedElement?.Blur();
@@ -344,6 +376,7 @@ namespace AthenHill
   {
    if(root==null||root.panel==null)return;
    if(PopupOpen())lastPopupFrame=Time.frameCount;
+   if(hasSave&&session.State==CityState.MainMenu){var c=root.Q<Button>("continue-game");bool ready=saveGame&&saveGame.Ready;if(c.enabledSelf!=ready)c.SetEnabled(ready);}
    if(windowWidth!=Screen.width||windowHeight!=Screen.height)UpdateWindowSize();
    UpdateCompass();
    var keyboard=Keyboard.current;

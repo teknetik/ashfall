@@ -487,6 +487,11 @@ Gameplay v2 content is serialized data; nothing is hard-coded in the scripts. Ed
 - `GameplayV2Installer.InstallBatch` is one-time: it refuses to run over its own marker (*CitySession/Gameplay v2 ·
   installed*) or an unsaved scene. `GameplayV2Content.BuildData/BuildOrders/BuildPrefabs` authored the assets once and
   refuse to overwrite them unless `GAMEPLAY_V2_FORCE=1` (which discards Inspector edits).
+- **CitySession → WardSaveGame**: save file name and (for tools/tests) a folder override. The format is
+  `WardSaveData` version 1 (JsonUtility). When adding saved state, add fields with safe defaults; bump
+  `CurrentVersion` only for incompatible changes (older builds then refuse the file and start a new game).
+  **CraftingSession → Fresh Seed Per New Game** (on) seeds loot per new game; turn it off to always start from
+  *Loot Seed* for repeatable QA. The start menu's Continue / New Game / confirmation live in **UI/StartupMenu.uxml**.
 - UI: the fabricator window and *Sell salvage* list are laid out in **UI/CityHUD.uxml** (`fabricator-panel`,
   `salvage-list`) and styled in **CityHUD.uss** (sections "Gameplay v2 · …"); `FabricatorPanel` and
   `SalvageSalePanel` fill them from data. Keep the named elements.

@@ -1,6 +1,6 @@
 {
-  "schema": "ward-crafting-vectors/1",
-  "source": "Unity Editor: ShopModel, CraftingModel, IngredientAllocator and System.Random",
+  "schema": "ward-crafting-vectors/2",
+  "source": "Unity Editor: ShopModel, CraftingModel, IngredientAllocator and LootRng (SplitMix64)",
   "cases": [
     {
       "id": "starter-craft-fit",
@@ -29,13 +29,68 @@
       }
     },
     {
-      "id": "seed1729-first-five-rolls",
+      "id": "splitmix64-seed1729-first-five-rolls",
       "values": [
-        0.99961150297876988,
-        0.1381151728043869,
-        0.31825822513469409,
-        0.6009881736715269,
-        0.8248772084828826
+        0.75060764922430123,
+        0.30586773032740666,
+        0.585148279354856,
+        0.55934361369033492,
+        0.77665375907603462
+      ]
+    },
+    {
+      "id": "loot_feral_scrap_drone-seed1729-first-three-rolls",
+      "values": [
+        [
+          {
+            "itemId": "scrap_alloy",
+            "quantity": 1
+          },
+          {
+            "itemId": "nanite_residue",
+            "quantity": 3
+          },
+          {
+            "itemId": "copper_filament",
+            "quantity": 1
+          }
+        ],
+        [
+          {
+            "itemId": "scrap_alloy",
+            "quantity": 2
+          },
+          {
+            "itemId": "nanite_residue",
+            "quantity": 3
+          },
+          {
+            "itemId": "copper_filament",
+            "quantity": 1
+          },
+          {
+            "itemId": "optic_lens_cracked",
+            "quantity": 1
+          }
+        ],
+        [
+          {
+            "itemId": "scrap_alloy",
+            "quantity": 2
+          },
+          {
+            "itemId": "nanite_residue",
+            "quantity": 3
+          },
+          {
+            "itemId": "copper_filament",
+            "quantity": 1
+          },
+          {
+            "itemId": "micro_capacitor",
+            "quantity": 1
+          }
+        ]
       ]
     }
   ]

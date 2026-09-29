@@ -120,6 +120,16 @@ namespace AthenHill
    else Open(slot==5?CityState.Inventory:CityState.Notes);
   }
   public void StartGame(){if(State!=CityState.MainMenu)return;HasStarted=true;SetState(CityState.Play);}
+  public CityVisitState CaptureCityVisit()=>new CityVisitState{visitedHill=visitedHill,boughtFlask=boughtFlask,soldScrap=soldScrap,linked=linked,spoken=Spoken.OrderBy(x=>x).ToArray(),selectedDestination=selectedDestination};
+  /// Save restore of the city-visit checklist (conversations, flask, scrap sale, lattice link).
+  public void RestoreCityVisit(CityVisitState city)
+  {
+   if(city==null)return;
+   visitedHill=city.visitedHill;boughtFlask=city.boughtFlask;soldScrap=city.soldScrap;linked=city.linked;
+   Spoken.Clear();if(city.spoken!=null)foreach(var id in city.spoken)if(!string.IsNullOrEmpty(id)&&npcs!=null&&npcs.Any(n=>n&&n.definition&&n.definition.id==id))Spoken.Add(id);
+   selectedDestination=city.selectedDestination??"";
+   Changed?.Invoke();
+  }
   /// Field rewards (Outer Berms patrols): credits and items change together, then the log records it.
   public void Reward(int credits,string itemId,int quantity,string speaker,string text)
   {

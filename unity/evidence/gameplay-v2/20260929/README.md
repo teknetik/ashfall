@@ -117,3 +117,61 @@ placement, Foreman encounter) is done by the M3 installer; until it runs, drops 
 M3 results: EditMode **128/128 passed** (new: `FieldOrderTests` 7, `ShopSellTests` 5, `GameplayV2SceneTests` 2,
 `HudPanelsTests` 3). Dev build **Succeeded, 0 errors, 348 warnings**. The windows were exercised in EditMode against
 the real UXML and catalogs; they have **not** been seen rendered in a native player (integrator QA).
+
+## M4 — save/load, Continue / New Game
+
+- `Scripts/Save/WardSaveData.cs`: `WardSaveData` v1 (credits/purchases/sales, carried stacks, `CraftingState`
+  known recipes + craft counts + fitted slots, `LootState` generator hex + miss counters + collected set, primer
+  step, pistol flag, `FieldOrderState` index + test-fired orders, city-visit checklist) and `WardSaveFile`
+  (JsonUtility; empty / non-JSON / truncated / versionless / newer-version / negative-balance / unknown-step files
+  are rejected with a message, never an exception; writes go to `.tmp` then replace).
+- `Scripts/Save/WardSaveGame.cs` (on CitySession, added by the installer): autosave coalesced per frame after
+  craft/fit/remove/unlock, cache or heap pickup, order completion, trade/sale, and on quit (only once a game has
+  started). Continue applies pack → crafting → loot → pistol (carried exactly from the Draw step) →
+  `BermsTutorial.Restore` (locker, plates, active encounters; a completed primer re-forms the depot nest) →
+  `FieldOrders.Restore` (no lines/rewards replayed; started orders' schematics and the Foreman re-applied) →
+  city-visit flags. Unknown IDs are skipped and named in the welcome notice. Unreadable saves are renamed
+  `ward-save.unreadable-<utc>.json`; New Game keeps `ward-save.previous.json`.
+- Start menu (`StartupMenu.uxml/.uss`, `CityHud`): **Continue** (hidden without a save; default focus when present;
+  summary line such as "Field order 3/5 · Bore It True · 37 cr · saved 29 Sep 23:56"), **New Game** (was Start
+  Game; confirmation panel "Start new game" / "Keep my save · Esc"), Settings unchanged.
+- Each new game seeds loot afresh (`CraftingSession.freshSeedPerNewGame`, on); turn it off for repeatable QA.
+- `ward-crafting.v1.vectors.json` is now schema `ward-crafting-vectors/2` (SplitMix64 reference rolls and the first
+  three seeded drone drops, matching `LootTests`).
+
+M4 results: EditMode **136/136 passed** (new: `SaveGameTests` 8; `GameplayV2SceneTests` also checks the save
+component). Dev build **Succeeded, 0 errors, 348 warnings**. The installer was re-run from the pre-install scene
+(`git show 94f14ad1:…/AthenHill.unity`) to produce the committed scene: +1109 / −3 lines.
+
+## Integrator checklist (native, not done here)
+
+1. On the main checkout, after merging: `Unity -batchmode -nographics -projectPath …/unity/AthenHill
+   -executeMethod AthenHill.Editor.GameplayV2Installer.InstallBatch -quit -logFile …` and read the single
+   `GAMEPLAY_V2_INSTALL {…}` line. (Or take this branch's scene if main's scene has not changed since `f17733c4`.)
+   Scene YAML from this branch will conflict with any other scene edits; prefer re-running the installer.
+2. Routes/placements to walk: the Foreman spawn at (-81.0, 0.75, -45.8) inside the processing hall (can it path to
+   the yard? does it clip the hall?), the 9 heap prompts (especially the 3.4 m range on the big heap and the two new
+   roadside heaps at (-88.5,-17.5) and (-78.5,-27.0) — do they read as scrap and not block the road?), cache
+   ground-snap after a scrap drone falls, and that heaps near the depot nest are not unfairly close to spawns.
+3. UI at 1920×1080 and a small window: fabricator window (two rows; the stats table scrolls inside the modal
+   scroll view), Basic General's Sell salvage list with several rows, the salvage toast under the top actions,
+   the search bar, and the startup Continue/New Game/confirmation layout. Keyboard only: Tab/↑↓/Enter/Esc.
+4. Loop timing with real input: primer → grip → cell → barrel → Foreman → Mark II. Expect roughly: capacitor cell
+   after 1–2 depot clears plus a few heaps; the Foreman needs ~10 Bored-Barrel hits (400 HP) and hits for 30.
+5. Save: quit mid-order, relaunch, Continue; New Game confirmation; a hand-damaged `ward-save.json`.
+6. Existing loop: West Gate spawn, four talks, flask purchase and scrap-coil sale (rows 0–2 unchanged), Lattice,
+   Ring Gate offline, first-contact drone and depot nest primer.
+
+## Known gaps / risks
+
+- Nothing here was run in a native player or seen rendered: layout sizes (fabricator ≈ two rows inside the 860 px
+  modal, salvage rows, toast position under the top-actions strip) are unverified visually.
+- Tuning (drop chances, prices, Foreman HP/damage, respawn timers) is first-pass and untested with real input.
+- World state that is not saved by design: droid encounters' live droids, uncollected caches and heap respawn
+  timers reset on Continue; the player resumes at West Gate.
+- The Foreman shares the worker's animations/voice (pitched down) and a tinted body material; no bespoke model.
+- The two roadside heaps are new props (Meshy industrial scrap at 0.85) — the other seven nodes reuse existing
+  depot scrap. The cache visual is the same Meshy scrap stack at 0.36 with an emissive beacon cylinder.
+- `FieldOrderSet` line text is first-draft Ossa voice; the Foreman briefing arrives 4.5 s after order 3's line.
+- Dev bridge exposes the Foreman encounter to `dev.encounter.*` after the primer; there is no dev command to set
+  field-order progress or loot state.
