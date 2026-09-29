@@ -80,7 +80,10 @@ namespace AthenHill
    var target=orders&&orders.Ready?orders.Progress.RecipeFor(Model,orders.Progress.Current):null;
    string pick=target!=null&&Model.Knows(target.id)?target.id:Selected!=null&&recipeButtons.ContainsKey(Selected)?Selected:order.FirstOrDefault(Model.Knows)??order.FirstOrDefault();
    if(pick!=null)Select(pick);
-   if(pick!=null&&recipeButtons.TryGetValue(pick,out var button))button.schedule.Execute(button.Focus);
+   // Ready to act on the current order's part: Enter fabricates (then fits) straight away, as before v2.
+   // Otherwise focus the schematic list (↑/↓ browse).
+   Focusable focusTarget=craft.enabledSelf?craft:fit.enabledSelf?fit:pick!=null&&recipeButtons.TryGetValue(pick,out var button)?button:null;
+   if(focusTarget!=null)craft.schedule.Execute(focusTarget.Focus);
   }
   public void Select(string recipeId){if(Selected==recipeId)return;Selected=recipeId;Refresh();}
   void SelectSlot(string slot)

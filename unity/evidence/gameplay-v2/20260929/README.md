@@ -143,6 +143,13 @@ M4 results: EditMode **136/136 passed** (new: `SaveGameTests` 8; `GameplayV2Scen
 component). Dev build **Succeeded, 0 errors, 348 warnings**. The installer was re-run from the pre-install scene
 (`git show 94f14ad1:…/AthenHill.unity`) to produce the committed scene: +1109 / −3 lines.
 
+## Follow-up after M4
+
+The fabricator now opens with focus on **Fabricate** when the current order's part can be made (then Fit), as
+before v2, so one Enter fabricates and a second fits; otherwise focus lands on the schematic list. Final results:
+EditMode **136/136**, `LinuxBuild.Development` **Succeeded (0 errors, 348 warnings)**, and `LinuxBuild.Release`
+**Succeeded (0 errors, 348 warnings)** — the release build confirms the non-DEBUG compile; neither player was run.
+
 ## Integrator checklist (native, not done here)
 
 1. On the main checkout, after merging: `Unity -batchmode -nographics -projectPath …/unity/AthenHill
