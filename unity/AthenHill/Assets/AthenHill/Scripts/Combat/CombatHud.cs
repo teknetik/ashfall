@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 namespace AthenHill
@@ -50,6 +51,7 @@ namespace AthenHill
    if(slot7!=null)slot7.clicked+=()=>combat.ToggleDraw();
    combat.TargetHit+=(_,killed)=>{hitUntil=Time.unscaledTime+(killed?.28f:.14f);hitMarker.EnableInClassList("kill",killed);};
    combat.Hurt+=amount=>flashAlpha=Mathf.Clamp01(flashAlpha+amount/30f);
+   combat.StatsChanged+=UpdatePistolTooltip;UpdatePistolTooltip();
    Refresh(true);
   }
   static VisualElement Element(string classes,VisualElement parent)
@@ -81,12 +83,12 @@ namespace AthenHill
    Refresh(false);
    // CityHud disables the reserve slots at start; keep slot 7 in step with the pistol.
    if(slot7!=null&&slot7.enabledSelf!=pistolShown)slot7.SetEnabled(pistolShown);
-   if(slot7!=null&&pistolShown)slot7.tooltip=$"Draw or holster the scrap pistol · 7 · Recoil {combat.RecoilStat:0}"+(crafting?.Model?.GripSlot!=null?" (Stabilised grip)":"");
+   if(slot7!=null&&pistolShown&&slot7.tooltip!=pistolTooltip)slot7.tooltip=pistolTooltip;
    var h=combat.Health;
    if(vitalBar!=null)vitalBar.style.width=Length.Percent(h.Fraction*100);
    if(vitalValue!=null)vitalValue.text=$"{Mathf.CeilToInt(h.Current)} / {Mathf.RoundToInt(h.max)}";
-   if(nanoBar!=null)nanoBar.style.width=Length.Percent(combat.Nano/Mathf.Max(1,combat.nanoMax)*100);
-   if(nanoValue!=null)nanoValue.text=$"{Mathf.FloorToInt(combat.Nano)} / {Mathf.RoundToInt(combat.nanoMax)}";
+   if(nanoBar!=null)nanoBar.style.width=Length.Percent(combat.Nano/Mathf.Max(1,combat.Stats.nanoMax)*100);
+   if(nanoValue!=null)nanoValue.text=$"{Mathf.FloorToInt(combat.Nano)} / {Mathf.RoundToInt(combat.Stats.nanoMax)}";
    bool play=session.State==CityState.Play;
    Show(crosshair,play&&combat.Armed);crosshair.EnableInClassList("aiming",combat.Aiming);
    Show(hitMarker,play&&Time.unscaledTime<hitUntil);
@@ -100,6 +102,15 @@ namespace AthenHill
    UpdateGuidance(play);
    UpdateBars(play);
   }
+  string pistolTooltip="";
+  /// Rebuilt only when the loadout changes, never per frame.
+  void UpdatePistolTooltip()
+  {
+   var model=crafting?crafting.Model:null;
+   var mods=model!=null?string.Join(", ",model.Loadout.FittedMods.Select(x=>CraftingText.ItemName(model,x.Value))):"";
+   pistolTooltip=$"Draw or holster the scrap pistol · 7 · Damage {combat.Stats.damage:0.#} · Recoil {combat.Stats.recoil:0.#}"+(mods.Length>0?" · "+mods:"");
+  }
+  void OnDestroy(){if(combat)combat.StatsChanged-=UpdatePistolTooltip;}
   void UpdateGuidance(bool play)
   {
    var target=tutorial?tutorial.GuidanceTarget:null;

@@ -69,9 +69,9 @@ namespace AthenHill
    root.RegisterCallback<KeyDownEvent>(InventoryKeyNav,TrickleDown.TrickleDown);
 
    Bind("close",session.Close);Bind("resume",session.Close);Bind("reset",session.ResetPlayer);
-   Bind("fabricator-craft",()=>{if(crafting!=null&&crafting.Craft(out _))root.Q<Button>("fabricator-fit").Focus();});
-   Bind("fabricator-fit",()=>crafting?.Fit(out _));
-   Bind("fabricator-remove",()=>crafting?.Remove(out _));
+   Bind("fabricator-craft",()=>{if(crafting!=null&&crafting.Craft(crafting.tutorialRecipeId,out _))root.Q<Button>("fabricator-fit").Focus();});
+   Bind("fabricator-fit",()=>{var r=crafting?.Model?.Recipe(crafting.tutorialRecipeId);if(r!=null)crafting.Fit(r.outputItemId,out _);});
+   Bind("fabricator-remove",()=>{var r=crafting?.Model?.Recipe(crafting.tutorialRecipeId);var mod=r!=null?crafting.Model.Loadout.Modifier(r.outputItemId):null;if(mod!=null)crafting.Remove(mod.slot,out _);});
    Bind("details-close",session.CloseItemDetails);
    Bind("inventory-button",()=>session.Open(CityState.Inventory));Bind("notes-button",()=>session.Open(CityState.Notes));Bind("pause-button",()=>session.Open(CityState.Paused));Bind("credits-button",()=>session.Open(CityState.Credits));Bind("interaction",session.Interact);
    Bind("hint-pause",()=>session.Open(CityState.Paused));
@@ -195,6 +195,8 @@ namespace AthenHill
    if(inventoryTiles.TryGetValue(nextId,out var next))next.Focus();
    e.StopPropagation();
   }
+  /// Known schematics that consume this item, directly or through one of its tags.
+  static string KnownUses(CraftingModel model,ItemSpec item)=>string.Join(", ",model.Data.recipes.Where(r=>model.Knows(r.id)&&r.outputItemId!=item.id&&r.inputs!=null&&r.inputs.Any(i=>i.kind=="item"?i.id==item.id:item.HasTag(i.id))).Select(r=>r.name));
   void OnDestroy(){SetMenuCamera(false);settingsPanel?.Dispose();windowLayout?.Dispose();if(session){session.Changed-=Refresh;session.input.PointerOverUi=null;session.input.MenuPopupOpen=null;}}
   // The opaque arrival artwork needs no city draw/shadow passes behind it.
   // Keep the saved world loaded, and restore its camera before entering gameplay.
@@ -245,15 +247,19 @@ namespace AthenHill
    if(session.State==CityState.Fabricator&&crafting?.Model!=null)
    {
     var model=crafting.Model;
-    bool known=model.KnownRecipes.Contains("recipe_grip_stabilised_pistol");
-
-    Text("fabricator-recipe",known?"Stabilised Pistol Grip · known schematic":"No known schematics · Unknown schematics: 1");
-    Text("fabricator-ingredients",known?$"Any servo {session.Shop.Quantity("droid_servo_damaged")}/1  ·  Scrap Alloy {session.Shop.Quantity("scrap_alloy")}/2  ·  Any tier-one nanites {session.Shop.Quantity("nanite_residue")}/5\nOutput: Stabilised Pistol Grip ×1":"Salvage a worker-droid servo at the depot to learn this schematic.");
-    Text("fabricator-stat",$"Scrap Pistol · Recoil {model.BaseRecoil:0} → 31 · Current {model.RecoilStat:0}");
-    bool canCraft=model.CanCraft("recipe_grip_stabilised_pistol",session.ActiveStationId,out var craftReason);
-    var craftButton=root.Q<Button>("fabricator-craft");craftButton.SetEnabled(canCraft);craftButton.tooltip=canCraft?"Consume parts to craft one grip":craftReason;
-    var fitButton=root.Q<Button>("fabricator-fit");fitButton.SetEnabled(session.Shop.Quantity("grip_stabilised_pistol")>0&&model.GripSlot==null);fitButton.tooltip="Fit one carried grip to the pistol";
-    root.Q<Button>("fabricator-remove").SetEnabled(model.GripSlot!=null);
+    var recipe=model.Recipe(crafting.tutorialRecipeId);
+    bool known=recipe!=null&&model.Knows(recipe.id);
+    var mod=recipe!=null?model.Loadout.Modifier(recipe.outputItemId):null;
+    string output=recipe!=null?CraftingText.ItemName(model,recipe.outputItemId):"";
+    Text("fabricator-recipe",known?$"{recipe.name} · known schematic":"No known schematics · "+(recipe!=null?recipe.lockedHint:""));
+    Text("fabricator-ingredients",known?string.Join("  ·  ",recipe.inputs.Select(i=>$"{CraftingText.InputName(model,i)} {model.Available(i)}/{i.quantity}"))+$"\nOutput: {output} ×{recipe.outputQuantity}":"");
+    var preview=mod!=null?model.Loadout.Preview(mod.slot,mod.itemId):model.Loadout.Stats;
+    Text("fabricator-stat",$"{model.Loadout.WeaponName} · "+(mod!=null?CraftingText.StatChanges(model.Data,model.Loadout.Base,preview):""));
+    string craftReason="unknown_recipe";bool canCraft=recipe!=null&&model.CanCraft(recipe.id,session.ActiveStationId,out craftReason);
+    var craftButton=root.Q<Button>("fabricator-craft");craftButton.SetEnabled(canCraft);craftButton.tooltip=canCraft?"Consume parts to fabricate one":CraftingText.Reason(craftReason,model,recipe);
+    bool fitted=mod!=null&&model.Loadout.Fitted(mod.slot)==mod.itemId;
+    var fitButton=root.Q<Button>("fabricator-fit");fitButton.SetEnabled(mod!=null&&session.Shop.Quantity(mod.itemId)>0&&!fitted);fitButton.tooltip="Fit one carried mod to the pistol";
+    root.Q<Button>("fabricator-remove").SetEnabled(mod!=null&&model.Loadout.Fitted(mod.slot)!=null);
    }
    Show("modal-notice",session.State!=CityState.Settings&&!string.IsNullOrEmpty(session.notice));
    bool settingsOpen=session.State==CityState.Settings;
@@ -306,7 +312,7 @@ namespace AthenHill
      detailsQuantity.text=$"{quantity} carried";
      detailsPrices.text=item!=null&&!item.excludeFromTrade?$"Basic General list price - Buy {item.buyPrice} cr / Sell {item.sellPrice} cr":"";
      detailsDescription.text=item!=null&& !string.IsNullOrWhiteSpace(item.description)?item.description:"No description recorded.";
-     if(crafting?.Model!=null&&item!=null&&crafting.Model.KnownRecipes.Contains("recipe_grip_stabilised_pistol")&&item.id!="grip_stabilised_pistol"&&new[]{"droid_servo_damaged","scrap_alloy","nanite_residue"}.Contains(item.id))detailsDescription.text+="\n\nKnown uses: Stabilised Pistol Grip (Field fabricator)";
+     if(crafting?.Model!=null&&item!=null){var uses=KnownUses(crafting.Model,item);if(uses.Length>0)detailsDescription.text+="\n\nKnown uses: "+uses+" (Field fabricator)";}
      SetItemIcon(detailsIcon,session.DetailItemId);
      if(lastDetailId!=session.DetailItemId){lastDetailId=session.DetailItemId;root.schedule.Execute(()=>detailsClose?.Focus());}
      if(footerRight!=null)footerRight.text="Esc · Close details     Tab · Close pack";

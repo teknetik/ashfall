@@ -1,7 +1,7 @@
 {
   "schema": "ward-crafting/1",
   "generated": {
-    "utc": "2026-09-28T10:59:52.9415600Z",
+    "utc": "2026-09-29T21:50:41.4736720Z",
     "unity": "6000.6.0f1",
     "sources": [
       "Assets/AthenHill/Data/CityCatalog.asset",
@@ -21,6 +21,9 @@
       "buyPrice": 4,
       "sellPrice": 2,
       "startingQuantity": 0,
+      "rarity": "Common",
+      "sellOnly": false,
+      "icon": "flask-icon",
       "catalogIndex": 0
     },
     {
@@ -35,6 +38,9 @@
       "buyPrice": 9,
       "sellPrice": 4,
       "startingQuantity": 0,
+      "rarity": "Common",
+      "sellOnly": false,
+      "icon": "medkit-icon",
       "catalogIndex": 1
     },
     {
@@ -50,6 +56,9 @@
       "buyPrice": 2,
       "sellPrice": 1,
       "startingQuantity": 1,
+      "rarity": "Common",
+      "sellOnly": false,
+      "icon": "scrap-icon",
       "catalogIndex": 2
     },
     {
@@ -64,10 +73,13 @@
         "tier:1"
       ],
       "maxStack": 10,
-      "excludeFromTrade": true,
+      "excludeFromTrade": false,
       "buyPrice": 0,
-      "sellPrice": 0,
+      "sellPrice": 3,
       "startingQuantity": 0,
+      "rarity": "Uncommon",
+      "sellOnly": true,
+      "icon": "scrap-icon",
       "catalogIndex": 3
     },
     {
@@ -81,10 +93,13 @@
         "tier:1"
       ],
       "maxStack": 30,
-      "excludeFromTrade": true,
+      "excludeFromTrade": false,
       "buyPrice": 0,
-      "sellPrice": 0,
+      "sellPrice": 1,
       "startingQuantity": 0,
+      "rarity": "Common",
+      "sellOnly": true,
+      "icon": "scrap-icon",
       "catalogIndex": 4
     },
     {
@@ -97,10 +112,13 @@
         "nanite:tier1"
       ],
       "maxStack": 60,
-      "excludeFromTrade": true,
+      "excludeFromTrade": false,
       "buyPrice": 0,
-      "sellPrice": 0,
+      "sellPrice": 1,
       "startingQuantity": 0,
+      "rarity": "Common",
+      "sellOnly": true,
+      "icon": "scrap-icon",
       "catalogIndex": 5
     },
     {
@@ -114,16 +132,19 @@
         "tier:1"
       ],
       "maxStack": 30,
-      "excludeFromTrade": true,
+      "excludeFromTrade": false,
       "buyPrice": 0,
-      "sellPrice": 0,
+      "sellPrice": 1,
       "startingQuantity": 0,
+      "rarity": "Common",
+      "sellOnly": true,
+      "icon": "scrap-icon",
       "catalogIndex": 6
     },
     {
       "id": "micro_capacitor",
       "name": "Micro Capacitor",
-      "description": "An intact low-voltage component; no schematic is known yet.",
+      "description": "An intact low-voltage capacitor from a drone's charge bus. Charge cell cores need two.",
       "tags": [
         "salvage",
         "component",
@@ -131,10 +152,13 @@
         "tier:1"
       ],
       "maxStack": 10,
-      "excludeFromTrade": true,
+      "excludeFromTrade": false,
       "buyPrice": 0,
-      "sellPrice": 0,
+      "sellPrice": 3,
       "startingQuantity": 0,
+      "rarity": "Uncommon",
+      "sellOnly": true,
+      "icon": "scrap-icon",
       "catalogIndex": 7
     },
     {
@@ -143,14 +167,249 @@
       "description": "A field-fabricated grip that steadies the scrap pistol.",
       "tags": [
         "weapon_mod",
-        "weapon_mod:grip"
+        "weapon_mod:grip",
+        "mark:1"
       ],
       "maxStack": 3,
       "excludeFromTrade": true,
       "buyPrice": 0,
       "sellPrice": 0,
       "startingQuantity": 0,
+      "rarity": "Uncommon",
+      "sellOnly": false,
+      "icon": "pistol-icon",
       "catalogIndex": 8
+    },
+    {
+      "id": "optic_lens_cracked",
+      "name": "Cracked Optic Lens",
+      "description": "A scrap drone's targeting lens, cracked at the rim but still true at the centre.",
+      "tags": [
+        "salvage",
+        "salvage:drone",
+        "component",
+        "component:optic",
+        "tier:1"
+      ],
+      "maxStack": 10,
+      "excludeFromTrade": false,
+      "buyPrice": 0,
+      "sellPrice": 4,
+      "startingQuantity": 0,
+      "rarity": "Uncommon",
+      "sellOnly": true,
+      "icon": "scrap-icon",
+      "catalogIndex": 9
+    },
+    {
+      "id": "actuator_intact",
+      "name": "Intact Actuator",
+      "description": "A heavy worker-droid joint actuator with its feedback loop unbroken. Rare in the Berms.",
+      "tags": [
+        "salvage",
+        "salvage:droid",
+        "component",
+        "component:actuator",
+        "tier:2"
+      ],
+      "maxStack": 10,
+      "excludeFromTrade": true,
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "rarity": "Rare",
+      "sellOnly": false,
+      "icon": "scrap-icon",
+      "catalogIndex": 10
+    },
+    {
+      "id": "lattice_shard",
+      "name": "Quantum Lattice Shard",
+      "description": "A sliver of quantum-stable lattice from Tir's old fabrication cores. It hums against the palm.",
+      "tags": [
+        "salvage",
+        "lattice",
+        "tier:2"
+      ],
+      "maxStack": 10,
+      "excludeFromTrade": true,
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "rarity": "Rare",
+      "sellOnly": false,
+      "icon": "lattice-icon",
+      "catalogIndex": 11
+    },
+    {
+      "id": "foreman_control_core",
+      "name": "Foreman Control Core",
+      "description": "The depot foreman's command core. Its stored shift schedules include full Mark II pistol schematics.",
+      "tags": [
+        "salvage",
+        "component",
+        "component:control",
+        "tier:2",
+        "unique"
+      ],
+      "maxStack": 1,
+      "excludeFromTrade": true,
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "rarity": "Rare",
+      "sellOnly": false,
+      "icon": "scrap-icon",
+      "catalogIndex": 12
+    },
+    {
+      "id": "alloy_plate",
+      "name": "Refined Alloy Plate",
+      "description": "Scrap alloy pressed and nanite-bonded into a true, stress-relieved plate.",
+      "tags": [
+        "refined",
+        "refined:alloy"
+      ],
+      "maxStack": 20,
+      "excludeFromTrade": true,
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "rarity": "Common",
+      "sellOnly": false,
+      "icon": "scrap-icon",
+      "catalogIndex": 13
+    },
+    {
+      "id": "wound_coil",
+      "name": "Wound Copper Coil",
+      "description": "Salvaged conductor rewound on a field jig; the heart of any charge circuit.",
+      "tags": [
+        "refined",
+        "refined:coil"
+      ],
+      "maxStack": 20,
+      "excludeFromTrade": true,
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "rarity": "Common",
+      "sellOnly": false,
+      "icon": "scrap-icon",
+      "catalogIndex": 14
+    },
+    {
+      "id": "charge_cell_core",
+      "name": "Charge Cell Core",
+      "description": "Two capacitors and a wound coil sealed in nanite resin: a stable nano-charge store.",
+      "tags": [
+        "refined",
+        "refined:cell"
+      ],
+      "maxStack": 10,
+      "excludeFromTrade": true,
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "rarity": "Uncommon",
+      "sellOnly": false,
+      "icon": "scrap-icon",
+      "catalogIndex": 15
+    },
+    {
+      "id": "barrel_bored_alloy",
+      "name": "Bored Alloy Barrel",
+      "description": "A refined-alloy barrel bored true on the fabricator. Hits harder and carries further.",
+      "tags": [
+        "weapon_mod",
+        "weapon_mod:barrel",
+        "mark:1"
+      ],
+      "maxStack": 3,
+      "excludeFromTrade": true,
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "rarity": "Uncommon",
+      "sellOnly": false,
+      "icon": "pistol-icon",
+      "catalogIndex": 16
+    },
+    {
+      "id": "cell_salvaged_capacitor",
+      "name": "Salvaged Capacitor Cell",
+      "description": "A larger nano cell built around a charge core. More shots before the pistol runs dry.",
+      "tags": [
+        "weapon_mod",
+        "weapon_mod:cell",
+        "mark:1"
+      ],
+      "maxStack": 3,
+      "excludeFromTrade": true,
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "rarity": "Uncommon",
+      "sellOnly": false,
+      "icon": "pistol-icon",
+      "catalogIndex": 17
+    },
+    {
+      "id": "grip_gyro_braced",
+      "name": "Gyro-Braced Grip",
+      "description": "A grip braced by a live actuator loop. It fights recoil and nudges your aim onto moving machines.",
+      "tags": [
+        "weapon_mod",
+        "weapon_mod:grip",
+        "mark:2"
+      ],
+      "maxStack": 3,
+      "excludeFromTrade": true,
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "rarity": "Rare",
+      "sellOnly": false,
+      "icon": "pistol-icon",
+      "catalogIndex": 18
+    },
+    {
+      "id": "barrel_lattice_focused",
+      "name": "Lattice-Focused Barrel",
+      "description": "A lattice shard seats behind a salvaged optic, focusing each nano pulse. Heavy hits, slightly slower cycling.",
+      "tags": [
+        "weapon_mod",
+        "weapon_mod:barrel",
+        "mark:2"
+      ],
+      "maxStack": 3,
+      "excludeFromTrade": true,
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "rarity": "Rare",
+      "sellOnly": false,
+      "icon": "pistol-icon",
+      "catalogIndex": 19
+    },
+    {
+      "id": "cell_overclocked",
+      "name": "Overclocked Charge Cell",
+      "description": "Twin charge cores tuned through a lattice shard: deep reserves, cheap shots, fast refill.",
+      "tags": [
+        "weapon_mod",
+        "weapon_mod:cell",
+        "mark:2"
+      ],
+      "maxStack": 3,
+      "excludeFromTrade": true,
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "rarity": "Rare",
+      "sellOnly": false,
+      "icon": "pistol-icon",
+      "catalogIndex": 20
     }
   ],
   "weapons": [
@@ -158,10 +417,39 @@
       "id": "weapon_scrap_pistol",
       "name": "Scrap Pistol",
       "baseStats": {
-        "recoil": 38.0
+        "damage": 34.0,
+        "fireInterval": 0.28,
+        "range": 70.0,
+        "recoil": 38.0,
+        "nanoMax": 100.0,
+        "nanoPerShot": 9.0,
+        "nanoRegen": 30.0,
+        "aimAssist": 3.5
+      },
+      "minStats": {
+        "damage": 1.0,
+        "fireInterval": 0.08,
+        "range": 10.0,
+        "recoil": 0.0,
+        "nanoMax": 20.0,
+        "nanoPerShot": 1.0,
+        "nanoRegen": 1.0,
+        "aimAssist": 0.0
+      },
+      "maxStats": {
+        "damage": 400.0,
+        "fireInterval": 2.0,
+        "range": 200.0,
+        "recoil": 100.0,
+        "nanoMax": 400.0,
+        "nanoPerShot": 60.0,
+        "nanoRegen": 200.0,
+        "aimAssist": 12.0
       },
       "slots": [
-        "grip"
+        "grip",
+        "barrel",
+        "cell"
       ],
       "stateSource": "PlayerCombat.hasPistol"
     }
@@ -181,6 +469,116 @@
           "value": -7.0
         }
       ]
+    },
+    {
+      "id": "mod_barrel_bored_alloy",
+      "itemId": "barrel_bored_alloy",
+      "slot": "barrel",
+      "weaponIds": [
+        "weapon_scrap_pistol"
+      ],
+      "effects": [
+        {
+          "stat": "damage",
+          "op": "percent",
+          "value": 20.0
+        },
+        {
+          "stat": "range",
+          "op": "add",
+          "value": 10.0
+        }
+      ]
+    },
+    {
+      "id": "mod_cell_salvaged_capacitor",
+      "itemId": "cell_salvaged_capacitor",
+      "slot": "cell",
+      "weaponIds": [
+        "weapon_scrap_pistol"
+      ],
+      "effects": [
+        {
+          "stat": "nanoMax",
+          "op": "add",
+          "value": 35.0
+        },
+        {
+          "stat": "nanoRegen",
+          "op": "percent",
+          "value": 15.0
+        }
+      ]
+    },
+    {
+      "id": "mod_grip_gyro_braced",
+      "itemId": "grip_gyro_braced",
+      "slot": "grip",
+      "weaponIds": [
+        "weapon_scrap_pistol"
+      ],
+      "effects": [
+        {
+          "stat": "recoil",
+          "op": "add",
+          "value": -15.0
+        },
+        {
+          "stat": "aimAssist",
+          "op": "add",
+          "value": 1.0
+        }
+      ]
+    },
+    {
+      "id": "mod_barrel_lattice_focused",
+      "itemId": "barrel_lattice_focused",
+      "slot": "barrel",
+      "weaponIds": [
+        "weapon_scrap_pistol"
+      ],
+      "effects": [
+        {
+          "stat": "damage",
+          "op": "percent",
+          "value": 45.0
+        },
+        {
+          "stat": "range",
+          "op": "add",
+          "value": 25.0
+        },
+        {
+          "stat": "fireInterval",
+          "op": "percent",
+          "value": 8.0
+        }
+      ]
+    },
+    {
+      "id": "mod_cell_overclocked",
+      "itemId": "cell_overclocked",
+      "slot": "cell",
+      "weaponIds": [
+        "weapon_scrap_pistol"
+      ],
+      "effects": [
+        {
+          "stat": "nanoMax",
+          "op": "add",
+          "value": 60.0
+        },
+        {
+          "stat": "nanoPerShot",
+          "op": "add",
+          "value": -2.0
+        },
+        {
+          "stat": "nanoRegen",
+          "op": "percent",
+          "value": 30.0
+        }
+      ]
     }
   ],
   "stations": [
@@ -191,11 +589,109 @@
   ],
   "recipes": [
     {
+      "id": "recipe_wound_coil",
+      "name": "Wound Copper Coil",
+      "group": "Component",
+      "stationId": "station_field_fabricator",
+      "requiresWeaponId": "",
+      "outputItemId": "wound_coil",
+      "outputQuantity": 1,
+      "inputs": [
+        {
+          "kind": "item",
+          "id": "copper_filament",
+          "quantity": 2
+        },
+        {
+          "kind": "tag",
+          "id": "material:conductive",
+          "quantity": 1
+        }
+      ],
+      "knownByDefault": false,
+      "unlocks": [
+        {
+          "type": "orderStart",
+          "id": "order_keep_charge"
+        }
+      ],
+      "lockedHint": "Ossa issues this schematic with her Keep the Charge order."
+    },
+    {
+      "id": "recipe_charge_cell_core",
+      "name": "Charge Cell Core",
+      "group": "Component",
+      "stationId": "station_field_fabricator",
+      "requiresWeaponId": "",
+      "outputItemId": "charge_cell_core",
+      "outputQuantity": 1,
+      "inputs": [
+        {
+          "kind": "tag",
+          "id": "component:capacitor",
+          "quantity": 2
+        },
+        {
+          "kind": "item",
+          "id": "wound_coil",
+          "quantity": 1
+        },
+        {
+          "kind": "tag",
+          "id": "nanite:tier1",
+          "quantity": 3
+        }
+      ],
+      "knownByDefault": false,
+      "unlocks": [
+        {
+          "type": "orderStart",
+          "id": "order_keep_charge"
+        },
+        {
+          "type": "acquireItem",
+          "id": "micro_capacitor"
+        }
+      ],
+      "lockedHint": "Recover a micro capacitor from a scrap drone to learn this."
+    },
+    {
+      "id": "recipe_alloy_plate",
+      "name": "Refined Alloy Plate",
+      "group": "Component",
+      "stationId": "station_field_fabricator",
+      "requiresWeaponId": "",
+      "outputItemId": "alloy_plate",
+      "outputQuantity": 1,
+      "inputs": [
+        {
+          "kind": "item",
+          "id": "scrap_alloy",
+          "quantity": 3
+        },
+        {
+          "kind": "tag",
+          "id": "nanite:tier1",
+          "quantity": 2
+        }
+      ],
+      "knownByDefault": false,
+      "unlocks": [
+        {
+          "type": "orderStart",
+          "id": "order_bore_true"
+        }
+      ],
+      "lockedHint": "Ossa issues this schematic with her Bore It True order."
+    },
+    {
       "id": "recipe_grip_stabilised_pistol",
       "name": "Stabilised Pistol Grip",
+      "group": "MarkI",
       "stationId": "station_field_fabricator",
       "requiresWeaponId": "weapon_scrap_pistol",
       "outputItemId": "grip_stabilised_pistol",
+      "outputQuantity": 1,
       "inputs": [
         {
           "kind": "tag",
@@ -213,18 +709,169 @@
           "quantity": 5
         }
       ],
-      "outputQuantity": 1,
       "knownByDefault": false,
       "unlocks": [
         {
           "type": "acquireItem",
           "id": "droid_servo_damaged"
+        }
+      ],
+      "lockedHint": "Salvage a worker-droid servo at the machine depot to learn this."
+    },
+    {
+      "id": "recipe_cell_salvaged_capacitor",
+      "name": "Salvaged Capacitor Cell",
+      "group": "MarkI",
+      "stationId": "station_field_fabricator",
+      "requiresWeaponId": "weapon_scrap_pistol",
+      "outputItemId": "cell_salvaged_capacitor",
+      "outputQuantity": 1,
+      "inputs": [
+        {
+          "kind": "item",
+          "id": "charge_cell_core",
+          "quantity": 1
         },
         {
-          "type": "tutorialStep",
-          "id": "Fabricate"
+          "kind": "item",
+          "id": "scrap_alloy",
+          "quantity": 2
         }
-      ]
+      ],
+      "knownByDefault": false,
+      "unlocks": [
+        {
+          "type": "orderStart",
+          "id": "order_keep_charge"
+        }
+      ],
+      "lockedHint": "Ossa issues this schematic with her Keep the Charge order."
+    },
+    {
+      "id": "recipe_barrel_bored_alloy",
+      "name": "Bored Alloy Barrel",
+      "group": "MarkI",
+      "stationId": "station_field_fabricator",
+      "requiresWeaponId": "weapon_scrap_pistol",
+      "outputItemId": "barrel_bored_alloy",
+      "outputQuantity": 1,
+      "inputs": [
+        {
+          "kind": "item",
+          "id": "alloy_plate",
+          "quantity": 2
+        },
+        {
+          "kind": "item",
+          "id": "wound_coil",
+          "quantity": 1
+        }
+      ],
+      "knownByDefault": false,
+      "unlocks": [
+        {
+          "type": "orderStart",
+          "id": "order_bore_true"
+        }
+      ],
+      "lockedHint": "Ossa issues this schematic with her Bore It True order."
+    },
+    {
+      "id": "recipe_grip_gyro_braced",
+      "name": "Gyro-Braced Grip",
+      "group": "MarkII",
+      "stationId": "station_field_fabricator",
+      "requiresWeaponId": "weapon_scrap_pistol",
+      "outputItemId": "grip_gyro_braced",
+      "outputQuantity": 1,
+      "inputs": [
+        {
+          "kind": "item",
+          "id": "actuator_intact",
+          "quantity": 1
+        },
+        {
+          "kind": "item",
+          "id": "alloy_plate",
+          "quantity": 2
+        }
+      ],
+      "knownByDefault": false,
+      "unlocks": [
+        {
+          "type": "acquireItem",
+          "id": "foreman_control_core"
+        }
+      ],
+      "lockedHint": "Ossa thinks the depot foreman's control core still holds Mark II schematics."
+    },
+    {
+      "id": "recipe_barrel_lattice_focused",
+      "name": "Lattice-Focused Barrel",
+      "group": "MarkII",
+      "stationId": "station_field_fabricator",
+      "requiresWeaponId": "weapon_scrap_pistol",
+      "outputItemId": "barrel_lattice_focused",
+      "outputQuantity": 1,
+      "inputs": [
+        {
+          "kind": "item",
+          "id": "lattice_shard",
+          "quantity": 1
+        },
+        {
+          "kind": "item",
+          "id": "alloy_plate",
+          "quantity": 2
+        },
+        {
+          "kind": "item",
+          "id": "wound_coil",
+          "quantity": 2
+        },
+        {
+          "kind": "tag",
+          "id": "component:optic",
+          "quantity": 1
+        }
+      ],
+      "knownByDefault": false,
+      "unlocks": [
+        {
+          "type": "acquireItem",
+          "id": "foreman_control_core"
+        }
+      ],
+      "lockedHint": "Ossa thinks the depot foreman's control core still holds Mark II schematics."
+    },
+    {
+      "id": "recipe_cell_overclocked",
+      "name": "Overclocked Charge Cell",
+      "group": "MarkII",
+      "stationId": "station_field_fabricator",
+      "requiresWeaponId": "weapon_scrap_pistol",
+      "outputItemId": "cell_overclocked",
+      "outputQuantity": 1,
+      "inputs": [
+        {
+          "kind": "item",
+          "id": "charge_cell_core",
+          "quantity": 2
+        },
+        {
+          "kind": "item",
+          "id": "lattice_shard",
+          "quantity": 1
+        }
+      ],
+      "knownByDefault": false,
+      "unlocks": [
+        {
+          "type": "acquireItem",
+          "id": "foreman_control_core"
+        }
+      ],
+      "lockedHint": "Ossa thinks the depot foreman's control core still holds Mark II schematics."
     }
   ],
   "lootTables": [
@@ -234,22 +881,47 @@
         {
           "itemId": "scrap_alloy",
           "quantity": 1,
-          "chance": 1.0
+          "minQuantity": 1,
+          "maxQuantity": 2,
+          "chance": 1.0,
+          "pityAfter": 0,
+          "guaranteeUntilCollected": false
         },
         {
           "itemId": "nanite_residue",
           "quantity": 2,
-          "chance": 1.0
+          "minQuantity": 2,
+          "maxQuantity": 3,
+          "chance": 1.0,
+          "pityAfter": 0,
+          "guaranteeUntilCollected": false
         },
         {
           "itemId": "copper_filament",
           "quantity": 1,
-          "chance": 0.6
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "chance": 0.6,
+          "pityAfter": 2,
+          "guaranteeUntilCollected": false
         },
         {
           "itemId": "micro_capacitor",
           "quantity": 1,
-          "chance": 0.25
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "chance": 0.45,
+          "pityAfter": 2,
+          "guaranteeUntilCollected": false
+        },
+        {
+          "itemId": "optic_lens_cracked",
+          "quantity": 1,
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "chance": 0.3,
+          "pityAfter": 3,
+          "guaranteeUntilCollected": false
         }
       ]
     },
@@ -259,22 +931,183 @@
         {
           "itemId": "droid_servo_damaged",
           "quantity": 1,
-          "chance": 1.0
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "chance": 1.0,
+          "pityAfter": 0,
+          "guaranteeUntilCollected": false
         },
         {
           "itemId": "scrap_alloy",
           "quantity": 1,
-          "chance": 1.0
+          "minQuantity": 1,
+          "maxQuantity": 2,
+          "chance": 1.0,
+          "pityAfter": 0,
+          "guaranteeUntilCollected": false
         },
         {
           "itemId": "nanite_residue",
           "quantity": 1,
-          "chance": 1.0
+          "minQuantity": 1,
+          "maxQuantity": 2,
+          "chance": 1.0,
+          "pityAfter": 0,
+          "guaranteeUntilCollected": false
         },
         {
           "itemId": "copper_filament",
           "quantity": 1,
-          "chance": 0.65
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "chance": 0.65,
+          "pityAfter": 2,
+          "guaranteeUntilCollected": false
+        },
+        {
+          "itemId": "micro_capacitor",
+          "quantity": 1,
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "chance": 0.2,
+          "pityAfter": 4,
+          "guaranteeUntilCollected": false
+        },
+        {
+          "itemId": "actuator_intact",
+          "quantity": 1,
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "chance": 0.06,
+          "pityAfter": 0,
+          "guaranteeUntilCollected": false
+        }
+      ]
+    },
+    {
+      "id": "loot_depot_foreman",
+      "entries": [
+        {
+          "itemId": "foreman_control_core",
+          "quantity": 1,
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "chance": 0.0,
+          "pityAfter": 0,
+          "guaranteeUntilCollected": true
+        },
+        {
+          "itemId": "actuator_intact",
+          "quantity": 1,
+          "minQuantity": 1,
+          "maxQuantity": 2,
+          "chance": 1.0,
+          "pityAfter": 0,
+          "guaranteeUntilCollected": false
+        },
+        {
+          "itemId": "lattice_shard",
+          "quantity": 1,
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "chance": 0.5,
+          "pityAfter": 1,
+          "guaranteeUntilCollected": false
+        },
+        {
+          "itemId": "scrap_alloy",
+          "quantity": 2,
+          "minQuantity": 2,
+          "maxQuantity": 4,
+          "chance": 1.0,
+          "pityAfter": 0,
+          "guaranteeUntilCollected": false
+        },
+        {
+          "itemId": "nanite_residue",
+          "quantity": 3,
+          "minQuantity": 3,
+          "maxQuantity": 5,
+          "chance": 1.0,
+          "pityAfter": 0,
+          "guaranteeUntilCollected": false
+        },
+        {
+          "itemId": "micro_capacitor",
+          "quantity": 1,
+          "minQuantity": 1,
+          "maxQuantity": 2,
+          "chance": 0.6,
+          "pityAfter": 1,
+          "guaranteeUntilCollected": false
+        },
+        {
+          "itemId": "droid_servo_damaged",
+          "quantity": 1,
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "chance": 0.5,
+          "pityAfter": 0,
+          "guaranteeUntilCollected": false
+        }
+      ]
+    },
+    {
+      "id": "loot_scrap_heap",
+      "entries": [
+        {
+          "itemId": "scrap_alloy",
+          "quantity": 1,
+          "minQuantity": 1,
+          "maxQuantity": 3,
+          "chance": 0.9,
+          "pityAfter": 1,
+          "guaranteeUntilCollected": false
+        },
+        {
+          "itemId": "nanite_residue",
+          "quantity": 1,
+          "minQuantity": 1,
+          "maxQuantity": 2,
+          "chance": 0.7,
+          "pityAfter": 2,
+          "guaranteeUntilCollected": false
+        },
+        {
+          "itemId": "copper_filament",
+          "quantity": 1,
+          "minQuantity": 1,
+          "maxQuantity": 2,
+          "chance": 0.6,
+          "pityAfter": 2,
+          "guaranteeUntilCollected": false
+        },
+        {
+          "itemId": "micro_capacitor",
+          "quantity": 1,
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "chance": 0.2,
+          "pityAfter": 4,
+          "guaranteeUntilCollected": false
+        },
+        {
+          "itemId": "optic_lens_cracked",
+          "quantity": 1,
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "chance": 0.08,
+          "pityAfter": 0,
+          "guaranteeUntilCollected": false
+        },
+        {
+          "itemId": "lattice_shard",
+          "quantity": 1,
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "chance": 0.03,
+          "pityAfter": 0,
+          "guaranteeUntilCollected": false
         }
       ]
     }
@@ -289,6 +1122,11 @@
       "id": "feral_worker_droid",
       "prefab": "Assets/AthenHill/Prefabs/OuterBerms/FeralWorkerDroid.prefab",
       "lootTableId": "loot_feral_worker_droid"
+    },
+    {
+      "id": "depot_foreman",
+      "prefab": "Assets/AthenHill/Prefabs/OuterBerms/FeralDepotForeman.prefab",
+      "lootTableId": "loot_depot_foreman"
     }
   ],
   "encounters": [
@@ -307,11 +1145,18 @@
         "feral_scrap_drone"
       ],
       "tutorial": true
+    },
+    {
+      "id": "depot_foreman",
+      "spawns": [
+        "depot_foreman"
+      ],
+      "fieldOrder": "order_depot_foreman"
     }
   ],
   "rules": {
     "allocation": "dfs-declared-order;candidates:sellPrice,catalogIndex",
-    "statFormula": "clamp(round1((base+sumAdd)*(1+sumPercent/100)),0,100)",
+    "statFormula": "clamp(round3((base+sumAdd)*(1+sumPercent/100)),minStats,maxStats)",
     "recoilDegreesPerPoint": 0.05,
     "lootSeed": 1729,
     "legacyShopRows": [

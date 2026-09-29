@@ -13,11 +13,28 @@ namespace AthenHill
   public BermsTutorial tutorial;
   public Transform fabricator;
   public int lootSeed=1729;
+  [Tooltip("Recipe the post-primer grip tutorial walks through.")]
+  public string tutorialRecipeId="recipe_grip_stabilised_pistol";
   public CraftingModel Model {get;private set;}
   public int LootEvents {get;private set;}
   public string LastLoot {get;private set;}="";
   public string TutorialStep {get;private set;}="Dormant";
-  public string Objective=>TutorialStep=="Salvage"?$"Salvage parts · Servo {Math.Min(1,Session.Shop.Quantity("droid_servo_damaged"))}/1 · Alloy {Math.Min(2,Session.Shop.Quantity("scrap_alloy"))}/2 · Residue {Math.Min(5,Session.Shop.Quantity("nanite_residue"))}/5":TutorialStep=="Fabricate"?"Use the field fabricator at Ossa's post to make a grip.":TutorialStep=="Fit"?"Fit the stabilised grip to your scrap pistol.":TutorialStep=="TestFire"?"Fire your upgraded pistol in the Outer Berms.":"";
+  public string Objective
+  {
+   get
+   {
+    var recipe=Model?.Recipe(tutorialRecipeId);if(recipe==null)return "";
+    var output=CraftingText.ItemName(Model,recipe.outputItemId);
+    switch(TutorialStep)
+    {
+     case "Salvage":return "Salvage parts · "+string.Join(" · ",recipe.inputs.Select(i=>$"{CraftingText.InputName(Model,i)} {Math.Min(i.quantity,Model.Available(i))}/{i.quantity}"));
+     case "Fabricate":return $"Use the field fabricator at Ossa's post to make a {output}.";
+     case "Fit":return $"Fit the {output} to your {Model.Loadout.WeaponName}.";
+     case "TestFire":return "Fire your upgraded pistol in the Outer Berms.";
+     default:return "";
+    }
+   }
+  }
   public GameSession Session {get;private set;}
   System.Random random;
   IEnumerator Start()
@@ -29,37 +46,45 @@ namespace AthenHill
    if(!data){Debug.LogError("Ward crafting data is missing.");yield break;}
    random=new System.Random(lootSeed);
    Model=new CraftingModel(data,Session.catalog.items,Session.Shop,()=>combat&&combat.hasPistol);
-   if(combat)combat.ShotFired+=OnShot;
+   if(combat){combat.BindLoadout(Model.Loadout);combat.ShotFired+=OnShot;}
   }
-  void OnDestroy(){if(combat)combat.ShotFired-=OnShot;}
+  void OnDestroy(){if(combat){combat.ShotFired-=OnShot;combat.BindLoadout(null);}}
+  string TutorialOutput=>Model?.Recipe(tutorialRecipeId)?.outputItemId;
+  bool TutorialFitted=>TutorialOutput!=null&&Model.Loadout.FittedMods.Any(x=>x.Value==TutorialOutput);
   void Update()
   {
-   if(Model==null||!tutorial||tutorial.Step!=BermsStep.Complete)return;
-   if(TutorialStep=="Dormant"&&Model.KnownRecipes.Count>0)TutorialStep="Salvage";
-   if(TutorialStep=="Salvage"&&Model.CanCraft("recipe_grip_stabilised_pistol","station_field_fabricator",out _))TutorialStep="Fabricate";
-   if(TutorialStep=="Fabricate"&&Model.Crafts>0)TutorialStep="Fit";
-   if(TutorialStep=="Fit"&&Model.GripSlot!=null)TutorialStep="TestFire";
+   if(Model==null||!tutorial||tutorial.Step!=BermsStep.Complete||TutorialStep=="Done")return;
+   if(TutorialStep=="Dormant"&&Model.Knows(tutorialRecipeId))TutorialStep="Salvage";
+   if(TutorialStep=="Salvage"&&Model.CanCraft(tutorialRecipeId,Model.Recipe(tutorialRecipeId).stationId,out _))TutorialStep="Fabricate";
+   if(TutorialStep=="Fabricate"&&Model.CraftCount(tutorialRecipeId)>0)TutorialStep="Fit";
+   if(TutorialStep=="Fit"&&TutorialFitted)TutorialStep="TestFire";
   }
-  void OnShot(){if(TutorialStep=="TestFire"&&Model?.GripSlot!=null){TutorialStep="Done";Session.Notify("Stabilised grip tested. Your pistol holds steadier.","Warden Ossa");}}
-  public bool Craft(out string reason)
+  void OnShot(){if(TutorialStep=="TestFire"&&TutorialFitted){TutorialStep="Done";Session.Notify("Stabilised grip tested. Your pistol holds steadier.","Warden Ossa");}}
+  bool AtStation(out string reason){if(Model==null||Session.State!=CityState.Fabricator){reason="wrong_station";return false;}reason="ok";return true;}
+  public bool Craft(string recipeId,out string reason)
   {
-   if(Model==null||Session.State!=CityState.Fabricator){reason="wrong_station";return false;}
-   bool ok=Model.TryCraft("recipe_grip_stabilised_pistol",Session.ActiveStationId,out reason);
-   if(ok)TutorialStep="Fit";
-   Session.Notify(ok?"Stabilised Pistol Grip crafted. Fit it to your pistol.":"Fabrication failed: "+reason,"Field Fabricator");return ok;
+   if(!AtStation(out reason))return false;
+   var recipe=Model.Recipe(recipeId);
+   bool ok=Model.TryCraft(recipeId,Session.ActiveStationId,out reason);
+   Session.Notify(ok?$"{CraftingText.ItemName(Model,recipe.outputItemId)} fabricated."+(Model.Loadout.Modifier(recipe.outputItemId)!=null?" Fit it to your pistol.":""):"Fabrication failed. "+CraftingText.Reason(reason,Model,recipe),"Field Fabricator");
+   return ok;
   }
-  public bool Fit(out string reason)
+  public bool Fit(string itemId,out string reason)
   {
-   if(Model==null||Session.State!=CityState.Fabricator){reason="wrong_station";return false;}
-   bool ok=Model.TryFit("grip_stabilised_pistol",out reason);
-   if(ok)TutorialStep="TestFire";
-   Session.Notify(ok?"Stabilised grip fitted. Recoil 38 → 31.":"Cannot fit grip: "+reason,"Field Fabricator");return ok;
+   if(!AtStation(out reason))return false;
+   var before=Model.Loadout.Stats;
+   bool ok=Model.TryFit(itemId,out reason);
+   var mod=Model.Loadout.Modifier(itemId);
+   Session.Notify(ok?$"{CraftingText.ItemName(Model,itemId)} fitted. {CraftingText.StatChanges(data,before,Model.Loadout.Stats)}":"Cannot fit. "+CraftingText.Reason(reason,Model,null,reason=="stack_full"&&mod!=null?Model.Loadout.Fitted(mod.slot):itemId),"Field Fabricator");
+   return ok;
   }
-  public bool Remove(out string reason)
+  public bool Remove(string slot,out string reason)
   {
-   if(Model==null||Session.State!=CityState.Fabricator){reason="wrong_station";return false;}
-   bool ok=Model.TryRemove(out reason);
-   Session.Notify(ok?"Stabilised grip returned to your pack.":"Cannot remove grip: "+reason,"Field Fabricator");return ok;
+   if(!AtStation(out reason))return false;
+   var itemId=Model.Loadout.Fitted(slot);
+   bool ok=Model.TryRemove(slot,out reason);
+   Session.Notify(ok?$"{CraftingText.ItemName(Model,itemId)} returned to your pack.":"Cannot remove. "+CraftingText.Reason(reason,Model,null,itemId),"Field Fabricator");
+   return ok;
   }
   public void Salvage(string tableId)
   {
@@ -67,21 +92,22 @@ namespace AthenHill
    var table=data.lootTables.FirstOrDefault(x=>x.id==tableId);
    if(table==null)return;
    LootEvents++;
-   var collected=new List<string>();var left=new List<string>();
+   var collected=new List<string>();var left=new List<string>();var discovered=new List<CraftRecipe>();
    foreach(var entry in table.entries.OrderByDescending(x=>x.chance>=1))
    {
     if(entry.chance<1&&random.NextDouble()>=entry.chance)continue;
     var item=Session.catalog.items.FirstOrDefault(x=>x.id==entry.itemId);
     if(item==null){left.Add(entry.itemId+" (unknown)");continue;}
-    if(Session.Shop.TryApply(new[]{new KeyValuePair<string,int>(entry.itemId,entry.quantity)},0,out _))
+    int quantity=Math.Max(1,entry.minQuantity);
+    if(Session.Shop.TryApply(new[]{new KeyValuePair<string,int>(entry.itemId,quantity)},0,out _))
     {
-     collected.Add(item.name+" ×"+entry.quantity);
-     if(Model.Acquire(entry.itemId))Session.Notify("Schematic discovered: Stabilised Pistol Grip.","Field Pack");
+     collected.Add(item.name+" ×"+quantity);
+     discovered.AddRange(Model.Acquire(entry.itemId));
     }
-    else left.Add(item.name+" ×"+entry.quantity);
+    else left.Add(item.name+" ×"+quantity);
    }
    LastLoot="Salvaged: "+(collected.Count>0?string.Join(", ",collected):"nothing")+(left.Count>0?" · left behind (pack full): "+string.Join(", ",left):"");
-   Session.Notify(LastLoot,"Field Pack");
+   Session.Notify(LastLoot+(discovered.Count>0?" "+CraftingText.Discovered(discovered):""),"Field Pack");
   }
  }
 }

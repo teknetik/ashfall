@@ -17,10 +17,13 @@ namespace AthenHill
   public Transform respawnPoint;
   [Header("Scrap pistol")]
   public bool hasPistol;
+  [Tooltip("Fallback numbers used only when no Ward crafting loadout is bound. The authoritative base stats and mods live in Data/Crafting/WardCrafting.asset.")]
   [Min(1)]public float damage=34,range=70;
   [Min(.05f)]public float fireInterval=.28f;
-  [Min(0)]public float nanoMax=100,nanoPerShot=9,nanoRegen=30,nanoRegenDelay=.6f;
+  [Min(0)]public float nanoMax=100,nanoPerShot=9,nanoRegen=30,recoil=38;
   [Range(0,15)]public float aimAssistDegrees=3.5f;
+  [Tooltip("Seconds after a shot before nano charge refills. Not a weapon stat.")]
+  [Min(0)]public float nanoRegenDelay=.6f;
   [Range(.1f,1)]public float aimMoveScale=.62f;
   [Tooltip("The pistol is holstered while the player stands east of this X (inside Ward's walls).")]
   public float cityEdgeX=-58.3f;
@@ -60,8 +63,13 @@ namespace AthenHill
   public float LastShotTime {get;private set;}=-99;
   [Header("Camera recoil")]
   public float recoilDegreesPerPoint=.05f,recoilRecoverFraction=.5f,recoilRecoverSeconds=.18f;
-  public float RecoilStat=>session?session.GetComponent<CraftingSession>()?.Model?.RecoilStat??38:38;
-  public float RecoilScale=>RecoilStat/38f;
+  /// Effective weapon stats from the fitted loadout (cached; recomputed only when the loadout changes).
+  public WeaponStats Stats {get;private set;}
+  /// The unmodified weapon: recoil presentation scales relative to its base recoil.
+  public WeaponStats BaseStats {get;private set;}
+  public WeaponLoadout Loadout {get;private set;}
+  public float RecoilStat=>Stats.recoil;
+  public float RecoilScale=>BaseStats.recoil>0?Stats.recoil/BaseStats.recoil:1;
   public float LastKickDegrees {get;private set;}
   public event Action ShotFired;
   /// Hit marker: (target, killed).
@@ -69,7 +77,26 @@ namespace AthenHill
   public event Action<float> Hurt;
   public event Action Downed;
   float nextFire,faceUntil,tracerOff,emptyNotice;
-  void Awake(){Health=GetComponent<Health>();Nano=nanoMax;Health.Damaged+=OnDamaged;Health.Died+=OnDied;}
+  void Awake(){Health=GetComponent<Health>();ApplyLoadout();Nano=Stats.nanoMax;Health.Damaged+=OnDamaged;Health.Died+=OnDied;}
+  /// CraftingSession binds the pistol's loadout once its model exists. Null returns to the serialized fallback.
+  public void BindLoadout(WeaponLoadout loadout)
+  {
+   if(Loadout!=null)Loadout.Changed-=ApplyLoadout;
+   Loadout=loadout;
+   if(Loadout!=null)Loadout.Changed+=ApplyLoadout;
+   ApplyLoadout();
+  }
+  void ApplyLoadout()
+  {
+   BaseStats=Loadout!=null?Loadout.Base:new WeaponStats{damage=damage,fireInterval=fireInterval,range=range,recoil=recoil,nanoMax=nanoMax,nanoPerShot=nanoPerShot,nanoRegen=nanoRegen,aimAssist=aimAssistDegrees};
+   Stats=Loadout!=null?Loadout.Stats:BaseStats;
+   if(Nano>Stats.nanoMax)Nano=Stats.nanoMax;
+   StatsChanged?.Invoke();
+  }
+  /// Raised when the effective stats change (a mod fitted or removed, or a loadout bound).
+  public event Action StatsChanged;
+  /// Save restore: the pistol is carried (and charged) exactly when the save says so.
+  public void RestorePistol(bool carried){hasPistol=carried;Armed=false;Nano=Stats.nanoMax;}
   void Start()
   {
    if(!view&&follow)view=follow.GetComponent<Camera>();
@@ -80,8 +107,8 @@ namespace AthenHill
    if(tracer)tracer.enabled=false;if(muzzleLight)muzzleLight.enabled=false;
    if(heldPistol)heldPistol.SetActive(false);
   }
-  void OnDestroy(){if(Health){Health.Damaged-=OnDamaged;Health.Died-=OnDied;}ReleaseCursor();}
-  public void GivePistol(){hasPistol=true;Nano=nanoMax;}
+  void OnDestroy(){if(Health){Health.Damaged-=OnDamaged;Health.Died-=OnDied;}if(Loadout!=null)Loadout.Changed-=ApplyLoadout;ReleaseCursor();}
+  public void GivePistol(){hasPistol=true;Nano=Stats.nanoMax;}
   public void ToggleDraw()
   {
    if(session.State!=CityState.Play)return;
@@ -99,7 +126,7 @@ namespace AthenHill
   void Update()
   {
    if(tracer&&tracer.enabled&&Time.time>tracerOff){tracer.enabled=false;if(muzzleLight)muzzleLight.enabled=false;}
-   if(Time.time-LastShotTime>nanoRegenDelay)Nano=Mathf.Min(nanoMax,Nano+nanoRegen*Time.deltaTime);
+   if(Time.time-LastShotTime>nanoRegenDelay)Nano=Mathf.Min(Stats.nanoMax,Nano+Stats.nanoRegen*Time.deltaTime);
    bool play=session.State==CityState.Play;
    if(play&&input.Pressed("Slot7"))ToggleDraw();
    if(Armed&&!InBerms){Armed=false;session.Notify("Back inside the walls. Scrap pistol holstered.","Ward");}
@@ -117,28 +144,30 @@ namespace AthenHill
   public void Fire()
   {
    if(!Armed||Time.time<nextFire||!Health.Alive)return;
-   if(Nano<nanoPerShot)
+   var stats=Stats;
+   if(Nano<stats.nanoPerShot)
    {
     var empty=emptyClips!=null&&emptyClips.Length>0?Pick(emptyClips,ref lastEmpty):emptyClip;
     if(audioSource&&empty)audioSource.PlayOneShot(empty,.7f);
     if(Time.time>emptyNotice){emptyNotice=Time.time+3;session.Notify("Nano charge depleted. Hold fire to let it refill.");}
-    nextFire=Time.time+fireInterval;return;
+    nextFire=Time.time+stats.fireInterval;return;
    }
-   nextFire=Time.time+fireInterval;Nano-=nanoPerShot;ShotsFired++;LastShotTime=Time.time;faceUntil=Time.time+.7f;
+   nextFire=Time.time+stats.fireInterval;Nano-=stats.nanoPerShot;ShotsFired++;LastShotTime=Time.time;faceUntil=Time.time+.7f;
    var cam=view.transform;
    // Start past the boom so geometry behind the player cannot block a shot.
    float skip=follow?follow.Distance:0;
    var origin=cam.position+cam.forward*skip;
+   float range=stats.range;
    Vector3 end=origin+cam.forward*range;Health target=null;
    if(Physics.Raycast(origin,cam.forward,out var hit,range,shotMask,QueryTriggerInteraction.Ignore))
    {end=hit.point;target=hit.collider.GetComponentInParent<Health>();if(target==Health)target=null;}
    if(!target||!target.Alive)
    {
-    var assisted=AimAssist(origin,cam.forward,hit.collider?hit.distance:range);
+    var assisted=AimAssist(origin,cam.forward,hit.collider?hit.distance:range,range,stats.aimAssist);
     if(assisted){target=assisted;end=assisted.AimPoint;}
    }
    // The shot uses the pre-kick view. LateUpdate applies recovery before writing the next view.
-   LastKickDegrees=RecoilStat*recoilDegreesPerPoint;
+   LastKickDegrees=stats.recoil*recoilDegreesPerPoint;
    if(follow)follow.ApplyShotKick(LastKickDegrees,recoilRecoverFraction,recoilRecoverSeconds);
    ShotFired?.Invoke();
    bool firstPerson=viewModel&&viewModel.Visible&&viewModel.muzzle;
@@ -150,7 +179,7 @@ namespace AthenHill
    if(impactSparks){impactSparks.transform.position=end;impactSparks.transform.forward=(muzzle-end).normalized;impactSparks.Emit(target?14:6);}
    if(target&&target.Alive)
    {
-    Hits++;target.Damage(damage,end);
+    Hits++;target.Damage(stats.damage,end);
     TargetHit?.Invoke(target,!target.Alive);
    }
   }
@@ -177,9 +206,9 @@ namespace AthenHill
     tail.PlayOneShot(Pick(shotTail,ref lastTail),tailGain*(close?closeTailScale:1));
    }
   }
-  Health AimAssist(Vector3 origin,Vector3 forward,float maxDistance)
+  Health AimAssist(Vector3 origin,Vector3 forward,float maxDistance,float range,float degrees)
   {
-   Health best=null;float bestAngle=aimAssistDegrees;
+   Health best=null;float bestAngle=degrees;
    foreach(var h in Health.Targets)
    {
     if(!h||!h.Alive||h==Health)continue;
@@ -202,7 +231,7 @@ namespace AthenHill
    Downs++;Armed=false;
    session.Notify("You go down in the dust. A Warden patrol drags you back to the post.","Outer Berms");
    if(respawnPoint){motor.Teleport(respawnPoint.position);motor.visual.rotation=respawnPoint.rotation;}
-   Health.Restore();Nano=nanoMax;
+   Health.Restore();Nano=Stats.nanoMax;
    Downed?.Invoke();
   }
  }
