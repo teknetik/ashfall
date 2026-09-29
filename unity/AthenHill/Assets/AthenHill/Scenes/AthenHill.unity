@@ -122448,6 +122448,62 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.5, y: 2.5, z: 0.5}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &958817449
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 958817451}
+  - component: {fileID: 958817450}
+  m_Layer: 0
+  m_Name: Combat FX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &958817450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 958817449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9ed03771f572ee32b79ca3258f69c78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.CombatFx
+  session: {fileID: 1607540210}
+  follow: {fileID: 1788821736}
+  player: {fileID: 175973430}
+  deathBurst: {fileID: 7034875524818643674, guid: b77971a4cc4ba33e582cdc42e909d172, type: 3}
+  hitFlash: {fileID: 15300598629390515, guid: f30a4c9f32baa2d8e9e05959cf82c421, type: 3}
+  deathPool: 3
+  hitPool: 6
+  deathKickDegrees: 0.9
+  kickRange: 14
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 1
+--- !u!4 &958817451
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 958817449}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &959342137
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -169128,6 +169184,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 185db00f2783bba6e999befbe54778fc, type: 2}
   - {fileID: 2100000, guid: e2da708a7a93213f69cec3b63133a0ee, type: 2}
   - {fileID: 2100000, guid: eafefb136661e2029a46b1bd304bf6d2, type: 2}
+  - {fileID: 2100000, guid: fe883eee1e2825749ab0e732da6ee270, type: 2}
   daytimeStrength: 0.04
   fullLightDistance: 90
   culledLightDistance: 150
@@ -340673,3 +340730,4 @@ SceneRoots:
   - {fileID: 156017151}
   - {fileID: 1723260306}
   - {fileID: 1002155508}
+  - {fileID: 958817451}
