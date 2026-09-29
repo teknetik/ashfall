@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e12aacedff0e7b41a944668d9e491ef, type: 3}
+  m_Name: WardCrafting
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.CraftingCatalog
+  weapons:
+  - id: weapon_scrap_pistol
+    name: Scrap Pistol
+    recoil: 38
+    slots:
+    - grip
+  modifiers:
+  - id: mod_grip_stabilised
+    itemId: grip_stabilised_pistol
+    slot: grip
+    weaponIds:
+    - weapon_scrap_pistol
+    effects:
+    - stat: recoil
+      op: add
+      value: -7
+  stations:
+  - id: station_field_fabricator
+    name: Warden Field Fabricator
+  recipes:
+  - id: recipe_grip_stabilised_pistol
+    name: Stabilised Pistol Grip
+    stationId: station_field_fabricator
+    requiresWeaponId: weapon_scrap_pistol
+    outputItemId: grip_stabilised_pistol
+    inputs:
+    - kind: tag
+      id: component:servo
+      quantity: 1
+    - kind: item
+      id: scrap_alloy
+      quantity: 2
+    - kind: tag
+      id: nanite:tier1
+      quantity: 5
+    outputQuantity: 1
+    knownByDefault: 0
+    unlocks:
+    - type: acquireItem
+      id: droid_servo_damaged
+    - type: tutorialStep
+      id: Fabricate
+  lootTables:
+  - id: loot_feral_scrap_drone
+    entries:
+    - itemId: scrap_alloy
+      quantity: 1
+      chance: 1
+    - itemId: nanite_residue
+      quantity: 2
+      chance: 1
+    - itemId: copper_filament
+      quantity: 1
+      chance: 0.6
+    - itemId: micro_capacitor
+      quantity: 1
+      chance: 0.25
+  - id: loot_feral_worker_droid
+    entries:
+    - itemId: droid_servo_damaged
+      quantity: 1
+      chance: 1
+    - itemId: scrap_alloy
+      quantity: 1
+      chance: 1
+    - itemId: nanite_residue
+      quantity: 1
+      chance: 1
+    - itemId: copper_filament
+      quantity: 1
+      chance: 0.65

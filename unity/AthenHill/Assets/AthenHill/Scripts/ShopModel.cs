@@ -13,36 +13,60 @@ namespace AthenHill
   public ShopModel(IEnumerable<ItemSpec> definitions,int credits=25)
   {
    if(credits<0)throw new ArgumentOutOfRangeException(nameof(credits));
-   items=definitions.ToDictionary(x=>x.id,x=>new ItemSpec{id=x.id,name=x.name,description=x.description,buyPrice=x.buyPrice,sellPrice=x.sellPrice,startingQuantity=x.startingQuantity});
-   if(items.Values.Any(x=>x.buyPrice<0||x.sellPrice<0||x.startingQuantity<0))throw new ArgumentException("Prices and quantities must be nonnegative.");
+   items=definitions.ToDictionary(x=>x.id,x=>new ItemSpec{id=x.id,name=x.name,description=x.description,buyPrice=x.buyPrice,sellPrice=x.sellPrice,startingQuantity=x.startingQuantity,tags=x.tags==null?null:(string[])x.tags.Clone(),maxStack=x.maxStack,excludeFromTrade=x.excludeFromTrade});
+   if(items.Values.Any(x=>x.buyPrice<0||x.sellPrice<0||x.startingQuantity<0||x.maxStack<0||x.maxStack>0&&x.startingQuantity>x.maxStack))throw new ArgumentException("Prices, quantities and caps must be valid.");
    quantities=items.ToDictionary(x=>x.Key,x=>x.Value.startingQuantity);Credits=credits;
   }
   public int Quantity(string id)=>id!=null&&quantities.TryGetValue(id,out int q)?q:0;
+  public IReadOnlyCollection<ItemSpec> Definitions=>items.Values;
+  /// Validate all deltas against one snapshot, then commit once. Duplicate IDs are summed.
+  public bool TryApply(IEnumerable<KeyValuePair<string,int>> changes,int creditDelta,out string reason)
+  {
+   var deltas=new Dictionary<string,long>();
+   var next=new Dictionary<string,int>();int credits;
+   try
+   {
+    credits=checked(Credits+creditDelta);
+    if(credits<0){reason="insufficient_credits";return false;}
+    foreach(var change in changes)
+    {
+     if(change.Key==null||!items.ContainsKey(change.Key)){reason="unknown_item";return false;}
+     deltas[change.Key]=checked((deltas.TryGetValue(change.Key,out var previous)?previous:0)+change.Value);
+    }
+    foreach(var pair in deltas)
+    {
+     long quantity=checked(quantities[pair.Key]+pair.Value);
+     if(quantity<0){reason="insufficient_items";return false;}
+     if(quantity>int.MaxValue){reason="overflow";return false;}
+     next[pair.Key]=(int)quantity;
+    }
+   }
+   catch(OverflowException){reason="overflow";return false;}
+   foreach(var pair in next)
+   {
+    int cap=items[pair.Key].maxStack;
+    if(cap>0&&pair.Value>cap){reason="stack_full";return false;}
+   }
+   Credits=credits;foreach(var pair in next)quantities[pair.Key]=pair.Value;
+   reason="ok";return true;
+  }
   /// Adds found items and credits in one step; nothing changes if either would overflow.
   public bool Grant(string id,int quantity,int credits,out string message)
   {
    if(quantity<0||credits<0){message="Rewards cannot be negative.";return false;}
    if(quantity>0&&(id==null||!items.ContainsKey(id))){message="That item is not available.";return false;}
-   try
-   {
-    int newCredits=checked(Credits+credits);int newQuantity=quantity>0?checked(Quantity(id)+quantity):0;
-    Credits=newCredits;if(quantity>0)quantities[id]=newQuantity;
-   }
-   catch(OverflowException){message="This reward cannot be added.";return false;}
+   if(!TryApply(quantity>0?new[]{new KeyValuePair<string,int>(id,quantity)}:Array.Empty<KeyValuePair<string,int>>(),credits,out _)){message="This reward cannot be added.";return false;}
    message=$"Received {credits} credits"+(quantity>0?$" and {quantity} × {items[id].name}.":".");return true;
   }
   public bool Trade(string id,bool buy,out string message)
   {
    if(id==null||!items.TryGetValue(id,out var item)){message="That item is not available.";return false;}
+   if(item.excludeFromTrade){message="This item is not tradeable.";return false;}
    int price=buy?item.buyPrice:item.sellPrice;
    if(buy&&Credits<price){message=$"You need {price-Credits} more credits for {item.name}.";return false;}
    if(!buy&&Quantity(id)<1){message=$"You have no {item.name} to sell.";return false;}
-   try
-   {
-    int credits=checked(Credits+(buy?-price:price));int quantity=checked(Quantity(id)+(buy?1:-1));int count=checked((buy?Purchases:Sales)+1);
-    Credits=credits;quantities[id]=quantity;if(buy)Purchases=count;else Sales=count;
-   }
-   catch(OverflowException){message="This trade cannot be completed.";return false;}
+   if((buy?Purchases:Sales)==int.MaxValue||!TryApply(new[]{new KeyValuePair<string,int>(id,buy?1:-1)},buy?-price:price,out _)){message="This trade cannot be completed.";return false;}
+   if(buy)Purchases++;else Sales++;
    message=$"{(buy?"Bought":"Sold")} {item.name} for {price} credit{(price==1?"":"s")}.";return true;
   }
  }

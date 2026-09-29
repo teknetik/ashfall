@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 namespace AthenHill
 {
- [Serializable] public class ItemSpec {public string id,name;[TextArea]public string description;[Min(0)]public int buyPrice,sellPrice,startingQuantity;}
+ [Serializable] public class ItemSpec {public string id,name;[TextArea]public string description;[Min(0)]public int buyPrice,sellPrice,startingQuantity;public string[] tags;[Min(0)]public int maxStack;public bool excludeFromTrade;}
  [Serializable] public class TravelNode {public string id,name;[TextArea] public string description;}
  [CreateAssetMenu(menuName="Athen Hill/City catalog")]
  public class CityCatalog : ScriptableObject

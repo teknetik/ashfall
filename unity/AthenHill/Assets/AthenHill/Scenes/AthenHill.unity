@@ -11299,6 +11299,68 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: -3128707403508033283, guid: abf3d3fbda2deabb58884a60a8f3f70d, type: 3}
   m_PrefabInstance: {fileID: 1872584812}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &118776012
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 118776013}
+  - component: {fileID: 118776015}
+  - component: {fileID: 118776014}
+  m_Layer: 0
+  m_Name: Field fabricator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &118776013
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118776012}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -75, y: -1.54, z: 0.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1027828638}
+  m_Father: {fileID: 226721071}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &118776014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118776012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acb2eb382ad0035f9b1e7f98756fd763, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.CraftingStationMarker
+  stationId: station_field_fabricator
+  session: {fileID: 1607540210}
+--- !u!114 &118776015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118776012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e84c252aa8195609bd9a07158772638, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.WorldInteractable
+  prompt: "E \xB7 Use field fabricator"
+  range: 2.4
 --- !u!23 &119488529 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8266802012194164090, guid: abf3d3fbda2deabb58884a60a8f3f70d, type: 3}
@@ -20027,6 +20089,9 @@ MonoBehaviour:
   muzzleLight: {fileID: 642352396}
   impactSparks: {fileID: 1833630459}
   tracerSeconds: 0.05
+  recoilDegreesPerPoint: 0.05
+  recoilRecoverFraction: 0.5
+  recoilRecoverSeconds: 0.18
 --- !u!114 &175973431
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25435,6 +25500,7 @@ Transform:
   - {fileID: 1263726169}
   - {fileID: 137413948}
   - {fileID: 1794407304}
+  - {fileID: 118776013}
   m_Father: {fileID: 1142859884}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &226774064
@@ -121386,6 +121452,68 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5969649132412031782, guid: 179d619c1536d03f0aa0039485505a5e, type: 3}
   m_PrefabInstance: {fileID: 1027186466}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1027828637
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 118776013}
+    m_Modifications:
+    - target: {fileID: 5299926168380429926, guid: 1c8fc96a0974bd59e9644af5a173ed03, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5299926168380429926, guid: 1c8fc96a0974bd59e9644af5a173ed03, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5299926168380429926, guid: 1c8fc96a0974bd59e9644af5a173ed03, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5299926168380429926, guid: 1c8fc96a0974bd59e9644af5a173ed03, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5299926168380429926, guid: 1c8fc96a0974bd59e9644af5a173ed03, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5299926168380429926, guid: 1c8fc96a0974bd59e9644af5a173ed03, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5299926168380429926, guid: 1c8fc96a0974bd59e9644af5a173ed03, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5299926168380429926, guid: 1c8fc96a0974bd59e9644af5a173ed03, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5299926168380429926, guid: 1c8fc96a0974bd59e9644af5a173ed03, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5299926168380429926, guid: 1c8fc96a0974bd59e9644af5a173ed03, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5354419588665008553, guid: 1c8fc96a0974bd59e9644af5a173ed03, type: 3}
+      propertyPath: m_Name
+      value: Field fabricator tool cart
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1c8fc96a0974bd59e9644af5a173ed03, type: 3}
+--- !u!4 &1027828638 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5299926168380429926, guid: 1c8fc96a0974bd59e9644af5a173ed03, type: 3}
+  m_PrefabInstance: {fileID: 1027828637}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1029938367
 GameObject:
   m_ObjectHideFlags: 0
@@ -149180,6 +149308,37 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 812794315368963802, guid: abf3d3fbda2deabb58884a60a8f3f70d, type: 3}
   m_PrefabInstance: {fileID: 1872584812}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1233573787
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1233573788}
+  m_Layer: 0
+  m_Name: checkpoint_fabricator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1233573788
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233573787}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -75, y: -1.54, z: -0.9}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1851674839}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1233634245 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: -914548834031661154, guid: abf3d3fbda2deabb58884a60a8f3f70d, type: 3}
@@ -195741,6 +195900,7 @@ GameObject:
   - component: {fileID: 1607540211}
   - component: {fileID: 1607540210}
   - component: {fileID: 1607540212}
+  - component: {fileID: 1607540213}
   m_Layer: 0
   m_Name: CitySession
   m_TagString: Untagged
@@ -195815,6 +195975,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 500d116e021d63c9f9dc7836a5da6619, type: 3}
   m_Name: 
   m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.GameSettings
+--- !u!114 &1607540213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607540209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0143b0421d64ec404b9e6fbc3ab286ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.CraftingSession
+  data: {fileID: 11400000, guid: 24e83b91f42edd438b40e230b34f6033, type: 2}
+  combat: {fileID: 175973430}
+  tutorial: {fileID: 1971609621}
+  fabricator: {fileID: 118776013}
+  lootSeed: 1729
 --- !u!1 &1608161666
 GameObject:
   m_ObjectHideFlags: 0
@@ -243876,6 +244053,7 @@ Transform:
   - {fileID: 226774065}
   - {fileID: 417673348}
   - {fileID: 859642174}
+  - {fileID: 1233573788}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1853008472
@@ -285287,7 +285465,7 @@ MonoBehaviour:
   lineTargets: 'Those are training targets: three numbered steel plates on hinged stands. Hold right mouse to aim, then left click to fire; F fires from the hip. Knock down all three. The range control raises them for practice after the primer.'
   lineFirstContact: Movement on the service road. A scrap drone's slipped its cluster. They back off before they dart in, so shoot on the tell.
   lineDepot: The rest of its cluster is nested at the old machine depot, south along the road. Clear it out. Break contact if you're hurt; vitality comes back, and nano refills when you stop firing.
-  lineComplete: Clean work. Take the salvage to Mira. The depot always fills up again. The Berms go on a long way; come back when you're ready.
+  lineComplete: Clean work. Bring that servo to the field fabricator at my post; a steadier grip will tame that pistol. The rest of the salvage sells at Basic General.
 --- !u!4 &1971609622
 Transform:
   m_ObjectHideFlags: 0

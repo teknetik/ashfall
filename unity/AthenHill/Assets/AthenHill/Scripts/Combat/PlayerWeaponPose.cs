@@ -68,7 +68,7 @@ namespace AthenHill
    if(spine.Length>0)
    {
     var axis=body.right;
-    float each=(pitch*pitchShare-recoilPitch*r*.5f)*Weight/spine.Length;
+    float each=(pitch*pitchShare-recoilPitch*combat.RecoilScale*r*.5f)*Weight/spine.Length;
     foreach(var b in spine)if(b)b.rotation=Quaternion.AngleAxis(each,axis)*b.rotation;
    }
    // Turn the hand so the barrel follows the aim line, then kick it up on a shot.
@@ -77,7 +77,7 @@ namespace AthenHill
     var barrel=combat.heldPistol.transform.forward;
     var fix=Quaternion.FromToRotation(barrel,aimDir);
     rightHand.rotation=Quaternion.Slerp(Quaternion.identity,fix,barrelAlign*Weight)*rightHand.rotation;
-    rightHand.rotation=Quaternion.AngleAxis(-recoilPitch*r*Weight,body.right)*rightHand.rotation;
+    rightHand.rotation=Quaternion.AngleAxis(-recoilPitch*combat.RecoilScale*r*Weight,body.right)*rightHand.rotation;
    }
   }
  }

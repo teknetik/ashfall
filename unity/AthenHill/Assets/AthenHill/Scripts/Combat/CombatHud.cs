@@ -12,6 +12,7 @@ namespace AthenHill
   public GameSession session;
   public PlayerCombat combat;
   public BermsTutorial tutorial;
+  CraftingSession crafting;
   public Camera worldCamera;
   [Min(1)]public float enemyBarDistance=32;
   VisualElement root,hud,vitalBar,nanoBar,crosshair,hitMarker,flash,objectiveRow,aimHint;
@@ -22,6 +23,7 @@ namespace AthenHill
   void Start()
   {
    root=GetComponent<UIDocument>().rootVisualElement;hud=root.Q("hud");
+   crafting=session?session.GetComponent<CraftingSession>():null;
    vitalBar=root.Q(className:"vital-bar");nanoBar=root.Q(className:"nano-bar");
    var values=root.Query<Label>(className:"vital-value").ToList();
    if(values.Count>1){vitalValue=values[0];nanoValue=values[1];}
@@ -79,6 +81,7 @@ namespace AthenHill
    Refresh(false);
    // CityHud disables the reserve slots at start; keep slot 7 in step with the pistol.
    if(slot7!=null&&slot7.enabledSelf!=pistolShown)slot7.SetEnabled(pistolShown);
+   if(slot7!=null&&pistolShown)slot7.tooltip=$"Draw or holster the scrap pistol · 7 · Recoil {combat.RecoilStat:0}"+(crafting?.Model?.GripSlot!=null?" (Stabilised grip)":"");
    var h=combat.Health;
    if(vitalBar!=null)vitalBar.style.width=Length.Percent(h.Fraction*100);
    if(vitalValue!=null)vitalValue.text=$"{Mathf.CeilToInt(h.Current)} / {Mathf.RoundToInt(h.max)}";
@@ -93,13 +96,15 @@ namespace AthenHill
    flash.style.opacity=flashAlpha*(session.reducedMotion?.5f:.85f);
    bool showObjective=tutorial&&tutorial.ShowObjective;
    Show(objectiveRow,showObjective);
-   if(showObjective)objective.text=tutorial.Objective;
+   if(showObjective)objective.text=tutorial.Step==BermsStep.Complete&&crafting!=null&&!string.IsNullOrEmpty(crafting.Objective)?crafting.Objective:tutorial.Objective;
    UpdateGuidance(play);
    UpdateBars(play);
   }
   void UpdateGuidance(bool play)
   {
    var target=tutorial?tutorial.GuidanceTarget:null;
+   bool fabTarget=tutorial&&tutorial.Step==BermsStep.Complete&&crafting!=null&&crafting.TutorialStep=="Fabricate";
+   if(fabTarget)target=crafting.fabricator;
    bool visible=play&&target&&tutorial.ShowObjective;
    if(visible)
    {
@@ -107,7 +112,7 @@ namespace AthenHill
     visible=vp.z>0&&vp.x>.05f&&vp.x<.95f&&vp.y>.08f&&vp.y<.92f&&Vector3.Distance(world,combat.transform.position)<35;
     if(visible)
     {
-     guidance.text=(tutorial.Step==BermsStep.TakePistol?"ARMS LOCKER":"WARDEN OSSA")+$" · {Mathf.CeilToInt(Vector3.Distance(target.position,combat.transform.position))} m";
+     guidance.text=(fabTarget?"FIELD FABRICATOR":tutorial.Step==BermsStep.TakePistol?"ARMS LOCKER":"WARDEN OSSA")+$" · {Mathf.CeilToInt(Vector3.Distance(target.position,combat.transform.position))} m";
      var p=RuntimePanelUtils.CameraTransformWorldToPanel(root.panel,world,worldCamera);guidance.style.left=p.x-85;guidance.style.top=p.y-24;
     }
    }

@@ -24,6 +24,14 @@ namespace AthenHill
   bool wasAiming;int settleFrames;
   Camera lens;
   bool lensTouched;
+  float recoilRecovery,recoilTime;
+  public void ApplyShotKick(float degrees,float recoverFraction,float recoverSeconds)
+  {
+   if(FixedView)return;
+   pitch=Mathf.Clamp(pitch-degrees,aimMode?-70:-80,aimMode?70:80);
+   recoilRecovery+=degrees*Mathf.Clamp01(recoverFraction);
+   recoilTime=Mathf.Max(.01f,recoverSeconds);
+  }
   PlayerMotor targetMotor;
   Renderer[] playerRenderers;
   ShadowCastingMode[] shadowModes;
@@ -45,6 +53,7 @@ namespace AthenHill
    wasAiming=aimMode;
    if(aimMode){var raw=input.RawLook;if(settleFrames>0)settleFrames--;else{yaw+=raw.x*sensitivity;pitch=Mathf.Clamp(pitch-raw.y*sensitivity,-70,70);}}
    else if(input.Orbit){var delta=input.Look;yaw+=delta.x*sensitivity;pitch=Mathf.Clamp(pitch-delta.y*sensitivity,-80,80);}
+   if(recoilRecovery>0){float step=Mathf.Min(recoilRecovery,Time.deltaTime*recoilRecovery/Mathf.Max(.0001f,recoilTime));pitch=Mathf.Clamp(pitch+step,aimMode?-70:-80,aimMode?70:80);recoilRecovery-=step;recoilTime=Mathf.Max(0,recoilTime-Time.deltaTime);}
    float scroll=input.Zoom;
    if(scroll!=0){boom=Mathf.Clamp(boom-scroll*zoomStep,0,maxBoom);if(boom<.05f)boom=0;}
    var targetPosition=targetMotor&&targetMotor.transform==target?targetMotor.RenderPosition:target.position;

@@ -58,6 +58,12 @@ namespace AthenHill
   public int Hits {get;private set;}
   public int Downs {get;private set;}
   public float LastShotTime {get;private set;}=-99;
+  [Header("Camera recoil")]
+  public float recoilDegreesPerPoint=.05f,recoilRecoverFraction=.5f,recoilRecoverSeconds=.18f;
+  public float RecoilStat=>session?session.GetComponent<CraftingSession>()?.Model?.RecoilStat??38:38;
+  public float RecoilScale=>RecoilStat/38f;
+  public float LastKickDegrees {get;private set;}
+  public event Action ShotFired;
   /// Hit marker: (target, killed).
   public event Action<Health,bool> TargetHit;
   public event Action<float> Hurt;
@@ -131,6 +137,10 @@ namespace AthenHill
     var assisted=AimAssist(origin,cam.forward,hit.collider?hit.distance:range);
     if(assisted){target=assisted;end=assisted.AimPoint;}
    }
+   // The shot uses the pre-kick view. LateUpdate applies recovery before writing the next view.
+   LastKickDegrees=RecoilStat*recoilDegreesPerPoint;
+   if(follow)follow.ApplyShotKick(LastKickDegrees,recoilRecoverFraction,recoilRecoverSeconds);
+   ShotFired?.Invoke();
    bool firstPerson=viewModel&&viewModel.Visible&&viewModel.muzzle;
    var muzzle=firstPerson?viewModel.muzzle.position:muzzlePoint&&heldPistol&&heldPistol.activeInHierarchy?muzzlePoint.position:motor.visual?motor.visual.TransformPoint(muzzleOffset):transform.TransformPoint(muzzleOffset);
    if(!firstPerson&&thirdPersonFlash)thirdPersonFlash.Fire();
