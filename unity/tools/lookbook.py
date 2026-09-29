@@ -68,8 +68,10 @@ class Run:
         raise TimeoutError(name)
 
 
-def launch(out, exe):
+def launch(out, exe, overrides=None):
     video = json.loads((ROOT / 'unity/evidence/courtyard/20260908/after-native/settings.json').read_text())['video']
+    video['antiAliasing'] = 32  # High preset default since 30 Sep: TAA (the saved courtyard settings predate it)
+    video.update(overrides or {})
     encoded = base64.b64encode(json.dumps(video).encode()).decode()
     for vendor, product in [('unknown', 'unknown'), ('Free Column', 'Athen Hill')]:
         folder = out / 'config/unity3d' / vendor / product
@@ -128,13 +130,16 @@ async def main():
     p.add_argument('--profile', type=float, default=0, help='seconds of frame timing per hour at the first camera')
     p.add_argument('--exe', type=Path, default=ROOT / 'unity/AthenHill/Builds/LinuxDevelopment/AthenHill.x86_64')
     p.add_argument('--sheet', action='store_true')
+    p.add_argument('--video', default='', help='video option overrides, e.g. shadows=2,postProcessing=false,renderPercent=80')
     a = p.parse_args()
     out = a.out.resolve(); out.mkdir(parents=True, exist_ok=False)
     cams = [c for c in a.cams.split(',') if c]; hours = [float(h) for h in a.hours.split(',') if h]
     report = dict(utc=time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), exe=str(a.exe),
                   exeMtime=time.strftime('%Y-%m-%dT%H:%M:%S', time.localtime(a.exe.stat().st_mtime)),
                   loadAverage=os.getloadavg(), cams=cams, hours=hours, captures=[], profiles={}, errors=[])
-    player = launch(out, a.exe); run = Run(out)
+    overrides = {k: json.loads(v) for k, v in (kv.split('=') for kv in a.video.split(',') if kv)}
+    report['videoOverrides'] = overrides
+    player = launch(out, a.exe, overrides); run = Run(out)
     try:
         await start_play(run, player)
         report['environment'] = run.read('environment.json')

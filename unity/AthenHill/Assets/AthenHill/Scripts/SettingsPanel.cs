@@ -65,7 +65,7 @@ namespace AthenHill
             Choice(videoPage, "graphics-preset", "Preset", new List<string> { "Low", "Medium", "High", "Custom" }, index => settings.Edit(v => { if (index < 3) v.UsePreset(index); else v.preset = 3; }));
             Slider(videoPage, "render-scale", "Render scale", 50, 100, value => settings.Edit(v => v.renderPercent = value, true));
             Choice(videoPage, "shadow-quality", "Shadows", new List<string> { "Off", "Low", "Medium", "High" }, index => settings.Edit(v => v.shadows = index, true));
-            Choice(videoPage, "anti-aliasing", "Anti-aliasing", new List<string> { "Off", "2× MSAA", "4× MSAA", "8× MSAA" }, index => settings.Edit(v => v.antiAliasing = 1 << index, true));
+            Choice(videoPage, "anti-aliasing", "Anti-aliasing", new List<string>(VideoOptions.AntiAliasingNames), index => settings.Edit(v => v.antiAliasing = VideoOptions.AntiAliasingCodes[index], true));
             Choice(videoPage, "texture-quality", "Textures", new List<string> { "Full resolution", "Half resolution", "Quarter resolution" }, index => settings.Edit(v => v.textureLimit = index, true));
             post = Toggle(videoPage, "post-processing", "Post-processing", value => settings.Edit(v => v.postProcessing = value, true));
             Note(videoPage, "Lower render scale improves performance while keeping the interface sharp. Post-processing controls the city’s bloom and colour grading.");
@@ -133,7 +133,7 @@ namespace AthenHill
             ChoiceValue("resolution", resolutions.IndexOf(new Vector2Int(v.width, v.height)));
             ChoiceValue("window-mode", v.windowMode); ChoiceValue("graphics-preset", v.preset);
             Value("render-scale", v.renderPercent); ChoiceValue("shadow-quality", v.shadows);
-            ChoiceValue("anti-aliasing", v.antiAliasing == 8 ? 3 : v.antiAliasing == 4 ? 2 : v.antiAliasing == 2 ? 1 : 0);
+            ChoiceValue("anti-aliasing", Mathf.Max(0, Array.IndexOf(VideoOptions.AntiAliasingCodes, v.antiAliasing)));
             ChoiceValue("texture-quality", v.textureLimit); ChoiceValue("frame-limit", Array.IndexOf(GameSettings.FrameLimits, v.frameLimit));
             post.SetValueWithoutNotify(v.postProcessing); vsync.SetValueWithoutNotify(v.vSync);
             choices["frame-limit"].SetEnabled(!v.vSync);

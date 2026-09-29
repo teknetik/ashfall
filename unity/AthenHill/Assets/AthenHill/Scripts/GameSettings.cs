@@ -18,9 +18,13 @@ namespace AthenHill
     public sealed class VideoOptions
     {
         public int width = 1920, height = 1080, windowMode, preset = 2;
-        public int renderPercent = 100, shadows = 3, antiAliasing = 4, textureLimit;
+        public int renderPercent = 100, shadows = 3, antiAliasing = TAA, textureLimit;
         public bool postProcessing = true, vSync;
         public int frameLimit = 60;
+        // Anti-aliasing codes: 1/2/4/8 are MSAA sample counts (older saves), 16 = SMAA, 32 = TAA (post-process, MSAA off).
+        public const int SMAA = 16, TAA = 32;
+        public static readonly int[] AntiAliasingCodes = { 1, SMAA, TAA, 2, 4, 8 };
+        public static readonly string[] AntiAliasingNames = { "Off", "SMAA", "Temporal (TAA)", "2× MSAA", "4× MSAA", "8× MSAA" };
         public VideoOptions Copy() => (VideoOptions)MemberwiseClone();
         public bool SameAs(VideoOptions other) => JsonUtility.ToJson(this) == JsonUtility.ToJson(other);
         public void UsePreset(int index)
@@ -28,7 +32,7 @@ namespace AthenHill
             preset = Mathf.Clamp(index, 0, 2);
             renderPercent = preset == 0 ? 75 : 100;
             shadows = preset + 1;
-            antiAliasing = preset == 0 ? 1 : preset == 1 ? 2 : 4;
+            antiAliasing = preset == 0 ? SMAA : preset == 1 ? SMAA : TAA;
             textureLimit = preset == 0 ? 1 : 0;
             postProcessing = preset != 0;
         }
@@ -53,6 +57,7 @@ namespace AthenHill
         UniversalRenderPipelineAsset runtimePipeline;
         UniversalAdditionalCameraData[] cameras;
         bool[] originalPostProcessing;
+        AntialiasingMode[] originalAntialiasing;
         int originalTextureLimit, originalVSync, originalFrameLimit;
         float deadline;
         bool previousRunInBackground;
@@ -83,6 +88,7 @@ namespace AthenHill
             }
             cameras = FindObjectsByType<UniversalAdditionalCameraData>();
             originalPostProcessing = cameras.Select(c => c.renderPostProcessing).ToArray();
+            originalAntialiasing = cameras.Select(c => c.antialiasing).ToArray();
             originalTextureLimit = QualitySettings.globalTextureMipmapLimit;
             originalVSync = QualitySettings.vSyncCount; originalFrameLimit = Application.targetFrameRate;
             ApplyQuality(Video);
@@ -140,7 +146,7 @@ namespace AthenHill
             value.renderPercent = Mathf.Clamp(value.renderPercent, 50, 100);
             value.shadows = Mathf.Clamp(value.shadows, 0, 3);
             value.textureLimit = Mathf.Clamp(value.textureLimit, 0, 2);
-            if (value.antiAliasing != 1 && value.antiAliasing != 2 && value.antiAliasing != 4 && value.antiAliasing != 8) value.antiAliasing = 4;
+            if (Array.IndexOf(VideoOptions.AntiAliasingCodes, value.antiAliasing) < 0) value.antiAliasing = VideoOptions.TAA;
             if (!FrameLimits.Contains(value.frameLimit)) value.frameLimit = 60;
         }
         static void SyncDisplay(VideoOptions value) { value.width = Screen.width; value.height = Screen.height; value.windowMode = Screen.fullScreen ? 1 : 0; }
@@ -150,7 +156,7 @@ namespace AthenHill
             if (runtimePipeline)
             {
                 runtimePipeline.renderScale = value.renderPercent / 100f;
-                runtimePipeline.msaaSampleCount = value.antiAliasing;
+                runtimePipeline.msaaSampleCount = value.antiAliasing <= 8 ? value.antiAliasing : 1;
                 // Sun shadows must reach across a street and the Berms, not stop at the player's feet.
                 runtimePipeline.shadowDistance = value.shadows == 0 ? 0 : value.shadows == 1 ? 45 : value.shadows == 2 ? 90 : 150;
                 runtimePipeline.shadowCascadeCount = value.shadows <= 1 ? 2 : value.shadows == 2 ? 3 : 4;
@@ -162,7 +168,14 @@ namespace AthenHill
             QualitySettings.globalTextureMipmapLimit = value.textureLimit;
             QualitySettings.vSyncCount = value.vSync ? 1 : 0;
             Application.targetFrameRate = value.frameLimit == 0 ? -1 : value.frameLimit;
-            if (cameras != null) foreach (var cameraData in cameras) if (cameraData) cameraData.renderPostProcessing = value.postProcessing;
+            // SMAA/TAA are post-process anti-aliasing: they need post-processing on the camera and MSAA off.
+            var aa = value.antiAliasing == VideoOptions.SMAA ? AntialiasingMode.SubpixelMorphologicalAntiAliasing : value.antiAliasing == VideoOptions.TAA ? AntialiasingMode.TemporalAntiAliasing : AntialiasingMode.None;
+            if (cameras != null) foreach (var cameraData in cameras) if (cameraData)
+            {
+                // URP still runs its final pass for SMAA/TAA when post-processing effects are switched off.
+                cameraData.renderPostProcessing = value.postProcessing;
+                cameraData.antialiasing = aa; cameraData.antialiasingQuality = AntialiasingQuality.High;
+            }
         }
         public void BeginEdit()
         {
@@ -212,7 +225,7 @@ namespace AthenHill
             if (runtimePipeline) { QualitySettings.renderPipeline = originalPipeline; Destroy(runtimePipeline); }
             if (cameras != null)
             {
-                for (int i = 0; i < cameras.Length; i++) if (cameras[i]) cameras[i].renderPostProcessing = originalPostProcessing[i];
+                for (int i = 0; i < cameras.Length; i++) if (cameras[i]) { cameras[i].renderPostProcessing = originalPostProcessing[i]; cameras[i].antialiasing = originalAntialiasing[i]; }
                 QualitySettings.globalTextureMipmapLimit = originalTextureLimit;
                 QualitySettings.vSyncCount = originalVSync; Application.targetFrameRate = originalFrameLimit;
             }
