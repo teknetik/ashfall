@@ -175,6 +175,11 @@ namespace AthenHill.Editor
             mat.SetFloat("_SoftParticlesEnabled", blend >= 0 ? 1 : 0); mat.SetFloat("_SoftParticlesNearFadeDistance", 0); mat.SetFloat("_SoftParticlesFarFadeDistance", .6f);
             mat.SetFloat("_CameraFadingEnabled", blend >= 0 ? 1 : 0); mat.SetFloat("_CameraNearFadeDistance", .3f); mat.SetFloat("_CameraFarFadeDistance", 1.2f);
             if (mat.HasProperty("_ReceiveShadows")) mat.SetFloat("_ReceiveShadows", 1);
+            // Matte, non-reflective particles: with "preserve specular" alpha blending, sky reflections would light
+            // the whole quad even where the texture is transparent (visible square cards).
+            if (mat.HasProperty("_BlendModePreserveSpecular")) mat.SetFloat("_BlendModePreserveSpecular", 0);
+            if (blend >= 0 && mat.HasProperty("_Smoothness")) mat.SetFloat("_Smoothness", 0);
+            if (blend >= 0 && mat.HasProperty("_Metallic")) mat.SetFloat("_Metallic", 0);
             // Same calls URP's own particle shader GUIs make (ParticlesLitShader / ParticlesUnlitShader).
             if (shaderName.EndsWith("/Lit")) BaseShaderGUI.SetMaterialKeywords(mat, LitGUI.SetMaterialKeywords, ParticleGUI.SetMaterialKeywords);
             else BaseShaderGUI.SetMaterialKeywords(mat, null, ParticleGUI.SetMaterialKeywords);
