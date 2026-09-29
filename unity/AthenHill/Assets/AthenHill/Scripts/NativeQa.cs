@@ -15,6 +15,9 @@ namespace AthenHill
   string folder;GameSession session;AthenDebugBridge bridge;UIDocument document;CityAtmosphere atmosphere;
   ProfilerRecorder draws,tris,batches,setPass,mainThread,renderThread;
   readonly List<object> samples=new List<object>();bool profiling;float nextSnapshot;
+#if UNITY_EDITOR || DEBUG
+  float nextDevState;
+#endif
   readonly FrameTiming[] timings=new FrameTiming[1];
 #if UNITY_EDITOR || DEBUG
   readonly NativeVisualReview visualReview=new NativeVisualReview();
@@ -48,9 +51,12 @@ namespace AthenHill
    string path=Path.Combine(folder,"command.json");
    if(File.Exists(path))
    {
+    string commandId=null;bool commandFailed=false;
     try
     {
      var j=JObject.Parse(File.ReadAllText(path));File.Delete(path);
+     commandId=ReadCommandId(j);
+     if(commandId==null){Write("ack.json",new{id=(string)null,success=false,error=new{code="bad_id",message="Command id must be 1–64 ASCII letters, digits, _ or -."}});return;}
      switch((string)j["action"])
      {
       case "memorySnapshot":Write("memory.json",MemorySnapshot());break;
@@ -91,14 +97,38 @@ namespace AthenHill
 #endif
       case "resize":Screen.SetResolution((int)j["width"],(int)j["height"],FullScreenMode.Windowed);break;
       case "quit":Application.Quit();break;
-      default:throw new ArgumentException("Unknown QA operation");
+      default:
+#if UNITY_EDITOR || DEBUG
+       if(((string)j["action"])?.StartsWith("dev.",StringComparison.Ordinal)==true)
+       {
+        var result=DevBridgeCommands.Execute(j,session,FindAnyObjectByType<BermsTutorial>(),FindAnyObjectByType<CityTimeOfDay>());
+        if(!result.success){Write("ack.json",new{id=commandId,success=false,error=new{code=result.code,message=result.message}});commandFailed=true;WriteDevState();break;}
+        WriteDevState();break;
+       }
+#endif
+       throw new ArgumentException("Unknown QA operation");
      }
-     Write("ack.json",new{id=(string)j["id"],success=true});
+     if(!commandFailed)Write("ack.json",new{id=commandId,success=true});
     }
-    catch(Exception e){Write("qa-error.json",new{error=e.ToString()});Debug.LogException(e);}
+    catch(Exception e){if(File.Exists(path))File.Delete(path);Write("ack.json",new{id=commandId,success=false,error=new{code="command_error",message=e.Message}});Write("qa-error.json",new{id=commandId,error=e.ToString()});Debug.LogException(e);}
    }
    if(Time.unscaledTime>=nextSnapshot){nextSnapshot=Time.unscaledTime+.1f;Snapshot();}
+#if UNITY_EDITOR || DEBUG
+   if(Time.unscaledTime>=nextDevState){nextDevState=Time.unscaledTime+.5f;WriteDevState();}
+#endif
   }
+  static string ReadCommandId(JObject j)
+  {
+#if UNITY_EDITOR || DEBUG
+   return DevBridgeCommands.ReadId(j);
+#else
+   var t=j?["id"];var id=t?.Type==JTokenType.String?(string)t:null;
+   return !string.IsNullOrEmpty(id)&&id.Length<=64&&id.All(c=>c>='a'&&c<='z'||c>='A'&&c<='Z'||c>='0'&&c<='9'||c=='_'||c=='-')?id:null;
+#endif
+  }
+#if UNITY_EDITOR || DEBUG
+  void WriteDevState(){Write("dev-state.json",DevBridgeCommands.State(session));}
+#endif
   static object MemorySnapshot()
   {
    // Unity counters are separate from OS process RSS and driver VRAM residency.

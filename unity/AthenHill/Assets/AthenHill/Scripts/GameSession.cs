@@ -112,6 +112,16 @@ namespace AthenHill
    if(!Shop.Grant(itemId,quantity,credits,out string message)){Notify(message);return;}
    Notify(text,speaker);SoundRequested?.Invoke(CitySoundCue.Trade);
   }
+#if UNITY_EDITOR || DEBUG
+  public void DevChanged(string message){Notify(message,"Dev");}
+  public bool DevResetCityVisit()
+  {
+   if(State!=CityState.Play&&State!=CityState.Paused)return false;
+   visitedHill=boughtFlask=soldScrap=linked=false;
+   Spoken.Clear();selectedDestination="";
+   DevChanged("City visit and dialogue flags reset; inventory and tutorial unchanged.");return true;
+  }
+#endif
   public void ToggleInventory()
   {
    if(State==CityState.Play)Open(CityState.Inventory);

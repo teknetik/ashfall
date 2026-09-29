@@ -58,6 +58,23 @@ namespace AthenHill
    if(!TryApply(quantity>0?new[]{new KeyValuePair<string,int>(id,quantity)}:Array.Empty<KeyValuePair<string,int>>(),credits,out _)){message="This reward cannot be added.";return false;}
    message=$"Received {credits} credits"+(quantity>0?$" and {quantity} × {items[id].name}.":".");return true;
   }
+#if UNITY_EDITOR || DEBUG
+  // Developer adjustments are not trades: no sale/purchase counters or prices change.
+  public bool Remove(string id,int quantity,out string message)
+  {
+   if(quantity<=0||id==null||!items.ContainsKey(id)){message="Invalid item or quantity.";return false;}
+   if(Quantity(id)<quantity){message="Not enough items carried.";return false;}
+   if(!TryApply(new[]{new KeyValuePair<string,int>(id,-quantity)},0,out _)){message="Not enough items carried.";return false;}
+   message=$"Removed {quantity} × {items[id].name}.";return true;
+  }
+  public bool RemoveCredits(int amount,out string message)
+  {
+   if(amount<=0){message="Amount must be positive.";return false;}
+   if(Credits<amount){message="Not enough credits.";return false;}
+   if(!TryApply(Array.Empty<KeyValuePair<string,int>>(),-amount,out _)){message="Not enough credits.";return false;}
+   message=$"Removed {amount} credits.";return true;
+  }
+#endif
   public bool Trade(string id,bool buy,out string message)
   {
    if(id==null||!items.TryGetValue(id,out var item)){message="That item is not available.";return false;}

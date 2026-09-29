@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "source": "draft",
+  "items": [
+    {
+      "id": "weapon_scrap_pistol",
+      "name": "Scrap pistol (design reference)",
+      "category": "Weapon",
+      "subtype": "",
+      "tier": 1,
+      "rarity": "Common",
+      "weightKg": 0,
+      "stack": 20,
+      "tags": [
+        "weapon:pistol"
+      ],
+      "stats": {
+        "recoil": 38
+      }
+    },
+    {
+      "id": "droid_servo_damaged",
+      "name": "QA draft servo 1790614729180852657",
+      "category": "Component",
+      "subtype": "",
+      "tier": 1,
+      "rarity": "Common",
+      "weightKg": 0.35,
+      "stack": 20,
+      "tags": [
+        "component:servo",
+        "droid",
+        "salvage"
+      ],
+      "stats": {}
+    },
+    {
+      "id": "scrap_alloy",
+      "name": "Scrap alloy",
+      "category": "Material",
+      "subtype": "",
+      "tier": 1,
+      "rarity": "Common",
+      "weightKg": 0,
+      "stack": 20,
+      "tags": [
+        "material:alloy",
+        "salvage"
+      ],
+      "stats": {}
+    },
+    {
+      "id": "nanite_residue",
+      "name": "Nanite residue",
+      "category": "Material",
+      "subtype": "",
+      "tier": 1,
+      "rarity": "Common",
+      "weightKg": 0,
+      "stack": 20,
+      "tags": [
+        "nanite:tier1",
+        "salvage"
+      ],
+      "stats": {}
+    },
+    {
+      "id": "copper_filament",
+      "name": "Copper filament",
+      "category": "Material",
+      "subtype": "",
+      "tier": 1,
+      "rarity": "Common",
+      "weightKg": 0,
+      "stack": 20,
+      "tags": [
+        "material:conductive",
+        "salvage"
+      ],
+      "stats": {}
+    },
+    {
+      "id": "micro_capacitor",
+      "name": "Micro capacitor",
+      "category": "Component",
+      "subtype": "",
+      "tier": 1,
+      "rarity": "Common",
+      "weightKg": 0,
+      "stack": 20,
+      "tags": [
+        "electronic",
+        "salvage"
+      ],
+      "stats": {}
+    },
+    {
+      "id": "grip_stabilised_pistol",
+      "name": "Stabilised pistol grip",
+      "category": "Upgrade",
+      "subtype": "",
+      "tier": 1,
+      "rarity": "Common",
+      "weightKg": 0,
+      "stack": 20,
+      "tags": [
+        "component:grip",
+        "weapon:pistol"
+      ],
+      "stats": {
+        "recoil": -7
+      }
+    },
+    {
+      "id": "cracked_ceramic_bearing",
+      "name": "Cracked ceramic bearing",
+      "category": "Junk",
+      "subtype": "",
+      "tier": 1,
+      "rarity": "Common",
+      "weightKg": 0,
+      "stack": 20,
+      "tags": [
+        "salvage"
+      ],
+      "stats": {}
+    }
+  ],
+  "recipes": [
+    {
+      "id": "recipe_grip_stabilised_pistol",
+      "name": "Stabilised pistol grip",
+      "station": "station_field_fabricator",
+      "seconds": 3,
+      "inputs": [
+        {
+          "kind": "tag",
+          "ref": "component:servo",
+          "quantity": 1
+        },
+        {
+          "kind": "item",
+          "ref": "scrap_alloy",
+          "quantity": 2
+        },
+        {
+          "kind": "tag",
+          "ref": "nanite:tier1",
+          "quantity": 5
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "grip_stabilised_pistol",
+          "quantity": 1
+        }
+      ]
+    }
+  ],
+  "enemies": [
+    {
+      "id": "feral_worker_droid",
+      "name": "Feral worker droid",
+      "loot": [
+        {
+          "itemId": "scrap_alloy",
+          "min": 1,
+          "max": 2,
+          "chance": 100
+        },
+        {
+          "itemId": "droid_servo_damaged",
+          "min": 1,
+          "max": 1,
+          "chance": 100
+        },
+        {
+          "itemId": "nanite_residue",
+          "min": 2,
+          "max": 3,
+          "chance": 100
+        }
+      ]
+    },
+    {
+      "id": "feral_scrap_drone",
+      "name": "Feral scrap drone",
+      "loot": [
+        {
+          "itemId": "scrap_alloy",
+          "min": 1,
+          "max": 1,
+          "chance": 100
+        },
+        {
+          "itemId": "nanite_residue",
+          "min": 2,
+          "max": 2,
+          "chance": 100
+        }
+      ]
+    }
+  ]
+}

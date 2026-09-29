@@ -9,8 +9,11 @@ class Client:
   deadline=time.monotonic()+10
   while time.monotonic()<deadline:
    p=self.folder/'ack.json'
-   if p.exists() and json.loads(p.read_text())['id']==j['id']:
-    await asyncio.sleep(.15);return
+   if p.exists():
+    ack=json.loads(p.read_text())
+    if ack.get('id')==j['id']:
+     if not ack.get('success'):raise RuntimeError('Native QA rejected command: '+str(ack.get('error')))
+     await asyncio.sleep(.15);return
    await asyncio.sleep(.02)
   raise TimeoutError('Native QA command was not acknowledged: '+str(j))
  async def call_tool(self,name,args):
