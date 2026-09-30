@@ -94,6 +94,8 @@ native evidence uses OpenGL. Do not silently change the graphics API or pipeline
 | World | Editable hill, stairs, terrain basin, stone/soil detail, grass, cloud/dust atmosphere, landmarks and collision sources. Existing assets are a baseline, not a permanent quality ceiling. |
 | Interface | Accepted worn bronze/metal UI Toolkit art, open center view, corner HUD, ten visible hotbar slots with six working actions and four empty reserves. |
 | Sound | Existing ElevenLabs music, ambience, spatial hums, footsteps and interaction cues; retain mixer, mute and reduced-motion behavior. |
+| Outer Berms loop | Scrap pistol with grip/barrel/cell mods, refined components, seeded loot with bad-luck protection, salvage caches, scrap heaps, Depot Foreman elite, Ossa's five field orders, Basic General Supplies / Buy parts / Sell salvage, versioned save with Continue. Content lives in `Data/Crafting/WardCrafting.asset`, `CityCatalog.asset` and the field-order set; see [unity/EDITING.md](unity/EDITING.md). |
+| Rendering baseline | Forward+, 150 m / 4-cascade sun shadows, HDR grading, TAA on High, procedural sky v2, interior-mapped windows, terrain v2, combat FX, truck/tree LODs. Measure changes with `unity/tools/lookbook.py` and `profile_scene.py`; the player is GPU-bound on the reference machine. |
 
 Read the relevant source records before replacing assets:
 [character imports](docs/model-import.md),

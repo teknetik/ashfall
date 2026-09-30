@@ -115,6 +115,30 @@ survive relaunch; explicit `-screen-*` launch arguments override a saved display
 The interface remains sharp when reducing render scale.
 See [AUDIO.md](AUDIO.md) for source records and [settings verification](evidence/settings/20260908/acceptance.md).
 
+## Look and rendering (29–30 September 2026)
+
+- **Light:** sun shadows reach 150 m in four cascades (in-game Shadows Low/Medium/High = 45/90/150 m), Forward+ so
+  every practical lamp lights nearby surfaces, HDR grading with a neutral base (cool shade, warm highlights), fog from
+  38 m to 420 m. The live day/night palette is `Art/Atmosphere/Dustbowl/WardDustbowl.asset` (the clock starts paused
+  at 17:00); the grade is `Art/Atmosphere/Dustbowl/WardDustbowlGrade.asset`.
+- **Sky:** `Shaders/WardSkyV2.shader` (procedural atmosphere, non-tiling cumulus and cirrus, stars, moon) through
+  `Materials/Sky/WardSkyV2.mat`; the previous sky material is kept for rollback.
+- **Night:** 63 practical lamps reach 150 m; shop windows are interior-mapped rooms that light up
+  (`Shaders/WardWindowInterior.shader` on WardGlass); shop sign letters glow on the lamp circuit.
+- **Terrain:** the desert basin uses `Shaders/WardDesertTerrainV2.shader` (layered rock/scree/sand, strata, ripples)
+  via `Materials/Terrain/SandstoneBasinV2.mat` and casts shadows.
+- **Combat FX:** the `Combat FX` scene object plays pooled droid death bursts and hit flashes
+  (`Prefabs/FX/`, rebuilt by *Athen Hill → Combat → Build combat FX prefabs*).
+- **Anti-aliasing:** Video settings offer SMAA, Temporal (TAA, High preset default) and 2/4/8× MSAA.
+- **Cost:** the Karaveen truck and hero tree have LODs and shadow proxies; render chunks use 24 m cells.
+  On the RTX 3060 reference at 1080p High the hill view runs ~67–71 FPS (09:00 is the heaviest at ~54 FPS);
+  the player is GPU-bound. Tools: `tools/lookbook.py` (named cameras × hours), `tools/profile_scene.py`
+  (Unity profiler capture + ranked markers), `tools/compare_lookbooks.py`.
+- **Adaptive Probe Volume sky occlusion** is configured but not baked (the bake exceeds this machine's memory);
+  see `evidence/rendering/20260930/apv/README.md`.
+
+Progress and decisions for this pass: [docs/next-level-20260929.md](../docs/next-level-20260929.md).
+
 ## Builds and diagnostics
 
 Use **Athen Hill → Build → Linux development player** or **Linux release player**.
