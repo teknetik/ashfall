@@ -1,0 +1,34 @@
+{
+ "utc": "2026-09-30",
+ "build": "unity/AthenHill/Builds/LinuxDevelopment/AthenHill.x86_64, data 30 Sep 03:38 (ward/next-level HEAD 4423b50a)",
+ "display": "1920x1080 windowed (Hyprland float), OpenGL 4.5 core, RTX 3060 12 GB / i9-10850K, driver 610.57.04, High + TAA, VSync off, uncapped",
+ "harness": "qa.py (adapted copy of ../20260930-native/qa.py); every verb by XTEST keys/mouse, bridge for positioning, camera, captures, state and profiling",
+ "runs": {
+  "run1-newgame": "no save -> city loop -> primer -> orders 1-5 -> free play (persistence, re-form, Buy parts, sales, night, profiles) -> Pause/Quit",
+  "run2-continue": "Continue menu, New Game confirmation + Esc, Continue restore compare",
+  "run3-newgame-confirm": "New Game over a save (confirm) -> primer -> order-2 pacing sample 2 -> orders 2-3 -> order-4 Foreman captures",
+  "run5-corrupt-save": "truncated save -> Continue notice; cache / droid / bridge cost experiments; 20 s depot fight window"
+ },
+ "checks": {
+  "1_fabricatorKeyboard": "pass (one step per arrow, 9/9 reachable, stops at edges; Remove on visibly selected grip removed only the grip; focus Fit -> schematic; slot cards in Tab order)",
+  "2_fabricatorLayout": "pass (1080p and 1280x720: stats table, headers STAT/NOW/WITH MOD/CHANGE, slots all visible, no scrolling) - cosmetic defects noted",
+  "3_inventoryArrows": "pass (11 items, 5 columns at 1080p, Left/Right across rows, Down onto shorter row lands on last tile, Enter opens details; 7 columns at 1280x720)",
+  "4_basicGeneral": "pass (three sections, six Sell rows visible, Buy part 172->160 cr +1 capacitor, disabled below price, sell-all deltas atomic, sold-out row hands focus on, last -> Close, last coil -> buy2, flask 25->21, coil ->22) - Tab leaks to chat scrollbar",
+  "5_startup": "pass (confirmation replaces actions, ends y=807 vs footer y=962, default Keep, Esc restores with focus on New Game, .previous.json kept, Continue left-aligned)",
+  "6_hudFocus": "pass (W, arrows, Enter in Play: focused None, state Play; Tab opens/closes pack)",
+  "7_cachesAndNest": "pass (nest stayed cleared ~23 min near bench and 6.5 min in fabricator; 6/6 caches present after 6.5 min; re-formed after >=45 s away; 3/3 old caches collectable after re-form within 600 s; caches expire at 600 s by design)",
+  "8_foreman": "pass (2 escorts, 1400 HP, every 3rd tell 1.76-1.94 s vs 1.06-1.21 s, bar just above head, marker on live droid / hides with bar / 'last seen' after kill); Mk I kill 27.1 s clean, 59.6 s with one down",
+  "9_text": "pass (radio panel, lines last 2.5 s + 0.3 s/word, queued, pickups toast/log only, notice below radio, per-node prompts on 9/9 heaps) - stale queued briefings",
+  "10_saves": "pass (plain-word corrupt notice, file kept as .unreadable-*.json; Continue restored credits/items/mods/stats/recipes/craft counts/order/city flags)",
+  "11_regression": "pass (Vex/Torr/Linn/Mira, no movement in modals, trades, Lattice link, Ring Gate offline walk-in and E, pause/pack/notes); Player.log: no exceptions/errors in 4 runs"
+ },
+ "pacing": {
+  "order2_sample1_run1": "3 micro capacitors from primer caches -> 0 extra clears, 0 heaps needed for capacitors (then 5 of 8 heaps also gave one: 9 carried)",
+  "order2_sample2_run3": "0 capacitors from primer -> 0 clears, 6 heap searches (capacitor on #2 and #6)",
+  "buyShortcut": "40 cr after primer >= 2 x 12 cr: order 2 can be bought outright immediately",
+  "foremanMk1": "27.1 s from first hit (46 shots, 0 damage, bot backs off every tell); 59.6 s with poor line of sight (91 shots, 113 damage, 1 down); Foreman alone with Mk II grip 31.6 s",
+  "primerToFreePlay_run1": "~34 min wall clock including all QA captures"
+ },
+ "frameTime": "see frame-time-summary.json",
+ "playerLog": "no exceptions or errors (run1/2/3/5); run5 has the two expected 'Ward save could not be parsed' warnings; run1 has a URP info line: 24 punctual shadow maps did not fit the 4096 atlas (night lamps)"
+}
