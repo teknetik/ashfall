@@ -54,6 +54,14 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .journal-icon { background-image: url("Art/journal.png"); }
 .gear-icon { background-image: url("Art/gear.png"); }
 #notice { position: absolute; top: 90px; left: 50%; margin-left: -300px; width: 600px; padding: 18px 28px; white-space: normal; font-size: 20px; -unity-text-align: middle-center; }
+/* Warden radio: its own channel under the compass; notices drop below it while a line is up (CityHud). */
+#radio { display: none; position: absolute; top: 90px; left: 50%; margin-left: -370px; width: 740px; padding: 14px 28px 16px; }
+.radio-heading { flex-direction: row; align-items: center; margin-bottom: 6px; }
+.radio-signal { width: 8px; height: 8px; background-color: #58d5d7; rotate: 45deg; margin-right: 12px; }
+.radio-speaker { color: #8be6df; letter-spacing: 2px; }
+.radio-text { font-size: 20px; white-space: normal; color: #eee9dc; }
+.compact #radio { width: 640px; margin-left: -320px; }
+.small-window .radio-text, .small-window .radio-speaker { font-size: 20px; }
 #nametags { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
 .nametag { position: absolute; width: 200px; flex-direction: row; align-items: flex-start; padding: 4px 7px; }
 .nametag-marker { width: 22px; height: 22px; margin-top: 2px; margin-right: 8px; }
@@ -78,6 +86,25 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .pack-icon { background-image: url("Art/pack.png"); }
 .notes-icon { background-image: url("Art/notes.png"); }
 .scrap-icon { background-image: url("Art/scrap.png"); }
+/* Gameplay v2 salvage, parts and pistol mods (refs/ui_20260930/items). */
+.alloy-icon { background-image: url("Art/alloy.png"); }
+.nanites-icon { background-image: url("Art/nanites.png"); }
+.copper-icon { background-image: url("Art/copper.png"); }
+.servo-icon { background-image: url("Art/servo.png"); }
+.capacitor-icon { background-image: url("Art/capacitor.png"); }
+.optic-icon { background-image: url("Art/optic.png"); }
+.actuator-icon { background-image: url("Art/actuator.png"); }
+.shard-icon { background-image: url("Art/shard.png"); }
+.control-core-icon { background-image: url("Art/control-core.png"); }
+.alloy-plate-icon { background-image: url("Art/alloy-plate.png"); }
+.wound-coil-icon { background-image: url("Art/wound-coil.png"); }
+.charge-core-icon { background-image: url("Art/charge-core.png"); }
+.grip-mk1-icon { background-image: url("Art/grip-mk1.png"); }
+.barrel-mk1-icon { background-image: url("Art/barrel-mk1.png"); }
+.cell-mk1-icon { background-image: url("Art/cell-mk1.png"); }
+.grip-mk2-icon { background-image: url("Art/grip-mk2.png"); }
+.barrel-mk2-icon { background-image: url("Art/barrel-mk2.png"); }
+.cell-mk2-icon { background-image: url("Art/cell-mk2.png"); }
 .hotbar-slot .talk-icon { width: 34px; height: 38px; margin-bottom: 6px; }
 .keycap { position: absolute; top: 3px; left: 3px; width: 16px; height: 18px; border-width: 1px; border-color: #82948b; border-radius: 2px; background-color: #101a1b; -unity-text-align: middle-center; font-size: 14px; }
 .slot-label { height: 18px; flex-shrink: 0; width: 100%; border-top-width: 1px; border-top-color: #5c6c64; -unity-text-align: middle-center; font-size: 14px; white-space: nowrap; }
@@ -124,7 +151,8 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .inventory-overview { width: 260px; flex-shrink: 0; padding-left: 12px; border-left-width: 1px; border-left-color: #535f58; }
 .inventory-overview-header { flex-direction: row; align-items: center; margin-bottom: 10px; }
 .inventory-overview-icon { width: 64px; height: 64px; margin-right: 12px; -unity-background-scale-mode: scale-to-fit; }
-.inventory-overview-name { font-size: 22px; }
+.inventory-overview-name { font-size: 22px; white-space: normal; flex-shrink: 1; }
+.inventory-overview-header > VisualElement { flex-shrink: 1; }
 .inventory-overview-description { white-space: normal; font-size: 18px; margin-top: 8px; }
 
 .inventory-details { display: none; position: absolute; left: 50%; top: 20px; width: 390px; height: 430px; margin-left: -195px; padding: 18px 22px 16px; z-index: 10; }
@@ -268,33 +296,52 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .search-progress-fill { height: 100%; width: 0; background-color: #49cbd0; border-top-width: 1px; border-top-color: #86e6df; }
 .small-window .search-progress-label { font-size: 20px; }
 
-/* Gameplay v2 · Basic General salvage list (SalvageSalePanel.cs). */
-.shop-section-heading { color: #a48a62; border-top-width: 1px; border-top-color: #7b8275; padding-top: 12px; margin-top: 10px; }
-.salvage-row { min-height: 84px; padding: 8px 0; }
-.salvage-art { width: 58px; height: 58px; }
-.salvage-row .item-copy { font-size: 19px; }
-.salvage-row Button { width: 132px; }
+/* Gameplay v2 · Basic General (supplies and Buy parts | Sell salvage). SalvageSalePanel.cs, PartsShopPanel.cs. */
+.shop-columns { flex-direction: row; align-items: flex-start; }
+.shop-col { flex-grow: 1; flex-shrink: 1; flex-basis: 0; min-width: 0; }
+.shop-col-sell { margin-left: 22px; padding-left: 22px; border-left-width: 1px; border-left-color: #535f58; }
+#shop-panel .balance { margin-bottom: 8px; }
+.shop-section-heading { color: #a48a62; border-top-width: 1px; border-top-color: #7b8275; padding-top: 10px; margin-top: 10px; margin-bottom: 2px; }
+.shop-first-heading { border-top-width: 0; padding-top: 0; margin-top: 0; }
+.supply-row { min-height: 76px; padding: 6px 0; }
+.supply-row .trade-art { width: 62px; height: 66px; margin-right: 14px; }
+.supply-row .item-copy { font-size: 18px; }
+.supply-row Button { width: 112px; min-height: 44px; padding: 10px 8px; }
+.salvage-row, .part-row { min-height: 60px; padding: 5px 0; }
+.salvage-art, .part-art { width: 50px; height: 50px; margin-right: 14px; }
+.salvage-row .item-copy, .part-row .item-copy { font-size: 18px; }
+.salvage-row Button, .part-row Button { width: 132px; min-height: 44px; padding: 10px 8px; }
+.small-window .supply-row .item-copy, .small-window .salvage-row .item-copy, .small-window .part-row .item-copy { font-size: 20px; }
 
-/* Gameplay v2 · field fabricator (FabricatorPanel.cs). Cyan = ready/focus, bronze = structure, red = short. */
-.fab-row { flex-direction: row; align-items: flex-start; }
-#fab-pistol { border-top-width: 1px; border-top-color: #7b8275; padding-top: 12px; margin-top: 12px; }
-.fab-side { width: 272px; flex-shrink: 0; margin-right: 20px; }
-.fab-main { flex-grow: 1; flex-shrink: 1; min-width: 0; }
+/* Gameplay v2 · wide modals (field fabricator, Basic General): everything fits at 1080p; the modal scroll view keeps
+   keyboard focus in view at smaller sizes (UiNavigation.KeepFocusVisible). */
+#modal.wide-modal { width: 1400px; max-width: 96%; }
+#modal.wide-modal #modal-scroll { max-height: 690px; }
+
+/* Gameplay v2 · field fabricator (FabricatorPanel.cs): schematics | selected schematic | pistol slots and stats.
+   Cyan = ready/focus, bronze = structure, red = short. */
+.fab-columns { flex-direction: row; align-items: stretch; }
+.fab-col { flex-shrink: 0; }
+.fab-col-list { width: 312px; padding-right: 18px; }
+.fab-col-detail { flex-grow: 1; flex-shrink: 1; flex-basis: 0; min-width: 0; padding: 0 20px; border-left-width: 1px; border-right-width: 1px; border-color: #535f58; }
+.fab-col-pistol { width: 424px; padding-left: 20px; }
 .fab-heading { color: #a48a62; margin-bottom: 6px; }
+.fab-stats-heading { margin-top: 14px; }
 .fab-group { color: #bcbcad; margin: 8px 0 3px; }
 .fab-recipe { flex-direction: row; justify-content: space-between; align-items: center; min-height: 38px; padding: 7px 12px; margin: 2px 0; -unity-text-align: middle-left; }
 .fab-recipe-name { flex-shrink: 1; font-size: 17px; white-space: normal; }
-.fab-recipe-state { font-size: 14px; color: #bcbcad; margin-left: 8px; }
+.fab-recipe-state { font-size: 14px; color: #bcbcad; margin-left: 8px; flex-shrink: 0; }
 .fab-recipe.locked .fab-recipe-name { color: #8c958b; }
 .fab-recipe.ready .fab-recipe-state { color: #58d5d7; }
 .fab-recipe.fitted .fab-recipe-state { color: #daca9e; }
-.fab-recipe.selected { border-left-width: 3px; border-left-color: #a48a62; }
+.fab-recipe.selected { border-left-width: 3px; border-left-color: #a48a62; background-image: url("Art/button-focus.png"); -unity-background-image-tint-color: #9fb5ad; }
+.fab-recipe.selected:focus { -unity-background-image-tint-color: #ffffff; border-left-color: #58d5d7; }
 .fab-title { font-size: 24px; color: #eee9dc; margin-bottom: 4px; white-space: normal; }
 .fab-description { font-size: 17px; white-space: normal; margin-bottom: 10px; }
 .fab-inputs { margin-bottom: 8px; }
 .fab-input { flex-direction: row; justify-content: space-between; border-bottom-width: 1px; border-bottom-color: #3f4a45; padding: 4px 2px; }
 .fab-input-name { font-size: 18px; flex-shrink: 1; white-space: normal; }
-.fab-input-count { font-size: 18px; margin-left: 12px; }
+.fab-input-count { font-size: 18px; margin-left: 12px; flex-shrink: 0; }
 .have-ok { color: #8fcf8a; }
 .have-short { color: #db7d6b; }
 .fab-actions { flex-direction: row; flex-wrap: wrap; }
@@ -302,19 +349,29 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 #fabricator-craft { color: #8be6df; }
 .fab-reason { font-size: 17px; white-space: normal; color: #bcbcad; margin-top: 6px; }
 .fab-reason.blocked { color: #db7d6b; }
-.fab-slot { flex-direction: column; align-items: flex-start; min-height: 52px; padding: 8px 12px; margin: 3px 0; }
+.fab-reason.fitted { color: #daca9e; }
+#fab-slots { flex-direction: row; margin: 0 -4px; }
+.fab-slot { flex-grow: 1; flex-basis: 0; min-width: 0; flex-direction: column; align-items: flex-start; justify-content: flex-start; min-height: 76px; padding: 8px 10px; margin: 3px 4px; }
 .fab-slot-label { color: #a48a62; }
-.fab-slot-mod { font-size: 17px; white-space: normal; }
+.fab-slot-mod { font-size: 16px; white-space: normal; -unity-text-align: upper-left; }
 .fab-slot.empty .fab-slot-mod { color: #8c958b; }
 .fab-slot.selected { border-left-width: 3px; border-left-color: #58d5d7; }
-.fab-stat-row { flex-direction: row; align-items: center; border-bottom-width: 1px; border-bottom-color: #3f4a45; min-height: 27px; }
-.fab-stat-header { border-bottom-color: #65706a; }
-.fab-stat-header .fab-stat-cell { color: #a48a62; }
-.fab-stat-name { width: 150px; font-size: 17px; }
-.fab-stat-cell { flex-grow: 1; flex-basis: 0; font-size: 17px; -unity-text-align: middle-right; padding-right: 6px; }
+.fab-stat-row { flex-direction: row; align-items: center; border-bottom-width: 1px; border-bottom-color: #3f4a45; min-height: 28px; }
+.fab-stat-header { border-bottom-color: #65706a; min-height: 24px; }
+.fab-stat-header Label { color: #a48a62; }
+.fab-stat-name { flex-grow: 1; flex-shrink: 1; min-width: 0; font-size: 17px; }
+.fab-stat-cell { flex-shrink: 0; font-size: 17px; -unity-text-align: middle-right; padding-right: 6px; white-space: nowrap; }
+.fab-stat-now { width: 84px; }
+.fab-stat-preview { width: 96px; }
+.fab-stat-delta { width: 78px; }
+.fab-stat-header .fab-stat-cell, .fab-stat-header .fab-stat-name { font-size: 15px; }
 .fab-stat-delta.better { color: #8fcf8a; }
 .fab-stat-delta.worse { color: #db7d6b; }
-.small-window .fab-recipe-name, .small-window .fab-stat-name, .small-window .fab-stat-cell, .small-window .fab-reason, .small-window .fab-description, .small-window .fab-slot-mod { font-size: 20px; }
-.small-window .fab-side { width: 300px; }
+.small-window .fab-recipe-name, .small-window .fab-stat-name, .small-window .fab-stat-cell, .small-window .fab-reason, .small-window .fab-description, .small-window .fab-slot-mod, .small-window .fab-input-name, .small-window .fab-input-count { font-size: 20px; }
+.small-window .fab-col-list { width: 330px; }
+.small-window .fab-col-pistol { width: 450px; }
+.small-window .fab-stat-now { width: 92px; }
+.small-window .fab-stat-preview { width: 104px; }
+.small-window .fab-stat-delta { width: 84px; }
 .inventory-tile.tile-uncommon { border-bottom-width: 3px; border-bottom-color: #58d5d7; }
 .inventory-tile.tile-rare { border-bottom-width: 3px; border-bottom-color: #e7a94a; }

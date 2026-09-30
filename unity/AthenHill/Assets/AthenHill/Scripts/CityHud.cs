@@ -20,6 +20,9 @@ namespace AthenHill
   bool hasSave;
   FabricatorPanel fabricator;
   SalvageSalePanel salvageSale;
+  PartsShopPanel partsShop;
+  VisualElement modalFocus,radio,notice;
+  readonly HashSet<string> iconClasses=new HashSet<string>{"flask-icon","medkit-icon","scrap-icon","pack-icon","pistol-icon","lattice-icon"};
   readonly Dictionary<NpcAgent,VisualElement> tags=new Dictionary<NpcAgent,VisualElement>();
   readonly List<VisualElement> compassTicks=new List<VisualElement>();
   readonly List<Label> compassLabels=new List<Label>();
@@ -44,7 +47,7 @@ namespace AthenHill
    windowLayout=new HudWindowLayout(root);
    settingsPanel=new SettingsPanel(root.Q("settings-panel"),session.Settings,session);
    crafting=session.GetComponent<CraftingSession>();
-   foreach(string name in new[]{"identity","compass","objective-box","chat","notice","modal"})windowLayout.Add(root.Q(name),name);
+   foreach(string name in new[]{"identity","compass","objective-box","chat","notice","radio","modal"})windowLayout.Add(root.Q(name),name);
    foreach(string name in new[]{"quickbar","top-actions","interaction","key-hints"})windowLayout.Add(root.Q(name),name,true);
    root.RegisterCallback<GeometryChangedEvent>(_=>UpdateWindowSize());
    UpdateWindowSize();
@@ -70,11 +73,22 @@ namespace AthenHill
    footerLeft=root.Q<Label>("modal-footer-left");
    footerRight=root.Q<Label>("modal-footer-right");
 
-   root.RegisterCallback<KeyDownEvent>(InventoryKeyNav,TrickleDown.TrickleDown);
+   // Keyboard: arrows move one step (grid/list handlers consume the navigation event); scroll views follow focus;
+   // in play, gameplay keys (WASD/arrows, Enter, Tab) never navigate or press HUD buttons.
+   inventoryGrid?.RegisterCallback<NavigationMoveEvent>(InventoryNavigate,TrickleDown.TrickleDown);
+   UiNavigation.KeepFocusVisible(root.Q<ScrollView>("modal-scroll"));UiNavigation.KeepFocusVisible(inventoryScroll);
+   root.RegisterCallback<NavigationMoveEvent>(GuardPlay,TrickleDown.TrickleDown);
+   root.RegisterCallback<NavigationSubmitEvent>(GuardPlay,TrickleDown.TrickleDown);
+   // HUD controls are mouse and hotkey only (1–7, Tab/5, 6, Esc, E), so nothing in the HUD can hold keyboard focus.
+   foreach(var v in root.Q("hud").Query<VisualElement>().ToList())if(v.focusable)v.focusable=false;
+   root.Q("modal").RegisterCallback<FocusInEvent>(e=>modalFocus=e.target as VisualElement);
+   radio=root.Q("radio");notice=root.Q("notice");
+   radio.RegisterCallback<GeometryChangedEvent>(_=>PlaceNotice());
+   foreach(var item in session.catalog.items)if(item!=null&&!string.IsNullOrEmpty(item.icon))iconClasses.Add(item.icon);
 
    Bind("close",session.Close);Bind("resume",session.Close);Bind("reset",session.ResetPlayer);
    if(crafting)fabricator=new FabricatorPanel(root,session,crafting);
-   salvageSale=new SalvageSalePanel(root,session);
+   salvageSale=new SalvageSalePanel(root,session);partsShop=new PartsShopPanel(root,session);
    Bind("details-close",session.CloseItemDetails);
    Bind("inventory-button",()=>session.Open(CityState.Inventory));Bind("notes-button",()=>session.Open(CityState.Notes));Bind("pause-button",()=>session.Open(CityState.Paused));Bind("credits-button",()=>session.Open(CityState.Credits));Bind("interaction",session.Interact);
    Bind("hint-pause",()=>session.Open(CityState.Paused));
@@ -111,15 +125,14 @@ namespace AthenHill
    session.Changed+=Refresh;Refresh();
   }
 
-  static readonly string[] itemIconClasses={"flask-icon","medkit-icon","scrap-icon","pack-icon","pistol-icon","lattice-icon"};
   static readonly string[] rarityClasses={"rarity-common","rarity-uncommon","rarity-rare"};
   /// Illustration class comes from the item's catalog record (CityCatalog icon); the pack illustration otherwise.
   void SetItemIcon(VisualElement target,string id)
   {
    if(target==null)return;
-   foreach(string c in itemIconClasses)target.RemoveFromClassList(c);
+   foreach(string c in iconClasses)target.RemoveFromClassList(c);
    var item=id!=null?session.Shop?.Spec(id):null;
-   target.AddToClassList(item!=null&&Array.IndexOf(itemIconClasses,item.icon)>=0?item.icon:"pack-icon");
+   target.AddToClassList(item!=null&&!string.IsNullOrEmpty(item.icon)?item.icon:"pack-icon");
   }
   /// Outer Berms field order for the Notes journal, when one is running.
   string FieldOrderNotes(){var orders=session.GetComponent<FieldOrders>();return orders&&orders.Ready&&orders.Progress.Started&&!string.IsNullOrEmpty(orders.Objective)?"\n\n"+(orders.Heading??"OUTER BERMS")+"\n"+orders.Objective:"";}
@@ -129,9 +142,10 @@ namespace AthenHill
    if(saveGame&&saveGame.HasSave){ShowNewGameConfirm(true);return;}
    if(saveGame&&saveGame.Ready)saveGame.NewGame();else session.StartGame();
   }
+  /// The confirmation takes the place of the start actions (it never stacks below them over the footer).
   void ShowNewGameConfirm(bool show)
   {
-   Show("new-game-confirm",show);root.Q("startup-actions").SetEnabled(!show);
+   Show("new-game-confirm",show);Show("startup-actions",!show);root.Q("startup-actions").SetEnabled(!show);
    if(show)root.schedule.Execute(()=>root.Q<Button>("cancel-new-game").Focus());
   }
   /// Continue appears (and takes focus) only when a save exists; its line summarises the saved progress.
@@ -201,32 +215,57 @@ namespace AthenHill
    SetItemIcon(inventoryOverviewIcon,id);
   }
 
-  void InventoryKeyNav(KeyDownEvent e)
+  /// Arrow keys in the pack grid: exactly one cell per press. Columns come from the laid-out tiles (the grid wraps
+  /// to the window), so Up/Down always land on the tile above/below.
+  void InventoryNavigate(NavigationMoveEvent e)
   {
-   if(session.State!=CityState.Inventory||inventoryIds.Count==0||root?.focusController==null)return;
-   bool detailsOpen=!string.IsNullOrEmpty(session.DetailItemId);
-   if(detailsOpen)return;
-   var focused=root.focusController.focusedElement as VisualElement;
-   if(focused==null||focused.name==null||!focused.name.StartsWith("inv-"))return;
-   string id=focused.name.Substring("inv-".Length);
-   int index=inventoryIds.IndexOf(id);
+   if(session.State!=CityState.Inventory||inventoryIds.Count==0||!UiNavigation.IsArrow(e.direction))return;
+   if(!string.IsNullOrEmpty(session.DetailItemId))return;
+   var focused=root.focusController?.focusedElement as VisualElement;
+   int index=focused!=null&&focused.name!=null&&focused.name.StartsWith("inv-")?inventoryIds.IndexOf(focused.name.Substring(4)):-1;
    if(index<0)return;
-   int columns=root.ClassListContains("small-window")?3:4;
-   int target=index;
-   switch(e.keyCode)
+   int target=UiNavigation.GridStep(index,inventoryIds.Count,InventoryColumns(),e.direction);
+   if(target>=0&&inventoryTiles.TryGetValue(inventoryIds[target],out var next))next.Focus();
+   UiNavigation.Consume(e,root);
+  }
+  public int InventoryColumns()=>UiNavigation.Columns(inventoryIds.Select(id=>inventoryTiles.TryGetValue(id,out var b)?b.layout:default).ToList());
+  /// In play the HUD is mouse/hotkey only: navigation and submit events (WASD, arrows, Tab, Enter) never reach it.
+  void GuardPlay(EventBase e)
+  {
+   if(session.State!=CityState.Play)return;
+   UiNavigation.Consume(e,root);
+   (root.focusController?.focusedElement as VisualElement)?.Blur();
+  }
+  /// Keeps keyboard focus on something usable in a modal: when the focused control disabled itself (e.g. the last
+  /// scrap coil sold) or disappeared, focus its nearest enabled neighbour (same row first), else Close.
+  void EnsureModalFocus()
+  {
+   var state=session.State;
+   if(state==CityState.Play||state==CityState.MainMenu||state==CityState.Boot||state==CityState.Settings||state==CityState.Inventory)return;
+   if(root.Q("shade").resolvedStyle.display==DisplayStyle.None)return; // e.g. the developer time overlay owns focus
+   var focused=root.focusController?.focusedElement as VisualElement;
+   if(focused!=null&&focused.panel!=null&&focused.enabledInHierarchy&&focused.visible&&focused.resolvedStyle.display!=DisplayStyle.None)return;
+   if(state==CityState.Fabricator&&fabricator!=null){var f=fabricator.ActionFocus;if(f!=null){(f as VisualElement).focusable=true;f.Focus();return;}}
+   var last=modalFocus;var close=root.Q<Button>("close");
+   Button pick=null;
+   if(last!=null&&last.panel!=null)
    {
-    case KeyCode.LeftArrow:target=index-1;break;
-    case KeyCode.RightArrow:target=index+1;break;
-    case KeyCode.UpArrow:target=index-columns;break;
-    case KeyCode.DownArrow:target=index+columns;break;
-    case KeyCode.Return:
-    case KeyCode.KeypadEnter:session.OpenItemDetails(id);e.StopPropagation();return;
-    default:return;
+    pick=last.parent?.Query<Button>().Where(Usable).ToList().FirstOrDefault(b=>b!=last);
+    if(pick==null)
+    {
+     var all=root.Q("modal").Query<Button>().ToList();int i=all.IndexOf(last as Button);
+     if(i>=0)pick=all.Skip(i+1).FirstOrDefault(Usable)??all.Take(i).Reverse().FirstOrDefault(b=>Usable(b)&&b!=close);
+    }
    }
-   target=Mathf.Clamp(target,0,inventoryIds.Count-1);
-   string nextId=inventoryIds[target];
-   if(inventoryTiles.TryGetValue(nextId,out var next))next.Focus();
-   e.StopPropagation();
+   (pick??close)?.Focus();
+  }
+  static bool Usable(Button b)=>b!=null&&b.focusable&&b.enabledInHierarchy&&b.visible&&b.resolvedStyle.display!=DisplayStyle.None&&b.panel!=null;
+  /// Notices sit under the radio panel while a radio line is up, so both stay readable.
+  void PlaceNotice()
+  {
+   if(notice==null||radio==null)return;
+   bool radioUp=radio.resolvedStyle.display==DisplayStyle.Flex&&radio.layout.height>0;
+   notice.style.top=radioUp?radio.layout.yMax+8:new StyleLength(StyleKeyword.Null);
   }
   /// Known schematics that consume this item, directly or through one of its tags.
   static string KnownUses(CraftingModel model,ItemSpec item)=>string.Join(", ",model.Data.recipes.Where(r=>model.Knows(r.id)&&r.outputItemId!=item.id&&r.inputs!=null&&r.inputs.Any(i=>i.kind=="item"?i.id==item.id:item.HasTag(i.id))).Select(r=>r.name));
@@ -272,6 +311,11 @@ namespace AthenHill
    root.Q("startup-content").SetEnabled(session.State==CityState.MainMenu);
    root.EnableInClassList("startup-settings",startup&&session.State==CityState.Settings);
    Show("shade",modal&&session.State!=CityState.MainMenu);Show("notice",!modal&&!string.IsNullOrEmpty(session.notice));Text("notice",session.notice);Text("modal-notice",session.notice);
+   bool radioUp=session.HasStarted&&session.RadioLine.Showing;
+   Show("radio",radioUp);
+   if(radioUp){Text("radio-text",session.RadioLine.Text);Text("radio-speaker",(session.RadioLine.Speaker??"Radio").ToUpperInvariant()+" · RADIO");}
+   PlaceNotice();
+   root.Q("modal").EnableInClassList("wide-modal",session.State==CityState.Fabricator||session.State==CityState.Shop);
    Text("objective",session.visitedHill&&session.Spoken.Count<4?"Meet the colonists":session.Objective);Text("progress",$"{session.Spoken.Count} / 4 conversations");
    for(int i=0;i<4;i++)root.Q("mark"+i).EnableInClassList("complete",i<session.Spoken.Count);
    Text("credits",$"{session.Shop.Credits} cr");
@@ -285,12 +329,12 @@ namespace AthenHill
    if(footerLeft!=null)footerLeft.text="FREE COLUMN  /  ATHEN HILL";
    if(footerRight!=null)footerRight.text="Tab · Select     Enter · Confirm";
    Text("modal-title",session.State.ToString());Text("modal-subtitle","");
-   if(session.State==CityState.Fabricator){Text("modal-title","Field fabricator");Text("modal-subtitle","Warden outpost · Fabricate parts and fit pistol mods");if(footerRight!=null)footerRight.text="↑↓ · Schematics     Tab · Select     Enter · Confirm";}
+   if(session.State==CityState.Fabricator){Text("modal-title","Field fabricator");Text("modal-subtitle","Warden outpost · Fabricate parts and fit pistol mods");if(footerRight!=null)footerRight.text="↑↓ · Schematic     → · Actions     Tab · Next     Enter · Confirm";}
    if(session.State==CityState.Dialogue){Text("modal-title",session.ActiveNpc.definition.displayName);Text("modal-subtitle",session.Dialogue.title);Text("dialogue-text",session.Dialogue.text);for(int i=0;i<2;i++)root.Q<Button>("choice"+i).text=session.Dialogue.choices[i].label;}
    if(session.State==CityState.Shop)
    {
-    Text("modal-title","Basic General");Text("modal-subtitle","Mira · Supplies and salvage");Text("shop-credit",$"Available balance: {session.Shop.Credits} credits");
-    salvageSale.Refresh();
+    Text("modal-title","Basic General");Text("modal-subtitle","Mira · Supplies, parts and salvage");Text("shop-credit",$"Available balance: {session.Shop.Credits} credits");
+    salvageSale.Refresh();partsShop.Refresh();
     for(int i=0;i<3;i++){var item=session.catalog.items[i];Text("item"+i,$"{item.name} · {session.Shop.Quantity(item.id)} carried\n{item.description}");var b=root.Q<Button>("buy"+i);b.text=$"Buy · {item.buyPrice} cr";b.SetEnabled(session.Shop.Credits>=item.buyPrice);var s=root.Q<Button>("sell"+i);s.text=$"Sell · {item.sellPrice} cr";s.SetEnabled(session.Shop.Quantity(item.id)>0);}
    }
    if(session.State==CityState.Grid)
@@ -371,6 +415,7 @@ namespace AthenHill
     }
     else root.focusController?.focusedElement?.Blur();
    }
+   if(modal)root.schedule.Execute(EnsureModalFocus);
   }
   void LateUpdate()
   {

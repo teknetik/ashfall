@@ -51,7 +51,7 @@ namespace AthenHill
   [Header("After the last order")]
   [TextArea]public string freePlayObjective="Free hunting in the Outer Berms.";
   public string freePlayGuidance;
-  [Tooltip("Seconds between an order's completion line and the next order's briefing, so both can be read.")]
+  [Tooltip("Seconds of radio silence between an order's completion line and the next order's briefing (the radio queue shows each line for its full reading time first).")]
   [Min(0)]public float nextLineDelay=4.5f;
  }
 }

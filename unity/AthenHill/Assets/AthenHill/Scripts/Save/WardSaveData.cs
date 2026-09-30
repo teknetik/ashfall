@@ -27,22 +27,23 @@ namespace AthenHill
   public static bool TryParse(string json,out WardSaveData data,out string error)
   {
    data=null;
-   if(string.IsNullOrWhiteSpace(json)){error="the save file is empty";return false;}
-   if(json.TrimStart()[0]!='{'){error="the save file is not a Ward save";return false;}
+   if(string.IsNullOrWhiteSpace(json)){error="the file is empty";return false;}
+   if(json.TrimStart()[0]!='{'){error="the file is not a Ward save";return false;}
    try{data=JsonUtility.FromJson<WardSaveData>(json);}
-   catch(Exception e){error="the save file is damaged ("+e.GetType().Name+")";data=null;return false;}
-   if(data==null){error="the save file is damaged";return false;}
-   if(data.version<=0){error="the save file has no version (not a Ward save)";data=null;return false;}
-   if(data.version>WardSaveData.CurrentVersion){error=$"the save was made by a newer build (save version {data.version}, this build reads {WardSaveData.CurrentVersion})";data=null;return false;}
-   if(data.credits<0||data.purchases<0||data.sales<0){error="the save file holds impossible balances";data=null;return false;}
-   if(!string.IsNullOrEmpty(data.bermsStep)&&!Enum.TryParse(data.bermsStep,out BermsStep _)){error="the save file names an unknown Outer Berms step";data=null;return false;}
+   // Player-facing words only; the exception detail goes to the log.
+   catch(Exception e){Debug.LogWarning("Ward save could not be parsed: "+e.Message);error="the file is damaged or incomplete";data=null;return false;}
+   if(data==null){error="the file is damaged or incomplete";return false;}
+   if(data.version<=0){error="the file is not a Ward save";data=null;return false;}
+   if(data.version>WardSaveData.CurrentVersion){Debug.LogWarning($"Ward save version {data.version} is newer than this build reads ({WardSaveData.CurrentVersion}).");error="it was made by a newer build of the game";data=null;return false;}
+   if(data.credits<0||data.purchases<0||data.sales<0){error="the file is damaged (impossible balances)";data=null;return false;}
+   if(!string.IsNullOrEmpty(data.bermsStep)&&!Enum.TryParse(data.bermsStep,out BermsStep _)){error="the file is damaged (unknown Outer Berms progress)";data=null;return false;}
    error=null;return true;
   }
   public static bool TryRead(string path,out WardSaveData data,out string error)
   {
    data=null;
    try{if(!File.Exists(path)){error="no save file";return false;}return TryParse(File.ReadAllText(path),out data,out error);}
-   catch(Exception e)when(e is IOException||e is UnauthorizedAccessException){error="the save file could not be opened ("+e.Message+")";return false;}
+   catch(Exception e)when(e is IOException||e is UnauthorizedAccessException){Debug.LogWarning("Ward save read failed: "+e.Message);error="the file could not be opened";return false;}
   }
   /// Writes beside the target, then swaps it in, so a crash mid-write never leaves a half-written save.
   public static void Write(string path,WardSaveData data)

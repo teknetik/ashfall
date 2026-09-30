@@ -13,8 +13,8 @@ namespace AthenHill
   public ShopModel(IEnumerable<ItemSpec> definitions,int credits=25)
   {
    if(credits<0)throw new ArgumentOutOfRangeException(nameof(credits));
-   items=definitions.ToDictionary(x=>x.id,x=>new ItemSpec{id=x.id,name=x.name,description=x.description,buyPrice=x.buyPrice,sellPrice=x.sellPrice,startingQuantity=x.startingQuantity,tags=x.tags==null?null:(string[])x.tags.Clone(),maxStack=x.maxStack,excludeFromTrade=x.excludeFromTrade,rarity=x.rarity,sellOnly=x.sellOnly,icon=x.icon});
-   if(items.Values.Any(x=>x.buyPrice<0||x.sellPrice<0||x.startingQuantity<0||x.maxStack<0||x.maxStack>0&&x.startingQuantity>x.maxStack))throw new ArgumentException("Prices, quantities and caps must be valid.");
+   items=definitions.ToDictionary(x=>x.id,x=>new ItemSpec{id=x.id,name=x.name,description=x.description,buyPrice=x.buyPrice,sellPrice=x.sellPrice,startingQuantity=x.startingQuantity,tags=x.tags==null?null:(string[])x.tags.Clone(),maxStack=x.maxStack,excludeFromTrade=x.excludeFromTrade,rarity=x.rarity,sellOnly=x.sellOnly,icon=x.icon,partsPrice=x.partsPrice});
+   if(items.Values.Any(x=>x.buyPrice<0||x.sellPrice<0||x.partsPrice<0||x.startingQuantity<0||x.maxStack<0||x.maxStack>0&&x.startingQuantity>x.maxStack))throw new ArgumentException("Prices, quantities and caps must be valid.");
    quantities=items.ToDictionary(x=>x.Key,x=>x.Value.startingQuantity);Credits=credits;
   }
   public int Quantity(string id)=>id!=null&&quantities.TryGetValue(id,out int q)?q:0;
@@ -28,6 +28,22 @@ namespace AthenHill
   }
   /// Salvage Mira buys but does not stock: shown in the shop's Sell salvage list while carried.
   public static bool BuysAsSalvage(ItemSpec item)=>item!=null&&item.sellOnly&&!item.excludeFromTrade&&item.sellPrice>0;
+  /// Crafting parts Mira stocks under Buy parts: a premium price is set, the part is common or uncommon (rare parts stay
+  /// loot-only) and it is tradeable.
+  public static bool SellsAsPart(ItemSpec item)=>item!=null&&item.partsPrice>0&&item.rarity!=ItemRarity.Rare&&!item.excludeFromTrade;
+  /// One atomic purchase of crafting parts at Mira's premium price. Nothing changes if the credits or pack room fall short.
+  public bool BuyPart(string id,int count,out string message)
+  {
+   if(id==null||!items.TryGetValue(id,out var item)){message="That item is not available.";return false;}
+   if(!SellsAsPart(item)){message=item.rarity==ItemRarity.Rare?$"Mira does not stock {item.name}. Rare parts only come out of the Berms.":$"Mira does not stock {item.name}.";return false;}
+   if(count<1){message="Choose at least one part to buy.";return false;}
+   long total=(long)item.partsPrice*count;
+   if(total>Credits){message=$"You need {total-Credits} more credits for {(count==1?item.name:$"{count} × {item.name}")}.";return false;}
+   if(Room(id)<count){message=item.maxStack>0?$"Your pack cannot hold more {item.name} (limit {item.maxStack}).":"Your pack cannot hold that many.";return false;}
+   if(Purchases==int.MaxValue||!TryApply(new[]{new KeyValuePair<string,int>(id,count)},-(int)total,out _)){message="This trade cannot be completed.";return false;}
+   Purchases++;
+   message=count==1?$"Bought {item.name} for {total} credit{(total==1?"":"s")}.":$"Bought {count} × {item.name} for {total} credits.";return true;
+  }
   /// Validate all deltas against one snapshot, then commit once. Duplicate IDs are summed.
   public bool TryApply(IEnumerable<KeyValuePair<string,int>> changes,int creditDelta,out string reason)
   {

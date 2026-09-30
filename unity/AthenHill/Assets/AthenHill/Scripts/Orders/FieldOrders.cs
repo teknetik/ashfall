@@ -6,8 +6,10 @@ using UnityEngine;
 namespace AthenHill
 {
  /// Runs Ossa's field orders once the Outer Berms primer is complete: evaluates goals when the pack, loadout or
- /// crafting state changes (never per frame), grants rewards once, speaks radio lines and exposes the Field Notes
- /// objective and guidance target. Order content lives in the FieldOrderSet asset.
+ /// crafting state changes (never per frame), grants rewards once, speaks radio lines (GameSession's radio channel, so
+ /// long briefings are queued and never overwritten) and exposes the Field Notes objective and guidance target. A
+ /// guidance key that also names an encounter binding follows that encounter's live leader (the Depot Foreman), and
+ /// marks where it was last seen once it is down. Order content lives in the FieldOrderSet asset.
  [RequireComponent(typeof(GameSession))]
  public class FieldOrders:MonoBehaviour
  {
@@ -29,10 +31,12 @@ namespace AthenHill
   public string Objective {get;private set;}
   public string Heading {get;private set;}
   public OrderStage Stage {get;private set;}
-  public Transform GuidanceTarget {get;private set;}
-  public string GuidanceLabel {get;private set;}
+  public Transform GuidanceTarget{get{ResolveGuidance(out var point,out _);return point;}}
+  public string GuidanceLabel{get{ResolveGuidance(out _,out var label);return label;}}
+  /// The droid the guidance marker is following right now (alive), or null.
+  public FeralDroid GuidanceDroid{get{var enc=GuidanceEncounter;var leader=enc?enc.Leader:null;return leader&&leader.isActiveAndEnabled&&leader.Health.Alive?leader:null;}}
   GameSession session;
-  string pendingLine,pendingSpeaker;float pendingAt;
+  Target guidance;
   bool dirty;
   IEnumerator Start()
   {
@@ -64,13 +68,18 @@ namespace AthenHill
   {
    if(!Ready)return;
    if(!Progress.Started&&tutorial&&tutorial.Step==BermsStep.Complete){BeginOrder(Progress.Begin(),true);dirty=true;}
-   if(pendingLine!=null&&Time.time>=pendingAt&&session.State==CityState.Play){session.Notify(pendingLine,pendingSpeaker);pendingLine=null;}
    if(dirty){dirty=false;Evaluate();}
   }
   void Evaluate()
   {
    var done=Progress.Advance(crafting.Model,Collected);
-   foreach(var order in done){var reward=Reward(order);if(order==done[done.Count-1])session.Notify(Join(order.completeLine,reward),order.speaker);Completed?.Invoke(order);}
+   foreach(var order in done)
+   {
+    var reward=Reward(order);
+    // Ossa's words go on the radio; the reward (credits, schematics) is a notice.
+    if(order==done[done.Count-1]){session.Radio(order.completeLine,order.speaker);if(!string.IsNullOrEmpty(reward))session.Notify(reward,"Field Orders");}
+    Completed?.Invoke(order);
+   }
    if(done.Count>0)BeginOrder(Progress.Current,false);
    Refresh();
   }
@@ -83,8 +92,7 @@ namespace AthenHill
    if(!speak)return;
    var line=Join(order.startLine,CraftingText.Discovered(discovered));
    if(string.IsNullOrEmpty(line))return;
-   if(immediate)session.Notify(line,order.speaker);
-   else{pendingLine=line;pendingSpeaker=order.speaker;pendingAt=Time.time+data.nextLineDelay;}
+   session.Radio(line,order.speaker,immediate?0:data.nextLineDelay);
   }
   void Activate(string key)
   {
@@ -115,9 +123,32 @@ namespace AthenHill
    var o=Progress.Current;
    Heading=o!=null?$"FIELD ORDER {Progress.Index+1}/{data.orders.Length} · {o.title.ToUpperInvariant()}":Progress.FreePlay?"OUTER BERMS · FREE HUNTING":null;
    var key=Progress.GuidanceKey(model,pack);
-   var target=string.IsNullOrEmpty(key)?null:guidanceTargets.FirstOrDefault(t=>t!=null&&t.key==key&&t.point);
-   GuidanceTarget=target?.point;GuidanceLabel=target?.label;
+   guidance=string.IsNullOrEmpty(key)?null:guidanceTargets.FirstOrDefault(t=>t!=null&&t.key==key&&t.point);
    Changed?.Invoke();
+  }
+  DroidEncounter GuidanceEncounter
+  {
+   get
+   {
+    if(guidance==null||encounters==null)return null;
+    foreach(var b in encounters)if(b!=null&&b.key==guidance.key&&b.encounter&&b.encounter.Spawned)return b.encounter;
+    return null;
+   }
+  }
+  /// Where the marker points: the target's marker, or, for an encounter target that has spawned, its live leader;
+  /// once the leader is down, its wreck's cache (or the wreck) as "last seen"; nothing after the wreck is gone.
+  void ResolveGuidance(out Transform point,out string label)
+  {
+   point=null;label=null;
+   if(guidance==null)return;
+   point=guidance.point;label=guidance.label;
+   var enc=GuidanceEncounter;if(!enc)return;
+   var leader=enc.Leader;if(!leader)return;
+   if(leader.isActiveAndEnabled&&leader.Health.Alive){point=leader.transform;return;}
+   label=guidance.label+" · last seen";
+   var loot=leader.GetComponent<LootSource>();
+   if(loot&&loot.Cache){point=loot.Cache.transform;return;}
+   point=leader.isActiveAndEnabled?leader.transform:null;
   }
   /// Save restore: sets the order index without replaying lines or rewards, re-applies every started order's
   /// schematics and encounters, then re-evaluates.
@@ -125,7 +156,7 @@ namespace AthenHill
   {
    if(!data)return;
    Progress??=new FieldOrderProgress(data);
-   Progress.Restore(state);pendingLine=null;
+   Progress.Restore(state);
    if(crafting&&crafting.Model!=null)for(int i=0;i<=Math.Min(Progress.Index,data.orders.Length-1);i++)BeginOrder(data.orders[i],true,false);
    dirty=true;
   }

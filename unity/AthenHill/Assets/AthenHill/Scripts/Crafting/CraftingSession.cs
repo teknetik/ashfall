@@ -17,6 +17,10 @@ namespace AthenHill
   public bool freshSeedPerNewGame=true;
   [Tooltip("Physical drop spawned at a droid wreck or beside a searched heap whose leftovers did not fit.")]
   public SalvageCache cachePrefab;
+  [Tooltip("Uncollected caches stay in the world this many seconds of game time (menus that pause the game do not count). They no longer vanish when a nest re-forms.")]
+  [Min(30)]public float cacheLifetimeSeconds=600;
+  [Tooltip("At most this many uncollected caches exist at once; a new drop retires the oldest (caches holding rare parts last).")]
+  [Min(1)]public int maxCaches=12;
   public CraftingModel Model {get;private set;}
   public int LootEvents {get;private set;}
   public string LastLoot {get;private set;}="";
@@ -33,8 +37,26 @@ namespace AthenHill
    Loot=new LootBook(freshSeedPerNewGame?unchecked((ulong)DateTime.UtcNow.Ticks):unchecked((ulong)lootSeed));
    Model=new CraftingModel(data,Session.catalog.items,Session.Shop,()=>combat&&combat.hasPistol);
    if(combat)combat.BindLoadout(Model.Loadout);
+   Session.PartBought+=OnPartBought;
   }
-  void OnDestroy(){if(combat)combat.BindLoadout(null);}
+  void OnDestroy(){if(combat)combat.BindLoadout(null);if(Session)Session.PartBought-=OnPartBought;}
+  /// A part bought from Mira reveals the schematics that use it, exactly like finding one.
+  void OnPartBought(PartPurchase purchase)
+  {
+   if(Model==null||purchase==null)return;
+   var found=Model.Acquire(purchase.itemId);
+   if(found.Count>0)purchase.note+=" "+CraftingText.Discovered(found);
+  }
+  /// Spawns a cache (ground-snapped by the caller), after retiring the oldest caches over the cap.
+  SalvageCache SpawnCache(Vector3 at,Quaternion rotation,Transform parent,IEnumerable<ItemStack> items,string source)
+  {
+   foreach(var old in SalvageCache.Evictions(SalvageCache.Active,maxCaches-1))old.Despawn();
+   var cache=Instantiate(cachePrefab,at,rotation,parent);
+   cache.name=cachePrefab.name+(string.IsNullOrEmpty(source)?"":" · "+source);
+   cache.lifetimeSeconds=cacheLifetimeSeconds;
+   cache.Fill(this,items,source);
+   return cache;
+  }
   bool AtStation(out string reason){if(Model==null||Session.State!=CityState.Fabricator){reason="wrong_station";return false;}reason="ok";return true;}
   public bool Craft(string recipeId,out string reason)
   {
@@ -74,10 +96,7 @@ namespace AthenHill
    LastLoot="Dropped: "+Describe(rolled);
    if(rolled.Count==0)return true;
    if(!cachePrefab){Collect(new SalvageContents(rolled),source,at);return true;}
-   var ground=SalvageCache.Ground(at,cachePrefab.groundMask);
-   cache=Instantiate(cachePrefab,ground,Quaternion.Euler(0,UnityEngine.Random.Range(0,360f),0),parent);
-   cache.name=cachePrefab.name+(string.IsNullOrEmpty(source)?"":" · "+source);
-   cache.Fill(this,rolled,source);
+   cache=SpawnCache(SalvageCache.Ground(at,cachePrefab.groundMask),Quaternion.Euler(0,UnityEngine.Random.Range(0,360f),0),parent,rolled,source);
    return true;
   }
   /// A searched scrap heap: rolls straight into the pack; anything over a stack cap is left in a cache beside it.
@@ -86,14 +105,11 @@ namespace AthenHill
    if(Model==null||Loot==null)return;
    var table=Table(tableId);if(table==null){Debug.LogWarning("Unknown loot table "+tableId);return;}
    var rolled=Loot.Roll(table);LootEvents++;
-   if(rolled.Count==0){LastLoot="Nothing useful";Session.Notify($"Nothing useful in this {(source??"heap").ToLowerInvariant()}.","Field Pack");Collected?.Invoke(new LootPickup{source=source,position=at});return;}
+   // Pickups are reported by the salvage toast and the event log; the notice banner stays free for prompts.
+   if(rolled.Count==0){LastLoot="Nothing useful";Session.Record($"Nothing useful in this {(source??"heap").ToLowerInvariant()}.","Field Pack");Collected?.Invoke(new LootPickup{source=source,position=at});return;}
    var contents=new SalvageContents(rolled);
    Collect(contents,source,at);
-   if(!contents.Empty&&cachePrefab)
-   {
-    var cache=Instantiate(cachePrefab,SalvageCache.Ground(at,cachePrefab.groundMask),Quaternion.identity,parent);
-    cache.name=cachePrefab.name+" · "+source;cache.Fill(this,contents.Stacks,source);
-   }
+   if(!contents.Empty&&cachePrefab)SpawnCache(SalvageCache.Ground(at,cachePrefab.groundMask),Quaternion.identity,parent,contents.Stacks,source);
   }
   /// Moves what fits from a cache into the pack, reveals schematics for new parts and reports the pickup.
   public LootPickup Collect(SalvageContents contents,string source,Vector3 at)
@@ -103,7 +119,7 @@ namespace AthenHill
    contents.Collect(Session.Shop,out pickup.taken,out pickup.left);
    foreach(var s in pickup.taken){Loot.MarkCollected(s.itemId);pickup.discovered.AddRange(Model.Acquire(s.itemId));}
    LastLoot=(pickup.taken.Count>0?"Collected: "+Describe(pickup.taken):"Collected nothing")+(pickup.left.Count>0?" · pack full, left in the cache: "+Describe(pickup.left):"");
-   Session.Notify(LastLoot+(pickup.discovered.Count>0?" "+CraftingText.Discovered(pickup.discovered):""),"Field Pack");
+   Session.Record(LastLoot+(pickup.discovered.Count>0?" "+CraftingText.Discovered(pickup.discovered):""),"Field Pack");
    Collected?.Invoke(pickup);
    return pickup;
   }

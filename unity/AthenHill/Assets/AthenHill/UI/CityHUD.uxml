@@ -15,6 +15,7 @@
   <ui:VisualElement usage-hints="DynamicColor" name="objective-box" class="panel" picking-mode="Ignore"><ui:VisualElement usage-hints="DynamicColor" class="section-heading" picking-mode="Ignore"><ui:Label usage-hints="DynamicColor" text="FIELD NOTES" class="small"/><ui:VisualElement usage-hints="DynamicColor" class="signal" picking-mode="Ignore"/></ui:VisualElement><ui:Label usage-hints="DynamicColor" name="objective"/><ui:VisualElement usage-hints="DynamicColor" class="objective-progress" picking-mode="Ignore"><ui:Label usage-hints="DynamicColor" name="progress" class="muted small"/><ui:VisualElement usage-hints="DynamicColor" name="progress-marks" picking-mode="Ignore"><ui:VisualElement usage-hints="DynamicColor" name="mark0" class="progress-mark" picking-mode="Ignore"/><ui:VisualElement usage-hints="DynamicColor" name="mark1" class="progress-mark" picking-mode="Ignore"/><ui:VisualElement usage-hints="DynamicColor" name="mark2" class="progress-mark" picking-mode="Ignore"/><ui:VisualElement usage-hints="DynamicColor" name="mark3" class="progress-mark" picking-mode="Ignore"/></ui:VisualElement></ui:VisualElement></ui:VisualElement>
   <ui:VisualElement usage-hints="DynamicColor" name="top-actions" class="panel"><ui:Button usage-hints="DynamicColor" name="inventory-button" class="utility" tooltip="Open field pack · 5"><ui:VisualElement usage-hints="DynamicColor" class="mini-icon inventory-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" text="Inventory" picking-mode="Ignore"/></ui:Button><ui:VisualElement usage-hints="DynamicColor" class="credit-readout" picking-mode="Ignore"><ui:VisualElement usage-hints="DynamicColor" class="mini-icon coins-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="credits" text="25 cr"/></ui:VisualElement><ui:Button usage-hints="DynamicColor" name="notes-button" class="utility" tooltip="Open city notes · 6"><ui:VisualElement usage-hints="DynamicColor" class="mini-icon journal-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" text="Notes" picking-mode="Ignore"/></ui:Button><ui:Button usage-hints="DynamicColor" name="pause-button" class="utility" tooltip="Pause · Esc"><ui:VisualElement usage-hints="DynamicColor" class="mini-icon gear-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" text="Pause" picking-mode="Ignore"/></ui:Button></ui:VisualElement>
   <ui:Label usage-hints="DynamicColor" name="notice" class="panel" picking-mode="Ignore"/>
+  <ui:VisualElement usage-hints="DynamicColor" name="radio" class="panel" picking-mode="Ignore"><ui:VisualElement usage-hints="DynamicColor" class="radio-heading" picking-mode="Ignore"><ui:VisualElement usage-hints="DynamicColor" class="radio-signal" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="radio-speaker" class="small radio-speaker" picking-mode="Ignore"/></ui:VisualElement><ui:Label usage-hints="DynamicColor" name="radio-text" class="radio-text" picking-mode="Ignore"/></ui:VisualElement>
   <ui:VisualElement usage-hints="DynamicColor" name="nametags" picking-mode="Ignore"/>
   <ui:Button usage-hints="DynamicColor" name="interaction" text="E · Talk"/>
   <ui:VisualElement usage-hints="DynamicColor" name="chat" class="panel"><ui:VisualElement usage-hints="DynamicColor" name="chat-heading" class="section-heading" picking-mode="Ignore"><ui:Label usage-hints="DynamicColor" text="LOCAL" class="channel-title"/><ui:Label usage-hints="DynamicColor" text="EVENT LOG" class="small muted"/></ui:VisualElement><ui:ScrollView name="log-scroll" horizontal-scroller-visibility="Hidden"><ui:Label usage-hints="DynamicColor" name="log"/></ui:ScrollView><ui:VisualElement usage-hints="DynamicColor" name="chat-footer" class="chat-footer" picking-mode="Ignore"><ui:VisualElement usage-hints="DynamicColor" class="mini-icon talk-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" text="Local transmissions" class="muted small"/></ui:VisualElement></ui:VisualElement>
@@ -41,21 +42,31 @@
    <ui:ScrollView name="modal-scroll" horizontal-scroller-visibility="Hidden">
     <ui:VisualElement usage-hints="DynamicColor" name="dialogue-panel"><ui:Label usage-hints="DynamicColor" name="dialogue-text" class="body-copy"/><ui:Label usage-hints="DynamicColor" text="YOUR RESPONSE" class="small muted response-heading"/><ui:Button usage-hints="DynamicColor" name="choice0"/><ui:Button usage-hints="DynamicColor" name="choice1"/></ui:VisualElement>
     <ui:VisualElement usage-hints="DynamicColor" name="shop-panel"><ui:Label usage-hints="DynamicColor" name="shop-credit" class="balance"/>
-     <ui:VisualElement usage-hints="DynamicColor" class="trade-row"><ui:VisualElement usage-hints="DynamicColor" class="trade-art flask-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="item0" class="item-copy"/><ui:Button usage-hints="DynamicColor" name="buy0" text="Buy · 4 cr"/><ui:Button usage-hints="DynamicColor" name="sell0" text="Sell · 2 cr"/></ui:VisualElement>
-     <ui:VisualElement usage-hints="DynamicColor" class="trade-row"><ui:VisualElement usage-hints="DynamicColor" class="trade-art medkit-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="item1" class="item-copy"/><ui:Button usage-hints="DynamicColor" name="buy1" text="Buy · 9 cr"/><ui:Button usage-hints="DynamicColor" name="sell1" text="Sell · 4 cr"/></ui:VisualElement>
-     <ui:VisualElement usage-hints="DynamicColor" class="trade-row"><ui:VisualElement usage-hints="DynamicColor" class="trade-art scrap-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="item2" class="item-copy"/><ui:Button usage-hints="DynamicColor" name="buy2" text="Buy · 2 cr"/><ui:Button usage-hints="DynamicColor" name="sell2" text="Sell · 1 cr"/></ui:VisualElement>
-     <ui:Label usage-hints="DynamicColor" text="SELL SALVAGE" class="small shop-section-heading"/>
-     <ui:VisualElement usage-hints="DynamicColor" name="salvage-list"/>
-     <ui:Label usage-hints="DynamicColor" name="salvage-empty" class="small muted trade-help"/>
-     <ui:Label usage-hints="DynamicColor" text="Each trade moves one item; Sell all moves a whole stack in one trade. Your balance updates immediately." class="small muted trade-help"/>
+     <ui:VisualElement usage-hints="DynamicColor" name="shop-columns" class="shop-columns">
+      <ui:VisualElement usage-hints="DynamicColor" name="shop-buy" class="shop-col">
+       <ui:Label usage-hints="DynamicColor" text="SUPPLIES" class="small shop-section-heading shop-first-heading"/>
+       <ui:VisualElement usage-hints="DynamicColor" class="trade-row supply-row"><ui:VisualElement usage-hints="DynamicColor" class="trade-art flask-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="item0" class="item-copy"/><ui:Button usage-hints="DynamicColor" name="buy0" text="Buy · 4 cr"/><ui:Button usage-hints="DynamicColor" name="sell0" text="Sell · 2 cr"/></ui:VisualElement>
+       <ui:VisualElement usage-hints="DynamicColor" class="trade-row supply-row"><ui:VisualElement usage-hints="DynamicColor" class="trade-art medkit-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="item1" class="item-copy"/><ui:Button usage-hints="DynamicColor" name="buy1" text="Buy · 9 cr"/><ui:Button usage-hints="DynamicColor" name="sell1" text="Sell · 4 cr"/></ui:VisualElement>
+       <ui:VisualElement usage-hints="DynamicColor" class="trade-row supply-row"><ui:VisualElement usage-hints="DynamicColor" class="trade-art scrap-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="item2" class="item-copy"/><ui:Button usage-hints="DynamicColor" name="buy2" text="Buy · 2 cr"/><ui:Button usage-hints="DynamicColor" name="sell2" text="Sell · 1 cr"/></ui:VisualElement>
+       <ui:Label usage-hints="DynamicColor" text="BUY PARTS · MIRA&apos;S PRICES" class="small shop-section-heading"/>
+       <ui:VisualElement usage-hints="DynamicColor" name="parts-list"/>
+       <ui:Label usage-hints="DynamicColor" name="parts-help" text="Common and uncommon parts at a premium. Rare parts only come out of the Berms." class="small muted trade-help"/>
+      </ui:VisualElement>
+      <ui:VisualElement usage-hints="DynamicColor" name="shop-sell" class="shop-col shop-col-sell">
+       <ui:Label usage-hints="DynamicColor" text="SELL SALVAGE" class="small shop-section-heading shop-first-heading"/>
+       <ui:VisualElement usage-hints="DynamicColor" name="salvage-list"/>
+       <ui:Label usage-hints="DynamicColor" name="salvage-empty" class="small muted trade-help"/>
+       <ui:Label usage-hints="DynamicColor" text="Each trade moves one item; Sell all moves a whole stack in one trade. Your balance updates immediately." class="small muted trade-help"/>
+      </ui:VisualElement>
+     </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement usage-hints="DynamicColor" name="fabricator-panel">
-     <ui:VisualElement usage-hints="DynamicColor" name="fab-top" class="fab-row">
-      <ui:VisualElement usage-hints="DynamicColor" name="fab-recipes" class="fab-side">
+     <ui:VisualElement usage-hints="DynamicColor" name="fab-columns" class="fab-columns">
+      <ui:VisualElement usage-hints="DynamicColor" name="fab-recipes" class="fab-col fab-col-list">
        <ui:Label usage-hints="DynamicColor" text="SCHEMATICS" class="small fab-heading"/>
        <ui:VisualElement usage-hints="DynamicColor" name="fab-recipe-list"/>
       </ui:VisualElement>
-      <ui:VisualElement usage-hints="DynamicColor" name="fab-detail" class="fab-main">
+      <ui:VisualElement usage-hints="DynamicColor" name="fab-detail" class="fab-col fab-col-detail">
        <ui:Label usage-hints="DynamicColor" name="fabricator-recipe" class="fab-title"/>
        <ui:Label usage-hints="DynamicColor" name="fab-description" class="muted fab-description"/>
        <ui:Label usage-hints="DynamicColor" text="PARTS · CARRIED / NEEDED" class="small fab-heading"/>
@@ -67,13 +78,12 @@
        </ui:VisualElement>
        <ui:Label usage-hints="DynamicColor" name="fab-reason" class="fab-reason"/>
       </ui:VisualElement>
-     </ui:VisualElement>
-     <ui:VisualElement usage-hints="DynamicColor" name="fab-pistol" class="fab-row">
-      <ui:VisualElement usage-hints="DynamicColor" class="fab-side">
+      <ui:VisualElement usage-hints="DynamicColor" name="fab-pistol" class="fab-col fab-col-pistol">
        <ui:Label usage-hints="DynamicColor" name="fabricator-stat" text="SCRAP PISTOL" class="small fab-heading"/>
        <ui:VisualElement usage-hints="DynamicColor" name="fab-slots"/>
+       <ui:Label usage-hints="DynamicColor" text="STATS" class="small fab-heading fab-stats-heading"/>
+       <ui:VisualElement usage-hints="DynamicColor" name="fab-stats"/>
       </ui:VisualElement>
-      <ui:VisualElement usage-hints="DynamicColor" name="fab-stats" class="fab-main"/>
      </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement usage-hints="DynamicColor" name="inventory-panel">

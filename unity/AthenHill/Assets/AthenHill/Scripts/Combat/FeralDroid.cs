@@ -7,6 +7,8 @@ namespace AthenHill
  public enum DroidState { Idle, Alert, Chase, Windup, Recover, Stagger, Returning, Dead }
  /// Feral industrial droid of the Outer Berms: guards its home ground, telegraphs each strike
  /// (optic flares, then a lunge), gives up past its leash and repairs itself when left alone.
+ /// Elite variants (the Depot Foreman) use the same behaviour with extra tuning: stagger resistance (damage needed
+ /// between staggers) and a periodic heavy slam with a longer tell that hits all around it.
  /// Enemies stand still while any city modal is open, so dialogue and menus are always safe.
  [RequireComponent(typeof(Health))]
  public class FeralDroid:MonoBehaviour
@@ -21,6 +23,14 @@ namespace AthenHill
   [Tooltip("Hover height above ground (Hover kind).")]
   [Min(0)]public float hoverHeight=1.6f;
   [Min(0)]public float corpseSeconds=14;
+  [Header("Elite tuning (0 = off)")]
+  [Tooltip("Stagger resistance: damage taken since the last stagger must reach this before it staggers again (0 = any hit can, subject to Stagger Immunity).")]
+  [Min(0)]public float staggerThreshold;
+  [Tooltip("Every Nth strike is a heavy slam: a longer, brighter tell, then a blow that hits everything within Slam Radius whatever its facing. 0 = never.")]
+  [Min(0)]public int slamEvery;
+  [Min(0)]public float slamWindupSeconds=1.6f,slamRecoverSeconds=1.8f,slamDamage=45,slamRadius=3.6f;
+  [Tooltip("Optional impact sound for the slam (the strike sound otherwise).")]
+  public AudioClip slamClip;
   public LayerMask groundMask=~(1<<8);
   [Header("Presentation")]
   public Animation animationSource;
@@ -60,6 +70,17 @@ namespace AthenHill
   public DroidState State {get;private set;}
   public Health Health {get;private set;}
   public static readonly List<FeralDroid> Active=new List<FeralDroid>();
+  /// Height of the top of the model above the transform, measured when bound (health bars and guidance sit just
+  /// above it at any scale).
+  public float BarHeight {get;private set;}=2;
+  /// World point for the health bar: just above the head bone as it animates (skinned droids), else above the
+  /// measured top of the model.
+  public Vector3 BarAnchor=>topBone?topBone.position+Vector3.up*.3f:transform.position+Vector3.up*(BarHeight+.25f);
+  Transform topBone;
+  /// The strike being wound up (or just delivered) is a heavy slam.
+  public bool Slamming {get;private set;}
+  public int Strikes {get;private set;}
+  float poise,windupNow=.6f;
   public event Action<FeralDroid> Killed;
   float timer,staggerReady,wanderWait,bob;
   Vector3 wanderTarget,velocity;
@@ -96,6 +117,22 @@ namespace AthenHill
   {
    Player=player;Session=session;Home=home;homeRotation=transform.rotation;
    wanderTarget=home;SetState(DroidState.Idle);Play(idle,1);
+   BarHeight=MeasureTop();
+  }
+  /// Top of the model above the transform: the highest bone of a skinned body (its head end; the droids' skinned
+  /// renderers carry deliberately huge culling bounds and centimetre mesh space) or the top of plain mesh renderers
+  /// (hover drones). Particles, lines and lights are ignored. Falls back to the aim point.
+  float MeasureTop()
+  {
+   float top=float.MinValue;
+   foreach(var r in GetComponentsInChildren<Renderer>())
+   {
+    if(!r.enabled)continue;
+    if(r is SkinnedMeshRenderer skinned){if(skinned.bones!=null)foreach(var b in skinned.bones)if(b&&b.position.y>top){top=b.position.y;topBone=b;}}
+    else if(r is MeshRenderer)top=Mathf.Max(top,r.bounds.max.y);
+   }
+   float fallback=(Health?Health.AimPoint.y:transform.position.y+1)+.9f-transform.position.y;
+   return top>float.MinValue?Mathf.Clamp(top-transform.position.y,.2f,8):fallback;
   }
   /// Return home at full health (player knocked down, or the encounter re-arming).
   public void ResetToHome(bool revive)
@@ -108,6 +145,7 @@ namespace AthenHill
    foreach(var c in GetComponentsInChildren<Collider>())c.enabled=true;
    if(smoke)smoke.Stop();
    Health.Restore();SetState(DroidState.Idle);Play(idle,1);SnapToGround(1);
+   poise=0;Strikes=0;Slamming=false;
    if(revive&&wasDead){var loot=GetComponent<LootSource>();if(loot)loot.Revived();}
    flash=0;rotorSpin=rotorSpeed;
    if(motorLoop&&motorLoop.clip){motorLoop.volume=1;if(!motorLoop.isPlaying)motorLoop.Play();}
@@ -137,6 +175,7 @@ namespace AthenHill
      if(!PlayerAvailable||Flat(transform.position-Home).magnitude>leashRadius){SetState(DroidState.Returning);break;}
      if(PlayerDistance<=attackRange)
      {
+      Strikes++;Slamming=IsSlam(Strikes,slamEvery);windupNow=Slamming?slamWindupSeconds:windupSeconds;
       SetState(DroidState.Windup);struck=false;Play(attack,AttackRate());
       if(voice&&windupClip)voice.PlayOneShot(windupClip,windupVolume);
       break;
@@ -146,12 +185,12 @@ namespace AthenHill
     case DroidState.Windup:
      if(!struck)Face(Player.transform.position,dt);
      if(kind==DroidKind.Hover)HoverLunge(dt);
-     if(!struck&&timer>=windupSeconds){struck=true;Strike();}
-     if(timer>=windupSeconds+.2f)SetState(DroidState.Recover);
+     if(!struck&&timer>=windupNow){struck=true;Strike();}
+     if(timer>=windupNow+.2f)SetState(DroidState.Recover);
      break;
     case DroidState.Recover:
      if(kind==DroidKind.Hover)Steer(transform.position,0,dt);
-     if(timer>=recoverSeconds)SetState(DroidState.Chase);
+     if(timer>=(Slamming?slamRecoverSeconds:recoverSeconds))SetState(DroidState.Chase);
      break;
     case DroidState.Stagger:
      if(timer>=staggerSeconds)SetState(DroidState.Chase);
@@ -177,14 +216,37 @@ namespace AthenHill
    if(voice&&alertClip)voice.PlayOneShot(alertClip);
   }
   void SetState(DroidState s){State=s;timer=0;}
-  float AttackRate(){return attack?Mathf.Max(.5f,attack.length*attackImpact/Mathf.Max(.05f,windupSeconds)):1;}
+  // A slam may play the attack slower (a heavier swing that still lands on the blow); ordinary strikes keep the old floor.
+  float AttackRate(){return attack?Mathf.Max(Slamming?.3f:.5f,attack.length*attackImpact/Mathf.Max(.05f,windupNow)):1;}
+  /// Strike number n (1-based) is a slam when every is set and n is a multiple of it.
+  public static bool IsSlam(int strike,int every)=>every>0&&strike>0&&strike%every==0;
+  /// Stagger resistance: a hit staggers once enough damage has built up since the last stagger.
+  public static bool Staggers(float poiseAfterHit,float threshold)=>poiseAfterHit>=threshold;
 
   void Strike()
   {
+   if(Slamming){Slam();return;}
    if(voice&&strikeClip)voice.PlayOneShot(strikeClip);
    if(!PlayerAvailable)return;
    var to=Flat(Player.transform.position-transform.position);
    if(to.magnitude<=attackRange+.6f&&Vector3.Angle(Flat(transform.forward),to)<75)Player.Health.Damage(strikeDamage,transform.position);
+  }
+
+  /// Heavy slam: ground burst, then damage to the player anywhere within the radius.
+  void Slam()
+  {
+   var clip=slamClip?slamClip:strikeClip;if(voice&&clip)voice.PlayOneShot(clip,1);
+   bool reduced=Session&&Session.reducedMotion;
+   if(sparks){sparks.transform.position=transform.position+Vector3.up*.3f;sparks.Emit(reduced?12:36);}
+   if(footDust)
+   {
+    for(int i=0;i<8;i++)
+    {
+     var a=i*Mathf.PI/4;var at=transform.position+new Vector3(Mathf.Cos(a),0,Mathf.Sin(a))*slamRadius*.45f;
+     footDust.Emit(new ParticleSystem.EmitParams{position=new Vector3(at.x,transform.position.y+.05f,at.z),applyShapeToPosition=true},reduced?1:4);
+    }
+   }
+   if(PlayerAvailable&&PlayerDistance<=slamRadius)Player.Health.Damage(slamDamage,transform.position);
   }
 
   void Wander(float dt)
@@ -320,8 +382,8 @@ namespace AthenHill
    else if(State==DroidState.Windup)
    {
     // flare builds through the wind-up and peaks as the blow lands
-    float p=Mathf.Clamp01(timer/Mathf.Max(.05f,windupSeconds));rate=30;
-    target=Color.Lerp(glowHostile,glowWindup,p*p);
+    float p=Mathf.Clamp01(timer/Mathf.Max(.05f,windupNow));rate=30;
+    target=Color.Lerp(glowHostile,glowWindup,p*p)*(Slamming?1.35f:1);
     if(!reduced)target*=1+.3f*Mathf.Sin(Time.time*38);
    }
    else target=Hostile?glowHostile:glowCalm;
@@ -392,9 +454,11 @@ namespace AthenHill
    if(voice&&hitClip)voice.PlayOneShot(hitClip,.8f);
    if(!Health.Alive)return;
    if(State==DroidState.Idle||State==DroidState.Returning||State==DroidState.Alert)SetState(DroidState.Chase);
-   if(Time.time>=staggerReady&&State!=DroidState.Windup)
+   poise+=amount;
+   // A slam in progress cannot be interrupted; elites need enough damage between staggers.
+   if(Time.time>=staggerReady&&State!=DroidState.Windup&&Staggers(poise,staggerThreshold))
    {
-    staggerReady=Time.time+staggerImmunity;SetState(DroidState.Stagger);Play(hit,1.4f);
+    poise=0;staggerReady=Time.time+staggerImmunity;SetState(DroidState.Stagger);Play(hit,1.4f);
     if(Player)transform.position+=Flat(transform.position-Player.transform.position).normalized*.25f;
    }
   }

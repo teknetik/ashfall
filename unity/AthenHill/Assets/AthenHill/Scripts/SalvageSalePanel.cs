@@ -5,7 +5,7 @@ namespace AthenHill
 {
  /// Basic General's "Sell salvage" list: every carried item Mira buys but does not stock (CityCatalog sellOnly),
  /// one row each with Sell 1 and Sell all, both through the atomic ShopModel sale. Rows update in place so
- /// keyboard focus survives a sale; a row that empties hands focus to its neighbour.
+ /// keyboard focus survives a sale; a row that empties hands focus to its neighbour, and the last sale hands it to Close.
  public sealed class SalvageSalePanel
  {
   readonly GameSession session;
@@ -15,7 +15,7 @@ namespace AthenHill
   readonly Dictionary<string,(VisualElement row,Label copy,Button one,Button all)> rows=new Dictionary<string,(VisualElement,Label,Button,Button)>();
   public SalvageSalePanel(VisualElement root,GameSession session)
   {
-   this.session=session;list=root.Q("salvage-list");empty=root.Q<Label>("salvage-empty");fallbackFocus=root.Q<Button>("sell2");
+   this.session=session;list=root.Q("salvage-list");empty=root.Q<Label>("salvage-empty");fallbackFocus=root.Q<Button>("close");
   }
   /// Salvage the player can sell right now, in catalog order.
   public static IEnumerable<ItemSpec> Sellable(IEnumerable<ItemSpec> catalog,ShopModel shop)=>catalog.Where(x=>ShopModel.BuysAsSalvage(x)&&shop.Quantity(x.id)>0);

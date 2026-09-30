@@ -131,7 +131,8 @@ namespace AthenHill.Tests
    Assert.That(rig.save.HasSave);Assert.That(rig.save.Summary(),Does.Contain("cannot be read"));
    Assert.DoesNotThrow(()=>Assert.That(rig.save.Continue(),Is.False));
    Assert.That(rig.session.State,Is.EqualTo(CityState.Play));
-   Assert.That(rig.session.notice,Does.StartWith("Your saved game could not be loaded").And.Contain("Starting a new game").And.Contain("unreadable"));
+   Assert.That(rig.session.notice,Does.StartWith("Your saved game could not be loaded").And.Contain("a new game has started").And.Contain("unreadable"));
+   Assert.That(rig.session.notice,Does.Not.Contain("Exception"),"no exception type names in the player's notice");
    Assert.That(rig.pack.Credits,Is.EqualTo(City().startingCredits));
    Assert.That(Directory.GetFiles(folder,"ward-save.unreadable-*.json").Length,Is.EqualTo(1),"the damaged file is kept");
    Assert.That(WardSaveFile.TryRead(rig.save.SavePath,out var fresh,out _),"a fresh save replaces it");Assert.That(fresh.credits,Is.EqualTo(City().startingCredits));

@@ -1,9 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 namespace AthenHill
 {
  /// A physical salvage drop at a wreck. It glows by the best rarity still inside (light, emissive beacon and motes)
  /// and is collected with E. Whatever the pack cannot hold stays inside; an empty cache removes itself.
+ /// Caches persist until collected: re-forming nests leave them alone. They expire after a generous lifetime of game
+ /// time, and CraftingSession retires the oldest when too many are waiting.
  [RequireComponent(typeof(WorldInteractable))]
  public class SalvageCache:MonoBehaviour
  {
@@ -18,6 +21,9 @@ namespace AthenHill
   public string promptFormat="E · Collect salvage ({0})";
   [Tooltip("Colliders ignored when snapping a new cache to the ground are those of droids and the player.")]
   public LayerMask groundMask=~(1<<8);
+  [Tooltip("Seconds of game time an uncollected cache waits before it is gone (set by CraftingSession when spawned).")]
+  [Min(30)]public float lifetimeSeconds=600;
+  public float SpawnedAt {get;private set;}
   public SalvageContents Contents {get;private set;}
   public string Source {get;private set;}
   public ItemRarity Rarity {get;private set;}
@@ -27,7 +33,21 @@ namespace AthenHill
   MaterialPropertyBlock block;
   static readonly int EmissionId=Shader.PropertyToID("_EmissionColor");
   static readonly RaycastHit[] hits=new RaycastHit[12];
-  void Awake(){interaction=GetComponent<WorldInteractable>();}
+  void Awake(){interaction=GetComponent<WorldInteractable>();SpawnedAt=Time.time;}
+  void Update(){if(Time.time-SpawnedAt>lifetimeSeconds)Despawn();}
+  /// Caches to retire so that at most keep remain: oldest first, and caches holding rare parts only after the rest.
+  public static List<SalvageCache> Evictions(IEnumerable<SalvageCache> caches,int keep)
+  {
+   var live=caches.Where(c=>c).ToList();
+   return EvictionOrder(live.Select(c=>(c.SpawnedAt,c.Rarity==ItemRarity.Rare)).ToList(),keep).Select(i=>live[i]).ToList();
+  }
+  /// Indices to retire so that at most keep remain (pure; see Evictions).
+  public static List<int> EvictionOrder(IReadOnlyList<(float spawnedAt,bool rare)> caches,int keep)
+  {
+   int excess=caches.Count-System.Math.Max(0,keep);
+   if(excess<=0)return new List<int>();
+   return Enumerable.Range(0,caches.Count).OrderBy(i=>caches[i].rare?1:0).ThenBy(i=>caches[i].spawnedAt).ThenBy(i=>i).Take(excess).ToList();
+  }
   void OnEnable(){if(!interaction)interaction=GetComponent<WorldInteractable>();interaction.Used+=Use;Active.Add(this);}
   void OnDisable(){if(interaction)interaction.Used-=Use;Active.Remove(this);}
   public void Fill(CraftingSession crafting,IEnumerable<ItemStack> items,string source)
@@ -56,7 +76,7 @@ namespace AthenHill
    foreach(var r in glowRenderers){if(!r)continue;r.GetPropertyBlock(block);block.SetColor(EmissionId,glow);r.SetPropertyBlock(block);}
    interaction.prompt=string.Format(promptFormat,Contents.Stacks.Count);
   }
-  public void Despawn(){if(this&&gameObject)Destroy(gameObject);}
+  public void Despawn(){if(this&&gameObject){Active.Remove(this);Destroy(gameObject);}}
   /// Highest walkable surface under a point, ignoring droids and the player. Falls back to the point itself.
   public static Vector3 Ground(Vector3 at,LayerMask mask)
   {

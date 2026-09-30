@@ -117,7 +117,7 @@ namespace AthenHill
    if(toast!=null&&toast.style.display==DisplayStyle.Flex&&Time.unscaledTime>toastUntil)Show(toast,false);
    var heap=SalvageNode.Searching;
    Show(search,play&&heap);
-   if(play&&heap){searchLabel.text=$"Searching {heap.displayName.ToLowerInvariant()}…";searchFill.style.width=Length.Percent(heap.Progress*100);}
+   if(play&&heap){searchLabel.text=string.IsNullOrEmpty(heap.progressLabel)?$"Searching the {heap.displayName.ToLowerInvariant()}…":heap.progressLabel;searchFill.style.width=Length.Percent(heap.Progress*100);}
    bool showObjective=tutorial&&tutorial.ShowObjective;
    Show(objectiveRow,showObjective);
    bool ordersActive=OrdersActive;
@@ -163,9 +163,12 @@ namespace AthenHill
    if(OrdersActive){target=orders.GuidanceTarget;label=orders.GuidanceLabel;}
    else{target=tutorial?tutorial.GuidanceTarget:null;label=tutorial&&tutorial.Step==BermsStep.TakePistol?"ARMS LOCKER":"WARDEN OSSA";}
    bool visible=play&&target&&tutorial&&tutorial.ShowObjective;
+   // A tracked droid (the Depot Foreman) carries its own name and health bar once engaged; the marker steps aside.
+   var droid=OrdersActive?orders.GuidanceDroid:null;
+   if(visible&&droid&&bars.TryGetValue(droid,out var droidBar)&&droidBar.style.display==DisplayStyle.Flex)visible=false;
    if(visible)
    {
-    var world=target.position+Vector3.up*1.8f;var vp=worldCamera.WorldToViewportPoint(world);
+    var world=droid&&droid.transform==target?droid.BarAnchor+Vector3.up*.45f:target.position+Vector3.up*1.8f;var vp=worldCamera.WorldToViewportPoint(world);
     visible=vp.z>0&&vp.x>.05f&&vp.x<.95f&&vp.y>.08f&&vp.y<.92f&&Vector3.Distance(world,combat.transform.position)<guidanceRange;
     if(visible)
     {
@@ -188,7 +191,8 @@ namespace AthenHill
    {
     var d=pair.Key;var bar=pair.Value;
     if(!d||!d.isActiveAndEnabled){(gone??=new List<FeralDroid>()).Add(d);continue;}
-    var world=d.Health.AimPoint+Vector3.up*.9f;var vp=worldCamera.WorldToViewportPoint(world);
+    // Just above the droid's head as it animates, so scaled variants (the 1.3× Foreman) are not over-lifted.
+    var world=d.BarAnchor;var vp=worldCamera.WorldToViewportPoint(world);
     bool engaged=d.Health.Alive&&(d.Health.Current<d.Health.max||d.State!=DroidState.Idle&&d.State!=DroidState.Returning);
     bool visible=play&&engaged&&vp.z>0&&vp.x>0&&vp.x<1&&vp.y>0&&vp.y<1&&Vector3.Distance(world,combat.transform.position)<enemyBarDistance;
     Show(bar,visible);

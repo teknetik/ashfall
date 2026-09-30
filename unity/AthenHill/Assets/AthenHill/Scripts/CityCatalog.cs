@@ -12,6 +12,8 @@ namespace AthenHill
   public bool sellOnly;
   [Tooltip("USS illustration class (flask-icon, scrap-icon, pistol-icon…). Empty uses the field-pack illustration.")]
   public string icon;
+  [Tooltip("Basic General's Buy parts price (Mira's premium over what she pays). 0 = not stocked. Rare parts are never stocked.")]
+  [Min(0)]public int partsPrice;
   public bool HasTag(string tag)=>tags!=null&&Array.IndexOf(tags,tag)>=0;
  }
  [Serializable] public class TravelNode {public string id,name;[TextArea] public string description;}
