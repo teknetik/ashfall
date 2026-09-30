@@ -462,6 +462,30 @@ uniform scale 1, full-resolution maps, no colliders. The eight 9 Sep manifold/wa
 retainers, riser clamps/anchors and feed flanges remain. Use Show Sources, edit, then Rebuild Render Chunks. `AirWaterFilterPass` is a one-time
 installer that refuses to run twice. Evidence, rollback scene/chunks and defects: `evidence/airwater-filters/20260929/README.md`.
 
+## Vanguard Hall rebuild (30 September 2026)
+
+**Vanguard Hall** (scene root) is a saved instance of `Prefabs/VanguardHall/VanguardHall.prefab` at world (−10, 0, −26.55),
+uniform scale 1. It replaces the Meshy salvage hall, which stays in the scene inactive (*Post-war salvage/Vanguard Hall
+repaired*), together with the retrofit *Hall banners* and the old *BLD_hall_plinth/step* and their colliders. The hall is
+**not** a render-chunk source: it keeps its own LODGroup (LOD0 ~85k triangles to 26 % screen height, LOD1 ~42k) and
+vertex-coloured masonry. Children: `LOD0`/`LOD1` (glTF models), `Colliders` (podium, front and rear steps, body, portal
+recess, piers, entablature; boxes you can edit), `Fittings` (Poly Haven lamps, security light/camera, air conditioners,
+power box; each wall lamp has a *Bulb*), `Practical lights` (portal, recess and rear lamps, two terrace uplights, mast
+beacon), `Weathering decals` (runoff and wall-foot sediment on the accepted Ward atlases).
+
+- Materials are in `Art/VanguardHall/Materials`. Stone uses **Athen Hill/Masonry Lit** (Weathered Lit + per-block
+  vertex tint *_BlockTint* and occlusion *_BlockAO*); metals, bronze/brass, banner (alpha clip, linen detail normal)
+  use URP Lit; glazing **VH_Glass** is Ward Window Interior with hall-sized rooms. VH_Glass and VH_LampLens are on the
+  **Ward lighting clock** emissive list and the lamp/uplight lights are practical + night-only lights there.
+- Geometry changes go through the source: `art/vanguard_hall_20260930/author_vanguard_hall.py` (Blender 5.2) writes
+  the GLBs and `vanguard-hall.json` (colliders, fittings, uplights). Then **Athen Hill → Vanguard Hall → Build assets**
+  rebuilds the prefab (existing materials keep Inspector edits; *rebuild materials* resets them). Rebuilding the prefab
+  re-creates its lights, so rerun the install (authoring: `VanguardHallPass.Reinstall()`) to re-bind them to the clock.
+  **Install rebuilt hall** is one-time and refuses to run over an installed hall; **Verify saved scene** writes a report.
+- **Vanguard Hall review cameras** (`cam_vh_*`) are player-height views for `tools/lookbook.py`; real-input traversal:
+  `tools/check_vanguard_hall_traversal.py`. Evidence, rollback scene and remaining defects:
+  `evidence/vanguard-hall/20260930/README.md`.
+
 ## Scavenger's Arc: fabrication, loot and field orders (29 September 2026)
 
 Gameplay v2 content is serialized data; nothing is hard-coded in the scripts. Edit these assets in the Inspector:

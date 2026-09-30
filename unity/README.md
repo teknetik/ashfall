@@ -135,6 +135,9 @@ See [AUDIO.md](AUDIO.md) for source records and [settings verification](evidence
   On the RTX 3060 reference at 1080p High the hill view runs ~67–71 FPS (09:00 is the heaviest at ~54 FPS);
   the player is GPU-bound. Tools: `tools/lookbook.py` (named cameras × hours), `tools/profile_scene.py`
   (Unity profiler capture + ranked markers), `tools/compare_lookbooks.py`.
+- **Vanguard Hall (30 Sep):** rebuilt as an authored stone civic hall (modelled ashlar, battered piers, riveted portal,
+  barred windows, cornice, mast, woven banner, brass nameplate), lit at night by portal lamps and terrace uplights.
+  See `EDITING.md` → *Vanguard Hall rebuild* and `evidence/vanguard-hall/20260930/README.md`.
 - **Adaptive Probe Volume sky occlusion** is configured but not baked (the bake exceeds this machine's memory);
   see `evidence/rendering/20260930/apv/README.md`.
 

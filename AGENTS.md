@@ -89,7 +89,8 @@ native evidence uses OpenGL. Do not silently change the graphics API or pipeline
 | Additional ambient actor | Yard mechanic, Humanoid Animator and its separate four-point service-yard loop. The current roster is one player, four talking NPCs and four ambient walkers. |
 | South Ring Gate | Accepted 12,009-triangle Meshy model, open aperture, console, approach step and current interaction/hum. The 6,263-triangle remesh was rejected. |
 | Mission terminals | Three saved Meshy terminal instances and the MissionTerminal prefab. Preserve the mission slab, nearby interaction access and `cam_terminal`; task records are in `meshy/mission-terminal-v1`. |
-| Shops and salvage | Restored Relay-based shops, Basic General, hall, community board, crates, generators, litter and industrial scrap. Preserve the working salvage placements. |
+| Shops and salvage | Restored Relay-based shops, Basic General, community board, crates, generators, litter and industrial scrap. Preserve the working salvage placements. |
+| Vanguard Hall | Rebuilt 30 Sep 2026 from the accepted concept (`art/vanguard_hall_20260930`): authored ashlar hall with LODs, own colliders, lamps/uplights on the city light clock. The Meshy hall stays in the scene inactive for rollback. See [EDITING](unity/EDITING.md). |
 | District replacements | Two active west-gate arches and the mechanic remain. Seven rejected shop candidates under `District rebuild` stay inactive until revised and reviewed. |
 | World | Editable hill, stairs, terrain basin, stone/soil detail, grass, cloud/dust atmosphere, landmarks and collision sources. Existing assets are a baseline, not a permanent quality ceiling. |
 | Interface | Accepted worn bronze/metal UI Toolkit art, open center view, corner HUD, ten visible hotbar slots with six working actions and four empty reserves. |
