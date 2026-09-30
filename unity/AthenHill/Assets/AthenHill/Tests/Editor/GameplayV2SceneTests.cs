@@ -74,6 +74,10 @@ namespace AthenHill.Tests
      if(n.displayName.Contains("carcass"))Assert.That(n.readyPrompt,Does.StartWith("E · Strip"),n.name);
      if(n.displayName=="Crashed drone")Assert.That(n.readyPrompt,Is.EqualTo("E · Salvage the crashed drone"));
     }
+    // Patch 2: names agree with what they are.
+    Assert.That(nodes.Single(n=>n.name=="Salvage node · Depot litter").readyPrompt,Is.EqualTo("E · Search the depot litter"));
+    foreach(var n in nodes.Where(n=>n.name.StartsWith("Salvage node · Roadside scrap heap")))Assert.That(n.readyPrompt,Is.EqualTo("E · Search the roadside scrap"),n.name);
+    Assert.That(session.GetComponentsInChildren<Transform>(true).Any(t=>t.name=="Gameplay v2 · patch 2 (GameplayV2Patch2)"),"patch 2 marker");
    }
    finally{EditorSceneManager.ClosePreviewScene(scene);}
   }

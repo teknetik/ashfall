@@ -26,6 +26,10 @@ namespace AthenHill
   [Tooltip("Radio line when the order becomes current. Empty = silent (e.g. the primer already briefed it).")]
   [TextArea(2,5)]public string startLine;
   [TextArea(2,5)]public string completeLine;
+  [Tooltip("The start line is time-critical (a combat warning): it jumps the radio queue instead of waiting behind other lines.")]
+  public bool urgentStart;
+  [Tooltip("Urgent radio line spoken once, the first time this order's encounter leader turns on the player. Empty = none.")]
+  [TextArea(1,3)]public string engageLine;
   public string speaker="Warden Ossa";
   [Min(0)]public int rewardCredits;
   public ItemStack[] rewardItems=new ItemStack[0];

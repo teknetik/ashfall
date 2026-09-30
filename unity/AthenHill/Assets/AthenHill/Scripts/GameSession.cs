@@ -201,8 +201,8 @@ namespace AthenHill
   void SetState(CityState state){State=state;input.SetGameplay(state==CityState.Play);player.Blocked=state!=CityState.Play;player.Talking=state==CityState.Dialogue;Time.timeScale=state==CityState.MainMenu||state==CityState.Paused||state==CityState.Settings?0:1;AudioListener.pause=state==CityState.Paused;Changed?.Invoke();}
   public void Notify(string text,string speaker="System"){notice=text;noticeTime=Mathf.Clamp(2.5f+noticeSecondsPerWord*RadioQueue.Words(text),4,10);AddLog(speaker,text);Changed?.Invoke();}
   /// A radio line (field briefings): logged now, shown on the radio channel when its turn comes. gapBefore leaves a
-  /// short silence after the previous line.
-  public void Radio(string text,string speaker,float gapBefore=0){if(string.IsNullOrWhiteSpace(text))return;AddLog(speaker,text);RadioLine.Say(text,speaker,gapBefore);Changed?.Invoke();}
+  /// short silence after the previous line; tag lets stale lines be dropped (RadioQueue.IsStale); urgent jumps the queue.
+  public void Radio(string text,string speaker,float gapBefore=0,string tag=null,bool urgent=false){if(string.IsNullOrWhiteSpace(text))return;AddLog(speaker,text);RadioLine.Say(text,speaker,gapBefore,tag,urgent);Changed?.Invoke();}
   /// Event log only (no banner): pickups already have their own toast.
   public void Record(string text,string speaker="System"){if(!string.IsNullOrWhiteSpace(text))AddLog(speaker,text);}
   void AddLog(string speaker,string text){LogRevision++;Log.Add(speaker+": "+text);if(Log.Count>16)Log.RemoveAt(0);Changed?.Invoke();}

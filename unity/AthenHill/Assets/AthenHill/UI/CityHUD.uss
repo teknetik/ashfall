@@ -155,9 +155,11 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .inventory-overview-header > VisualElement { flex-shrink: 1; }
 .inventory-overview-description { white-space: normal; font-size: 18px; margin-top: 8px; }
 
-.inventory-details { display: none; position: absolute; left: 50%; top: 20px; width: 390px; height: 430px; margin-left: -195px; padding: 18px 22px 16px; z-index: 10; }
+/* Details take the overview's place beside the grid (CityHud hides the overview), so they are never clipped or float over it. */
+.inventory-details { display: none; flex-shrink: 0; width: 430px; margin-left: 4px; padding: 18px 22px 16px; }
 .details-heading { padding-bottom: 12px; }
-.details-heading #details-close { min-height: 40px; padding: 10px 16px; font-size: 17px; }
+.details-heading #details-title { font-size: 24px; flex-shrink: 1; white-space: normal; margin-right: 14px; }
+.details-heading #details-close { flex-shrink: 0; min-height: 40px; padding: 10px 16px; font-size: 17px; }
 .details-body { flex-direction: column; flex-grow: 1; min-height: 0; margin-top: 12px; }
 .details-icon { width: 120px; height: 120px; align-self: center; margin-bottom: 10px; -unity-background-scale-mode: scale-to-fit; }
 #details-scroll { flex-grow: 1; flex-shrink: 1; min-height: 0; max-height: 190px; margin-top: 8px; }
@@ -167,6 +169,7 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 /* Small window: stack overview and allow the content to scroll as a whole. */
 .small-window #inventory-content { flex-direction: column; max-height: none; }
 .small-window #inventory-scroll { margin-right: 0; max-height: 360px; }
+.small-window .inventory-details { width: auto; margin-left: 0; margin-top: 10px; }
 .small-window .inventory-overview { width: auto; border-left-width: 0; border-top-width: 1px; border-top-color: #535f58; padding-left: 0; padding-top: 12px; margin-top: 10px; }
 .small-window .inventory-tile { width: 96px; height: 96px; }
 .small-window .inventory-overview-name, .small-window #details-description { font-size: 20px; }
@@ -300,17 +303,18 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .shop-columns { flex-direction: row; align-items: flex-start; }
 .shop-col { flex-grow: 1; flex-shrink: 1; flex-basis: 0; min-width: 0; }
 .shop-col-sell { margin-left: 22px; padding-left: 22px; border-left-width: 1px; border-left-color: #535f58; }
-#shop-panel .balance { margin-bottom: 8px; }
+#shop-panel .balance { margin: 0 0 6px; font-size: 20px; }
 .shop-section-heading { color: #a48a62; border-top-width: 1px; border-top-color: #7b8275; padding-top: 10px; margin-top: 10px; margin-bottom: 2px; }
 .shop-first-heading { border-top-width: 0; padding-top: 0; margin-top: 0; }
-.supply-row { min-height: 76px; padding: 6px 0; }
+.supply-row { min-height: 70px; padding: 4px 0; }
 .supply-row .trade-art { width: 62px; height: 66px; margin-right: 14px; }
 .supply-row .item-copy { font-size: 18px; }
-.supply-row Button { width: 112px; min-height: 44px; padding: 10px 8px; }
-.salvage-row, .part-row { min-height: 60px; padding: 5px 0; }
+.supply-row Button { width: 112px; }
+.salvage-row, .part-row { min-height: 54px; padding: 3px 0; }
 .salvage-art, .part-art { width: 50px; height: 50px; margin-right: 14px; }
 .salvage-row .item-copy, .part-row .item-copy { font-size: 18px; }
-.salvage-row Button, .part-row Button { width: 132px; min-height: 44px; padding: 10px 8px; }
+.salvage-row Button, .part-row Button, .supply-row Button { min-height: 42px; padding: 9px 8px; margin-top: 2px; margin-bottom: 2px; }
+.salvage-row Button, .part-row Button { width: 132px; }
 .small-window .supply-row .item-copy, .small-window .salvage-row .item-copy, .small-window .part-row .item-copy { font-size: 20px; }
 
 /* Gameplay v2 · wide modals (field fabricator, Basic General): everything fits at 1080p; the modal scroll view keeps
@@ -347,11 +351,12 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .fab-actions { flex-direction: row; flex-wrap: wrap; }
 .fab-actions Button { margin: 4px 8px 4px 0; min-height: 44px; padding: 10px 16px; font-size: 17px; }
 #fabricator-craft { color: #8be6df; }
+#fabricator-craft:disabled { color: #8c958b; }
 .fab-reason { font-size: 17px; white-space: normal; color: #bcbcad; margin-top: 6px; }
 .fab-reason.blocked { color: #db7d6b; }
 .fab-reason.fitted { color: #daca9e; }
 #fab-slots { flex-direction: row; margin: 0 -4px; }
-.fab-slot { flex-grow: 1; flex-basis: 0; min-width: 0; flex-direction: column; align-items: flex-start; justify-content: flex-start; min-height: 76px; padding: 8px 10px; margin: 3px 4px; }
+.fab-slot { flex-grow: 1; flex-basis: 0; min-width: 0; flex-direction: column; align-items: flex-start; justify-content: flex-start; min-height: 82px; padding: 14px 14px 12px 16px; margin: 3px 4px; }
 .fab-slot-label { color: #a48a62; }
 .fab-slot-mod { font-size: 16px; white-space: normal; -unity-text-align: upper-left; }
 .fab-slot.empty .fab-slot-mod { color: #8c958b; }

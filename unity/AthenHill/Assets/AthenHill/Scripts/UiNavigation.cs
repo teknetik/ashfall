@@ -43,6 +43,32 @@ namespace AthenHill
    anyInPanel?.panel?.focusController?.IgnoreEvent(e);
    e.StopPropagation();
   }
+  /// Next index when Tab (forward) or Shift+Tab cycles through count stops from index (-1 = none focused yet).
+  public static int Cycle(int index,int count,bool forward)
+  {
+   if(count<=0)return -1;
+   if(index<0||index>=count)return forward?0:count-1;
+   return forward?(index+1)%count:(index-1+count)%count;
+  }
+  /// Tab stops inside scope in tree order: focusable, enabled, displayed controls with a non-negative tab index —
+  /// never scrollbars or the insides of a field that delegates its focus.
+  public static List<VisualElement> TabStops(VisualElement scope)
+  {
+   var stops=new List<VisualElement>();
+   if(scope==null)return stops;
+   scope.Query<VisualElement>().ForEach(v=>{if(v!=scope&&IsTabStop(v,scope))stops.Add(v);});
+   return stops;
+  }
+  static bool IsTabStop(VisualElement v,VisualElement scope)
+  {
+   if(!v.focusable||v.tabIndex<0||!v.enabledInHierarchy||v is ScrollView||v is Scroller)return false;
+   for(var e=v;e!=null&&e!=scope.parent;e=e.parent)
+   {
+    if(!e.visible||e.resolvedStyle.display==DisplayStyle.None)return false;
+    if(e!=v&&(e is Scroller||e.focusable&&e.delegatesFocus))return false;
+   }
+   return true;
+  }
   /// Whenever keyboard focus enters the scroll view's content, scroll the focused element into view (after layout).
   public static void KeepFocusVisible(ScrollView scroll)
   {

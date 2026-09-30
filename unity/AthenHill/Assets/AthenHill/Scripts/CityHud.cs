@@ -77,10 +77,12 @@ namespace AthenHill
    // in play, gameplay keys (WASD/arrows, Enter, Tab) never navigate or press HUD buttons.
    inventoryGrid?.RegisterCallback<NavigationMoveEvent>(InventoryNavigate,TrickleDown.TrickleDown);
    UiNavigation.KeepFocusVisible(root.Q<ScrollView>("modal-scroll"));UiNavigation.KeepFocusVisible(inventoryScroll);
-   root.RegisterCallback<NavigationMoveEvent>(GuardPlay,TrickleDown.TrickleDown);
+   root.RegisterCallback<NavigationMoveEvent>(GuardNavigation,TrickleDown.TrickleDown);
    root.RegisterCallback<NavigationSubmitEvent>(GuardPlay,TrickleDown.TrickleDown);
-   // HUD controls are mouse and hotkey only (1–7, Tab/5, 6, Esc, E), so nothing in the HUD can hold keyboard focus.
-   foreach(var v in root.Q("hud").Query<VisualElement>().ToList())if(v.focusable)v.focusable=false;
+   // HUD controls are mouse and hotkey only (1–7, Tab/5, 6, Esc, E), so nothing in the HUD can hold keyboard focus —
+   // including scroll views' scrollers, which UI Toolkit may make focusable again when they re-layout.
+   HudUnfocusable();
+   foreach(var scroll in root.Q("hud").Query<ScrollView>().ToList())scroll.RegisterCallback<GeometryChangedEvent>(_=>HudUnfocusable(scroll));
    root.Q("modal").RegisterCallback<FocusInEvent>(e=>modalFocus=e.target as VisualElement);
    radio=root.Q("radio");notice=root.Q("notice");
    radio.RegisterCallback<GeometryChangedEvent>(_=>PlaceNotice());
@@ -229,6 +231,38 @@ namespace AthenHill
    UiNavigation.Consume(e,root);
   }
   public int InventoryColumns()=>UiNavigation.Columns(inventoryIds.Select(id=>inventoryTiles.TryGetValue(id,out var b)?b.layout:default).ToList());
+  /// Makes every element under the HUD (or one HUD scroll view) non-focusable and outside the Tab order.
+  void HudUnfocusable(VisualElement scope=null)
+  {
+   foreach(var v in (scope??root.Q("hud")).Query<VisualElement>().ToList()){if(v.focusable)v.focusable=false;if(v.tabIndex>=0)v.tabIndex=-1;}
+  }
+  /// Navigation: in play nothing moves; in a modal, Tab / Shift+Tab cycle only through the modal's own controls.
+  void GuardNavigation(NavigationMoveEvent e)
+  {
+   if(session.State==CityState.Play){GuardPlay(e);return;}
+   if(e.direction!=NavigationMoveEvent.Direction.Next&&e.direction!=NavigationMoveEvent.Direction.Previous)return;
+   var scope=ModalScope();if(scope==null)return;
+   var stops=UiNavigation.TabStops(scope);if(stops.Count==0)return;
+   var focused=root.focusController?.focusedElement as VisualElement;
+   int i=stops.FindLastIndex(s=>s==focused||focused!=null&&s.Contains(focused));
+   int next=UiNavigation.Cycle(i,stops.Count,e.direction==NavigationMoveEvent.Direction.Next);
+   stops[next].Focus();
+   UiNavigation.Consume(e,root);
+  }
+  /// The element Tab cycles within: the open modal (or the inventory's details), the startup actions or the New Game
+  /// confirmation. Null in play, in Settings (its fields manage their own focus) and while the developer overlay is up.
+  VisualElement ModalScope()
+  {
+   var overlay=root.Q("developer-time-overlay");
+   if(overlay!=null&&overlay.resolvedStyle.display==DisplayStyle.Flex)return null;
+   switch(session.State)
+   {
+    case CityState.Play:case CityState.Boot:case CityState.Settings:return null;
+    case CityState.MainMenu:{var confirm=root.Q("new-game-confirm");return confirm!=null&&confirm.resolvedStyle.display==DisplayStyle.Flex?confirm:root.Q("startup-content");}
+    case CityState.Inventory:return !string.IsNullOrEmpty(session.DetailItemId)?inventoryDetails:root.Q("modal");
+    default:return root.Q("modal");
+   }
+  }
   /// In play the HUD is mouse/hotkey only: navigation and submit events (WASD, arrows, Tab, Enter) never reach it.
   void GuardPlay(EventBase e)
   {
@@ -364,6 +398,8 @@ namespace AthenHill
     // Details overlay: blocks interaction with the grid while open.
     bool detailsOpen=!string.IsNullOrEmpty(session.DetailItemId);
     inventoryDetails.style.display=detailsOpen?DisplayStyle.Flex:DisplayStyle.None;
+    // The details panel takes the overview's place beside the grid (never floating over both).
+    root.Q("inventory-overview").style.display=detailsOpen?DisplayStyle.None:DisplayStyle.Flex;
     inventoryScroll?.SetEnabled(!detailsOpen);
     inventoryGrid?.SetEnabled(!detailsOpen);
     if(detailsOpen)
@@ -391,7 +427,7 @@ namespace AthenHill
    if(session.State==CityState.Credits){Text("modal-title","Credits and licences");Text("modal-subtitle","Athen Hill · An original colony city homage");Text("panel-text",session.catalog.credits?session.catalog.credits.text:"Credits unavailable.");}
    if(previous!=session.State)
    {
-    previous=session.State;
+    previous=session.State;HudUnfocusable();
     root.Q<ScrollView>("modal-scroll").scrollOffset=Vector2.zero;
     if(modal)
     {
@@ -430,10 +466,12 @@ namespace AthenHill
    Show("tunnel",tunnel);
    if(tunnel)for(int i=0;i<4;i++){var ring=root.Q("tunnel-ring"+i);float phase=Mathf.Repeat(session.GridProgress*tunnelSpeed+i*.25f,1);float size=20+phase*480;ring.style.width=Length.Percent(size);ring.style.height=Length.Percent(size);ring.style.left=Length.Percent(50-size/2);ring.style.top=Length.Percent(50-size/2);ring.style.opacity=1-phase;}
    string prompt=session.Prompt;Show("interaction",!string.IsNullOrEmpty(prompt));root.Q<Button>("interaction").text=prompt;
+   // Declutter: the colonist named by the interaction prompt needs no nametag (it would sit over shop signs).
+   var prompted=!string.IsNullOrEmpty(prompt)?session.Nearest:null;
    foreach(var pair in tags)
    {
     var world=pair.Key.transform.position+Vector3.up*2.15f;var p=worldCamera.WorldToViewportPoint(world);
-    bool visible=session.State==CityState.Play&&p.z>0&&p.x>0&&p.x<1&&p.y>0&&p.y<1&&Vector3.Distance(world,session.player.transform.position)<34;
+    bool visible=session.State==CityState.Play&&pair.Key!=prompted&&p.z>0&&p.x>0&&p.x<1&&p.y>0&&p.y<1&&Vector3.Distance(world,session.player.transform.position)<34;
     pair.Value.style.display=visible?DisplayStyle.Flex:DisplayStyle.None;
     if(visible){var point=RuntimePanelUtils.CameraTransformWorldToPanel(root.panel,world,worldCamera);pair.Value.style.left=point.x-28;pair.Value.style.top=point.y-30;}
    }

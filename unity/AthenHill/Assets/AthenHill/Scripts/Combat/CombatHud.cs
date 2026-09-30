@@ -173,10 +173,26 @@ namespace AthenHill
     if(visible)
     {
      guidance.text=label+$" · {Mathf.CeilToInt(Vector3.Distance(target.position,combat.transform.position))} m";
-     var p=RuntimePanelUtils.CameraTransformWorldToPanel(root.panel,world,worldCamera);guidance.style.left=p.x-85;guidance.style.top=p.y-24;
+     var p=RuntimePanelUtils.CameraTransformWorldToPanel(root.panel,world,worldCamera);
+     guidance.style.left=p.x-85;guidance.style.top=AvoidNametags(new Rect(p.x-85,p.y-24,170,24));
     }
    }
    Show(guidance,visible);
+  }
+  List<VisualElement> nametags;
+  /// Declutter: a guidance marker that would sit on a colonist's nametag moves up above it.
+  float AvoidNametags(Rect marker)
+  {
+   if(nametags==null||nametags.Count==0)nametags=root.Query(className:"nametag").ToList();
+   float top=marker.y;
+   foreach(var tag in nametags)
+   {
+    if(tag.style.display!=DisplayStyle.Flex)continue;
+    var r=new Rect(tag.style.left.value.value,tag.style.top.value.value,tag.layout.width>0?tag.layout.width:200,tag.layout.height>0?tag.layout.height:48);
+    var m=new Rect(marker.x,top,marker.width,marker.height);
+    if(m.Overlaps(r))top=r.y-marker.height-4;
+   }
+   return top;
   }
   void UpdateBars(bool play)
   {

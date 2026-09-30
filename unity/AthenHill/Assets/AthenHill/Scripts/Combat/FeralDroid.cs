@@ -31,6 +31,12 @@ namespace AthenHill
   [Min(0)]public float slamWindupSeconds=1.6f,slamRecoverSeconds=1.8f,slamDamage=45,slamRadius=3.6f;
   [Tooltip("Optional impact sound for the slam (the strike sound otherwise).")]
   public AudioClip slamClip;
+  [Header("Idle cost (behaviour is unchanged once engaged)")]
+  [Tooltip("Idle droids farther than this from the player stand still and think only every Far Tick Seconds; they wander again as the player approaches (always well outside the aggro radius).")]
+  [Min(0)]public float idleThrottleDistance=40;
+  [Min(.05f)]public float farTickSeconds=.5f;
+  [Tooltip("Hover wrecks: the death tumble may carry the wreck at most this far (metres, horizontal) before it is stopped; it then settles in place and its cache drops there.")]
+  [Min(0)]public float wreckMaxTravel=2.5f;
   public LayerMask groundMask=~(1<<8);
   [Header("Presentation")]
   public Animation animationSource;
@@ -80,7 +86,16 @@ namespace AthenHill
   /// The strike being wound up (or just delivered) is a heavy slam.
   public bool Slamming {get;private set;}
   public int Strikes {get;private set;}
-  float poise,windupNow=.6f;
+  /// Turned on the player (alert, chasing, winding up, recovering or staggered).
+  public bool Engaged=>Hostile;
+  /// Idle beyond Idle Throttle Distance: standing still, thinking at Far Tick Seconds.
+  public bool FarIdle {get;private set;}
+  /// A hover wreck has stopped tumbling (walkers: immediately). Loot drops once it has.
+  public bool WreckSettled {get;private set;}
+  float poise,windupNow=.6f,farClock,settleClock,baseLinearDamping,baseAngularDamping;
+  bool wreckGrounded;
+  Vector3 deathPoint;
+  Renderer mainRenderer;
   public event Action<FeralDroid> Killed;
   float timer,staggerReady,wanderWait,bob;
   Vector3 wanderTarget,velocity;
@@ -109,7 +124,19 @@ namespace AthenHill
    footBase=new float[feet.Length];footUp=new bool[feet.Length];
    for(int i=0;i<footBase.Length;i++)footBase[i]=float.MaxValue;
    rotorSpin=rotorSpeed;
+   if(body){baseLinearDamping=body.linearDamping;baseAngularDamping=body.angularDamping;}
+   foreach(var r in GetComponentsInChildren<Renderer>())if(r.enabled&&(r is SkinnedMeshRenderer||r is MeshRenderer)){mainRenderer=r;break;}
+   UpdateAnimationCulling();
   }
+  /// Off-screen idle droids are not animated (their skinned renderers carry real bounds, so they cull); once engaged
+  /// or dying they always animate, so fights look and sound exactly as before.
+  void UpdateAnimationCulling()
+  {
+   if(!animationSource)return;
+   var want=Hostile||State==DroidState.Dead?AnimationCullingType.AlwaysAnimate:AnimationCullingType.BasedOnRenderers;
+   if(animationSource.cullingType!=want)animationSource.cullingType=want;
+  }
+  bool Visible=>!mainRenderer||mainRenderer.isVisible;
   void Loop(AnimationClip c){if(animationSource&&c&&animationSource[c.name]!=null)animationSource[c.name].wrapMode=WrapMode.Loop;}
   void OnEnable(){Active.Add(this);}
   void OnDisable(){Active.Remove(this);}
@@ -145,7 +172,8 @@ namespace AthenHill
    foreach(var c in GetComponentsInChildren<Collider>())c.enabled=true;
    if(smoke)smoke.Stop();
    Health.Restore();SetState(DroidState.Idle);Play(idle,1);SnapToGround(1);
-   poise=0;Strikes=0;Slamming=false;
+   poise=0;Strikes=0;Slamming=false;WreckSettled=false;wreckGrounded=false;
+   if(body){body.linearDamping=baseLinearDamping;body.angularDamping=baseAngularDamping;}
    if(revive&&wasDead){var loot=GetComponent<LootSource>();if(loot)loot.Revived();}
    flash=0;rotorSpin=rotorSpeed;
    if(motorLoop&&motorLoop.clip){motorLoop.volume=1;if(!motorLoop.isPlaying)motorLoop.Play();}
@@ -159,7 +187,17 @@ namespace AthenHill
   {
    if(!Player||State==DroidState.Dead)return;
    if(Session&&Session.State!=CityState.Play)return;
-   float dt=Time.deltaTime;timer+=dt;
+   float dt=Time.deltaTime;
+   // Far idle droids stand still and think at a low rate: the player is far outside the aggro radius.
+   FarIdle=State==DroidState.Idle&&idleThrottleDistance>0&&PlayerDistance>idleThrottleDistance;
+   if(FarIdle)
+   {
+    farClock+=dt;if(farClock<farTickSeconds)return;
+    dt=farClock;farClock=0;timer+=dt;RepairStep(dt);
+    if(velocity!=Vector3.zero){velocity=Vector3.zero;Play(idle,1);}
+    return;
+   }
+   farClock=0;timer+=dt;
    if(State==DroidState.Idle||State==DroidState.Returning)RepairStep(dt);
    switch(State)
    {
@@ -215,7 +253,7 @@ namespace AthenHill
    SetState(DroidState.Alert);Play(idle,1.6f);
    if(voice&&alertClip)voice.PlayOneShot(alertClip);
   }
-  void SetState(DroidState s){State=s;timer=0;}
+  void SetState(DroidState s){State=s;timer=0;UpdateAnimationCulling();}
   // A slam may play the attack slower (a heavier swing that still lands on the blow); ordinary strikes keep the old floor.
   float AttackRate(){return attack?Mathf.Max(Slamming?.3f:.5f,attack.length*attackImpact/Mathf.Max(.05f,windupNow)):1;}
   /// Strike number n (1-based) is a slam when every is set and n is a multiple of it.
@@ -366,7 +404,30 @@ namespace AthenHill
   {
    float dt=Time.deltaTime;bool reduced=Session&&Session.reducedMotion;
    Glow(dt,reduced);
+   bool visible=Visible;
+   // The optic light only matters where it can be seen, or in a fight.
+   if(eyeLight){bool lit=visible||Hostile;if(eyeLight.enabled!=lit)eyeLight.enabled=lit;}
+   if(FarIdle&&!visible)return;
    if(kind==DroidKind.Walker)Footsteps(reduced);else Rotors(dt,reduced);
+  }
+  // Hover wrecks: stop the tumble within Wreck Max Travel, damp it once it lands, then freeze it where it rests.
+  void FixedUpdate()
+  {
+   if(State!=DroidState.Dead||WreckSettled||!body||body.isKinematic)return;
+   var travel=body.position-deathPoint;travel.y=0;
+   if(travel.magnitude>wreckMaxTravel){var v=body.linearVelocity;v.x=0;v.z=0;body.linearVelocity=v;}
+   if(wreckGrounded){body.linearDamping=Mathf.Max(baseLinearDamping,4);body.angularDamping=Mathf.Max(baseAngularDamping,4);}
+   bool still=body.linearVelocity.sqrMagnitude<.05f&&body.angularVelocity.sqrMagnitude<.3f;
+   settleClock=wreckGrounded&&still?settleClock+Time.fixedDeltaTime:0;
+   if(settleClock>.35f||Time.time-deadAt>4)SettleWreck();
+  }
+  void OnCollisionEnter(Collision c){if(State==DroidState.Dead)wreckGrounded=true;}
+  void SettleWreck()
+  {
+   WreckSettled=true;
+   if(!body)return;
+   if(!body.isKinematic){body.linearVelocity=Vector3.zero;body.angularVelocity=Vector3.zero;}
+   body.isKinematic=true;body.linearDamping=baseLinearDamping;body.angularDamping=baseAngularDamping;
   }
   Color glowNow;
   void Glow(float dt,bool reduced)
@@ -465,6 +526,7 @@ namespace AthenHill
   void OnDied()
   {
    SetState(DroidState.Dead);velocity=Vector3.zero;deadAt=Time.time;
+   deathPoint=transform.position;wreckGrounded=false;settleClock=0;WreckSettled=kind!=DroidKind.Hover||!body;
    if(voice&&deathClip)voice.PlayOneShot(deathClip);
    if(eyeLight)eyeLight.intensity=0;
    if(sparks)sparks.Emit(30);

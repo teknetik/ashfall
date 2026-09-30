@@ -115,12 +115,17 @@ namespace AthenHill.Tests
    FitMarkOne(rig);
    var loadout=rig.model.Loadout;
    Assert.That(loadout.Stats.recoil,Is.EqualTo(31));Assert.That(loadout.Stats.damage,Is.EqualTo(40.8f).Within(1e-4));
-   var gyro=FabricatorPanel.ModSummary(rig.model,loadout.Modifier("grip_gyro_braced"));
+   string Plain(string s)=>s.Replace('\u00A0',' ').Replace('\u2215','/');
+   var gyro=Plain(FabricatorPanel.ModSummary(rig.model,loadout.Modifier("grip_gyro_braced")));
    Assert.That(gyro,Does.Contain("replaces Stabilised Pistol Grip").And.Contain("31 → 23"));Assert.That(gyro,Does.Not.Contain("38 →"));
-   var lattice=FabricatorPanel.ModSummary(rig.model,loadout.Modifier("barrel_lattice_focused"));
+   var lattice=Plain(FabricatorPanel.ModSummary(rig.model,loadout.Modifier("barrel_lattice_focused")));
    Assert.That(lattice,Does.Contain("40.8 → 49.3"));Assert.That(lattice,Does.Not.Contain("34 →"));
-   var fitted=FabricatorPanel.ModSummary(rig.model,loadout.Modifier("grip_stabilised_pistol"));
+   var fitted=Plain(FabricatorPanel.ModSummary(rig.model,loadout.Modifier("grip_stabilised_pistol")));
    Assert.That(fitted,Does.Contain("fitted").And.Contain("38 → 31"),"a fitted mod shows what it adds over an empty slot");
+   // Each change stays on one line: no ordinary space or slash inside "Nano refill 30/s → 39/s".
+   var cell=FabricatorPanel.ModSummary(rig.model,loadout.Modifier("cell_overclocked"));
+   var refill=cell.Split(new[]{" · "},System.StringSplitOptions.None).Single(s=>s.Contains("refill"));
+   Assert.That(refill,Does.Not.Contain(" ").And.Not.Contain("/"),refill);Assert.That(Plain(refill),Does.Contain("→"));
   }
 
   [Test] public void UxmlHasTheNewLayoutAndRadioElements()
