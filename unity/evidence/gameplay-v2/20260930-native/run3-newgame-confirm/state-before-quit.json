@@ -1,0 +1,883 @@
+{
+ "dev": {
+  "schemaVersion": 1,
+  "available": true,
+  "source": "unity",
+  "utc": "2026-09-30T00:24:55.4913070Z",
+  "frame": 6281,
+  "unscaledTime": 116.364708,
+  "build": {
+   "unity": "6000.6.0f1",
+   "version": "0.1.0",
+   "development": true
+  },
+  "session": {
+   "state": "Play",
+   "objective": "Reach the Hill Tree.",
+   "visitedHill": false,
+   "boughtFlask": false,
+   "soldScrap": false,
+   "linked": false,
+   "spoken": [],
+   "selectedDestination": "",
+   "credits": 40,
+   "purchases": 0,
+   "sales": 0
+  },
+  "items": [
+   {
+    "id": "water_flask",
+    "name": "Water Flask",
+    "description": "A dented field flask with a fresh seal and clean water.",
+    "buyPrice": 4,
+    "sellPrice": 2,
+    "startingQuantity": 0,
+    "maxStack": 0,
+    "excludeFromTrade": false,
+    "tags": [
+     "consumable"
+    ],
+    "quantity": 0
+   },
+   {
+    "id": "medkit",
+    "name": "Medkit",
+    "description": "A compact pack of sealed dressings and colony first-aid supplies.",
+    "buyPrice": 9,
+    "sellPrice": 4,
+    "startingQuantity": 0,
+    "maxStack": 0,
+    "excludeFromTrade": false,
+    "tags": [
+     "consumable"
+    ],
+    "quantity": 0
+   },
+   {
+    "id": "scrap_coil",
+    "name": "Scrap Coil",
+    "description": "A worn induction coil. Someone at the market can still use the copper.",
+    "buyPrice": 2,
+    "sellPrice": 1,
+    "startingQuantity": 1,
+    "maxStack": 0,
+    "excludeFromTrade": false,
+    "tags": [
+     "salvage",
+     "material:conductive"
+    ],
+    "quantity": 2
+   },
+   {
+    "id": "droid_servo_damaged",
+    "name": "Damaged Servo",
+    "description": "A salvaged worker-droid servo, still fit for a field repair.",
+    "buyPrice": 0,
+    "sellPrice": 3,
+    "startingQuantity": 0,
+    "maxStack": 10,
+    "excludeFromTrade": false,
+    "tags": [
+     "salvage",
+     "salvage:droid",
+     "component",
+     "component:servo",
+     "tier:1"
+    ],
+    "quantity": 1
+   },
+   {
+    "id": "scrap_alloy",
+    "name": "Scrap Alloy",
+    "description": "Cleaned structural alloy recovered from feral machines.",
+    "buyPrice": 0,
+    "sellPrice": 1,
+    "startingQuantity": 0,
+    "maxStack": 30,
+    "excludeFromTrade": false,
+    "tags": [
+     "salvage",
+     "material",
+     "material:metal",
+     "tier:1"
+    ],
+    "quantity": 4
+   },
+   {
+    "id": "nanite_residue",
+    "name": "Nanite Residue",
+    "description": "Recoverable tier-one nanites from a damaged industrial core.",
+    "buyPrice": 0,
+    "sellPrice": 1,
+    "startingQuantity": 0,
+    "maxStack": 60,
+    "excludeFromTrade": false,
+    "tags": [
+     "salvage",
+     "nanite",
+     "nanite:tier1"
+    ],
+    "quantity": 3
+   },
+   {
+    "id": "copper_filament",
+    "name": "Copper Filament",
+    "description": "Fine conductor salvaged from a machine winding.",
+    "buyPrice": 0,
+    "sellPrice": 1,
+    "startingQuantity": 0,
+    "maxStack": 30,
+    "excludeFromTrade": false,
+    "tags": [
+     "salvage",
+     "material",
+     "material:conductive",
+     "tier:1"
+    ],
+    "quantity": 1
+   },
+   {
+    "id": "micro_capacitor",
+    "name": "Micro Capacitor",
+    "description": "An intact low-voltage capacitor from a drone's charge bus. Charge cell cores need two.",
+    "buyPrice": 0,
+    "sellPrice": 3,
+    "startingQuantity": 0,
+    "maxStack": 10,
+    "excludeFromTrade": false,
+    "tags": [
+     "salvage",
+     "component",
+     "component:capacitor",
+     "tier:1"
+    ],
+    "quantity": 0
+   },
+   {
+    "id": "grip_stabilised_pistol",
+    "name": "Stabilised Pistol Grip",
+    "description": "A field-fabricated grip that steadies the scrap pistol.",
+    "buyPrice": 0,
+    "sellPrice": 0,
+    "startingQuantity": 0,
+    "maxStack": 3,
+    "excludeFromTrade": true,
+    "tags": [
+     "weapon_mod",
+     "weapon_mod:grip",
+     "mark:1"
+    ],
+    "quantity": 0
+   },
+   {
+    "id": "optic_lens_cracked",
+    "name": "Cracked Optic Lens",
+    "description": "A scrap drone's targeting lens, cracked at the rim but still true at the centre.",
+    "buyPrice": 0,
+    "sellPrice": 4,
+    "startingQuantity": 0,
+    "maxStack": 10,
+    "excludeFromTrade": false,
+    "tags": [
+     "salvage",
+     "salvage:drone",
+     "component",
+     "component:optic",
+     "tier:1"
+    ],
+    "quantity": 1
+   },
+   {
+    "id": "actuator_intact",
+    "name": "Intact Actuator",
+    "description": "A heavy worker-droid joint actuator with its feedback loop unbroken. Rare in the Berms.",
+    "buyPrice": 0,
+    "sellPrice": 0,
+    "startingQuantity": 0,
+    "maxStack": 10,
+    "excludeFromTrade": true,
+    "tags": [
+     "salvage",
+     "salvage:droid",
+     "component",
+     "component:actuator",
+     "tier:2"
+    ],
+    "quantity": 0
+   },
+   {
+    "id": "lattice_shard",
+    "name": "Quantum Lattice Shard",
+    "description": "A sliver of quantum-stable lattice from Tir's old fabrication cores. It hums against the palm.",
+    "buyPrice": 0,
+    "sellPrice": 0,
+    "startingQuantity": 0,
+    "maxStack": 10,
+    "excludeFromTrade": true,
+    "tags": [
+     "salvage",
+     "lattice",
+     "tier:2"
+    ],
+    "quantity": 0
+   },
+   {
+    "id": "foreman_control_core",
+    "name": "Foreman Control Core",
+    "description": "The depot foreman's command core. Its stored shift schedules include full Mark II pistol schematics.",
+    "buyPrice": 0,
+    "sellPrice": 0,
+    "startingQuantity": 0,
+    "maxStack": 1,
+    "excludeFromTrade": true,
+    "tags": [
+     "salvage",
+     "component",
+     "component:control",
+     "tier:2",
+     "unique"
+    ],
+    "quantity": 0
+   },
+   {
+    "id": "alloy_plate",
+    "name": "Refined Alloy Plate",
+    "description": "Scrap alloy pressed and nanite-bonded into a true, stress-relieved plate.",
+    "buyPrice": 0,
+    "sellPrice": 0,
+    "startingQuantity": 0,
+    "maxStack": 20,
+    "excludeFromTrade": true,
+    "tags": [
+     "refined",
+     "refined:alloy"
+    ],
+    "quantity": 0
+   },
+   {
+    "id": "wound_coil",
+    "name": "Wound Copper Coil",
+    "description": "Salvaged conductor rewound on a field jig; the heart of any charge circuit.",
+    "buyPrice": 0,
+    "sellPrice": 0,
+    "startingQuantity": 0,
+    "maxStack": 20,
+    "excludeFromTrade": true,
+    "tags": [
+     "refined",
+     "refined:coil"
+    ],
+    "quantity": 1
+   },
+   {
+    "id": "charge_cell_core",
+    "name": "Charge Cell Core",
+    "description": "Two capacitors and a wound coil sealed in nanite resin: a stable nano-charge store.",
+    "buyPrice": 0,
+    "sellPrice": 0,
+    "startingQuantity": 0,
+    "maxStack": 10,
+    "excludeFromTrade": true,
+    "tags": [
+     "refined",
+     "refined:cell"
+    ],
+    "quantity": 0
+   },
+   {
+    "id": "barrel_bored_alloy",
+    "name": "Bored Alloy Barrel",
+    "description": "A refined-alloy barrel bored true on the fabricator. Hits harder and carries further.",
+    "buyPrice": 0,
+    "sellPrice": 0,
+    "startingQuantity": 0,
+    "maxStack": 3,
+    "excludeFromTrade": true,
+    "tags": [
+     "weapon_mod",
+     "weapon_mod:barrel",
+     "mark:1"
+    ],
+    "quantity": 0
+   },
+   {
+    "id": "cell_salvaged_capacitor",
+    "name": "Salvaged Capacitor Cell",
+    "description": "A larger nano cell built around a charge core. More shots before the pistol runs dry.",
+    "buyPrice": 0,
+    "sellPrice": 0,
+    "startingQuantity": 0,
+    "maxStack": 3,
+    "excludeFromTrade": true,
+    "tags": [
+     "weapon_mod",
+     "weapon_mod:cell",
+     "mark:1"
+    ],
+    "quantity": 0
+   },
+   {
+    "id": "grip_gyro_braced",
+    "name": "Gyro-Braced Grip",
+    "description": "A grip braced by a live actuator loop. It fights recoil and nudges your aim onto moving machines.",
+    "buyPrice": 0,
+    "sellPrice": 0,
+    "startingQuantity": 0,
+    "maxStack": 3,
+    "excludeFromTrade": true,
+    "tags": [
+     "weapon_mod",
+     "weapon_mod:grip",
+     "mark:2"
+    ],
+    "quantity": 0
+   },
+   {
+    "id": "barrel_lattice_focused",
+    "name": "Lattice-Focused Barrel",
+    "description": "A lattice shard seats behind a salvaged optic, focusing each nano pulse. Heavy hits, slightly slower cycling.",
+    "buyPrice": 0,
+    "sellPrice": 0,
+    "startingQuantity": 0,
+    "maxStack": 3,
+    "excludeFromTrade": true,
+    "tags": [
+     "weapon_mod",
+     "weapon_mod:barrel",
+     "mark:2"
+    ],
+    "quantity": 0
+   },
+   {
+    "id": "cell_overclocked",
+    "name": "Overclocked Charge Cell",
+    "description": "Twin charge cores tuned through a lattice shard: deep reserves, cheap shots, fast refill.",
+    "buyPrice": 0,
+    "sellPrice": 0,
+    "startingQuantity": 0,
+    "maxStack": 3,
+    "excludeFromTrade": true,
+    "tags": [
+     "weapon_mod",
+     "weapon_mod:cell",
+     "mark:2"
+    ],
+    "quantity": 0
+   }
+  ],
+  "combat": {
+   "available": true,
+   "hasPistol": true,
+   "armed": true,
+   "aiming": false,
+   "nano": 100.0,
+   "health": 100.0,
+   "maxHealth": 100.0,
+   "Downs": 1,
+   "inBerms": true,
+   "weaponId": "weapon_scrap_pistol",
+   "baseRecoil": 38.0,
+   "recoil": 31.0,
+   "stats": {
+    "damage": 34.0,
+    "fireInterval": 0.28,
+    "range": 70.0,
+    "recoil": 31.0,
+    "nanoMax": 100.0,
+    "nanoPerShot": 9.0,
+    "nanoRegen": 30.0,
+    "aimAssist": 3.5
+   },
+   "baseStats": {
+    "damage": 34.0,
+    "fireInterval": 0.28,
+    "range": 70.0,
+    "recoil": 38.0,
+    "nanoMax": 100.0,
+    "nanoPerShot": 9.0,
+    "nanoRegen": 30.0,
+    "aimAssist": 3.5
+   },
+   "lastKickDegrees": 1.55000007
+  },
+  "crafting": {
+   "available": true,
+   "knownRecipes": [
+    "recipe_cell_salvaged_capacitor",
+    "recipe_charge_cell_core",
+    "recipe_grip_stabilised_pistol",
+    "recipe_wound_coil"
+   ],
+   "crafts": 2,
+   "gripSlot": "grip_stabilised_pistol",
+   "slots": {
+    "grip": "grip_stabilised_pistol"
+   },
+   "craftCounts": {
+    "recipe_grip_stabilised_pistol": 1,
+    "recipe_wound_coil": 1
+   },
+   "lootEvents": 4,
+   "lastLoot": "Collected: Scrap Alloy \u00d72, Nanite Residue \u00d73, Copper Filament \u00d71, Cracked Optic Lens \u00d71",
+   "tutorialStep": "Done",
+   "stationId": null,
+   "fabricatorOpen": false
+  },
+  "fieldOrders": {
+   "available": true,
+   "index": 1,
+   "total": 5,
+   "id": "order_keep_charge",
+   "stage": "Gather",
+   "objective": "Build a bigger nano cell: wind a copper coil, seal two micro capacitors into a charge core, then fabricate and fit the Salvaged Capacitor Cell.\nSalvaged Capacitor Cell: Charge Cell Core 0/1 \u00b7 Scrap Alloy 2/2",
+   "freePlay": false
+  },
+  "tutorial": {
+   "available": true,
+   "step": "Complete",
+   "targetsDown": 0,
+   "targetsTotal": 3
+  },
+  "encounters": [
+   {
+    "key": "First contact \u00b7 service road",
+    "displayName": "First contact \u00b7 service road",
+    "spawned": true,
+    "total": 1,
+    "remaining": 0,
+    "cleared": true,
+    "respawnSeconds": 0.0
+   },
+   {
+    "key": "Machine depot nest",
+    "displayName": "Machine depot nest",
+    "spawned": true,
+    "total": 3,
+    "remaining": 0,
+    "cleared": true,
+    "respawnSeconds": 120.0
+   },
+   {
+    "key": "Depot Foreman \u00b7 processing hall",
+    "displayName": "Depot Foreman",
+    "spawned": false,
+    "total": 1,
+    "remaining": 0,
+    "cleared": false,
+    "respawnSeconds": 300.0
+   }
+  ],
+  "enemies": [
+   {
+    "name": "Feral scrap drone",
+    "kind": "Hover",
+    "state": "Dead",
+    "health": 0.0,
+    "maxHealth": 60.0,
+    "position": [
+     -75.00114,
+     -0.9380111,
+     -4.23521233
+    ]
+   },
+   {
+    "name": "Feral worker droid",
+    "kind": "Walker",
+    "state": "Dead",
+    "health": 0.0,
+    "maxHealth": 100.0,
+    "position": [
+     -82.2324142,
+     0.193615824,
+     -33.6488838
+    ]
+   },
+   {
+    "name": "Feral worker droid",
+    "kind": "Walker",
+    "state": "Dead",
+    "health": 0.0,
+    "maxHealth": 100.0,
+    "position": [
+     -81.64034,
+     -0.08778292,
+     -30.4667912
+    ]
+   },
+   {
+    "name": "Feral scrap drone",
+    "kind": "Hover",
+    "state": "Dead",
+    "health": 0.0,
+    "maxHealth": 60.0,
+    "position": [
+     -83.03517,
+     0.209878922,
+     -22.1815567
+    ]
+   }
+  ],
+  "clock": {
+   "available": true,
+   "hour": 17.0,
+   "paused": true,
+   "speed": 1.0,
+   "defaultHour": 17.0,
+   "ReducedMotionSpeedLimited": false
+  },
+  "weather": {
+   "available": false,
+   "reason": "No weather system in build"
+  }
+ },
+ "craft": {
+  "knownRecipes": [
+   "recipe_grip_stabilised_pistol",
+   "recipe_wound_coil",
+   "recipe_charge_cell_core",
+   "recipe_cell_salvaged_capacitor"
+  ],
+  "gripSlot": "grip_stabilised_pistol",
+  "slots": {
+   "grip": "grip_stabilised_pistol"
+  },
+  "stats": {
+   "damage": 34.0,
+   "fireInterval": 0.28,
+   "range": 70.0,
+   "recoil": 31.0,
+   "nanoMax": 100.0,
+   "nanoPerShot": 9.0,
+   "nanoRegen": 30.0,
+   "aimAssist": 3.5
+  },
+  "recoilBase": 38.0,
+  "recoilFinal": 31.0,
+  "lastKickDegrees": 1.55000007,
+  "crafts": 2,
+  "lootEvents": 4,
+  "lastLoot": "Collected: Scrap Alloy \u00d72, Nanite Residue \u00d73, Copper Filament \u00d71, Cracked Optic Lens \u00d71",
+  "tutorialStep": "Done",
+  "fieldOrder": 1,
+  "orderStage": "Gather",
+  "objective": "Build a bigger nano cell: wind a copper coil, seal two micro capacitors into a charge core, then fabricate and fit the Salvaged Capacitor Cell.\nSalvaged Capacitor Cell: Charge Cell Core 0/1 \u00b7 Scrap Alloy 2/2",
+  "fabricatorOpen": false
+ },
+ "snap": {
+  "atmosphere": {
+   "windTime": 102.493393,
+   "dustParticles": 52,
+   "dustPlaying": true
+  },
+  "frame": 6282,
+  "width": 1920,
+  "height": 1080,
+  "session": {
+   "state": "Play",
+   "visitedHill": false,
+   "spoken": [],
+   "boughtFlask": false,
+   "soldScrap": false,
+   "linked": false,
+   "muted": false,
+   "reducedMotion": false,
+   "notice": "Wound Copper Coil fabricated.",
+   "selectedDestination": "",
+   "gridProgress": 0.0,
+   "credits": 40,
+   "quantities": {
+    "water_flask": 0,
+    "medkit": 0,
+    "scrap_coil": 2,
+    "droid_servo_damaged": 1,
+    "scrap_alloy": 4,
+    "nanite_residue": 3,
+    "copper_filament": 1,
+    "micro_capacitor": 0,
+    "grip_stabilised_pistol": 0,
+    "optic_lens_cracked": 1,
+    "actuator_intact": 0,
+    "lattice_shard": 0,
+    "foreman_control_core": 0,
+    "alloy_plate": 0,
+    "wound_coil": 1,
+    "charge_cell_core": 0,
+    "barrel_bored_alloy": 0,
+    "cell_salvaged_capacitor": 0,
+    "grip_gyro_braced": 0,
+    "barrel_lattice_focused": 0,
+    "cell_overclocked": 0
+   },
+   "focused": null
+  },
+  "player": {
+   "position": [
+    -74.99914,
+    -1.47764361,
+    -0.8994253
+   ],
+   "grounded": true,
+   "speed": 0.0
+  },
+  "footsteps": {
+   "StepCount": 34,
+   "LandCount": 0,
+   "surface": "Sand",
+   "clip": "sand-walk-01",
+   "under": "Gravel"
+  },
+  "guards": [
+   {
+    "name": "Warden Rell",
+    "Focused": false,
+    "clip": "idle_calm_252"
+   },
+   {
+    "name": "Warden Ossa",
+    "Focused": false,
+    "clip": "idle_calm_243"
+   },
+   {
+    "name": "WardGuard",
+    "Focused": false,
+    "clip": "idle_calm_246"
+   },
+   {
+    "name": "WardGuard",
+    "Focused": false,
+    "clip": "idle_calm_252"
+   },
+   {
+    "name": "WardGuard",
+    "Focused": false,
+    "clip": "idle_calm_244"
+   },
+   {
+    "name": "WardGuard",
+    "Focused": false,
+    "clip": "idle_calm_243"
+   }
+  ],
+  "audio": {
+   "StepCount": 34,
+   "ClickCount": 6,
+   "TradeCount": 1,
+   "UnavailableCount": 0,
+   "TravelOpenCount": 0,
+   "TravelLinkCount": 0,
+   "paused": false,
+   "volume": 1.0,
+   "sources": [
+    {
+     "name": "Berms pistol audio",
+     "clip": null,
+     "playing": false,
+     "time": 0.0,
+     "volume": 1.0,
+     "spatialBlend": 0.0,
+     "loop": false,
+     "group": "SFX"
+    },
+    {
+     "name": "City music crossfade",
+     "clip": "Dust of Alshain",
+     "playing": true,
+     "time": 50.4746475,
+     "volume": 0.325,
+     "spatialBlend": 0.0,
+     "loop": false,
+     "group": "Music"
+    },
+    {
+     "name": "City soundtrack",
+     "clip": "Dust of the Giants",
+     "playing": false,
+     "time": 0.0,
+     "volume": 0.0,
+     "spatialBlend": 0.0,
+     "loop": false,
+     "group": "Music"
+    },
+    {
+     "name": "Cradle arc",
+     "clip": null,
+     "playing": true,
+     "time": 0.0,
+     "volume": 1.0,
+     "spatialBlend": 1.0,
+     "loop": false,
+     "group": "UI"
+    },
+    {
+     "name": "Cradle hum",
+     "clip": "cradle-hum",
+     "playing": true,
+     "time": 2.21997738,
+     "volume": 0.5,
+     "spatialBlend": 1.0,
+     "loop": true,
+     "group": "UI"
+    },
+    {
+     "name": "Desert wind",
+     "clip": "desert-wind",
+     "playing": true,
+     "time": 8.269978,
+     "volume": 0.8,
+     "spatialBlend": 0.0,
+     "loop": true,
+     "group": "Ambience"
+    },
+    {
+     "name": "Hall lamp sparks",
+     "clip": null,
+     "playing": false,
+     "time": 0.0,
+     "volume": 1.0,
+     "spatialBlend": 1.0,
+     "loop": false,
+     "group": "UI"
+    },
+    {
+     "name": "Lattice activation and link",
+     "clip": "lattice-open",
+     "playing": false,
+     "time": 0.0,
+     "volume": 0.7,
+     "spatialBlend": 0.0,
+     "loop": false,
+     "group": "SFX"
+    },
+    {
+     "name": "Lattice hum",
+     "clip": "lattice-hum",
+     "playing": true,
+     "time": 5.46997738,
+     "volume": 0.7,
+     "spatialBlend": 1.0,
+     "loop": true,
+     "group": "Ambience"
+    },
+    {
+     "name": "Market murmur",
+     "clip": "market-murmur",
+     "playing": true,
+     "time": 12.4199772,
+     "volume": 0.8,
+     "spatialBlend": 1.0,
+     "loop": true,
+     "group": "Ambience"
+    },
+    {
+     "name": "Pistol tail",
+     "clip": null,
+     "playing": false,
+     "time": 0.0,
+     "volume": 1.0,
+     "spatialBlend": 0.0,
+     "loop": false,
+     "group": "SFX"
+    },
+    {
+     "name": "Range plate 1",
+     "clip": "target-clang",
+     "playing": false,
+     "time": 0.0,
+     "volume": 1.0,
+     "spatialBlend": 1.0,
+     "loop": false,
+     "group": "UI"
+    },
+    {
+     "name": "Range plate 2",
+     "clip": "target-clang",
+     "playing": false,
+     "time": 0.0,
+     "volume": 1.0,
+     "spatialBlend": 1.0,
+     "loop": false,
+     "group": "UI"
+    },
+    {
+     "name": "Range plate 3",
+     "clip": "target-clang",
+     "playing": false,
+     "time": 0.0,
+     "volume": 1.0,
+     "spatialBlend": 1.0,
+     "loop": false,
+     "group": "UI"
+    },
+    {
+     "name": "Ring hum",
+     "clip": "ring-hum",
+     "playing": true,
+     "time": 5.46997738,
+     "volume": 0.8,
+     "spatialBlend": 1.0,
+     "loop": true,
+     "group": "Ambience"
+    },
+    {
+     "name": "Stone footsteps",
+     "clip": "stone-step-01",
+     "playing": false,
+     "time": 0.0,
+     "volume": 0.55,
+     "spatialBlend": 0.0,
+     "loop": false,
+     "group": "SFX"
+    },
+    {
+     "name": "Terminal feedback",
+     "clip": "terminal-click",
+     "playing": true,
+     "time": 0.0,
+     "volume": 0.65,
+     "spatialBlend": 0.0,
+     "loop": false,
+     "group": "UI"
+    }
+   ]
+  },
+  "camera": {
+   "yaw": 46.3614235,
+   "pitch": 17.8837585,
+   "boom": 4.2,
+   "distance": 4.19999933,
+   "firstPerson": false,
+   "playerHidden": false,
+   "position": [
+    -77.89184,
+    1.312121,
+    -3.65782547
+   ],
+   "overlaps": []
+  },
+  "interaction": {
+   "prompt": "E \u00b7 Use field fabricator",
+   "npc": null
+  },
+  "combat": {
+   "hasPistol": true,
+   "Armed": true,
+   "Aiming": false,
+   "Nano": 100.0,
+   "ShotsFired": 19,
+   "viewModelVisible": false,
+   "viewModelAim": 0.0,
+   "viewModelFlashes": 0,
+   "thirdPersonFlashes": 19,
+   "aimPoseWeight": 1.401298e-45,
+   "health": 100.0,
+   "step": "Complete",
+   "targets": 0,
+   "objective": "Outer Berms primer complete. Sell the salvage at Basic General.",
+   "lockerEnabled": false,
+   "enemies": []
+  },
+  "fps": 50.43923,
+  "draws": 0,
+  "triangles": 9323558
+ }
+}
