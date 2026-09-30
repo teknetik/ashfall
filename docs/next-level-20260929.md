@@ -65,10 +65,21 @@ Native lookbook `unity/evidence/rendering/20260929/baseline/` (11 review cameras
 - APV sky occlusion configured (`316738e1`), bake pending a free GPU (Vulkan Editor; recipe in
   `docs/apv-sky-occlusion-recipe.md`).
 
+- Native QA of gameplay v2 (`0ace642c`, 9 runs): loop works end-to-end (orders 1→5, caches, heaps, Foreman,
+  Mk II, save/Continue), zero exceptions; found keyboard/UI, cache-despawn and marker bugs plus tuning issues.
+- APV sky occlusion: three Vulkan bakes failed on this host (driver crash, VRAM exhaustion, 14 GB RAM cap);
+  configuration kept, pipeline back on legacy probes (`d09b7fd2`); see `unity/evidence/rendering/20260930/apv/`.
+- Shop sign letters glow at night via the lamp circuit (`2f55f2a8`).
+- QA fixes merged (`b67abd9a`): one-step keyboard navigation, fabricator 3-column window, Basic General
+  Supplies / Buy parts / Sell salvage, persistent caches (600 s, max 12), nest re-form 240 s + 55 m, elite Foreman
+  (1400 HP, telegraphed slam, 2 escorts, marker tracks it), radio panel with queued lines, per-heap prompts,
+  18 new item icons (Meshy text-to-image; OpenAI had no credit), order-2 drop odds up. 152/152 EditMode.
+- Salvage cache hero prop (`4423b50a`): droid-housing tray + nanite canister core glow, 62k/22k/6k LODs
+  (Meshy 80 credits; icons 162 credits).
+
 ## Delegated work in flight
 
-- Native QA of the gameplay v2 loop (exclusive GPU) → `unity/evidence/gameplay-v2/20260930-native/`.
-- Salvage cache hero prop (OpenAI concept → Meshy → Blender, `art/salvage_cache_20260930/`).
+- Native re-QA after fixes (exclusive GPU) → `unity/evidence/gameplay-v2/20260930-reqa/`.
 
 ## Open items
 
