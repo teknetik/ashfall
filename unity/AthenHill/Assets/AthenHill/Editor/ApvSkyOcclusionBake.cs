@@ -104,6 +104,8 @@ namespace AthenHill.Editor
                     if (r.enabled && !r.name.StartsWith("COL_") && MarkContributor(r)) flagged++;
             }
 
+            foreach (var r in UnityEngine.Object.FindObjectsByType<MeshRenderer>(FindObjectsInactive.Include))
+                if (GameObjectUtility.GetStaticEditorFlags(r.gameObject).HasFlag(StaticEditorFlags.ContributeGI) && !MarkContributor(r)) flagged--;
             EnsureOptions();
             AssetDatabase.SaveAssets();
             EditorSceneManager.MarkSceneDirty(scene);
@@ -125,7 +127,7 @@ namespace AthenHill.Editor
             if (!set.sceneGUIDs.Contains(sceneGuid) && !set.TryAddScene(sceneGuid))
                 throw new InvalidOperationException("Scene already belongs to another ProbeVolumeBakingSet; remove it there first.");
 
-            set.minDistanceBetweenProbes = 1.5f;          // first bake: 1.5 m (recipe fallback); try 1 m once the look is judged
+            set.minDistanceBetweenProbes = 2f;            // first bake: 2 m keeps the bake within memory; refine once the look is judged
             set.simplificationLevels = 3;
             set.minRendererVolumeSize = 0.1f;
             set.renderersLayerMask = ~0;                  // narrow if actors share layers with static art
@@ -169,14 +171,25 @@ namespace AthenHill.Editor
 
         static bool MarkContributor(MeshRenderer r)
         {
-            var m = r.sharedMaterial;
-            bool opaque = m && m.renderQueue < (int)RenderQueue.AlphaTest;   // cut-out/transparent block sky fully
+            // Opaque only (cut-out foliage and glass would block the sky like solid walls), and no empty submeshes
+            // (the compute ray tracer dispatches zero thread groups for them and drops the mesh).
+            var f = r.GetComponent<MeshFilter>(); var m = f ? f.sharedMesh : null;
+            var mats = r.sharedMaterials;
+            bool ok = m && mats.Length > 0 && mats.All(x => x && x.renderQueue < (int)RenderQueue.AlphaTest)
+                      && Enumerable.Range(0, m.subMeshCount).All(i => m.GetSubMesh(i).vertexCount > 0 && m.GetIndexCount(i) > 0);
             var flags = GameObjectUtility.GetStaticEditorFlags(r.gameObject);
-            flags = opaque ? flags | StaticEditorFlags.ContributeGI : flags & ~StaticEditorFlags.ContributeGI;
+            flags = ok ? flags | StaticEditorFlags.ContributeGI : flags & ~StaticEditorFlags.ContributeGI;
             GameObjectUtility.SetStaticEditorFlags(r.gameObject, flags);
-            r.receiveGI = ReceiveGI.LightProbes;          // never lightmaps: chunks have no valid UV1
-            EditorUtility.SetDirty(r.gameObject);
-            return opaque;
+            var so = new SerializedObject(r);                 // never lightmaps: most meshes have no valid UV1
+            so.FindProperty("m_ReceiveGI").intValue = (int)ReceiveGI.LightProbes;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            if (PrefabUtility.IsPartOfPrefabInstance(r))
+            {   // Prefab-instance edits are dropped on save unless recorded as overrides.
+                PrefabUtility.RecordPrefabInstancePropertyModifications(r);
+                PrefabUtility.RecordPrefabInstancePropertyModifications(r.gameObject);
+            }
+            EditorUtility.SetDirty(r); EditorUtility.SetDirty(r.gameObject);
+            return ok;
         }
 
         static void EnsureOptions()
@@ -219,6 +232,30 @@ namespace AthenHill.Editor
             AssetDatabase.CreateFolder(parent, Path.GetFileName(folder));
         }
 
+        // Read-only: which renderers the bake will treat as GI contributors, and which look risky for the ray tracer.
+        public static void DiagnoseBatch()
+        {
+            EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            var rows = new List<object>(); int contributors = 0, lightmapped = 0;
+            foreach (var r in UnityEngine.Object.FindObjectsByType<MeshRenderer>(FindObjectsInactive.Exclude))
+            {
+                if (!GameObjectUtility.GetStaticEditorFlags(r.gameObject).HasFlag(StaticEditorFlags.ContributeGI)) continue;
+                contributors++;
+                var f = r.GetComponent<MeshFilter>(); var m = f ? f.sharedMesh : null;
+                bool lm = r.receiveGI == ReceiveGI.Lightmaps; if (lm) lightmapped++;
+                bool empty = !m || m.vertexCount == 0 || m.subMeshCount == 0 || Enumerable.Range(0, m ? m.subMeshCount : 0).Any(i => m.GetIndexCount(i) == 0);
+                bool cutout = r.sharedMaterials.Any(x => x && x.renderQueue >= (int)RenderQueue.AlphaTest);
+                if (lm || empty || cutout || (m && !m.isReadable) || (m && m.vertexBufferCount > 1))
+                    rows.Add(new { path = PathOf(r.transform), mesh = m ? m.name : null, verts = m ? m.vertexCount : 0, subMeshes = m ? m.subMeshCount : 0, readable = m && m.isReadable, streams = m ? m.vertexBufferCount : 0, lightmapped = lm, empty, cutout });
+            }
+            var path = Path.GetFullPath(Path.Combine(Directory.GetParent(Application.dataPath).FullName, "../evidence/rendering/20260930/apv/diagnose.json"));
+            File.WriteAllText(path, JsonConvert.SerializeObject(new { contributors, lightmapped, flagged = rows.Count, rows }, Formatting.Indented));
+            Debug.Log("APV_DIAGNOSE contributors=" + contributors + " lightmapped=" + lightmapped + " flagged=" + rows.Count);
+            EditorApplication.Exit(0);
+        }
+
+        static string PathOf(Transform t) { var parts = new List<string>(); for (; t; t = t.parent) parts.Add(t.name); parts.Reverse(); return string.Join("/", parts); }
+
         // ------------------------------------------------------------------ launch 2
         static double s_Start;
         static DateTime s_StartUtc;
@@ -230,6 +267,9 @@ namespace AthenHill.Editor
             {
                 if (SystemInfo.graphicsDeviceType != GraphicsDeviceType.Vulkan)
                     throw new InvalidOperationException("Start with -force-vulkan: APV placement/sky-occlusion kernels are not compiled for glcore.");
+                // The 12 GB card also hosts the desktop (~3 GB); full-resolution scene textures plus the bake ran it out
+                // of memory and crashed the driver twice. Sky occlusion uses a constant albedo, so textures can load at 1/8.
+                QualitySettings.globalTextureMipmapLimit = 3;
                 EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
                 ForceOneRender();                         // creates the URP pipeline -> ProbeReferenceVolume.Initialize
                 if (!ProbeReferenceVolume.instance.isInitialized)
