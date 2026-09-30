@@ -1,0 +1,132 @@
+[
+ {
+  "name": "hero_v1",
+  "endpoint": "/text-to-image",
+  "options": {
+   "ai_model": "gpt-image-2",
+   "prompt": "Game-art prop concept, single object centred on a plain seamless light-grey studio background, soft even diffuse lighting, three-quarter view from slightly above, realistic AAA hard-surface detail, no text labels, no people, nothing else in frame except a faint contact shadow.\nThe prop: a scavenger's field salvage bundle stripped from a wrecked feral industrial worker droid on a desert mining world. Overall about 55 cm long, 35 cm wide and 35 cm tall, low and compact, with a flat stable underside.\nBase: a boxy open-topped section of the droid's armoured torso housing used as a tray - thick pressed-steel shell painted sun-faded bone-white with a rust-orange side panel, dented, paint chipped on the edges down to bare grey steel, gunmetal-grey inner frame, a cracked round sensor lens socket (dark, broken glass) on the front face, bolt heads and a simple black stencilled salvage mark (a chevron and a short number).\nPacked into and lashed on top of it with one worn tan canvas webbing strap and steel buckle: a detached servo actuator motor (gunmetal housing, exposed gear ring, stub of black cable), a tight coil of bright salvaged copper filament wire, two bent orange-and-white alloy armour plate fragments with torn edges, a bundle of cut black cables with brass terminals, and one sealed nanite core canister (a thick glass cylinder about 6 cm wide and 18 cm tall with knurled steel end caps and three thin steel guard bars) clamped upright at the back corner - its contents glow soft cyan.\nFine ochre desert dust settled in crevices, grime concentrated at joints and handles, not uniform. Believable manufactured industrial design, physically plausible materials.",
+   "aspect_ratio": "3:2"
+  },
+  "refs": [],
+  "submitted": "2026-09-30T00:59:34",
+  "task_id": "01a0ef9c-0474-778e-bfad-92252dc297ed",
+  "status": "SUCCEEDED",
+  "consumed_credits": 9,
+  "finished": "2026-09-30T01:00:11",
+  "files": [
+   "hero_v1.png"
+  ]
+ },
+ {
+  "name": "views_v1",
+  "endpoint": "/image-to-image",
+  "options": {
+   "ai_model": "gpt-image-2",
+   "prompt": "Exactly the same prop as the reference image - identical design, parts, layout, proportions, paint scheme and wear - shown as clean turnaround views for 3D modelling: plain seamless light-grey background, flat even shadowless studio lighting, whole object in frame, camera at slightly elevated eye level. The glass nanite canister is unlit: clear glass with dark smoky-grey contents, no glow, no light emission, no coloured light spill. No text other than the painted stencil.",
+   "generate_multi_view": true
+  },
+  "refs": [
+   "concepts/hero_v1.png"
+  ],
+  "submitted": "2026-09-30T01:00:25",
+  "task_id": "01a0ef9c-cb50-7461-9ced-177b74cb0caa",
+  "status": "FAILED",
+  "error": {
+   "type": "invalid_input",
+   "code": "provider_content_refused",
+   "message": "The generation provider could not process this content. Please adjust your input and retry.",
+   "doc_url": "https://docs.meshy.ai/en/api/errors#invalid-input"
+  }
+ },
+ {
+  "name": "views_v1",
+  "endpoint": "/image-to-image",
+  "options": {
+   "ai_model": "nano-banana-pro",
+   "prompt": "The same game prop as the reference image, with identical design, parts, layout, proportions, paint and wear, shown as clean turnaround views for 3D modelling on a plain light-grey background with flat, even, shadowless studio lighting. The glass cylinder on the back corner is unlit: clear glass with dark smoky contents and no glow.",
+   "generate_multi_view": true
+  },
+  "refs": [
+   "concepts/hero_v1.png"
+  ],
+  "submitted": "2026-09-30T01:01:05",
+  "task_id": "01a0ef9d-6abb-76f4-9096-0dac9ca9bb84",
+  "status": "SUCCEEDED",
+  "consumed_credits": 9,
+  "finished": "2026-09-30T01:01:34",
+  "files": [
+   "views_v1_0.png",
+   "views_v1_1.png",
+   "views_v1_2.png"
+  ]
+ },
+ {
+  "name": "view_front",
+  "endpoint": "/image-to-image",
+  "options": {
+   "ai_model": "nano-banana-pro",
+   "prompt": "Exactly the same game prop as in the reference images - identical design, parts, layout, proportions, paint scheme and wear - rendered as a straight-on front view, camera level with the middle of the object, looking at the face with the cracked round sensor socket and the black chevron stencil. Plain seamless light-grey background, flat even shadowless studio lighting, the whole object fully in frame with margin. The glass cylinder is unlit: clear glass with dark smoky contents, no glow.",
+   "aspect_ratio": "4:3"
+  },
+  "refs": [
+   "concepts/hero_v1.png",
+   "concepts/views_v1_0.png",
+   "concepts/views_v1_1.png",
+   "concepts/views_v1_2.png"
+  ],
+  "submitted": "2026-09-30T01:02:00",
+  "task_id": "01a0ef9e-4118-76fc-8007-668be60fd20f",
+  "status": "SUCCEEDED",
+  "consumed_credits": 9,
+  "finished": "2026-09-30T01:02:56",
+  "files": [
+   "view_front.png"
+  ]
+ },
+ {
+  "name": "view_right",
+  "endpoint": "/image-to-image",
+  "options": {
+   "ai_model": "nano-banana-pro",
+   "prompt": "Exactly the same game prop as in the reference images - identical design, parts, layout, proportions, paint scheme and wear - rendered as a straight-on right side view, camera level with the middle of the object, looking at the rust-orange side panel, the glass canister at the far left (back) end. Plain seamless light-grey background, flat even shadowless studio lighting, the whole object fully in frame with margin. The glass cylinder is unlit: clear glass with dark smoky contents, no glow.",
+   "aspect_ratio": "4:3"
+  },
+  "refs": [
+   "concepts/hero_v1.png",
+   "concepts/views_v1_0.png",
+   "concepts/views_v1_1.png",
+   "concepts/views_v1_2.png"
+  ],
+  "submitted": "2026-09-30T01:02:56",
+  "task_id": "01a0ef9f-1bd0-7542-bce9-798076d668e9",
+  "status": "SUCCEEDED",
+  "consumed_credits": 9,
+  "finished": "2026-09-30T01:03:52",
+  "files": [
+   "view_right.png"
+  ]
+ },
+ {
+  "name": "view_back",
+  "endpoint": "/image-to-image",
+  "options": {
+   "ai_model": "nano-banana-pro",
+   "prompt": "Exactly the same game prop as in the reference images - identical design, parts, layout, proportions, paint scheme and wear - rendered as a straight-on back view, camera level with the middle of the object, looking at the back wall of the tray, the glass canister on the left. Plain seamless light-grey background, flat even shadowless studio lighting, the whole object fully in frame with margin. The glass cylinder is unlit: clear glass with dark smoky contents, no glow.",
+   "aspect_ratio": "4:3"
+  },
+  "refs": [
+   "concepts/hero_v1.png",
+   "concepts/views_v1_0.png",
+   "concepts/views_v1_1.png",
+   "concepts/views_v1_2.png"
+  ],
+  "submitted": "2026-09-30T01:03:52",
+  "task_id": "01a0ef9f-f680-702f-ac39-6d9f684a116e",
+  "status": "SUCCEEDED",
+  "consumed_credits": 9,
+  "finished": "2026-09-30T01:04:30",
+  "files": [
+   "view_back.png"
+  ]
+ }
+]
