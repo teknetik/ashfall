@@ -84,7 +84,7 @@ native evidence uses OpenGL. Do not silently change the graphics API or pipeline
 | Area | Current state to preserve |
 | --- | --- |
 | Player | Supplied MeshyPlayer from `meshy/mpc`, walk/run and controller-driven movement. Static source idle/talk are known quality limitations. See [player record](unity/MESHY_PLAYER.md). |
-| Four talking NPCs | Supplied Ward Guard with arms at its sides, on the existing four interaction roots. |
+| Four talking NPCs | Currently the supplied Ward Guard with arms at its sides on all four interaction roots. Distinct, role-appropriate characters may replace it (see §4 Characters); keep the interaction roots, dialogue IDs and routes. |
 | Three original ambient walkers | `meshy/Meshy_AI_weathered_traveler_ri_biped`, supplied walking animation, existing roots/routes. |
 | Additional ambient actor | Yard mechanic, Humanoid Animator and its separate four-point service-yard loop. The current roster is one player, four talking NPCs and four ambient walkers. |
 | South Ring Gate | Accepted 12,009-triangle Meshy model, open aperture, console, approach step and current interaction/hum. The 6,263-triangle remesh was rejected. |
@@ -138,7 +138,10 @@ Requirements for the visual target:
 - **Characters:** convincing anatomy, face/hair, fabric and armour construction,
   hands/feet, deformation and ground contact. Natural idle, turn and locomotion
   transitions are quality work; source static poses are not final animation.
-  Preserve the current role/model assignments while improving them as requested.
+  Supplied models are a starting point, not a fixed assignment: replace them when a better character serves the role
+  (e.g. give Mira, Torr, Vex and Linn distinct faces, clothing and silhouettes instead of one armoured guard).
+  Use Meshy (generation, texturing, remeshing, rigging, animation — pre-approved in §5) or other licensed sources,
+  keep the gameplay roots, dialogue IDs, routes and save/data references, and keep the previous model recoverable.
 - **Materials:** correct scale and UVs; distinct albedo, normals, roughness and
   metallic response; controlled dirt and edge wear. Keep shading readable in shade.
   Do not bake strong directional light or shiny highlights into base color.
