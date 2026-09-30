@@ -71,7 +71,8 @@ namespace AthenHill
   }
   /// True when the change is an improvement for this stat (for green/red colouring).
   public static bool Improves(StatLabel label,float delta)=>label!=null&&label.lowerIsBetter?delta<0:delta>0;
-  /// "Recoil 38 → 31 · Damage 34 → 40.8" for a notice after fitting.
+  /// "Recoil 38 → 31 · Damage 34 → 40.8" for a notice after fitting. Each change is kept on one line (no-break
+  /// spaces, and a division slash in units such as "/s" so "39/s" never wraps as "39/ s"); lines break only at " · ".
   public static string StatChanges(CraftingCatalog data,WeaponStats before,WeaponStats after)
   {
    var parts=new List<string>();
@@ -79,9 +80,11 @@ namespace AthenHill
    {
     if(Math.Abs(before[i]-after[i])<.0005f)continue;
     var label=data.Stat(WeaponStats.Ids[i]);
-    parts.Add($"{(label!=null?label.label:WeaponStats.Ids[i])} {FormatStat(label,before[i])} → {FormatStat(label,after[i])}");
+    parts.Add(NoBreak($"{(label!=null?label.label:WeaponStats.Ids[i])} {FormatStat(label,before[i])} → {FormatStat(label,after[i])}"));
    }
    return string.Join(" · ",parts);
   }
+  /// Keeps a phrase on one line: spaces become no-break spaces and "/" a division slash (both in ColonySans).
+  public static string NoBreak(string text)=>text?.Replace(' ','\u00A0').Replace('/','\u2215');
  }
 }

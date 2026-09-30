@@ -29,6 +29,8 @@ namespace AthenHill
   void Update(){if(pending)TryPay();}
   void TryPay()
   {
+   // A hover wreck drops its cache where it comes to rest, not where it was shot.
+   if(droid&&droid.State==DroidState.Dead&&!droid.WreckSettled)return;
    bool ok=false;
    if(payout!=null)ok=payout(lootTableId);
    else if(session){ok=session.DropLoot(lootTableId,transform.position,transform.parent,out var cache,droid?droid.displayName:null);if(ok)Cache=cache;}

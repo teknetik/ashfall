@@ -2324,7 +2324,7 @@ Transform:
   m_GameObject: {fileID: 1302460955405725759}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.7, z: 0}
+  m_LocalPosition: {x: -0.12, y: 0.45, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2341,8 +2341,8 @@ Light:
   serializedVersion: 13
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1.2
-  m_Range: 3.2
+  m_Intensity: 0.3
+  m_Range: 0.95
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -2463,10 +2463,21 @@ MonoBehaviour:
   - {fileID: 5568070410140113128}
   - {fileID: 5749272897888620949}
   motes: {fileID: 4863025307410679927}
-  commonGlow: {r: 1.5, g: 1.35, b: 1.1, a: 1}
-  uncommonGlow: {r: 0.45, g: 1.9, b: 1.95, a: 1}
-  rareGlow: {r: 2.6, g: 1.45, b: 0.3, a: 1}
-  lightIntensity: 1.2
+  commonGlow: {r: 0.8, g: 0.72, b: 0.58, a: 1}
+  uncommonGlow: {r: 0.3, g: 1.35, b: 1.45, a: 1}
+  rareGlow: {r: 5, g: 2, b: 0.15, a: 1}
+  commonLight: 0.15
+  uncommonLight: 0.3
+  rareLight: 0.55
+  commonLightRange: 0.8
+  uncommonLightRange: 0.95
+  rareLightRange: 1.25
+  rarePulse: 0.25
+  rarePulseHz: 0.6
+  footprint: {x: 0.26, y: 0.2, z: 0.25}
+  searchRadius: 1.5
+  minSeparation: 0.8
+  maxStep: 0.14
   promptFormat: "E \xB7 Collect salvage ({0})"
   groundMask:
     serializedVersion: 2

@@ -47,10 +47,13 @@ namespace AthenHill
    var found=Model.Acquire(purchase.itemId);
    if(found.Count>0)purchase.note+=" "+CraftingText.Discovered(found);
   }
-  /// Spawns a cache (ground-snapped by the caller), after retiring the oldest caches over the cap.
-  SalvageCache SpawnCache(Vector3 at,Quaternion rotation,Transform parent,IEnumerable<ItemStack> items,string source)
+  /// Spawns a cache on a clear, flat spot near the wreck or heap (SalvageCache.FindSpot), after retiring the oldest
+  /// caches over the cap.
+  SalvageCache SpawnCache(Vector3 near,Quaternion rotation,Transform parent,IEnumerable<ItemStack> items,string source)
   {
    foreach(var old in SalvageCache.Evictions(SalvageCache.Active,maxCaches-1))old.Despawn();
+   var others=new List<Vector3>();foreach(var c in SalvageCache.Active)if(c)others.Add(c.transform.position);
+   cachePrefab.FindSpot(near,rotation,others,out var at);
    var cache=Instantiate(cachePrefab,at,rotation,parent);
    cache.name=cachePrefab.name+(string.IsNullOrEmpty(source)?"":" · "+source);
    cache.lifetimeSeconds=cacheLifetimeSeconds;
@@ -96,7 +99,7 @@ namespace AthenHill
    LastLoot="Dropped: "+Describe(rolled);
    if(rolled.Count==0)return true;
    if(!cachePrefab){Collect(new SalvageContents(rolled),source,at);return true;}
-   cache=SpawnCache(SalvageCache.Ground(at,cachePrefab.groundMask),Quaternion.Euler(0,UnityEngine.Random.Range(0,360f),0),parent,rolled,source);
+   cache=SpawnCache(at,Quaternion.Euler(0,UnityEngine.Random.Range(0,360f),0),parent,rolled,source);
    return true;
   }
   /// A searched scrap heap: rolls straight into the pack; anything over a stack cap is left in a cache beside it.
@@ -109,7 +112,7 @@ namespace AthenHill
    if(rolled.Count==0){LastLoot="Nothing useful";Session.Record($"Nothing useful in this {(source??"heap").ToLowerInvariant()}.","Field Pack");Collected?.Invoke(new LootPickup{source=source,position=at});return;}
    var contents=new SalvageContents(rolled);
    Collect(contents,source,at);
-   if(!contents.Empty&&cachePrefab)SpawnCache(SalvageCache.Ground(at,cachePrefab.groundMask),Quaternion.identity,parent,contents.Stacks,source);
+   if(!contents.Empty&&cachePrefab)SpawnCache(at,Quaternion.Euler(0,UnityEngine.Random.Range(0,360f),0),parent,contents.Stacks,source);
   }
   /// Moves what fits from a cache into the pack, reveals schematics for new parts and reports the pickup.
   public LootPickup Collect(SalvageContents contents,string source,Vector3 at)

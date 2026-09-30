@@ -137,7 +137,7 @@ namespace AthenHill.Tests
   {
    var w=Data().weapons.Single();
    var after=WeaponLoadout.Compute(w,new[]{Data().modifiers.Single(m=>m.itemId=="grip_stabilised_pistol")});
-   Assert.That(CraftingText.StatChanges(Data(),w.stats,after),Is.EqualTo("Recoil 38 → 31"));
+   Assert.That(CraftingText.StatChanges(Data(),w.stats,after),Is.EqualTo(CraftingText.NoBreak("Recoil 38 → 31")));
    var label=Data().Stat("recoil");
    Assert.That(CraftingText.FormatDelta(label,-7),Is.EqualTo("−7"));Assert.That(CraftingText.Improves(label,-7));
    Assert.That(CraftingText.Improves(Data().Stat("damage"),6.8f));Assert.That(CraftingText.FormatDelta(Data().Stat("damage"),6.8f),Is.EqualTo("+6.8"));

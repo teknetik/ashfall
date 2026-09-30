@@ -38,6 +38,7 @@ namespace AthenHill
   GameSession session;
   Target guidance;
   bool dirty;
+  readonly HashSet<int> engageSpoken=new HashSet<int>();
   IEnumerator Start()
   {
    session=GetComponent<GameSession>();
@@ -47,6 +48,7 @@ namespace AthenHill
    if(!data||!crafting){Debug.LogError("Field orders need their data asset and the crafting session.");yield break;}
    while(crafting.Model==null||crafting.Loot==null)yield return null;
    Progress??=new FieldOrderProgress(data);
+   session.RadioLine.IsStale=StaleRadioTag;
    crafting.Model.Changed+=MarkDirty;crafting.Collected+=OnCollected;
    session.Changed+=MarkDirty;
    if(combat)combat.ShotFired+=OnShot;
@@ -69,6 +71,29 @@ namespace AthenHill
    if(!Ready)return;
    if(!Progress.Started&&tutorial&&tutorial.Step==BermsStep.Complete){BeginOrder(Progress.Begin(),true);dirty=true;}
    if(dirty){dirty=false;Evaluate();}
+   EngageWarning();
+  }
+  /// Radio tags: "order:INDEX:brief", "order:INDEX:done", "order:INDEX:engage".
+  public static string RadioTag(int index,string kind)=>"order:"+index+":"+kind;
+  /// A briefing (or engage warning) is stale once its order is complete; a completion line once a later order
+  /// has completed too. Stale lines are dropped from the radio queue instead of replaying late.
+  public bool StaleRadioTag(string tag)=>Progress!=null&&IsStale(tag,Progress.Index);
+  public static bool IsStale(string tag,int currentIndex)
+  {
+   if(string.IsNullOrEmpty(tag)||!tag.StartsWith("order:"))return false;
+   var parts=tag.Split(':');if(parts.Length!=3||!int.TryParse(parts[1],out int i))return false;
+   return parts[2]=="done"?i<currentIndex-1:i<currentIndex;
+  }
+  /// The current order's engage line (the Foreman's slam warning) goes out urgently the first time its encounter's
+  /// leader turns on the player.
+  void EngageWarning()
+  {
+   var o=Progress.Current;if(o==null||string.IsNullOrEmpty(o.engageLine)||engageSpoken.Contains(Progress.Index))return;
+   var binding=encounters.FirstOrDefault(x=>x!=null&&x.key==o.activateEncounter);
+   var leader=binding!=null&&binding.encounter?binding.encounter.Leader:null;
+   if(!leader||!leader.Health.Alive||!leader.Engaged)return;
+   engageSpoken.Add(Progress.Index);
+   session.Radio(o.engageLine,o.speaker,0,RadioTag(Progress.Index,"engage"),true);
   }
   void Evaluate()
   {
@@ -77,10 +102,11 @@ namespace AthenHill
    {
     var reward=Reward(order);
     // Ossa's words go on the radio; the reward (credits, schematics) is a notice.
-    if(order==done[done.Count-1]){session.Radio(order.completeLine,order.speaker);if(!string.IsNullOrEmpty(reward))session.Notify(reward,"Field Orders");}
+    if(order==done[done.Count-1]){session.Radio(order.completeLine,order.speaker,0,RadioTag(Array.IndexOf(data.orders,order),"done"));if(!string.IsNullOrEmpty(reward))session.Notify(reward,"Field Orders");}
     Completed?.Invoke(order);
    }
-   if(done.Count>0)BeginOrder(Progress.Current,false);
+   // Lines queued while the player was busy (the radio clock stops in the fabricator) must not replay late.
+   if(done.Count>0){session.RadioLine.Drop();BeginOrder(Progress.Current,false);}
    Refresh();
   }
   /// Order-start side effects: schematics tied to the order, its encounter, and its briefing line.
@@ -92,7 +118,7 @@ namespace AthenHill
    if(!speak)return;
    var line=Join(order.startLine,CraftingText.Discovered(discovered));
    if(string.IsNullOrEmpty(line))return;
-   session.Radio(line,order.speaker,immediate?0:data.nextLineDelay);
+   session.Radio(line,order.speaker,immediate||order.urgentStart?0:data.nextLineDelay,RadioTag(Array.IndexOf(data.orders,order),"brief"),order.urgentStart);
   }
   void Activate(string key)
   {

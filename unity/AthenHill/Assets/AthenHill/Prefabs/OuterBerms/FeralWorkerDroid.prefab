@@ -2386,6 +2386,16 @@ MonoBehaviour:
   repairPerSecond: 12
   hoverHeight: 1.6
   corpseSeconds: 14
+  staggerThreshold: 0
+  slamEvery: 0
+  slamWindupSeconds: 1.6
+  slamRecoverSeconds: 1.8
+  slamDamage: 45
+  slamRadius: 3.6
+  slamClip: {fileID: 0}
+  idleThrottleDistance: 40
+  farTickSeconds: 0.5
+  wreckMaxTravel: 2.5
   groundMask:
     serializedVersion: 2
     m_Bits: 4294967039
@@ -7563,6 +7573,10 @@ PrefabInstance:
       value: 0.22554168
       objectReference: {fileID: 0}
     - target: {fileID: -2272193907538426981, guid: 181a344968be6a943bb191a967a7caaf, type: 3}
+      propertyPath: m_CullingType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -2272193907538426981, guid: 181a344968be6a943bb191a967a7caaf, type: 3}
       propertyPath: m_PlayAutomatically
       value: 0
       objectReference: {fileID: 0}
@@ -7919,16 +7933,28 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7627045602068744005, guid: 181a344968be6a943bb191a967a7caaf, type: 3}
+      propertyPath: m_AABB.m_Center.x
+      value: -4.966362
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627045602068744005, guid: 181a344968be6a943bb191a967a7caaf, type: 3}
+      propertyPath: m_AABB.m_Center.y
+      value: 0.17054749
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627045602068744005, guid: 181a344968be6a943bb191a967a7caaf, type: 3}
+      propertyPath: m_AABB.m_Center.z
+      value: 1.6584625
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627045602068744005, guid: 181a344968be6a943bb191a967a7caaf, type: 3}
       propertyPath: m_AABB.m_Extent.x
-      value: 450.4
+      value: 151.79225
       objectReference: {fileID: 0}
     - target: {fileID: 7627045602068744005, guid: 181a344968be6a943bb191a967a7caaf, type: 3}
       propertyPath: m_AABB.m_Extent.y
-      value: 180.4
+      value: 168.97638
       objectReference: {fileID: 0}
     - target: {fileID: 7627045602068744005, guid: 181a344968be6a943bb191a967a7caaf, type: 3}
       propertyPath: m_AABB.m_Extent.z
-      value: 450.4
+      value: 160.70741
       objectReference: {fileID: 0}
     - target: {fileID: 7627045602068744005, guid: 181a344968be6a943bb191a967a7caaf, type: 3}
       propertyPath: m_UpdateWhenOffscreen
