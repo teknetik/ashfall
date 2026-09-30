@@ -486,6 +486,36 @@ beacon), `Weathering decals` (runoff and wall-foot sediment on the accepted Ward
   `tools/check_vanguard_hall_traversal.py`. Evidence, rollback scene and remaining defects:
   `evidence/vanguard-hall/20260930/README.md`.
 
+## Hall district shops, signs and weathering (30 September 2026)
+
+**Ward shops (hall district)** (scene root) holds five prefab instances from `Prefabs/WardShops`: Relay Works (−18.1, −18),
+Air + Water (−18.1, −9), Tool Exchange (−18.1, 9) (all yaw 90), Finery (18.1, −18) and Field Supply (18.1, −9) (yaw −90).
+Each has `LOD0`/`LOD1` (glTF), `Colliders` (body, front piers, over-door blocks and door leaves set back 0.4 m so the
+recesses are walkable), `Fittings` (Poly Haven lamps with bulbs, AC, power box, security light), `Practical lights`
+(on the **Ward lighting clock**, practical + night-only), `Sign mounts` (the sign prefab under each) and, for the Tool
+Exchange, `Display` (Meshy props on named mounts plus the display light). The shops are not render-chunk sources.
+The porch and step colliders are the original `AuthoredWorld/COL_BLD_shop_*` boxes; their renderers are retired.
+
+- Geometry changes go through `art/hall_district_20260930/author_ward_shops.py` (and `author_ward_signs.py` for signs),
+  both on the shared kit `art/ward_masonry_kit`. Then **Athen Hill → Ward shops → Refresh models and materials**
+  (re-imports the GLBs into the existing prefabs, keeping light bindings). *Build assets* rebuilds prefabs from the JSON
+  records (then re-run *Fit Tool Exchange display props* and *Install signs*, and re-bind lights by re-running the
+  install on a fresh scene). *Install rebuilt shops* is one-time; *Dry-run install* lists what it would retire.
+- Stone uses the hall's materials (`Art/VanguardHall/Materials/VH_*`, **Athen Hill/Masonry Lit**). Its weathering controls:
+  *Runoff streaks* (map, tile, strength, tints), *Rust*, *Edge wear*, *Dust on upward faces*, *Old pitting*, *Battle
+  damage*, *Shrapnel scars per metre*, *Grime packed on arrises*, *Occlusion darkens albedo*. The weights they scale are
+  baked per vertex by the kit (see `art/ward_masonry_kit/README.md`); these meshes are probe-lit (UV1/UV2 hold wear data,
+  not lightmap UVs). Shop-only materials (`WS_*`: glass, steel, paint, canvas, corrugated roof, sign parts, cyan LEDs) are
+  in `Art/WardShops/Materials`.
+- Retired layers stay in the scene inactive (`evidence/hall-district/20260930/shops-install.json`). The district
+  retrofit's combined *Shop retrofits* meshes use filtered copies in `Art/WardShops/Retrofit`; point them back at the
+  `WardRetrofit.glb` sub-meshes to restore. The accepted Air + Water filter bank is kept by prefab-instance overrides on
+  `Ward shop architecture/air_water` (only *Front filter bank* and the riser anchors active).
+- The Basic General sign is **Basic General sign (hall district family)**; the 29 Sep baked plate *Basic General neon
+  sign* is inactive for rollback.
+- Real-input QA: `tools/check_hall_district_city_loop.py` (walks Vex → Torr → Linn → Mira trade → shop porches and door
+  recesses → Lattice link). Evidence and defects: `evidence/hall-district/20260930/README.md`.
+
 ## Scavenger's Arc: fabrication, loot and field orders (29 September 2026)
 
 Gameplay v2 content is serialized data; nothing is hard-coded in the scripts. Edit these assets in the Inspector:
