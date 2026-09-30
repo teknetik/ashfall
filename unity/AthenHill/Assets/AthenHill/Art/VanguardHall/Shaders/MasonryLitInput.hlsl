@@ -34,7 +34,11 @@ half _DetailNormalMapScale;
 UNITY_TEXTURE_STREAMING_DEBUG_VARS;
 half _WearStrength, _WearScale, _BaseWear;
 half4 _WearTint;
-half _BlockTint, _BlockAO;
+half _BlockTint, _BlockAO, _CavityAlbedo;
+float4 _StreakScale;
+half _StreakStrength, _RustStrength, _EdgeWear, _EdgeNoiseScale, _TopDust;
+half _Pitting, _PitScale, _BattleDamage, _ScarScale, _EdgeGrime;
+half4 _StreakTint, _DepositTint, _RustTint, _EdgeTint, _DustTint;
 CBUFFER_END
 
 // NOTE: Do not ifdef the properties for dots instancing, but ifdef the actual usage.
@@ -118,6 +122,7 @@ void SetupDOTSLitMaterialPropertyCaches()
 
 #endif
 
+TEXTURE2D(_StreakMap);       SAMPLER(sampler_StreakMap);
 TEXTURE2D(_ParallaxMap);        SAMPLER(sampler_ParallaxMap);
 TEXTURE2D(_OcclusionMap);       SAMPLER(sampler_OcclusionMap);
 TEXTURE2D(_DetailMask);         SAMPLER(sampler_DetailMask);

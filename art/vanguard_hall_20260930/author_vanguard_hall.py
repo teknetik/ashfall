@@ -26,6 +26,11 @@ from mathutils.noise import noise as pnoise
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
+sys.path.insert(0, str(ROOT / "art/ward_masonry_kit"))
+import ward_masonry as WM
+from ward_masonry import (Part, Frame, stone_tint, ashlar_block, course_intervals, fill_wall, sweep, triangulate, material,
+                          eroded_bevel, split_edge, block_wear, finalize_parts, AOBaker, DripSet, U, lerp, smoothstep, drng,
+                          ScarSet, scatter_impacts)
 OUT = ROOT / "unity/AthenHill/Assets/AthenHill/Art/VanguardHall/Models"
 FONT = HERE / "fonts/NotoSerifDisplay-Bold.ttf"
 OUT.mkdir(parents=True, exist_ok=True)
@@ -34,22 +39,8 @@ LOD = 0          # set per build pass
 LAYOUT = None    # layout RNG (identical sequence in every LOD)
 
 
-def U(p):
-    return Vector((-p[0], -p[2], p[1]))
 
 
-def lerp(a, b, t):
-    return a + (b - a) * t
-
-
-def smoothstep(e0, e1, x):
-    t = max(0.0, min(1.0, (x - e0) / (e1 - e0)))
-    return t * t * (3 - 2 * t)
-
-
-def drng(*key):
-    """Detail RNG (LOD0-only decisions) seeded from a stable key so layouts stay identical across LODs."""
-    return random.Random(hash(("vh",) + key) & 0xFFFFFFFF)
 
 
 # ================================================================ dimensions (Unity local metres)
@@ -93,346 +84,16 @@ def pier_side_rear(y):
     return ZB - pier_proj(y) + pier_w(y)
 
 
-# ================================================================ geometry builder
-class Part:
-    """One output object. Geometry is authored in Unity coordinates, converted on build()."""
-
-    def __init__(self, name):
-        self.name = name
-        self.bm = bmesh.new()
-        self.blk = self.bm.faces.layers.int.new("blk")
-        self.mats = []
-        self.blocks = [dict(off=(0.0, 0.0), tint=(0.5, 0.5, 0.5), scale=1.0, ao=None)]  # 0 = default
-        self.pending = {}   # (offset, segments) -> edges; bevelled together in build()
-
-    def mi(self, m):
-        if m not in self.mats:
-            self.mats.append(m)
-        return self.mats.index(m)
-
-    def new_block(self, tint=None, off=None, scale=1.0, ao=None):
-        if off is None:
-            off = (LAYOUT.uniform(0, 8), LAYOUT.uniform(0, 8))
-        self.blocks.append(dict(off=off, tint=tint or (0.5, 0.5, 0.5), scale=scale, ao=ao))
-        return len(self.blocks) - 1
-
-    # ---- primitives
-    def hexa(self, c, mat, bid=0, skip=()):
-        """c = 8 corners: bottom ring b0..b3 then top ring t0..t3 (same order). Convex hexahedron."""
-        vs = [self.bm.verts.new(Vector(p)) for p in c]
-        centre = sum((v.co for v in vs), Vector()) / 8
-        faces = {"bottom": [0, 3, 2, 1], "top": [4, 5, 6, 7], "s0": [0, 1, 5, 4], "s1": [1, 2, 6, 5],
-                 "s2": [2, 3, 7, 6], "s3": [3, 0, 4, 7]}
-        made = {}
-        idx = self.mi(mat)
-        for k, ids in faces.items():
-            if k in skip:
-                continue
-            f = self.bm.faces.new([vs[i] for i in ids])
-            fc = sum((vs[i].co for i in ids), Vector()) / 4
-            n = (vs[ids[1]].co - vs[ids[0]].co).cross(vs[ids[3]].co - vs[ids[0]].co)
-            if n.dot(fc - centre) < 0:
-                f.normal_flip()
-            f.material_index = idx
-            f[self.blk] = bid
-            made[k] = f
-        return vs, made
-
-    def box(self, lo, hi, mat, bid=0, skip=()):
-        x0, y0, z0 = lo
-        x1, y1, z1 = hi
-        c = [(x0, y0, z0), (x1, y0, z0), (x1, y0, z1), (x0, y0, z1), (x0, y1, z0), (x1, y1, z0), (x1, y1, z1), (x0, y1, z1)]
-        return self.hexa(c, mat, bid, skip)
-
-    def bevel_edges(self, edges, offset, segs):
-        if LOD > 0:
-            segs = 1
-            offset *= 0.8
-        if not edges or offset <= 0:
-            return
-        key = (round(offset / 0.002) * 0.002, segs)
-        self.pending.setdefault(key, []).extend(edges)
-
-    def flush_bevels(self):
-        for (offset, segs), edges in sorted(self.pending.items()):
-            edges = list({e for e in edges if e.is_valid})
-            if edges:
-                bmesh.ops.bevel(self.bm, geom=edges, offset=offset, offset_type="OFFSET", segments=segs, profile=0.5,
-                                affect="EDGES", clamp_overlap=True, loop_slide=True)
-        self.pending = {}
-
-    def cyl(self, a, b, r, mat, sides=12, cap=True, bid=0, r2=None):
-        a, b = Vector(a), Vector(b)
-        d = (b - a)
-        L = d.length
-        if L < 1e-6:
-            return
-        if LOD > 0:
-            sides = max(6, sides // 2)
-        dn = d.normalized()
-        ref = Vector((0, 1, 0)) if abs(dn.y) < 0.9 else Vector((1, 0, 0))
-        s1 = dn.cross(ref).normalized()
-        s2 = dn.cross(s1).normalized()
-        r2 = r if r2 is None else r2
-        ring0 = [self.bm.verts.new(a + (s1 * math.cos(t) + s2 * math.sin(t)) * r)
-                 for t in [2 * math.pi * i / sides for i in range(sides)]]
-        ring1 = [self.bm.verts.new(b + (s1 * math.cos(t) + s2 * math.sin(t)) * r2)
-                 for t in [2 * math.pi * i / sides for i in range(sides)]]
-        idx = self.mi(mat)
-        fs = []
-        for i in range(sides):
-            j = (i + 1) % sides
-            fs.append(self.bm.faces.new([ring0[i], ring0[j], ring1[j], ring1[i]]))
-        if cap:
-            fs.append(self.bm.faces.new(ring0[::-1]))
-            fs.append(self.bm.faces.new(ring1))
-        for f in fs:
-            f.material_index = idx
-            f[self.blk] = bid
-        bmesh.ops.recalc_face_normals(self.bm, faces=fs)
-        return fs
-
-    def tube(self, pts, r, mat, sides=10, bid=0, clamps=0.0, clamp_mat=None):
-        """Polyline conduit with mitre-free joints (short sleeves at bends)."""
-        pts = [Vector(p) for p in pts]
-        for a, b in zip(pts, pts[1:]):
-            self.cyl(a, b, r, mat, sides, cap=True, bid=bid)
-        for p in pts[1:-1]:
-            self.sphere(p, r * 1.15, mat, 8 if LOD == 0 else 6)
-        if clamps > 0 and LOD == 0:
-            for a, b in zip(pts, pts[1:]):
-                L = (b - a).length
-                n = int(L / clamps)
-                for k in range(1, n + 1):
-                    p = a + (b - a) * (k / (n + 1))
-                    self.cyl(p - (b - a).normalized() * 0.02, p + (b - a).normalized() * 0.02, r * 1.45, clamp_mat or mat, 8)
-
-    def sphere(self, c, r, mat, seg=8, bid=0, hemi_axis=None):
-        res = bmesh.ops.create_uvsphere(self.bm, u_segments=seg, v_segments=max(4, seg // 2), radius=r)
-        vs = res["verts"]
-        c = Vector(c)
-        fs = list({f for v in vs for f in v.link_faces})
-        if hemi_axis is not None:
-            ax = Vector(hemi_axis).normalized()
-            kill = [v for v in vs if v.co.dot(ax) < -1e-4]
-            bmesh.ops.delete(self.bm, geom=kill, context="VERTS")
-            vs = [v for v in vs if v.is_valid]
-            for v in vs:
-                if abs(v.co.dot(ax)) < 1e-4:
-                    pass
-            fs = list({f for v in vs for f in v.link_faces})
-        for v in vs:
-            v.co = v.co + c
-        idx = self.mi(mat)
-        for f in fs:
-            f.material_index = idx
-            f[self.blk] = bid
-        return fs
-
-    def closed_solid(self, verts, faces, mat, bid=0):
-        vs = [self.bm.verts.new(Vector(p)) for p in verts]
-        idx = self.mi(mat)
-        fs = []
-        for ids in faces:
-            f = self.bm.faces.new([vs[i] for i in ids])
-            f.material_index = idx
-            f[self.blk] = bid
-            fs.append(f)
-        bmesh.ops.recalc_face_normals(self.bm, faces=fs)
-        return vs, fs
-
-    # ---- finalise
-    def build(self, collection, ao_fn=None, flat=False):
-        self.flush_bevels()
-        bm = self.bm
-        bm.faces.ensure_lookup_table()
-        uv = bm.loops.layers.uv.new("UVMap")
-        col = bm.loops.layers.color.new("Col")
-        bm.normal_update()
-        for f in bm.faces:
-            info = self.blocks[f[self.blk]] if f[self.blk] < len(self.blocks) else self.blocks[0]
-            n = f.normal
-            ax = max(range(3), key=lambda i: abs(n[i]))
-            ou, ov = info["off"]
-            s = info["scale"]
-            tr, tg, tb = info["tint"]
-            for l in f.loops:
-                p = l.vert.co
-                if ax == 0:
-                    u, v = (-p.z if n.x > 0 else p.z), p.y
-                elif ax == 2:
-                    u, v = (p.x if n.z > 0 else -p.x), p.y
-                else:
-                    u, v = p.x, (p.z if n.y > 0 else -p.z)
-                l[uv].uv = (u * s + ou, v * s + ov)
-                a = 1.0
-                if ao_fn is not None:
-                    a = ao_fn(p, n)
-                if info["ao"] is not None:
-                    a *= info["ao"]
-                l[col] = (tr, tg, tb, max(0.0, min(1.0, a)))
-        # Unity -> Blender (a reflection): move verts and flip winding to keep outward normals
-        for v in bm.verts:
-            v.co = U(v.co)
-        bmesh.ops.reverse_faces(bm, faces=bm.faces[:])
-        me = bpy.data.meshes.new(self.name)
-        bm.to_mesh(me)
-        bm.free()
-        for m in self.mats:
-            me.materials.append(material(m))
-        ob = bpy.data.objects.new(self.name, me)
-        collection.objects.link(ob)
-        me.color_attributes.active_color_name = "Col"
-        me.color_attributes.render_color_index = 0
-        if flat:
-            for p in me.polygons:
-                p.use_smooth = False
-        else:
-            for p in me.polygons:
-                p.use_smooth = True
-            me.set_sharp_from_angle(angle=math.radians(38))
-            bpy.context.view_layer.objects.active = ob
-            wn = ob.modifiers.new("wn", "WEIGHTED_NORMAL")
-            wn.keep_sharp = True
-            wn.mode = "FACE_AREA"
-            wn.weight = 50
-            for o in bpy.context.selected_objects:
-                o.select_set(False)
-            ob.select_set(True)
-            bpy.ops.object.modifier_apply(modifier="wn")
-        triangulate(ob)
-        return ob
-
-
-MATERIALS = {}
-
-
-def triangulate(ob):
-    for o in bpy.context.selected_objects:
-        o.select_set(False)
-    ob.select_set(True)
-    bpy.context.view_layer.objects.active = ob
-    t = ob.modifiers.new("tri", "TRIANGULATE")
-    t.quad_method = "BEAUTY"
-    t.ngon_method = "BEAUTY"
-    t.keep_custom_normals = True
-    bpy.ops.object.modifier_apply(modifier="tri")
-
-
-def material(name):
-    if name not in MATERIALS:
-        m = bpy.data.materials.get(name) or bpy.data.materials.new(name)
-        MATERIALS[name] = m
-    return MATERIALS[name]
-
-
-# ================================================================ stone helpers
-def stone_tint(kind="ashlar"):
-    r = LAYOUT
-    v = max(0.8, min(1.18, r.gauss(1.0, 0.075)))
-    warm = r.gauss(0, 0.03)
-    t = [v * (1 + warm), v, v * (1 - warm * 1.6)]
-    roll = r.random()
-    if roll < 0.05:          # later replacement stone: paler, slightly cooler
-        t = [c * f for c, f in zip(t, (1.12, 1.11, 1.12))]
-    elif roll < 0.09:        # darker weathered stone
-        t = [c * f for c, f in zip(t, (0.84, 0.81, 0.78))]
-    if kind == "rough":
-        t = [c * 0.96 for c in t]
-    return tuple(0.5 * c for c in t)
-
-
-class Frame:
-    """Axis-aligned wall frame: P(u, y, d) = origin + u * uaxis + (0, y, 0) + d * n."""
-
-    def __init__(self, origin, uaxis, n):
-        self.o, self.u, self.n = Vector(origin), Vector(uaxis), Vector(n)
-
-    def P(self, u, y, d):
-        return self.o + self.u * u + Vector((0, y, 0)) + self.n * d
-
-    def box(self, part, u0, u1, y0, y1, d0, d1, mat, bid=0, skip=()):
-        c = [self.P(u0, y0, d0), self.P(u1, y0, d0), self.P(u1, y0, d1), self.P(u0, y0, d1),
-             self.P(u0, y1, d0), self.P(u1, y1, d0), self.P(u1, y1, d1), self.P(u0, y1, d1)]
-        return part.hexa(c, mat, bid, skip)
-
-
-def ashlar_block(part, F, u0, u1, y0, y1, mat="VH_Ashlar", depth=0.062, back=0.035, bevel=(0.010, 0.022),
-                 key=None, tint=None, chip=0.10, ao=None, face_jitter=0.003, bottom=False, top=False):
-    """One dressed block on frame F. Only the front, its four returns (and optionally bottom/top) are built."""
-    bid = part.new_block(tint=tint or stone_tint("rough" if mat == "VH_AshlarRough" else "ashlar"), ao=ao)
-    d1 = depth + LAYOUT.uniform(-0.004, 0.004)
-    corners = [F.P(u0, y0, back), F.P(u1, y0, back), F.P(u1, y0, d1), F.P(u0, y0, d1),
-               F.P(u0, y1, back), F.P(u1, y1, back), F.P(u1, y1, d1), F.P(u0, y1, d1)]
-    # subtle facet tilt of the dressed face
-    for i in (2, 3, 6, 7):
-        corners[i] = corners[i] + F.n * LAYOUT.uniform(-face_jitter, face_jitter)
-    rr = drng(part.name, key or (round(u0, 3), round(y0, 3)))
-    if LOD == 0 and rr.random() < chip:
-        i = rr.choice((2, 3, 6, 7))
-        inward_u = F.u * (1 if i in (3, 7) else -1)
-        inward_y = Vector((0, 1 if i in (2, 3) else -1, 0))
-        corners[i] = corners[i] - F.n * rr.uniform(0.012, 0.03) + inward_u * rr.uniform(0.01, 0.035) + inward_y * rr.uniform(0.01, 0.03)
-    skip = ["s0"]  # the back face (b0,b1,t1,t0 lies at d=back)
-    if not bottom:
-        skip.append("bottom")
-    if not top:
-        skip.append("top")
-    # hexa faces: bottom ring 0..3 = (u0,back)(u1,back)(u1,front)(u0,front); s0 = back, s2 = front
-    vs, made = part.hexa(corners, mat, bid, skip=tuple(skip))
-    front = made.get("s2")
-    if front is not None:
-        b = LAYOUT.uniform(*bevel)
-        part.bevel_edges(list(front.edges), b, 2)
-    return bid
-
-
-def course_intervals(u0, u1, holes, y0, y1):
-    """Free [a, b] spans of [u0, u1] in the course y0..y1, removing holes (ua, ub, va, vb) that overlap it."""
-    cuts = sorted((h[0], h[1]) for h in holes if h[2] < y1 - 1e-3 and h[3] > y0 + 1e-3)
-    spans, a = [], u0
-    for ha, hb in cuts:
-        if hb <= a:
-            continue
-        if ha > a:
-            spans.append((a, min(ha, u1)))
-        a = max(a, hb)
-        if a >= u1:
-            break
-    if a < u1:
-        spans.append((a, u1))
-    return [(a, b) for a, b in spans if b - a > 0.05]
-
-
-def fill_wall(part, F, u0, u1, courses, holes, mat="VH_Ashlar", lmin=0.62, lmax=1.28, joint=0.009,
-              mortar=True, ulimit=None, key="w", ao=None):
-    """Ashlar courses on frame F over u0..u1; courses = list of y boundaries. ulimit(y0, y1) -> (u0, u1) overrides."""
-    for ci, (y0, y1) in enumerate(zip(courses, courses[1:])):
-        a0, a1 = (u0, u1) if ulimit is None else ulimit(y0, y1)
-        for (sa, sb) in course_intervals(a0, a1, holes, y0, y1):
-            L = sb - sa
-            # running bond: offset the first joint by course parity
-            u = sa
-            first = True
-            while u < sb - 1e-4:
-                ln = LAYOUT.uniform(lmin, lmax)
-                if first:
-                    ln *= (0.45 + 0.35 * LAYOUT.random()) if ci % 2 else 1.0
-                    first = False
-                if sb - (u + ln) < lmin * 0.5:
-                    ln = sb - u
-                ashlar_block(part, F, u + joint / 2, u + ln - joint / 2, y0 + joint / 2, y1 - joint / 2, mat=mat,
-                             key=(key, ci, round(u, 3)), ao=ao)
-                u += ln
-            if mortar:
-                F.box(part, sa, sb, y0, y1, 0.035, 0.047, "VH_Mortar", skip=("s0", "bottom", "top", "s1", "s3"))
-
+# geometry helpers live in the shared Ward masonry kit (art/ward_masonry_kit/ward_masonry.py)
 
 # ================================================================ the building
 def build(lod):
     global LOD, LAYOUT
     LOD = lod
     LAYOUT = random.Random(20260930)
+    WM.set_state(lod, LAYOUT, "vh")
+    WM.WEAR["ground_y"] = BASE
+    WM.reset_materials()
     coll = bpy.data.collections.new(f"LOD{lod}")
     bpy.context.scene.collection.children.link(coll)
     rec = {"colliders": [], "mounts": [], "notes": []}
@@ -440,10 +101,12 @@ def build(lod):
     mas = Part(f"VH_Masonry_LOD{lod}")      # walls, piers, frieze, parapet (Masonry Lit)
     trim = Part(f"VH_Trim_LOD{lod}")        # sweeps: plinth course, string course, cornice, coping, sills, lintels
     pod = Part(f"VH_Podium_LOD{lod}")       # podium, steps, slabs
-    metal = Part(f"VH_Metal_LOD{lod}")      # doors, frames, bars, brackets, plates, conduit
-    glass = Part(f"VH_Glass_LOD{lod}")      # window glazing (interior-mapped in Unity)
-    roof = Part(f"VH_Roof_LOD{lod}")        # roof deck, hatch, vents, mast
-    sand = Part(f"VH_Sand_LOD{lod}")        # sheltered sand drifts (LOD0 only)
+    metal = Part(f"VH_Metal_LOD{lod}", wear=False)      # doors, frames, bars, brackets, plates, conduit
+    glass = Part(f"VH_Glass_LOD{lod}", wear=False)      # window glazing (interior-mapped in Unity)
+    roof = Part(f"VH_Roof_LOD{lod}", wear=False)        # roof deck, hatch, vents, mast
+    sand = Part(f"VH_Sand_LOD{lod}", wear=False)        # sheltered sand drifts (LOD0 only)
+    # runoff / rust sources on the vertical faces (Masonry Lit UV1/UV2); base runoff grows towards the parapet
+    drips = DripSet(base=0.22, base_top=11.2, ground_y=BASE)
 
     # ------------------------------------------------ frames
     FRONT = Frame((0, 0, ZF), (1, 0, 0), (0, 0, 1))
@@ -562,7 +225,8 @@ def build(lod):
                         bot = c4(xs0, zs0, y0 + j)
                         top = c4(xs1, zs1, y1 - j)
                         mat = "VH_AshlarRough" if ci == 0 else "VH_Ashlar"
-                        bid = mas.new_block(tint=stone_tint("rough" if ci == 0 else "ashlar"))
+                        bid = mas.new_block(tint=stone_tint("rough" if ci == 0 else "ashlar"),
+                                            erode=(0.006 + 0.01 * block_wear(y0)) * (1.4 if ci == 0 else 1.0))
                         rr = drng("pier", cx, cz, ci, ix, iz)
                         if LOD == 0 and rr.random() < 0.18:
                             k = rr.randrange(4)
@@ -573,7 +237,8 @@ def build(lod):
                         outer = [e for e in {e for f in made.values() for e in f.edges}
                                  if all(abs(v.co.x) > WX - 0.02 or (cz > 0 and v.co.z > ZF - 0.02) or (cz < 0 and v.co.z < ZB + 0.02)
                                         for v in e.verts)]
-                        mas.bevel_edges(outer, LAYOUT.uniform(0.012, 0.024) + (0.04 if ci == 0 else 0), 2)
+                        eroded_bevel(mas, outer, LAYOUT.uniform(0.012, 0.024) + (0.04 if ci == 0 else 0), 2,
+                                     seg_len=0.15 if y0 < 3.2 else 0.32)
                 # mortar core (visible in the joints)
                 core_a, core_b = ring(y0, grow - 0.045), ring(y1, (grow if ci > 0 else 0.0) - 0.045)
                 x0a, x1a = sorted(core_a[:2]); z0a, z1a = sorted(core_a[2:])
@@ -623,52 +288,6 @@ def build(lod):
             F.box(mas, ua, ub, y0, y1, -0.03, -0.012, "VH_Mortar", skip=("s0", "top", "bottom"))
 
     # ------------------------------------------------ sweeps (plinth course, string courses, cornice, copings)
-    def sweep(part, path, closed, profile, mat, seg=1.2, joint=0.008, bev=0.006, key="sw", tint=True):
-        """Extrude a closed profile [(o, y)] (o = outward offset) along a horizontal path of (x, z) points.
-        The outward side is to the right of travel (path drawn clockwise seen from above in Unity)."""
-        P = [Vector((p[0], 0, p[1])) for p in path]
-        n = len(P)
-        edges = list(range(n if closed else n - 1))
-
-        def nrm(i):
-            a, b = P[i], P[(i + 1) % n]
-            d = (b - a).normalized()
-            return Vector((d.z, 0, -d.x)) * -1   # right-hand side of travel (Unity X east, Z north)
-
-        for ei in edges:
-            a, b = P[ei], P[(ei + 1) % n]
-            d = (b - a)
-            L = d.length
-            dn = d.normalized()
-            nn = nrm(ei)
-            prev_n = nrm((ei - 1) % n) if (closed or ei > 0) else None
-            next_n = nrm((ei + 1) % n) if (closed or ei < n - 2) else None
-            k = max(1, round(L / seg))
-            cuts = [L * i / k for i in range(k + 1)]
-            for si in range(k):
-                ta, tb = cuts[si] + (joint / 2 if si > 0 else 0), cuts[si + 1] - (joint / 2 if si < k - 1 else 0)
-
-                def pt(t, o, y, end):
-                    base = a + dn * t + nn * o
-                    if end == 0 and si == 0 and prev_n is not None:
-                        # mitre with previous edge: shift along travel by o * tan(half angle); right angle -> -o
-                        base = a + nn * o + prev_n * o
-                    if end == 1 and si == k - 1 and next_n is not None:
-                        base = b + nn * o + next_n * o
-                    return Vector((base.x, y, base.z))
-
-                ring_a = [pt(ta, o, y, 0) for o, y in profile]
-                ring_b = [pt(tb, o, y, 1) for o, y in profile]
-                m = len(profile)
-                verts = ring_a + ring_b
-                faces = [[i, (i + 1) % m, m + (i + 1) % m, m + i] for i in range(m)]
-                faces.append(list(range(m))[::-1])
-                faces.append([m + i for i in range(m)])
-                bid = part.new_block(tint=stone_tint() if tint else (0.5, 0.5, 0.5))
-                vs, fs = part.closed_solid(verts, faces, mat, bid)
-                if bev > 0:
-                    sharp = [e for e in {e for f in fs for e in f.edges} if e.calc_face_angle(0) > math.radians(40)]
-                    part.bevel_edges(sharp, bev, 2)
 
     PX = ENT_X
     rect = [(-PX, ENT_ZF), (PX, ENT_ZF), (PX, ENT_ZB), (-PX, ENT_ZB)]
@@ -848,6 +467,20 @@ def build(lod):
     # threshold plate
     metal.box((-PORTAL_HW, BASE - 0.005, DZ - 0.02), (PORTAL_HW, BASE + 0.012, DZ + 0.35), "VH_Bronze")
 
+    # ------------------------------------------------ drip helpers (frame -> world-local Drip)
+    def fdrip(F, ua, ub, top, length, strength, kind="grime", plane_off=0.0, soft=0.12):
+        n = F.n
+        a, b = F.P(ua, 0, plane_off), F.P(ub, 0, plane_off)
+        if abs(n.z) > 0.5:
+            drips.add((0, 0, n.z), a.z, a.x, b.x, top, length, strength, kind, soft)
+        else:
+            drips.add((n.x, 0, 0), a.x, a.z, b.z, top, length, strength, kind, soft)
+
+    def drips_sill(F, ua, ub, top, length):
+        fdrip(F, ua - 0.1, ub + 0.1, top, length, 0.55)
+        for u in (ua - 0.05, ub + 0.05):
+            fdrip(F, u - 0.12, u + 0.12, top, length * 1.25, 0.95, soft=0.1)
+
     # ------------------------------------------------ windows (reveals, sills, lintels, frames, glass, bars)
     def window(F, ua, ub, y0, y1, depth, bars=True, ground=False, key="win"):
         # reveal lining stones (jambs + soffit), sill stone, lintel stone
@@ -861,13 +494,15 @@ def build(lod):
         # sill (projecting, weathered top)
         bid = trim.new_block(tint=stone_tint())
         vs, made = F.box(trim, ua - 0.1, ub + 0.1, y0 - 0.16, y0, -depth, 0.11, "VH_Ashlar", bid)
-        trim.bevel_edges(list(made["top"].edges), 0.015, 2)
+        eroded_bevel(trim, list(made["top"].edges) + [e for e in made["s2"].edges if e not in made["top"].edges], 0.015, 2)
+        # sill ends shed water down the wall (strongest at the ends, lighter under the middle)
+        drips_sill(F, ua, ub, y0 - 0.16, 2.6 if not ground else 1.25)
         # lintel stone in the course above
         bid = trim.new_block(tint=stone_tint())
         ly1 = y1 + (0.45 if not ground else 0.43)
         vs, made = F.box(trim, ua - 0.15 + .005, ub + 0.15 - .005, y1 + .005, ly1 - .005, 0.0, 0.075, "VH_Ashlar", bid,
                          skip=("s0",))
-        trim.bevel_edges(list(made["s2"].edges), 0.02, 2)
+        eroded_bevel(trim, list(made["s2"].edges), 0.02, 2, seg_len=0.2)
         # steel frame and glazing at the back of the reveal
         fd = -depth + 0.02
         t = 0.05
@@ -1368,14 +1003,68 @@ def build(lod):
         dwall = min(abs(abs(p.x) - WX) if ZB < p.z < ZF else 9, abs(p.z - ZF) if abs(p.x) < WX else 9, abs(p.z - ZB) if abs(p.x) < WX else 9)
         return lerp(0.72, 1.0, smoothstep(0.0, 1.4, dwall))
 
+    # drip edges of the whole shell: entablature, walls under the soffit, string course, parapet coping
+    for F in (FRONT, REAR):
+        fdrip(F, -ENT_X, ENT_X, 11.2, 1.6, 0.8, plane_off=ENT_ZF - ZF if F is FRONT else ZB - ENT_ZB)
+        fdrip(F, -WX - 0.9, WX + 0.9, PIER_TOP - 0.02, 6.0, 0.95, soft=0.3)
+        fdrip(F, -WX, WX, 6.1, 3.0, 0.75, soft=0.3)
+        fdrip(F, -PPX, PPX, 12.7, 0.95, 0.75, plane_off=PZF if F is FRONT else ZB - PZB)
+    for F in (EAST, WEST):
+        fdrip(F, -12, 12, 11.2, 1.6, 0.8, plane_off=ENT_X - WX)
+        fdrip(F, -12, 12, PIER_TOP - 0.02, 6.0, 0.95, soft=0.3)
+        fdrip(F, -12, 12, 6.1, 3.0, 0.75, soft=0.3)
+        fdrip(F, -12, 12, 12.7, 0.95, 0.75, plane_off=PPX - WX)
+    # rust under the iron corbels (frieze) and the steel brackets (walls)
+    for F, us in ((EF, (-3.35, -2.1, -0.45, 0.45, 2.1, 3.35)), (EE, (1.9, 4.25, 6.6)), (EW, (-1.9, -4.25, -6.6)),
+                  (ER, (-3.0, -1.0, 1.0, 3.0))):
+        for u in us:
+            fdrip(F, u - 0.1, u + 0.1, 10.47, 0.75, 1.0, "rust", soft=0.07)
+    for F, us in ((FRONT, (-3.66, 3.66)), (EAST, (1.75, 6.6)), (WEST, (-1.75, -6.6)), (REAR, (-2.6, 0.0, 2.6))):
+        for u in us:
+            fdrip(F, u - 0.1, u + 0.1, PIER_TOP - 0.75, 2.4, 0.95, "rust", soft=0.08)
+    # scupper spouts: dark runoff and rust down the parapet, frieze and wall below each spout
+    for sc in rec["scuppers"]:
+        tx, tz = sc["tip"][0], sc["tip"][2]
+        nx_, nz_ = sc["normal"][0], sc["normal"][2]
+        if abs(nz_) > 0.5:
+            for plane, top, L in ((PZF if nz_ > 0 else PZB, 11.9, 0.9), (ENT_ZF if nz_ > 0 else ENT_ZB, 11.2, 1.2), (ZF if nz_ > 0 else ZB, 10.4, 5.5)):
+                drips.add((0, 0, nz_), plane, tx - 0.2, tx + 0.2, top, L, 1.0, "grime", 0.15)
+                drips.add((0, 0, nz_), plane, tx - 0.12, tx + 0.12, top, L * 0.8, 0.7, "rust", 0.1)
+        else:
+            for plane, top, L in ((PPX * nx_, 11.9, 0.9), (ENT_X * nx_, 11.2, 1.2), (WX * nx_, 10.4, 5.5)):
+                drips.add((nx_, 0, 0), plane, tz - 0.2, tz + 0.2, top, L, 1.0, "grime", 0.15)
+                drips.add((nx_, 0, 0), plane, tz - 0.12, tz + 0.12, top, L * 0.8, 0.7, "rust", 0.1)
+    # bronze nameplate, lamps, rear canopy, repair plate
+    fdrip(FRONT, -npx, npx, npy0, 1.4, 0.7, soft=0.15)
+    fdrip(FRONT, -npx + 0.3, npx - 0.3, npy0, 1.0, 0.35, "rust", soft=0.2)
+    for x in (-2.45, 2.45):
+        fdrip(FRONT, x - 0.09, x + 0.09, 3.1, 1.3, 0.8, "rust", soft=0.07)
+    fdrip(REAR, -rx1 - 0.35, -rx0 + 0.35, 3.5, 0.8, 0.6, "rust", soft=0.1)
+    fdrip(REAR, 1.15, 3.1, 1.45, 0.9, 0.8, "rust", soft=0.1)
+
+    # old battle damage: scattered impact clusters, heavier by the portal and the front-west pier (the side that faced
+    # the West Gate), soot above the rear window that burned before it was walled in and one east upper window
+    scars = ScarSet(base=0.12)
+    srng = random.Random(1918)
+    scatter_impacts(scars, [(FRONT, -5.5, 5.5), (WEST, -8.5, 0.0), (EAST, 0.0, 8.5), (REAR, -5.5, 5.5)], 8, srng, BASE + 0.4, 8.0)
+    scars.impact(tuple(FRONT.P(-4.7, 2.3, 0.1)), 1.9, 1.0)
+    scars.impact(tuple(FRONT.P(-2.2, 1.4, 0.1)), 1.1, 0.9)
+    scars.impact(tuple(WEST.P(-1.4, 3.2, 0.1)), 1.6, 1.0)
+    scars.impact(tuple(FRONT.P(2.6, 5.0, 0.1)), 1.2, 0.8)
+    scars.plume((0, 0, -1), ZB, -2.15, -0.85, 9.5, 2.6, 0.85)
+    scars.plume((1, 0, 0), WX, -3.6, -2.5, 9.5, 2.2, 0.6)
+    parts = [mas, trim, pod, metal, glass, roof] + ([sand] if LOD == 0 else [])
+    finalize_parts(parts)
+    ao = AOBaker(parts, ground_y=0.0, samples=24 if LOD == 0 else 12)
     objs = [
-        mas.build(coll, mas_ao),
-        trim.build(coll, trim_ao),
-        pod.build(coll, pod_ao),
+        mas.build(coll, ao=ao, drips=drips, ground_y=BASE, scars=scars),
+        trim.build(coll, ao=ao, drips=drips, ground_y=BASE, scars=scars),
+        pod.build(coll, ao=ao, drips=drips, ground_y=0.0, splash=0.25, scars=scars),
         metal.build(coll),
         glass.build(coll, flat=True),
         roof.build(coll),
     ]
+    rec.setdefault("notes", []).append(f"LOD{lod}: vertex AO {ao.rays} rays")
     if LOD == 0:
         objs.append(sand.build(coll))
     else:

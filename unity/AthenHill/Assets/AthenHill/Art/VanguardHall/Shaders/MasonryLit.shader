@@ -8,6 +8,24 @@ Shader "Athen Hill/Masonry Lit"
         _WearTint("Dust stain multiplier", Color) = (0.57,0.52,0.44,1)
         _BlockTint("Per-block tint (vertex RGB, 0.5 = neutral)", Range(0,1)) = 1
         _BlockAO("Per-block occlusion (vertex A)", Range(0,1)) = 1
+        _CavityAlbedo("Occlusion darkens albedo", Range(0,1)) = 0.5
+        [NoScaleOffset] _StreakMap("Runoff streaks (R grime, G deposit, B rust)", 2D) = "black" {}
+        _StreakScale("Streak tile (x per metre along wall, y per metre up)", Vector) = (0.45, 0.125, 0, 0)
+        _StreakStrength("Runoff strength (UV1.x)", Range(0,2)) = 1
+        _StreakTint("Grime runoff multiplier", Color) = (0.46,0.42,0.37,1)
+        _DepositTint("Mineral deposit multiplier", Color) = (1.12,1.1,1.05,1)
+        _RustStrength("Rust strength (UV2.x)", Range(0,2)) = 1
+        _RustTint("Rust multiplier", Color) = (0.62,0.38,0.24,1)
+        _EdgeWear("Edge wear (UV1.y)", Range(0,2)) = 1
+        _EdgeTint("Worn arris multiplier", Color) = (1.2,1.16,1.08,1)
+        _EdgeNoiseScale("Edge wear breakup per metre", Float) = 24
+        _TopDust("Dust on upward faces", Range(0,1)) = 0.45
+        _Pitting("Old pitting (everywhere)", Range(0,1)) = 0.35
+        _PitScale("Pits per metre", Float) = 11
+        _BattleDamage("Battle damage (UV2.y clusters)", Range(0,2)) = 1
+        _ScarScale("Shrapnel scars per metre", Float) = 3.2
+        _EdgeGrime("Grime packed on arrises", Range(0,1)) = 0.6
+        _DustTint("Dust colour", Color) = (0.8,0.68,0.52,1)
         // Specular vs Metallic workflow
         _WorkflowMode("WorkflowMode", Float) = 1.0
 

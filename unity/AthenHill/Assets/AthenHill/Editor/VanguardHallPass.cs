@@ -60,6 +60,7 @@ namespace AthenHill.Editor
         static void Build(bool rebuildMaterials)
         {
             ConfigureTextures();
+            ConfigureStreakMap();
             ConfigureModels();
             var mats = BuildMaterials(rebuildMaterials);
             BuildPrefab(mats);
@@ -146,6 +147,89 @@ namespace AthenHill.Editor
             m.SetFloat("_BlockTint", 1f); m.SetFloat("_BlockAO", 1f);
             m.SetFloat("_WearStrength", wear); m.SetFloat("_WearScale", .22f); m.SetFloat("_BaseWear", baseWear);
             m.SetColor("_WearTint", new Color(.62f, .55f, .45f));
+            MasonryWeathering(m, 1f, 1f);
+        }
+
+        public const string StreakMapPath = TexDir + "WardRunoff_Streaks.png";
+
+        /// 30 Sep 2026 weathering pass (Carl: flat shade, clean edges, faint rain stains): runoff streaks (mesh UV1.x),
+        /// worn arrises (UV1.y), rust trails (UV2.x), dust on upward faces, ray-traced vertex sky occlusion.
+        public static void MasonryWeathering(Material m, float edgeWear, float streaks)
+        {
+            m.SetTexture("_StreakMap", AssetDatabase.LoadAssetAtPath<Texture2D>(StreakMapPath));
+            m.SetVector("_StreakScale", new Vector4(.45f, .125f, 0, 0));
+            m.SetFloat("_StreakStrength", streaks); m.SetColor("_StreakTint", new Color(.44f, .40f, .35f));
+            m.SetColor("_DepositTint", new Color(1.12f, 1.1f, 1.05f));
+            m.SetFloat("_RustStrength", 1f); m.SetColor("_RustTint", new Color(.6f, .37f, .23f));
+            m.SetFloat("_EdgeWear", edgeWear); m.SetColor("_EdgeTint", new Color(1.2f, 1.16f, 1.08f)); m.SetFloat("_EdgeNoiseScale", 24f);
+            m.SetFloat("_TopDust", .5f); m.SetColor("_DustTint", new Color(.8f, .68f, .52f));
+            m.SetFloat("_CavityAlbedo", .6f);
+            BattleGrime(m, edgeWear > 0 ? 1f : .5f);
+            EditorUtility.SetDirty(m);
+        }
+
+        /// 30 Sep 2026 (Carl: "everything needs a little more weathering, dirt, grime and general 'this place saw a battle
+        /// take place long ago'", West Gate arches as the reference): old pitting, shrapnel scars in the baked impact
+        /// clusters, grime packed on the arrises, heavier broad dirt and wall-foot soiling, darker runoff.
+        public static void BattleGrime(Material m, float amount)
+        {
+            m.SetFloat("_Pitting", .45f * amount); m.SetFloat("_PitScale", 7f);
+            m.SetFloat("_BattleDamage", 1.15f * amount); m.SetFloat("_ScarScale", 1.7f);
+            m.SetFloat("_EdgeGrime", .65f * amount);
+            m.SetFloat("_WearStrength", .5f); m.SetColor("_WearTint", new Color(.52f, .45f, .36f)); m.SetFloat("_BaseWear", .6f);
+            m.SetFloat("_StreakStrength", Mathf.Max(m.GetFloat("_StreakStrength"), 1.4f * amount));
+            m.SetColor("_StreakTint", new Color(.36f, .32f, .28f));
+            EditorUtility.SetDirty(m);
+        }
+
+        static void ConfigureStreakMap()
+        {
+            AssetDatabase.ImportAsset(StreakMapPath, ImportAssetOptions.ForceUpdate);
+            if (AssetImporter.GetAtPath(StreakMapPath) is not TextureImporter ti) throw new Exception("Streak map missing: " + StreakMapPath);
+            ti.textureType = TextureImporterType.Default; ti.sRGBTexture = false; ti.alphaSource = TextureImporterAlphaSource.None;
+            ti.mipmapEnabled = true; ti.streamingMipmaps = true; ti.anisoLevel = 8; ti.wrapMode = TextureWrapMode.Repeat;
+            ti.maxTextureSize = 2048; ti.textureCompression = TextureImporterCompression.CompressedHQ;
+            ti.SaveAndReimport();
+        }
+
+        public const float Lod0ScreenHeight = .40f;
+
+        /// Applies the weathering pass to the installed hall without rebuilding the prefab (keeps its light bindings):
+        /// streak map import, re-imported GLBs (new UV1/UV2 wear channels and vertex AO), masonry material
+        /// properties, LOD0 cut and probe-only GI on the renderers (UV1 carries wear data, never lightmap UVs).
+        [MenuItem("Athen Hill/Vanguard Hall/Apply weathering pass")]
+        public static string ApplyWeathering()
+        {
+            ConfigureStreakMap();
+            ConfigureModels();
+            foreach (var (name, edge, streak) in new[] { ("VH_Ashlar", 1f, 1.4f), ("VH_AshlarRough", 1.15f, 1.4f), ("VH_Mortar", 0f, 1f), ("VH_PodiumSlab", .9f, .5f) })
+            {
+                var m = AssetDatabase.LoadAssetAtPath<Material>(MatDir + name + ".mat");
+                if (!m) continue;
+                MasonryWeathering(m, edge, streak);
+                if (name == "VH_Ashlar") m.SetFloat("_BumpScale", 1f);
+                if (name == "VH_Mortar") m.SetColor("_BaseColor", new Color(.56f, .51f, .44f));   // grime-packed joints (West Gate)
+                if (name == "VH_PodiumSlab") { m.SetFloat("_Pitting", .2f); m.SetFloat("_BaseWear", 0f); }
+            }
+            var root = PrefabUtility.LoadPrefabContents(PrefabPath);
+            int renderers = 0;
+            try
+            {
+                var group = root.GetComponent<LODGroup>();
+                var lods = group.GetLODs();
+                lods[0].screenRelativeTransitionHeight = Lod0ScreenHeight;
+                group.SetLODs(lods);
+                foreach (var r in root.GetComponentsInChildren<MeshRenderer>(true))
+                {
+                    r.receiveGI = ReceiveGI.LightProbes;
+                    GameObjectUtility.SetStaticEditorFlags(r.gameObject, GameObjectUtility.GetStaticEditorFlags(r.gameObject) & ~StaticEditorFlags.ContributeGI);
+                    renderers++;
+                }
+                PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
+            }
+            finally { PrefabUtility.UnloadPrefabContents(root); }
+            AssetDatabase.SaveAssets();
+            return "weathering applied; renderers " + renderers;
         }
 
         public static Dictionary<string, Material> BuildMaterials(bool rebuild)
@@ -245,7 +329,7 @@ namespace AthenHill.Editor
             try
             {
                 var levels = new List<LOD>();
-                foreach (var (lod, cut) in new[] { (0, .26f), (1, .012f) })
+                foreach (var (lod, cut) in new[] { (0, Lod0ScreenHeight), (1, .012f) })
                 {
                     var model = AssetDatabase.LoadAssetAtPath<GameObject>(ModelDir + $"VanguardHall_LOD{lod}.glb");
                     if (!model) throw new Exception("Model not imported: LOD" + lod);
@@ -265,7 +349,7 @@ namespace AthenHill.Editor
                         bool glass = r.name.StartsWith("VH_Glass"), sand = r.name.StartsWith("VH_Sand");
                         r.shadowCastingMode = glass || sand ? ShadowCastingMode.Off : ShadowCastingMode.On;
                         r.receiveShadows = true;
-                        if (r is MeshRenderer mr) mr.motionVectorGenerationMode = MotionVectorGenerationMode.Camera;
+                        if (r is MeshRenderer mr) { mr.motionVectorGenerationMode = MotionVectorGenerationMode.Camera; mr.receiveGI = ReceiveGI.LightProbes; }
                         rs.Add(r);
                     }
                     levels.Add(new LOD(cut, rs.ToArray()));
