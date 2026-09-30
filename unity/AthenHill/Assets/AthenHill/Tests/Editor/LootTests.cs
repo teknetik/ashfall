@@ -177,7 +177,8 @@ namespace AthenHill.Tests
    Assert.That(PrefabUtility.GetPrefabAssetType(foreman),Is.EqualTo(PrefabAssetType.Variant));
    Assert.That(PrefabUtility.GetCorrespondingObjectFromSource(foreman),Is.EqualTo(worker));
    var s=foreman.transform.localScale;Assert.That(s.x,Is.EqualTo(1.3f).Within(1e-4));Assert.That(s.y,Is.EqualTo(s.x));Assert.That(s.z,Is.EqualTo(s.x));
-   Assert.That(foreman.GetComponent<Health>().max,Is.EqualTo(worker.GetComponent<Health>().max*4));
+   // 30 Sep 2026 tuning: an elite fight (1400 HP = 14 workers; see GameplayV2FixesTests.ForemanIsAnEliteWithinTheWorkerBehaviour).
+   Assert.That(foreman.GetComponent<Health>().max,Is.EqualTo(worker.GetComponent<Health>().max*14));
    var f=foreman.GetComponent<FeralDroid>();var w=worker.GetComponent<FeralDroid>();
    Assert.That(f.displayName,Is.EqualTo("Depot Foreman"));
    Assert.That(f.strikeDamage,Is.GreaterThan(w.strikeDamage));Assert.That(f.windupSeconds,Is.GreaterThan(w.windupSeconds));

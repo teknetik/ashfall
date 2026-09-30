@@ -23,6 +23,8 @@ namespace AthenHill
   public float showObjectiveWestOf=-30;
   public string radioSpeaker="Warden Ossa";
   [Min(0)]public int rewardCredits=15,rewardScrap=2;
+  [Tooltip("Once the primer is complete the depot nest re-forms this many seconds after each clear (plus the nest's own away rule), unless the nest sets its own Respawn Seconds.")]
+  [Min(1)]public float depotRespawnSeconds=240;
   public string rewardItem="scrap_coil";
   [Header("Radio")]
   [TextArea]public string lineStart="New scavenger? Nobody walks the Berms unarmed. I'm Ossa, on West Gate watch. Take the scrap pistol from the ARMS LOCKER under the canopy at my post; the cyan light marks it. Then use the range across the lane.";
@@ -81,7 +83,7 @@ namespace AthenHill
   {
    Step=step;
    if(step==BermsStep.Depot&&depot)depot.Activate();
-   if(!string.IsNullOrEmpty(line))session.Notify(line,radioSpeaker);
+   if(!string.IsNullOrEmpty(line))session.Radio(line,radioSpeaker);
    Changed?.Invoke();
   }
   /// Save restore: puts the primer at a saved step with that step's world state (locker, active encounters,
@@ -93,7 +95,7 @@ namespace AthenHill
    foreach(var t in targets)if(t)t.Raise();
    if(step==BermsStep.FirstContact&&firstContact)firstContact.Activate();
    if(step==BermsStep.Depot&&depot)depot.Activate();
-   if(step==BermsStep.Complete&&depot){if(depot.respawnSeconds<=0)depot.respawnSeconds=120;depot.Activate();}
+   if(step==BermsStep.Complete&&depot){if(depot.respawnSeconds<=0)depot.respawnSeconds=depotRespawnSeconds;depot.Activate();}
    Changed?.Invoke();
   }
   void Finish()
@@ -102,7 +104,7 @@ namespace AthenHill
    session.Reward(rewardCredits,rewardItem,rewardScrap,radioSpeaker,lineComplete);
    // Plates go back up for practice; the depot re-forms while the player is away.
    foreach(var t in targets)if(t)t.Raise();
-   if(depot&&depot.respawnSeconds<=0)depot.respawnSeconds=120;
+   if(depot&&depot.respawnSeconds<=0)depot.respawnSeconds=depotRespawnSeconds;
    Changed?.Invoke();
   }
  }

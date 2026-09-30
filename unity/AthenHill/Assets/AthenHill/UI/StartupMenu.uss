@@ -31,10 +31,13 @@
 .small-window .arrival-help { font-size: 20px; }
 .startup-settings #shade { background-color: rgba(5,11,12,0.54); }
 /* Gameplay v2: Continue / New Game with overwrite confirmation. */
-.arrival-button-copy { flex-shrink: 1; }
+.arrival-button-copy { flex-grow: 1; flex-shrink: 1; align-items: flex-start; }
+.arrival-button-copy Label, .arrival-button-label { -unity-text-align: middle-left; }
 .arrival-button-detail { font-size: 16px; color: #b9c2b5; white-space: normal; margin-top: 3px; }
 #continue-game { display: none; }
-.arrival-confirm { display: none; width: 430px; margin-top: 18px; padding: 18px 22px; background-color: rgba(12,25,26,0.9); border-left-width: 3px; border-left-color: #c8b283; }
+/* The confirmation replaces the start actions in place (CityHud.ShowNewGameConfirm), so it never reaches the footer. */
+.arrival-confirm { display: none; width: 430px; margin-top: 49px; padding: 18px 22px; background-color: rgba(12,25,26,0.9); border-left-width: 3px; border-left-color: #c8b283; }
+.small-window .arrival-confirm { margin-top: 28px; }
 .arrival-confirm-title { font-size: 24px; color: #f1e8d4; margin-bottom: 8px; }
 .arrival-confirm-text { font-size: 18px; color: #c8cfbf; white-space: normal; margin-bottom: 12px; }
 .arrival-confirm-actions { flex-direction: row; }

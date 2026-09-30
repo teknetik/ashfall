@@ -128,7 +128,7 @@ namespace AthenHill
    {
     string kept=QuarantineSave();
     Session.StartGame();
-    Session.Notify($"Your saved game could not be loaded: {error}. Starting a new game."+(kept!=null?$" The old file was kept as {Path.GetFileName(kept)}.":""),"Ward");
+    Session.Notify($"Your saved game could not be loaded ({error}), so a new game has started."+(kept!=null?" The unreadable file was kept beside your saves, not deleted.":""),"Ward");
     SaveNow("new game after unreadable save");
     return false;
    }

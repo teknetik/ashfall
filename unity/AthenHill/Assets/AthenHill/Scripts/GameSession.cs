@@ -4,12 +4,14 @@ using System.Linq;
 using UnityEngine;
 namespace AthenHill
 {
+ /// One Buy parts purchase; listeners may append words to the notice (e.g. " Schematic discovered: …").
+ public sealed class PartPurchase{public string itemId,note="";}
  public enum CityState { Boot,Play,Dialogue,Shop,Grid,Paused,Inventory,Notes,Credits,Error,Settings,MainMenu,Fabricator }
  public class GameSession:MonoBehaviour
  {
   public CityCatalog catalog;
   public GameSettings Settings {get;private set;}
-  void Awake(){Settings=GetComponent<GameSettings>();if(!Settings)Settings=gameObject.AddComponent<GameSettings>();reducedMotion=Settings.ReadReducedMotion(reducedMotion);}
+  void Awake(){Settings=GetComponent<GameSettings>();if(!Settings)Settings=gameObject.AddComponent<GameSettings>();reducedMotion=Settings.ReadReducedMotion(reducedMotion);RadioLine.timing=radioTiming??new RadioQueue.Timing();}
   void SettingsChanged(){muted=Settings.Sound.muted;Changed?.Invoke();}
   public GameInput input;
   public PlayerMotor player;
@@ -32,6 +34,13 @@ namespace AthenHill
   public readonly List<string> Log=new List<string>();
   public readonly HashSet<string> Spoken=new HashSet<string>();
   public bool visitedHill,boughtFlask,soldScrap,linked;
+  [Header("Messages")]
+  [Tooltip("Warden radio lines: on screen for Base + Seconds Per Word × words (clamped), one at a time, and only counting down during play.")]
+  public RadioQueue.Timing radioTiming=new RadioQueue.Timing();
+  [Tooltip("Short system notices: on screen for 2.5 s + this many seconds per word, clamped to 4–10 s.")]
+  [Min(0)]public float noticeSecondsPerWord=.25f;
+  /// The radio channel (Ossa's briefings). Separate from notices, so pickups and prompts never overwrite a briefing.
+  public RadioQueue RadioLine {get;}=new RadioQueue();
   public event Action Changed;
   public event Action<CitySoundCue> SoundRequested;
   public int LogRevision {get;private set;}
@@ -61,6 +70,7 @@ namespace AthenHill
    }
    if(State==CityState.Grid&&GridProgress<1){GridProgress=Mathf.Min(1,GridProgress+Time.deltaTime/Mathf.Max(.01f,catalog.transitionSeconds));Changed?.Invoke();}
    if(noticeTime>0){noticeTime-=Time.unscaledDeltaTime;if(noticeTime<=0){notice="";Changed?.Invoke();}}
+   if(RadioLine.Tick(Time.unscaledDeltaTime,State==CityState.Play))Changed?.Invoke();
   }
   public NpcAgent Nearest=>npcs.Where(n=>n&&Vector3.Distance(n.transform.position,player.transform.position)<=interactionRange).OrderBy(n=>Vector3.Distance(n.transform.position,player.transform.position)).FirstOrDefault();
   bool NearLattice=>latticePoint&&Vector3.Distance(player.transform.position,latticePoint.position)<latticeRange;
@@ -104,8 +114,22 @@ namespace AthenHill
    if(ok)Traded?.Invoke();
    return ok;
   }
+  /// Basic General's Buy parts list: one common or uncommon crafting part at Mira's premium price.
+  public bool BuyPart(string id)
+  {
+   if(State!=CityState.Shop)return false;
+   bool ok=Shop.BuyPart(id,1,out string message);
+   var purchase=new PartPurchase{itemId=id};
+   if(ok)PartBought?.Invoke(purchase);
+   Notify(message+purchase.note,"Mira");SoundRequested?.Invoke(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);
+   if(ok)Traded?.Invoke();
+   return ok;
+  }
   /// A trade or salvage sale completed (autosave hook).
   public event Action Traded;
+  /// A crafting part was bought (the crafting session reveals schematics that use it, as for a pickup, and appends
+  /// them to the purchase notice).
+  public event Action<PartPurchase> PartBought;
   public void SelectDestination(int index)
   {
    if(State!=CityState.Grid||GridProgress<1||index<0||index>=catalog.destinations.Length)return;
@@ -134,7 +158,9 @@ namespace AthenHill
   public void Reward(int credits,string itemId,int quantity,string speaker,string text)
   {
    if(!Shop.Grant(itemId,quantity,credits,out string message)){Notify(message);return;}
-   Notify(text,speaker);SoundRequested?.Invoke(CitySoundCue.Trade);
+   // The Warden's words go on the radio; the banner states what was received.
+   if(speaker=="System")Notify(text,speaker);else{Radio(text,speaker);Notify(message);}
+   SoundRequested?.Invoke(CitySoundCue.Trade);
   }
 #if UNITY_EDITOR || DEBUG
   public void DevChanged(string message){Notify(message,"Dev");}
@@ -173,7 +199,12 @@ namespace AthenHill
   public void ToggleMute(){Settings.Sound.muted=!Settings.Sound.muted;Settings.SaveSound();Settings.Flush();}
   public void ToggleReducedMotion(){reducedMotion=!reducedMotion;Settings.SaveReducedMotion(reducedMotion);Changed?.Invoke();}
   void SetState(CityState state){State=state;input.SetGameplay(state==CityState.Play);player.Blocked=state!=CityState.Play;player.Talking=state==CityState.Dialogue;Time.timeScale=state==CityState.MainMenu||state==CityState.Paused||state==CityState.Settings?0:1;AudioListener.pause=state==CityState.Paused;Changed?.Invoke();}
-  public void Notify(string text,string speaker="System"){notice=text;noticeTime=4;AddLog(speaker,text);Changed?.Invoke();}
+  public void Notify(string text,string speaker="System"){notice=text;noticeTime=Mathf.Clamp(2.5f+noticeSecondsPerWord*RadioQueue.Words(text),4,10);AddLog(speaker,text);Changed?.Invoke();}
+  /// A radio line (field briefings): logged now, shown on the radio channel when its turn comes. gapBefore leaves a
+  /// short silence after the previous line.
+  public void Radio(string text,string speaker,float gapBefore=0){if(string.IsNullOrWhiteSpace(text))return;AddLog(speaker,text);RadioLine.Say(text,speaker,gapBefore);Changed?.Invoke();}
+  /// Event log only (no banner): pickups already have their own toast.
+  public void Record(string text,string speaker="System"){if(!string.IsNullOrWhiteSpace(text))AddLog(speaker,text);}
   void AddLog(string speaker,string text){LogRevision++;Log.Add(speaker+": "+text);if(Log.Count>16)Log.RemoveAt(0);Changed?.Invoke();}
  }
 }

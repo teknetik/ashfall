@@ -15,8 +15,11 @@ namespace AthenHill
   [Min(1)]public float respawnSeconds=270;
   [Tooltip("Moving farther than this from where the search began cancels it.")]
   [Min(.05f)]public float cancelDistance=.6f;
+  [Tooltip("Prompt while searchable; name the thing, e.g. \"E · Strip the droid carcass\".")]
   public string readyPrompt="E · Search the scrap heap";
   public string searchingPrompt="Searching the heap… hold still";
+  [Tooltip("Label over the search progress bar.")]
+  public string progressLabel="Searching the scrap heap…";
   [Tooltip("{0} = minutes:seconds until it can be searched again.")]
   public string depletedPrompt="Picked clean · more scrap in {0}";
   [Header("Presentation (shown while searchable)")]
@@ -53,7 +56,7 @@ namespace AthenHill
    {
     case SalvageTick.Cancelled:
      if(Searching==this)Searching=null;
-     if(session)session.Notify("Search interrupted. Stay close to the heap until it finishes.","Field Pack");
+     if(session)session.Notify($"Search interrupted. Stay close to the {displayName.ToLowerInvariant()} until it finishes.","Field Pack");
      Present();break;
     case SalvageTick.Completed:
      if(Searching==this)Searching=null;

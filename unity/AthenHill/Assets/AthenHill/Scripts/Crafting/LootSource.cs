@@ -3,7 +3,8 @@ using UnityEngine;
 namespace AthenHill
 {
  /// Bound explicitly by DroidEncounter, never by a global kill event. On death the droid drops one salvage cache at
- /// its wreck; the cache despawns when the encounter re-forms (the droid is revived).
+ /// its wreck. The cache outlives the wreck: when the encounter re-forms (the droid is revived) the old cache stays
+ /// until it is collected or expires (SalvageCache lifetime and CraftingSession's cap).
  /// A kill is only marked paid once the payout really happened: if the crafting model is not ready yet the payout
  /// is retried each frame until it succeeds or the droid is revived.
  [RequireComponent(typeof(FeralDroid))]
@@ -36,7 +37,6 @@ namespace AthenHill
   public void Revived()
   {
    paid=pending=false;
-   if(Cache)Cache.Despawn();
    Cache=null;
   }
  }
