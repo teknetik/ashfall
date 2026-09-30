@@ -31,5 +31,26 @@ namespace AthenHill.Editor
             EditorUtility.SetDirty(mat); AssetDatabase.SaveAssets();
             EditorApplication.Exit(0);
         }
+
+        /// Makes a URP Lit material emissive and puts it on the scene's lamp circuit, so its emission follows the clock
+        /// (≈4 % by day, full at night):  -executeMethod AthenHill.Editor.MaterialTweak.LampLitBatch --mat PATH --emission r,g,b
+        public static void LampLitBatch()
+        {
+            var args = Environment.GetCommandLineArgs();
+            string Arg(string n) { int i = Array.IndexOf(args, n); return i >= 0 && i + 1 < args.Length ? args[i + 1] : null; }
+            var path = Arg("--mat"); var e = Arg("--emission").Split(',').Select(x => float.Parse(x, CultureInfo.InvariantCulture)).ToArray();
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (!mat || !mat.HasProperty("_EmissionColor")) throw new ArgumentException("Need an existing emissive-capable material: " + path);
+            var scene = UnityEditor.SceneManagement.EditorSceneManager.OpenScene(ImportBaseline.ScenePath, UnityEditor.SceneManagement.OpenSceneMode.Single);
+            var circuit = UnityEngine.Object.FindAnyObjectByType<CityLightCircuit>();
+            if (!circuit) throw new InvalidOperationException("No lamp circuit in the scene.");
+            Debug.Log($"TWEAK {path} _EmissionColor {mat.GetColor("_EmissionColor")} -> {string.Join(",", e)}");
+            mat.EnableKeyword("_EMISSION"); mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+            mat.SetColor("_EmissionColor", new Color(e[0], e[1], e[2]));
+            EditorUtility.SetDirty(mat);
+            if (!circuit.emissiveMaterials.Contains(mat)) { circuit.emissiveMaterials = circuit.emissiveMaterials.Concat(new[] { mat }).ToArray(); EditorUtility.SetDirty(circuit); }
+            UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(scene); UnityEditor.SceneManagement.EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets(); EditorApplication.Exit(0);
+        }
     }
 }
