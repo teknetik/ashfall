@@ -372,7 +372,8 @@ namespace AthenHill.Editor
                 var lampHeads = new List<Transform>();
                 foreach (var mnt in rec["mounts"])
                 {
-                    var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/AthenHill/Prefabs/WestGate/" + (string)mnt["prefab"] + ".prefab");
+                    var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/AthenHill/Prefabs/WestGate/" + (string)mnt["prefab"] + ".prefab")
+                                 ?? AssetDatabase.LoadAssetAtPath<GameObject>("Assets/AthenHill/Prefabs/WardHill/" + (string)mnt["prefab"] + ".prefab");   // 30 Sep: Meshy floodlights
                     if (!prefab) { Debug.LogWarning("Vanguard Hall: missing prefab " + mnt["prefab"]); continue; }
                     var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
                     go.name = (string)mnt["name"];

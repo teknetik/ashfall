@@ -516,6 +516,39 @@ The porch and step colliders are the original `AuthoredWorld/COL_BLD_shop_*` box
 - Real-input QA: `tools/check_hall_district_city_loop.py` (walks Vex → Torr → Linn → Mira trade → shop porches and door
   recesses → Lattice link). Evidence and defects: `evidence/hall-district/20260930/README.md`.
 
+## Hill, tree ring, terminals and hall floodlights (30 September 2026)
+
+**Ward hill** (scene root) is a saved instance of `Prefabs/WardHill/WardHill.prefab` at the origin. It replaces the hill's
+visuals only: the plinth, surface and eighteen stair colliders (`AuthoredWorld/COL_ENV_hill_*`) are unchanged, and the
+retired pieces (plinth/caps/mound/paths, the old stair stones, market boxes, root stones, the spiky Hill grass patches,
+Hill weathered stones, stair sand decals, the hill bench) stay in the scene inactive (`evidence/hill/20260930/install.json`).
+The hill is not a render-chunk source.
+
+- Children: `LOD0`/`LOD1` (glTF: walls, stairs, ring, paving, metal, bed soil, ring soil, roots, sand; at LOD0 the walls,
+  stairs and ring cast shadows through `Shadow proxy (LOD1 meshes)`), `Planting` (one LODGroup per bed zone and the ring; ground cover casts no shadow, boulders/shrubs/twigs do), `Colliders` (stair cheek boxes,
+  `COL_TreeRing` mesh collider, convex `COL_TreeRingSoil`), `Terminals` (three `WardSaveTerminal` prefab instances facing
+  the tree: Meshy kiosk LODs, *Screen front/back* overlays with `HP_TerminalScreen`, a night *Screen glow*), `Practical lights` (three tree uplights). Uplights and screen glows are
+  practical + night-only lights on the **Ward lighting clock**.
+- The saved terminal colliders `COL_PROP_hill_market_0x_body/foot` were moved/rotated onto the new kiosks and pads (same
+  objects). The kiosks are decorative, as the old boxes were: no save or reclaim interaction exists.
+- Stone uses the hall's `VH_*` materials (Athen Hill/Masonry Lit), so hall weathering edits apply here too. Soils, roots,
+  plants and the kiosk/floodlight materials (`HP_*`, emissive with the RealtimeEmissive flag so URP keeps `_EMISSION`) are in
+  `Art/WardHill/Materials`: `WH_BedSoil`, `WH_RingLitter`, `WH_RootBark` (URP Lit) and one material per
+  Poly Haven species. Foliage uses **Athen Hill/Ward Ground Cover** (`Shaders/WardGroundCover`, the Ward Tree shader with
+  the wind bending by height above each group's origin): *Sway*, *Full bend at this height*, *Blade flutter* and the
+  transmission sliders are per material; wind stops with Reduced Motion. Never static-batch the planting.
+- Geometry changes go through `art/hill_20260930` (`author_ward_hill.py`, `scatter_hill_plants.py`, shared `hill_layout.py`),
+  then **Athen Hill → Ward hill → Build assets**. Rebuilding recreates the hill prefab and its lights, so re-bind them with
+  `WardHillPass.Reinstall()` (authoring only; it keeps the retired objects retired). **Install rebuilt hill** is one-time;
+  **Dry-run install** lists what it would retire; **Verify saved scene** writes `evidence/hill/20260930/verify-saved-scene.json`.
+- **Vanguard Hall floodlights**: `Fittings/Facade floodlight west/east` are `WardFloodlight` prefab instances (Carl's Meshy
+  model, head re-aimed 15°, three LODs); the existing `Practical lights/Facade uplight west/east` spots sit at their lenses
+  (same light objects, so the clock bindings are kept). The hall GLBs no longer contain the box uplights. After a hall
+  re-author, run **Athen Hill → Ward hill → Install Vanguard Hall floodlights** (re-imports the hall models and edits the
+  prefab in place).
+- Review cameras `cam_hill_*` (under *Ward hill review cameras*); real-input check `tools/check_hill_native.py`. Evidence,
+  rollback scene and remaining defects: `evidence/hill/20260930/README.md`.
+
 ## Scavenger's Arc: fabrication, loot and field orders (29 September 2026)
 
 Gameplay v2 content is serialized data; nothing is hard-coded in the scripts. Edit these assets in the Inspector:

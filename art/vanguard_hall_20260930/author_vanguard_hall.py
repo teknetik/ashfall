@@ -939,30 +939,23 @@ def build(lod):
         drift((-WX - 0.02, pier_side_front(0.6)), (-WX - 0.02, pier_side_rear(0.6)), 0.34, 0.09, "west")
         drift((xi, ZB - 0.02), (-xi, ZB - 0.02), 0.3, 0.07, "rear")
 
-    # ------------------------------------------------ terrace uplights (floodlight the nameplate and banner at night)
+    # ------------------------------------------------ terrace floodlights (floodlight the nameplate and banner at night)
+    # 30 Sep 2026: Carl's Meshy tripod floodlight (Prefabs/WardHill/WardFloodlight, art/hill_20260930) replaces the
+    # modelled box uplights. The prop's beam points along its local +X, 38 deg up; each lamp is yawed at the facade
+    # above the portal and the spot light sits at its lens, aimed a little higher inside its wide cone.
     rec["lights"] = []
+    FL_LENS = (0.3327, 0.8721, 0.0001)        # lens centre in the prop's local metres (prepare_meshy_props.py)
     for side in (-1, 1):
-        x, z = side * 2.75, 1.75
-        metal.box((x - 0.2, BASE, z - 0.16), (x + 0.2, BASE + 0.06, z + 0.16), "VH_Steel")          # base plate
-        for dx in (-0.13, 0.13):
-            metal.box((x + dx - 0.012, BASE + 0.06, z - 0.03), (x + dx + 0.012, BASE + 0.3, z + 0.03), "VH_Steel")
-        target = Vector((side * 0.4, 7.4, 0.2))
-        head = Vector((x, BASE + 0.26, z))
-        aim = (target - head).normalized()
-        ref = Vector((1, 0, 0))
-        s1 = aim.cross(ref).normalized(); s2 = aim.cross(s1).normalized()
-        c0, c1 = head - aim * 0.12, head + aim * 0.06
-        def ring(c, r1, r2):
-            return [c + s1 * r1 * sx + s2 * r2 * sy for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))]
-        metal.hexa(ring(c0, 0.14, 0.1) + ring(c1, 0.15, 0.11), "VH_PaintedSteel")
-        metal.hexa(ring(c1, 0.12, 0.085) + ring(c1 + aim * 0.012, 0.12, 0.085), "VH_LampLens")
-        metal.cyl(tuple(Vector((x - 0.13, BASE + 0.26, z))), tuple(Vector((x + 0.13, BASE + 0.26, z))), 0.018, "VH_Steel", 8)
-        rec["lights"].append({"name": "Facade uplight " + ("west" if side < 0 else "east"), "type": "Spot",
-                              "pos": list(head + aim * 0.1), "target": list(target), "intensity": 16.0, "range": 13.0,
-                              "angle": 42.0, "inner": 18.0, "color": [1.0, 0.86, 0.68]})
-    # cable from the uplights into the portal junction
-    metal.tube([(-2.75, BASE + 0.012, 1.55), (-2.45, BASE + 0.012, 0.2)], 0.012, "VH_Rubber", sides=6)
-    metal.tube([(2.75, BASE + 0.012, 1.55), (2.45, BASE + 0.012, 0.2)], 0.012, "VH_Rubber", sides=6)
+        root = (side * 3.1, BASE, 1.7)
+        target = (side * 0.5, 5.2, 0.0)
+        dx, dz = target[0] - root[0], target[2] - root[2]
+        yaw = math.degrees(math.atan2(-dz, dx))
+        c, s_ = math.cos(math.radians(yaw)), math.sin(math.radians(yaw))
+        lens = (root[0] + FL_LENS[0] * c + FL_LENS[2] * s_, root[1] + FL_LENS[1], root[2] - FL_LENS[0] * s_ + FL_LENS[2] * c)
+        name = "west" if side < 0 else "east"
+        rec["mounts"].append({"name": "Facade floodlight " + name, "prefab": "WardFloodlight", "pos": list(root), "yaw": yaw})
+        rec["lights"].append({"name": "Facade uplight " + name, "type": "Spot", "pos": list(lens), "target": list(target),
+                              "intensity": 55.0, "range": 15.0, "angle": 62.0, "inner": 26.0, "color": [1.0, 0.86, 0.68]})   # nameplate ~5.3 m from the lens
 
     # ------------------------------------------------ mounts (placed in Unity)
     rec["mounts"] += [
