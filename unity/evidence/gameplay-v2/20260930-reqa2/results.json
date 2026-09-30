@@ -1,0 +1,26 @@
+{
+ "utc": "2026-09-30",
+ "build": "unity/AthenHill/Builds/LinuxDevelopment/AthenHill.x86_64, data 30 Sep 06:13 (ward/next-level HEAD aa99640b: fix batch 2 + terrain v2 + sky v4 + perf pass v1)",
+ "display": "1920x1080 windowed, OpenGL 4.5 core, RTX 3060 12 GB / i9-10850K, driver 610.57.04, High + TAA, VSync off, uncapped",
+ "harness": "qa.py (copy of ../20260930-reqa/qa.py + tab_cycle/cycle_summary/project); real XTEST input for every verb",
+ "runs": {
+  "runA-newgame": "no save -> city loop -> primer -> orders 1-4 (fast orders 2+3 in the fabricator) -> Foreman -> Basic General -> night -> Quit",
+  "runB-continue": "start menu with save, New Game confirm + Esc, Continue, cache placement kills, terrain views, all profiles"
+ },
+ "checks": {
+  "1_focus": "pass: Tab and Shift+Tab wrap inside Basic General (11 stops empty / 19 with salvage), fabricator (6), dialogue (3), pause (9), start menu (2 / 3 with save), New Game confirm (2); never unity-slider or anything behind the modal. Inventory: Tab/Shift+Tab close the pack even from details (matches footer)",
+  "2_radio": "pass: orders 2+3 finished inside the fabricator -> order-3 briefing dropped, order-2 completion dropped as stale, Foreman briefing shown at once (urgent), order-3 completion after it; 'It's seen you...' at the Foreman's first Alert (same 0.05 s sample), once",
+  "3_cachePlacement": "pass: 13 caches (first contact 1, nest 3+3, escorts 2+2, Foreman 1+1) flat on ground, >=0.8 m apart, none overhanging the cradle platform or inside the cradle base/fence/post; hall escort cache on the apron beside the platform lip",
+  "4_wrecks": "pass: drone wreck travel 0.39 / 0.10 / 0.45 m; caches ~0.5-1.0 m from the wreck",
+  "5_glow": "pass with note: common pale/weak, uncommon calm cyan ~1 m pool, rare saturated amber with a broad orange pool, strongest at 1-4 m in sun and shade; at 12 m in sun the amber blends into orange ground while cyan still pops",
+  "6_uiPolish": "pass: slot titles clear frame, disabled Fabricate grey, '34.5/s -> 39/s' on one line, inventory details beside grid (not clipped), Basic General fits (no scrollbar, parts help visible), ARMS LOCKER marker above Ossa's tag, Mira's tag hidden while 'E · Talk to Mira'; heap prompts 'depot litter' / 'roadside scrap'. New: fabricator modal overlaps the bottom line of a 3-line objective box",
+  "7_perf": "improved: idle Foreman group in view +1.7 ms p50 (was +2.3 ms), behind the camera +0.56 ms; cam_hill 17:30 67.7 FPS (was 60.5); West Gate->hill heading peak 39.8 M tris (was 60-81 M) but warm leg p50 17.6 ms / ~57 FPS; cold first traversal hitched 326-524 ms x3",
+  "regression": "pass: Vex/Torr/Linn/Mira, no modal movement, flask 25->21, coil ->22, Lattice link, Ring Gate offline, pause/notes/pack, Continue restore; Foreman Mk I kill 27.7 s (0 damage)",
+  "playerLog": "no exceptions or errors (runA, runB); URP info: 18 punctual shadow maps halved in the 4096 atlas (runB)"
+ },
+ "newIssues": [
+  "One capture (runA 30) shows the top-left 960x540 quadrant as a flat beige fill (half-resolution buffer size); not reproduced in ~75 captures; possibly the half-res SSAO/perf pass",
+  "Terrain v2: pale hard-edged diagonal stripes on steep basin slopes (were dark stripes before), far ridges near-white at 13:00",
+  "Player RSS 7.6 GB after ~35 min (textureCurrent 4.5 GB, desired 4.9 GB) vs 3.1 GB in re-QA 1"
+ ]
+}
