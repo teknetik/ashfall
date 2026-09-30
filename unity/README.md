@@ -59,7 +59,8 @@ See [terrain evidence](evidence/terrain/20260908/acceptance.md) and the
 | R | Return to West Gate |
 | 1 / 2 | Flask / medkit information |
 | 3 / 4 | Lattice / talk shortcut |
-| 5 / 6 | Inventory / notes |
+| 5 or Tab / 6 | Field pack / notes |
+| In the pack | Arrows choose · Enter or Shift+click inspects · type in Search · drag the colonist to turn |
 | Tab / Enter | Focus / activate UI controls |
 | Drag UI frame, header or bronze grip | Move that panel; position is saved |
 | Ctrl + drag over a UI control | Move its panel without activating the control |

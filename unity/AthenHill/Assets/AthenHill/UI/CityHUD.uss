@@ -134,45 +134,163 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .trade-help { margin-top: 13px; white-space: normal; }
 .quantity { width: 104px; color: #daca9e; font-size: 21px; -unity-text-align: middle-right; }
 
-/* Inventory: compact grid + stationary overview + inspection subwindow. */
-#inventory-content { flex-direction: row; align-items: stretch; min-height: 420px; max-height: 520px; position: relative; }
-#inventory-scroll { flex-grow: 1; flex-shrink: 1; flex-basis: 0; min-height: 0; margin-right: 18px; }
-#inventory-scroll .unity-scroll-view__content-container { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
+/* Field pack, after the user's Ark-style reference (30 Sep 2026; PackPanel.cs, CharacterPreview.cs).
+   Three instrument panels inside the bronze modal: pack grid | colonist and loadout | turnable colonist view.
+   Panels are deep teal enamel with thin cyan rules; cyan marks focus and selection, bronze marks headings,
+   rarity keeps its colours (Common warm white, Uncommon cyan, Rare amber). The details panel takes the view's place. */
+#modal.pack-modal { width: 1580px; max-width: 97%; }
+#modal.pack-modal #modal-scroll { max-height: 700px; }
+#modal.pack-modal #modal-subtitle { margin-bottom: 12px; }
+#inventory-content { flex-direction: row; align-items: stretch; height: 680px; }
+.tech-panel { background-color: rgba(8, 25, 29, 0.94); border-width: 1px; border-color: #2c5a5f; border-top-color: #3d7479; padding: 12px 14px 12px; }
+.pack-col { width: 616px; flex-shrink: 0; }
+.you-col { flex-grow: 1; flex-shrink: 1; flex-basis: 0; min-width: 0; margin-left: 12px; }
+.preview-col, .inventory-details { width: 400px; flex-shrink: 0; margin-left: 12px; }
+
+/* Tabs: large caps lettering over a cyan underline, like the reference's INVENTORY / YOU headers. */
+.pack-tabs { flex-direction: row; flex-shrink: 0; align-items: flex-end; height: 42px; margin-bottom: 8px; border-bottom-width: 1px; border-bottom-color: #2c5a5f; }
+.pack-tab, .pack-tab-label { font-size: 22px; letter-spacing: 1px; color: #7f9a98; background-image: none; background-color: rgba(0,0,0,0); min-height: 0; height: 40px; margin: 0 22px -1px 0; padding: 4px 0 0; border-bottom-width: 3px; border-color: rgba(0,0,0,0); -unity-text-align: middle-left; }
+.pack-tab:hover { color: #d6f4f1; background-color: rgba(0,0,0,0); }
+.pack-tab:focus { background-image: none; color: #eee9dc; border-bottom-color: #8be6df; }
+.pack-tab.active-tab, .pack-tab-label.active-tab { color: #eee9dc; border-bottom-color: #58d5d7; }
+.pack-credit-readout { flex-grow: 1; flex-direction: row; align-items: center; justify-content: flex-end; margin-bottom: 8px; }
+.pack-credit { font-size: 20px; color: #daca9e; }
+
+/* Search and filter chips. */
+.pack-tools { flex-direction: row; flex-shrink: 0; align-items: center; margin-bottom: 10px; }
+.pack-search-box { width: 176px; height: 36px; flex-shrink: 0; flex-direction: row; align-items: center; background-color: #0c2227; border-width: 1px; border-color: #2c5a5f; margin-right: 10px; }
+.pack-search-box.focused { border-color: #58d5d7; }
+.pack-search-glyph { width: 12px; height: 12px; margin: 0 4px 0 10px; border-width: 2px; border-color: #7f9a98; border-radius: 6px; flex-shrink: 0; }
+.pack-search { flex-grow: 1; margin: 0; padding: 0; font-size: 17px; }
+.pack-search > .unity-base-text-field__input, .pack-search .unity-text-field__input { background-color: rgba(0,0,0,0); border-width: 0; color: #eee9dc; padding: 4px 6px; -unity-font: url("Art/ColonySans.ttf"); -unity-font-definition: initial; --unity-cursor-color: #8be6df; --unity-selection-color: rgba(88,213,215,0.35); }
+.pack-search-placeholder { position: absolute; left: 30px; top: 7px; font-size: 17px; color: #6f8987; }
+.pack-filters { flex-direction: row; flex-grow: 1; flex-wrap: nowrap; }
+.pack-chip { font-size: 15px; min-height: 0; height: 36px; margin: 0 6px 0 0; padding: 0 11px; background-image: none; background-color: #0c2227; border-width: 1px; border-color: #2c5a5f; color: #aebdb8; letter-spacing: 1px; -unity-text-align: middle-center; }
+.pack-chip:hover { background-color: #15353b; color: #eee9dc; }
+.pack-chip:focus { background-image: none; border-color: #8be6df; color: #eee9dc; }
+.pack-chip.active-chip { background-color: #173f45; border-color: #58d5d7; color: #eee9dc; }
+
+/* Item grid: dense square cells; the grid is always filled out with empty cells like a pack, never implying a capacity. */
+#inventory-scroll { flex-grow: 1; flex-shrink: 1; flex-basis: 0; min-height: 0; }
+#inventory-scroll .unity-scroll-view__content-container { flex-direction: column; }
 #inventory-grid { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
-.inventory-empty { display: none; flex-direction: column; padding: 10px 0; }
+.inventory-empty { display: none; flex-direction: column; padding: 18px 6px; }
 #inventory-empty-subtitle { font-size: 18px; margin-top: -6px; }
+.inventory-tile, .pack-cell { width: 89px; height: 89px; margin: 0 5px 5px 0; padding: 0; background-image: none; background-color: #0f2a30; border-width: 1px; border-color: #2a5157; border-radius: 0; justify-content: center; align-items: center; min-height: 0; }
+.pack-cell { background-color: #0b2025; border-color: #1c3a3f; }
+.inventory-tile:hover { background-color: #16373e; border-color: #4aa9ad; }
+.inventory-tile:focus, .inventory-tile.selected { background-image: none; background-color: #1a434a; border-color: #58d5d7; }
+.inventory-tile:focus { border-width: 2px; border-color: #8be6df; }
+.inventory-tile-icon { width: 60px; height: 60px; margin-top: -9px; -unity-background-scale-mode: scale-to-fit; }
+.inventory-tile-qty { position: absolute; left: 5px; top: 3px; font-size: 14px; color: #eee9dc; text-shadow: 1px 1px 1px rgba(0,0,0,0.9); }
+.inventory-tile-name { position: absolute; left: 3px; right: 3px; bottom: 7px; font-size: 14px; color: #e6e1d3; -unity-text-align: lower-center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 1px 1px 1px rgba(0,0,0,0.95); }
+.inventory-tile-bar { position: absolute; left: 4px; right: 4px; bottom: 3px; height: 3px; background-color: #30494c; }
+.inventory-tile.tile-uncommon .inventory-tile-bar { background-color: #58d5d7; }
+.inventory-tile.tile-rare .inventory-tile-bar { background-color: #e7a94a; }
+.inventory-tile.short .inventory-tile-icon { opacity: 0.45; }
+.inventory-tile.short .inventory-tile-bar { background-color: #6b3e38; }
+.inventory-tile.ready .inventory-tile-bar { background-color: #58d5d7; }
 
-.inventory-tile { width: 84px; height: 84px; margin: 0 10px 10px 0; padding: 8px; justify-content: center; align-items: center; background-image: url("Art/button.png"); }
-.inventory-tile:hover { background-color: #2a3a39; -unity-background-image-tint-color: #d0eeeb; }
-.inventory-tile:focus { background-image: url("Art/button-focus.png"); -unity-background-image-tint-color: #ffffff; }
-.inventory-tile-icon { width: 60px; height: 60px; -unity-background-scale-mode: scale-to-fit; picking-mode: ignore; }
-.inventory-tile-qty { position: absolute; right: 6px; bottom: 6px; padding: 2px 6px; font-size: 14px; color: #eee9dc; background-color: rgba(12,20,19,0.9); border-width: 1px; border-color: #59615a; border-radius: 2px; }
+/* Selected item: a strip under the grid, like the reference's hover card. */
+.inventory-overview { flex-direction: row; flex-shrink: 0; height: 120px; margin-top: 8px; padding-top: 10px; border-top-width: 1px; border-top-color: #2c5a5f; }
+.inventory-overview-frame { width: 92px; height: 92px; flex-shrink: 0; margin-right: 14px; background-color: #0f2a30; border-width: 1px; border-color: #2a5157; align-items: center; justify-content: center; }
+.inventory-overview-icon { width: 76px; height: 76px; -unity-background-scale-mode: scale-to-fit; }
+.inventory-overview-copy { flex-grow: 1; flex-shrink: 1; min-width: 0; }
+.inventory-overview-name { font-size: 21px; white-space: normal; }
+.inventory-overview-quantity { font-size: 15px; letter-spacing: 1px; margin-top: 1px; }
+.inventory-overview-description { white-space: normal; font-size: 17px; margin-top: 5px; color: #d7d3c6; overflow: hidden; }
+.pack-footer { flex-direction: row; flex-shrink: 0; justify-content: space-between; align-items: center; height: 34px; margin-top: 6px; padding: 0 10px; background-color: #0c2227; border-width: 1px; border-color: #2c5a5f; }
+.pack-filter-name { font-size: 15px; letter-spacing: 1px; color: #eee9dc; }
+.pack-summary { font-size: 15px; }
 
-.inventory-overview { width: 260px; flex-shrink: 0; padding-left: 12px; border-left-width: 1px; border-left-color: #535f58; }
-.inventory-overview-header { flex-direction: row; align-items: center; margin-bottom: 10px; }
-.inventory-overview-icon { width: 64px; height: 64px; margin-right: 12px; -unity-background-scale-mode: scale-to-fit; }
-.inventory-overview-name { font-size: 22px; white-space: normal; flex-shrink: 1; }
-.inventory-overview-header > VisualElement { flex-shrink: 1; }
-.inventory-overview-description { white-space: normal; font-size: 18px; margin-top: 8px; }
+/* YOU: loadout slots flank the colonist card; progress runs under it like an experience bar; stats follow. */
+.loadout { flex-direction: row; flex-shrink: 0; align-items: stretch; }
+.loadout-slots { width: 92px; flex-shrink: 0; }
+.loadout-slot { margin-bottom: 8px; }
+.loadout-slot-label { font-size: 14px; color: #a48a62; letter-spacing: 1px; margin-bottom: 3px; -unity-text-align: middle-center; }
+.loadout-cell { width: 92px; height: 92px; background-color: #0f2a30; border-width: 1px; border-color: #2a5157; align-items: center; justify-content: center; }
+.loadout-cell:hover { background-color: #16373e; border-color: #4aa9ad; }
+.loadout-cell.empty { background-color: #0b2025; border-color: #1c3a3f; }
+.loadout-cell.selected { border-color: #58d5d7; background-color: #1a434a; }
+.loadout-cell-icon { width: 66px; height: 66px; -unity-background-scale-mode: scale-to-fit; }
+.loadout-cell-empty { font-size: 14px; color: #5f7a78; letter-spacing: 1px; }
+.loadout-cell .inventory-tile-bar { bottom: 3px; }
+.loadout-cell.tile-uncommon .inventory-tile-bar { background-color: #58d5d7; }
+.loadout-cell.tile-rare .inventory-tile-bar { background-color: #e7a94a; }
+.colonist-card { flex-grow: 1; flex-shrink: 1; min-width: 0; margin: 20px 10px 8px; padding: 10px 12px 8px; background-color: #0e2c32; border-width: 1px; border-color: #2c5a5f; }
+.colonist-name { font-size: 21px; -unity-text-align: upper-center; }
+.colonist-faction { font-size: 15px; color: #58d5d7; letter-spacing: 2px; -unity-text-align: upper-center; margin-bottom: 7px; padding-bottom: 7px; border-bottom-width: 1px; border-bottom-color: #2c5a5f; }
+.colonist-fact { flex-direction: row; justify-content: space-between; height: 25px; align-items: center; }
+.colonist-fact-label { font-size: 14px; color: #9fb1ad; letter-spacing: 1px; }
+.colonist-fact-value { font-size: 16px; color: #eee9dc; -unity-text-align: middle-right; }
+.you-progress { flex-shrink: 0; margin: 4px 0 14px; }
+.you-progress-row { flex-direction: row; justify-content: space-between; margin-bottom: 4px; }
+.you-progress-label { font-size: 15px; color: #a48a62; letter-spacing: 1px; }
+.you-progress-value { font-size: 15px; color: #eee9dc; }
+.you-progress-track { height: 9px; background-color: #0b2025; border-width: 1px; border-color: #2c5a5f; }
+.you-progress-fill { height: 100%; width: 0; background-color: #c9ab63; border-top-width: 1px; border-top-color: #e6cf8e; }
+.you-stats { flex-grow: 1; flex-shrink: 1; min-height: 0; overflow: hidden; }
+.you-stat { flex-direction: row; align-items: center; height: 37px; padding: 0 8px; margin-bottom: 4px; background-color: #0e262b; border-width: 1px; border-color: #1f4247; }
+.you-stat.vital { height: 46px; flex-direction: column; align-items: stretch; justify-content: center; }
+.you-stat-line { flex-direction: row; align-items: center; }
+.you-stat-mark { width: 11px; height: 11px; margin-right: 9px; rotate: 45deg; scale: 0.8 0.8; background-color: #a48a62; flex-shrink: 0; }
+.you-stat.vital .you-stat-mark { background-color: #58d5d7; }
+.you-stat.vitality .you-stat-mark { background-color: #c65c4f; }
+.you-stat-name { flex-grow: 1; font-size: 15px; letter-spacing: 1px; color: #dcd8cb; }
+.you-stat-value { font-size: 16px; color: #eee9dc; -unity-text-align: middle-right; }
+.you-stat-delta { width: 62px; font-size: 14px; -unity-text-align: middle-right; color: #8c958b; }
+.you-stat-delta.better { color: #8fcf8a; }
+.you-stat-delta.worse { color: #db7d6b; }
+.you-stat-track { height: 6px; margin: 4px 0 0 20px; background-color: #0b1b1f; border-width: 1px; border-color: #1c3a3f; }
+.you-stat-fill { height: 100%; width: 100%; background-color: #49cbd0; border-top-width: 1px; border-top-color: #86e6df; }
+.you-stat.vitality .you-stat-fill { background-color: #c65c4f; border-top-color: #db7d6b; }
+.you-stat-grid { flex-direction: row; flex-wrap: wrap; justify-content: space-between; }
+.you-stat-cell { width: 49.3%; padding: 0 6px 0 8px; }
+.you-stat-cell .you-stat-name { font-size: 14px; letter-spacing: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 1; min-width: 0; }
+.you-stat-cell .you-stat-delta { width: 50px; flex-shrink: 0; }
+.you-stat-cell .you-stat-value { flex-shrink: 0; margin-left: 4px; }
+.you-stat-heading { flex-direction: row; justify-content: space-between; font-size: 14px; color: #a48a62; letter-spacing: 1px; margin: 12px 0 5px; }
+.you-stat-note { font-size: 16px; color: #9fb1ad; white-space: normal; margin: 4px 2px; }
 
-/* Details take the overview's place beside the grid (CityHud hides the overview), so they are never clipped or float over it. */
-.inventory-details { display: none; flex-shrink: 0; width: 430px; margin-left: 4px; padding: 18px 22px 16px; }
-.details-heading { padding-bottom: 12px; }
-.details-heading #details-title { font-size: 24px; flex-shrink: 1; white-space: normal; margin-right: 14px; }
-.details-heading #details-close { flex-shrink: 0; min-height: 40px; padding: 10px 16px; font-size: 17px; }
+/* Colonist view: rendered colonist over a faint dot grid, with bracket corners like the reference. */
+.preview-col { padding: 0; background-image: url("Art/preview-grid.png"); background-repeat: repeat repeat; background-size: 22px 22px; background-color: #0a2126; }
+.preview-view { position: absolute; left: 10px; right: 10px; top: 16px; bottom: 44px; -unity-background-scale-mode: scale-to-fit; }
+.preview-fallback { position: absolute; left: 25%; right: 25%; top: 30%; bottom: 40%; opacity: 0.35; margin: 0; width: auto; height: auto; }
+.preview-corner { position: absolute; width: 26px; height: 26px; border-color: #58d5d7; }
+.preview-corner.tl { left: 8px; top: 8px; border-left-width: 2px; border-top-width: 2px; }
+.preview-corner.tr { right: 8px; top: 8px; border-right-width: 2px; border-top-width: 2px; }
+.preview-corner.bl { left: 8px; bottom: 8px; border-left-width: 2px; border-bottom-width: 2px; }
+.preview-corner.br { right: 8px; bottom: 8px; border-right-width: 2px; border-bottom-width: 2px; }
+.preview-caption { position: absolute; left: 20px; right: 20px; bottom: 16px; flex-direction: row; justify-content: space-between; align-items: flex-end; }
+.preview-name { font-size: 15px; letter-spacing: 2px; color: #eee9dc; }
+.preview-hint { font-size: 14px; }
+
+/* Item details take the colonist view's place, never floating over the grid. */
+.inventory-details { display: none; padding: 14px 16px 12px; }
+.details-heading { padding-bottom: 10px; border-bottom-color: #2c5a5f; }
+.details-heading #details-title { font-size: 23px; flex-shrink: 1; white-space: normal; margin-right: 12px; }
+.details-heading #details-close { flex-shrink: 0; min-height: 40px; padding: 9px 14px; font-size: 16px; margin: 0; }
 .details-body { flex-direction: column; flex-grow: 1; min-height: 0; margin-top: 12px; }
-.details-icon { width: 120px; height: 120px; align-self: center; margin-bottom: 10px; -unity-background-scale-mode: scale-to-fit; }
-#details-scroll { flex-grow: 1; flex-shrink: 1; min-height: 0; max-height: 190px; margin-top: 8px; }
+.details-icon-frame { width: 176px; height: 176px; align-self: center; margin-bottom: 12px; background-color: #0f2a30; border-width: 1px; border-color: #2a5157; align-items: center; justify-content: center; }
+.details-icon { width: 150px; height: 150px; -unity-background-scale-mode: scale-to-fit; }
+#details-quantity { font-size: 17px; }
+#details-prices { margin-top: 2px; }
+#details-scroll { flex-grow: 1; flex-shrink: 1; min-height: 0; margin-top: 10px; }
 #details-scroll .unity-scroll-view__content-viewport { overflow: hidden; }
-#details-description { font-size: 20px; margin-top: 0; margin-bottom: 0; }
+#details-description { font-size: 19px; margin-top: 0; margin-bottom: 0; }
 
-/* Small window: stack overview and allow the content to scroll as a whole. */
-.small-window #inventory-content { flex-direction: column; max-height: none; }
-.small-window #inventory-scroll { margin-right: 0; max-height: 360px; }
-.small-window .inventory-details { width: auto; margin-left: 0; margin-top: 10px; }
-.small-window .inventory-overview { width: auto; border-left-width: 0; border-top-width: 1px; border-top-color: #535f58; padding-left: 0; padding-top: 12px; margin-top: 10px; }
-.small-window .inventory-tile { width: 96px; height: 96px; }
-.small-window .inventory-overview-name, .small-window #details-description { font-size: 20px; }
+/* Small windows: text grows to 20 reference pixels; cell names give way to the selected-item strip. */
+.small-window .inventory-tile-name { display: none; }
+.small-window .pack-chip, .small-window .pack-filter-name, .small-window .pack-summary, .small-window .colonist-fact-label, .small-window .you-stat-name, .small-window .you-progress-label, .small-window .you-progress-value, .small-window .preview-name, .small-window .preview-hint, .small-window .loadout-slot-label, .small-window .inventory-overview-quantity, .small-window .inventory-tile-qty, .small-window .you-stat-delta, .small-window .you-stat-cell .you-stat-name, .small-window .loadout-cell-empty, .small-window .you-stat-heading { font-size: 20px; }
+.small-window .pack-chip { padding: 0 8px; margin-right: 4px; letter-spacing: 0; }
+.small-window .colonist-fact-value, .small-window .you-stat-value, .small-window .inventory-overview-description, .small-window #details-description, .small-window .pack-search, .small-window .pack-search-placeholder { font-size: 20px; }
+.small-window .colonist-fact { height: 26px; }
+.small-window .you-stat { height: 32px; margin-bottom: 3px; }
+.small-window .you-stat.vital { height: 40px; }
+.small-window .you-progress { margin: 2px 0 10px; }
+.small-window .you-stat-heading { margin: 8px 0 4px; }
+.small-window .you-stat-cell .you-stat-delta { display: none; }
+.small-window .pack-search-box { width: 150px; }
 #grid-nodes { margin-top: 20px; }
 #grid-nodes Button { min-height: 76px; padding: 16px 25px; -unity-text-align: middle-left; font-size: 20px; }
 #pause-panel Button { min-height: 49px; padding: 12px 25px; }
@@ -180,6 +298,7 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .controls-copy { margin: 18px 6px 10px; font-size: 18px; white-space: normal; }
 #text-panel { padding: 0 7px; }
 .feedback { flex-shrink: 0; white-space: normal; color: #8be6df; font-size: 18px; margin-top: 14px; }
+#modal-footer-left, #modal-footer-right { white-space: pre; }
 .modal-footer { flex-direction: row; flex-shrink: 0; justify-content: space-between; border-top-width: 1px; border-top-color: #59615a; padding-top: 14px; margin-top: 18px; }
 #tunnel { height: 180px; overflow: hidden; background-color: #101f22; margin-bottom: 16px; border-width: 1px; border-color: #586f67; }
 .tunnel-ring { position: absolute; border-width: 2px; border-color: #4ababb; border-radius: 12px; }
@@ -378,5 +497,3 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .small-window .fab-stat-now { width: 92px; }
 .small-window .fab-stat-preview { width: 104px; }
 .small-window .fab-stat-delta { width: 84px; }
-.inventory-tile.tile-uncommon { border-bottom-width: 3px; border-bottom-color: #58d5d7; }
-.inventory-tile.tile-rare { border-bottom-width: 3px; border-bottom-color: #e7a94a; }

@@ -88,33 +88,66 @@
      </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement usage-hints="DynamicColor" name="inventory-panel">
-     <ui:Label usage-hints="DynamicColor" name="pack-credit" class="balance"/>
+     <!-- Field pack, after the user's Ark-style reference (30 Sep 2026): pack grid | colonist and loadout | colonist view. PackPanel.cs builds the tiles, chips, slots and stat rows. -->
      <ui:VisualElement usage-hints="DynamicColor" name="inventory-content" class="inventory-content">
-      <ui:ScrollView name="inventory-scroll" class="inventory-scroll" horizontal-scroller-visibility="Hidden">
-       <ui:VisualElement usage-hints="DynamicColor" name="inventory-grid" class="inventory-grid" />
-       <ui:VisualElement usage-hints="DynamicColor" name="inventory-empty" class="inventory-empty" picking-mode="Ignore">
-        <ui:Label usage-hints="DynamicColor" name="inventory-empty-title" class="body-copy" text="Your field pack is empty." />
-        <ui:Label usage-hints="DynamicColor" name="inventory-empty-subtitle" class="muted" text="Supplies you acquire will appear here." />
+      <ui:VisualElement usage-hints="DynamicColor" name="pack-col" class="pack-col tech-panel">
+       <ui:VisualElement usage-hints="DynamicColor" class="pack-tabs">
+        <ui:Button usage-hints="DynamicColor" name="pack-tab-items" text="PACK" class="pack-tab active-tab" tooltip="Carried supplies, salvage, parts and mods"/>
+        <ui:Button usage-hints="DynamicColor" name="pack-tab-schematics" text="SCHEMATICS" class="pack-tab" tooltip="Known field-fabricator schematics and the parts they need"/>
+        <ui:VisualElement usage-hints="DynamicColor" class="pack-credit-readout" picking-mode="Ignore"><ui:VisualElement usage-hints="DynamicColor" class="mini-icon coins-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="pack-credit" class="pack-credit" picking-mode="Ignore"/></ui:VisualElement>
        </ui:VisualElement>
-      </ui:ScrollView>
-      <ui:VisualElement usage-hints="DynamicColor" name="inventory-overview" class="inventory-overview" picking-mode="Ignore">
-       <ui:VisualElement usage-hints="DynamicColor" class="inventory-overview-header" picking-mode="Ignore">
-        <ui:VisualElement usage-hints="DynamicColor" name="inventory-overview-icon" class="inventory-overview-icon" picking-mode="Ignore" />
-        <ui:VisualElement usage-hints="DynamicColor" picking-mode="Ignore">
+       <ui:VisualElement usage-hints="DynamicColor" class="pack-tools">
+        <ui:VisualElement usage-hints="DynamicColor" class="pack-search-box"><ui:VisualElement usage-hints="DynamicColor" class="pack-search-glyph" picking-mode="Ignore"/><ui:TextField name="pack-search" class="pack-search" max-length="32"/><ui:Label usage-hints="DynamicColor" name="pack-search-placeholder" text="Search" class="pack-search-placeholder" picking-mode="Ignore"/></ui:VisualElement>
+        <ui:VisualElement usage-hints="DynamicColor" name="pack-filters" class="pack-filters"/>
+       </ui:VisualElement>
+       <ui:ScrollView name="inventory-scroll" class="inventory-scroll" horizontal-scroller-visibility="Hidden">
+        <ui:VisualElement usage-hints="DynamicColor" name="inventory-grid" class="inventory-grid" />
+        <ui:VisualElement usage-hints="DynamicColor" name="inventory-empty" class="inventory-empty" picking-mode="Ignore">
+         <ui:Label usage-hints="DynamicColor" name="inventory-empty-title" class="body-copy" text="Your field pack is empty." />
+         <ui:Label usage-hints="DynamicColor" name="inventory-empty-subtitle" class="muted" text="Supplies you acquire will appear here." />
+        </ui:VisualElement>
+       </ui:ScrollView>
+       <ui:VisualElement usage-hints="DynamicColor" name="inventory-overview" class="inventory-overview" picking-mode="Ignore">
+        <ui:VisualElement usage-hints="DynamicColor" class="inventory-overview-frame" picking-mode="Ignore"><ui:VisualElement usage-hints="DynamicColor" name="inventory-overview-icon" class="inventory-overview-icon" picking-mode="Ignore" /></ui:VisualElement>
+        <ui:VisualElement usage-hints="DynamicColor" class="inventory-overview-copy" picking-mode="Ignore">
          <ui:Label usage-hints="DynamicColor" name="inventory-overview-name" class="inventory-overview-name" text="No item selected." />
-         <ui:Label usage-hints="DynamicColor" name="inventory-overview-quantity" class="muted small" text="" />
+         <ui:Label usage-hints="DynamicColor" name="inventory-overview-quantity" class="muted inventory-overview-quantity" text="" />
+         <ui:Label usage-hints="DynamicColor" name="inventory-overview-description" class="inventory-overview-description" text="" />
         </ui:VisualElement>
        </ui:VisualElement>
-       <ui:Label usage-hints="DynamicColor" name="inventory-overview-description" class="inventory-overview-description" text="" />
+       <ui:VisualElement usage-hints="DynamicColor" class="pack-footer" picking-mode="Ignore"><ui:Label usage-hints="DynamicColor" name="pack-filter-name" class="pack-filter-name" text="ALL ITEMS"/><ui:Label usage-hints="DynamicColor" name="pack-summary" class="muted pack-summary"/></ui:VisualElement>
       </ui:VisualElement>
-      <ui:VisualElement usage-hints="DynamicColor" name="inventory-details" class="inventory-details panel">
+      <ui:VisualElement usage-hints="DynamicColor" name="you-col" class="you-col tech-panel" picking-mode="Ignore">
+       <ui:VisualElement usage-hints="DynamicColor" class="pack-tabs" picking-mode="Ignore"><ui:Label usage-hints="DynamicColor" text="YOU" class="pack-tab-label active-tab"/></ui:VisualElement>
+       <ui:VisualElement usage-hints="DynamicColor" class="loadout" picking-mode="Ignore">
+        <ui:VisualElement usage-hints="DynamicColor" name="loadout-left" class="loadout-slots" picking-mode="Ignore"/>
+        <ui:VisualElement usage-hints="DynamicColor" class="colonist-card" picking-mode="Ignore">
+         <ui:Label usage-hints="DynamicColor" name="colonist-name" text="Colonist" class="colonist-name"/>
+         <ui:Label usage-hints="DynamicColor" name="colonist-faction" text="FREE COLUMN" class="colonist-faction"/>
+         <ui:VisualElement usage-hints="DynamicColor" name="colonist-facts" class="colonist-facts" picking-mode="Ignore"/>
+        </ui:VisualElement>
+        <ui:VisualElement usage-hints="DynamicColor" name="loadout-right" class="loadout-slots" picking-mode="Ignore"/>
+       </ui:VisualElement>
+       <ui:VisualElement usage-hints="DynamicColor" class="you-progress" picking-mode="Ignore">
+        <ui:VisualElement usage-hints="DynamicColor" class="you-progress-row" picking-mode="Ignore"><ui:Label usage-hints="DynamicColor" name="you-progress-label" class="you-progress-label"/><ui:Label usage-hints="DynamicColor" name="you-progress-value" class="you-progress-value"/></ui:VisualElement>
+        <ui:VisualElement usage-hints="DynamicColor" class="you-progress-track" picking-mode="Ignore"><ui:VisualElement usage-hints="DynamicColor" name="you-progress-fill" class="you-progress-fill" picking-mode="Ignore"/></ui:VisualElement>
+       </ui:VisualElement>
+       <ui:VisualElement usage-hints="DynamicColor" name="you-stats" class="you-stats" picking-mode="Ignore"/>
+      </ui:VisualElement>
+      <ui:VisualElement usage-hints="DynamicColor" name="preview-col" class="preview-col tech-panel">
+       <ui:VisualElement usage-hints="DynamicColor" name="preview-fallback" class="preview-fallback insignia" picking-mode="Ignore"/>
+       <ui:VisualElement usage-hints="DynamicColor" name="preview-view" class="preview-view" tooltip="Drag to turn · double-click to face"/>
+       <ui:VisualElement usage-hints="DynamicColor" class="preview-corner tl" picking-mode="Ignore"/><ui:VisualElement usage-hints="DynamicColor" class="preview-corner tr" picking-mode="Ignore"/><ui:VisualElement usage-hints="DynamicColor" class="preview-corner bl" picking-mode="Ignore"/><ui:VisualElement usage-hints="DynamicColor" class="preview-corner br" picking-mode="Ignore"/>
+       <ui:VisualElement usage-hints="DynamicColor" class="preview-caption" picking-mode="Ignore"><ui:Label usage-hints="DynamicColor" name="preview-name" text="COLONIST" class="preview-name"/><ui:Label usage-hints="DynamicColor" name="preview-hint" text="Drag to turn" class="muted preview-hint"/></ui:VisualElement>
+      </ui:VisualElement>
+      <ui:VisualElement usage-hints="DynamicColor" name="inventory-details" class="inventory-details tech-panel">
        <ui:VisualElement usage-hints="DynamicColor" class="modal-heading details-heading">
         <ui:VisualElement usage-hints="DynamicColor" class="modal-emblem diamond" picking-mode="Ignore" />
         <ui:Label usage-hints="DynamicColor" name="details-title" class="title" text="Item details" />
-        <ui:Button usage-hints="DynamicColor" name="details-close" text="Close details · Esc" />
+        <ui:Button usage-hints="DynamicColor" name="details-close" text="Close · Esc" />
        </ui:VisualElement>
        <ui:VisualElement usage-hints="DynamicColor" class="details-body">
-        <ui:VisualElement usage-hints="DynamicColor" name="details-icon" class="details-icon" picking-mode="Ignore" />
+        <ui:VisualElement usage-hints="DynamicColor" class="details-icon-frame" picking-mode="Ignore"><ui:VisualElement usage-hints="DynamicColor" name="details-icon" class="details-icon" picking-mode="Ignore" /></ui:VisualElement>
         <ui:Label usage-hints="DynamicColor" name="details-quantity" class="muted" text="" />
         <ui:Label usage-hints="DynamicColor" name="details-prices" class="muted small" text="" />
         <ui:ScrollView name="details-scroll" horizontal-scroller-visibility="Hidden">

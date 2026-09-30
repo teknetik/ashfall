@@ -32,14 +32,11 @@ namespace AthenHill
   CameraClearFlags gameplayClearFlags;
   bool menuCamera;
   CityState previous=CityState.Boot;
-  // Inventory UI state is local to the HUD; the session owns only the modal state + inspected item id.
-  VisualElement inventoryGrid,inventoryEmpty,inventoryOverviewIcon,inventoryDetails,detailsIcon;
-  ScrollView inventoryScroll;
-  Label inventoryOverviewName,inventoryOverviewQuantity,inventoryOverviewDescription,detailsTitle,detailsQuantity,detailsPrices,detailsDescription,footerLeft,footerRight;
-  Button detailsClose;
-  readonly Dictionary<string,Button> inventoryTiles=new Dictionary<string,Button>();
-  readonly List<string> inventoryIds=new List<string>();
-  string selectedItemId,hoverItemId,lastDetailId;
+  [Tooltip("Colonist view for the field pack. Found in the scene when not assigned.")]
+  public CharacterPreview characterPreview;
+  // The field pack owns its grid, loadout and colonist view; the session owns only the modal state + inspected item id.
+  PackPanel pack;
+  Label footerLeft,footerRight;
   void Start()
   {
    root=GetComponent<UIDocument>().rootVisualElement;
@@ -55,28 +52,12 @@ namespace AthenHill
    session.input.PointerOverUi=PointerOverControls;
    session.input.MenuPopupOpen=()=>PopupOpen()||Time.frameCount-lastPopupFrame<=1;
 
-   // Inventory elements (dynamic grid + overview + details overlay).
-   inventoryGrid=root.Q("inventory-grid");
-   inventoryEmpty=root.Q("inventory-empty");
-   inventoryScroll=root.Q<ScrollView>("inventory-scroll");
-   inventoryOverviewIcon=root.Q("inventory-overview-icon");
-   inventoryOverviewName=root.Q<Label>("inventory-overview-name");
-   inventoryOverviewQuantity=root.Q<Label>("inventory-overview-quantity");
-   inventoryOverviewDescription=root.Q<Label>("inventory-overview-description");
-   inventoryDetails=root.Q("inventory-details");
-   detailsIcon=root.Q("details-icon");
-   detailsTitle=root.Q<Label>("details-title");
-   detailsQuantity=root.Q<Label>("details-quantity");
-   detailsPrices=root.Q<Label>("details-prices");
-   detailsDescription=root.Q<Label>("details-description");
-   detailsClose=root.Q<Button>("details-close");
    footerLeft=root.Q<Label>("modal-footer-left");
    footerRight=root.Q<Label>("modal-footer-right");
 
    // Keyboard: arrows move one step (grid/list handlers consume the navigation event); scroll views follow focus;
    // in play, gameplay keys (WASD/arrows, Enter, Tab) never navigate or press HUD buttons.
-   inventoryGrid?.RegisterCallback<NavigationMoveEvent>(InventoryNavigate,TrickleDown.TrickleDown);
-   UiNavigation.KeepFocusVisible(root.Q<ScrollView>("modal-scroll"));UiNavigation.KeepFocusVisible(inventoryScroll);
+   UiNavigation.KeepFocusVisible(root.Q<ScrollView>("modal-scroll"));UiNavigation.KeepFocusVisible(root.Q<ScrollView>("inventory-scroll"));
    root.RegisterCallback<NavigationMoveEvent>(GuardNavigation,TrickleDown.TrickleDown);
    root.RegisterCallback<NavigationSubmitEvent>(GuardPlay,TrickleDown.TrickleDown);
    // HUD controls are mouse and hotkey only (1–7, Tab/5, 6, Esc, E), so nothing in the HUD can hold keyboard focus —
@@ -87,6 +68,7 @@ namespace AthenHill
    radio=root.Q("radio");notice=root.Q("notice");
    radio.RegisterCallback<GeometryChangedEvent>(_=>PlaceNotice());
    foreach(var item in session.catalog.items)if(item!=null&&!string.IsNullOrEmpty(item.icon))iconClasses.Add(item.icon);
+   pack=new PackPanel(root,session,crafting,characterPreview?characterPreview:FindAnyObjectByType<CharacterPreview>(),iconClasses);
 
    Bind("close",session.Close);Bind("resume",session.Close);Bind("reset",session.ResetPlayer);
    if(crafting)fabricator=new FabricatorPanel(root,session,crafting);
@@ -127,15 +109,6 @@ namespace AthenHill
    session.Changed+=Refresh;Refresh();
   }
 
-  static readonly string[] rarityClasses={"rarity-common","rarity-uncommon","rarity-rare"};
-  /// Illustration class comes from the item's catalog record (CityCatalog icon); the pack illustration otherwise.
-  void SetItemIcon(VisualElement target,string id)
-  {
-   if(target==null)return;
-   foreach(string c in iconClasses)target.RemoveFromClassList(c);
-   var item=id!=null?session.Shop?.Spec(id):null;
-   target.AddToClassList(item!=null&&!string.IsNullOrEmpty(item.icon)?item.icon:"pack-icon");
-  }
   /// Outer Berms field order for the Notes journal, when one is running.
   string FieldOrderNotes(){var orders=session.GetComponent<FieldOrders>();return orders&&orders.Ready&&orders.Progress.Started&&!string.IsNullOrEmpty(orders.Objective)?"\n\n"+(orders.Heading??"OUTER BERMS")+"\n"+orders.Objective:"";}
   /// Start menu: New Game asks before replacing a save; without a save it simply starts.
@@ -160,77 +133,7 @@ namespace AthenHill
    if(hasSave)root.Q<Label>("continue-summary").text=saveGame.Summary()??"";
    ShowNewGameConfirm(false);
   }
-  static string RarityName(ItemRarity r)=>r==ItemRarity.Rare?"Rare":r==ItemRarity.Uncommon?"Uncommon":"Common";
-
-  void EnsureInventoryGrid(IEnumerable<ItemSpec> items)
-  {
-   inventoryTiles.Clear();inventoryIds.Clear();
-   inventoryGrid?.Clear();
-   if(inventoryGrid==null)return;
-   foreach(var item in items)
-   {
-    int quantity=session.Shop.Quantity(item.id);
-    var tile=new Button{tooltip=$"{item.name} · ×{quantity}"};
-    tile.name="inv-"+item.id;
-    tile.AddToClassList("inventory-tile");
-    if(item.rarity!=ItemRarity.Common)tile.AddToClassList(item.rarity==ItemRarity.Rare?"tile-rare":"tile-uncommon");
-    var icon=new VisualElement{pickingMode=PickingMode.Ignore};
-    icon.AddToClassList("inventory-tile-icon");
-    SetItemIcon(icon,item.id);
-    tile.Add(icon);
-    var badge=new Label($"×{quantity}");
-    badge.AddToClassList("inventory-tile-qty");
-    badge.pickingMode=PickingMode.Ignore;
-    tile.Add(badge);
-    string id=item.id;
-    tile.RegisterCallback<PointerEnterEvent>(_=>{hoverItemId=id;UpdateInventoryOverview();});
-    tile.RegisterCallback<PointerLeaveEvent>(_=>{if(hoverItemId==id)hoverItemId=null;UpdateInventoryOverview();});
-    tile.RegisterCallback<FocusInEvent>(_=>{selectedItemId=id;UpdateInventoryOverview();});
-    tile.RegisterCallback<ClickEvent>(e=>{selectedItemId=id;UpdateInventoryOverview();if(e.shiftKey)session.OpenItemDetails(id);});
-    tile.RegisterCallback<KeyDownEvent>(e=>{
-     if(e.keyCode==KeyCode.Return||e.keyCode==KeyCode.KeypadEnter){session.OpenItemDetails(id);e.StopPropagation();}
-    });
-    inventoryGrid.Add(tile);
-    inventoryTiles[id]=tile;
-    inventoryIds.Add(id);
-   }
-  }
-
-  void UpdateInventoryOverview()
-  {
-   if(session==null||session.Shop==null||session.catalog==null)return;
-   string id=hoverItemId??selectedItemId;
-   if(string.IsNullOrEmpty(id))
-   {
-    inventoryOverviewName.text="No item selected.";
-    inventoryOverviewQuantity.text="";
-    inventoryOverviewDescription.text="";
-    SetItemIcon(inventoryOverviewIcon,null);
-    return;
-   }
-   var item=session.catalog.items.FirstOrDefault(i=>i!=null&&i.id==id);
-   if(item==null){inventoryOverviewName.text="No item selected.";inventoryOverviewQuantity.text="";inventoryOverviewDescription.text="";SetItemIcon(inventoryOverviewIcon,null);return;}
-   int quantity=session.Shop.Quantity(id);
-   inventoryOverviewName.text=item.name;
-   inventoryOverviewQuantity.text=$"{quantity} carried";
-   inventoryOverviewDescription.text=string.IsNullOrWhiteSpace(item.description)?"No description recorded.":item.description;
-   SetItemIcon(inventoryOverviewIcon,id);
-  }
-
-  /// Arrow keys in the pack grid: exactly one cell per press. Columns come from the laid-out tiles (the grid wraps
-  /// to the window), so Up/Down always land on the tile above/below.
-  void InventoryNavigate(NavigationMoveEvent e)
-  {
-   if(session.State!=CityState.Inventory||inventoryIds.Count==0||!UiNavigation.IsArrow(e.direction))return;
-   if(!string.IsNullOrEmpty(session.DetailItemId))return;
-   var focused=root.focusController?.focusedElement as VisualElement;
-   int index=focused!=null&&focused.name!=null&&focused.name.StartsWith("inv-")?inventoryIds.IndexOf(focused.name.Substring(4)):-1;
-   if(index<0)return;
-   int target=UiNavigation.GridStep(index,inventoryIds.Count,InventoryColumns(),e.direction);
-   if(target>=0&&inventoryTiles.TryGetValue(inventoryIds[target],out var next))next.Focus();
-   UiNavigation.Consume(e,root);
-  }
-  public int InventoryColumns()=>UiNavigation.Columns(inventoryIds.Select(id=>inventoryTiles.TryGetValue(id,out var b)?b.layout:default).ToList());
+  public int InventoryColumns()=>pack!=null?pack.Columns():1;
   /// Makes every element under the HUD (or one HUD scroll view) non-focusable and outside the Tab order.
   void HudUnfocusable(VisualElement scope=null)
   {
@@ -259,7 +162,7 @@ namespace AthenHill
    {
     case CityState.Play:case CityState.Boot:case CityState.Settings:return null;
     case CityState.MainMenu:{var confirm=root.Q("new-game-confirm");return confirm!=null&&confirm.resolvedStyle.display==DisplayStyle.Flex?confirm:root.Q("startup-content");}
-    case CityState.Inventory:return !string.IsNullOrEmpty(session.DetailItemId)?inventoryDetails:root.Q("modal");
+    case CityState.Inventory:return !string.IsNullOrEmpty(session.DetailItemId)?root.Q("inventory-details"):root.Q("modal");
     default:return root.Q("modal");
    }
   }
@@ -301,9 +204,7 @@ namespace AthenHill
    bool radioUp=radio.resolvedStyle.display==DisplayStyle.Flex&&radio.layout.height>0;
    notice.style.top=radioUp?radio.layout.yMax+8:new StyleLength(StyleKeyword.Null);
   }
-  /// Known schematics that consume this item, directly or through one of its tags.
-  static string KnownUses(CraftingModel model,ItemSpec item)=>string.Join(", ",model.Data.recipes.Where(r=>model.Knows(r.id)&&r.outputItemId!=item.id&&r.inputs!=null&&r.inputs.Any(i=>i.kind=="item"?i.id==item.id:item.HasTag(i.id))).Select(r=>r.name));
-  void OnDestroy(){SetMenuCamera(false);settingsPanel?.Dispose();windowLayout?.Dispose();if(session){session.Changed-=Refresh;session.input.PointerOverUi=null;session.input.MenuPopupOpen=null;}}
+  void OnDestroy(){pack?.Closed();SetMenuCamera(false);settingsPanel?.Dispose();windowLayout?.Dispose();if(session){session.Changed-=Refresh;session.input.PointerOverUi=null;session.input.MenuPopupOpen=null;}}
   // The opaque arrival artwork needs no city draw/shadow passes behind it.
   // Keep the saved world loaded, and restore its camera before entering gameplay.
   void SetMenuCamera(bool enabled)
@@ -350,6 +251,7 @@ namespace AthenHill
    if(radioUp){Text("radio-text",session.RadioLine.Text);Text("radio-speaker",(session.RadioLine.Speaker??"Radio").ToUpperInvariant()+" · RADIO");}
    PlaceNotice();
    root.Q("modal").EnableInClassList("wide-modal",session.State==CityState.Fabricator||session.State==CityState.Shop);
+   root.Q("modal").EnableInClassList("pack-modal",session.State==CityState.Inventory);
    Text("objective",session.visitedHill&&session.Spoken.Count<4?"Meet the colonists":session.Objective);Text("progress",$"{session.Spoken.Count} / 4 conversations");
    for(int i=0;i<4;i++)root.Q("mark"+i).EnableInClassList("complete",i<session.Spoken.Count);
    Text("credits",$"{session.Shop.Credits} cr");
@@ -381,64 +283,23 @@ namespace AthenHill
    if(session.State==CityState.Paused){Text("modal-title","City paused");Text("modal-subtitle","Take your time. The hill will be here.");root.Q<Button>("mute").text=session.muted?"Unmute audio":"Mute audio";root.Q<Button>("reduced-motion").text="Reduced motion: "+(session.reducedMotion?"On":"Off");}
    if(session.State==CityState.Inventory)
    {
-    Text("modal-title","Field pack");Text("modal-subtitle","Supplies and salvage");Text("pack-credit",$"{session.Shop.Credits} credits");
-    var carried=InventoryView.Items(session.catalog.items,session.Shop).ToList();
-    bool empty=carried.Count==0;
-    inventoryEmpty.style.display=empty?DisplayStyle.Flex:DisplayStyle.None;
-    inventoryGrid.style.display=empty?DisplayStyle.None:DisplayStyle.Flex;
-    if(empty){selectedItemId=null;hoverItemId=null;lastDetailId=null;UpdateInventoryOverview();}
-    else
-    {
-     if(string.IsNullOrEmpty(selectedItemId)||!carried.Any(i=>i.id==selectedItemId))selectedItemId=carried[0].id;
-     EnsureInventoryGrid(carried);
-     UpdateInventoryOverview();
-     if(string.IsNullOrEmpty(session.DetailItemId)&&inventoryTiles.TryGetValue(selectedItemId,out var focus))root.schedule.Execute(focus.Focus);
-    }
-
-    // Details overlay: blocks interaction with the grid while open.
-    bool detailsOpen=!string.IsNullOrEmpty(session.DetailItemId);
-    inventoryDetails.style.display=detailsOpen?DisplayStyle.Flex:DisplayStyle.None;
-    // The details panel takes the overview's place beside the grid (never floating over both).
-    root.Q("inventory-overview").style.display=detailsOpen?DisplayStyle.None:DisplayStyle.Flex;
-    inventoryScroll?.SetEnabled(!detailsOpen);
-    inventoryGrid?.SetEnabled(!detailsOpen);
-    if(detailsOpen)
-    {
-     var item=session.catalog.items.FirstOrDefault(i=>i!=null&&i.id==session.DetailItemId);
-     int quantity=session.Shop.Quantity(session.DetailItemId);
-     detailsTitle.text=item!=null?item.name:"Item details";
-     detailsQuantity.text=item!=null?$"{quantity} carried · {RarityName(item.rarity)}":$"{quantity} carried";
-     foreach(var c in rarityClasses)detailsTitle.RemoveFromClassList(c);
-     if(item!=null&&item.rarity!=ItemRarity.Common)detailsTitle.AddToClassList(rarityClasses[(int)item.rarity]);
-     detailsPrices.text=item!=null&&!item.excludeFromTrade?item.sellOnly?$"Mira at Basic General buys this for {item.sellPrice} cr":$"Basic General list price - Buy {item.buyPrice} cr / Sell {item.sellPrice} cr":item!=null&&item.rarity==ItemRarity.Rare?"Rare part · Mira will not trade it":"";
-     detailsDescription.text=item!=null&& !string.IsNullOrWhiteSpace(item.description)?item.description:"No description recorded.";
-     if(crafting?.Model!=null&&item!=null){var uses=KnownUses(crafting.Model,item);if(uses.Length>0)detailsDescription.text+="\n\nKnown uses: "+uses+" (Field fabricator)";}
-     SetItemIcon(detailsIcon,session.DetailItemId);
-     if(lastDetailId!=session.DetailItemId){lastDetailId=session.DetailItemId;root.schedule.Execute(()=>detailsClose?.Focus());}
-     if(footerRight!=null)footerRight.text="Esc · Close details     Tab · Close pack";
-    }
-    else
-    {
-     if(lastDetailId!=null){lastDetailId=null;root.schedule.Execute(()=>{if(selectedItemId!=null&&inventoryTiles.TryGetValue(selectedItemId,out var b))b.Focus();});}
-     if(footerRight!=null)footerRight.text="Arrows · Choose     Enter / Shift+click · Inspect     Tab / Esc · Close";
-    }
+    Text("modal-title","Field pack");Text("modal-subtitle","Pack, loadout and colonist");
+    pack.Refresh();
+    if(footerRight!=null)footerRight.text=pack.DetailsOpen?"Esc · Close details     Tab · Close pack":"Arrows · Choose     Enter / Shift+click · Inspect     Drag · Turn colonist     Tab / Esc · Close";
    }
    if(session.State==CityState.Notes){Text("modal-title","City notes");Text("modal-subtitle","Field journal · Colony district");Text("panel-text",session.Objective+"\n\n"+$"Conversations {session.Spoken.Count}/4 · Flask {(session.boughtFlask?"acquired":"needed")} · Scrap {(session.soldScrap?"sold":"to sell")} · Link {(session.linked?"established":"pending")}"+"\n\n"+session.catalog.notes+FieldOrderNotes());}
    if(session.State==CityState.Credits){Text("modal-title","Credits and licences");Text("modal-subtitle","Athen Hill · An original colony city homage");Text("panel-text",session.catalog.credits?session.catalog.credits.text:"Credits unavailable.");}
    if(previous!=session.State)
    {
+    if(previous==CityState.Inventory)pack.Closed();
     previous=session.State;HudUnfocusable();
     root.Q<ScrollView>("modal-scroll").scrollOffset=Vector2.zero;
     if(modal)
     {
      // Default modal focus goes to the close/primary button, except Inventory.
-     // Inventory manages its own focus (grid tile or details-close) so Enter inspects items
+     // The pack manages its own focus (the selected cell, or Close when the pack is empty) so Enter inspects items
      // rather than accidentally closing the modal.
-     if(session.State==CityState.Inventory)
-     {
-      // If the pack is empty there is no tile focus target, so fall back to Close.
-      if(inventoryIds.Count==0)root.schedule.Execute(()=>root.Q<Button>("close").Focus());
-     }
+     if(session.State==CityState.Inventory)pack.Opened();
      else
      {
       if(session.State==CityState.Fabricator&&fabricator!=null)fabricator.Opened();
@@ -461,7 +322,7 @@ namespace AthenHill
    if(windowWidth!=Screen.width||windowHeight!=Screen.height)UpdateWindowSize();
    UpdateCompass();
    var keyboard=Keyboard.current;
-   if(keyboard!=null)for(int i=1;i<=6;i++)if(keyboard[(Key)((int)Key.Digit1+i-1)].wasPressedThisFrame)SelectSlot(i);
+   if(keyboard!=null&&session.State==CityState.Play)for(int i=1;i<=6;i++)if(keyboard[(Key)((int)Key.Digit1+i-1)].wasPressedThisFrame)SelectSlot(i);
    bool tunnel=session.State==CityState.Grid&&session.GridProgress<1&&!session.reducedMotion;
    Show("tunnel",tunnel);
    if(tunnel)for(int i=0;i<4;i++){var ring=root.Q("tunnel-ring"+i);float phase=Mathf.Repeat(session.GridProgress*tunnelSpeed+i*.25f,1);float size=20+phase*480;ring.style.width=Length.Percent(size);ring.style.height=Length.Percent(size);ring.style.left=Length.Percent(50-size/2);ring.style.top=Length.Percent(50-size/2);ring.style.opacity=1-phase;}

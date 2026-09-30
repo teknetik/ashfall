@@ -10,7 +10,7 @@ namespace AthenHill
     [Serializable]
     public sealed class SoundOptions
     {
-        public float master = 1, music = 1, ambience = 1, effects = 1;
+        public float master = 1, music = .5f, ambience = 1, effects = 1;
         public bool muted;
     }
 

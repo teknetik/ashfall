@@ -250,6 +250,14 @@ hotbar slots (six illustrated actions and four reserves) share original bevelled
 notes, sector lattice, pause and credits inherit the same skin. Element names
 remain the binding contract for **CityHud**.
 
+The field pack (30 Sep 2026, after the user's Ark reference) is built by **PackPanel** from the `inventory-panel`
+elements; its filters are **InventoryView.Categories** (catalog tags). The colonist view is the scene object
+**Character preview** (**CharacterPreview**: framing, drag speed, resolution; child camera and Key/Fill/Rim studio
+lights). During its own camera pass the player's renderers move to the **CharacterPreview** layer, the Sun and Sky fill
+and any lamp reaching the colonist switch off, and the studio lights switch on; everything is restored after the pass,
+and the camera only runs while the pack shows it. **Athen Hill → UI → Install field-pack colonist view** re-creates a
+missing rig (it only re-wires an existing one).
+
 **UI/Art** contains the item PNGs, original interface symbols, three nine-slice
 frames and the bundled font/licence. **HudArtImporter** keeps UI textures sharp,
 without mipmaps or compression; the UI panel allows them in its dynamic atlas.
