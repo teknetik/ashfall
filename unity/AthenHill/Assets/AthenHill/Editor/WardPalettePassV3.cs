@@ -50,6 +50,26 @@ namespace AthenHill.Editor
 
         public static void ApplyBatch() { Apply(); EditorApplication.Exit(0); }
 
+        /// Sky v4 (30 Sep): the noon/afternoon sky read pale grey-beige, so the warm town had nothing to sit against.
+        /// Deepens the upper sky to a clear desert blue while keeping the dusty horizon band. Logs before values.
+        public static void SkyBatch()
+        {
+            EditorSceneManager.OpenScene(ImportBaseline.ScenePath, OpenSceneMode.Single);
+            var profile = UnityEngine.Object.FindAnyObjectByType<CityTimeOfDay>().profile;
+            var before = profile.frames.Select(f => new { f.hour, zenith = f.skyZenith.ToString(), middle = f.skyMiddle.ToString() }).ToArray();
+            for (int i = 0; i < profile.frames.Length; i++)
+            {
+                ref var f = ref profile.frames[i];
+                if (Mathf.Abs(f.hour - 12) < .01f) { f.skyZenith = new Color(.15f, .31f, .62f); f.skyMiddle = new Color(.44f, .55f, .66f); }
+                if (Mathf.Abs(f.hour - 16) < .01f) { f.skyZenith = new Color(.13f, .26f, .55f); f.skyMiddle = new Color(.5f, .52f, .56f); }
+            }
+            if (!profile.IsValid(out var reason)) throw new InvalidOperationException(reason);
+            EditorUtility.SetDirty(profile); AssetDatabase.SaveAssets();
+            File.WriteAllText(Path.GetFullPath("../evidence/rendering/20260930/sky-v4.json"), JsonConvert.SerializeObject(new { utc = DateTime.UtcNow.ToString("O"), before }, Formatting.Indented));
+            Debug.Log("SKY_V4 applied");
+            EditorApplication.Exit(0);
+        }
+
         static void Night(ref DayNightFrame f, float key, Color moon)
         {
             f.keyIntensity = key; f.keyColor = moon; f.fillIntensity = .05f;
