@@ -64349,6 +64349,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 488352470}
   m_Mesh: {fileID: 4300000, guid: a31eb4a3d8069dce88ec0185f40213c4, type: 2}
+--- !u!1 &488417000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 488417001}
+  m_Layer: 0
+  m_Name: "Spawn 3 \xB7 FeralWorkerDroid (escort)"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &488417001
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 488417000}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.01803276, z: -0, w: 0.9998374}
+  m_LocalPosition: {x: 1.199997, y: -0.31503174, z: 2.5999985}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1672046954}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &488910347 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8208671557206241727, guid: abf3d3fbda2deabb58884a60a8f3f70d, type: 3}
@@ -65537,7 +65568,8 @@ MonoBehaviour:
   player: {fileID: 175973430}
   session: {fileID: 1607540210}
   respawnSeconds: 0
-  respawnClearance: 35
+  respawnClearance: 55
+  awaySeconds: 45
 --- !u!4 &498451435
 Transform:
   m_ObjectHideFlags: 0
@@ -68606,6 +68638,10 @@ PrefabInstance:
       propertyPath: crafting
       value: 
       objectReference: {fileID: 1607540213}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: searchingPrompt
+      value: "Searching the scrap heap\u2026 hold still"
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -93503,6 +93539,18 @@ PrefabInstance:
     - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
       propertyPath: displayName
       value: Machine debris
+      objectReference: {fileID: 0}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: readyPrompt
+      value: "E \xB7 Search the machine debris"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: progressLabel
+      value: "Searching the machine debris\u2026"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: searchingPrompt
+      value: "Searching the debris\u2026 hold still"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -128667,6 +128715,18 @@ PrefabInstance:
     - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
       propertyPath: lootTableId
       value: loot_wreck_carcass
+      objectReference: {fileID: 0}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: readyPrompt
+      value: "E \xB7 Strip the mining droid carcass"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: progressLabel
+      value: "Stripping the mining droid carcass\u2026"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: searchingPrompt
+      value: "Stripping the carcass\u2026 hold still"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -164498,6 +164558,7 @@ MonoBehaviour:
   session: {fileID: 1607540210}
   respawnSeconds: 0
   respawnClearance: 35
+  awaySeconds: 0
 --- !u!205 &1234510714
 LODGroup:
   m_ObjectHideFlags: 0
@@ -164697,6 +164758,18 @@ PrefabInstance:
     - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
       propertyPath: lootTableId
       value: loot_wreck_carcass
+      objectReference: {fileID: 0}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: readyPrompt
+      value: "E \xB7 Strip the droid carcass"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: progressLabel
+      value: "Stripping the droid carcass\u2026"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: searchingPrompt
+      value: "Stripping the carcass\u2026 hold still"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -188296,6 +188369,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.96, y: 0.44, z: 0.34}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &1426998756
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1426998757}
+  m_Layer: 0
+  m_Name: "Gameplay v2 \xB7 patch 1 (GameplayV2Patch1)"
+  m_TagString: EditorOnly
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1426998757
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1426998756}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1607540211}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1427397163
 GameObject:
   m_ObjectHideFlags: 0
@@ -197843,6 +197947,10 @@ PrefabInstance:
       propertyPath: crafting
       value: 
       objectReference: {fileID: 1607540213}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: searchingPrompt
+      value: "Searching the scrap heap\u2026 hold still"
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -201041,6 +201149,18 @@ PrefabInstance:
     - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
       propertyPath: displayName
       value: Machine debris
+      objectReference: {fileID: 0}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: readyPrompt
+      value: "E \xB7 Search the machine debris"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: progressLabel
+      value: "Searching the machine debris\u2026"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: searchingPrompt
+      value: "Searching the debris\u2026 hold still"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -214041,6 +214161,12 @@ MonoBehaviour:
   boughtFlask: 0
   soldScrap: 0
   linked: 0
+  radioTiming:
+    baseSeconds: 2.5
+    secondsPerWord: 0.3
+    minSeconds: 5
+    maxSeconds: 24
+  noticeSecondsPerWord: 0.25
 --- !u!4 &1607540211
 Transform:
   m_ObjectHideFlags: 0
@@ -214055,6 +214181,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 583890916}
+  - {fileID: 1426998757}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1607540212
@@ -214087,6 +214214,8 @@ MonoBehaviour:
   lootSeed: 1729
   freshSeedPerNewGame: 1
   cachePrefab: {fileID: 43210287643906945, guid: 82b2001e8bb2cd6dd82f455d805914ff, type: 3}
+  cacheLifetimeSeconds: 600
+  maxCaches: 12
 --- !u!114 &1607540214
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224315,6 +224444,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 648412388}
+  - {fileID: 2061258938}
+  - {fileID: 488417001}
   m_Father: {fileID: 513157732}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1672046955
@@ -224333,10 +224464,15 @@ MonoBehaviour:
   spawns:
   - prefab: {fileID: 4386558407881887982, guid: 95585dae46aaf4a66bd7d3288d1965ee, type: 3}
     point: {fileID: 648412388}
+  - prefab: {fileID: 2515591857831824590, guid: 1ce89da8fcc8da9288bfd348afd09a73, type: 3}
+    point: {fileID: 2061258938}
+  - prefab: {fileID: 2515591857831824590, guid: 1ce89da8fcc8da9288bfd348afd09a73, type: 3}
+    point: {fileID: 488417001}
   player: {fileID: 175973430}
   session: {fileID: 1607540210}
   respawnSeconds: 300
-  respawnClearance: 35
+  respawnClearance: 55
+  awaySeconds: 45
 --- !u!1 &1672189307
 GameObject:
   m_ObjectHideFlags: 0
@@ -236007,6 +236143,18 @@ PrefabInstance:
     - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
       propertyPath: lootTableId
       value: loot_drone_wreck
+      objectReference: {fileID: 0}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: readyPrompt
+      value: "E \xB7 Salvage the crashed drone"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: progressLabel
+      value: "Salvaging the crashed drone\u2026"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: searchingPrompt
+      value: "Salvaging the drone\u2026 hold still"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -307695,6 +307843,7 @@ MonoBehaviour:
   radioSpeaker: Warden Ossa
   rewardCredits: 15
   rewardScrap: 2
+  depotRespawnSeconds: 240
   rewardItem: scrap_coil
   lineStart: New scavenger? Nobody walks the Berms unarmed. I'm Ossa, on West Gate watch. Take the scrap pistol from the ARMS LOCKER under the canopy at my post; the cyan light marks it. Then use the range across the lane.
   lineDraw: It runs on nano charge, not rounds. Press 7 to draw it.
@@ -314996,6 +315145,10 @@ PrefabInstance:
       propertyPath: crafting
       value: 
       objectReference: {fileID: 1607540213}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: searchingPrompt
+      value: "Searching the scrap heap\u2026 hold still"
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -318073,6 +318226,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2060547476}
   m_Mesh: {fileID: 4300000, guid: 6d0391edb4a28bd298c5ef223513c1c4, type: 2}
+--- !u!1 &2061258937
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2061258938}
+  m_Layer: 0
+  m_Name: "Spawn 2 \xB7 FeralWorkerDroid (escort)"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2061258938
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2061258937}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.01803276, z: -0, w: 0.9998374}
+  m_LocalPosition: {x: -2.5999985, y: 0.2818553, z: -1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1672046954}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2062051149
 GameObject:
   m_ObjectHideFlags: 0
@@ -319806,6 +319990,18 @@ PrefabInstance:
     - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
       propertyPath: displayName
       value: Roadside scrap
+      objectReference: {fileID: 0}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: readyPrompt
+      value: "E \xB7 Search the roadside scrap"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: progressLabel
+      value: "Searching the roadside scrap\u2026"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8347150429289757193, guid: ac390e07abaa4fc248bddcf9fa4649a6, type: 3}
+      propertyPath: searchingPrompt
+      value: "Searching the scrap\u2026 hold still"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

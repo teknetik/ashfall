@@ -11,6 +11,7 @@ namespace AthenHill.Tests
  {
   const string ScenePath="Assets/AthenHill/Scenes/AthenHill.unity";
   static T[] All<T>(Scene scene)where T:Component=>scene.GetRootGameObjects().SelectMany(r=>r.GetComponentsInChildren<T>(true)).ToArray();
+  static float Flat(Vector3 v){v.y=0;return v.magnitude;}
 
   [Test] public void InstallerWiredOrdersCachesHeapsAndTheForeman()
   {
@@ -31,11 +32,27 @@ namespace AthenHill.Tests
      Assert.That(orders.encounters.Any(e=>e.key==key&&e.encounter),"encounter "+key);
     // Foreman: one spawn of the variant prefab, re-forms after clearing, not on top of the depot nest.
     var foreman=All<DroidEncounter>(scene).Single(e=>e.name=="Depot Foreman · processing hall");
-    Assert.That(foreman.spawns.Length,Is.EqualTo(1));
+    // Patch 1: the Foreman leads (spawn 0) with two worker escorts beside it, all clear of the depot nest.
+    Assert.That(foreman.spawns.Length,Is.EqualTo(3));
     Assert.That(AssetDatabase.GetAssetPath(foreman.spawns[0].prefab),Is.EqualTo("Assets/AthenHill/Prefabs/OuterBerms/FeralDepotForeman.prefab"));
+    foreach(var s in foreman.spawns.Skip(1))
+    {
+     Assert.That(AssetDatabase.GetAssetPath(s.prefab),Is.EqualTo("Assets/AthenHill/Prefabs/OuterBerms/FeralWorkerDroid.prefab"));
+     Assert.That(Vector3.Distance(s.point.position,foreman.spawns[0].point.position),Is.InRange(1.8f,4.5f));
+     Assert.That(s.point.parent,Is.EqualTo(foreman.transform));
+    }
     Assert.That(foreman.player&&foreman.session,Is.True);Assert.That(foreman.respawnSeconds,Is.GreaterThan(0));
-    var depot=All<BermsTutorial>(scene).Single().depot;
-    foreach(var s in depot.spawns)Assert.That(Vector3.Distance(s.point.position,foreman.spawns[0].point.position),Is.GreaterThan(2.5f));
+    var tutorial=All<BermsTutorial>(scene).Single();var depot=tutorial.depot;
+    foreach(var s in depot.spawns)foreach(var f in foreman.spawns)Assert.That(Vector3.Distance(s.point.position,f.point.position),Is.GreaterThan(2.5f));
+    // Re-form rule: working at the field fabricator never counts as "away" from the depot nest or the Foreman.
+    var bench=crafting.fabricator.position;
+    foreach(var e in new[]{depot,foreman})
+    {
+     Assert.That(e.respawnClearance,Is.GreaterThan(Flat(bench-e.transform.position)+5),e.name);
+     Assert.That(e.awaySeconds,Is.GreaterThanOrEqualTo(30),e.name);
+    }
+    Assert.That(tutorial.depotRespawnSeconds,Is.InRange(180,360));
+    Assert.That(session.GetComponentsInChildren<Transform>(true).Any(t=>t.name=="Gameplay v2 · patch 1 (GameplayV2Patch1)"),"patch 1 marker");
     Assert.That(All<DroidEncounter>(scene).Length,Is.EqualTo(3));
     // Heaps: 6–10 searchable nodes with real tables, clear of colonists and Wardens.
     var catalog=AssetDatabase.LoadAssetAtPath<CraftingCatalog>("Assets/AthenHill/Data/Crafting/WardCrafting.asset");
@@ -49,6 +66,14 @@ namespace AthenHill.Tests
      foreach(var w in All<WorldInteractable>(scene).Where(w=>!w.GetComponent<SalvageNode>()))Assert.That(Vector3.Distance(w.transform.position,n.transform.position),Is.GreaterThan(4),n.name+" vs "+w.name);
     }
     Assert.That(nodes.Select(n=>n.lootTableId).Distinct().Count(),Is.GreaterThanOrEqualTo(3));
+    // Prompts name what is searched.
+    Assert.That(nodes.Select(n=>n.readyPrompt).Distinct().Count(),Is.GreaterThanOrEqualTo(4));
+    foreach(var n in nodes)
+    {
+     Assert.That(n.readyPrompt,Does.StartWith("E · "),n.name);Assert.That(n.progressLabel,Is.Not.Empty,n.name);
+     if(n.displayName.Contains("carcass"))Assert.That(n.readyPrompt,Does.StartWith("E · Strip"),n.name);
+     if(n.displayName=="Crashed drone")Assert.That(n.readyPrompt,Is.EqualTo("E · Salvage the crashed drone"));
+    }
    }
    finally{EditorSceneManager.ClosePreviewScene(scene);}
   }
