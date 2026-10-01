@@ -1,0 +1,251 @@
+{
+  "time": "2026-10-01T17:01:36",
+  "tune": {
+    "_doc": "Night facade tune (1 Oct 2026). Edit, then run NightFacadePass --steps apply,verify (-nographics). Lamp offsets are applied to the ORIGINAL light positions recorded in originals.json (out = along the wall normal, down = metres). Glass entries with 'from' are new materials copied from that WS_ material and assigned to the listed shop prefabs; entries without 'from' are tuned in place (originals recorded).",
+    "lamps": {
+      "prefabs": [
+        "Assets/AthenHill/Prefabs/WardShops/RelayWorks.prefab",
+        "Assets/AthenHill/Prefabs/WardShops/AirWater.prefab",
+        "Assets/AthenHill/Prefabs/WardShops/ToolExchange.prefab",
+        "Assets/AthenHill/Prefabs/WardShops/Finery.prefab",
+        "Assets/AthenHill/Prefabs/WardShops/FieldSupply.prefab",
+        "Assets/AthenHill/Prefabs/WardShops/Salvage.prefab",
+        "Assets/AthenHill/Prefabs/WardShops/Repairs.prefab",
+        "Assets/AthenHill/Prefabs/WardShops/ThreadHide.prefab",
+        "Assets/AthenHill/Prefabs/WardShops/BasicGeneral.prefab",
+        "Assets/AthenHill/Prefabs/VanguardHall/VanguardHall.prefab"
+      ],
+      "out": 0.15,
+      "down": 0.1,
+      "tilt": 10,
+      "outer": 140,
+      "inner": 95,
+      "intensityScale": 1.3,
+      "rangeScale": 1.0,
+      "cookie": true
+    },
+    "bulb": {
+      "_EmissionColor": [
+        1.5,
+        1.15,
+        0.75,
+        1
+      ]
+    },
+    "lampGlass": {
+      "_EmissionColor": [
+        0.45,
+        0.33,
+        0.2,
+        1
+      ]
+    },
+    "bulkheads": {
+      "_doc": "West Gate arch bulkheads (art/west_gate_arches_20261001; batch-2 lookbook: clipped white lens, wicket black). Lens slots VH_LampLens -> NF_BulkheadLens in WGA_GateA/B; the spot moves 'out' metres away from the leaves (horizontal part of its original aim) and 'down', tilt = degrees from vertical away from the leaves (negative leans toward the leaves).",
+      "prefabs": [
+        "Assets/AthenHill/Prefabs/WestGateArches/WGA_GateA.prefab",
+        "Assets/AthenHill/Prefabs/WestGateArches/WGA_GateB.prefab"
+      ],
+      "light": "Bulkhead light",
+      "out": 0.3,
+      "down": 0.05,
+      "tilt": -8,
+      "outer": 140,
+      "inner": 90,
+      "intensityScale": 1.4,
+      "rangeScale": 1.13,
+      "lensMaterial": {
+        "_EmissionColor": [
+          1.1,
+          0.85,
+          0.58,
+          1
+        ]
+      }
+    },
+    "glass": {
+      "WS_Glass": {
+        "_EmissionColor": [
+          1.3,
+          1.3,
+          1.3,
+          1
+        ],
+        "_LitFraction": 0.45,
+        "_BlindAmount": 0.7,
+        "_WarmLight": [
+          1,
+          0.72,
+          0.48,
+          1
+        ],
+        "_NeutralLight": [
+          0.96,
+          0.88,
+          0.74,
+          1
+        ],
+        "_NeutralFraction": 0.25,
+        "_CoolFraction": 0.1,
+        "_CoolLight": [
+          0.68,
+          0.86,
+          1.0,
+          1
+        ]
+      },
+      "NF_Glass_HallEast": {
+        "from": "WS_Glass",
+        "prefabs": [
+          "Assets/AthenHill/Prefabs/WardShops/Finery.prefab",
+          "Assets/AthenHill/Prefabs/WardShops/FieldSupply.prefab"
+        ],
+        "_EmissionColor": [
+          1.2,
+          1.2,
+          1.2,
+          1
+        ],
+        "_LitFraction": 0.6,
+        "_BlindAmount": 0.75,
+        "_WarmLight": [
+          1,
+          0.68,
+          0.44,
+          1
+        ],
+        "_NeutralLight": [
+          0.96,
+          0.88,
+          0.74,
+          1
+        ],
+        "_NeutralFraction": 0.25,
+        "_CoolFraction": 0.04,
+        "_RoomSeed": 41,
+        "_CoolLight": [
+          0.68,
+          0.86,
+          1.0,
+          1
+        ]
+      },
+      "NF_Glass_North": {
+        "from": "WS_Glass",
+        "prefabs": [
+          "Assets/AthenHill/Prefabs/WardShops/Salvage.prefab",
+          "Assets/AthenHill/Prefabs/WardShops/Repairs.prefab",
+          "Assets/AthenHill/Prefabs/WardShops/ThreadHide.prefab"
+        ],
+        "_EmissionColor": [
+          1.45,
+          1.45,
+          1.45,
+          1
+        ],
+        "_LitFraction": 0.68,
+        "_BlindAmount": 0.6,
+        "_WarmLight": [
+          1,
+          0.74,
+          0.5,
+          1
+        ],
+        "_NeutralLight": [
+          0.95,
+          0.9,
+          0.8,
+          1
+        ],
+        "_NeutralFraction": 0.35,
+        "_CoolFraction": 0.15,
+        "_RoomSeed": 53,
+        "_CoolLight": [
+          0.68,
+          0.86,
+          1.0,
+          1
+        ]
+      },
+      "VH_Glass": {
+        "_EmissionColor": [
+          1.25,
+          1.25,
+          1.25,
+          1
+        ],
+        "_LitFraction": 0.5,
+        "_BlindAmount": 0.7,
+        "_WarmLight": [
+          1,
+          0.72,
+          0.48,
+          1
+        ],
+        "_NeutralLight": [
+          0.96,
+          0.88,
+          0.74,
+          1
+        ],
+        "_NeutralFraction": 0.2,
+        "_CoolLight": [
+          0.68,
+          0.86,
+          1.0,
+          1
+        ]
+      }
+    },
+    "masonry": {
+      "VH_Ashlar": {
+        "_BumpScale": 0.65
+      },
+      "VH_AshlarRough": {
+        "_BumpScale": 0.65
+      }
+    },
+    "defects": {
+      "_doc": "Review section 4 defects. Foundation grime 9/10 are 8 Sep wall-foot decals for the OLD Finery facade line (x 16.7); the rebuilt Finery wall is at x 18.1, so they hang in the air over the porch and smear onto it (the orange streak). The strip box holds the hoist remnant of the old Tool Exchange jib crane (hook block, cable, hook; 98 tris) left floating at 6-8 m in front of the rebuilt shop by the parcel filter: the caster of the floating 13:00 shadow at the hill benches.",
+      "deactivate": [
+        "Field Supply and Finery weathering/Localized drainage and foundation deposits/Foundation grime 9",
+        "Field Supply and Finery weathering/Localized drainage and foundation deposits/Foundation grime 10"
+      ],
+      "strip": [
+        {
+          "renderer": "Ward district retrofit/Shop retrofits/Shop retrofits Structure",
+          "boxMin": [
+            -16.3,
+            5.9,
+            10.6
+          ],
+          "boxMax": [
+            -15.6,
+            8.4,
+            11.2
+          ]
+        }
+      ]
+    }
+  },
+  "log": [
+    "material WS_Glass: _EmissionColor, _LitFraction, _BlindAmount, _WarmLight, _NeutralLight, _NeutralFraction, _CoolFraction, _CoolLight",
+    "material NF_Glass_HallEast: _EmissionColor, _LitFraction, _BlindAmount, _WarmLight, _NeutralLight, _NeutralFraction, _CoolFraction, _RoomSeed, _CoolLight",
+    "material NF_Glass_North: _EmissionColor, _LitFraction, _BlindAmount, _WarmLight, _NeutralLight, _NeutralFraction, _CoolFraction, _RoomSeed, _CoolLight",
+    "material VH_Glass: _EmissionColor, _LitFraction, _BlindAmount, _WarmLight, _NeutralLight, _NeutralFraction, _CoolLight",
+    "material VH_Ashlar: _BumpScale",
+    "material VH_AshlarRough: _BumpScale",
+    "material NF_WallLampBulb: _EmissionColor",
+    "material NF_WallLampGlass: _EmissionColor",
+    "material NF_BulkheadLens: _EmissionColor",
+    "lamps 34, lamp glass slots 68 (NF_WallLampGlass)",
+    "bulkhead WGA_GateA: spot 140/90, 4.2 / 8.475 m, lens slots 3",
+    "bulkhead WGA_GateB: spot 140/90, 4.2 / 8.475 m, lens slots 3",
+    "glass NF_Glass_HallEast -> Finery: 2 slots",
+    "glass NF_Glass_HallEast -> FieldSupply: 2 slots",
+    "glass NF_Glass_North -> Salvage: 2 slots",
+    "glass NF_Glass_North -> Repairs: 2 slots",
+    "glass NF_Glass_North -> ThreadHide: 2 slots",
+    "reverted instance overrides 0"
+  ]
+}

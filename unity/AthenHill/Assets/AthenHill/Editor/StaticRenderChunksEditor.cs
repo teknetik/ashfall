@@ -84,7 +84,10 @@ namespace AthenHill.Editor
    int index=0;
    foreach(var pair in buckets)
    {
-    var mesh=new Mesh{name=$"Chunk_{index++}_{pair.Key.Item1.name}_{pair.Key.Item2}_{pair.Key.Item3}",indexFormat=IndexFormat.UInt32};mesh.CombineMeshes(pair.Value.ToArray(),true,true);mesh.RecalculateBounds();AssetDatabase.CreateAsset(mesh,folder+"/"+mesh.name+".asset");
+    var mesh=new Mesh{name=$"Chunk_{index++}_{pair.Key.Item1.name}_{pair.Key.Item2}_{pair.Key.Item3}",indexFormat=IndexFormat.UInt32};mesh.CombineMeshes(pair.Value.ToArray(),true,true);mesh.RecalculateBounds();
+    // Mipmap streaming needs the UV density of the combined mesh; without this every chunk kept the default metric 1 and
+    // streamed its textures far too coarse (city paving calculated at mip 2, 1 Oct 2026).
+    mesh.RecalculateUVDistributionMetrics();AssetDatabase.CreateAsset(mesh,folder+"/"+mesh.name+".asset");
     var go=new GameObject(mesh.name);go.transform.SetParent(c.generatedRoot,false);go.AddComponent<MeshFilter>().sharedMesh=mesh;var r=go.AddComponent<MeshRenderer>();r.sharedMaterial=pair.Key.Item1;r.shadowCastingMode=pair.Key.Item4;r.receiveShadows=pair.Key.Item5;
     // Opaque chunks occlude the sky for the Adaptive Probe Volume bake; they never use lightmaps (no valid UV1).
     if(pair.Key.Item1&&pair.Key.Item1.renderQueue<(int)RenderQueue.AlphaTest)GameObjectUtility.SetStaticEditorFlags(go,StaticEditorFlags.ContributeGI);r.receiveGI=ReceiveGI.LightProbes;

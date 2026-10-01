@@ -1,0 +1,472 @@
+{
+  "schemaVersion": 1,
+  "available": true,
+  "source": "unity",
+  "utc": "2026-10-01T13:20:36.2249450Z",
+  "frame": 2152,
+  "unscaledTime": 36.2093277,
+  "build": {
+    "unity": "6000.6.0f1",
+    "version": "0.1.0",
+    "development": true
+  },
+  "session": {
+    "state": "Play",
+    "objective": "Reach the Hill Tree.",
+    "visitedHill": false,
+    "boughtFlask": false,
+    "soldScrap": false,
+    "linked": false,
+    "spoken": [],
+    "selectedDestination": "",
+    "credits": 25,
+    "purchases": 0,
+    "sales": 0
+  },
+  "items": [
+    {
+      "id": "water_flask",
+      "name": "Water Flask",
+      "description": "A dented field flask with a fresh seal and clean water.",
+      "buyPrice": 4,
+      "sellPrice": 2,
+      "startingQuantity": 0,
+      "maxStack": 0,
+      "excludeFromTrade": false,
+      "tags": [
+        "consumable"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "medkit",
+      "name": "Medkit",
+      "description": "A compact pack of sealed dressings and colony first-aid supplies.",
+      "buyPrice": 9,
+      "sellPrice": 4,
+      "startingQuantity": 0,
+      "maxStack": 0,
+      "excludeFromTrade": false,
+      "tags": [
+        "consumable"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "scrap_coil",
+      "name": "Scrap Coil",
+      "description": "A worn induction coil. Someone at the market can still use the copper.",
+      "buyPrice": 2,
+      "sellPrice": 1,
+      "startingQuantity": 1,
+      "maxStack": 0,
+      "excludeFromTrade": false,
+      "tags": [
+        "salvage",
+        "material:conductive"
+      ],
+      "quantity": 1
+    },
+    {
+      "id": "droid_servo_damaged",
+      "name": "Damaged Servo",
+      "description": "A salvaged worker-droid servo, still fit for a field repair.",
+      "buyPrice": 0,
+      "sellPrice": 3,
+      "startingQuantity": 0,
+      "maxStack": 10,
+      "excludeFromTrade": false,
+      "tags": [
+        "salvage",
+        "salvage:droid",
+        "component",
+        "component:servo",
+        "tier:1"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "scrap_alloy",
+      "name": "Scrap Alloy",
+      "description": "Cleaned structural alloy recovered from feral machines.",
+      "buyPrice": 0,
+      "sellPrice": 1,
+      "startingQuantity": 0,
+      "maxStack": 30,
+      "excludeFromTrade": false,
+      "tags": [
+        "salvage",
+        "material",
+        "material:metal",
+        "tier:1"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "nanite_residue",
+      "name": "Nanite Residue",
+      "description": "Recoverable tier-one nanites from a damaged industrial core.",
+      "buyPrice": 0,
+      "sellPrice": 1,
+      "startingQuantity": 0,
+      "maxStack": 60,
+      "excludeFromTrade": false,
+      "tags": [
+        "salvage",
+        "nanite",
+        "nanite:tier1"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "copper_filament",
+      "name": "Copper Filament",
+      "description": "Fine conductor salvaged from a machine winding.",
+      "buyPrice": 0,
+      "sellPrice": 1,
+      "startingQuantity": 0,
+      "maxStack": 30,
+      "excludeFromTrade": false,
+      "tags": [
+        "salvage",
+        "material",
+        "material:conductive",
+        "tier:1"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "micro_capacitor",
+      "name": "Micro Capacitor",
+      "description": "An intact low-voltage capacitor from a drone's charge bus. Charge cell cores need two.",
+      "buyPrice": 0,
+      "sellPrice": 3,
+      "startingQuantity": 0,
+      "maxStack": 10,
+      "excludeFromTrade": false,
+      "tags": [
+        "salvage",
+        "component",
+        "component:capacitor",
+        "tier:1"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "grip_stabilised_pistol",
+      "name": "Stabilised Pistol Grip",
+      "description": "A field-fabricated grip that steadies the scrap pistol.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 3,
+      "excludeFromTrade": true,
+      "tags": [
+        "weapon_mod",
+        "weapon_mod:grip",
+        "mark:1"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "optic_lens_cracked",
+      "name": "Cracked Optic Lens",
+      "description": "A scrap drone's targeting lens, cracked at the rim but still true at the centre.",
+      "buyPrice": 0,
+      "sellPrice": 4,
+      "startingQuantity": 0,
+      "maxStack": 10,
+      "excludeFromTrade": false,
+      "tags": [
+        "salvage",
+        "salvage:drone",
+        "component",
+        "component:optic",
+        "tier:1"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "actuator_intact",
+      "name": "Intact Actuator",
+      "description": "A heavy worker-droid joint actuator with its feedback loop unbroken. Rare in the Berms.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 10,
+      "excludeFromTrade": true,
+      "tags": [
+        "salvage",
+        "salvage:droid",
+        "component",
+        "component:actuator",
+        "tier:2"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "lattice_shard",
+      "name": "Quantum Lattice Shard",
+      "description": "A sliver of quantum-stable lattice from Tir's old fabrication cores. It hums against the palm.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 10,
+      "excludeFromTrade": true,
+      "tags": [
+        "salvage",
+        "lattice",
+        "tier:2"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "foreman_control_core",
+      "name": "Foreman Control Core",
+      "description": "The depot foreman's command core. Its stored shift schedules include full Mark II pistol schematics.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 1,
+      "excludeFromTrade": true,
+      "tags": [
+        "salvage",
+        "component",
+        "component:control",
+        "tier:2",
+        "unique"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "alloy_plate",
+      "name": "Refined Alloy Plate",
+      "description": "Scrap alloy pressed and nanite-bonded into a true, stress-relieved plate.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 20,
+      "excludeFromTrade": true,
+      "tags": [
+        "refined",
+        "refined:alloy"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "wound_coil",
+      "name": "Wound Copper Coil",
+      "description": "Salvaged conductor rewound on a field jig; the heart of any charge circuit.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 20,
+      "excludeFromTrade": true,
+      "tags": [
+        "refined",
+        "refined:coil"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "charge_cell_core",
+      "name": "Charge Cell Core",
+      "description": "Two capacitors and a wound coil sealed in nanite resin: a stable nano-charge store.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 10,
+      "excludeFromTrade": true,
+      "tags": [
+        "refined",
+        "refined:cell"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "barrel_bored_alloy",
+      "name": "Bored Alloy Barrel",
+      "description": "A refined-alloy barrel bored true on the fabricator. Hits harder and carries further.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 3,
+      "excludeFromTrade": true,
+      "tags": [
+        "weapon_mod",
+        "weapon_mod:barrel",
+        "mark:1"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "cell_salvaged_capacitor",
+      "name": "Salvaged Capacitor Cell",
+      "description": "A larger nano cell built around a charge core. More shots before the pistol runs dry.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 3,
+      "excludeFromTrade": true,
+      "tags": [
+        "weapon_mod",
+        "weapon_mod:cell",
+        "mark:1"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "grip_gyro_braced",
+      "name": "Gyro-Braced Grip",
+      "description": "A grip braced by a live actuator loop. It fights recoil and nudges your aim onto moving machines.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 3,
+      "excludeFromTrade": true,
+      "tags": [
+        "weapon_mod",
+        "weapon_mod:grip",
+        "mark:2"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "barrel_lattice_focused",
+      "name": "Lattice-Focused Barrel",
+      "description": "A lattice shard seats behind a salvaged optic, focusing each nano pulse. Heavy hits, slightly slower cycling.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 3,
+      "excludeFromTrade": true,
+      "tags": [
+        "weapon_mod",
+        "weapon_mod:barrel",
+        "mark:2"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "cell_overclocked",
+      "name": "Overclocked Charge Cell",
+      "description": "Twin charge cores tuned through a lattice shard: deep reserves, cheap shots, fast refill.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 3,
+      "excludeFromTrade": true,
+      "tags": [
+        "weapon_mod",
+        "weapon_mod:cell",
+        "mark:2"
+      ],
+      "quantity": 0
+    }
+  ],
+  "combat": {
+    "available": true,
+    "hasPistol": false,
+    "armed": false,
+    "aiming": false,
+    "nano": 100.0,
+    "health": 100.0,
+    "maxHealth": 100.0,
+    "Downs": 0,
+    "inBerms": false,
+    "weaponId": "weapon_scrap_pistol",
+    "baseRecoil": 38.0,
+    "recoil": 38.0,
+    "stats": {
+      "damage": 34.0,
+      "fireInterval": 0.28,
+      "range": 70.0,
+      "recoil": 38.0,
+      "nanoMax": 100.0,
+      "nanoPerShot": 9.0,
+      "nanoRegen": 30.0,
+      "aimAssist": 3.5
+    },
+    "baseStats": {
+      "damage": 34.0,
+      "fireInterval": 0.28,
+      "range": 70.0,
+      "recoil": 38.0,
+      "nanoMax": 100.0,
+      "nanoPerShot": 9.0,
+      "nanoRegen": 30.0,
+      "aimAssist": 3.5
+    },
+    "lastKickDegrees": 0.0
+  },
+  "crafting": {
+    "available": true,
+    "knownRecipes": [],
+    "crafts": 0,
+    "gripSlot": null,
+    "slots": {},
+    "craftCounts": {},
+    "lootEvents": 0,
+    "lastLoot": "",
+    "tutorialStep": "Dormant",
+    "stationId": null,
+    "fabricatorOpen": false
+  },
+  "fieldOrders": {
+    "available": true,
+    "index": -1,
+    "total": 5,
+    "id": null,
+    "stage": "NotStarted",
+    "objective": null,
+    "freePlay": false
+  },
+  "tutorial": {
+    "available": true,
+    "step": "Approach",
+    "targetsDown": 0,
+    "targetsTotal": 3
+  },
+  "encounters": [
+    {
+      "key": "First contact · service road",
+      "displayName": "First contact · service road",
+      "spawned": false,
+      "total": 1,
+      "remaining": 0,
+      "cleared": false,
+      "respawnSeconds": 0.0
+    },
+    {
+      "key": "Machine depot nest",
+      "displayName": "Machine depot nest",
+      "spawned": false,
+      "total": 3,
+      "remaining": 0,
+      "cleared": false,
+      "respawnSeconds": 0.0
+    },
+    {
+      "key": "Depot Foreman · processing hall",
+      "displayName": "Depot Foreman",
+      "spawned": false,
+      "total": 3,
+      "remaining": 0,
+      "cleared": false,
+      "respawnSeconds": 300.0
+    }
+  ],
+  "enemies": [],
+  "clock": {
+    "available": true,
+    "hour": 20.5,
+    "paused": true,
+    "speed": 1.0,
+    "defaultHour": 17.0,
+    "ReducedMotionSpeedLimited": false
+  },
+  "weather": {
+    "available": false,
+    "reason": "No weather system in build"
+  }
+}

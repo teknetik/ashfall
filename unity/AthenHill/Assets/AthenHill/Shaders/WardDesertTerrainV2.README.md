@@ -193,3 +193,19 @@ profiler in the West Gate and Berms overview views.
 4. **Near-detail range.** `_DetailFadeStart` and `_DetailFadeEnd` against aliasing and
    cost.
 5. **Berms edge.** The seam at the Berms edge (see integration step 6).
+
+## Haze shape (added 1 Oct 2026, basin mountains pass)
+
+Five properties shape the distance haze. Their defaults reproduce the original haze exactly, so
+`SandstoneBasinV2.mat` (and anything else on the old values) renders as before. `SandstoneBasinV3.mat` (the
+**Basin mountains** material, values in `art/basin_mountains_20261001/material.json`) uses them:
+
+| Property | Default | V3 | Meaning |
+| --- | --- | --- | --- |
+| `_HazeFarStart` | 1000 | 100 | Metres beyond 38 m where the haze starts to thin. Up to 138 m V3 matches the Berms ground's haze. |
+| `_HazeFarScale` | 1 | 0.28 | Density multiplier beyond that point. |
+| `_HazeHeightFalloff` | 0 (off) | 32 | Scale height (m) of an exponential haze layer; the optical depth is averaged along the ray, so ridge tops keep their form. |
+| `_HazeBaseHeight` | 6 | 6 | Height (m) below which the layer is full density (the Berms floor and the basin floor stay as before). |
+| `_HazeNoonTint` | (1, 1, 1) | (.88, .93, 1.03) | Linear multiplier on the haze colour, weighted by a high, strong sun (`_MainLightPosition.y` 0.3–0.6 and main-light luminance 0.8–1.5): noon, not 17:00 and not the night key. |
+
+The low-altitude term (`exp(-y·0.06)·0.11`) and the clock's haze colour scale are unchanged.

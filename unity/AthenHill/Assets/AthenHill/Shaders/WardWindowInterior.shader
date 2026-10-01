@@ -42,6 +42,8 @@ Shader "Athen Hill/Ward Window Interior"
         _CoolFraction("Cool tech-light fraction", Range(0, 1)) = 0.3
         _WarmLight("Warm tungsten tint", Color) = (1, 0.62, 0.32, 1)
         _CoolLight("Cool tech tint", Color) = (0.55, 0.86, 1, 1)
+        _NeutralLight("Neutral lamp tint (third colour temperature)", Color) = (0.96, 0.88, 0.74, 1)
+        _NeutralFraction("Neutral lamp fraction of non-cool rooms (0 = off)", Range(0, 1)) = 0
         _LampRange("Lamp falloff radius (m)", Range(0.5, 5)) = 2.6
 
         [Header(Glass)]
@@ -83,6 +85,8 @@ Shader "Athen Hill/Ward Window Interior"
             half _CoolFraction;
             half4 _WarmLight;
             half4 _CoolLight;
+            half4 _NeutralLight;
+            half _NeutralFraction;
             half _LampRange;
             half4 _GlassTint;
             half _Smoothness;
@@ -279,7 +283,10 @@ Shader "Athen Hill/Ward Window Interior"
                                          : (typeRnd < 0.45 ? 2.0 : (typeRnd < 0.75 ? 1.0 : 3.0));
                 float lit = step(h0.y, _LitFraction);
                 float cool = step(h0.z, _CoolFraction * (type == 1.0 ? 1.8 : 0.6));
-                float3 lampCol = _EmissionColor.rgb * lerp(_WarmLight.rgb, _CoolLight.rgb, cool) * (lit * lerp(0.6, 1.25, h0.w));
+                // Night facade tune (1 Oct 2026): a third lamp colour temperature for some warm rooms (0 = previous look).
+                float neutral = (1.0 - cool) * (frac(h0.w * 7.31 + h0.y * 3.17) < _NeutralFraction ? 1.0 : 0.0);
+                float3 lampTint = lerp(lerp(_WarmLight.rgb, _NeutralLight.rgb, neutral), _CoolLight.rgb, cool);
+                float3 lampCol = _EmissionColor.rgb * lampTint * (lit * lerp(0.6, 1.25, h0.w));
                 float tube = cool;                                               // tech rooms: tube fittings
 
                 float zA = clamp(S.z * (0.28 + 0.12 * h1.y), 0.8, S.z - 1.2);    // front furniture + lamp plane

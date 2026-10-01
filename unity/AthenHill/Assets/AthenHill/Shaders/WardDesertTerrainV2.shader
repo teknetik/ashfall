@@ -15,7 +15,8 @@
 // where the far basin also stops sampling detail textures.
 // Lighting: URP PBR (InitializeBRDFData / GlobalIllumination / LightingPhysicallyBased, the body of
 // UniversalFragmentPBR) so the authored noon shadow can join the main light's shadow term; cascaded + soft
-// shadows, Forward+ lights, SSAO, probes, SH. Then the Desert Terrain distance haze, unchanged.
+// shadows, Forward+ lights, SSAO, probes, SH. Then the Desert Terrain distance haze (optional far/height thinning and
+// high-sun tint since 1 Oct 2026; the defaults reproduce the original haze).
 // Passes: UniversalForward, ShadowCaster, DepthOnly, DepthNormals. SRP Batcher compatible.
 Shader "Athen Hill/Ward Desert Terrain V2"
 {
@@ -79,6 +80,13 @@ Shader "Athen Hill/Ward Desert Terrain V2"
         _DetailFadeEnd("Detail fade end (m)", Range(10, 500)) = 140
         _SkyOcclusion("Baked sky access strength", Range(0, 1)) = 1
         _FogBlend("URP fog blend (0 = previous look)", Range(0, 1)) = 0
+
+        [Header(Distance haze shape (defaults keep the original haze))]
+        _HazeFarStart("Far haze starts (m beyond 38 m)", Range(0, 1000)) = 1000
+        _HazeFarScale("Density beyond the far start", Range(0, 1)) = 1
+        _HazeHeightFalloff("Haze height falloff (m, 0 = off)", Range(0, 300)) = 0
+        _HazeBaseHeight("Height falloff base (m)", Range(-5, 40)) = 6
+        _HazeNoonTint("High-sun haze tint (linear multiplier)", Vector) = (1, 1, 1, 0)
     }
 
     SubShader
@@ -105,6 +113,8 @@ Shader "Athen Hill/Ward Desert Terrain V2"
             float4 _WindDirection;
             float _RippleWavelength, _RippleStrength;
             float _DetailFadeStart, _DetailFadeEnd, _SkyOcclusion, _FogBlend;
+            float _HazeFarStart, _HazeFarScale, _HazeHeightFalloff, _HazeBaseHeight;
+            float4 _HazeNoonTint;
         CBUFFER_END
 
         TEXTURE2D(_RockTex); SAMPLER(sampler_RockTex);
@@ -510,11 +520,28 @@ Shader "Athen Hill/Ward Desert Terrain V2"
                 float3 color = TerrainLighting(inputData, surfaceData, input.baked.r);
                 color = lerp(color, MixFog(color, inputData.fogCoord), _FogBlend);
 
-                // ---- Desert Terrain distance haze, unchanged ------------------------------------------------
-                float haze = 1.0 - exp(-max(0.0, dist - 38.0) * _HazeDensity);
+                // ---- Desert Terrain distance haze --------------------------------------------------------
+                // Same model and same values up to _HazeFarStart (the Berms ground toe uses this haze too), then
+                // optionally thinner with distance and with height (optical depth averaged along the ray through an
+                // exponential layer above _HazeBaseHeight), so far ridge tops keep their form under a high sun.
+                float hazeDist = max(0.0, dist - 38.0);
+                hazeDist = min(hazeDist, _HazeFarStart) + max(hazeDist - _HazeFarStart, 0.0) * _HazeFarScale;
+                float opticalDepth = hazeDist * _HazeDensity;
+                UNITY_BRANCH
+                if (_HazeHeightFalloff > 0.0)
+                {
+                    float h0 = max(GetCameraPositionWS().y - _HazeBaseHeight, 0.0) / _HazeHeightFalloff;
+                    float h1 = max(P.y - _HazeBaseHeight, 0.0) / _HazeHeightFalloff;
+                    float dh = h1 - h0;
+                    opticalDepth *= abs(dh) > 1e-3 ? (exp(-h0) - exp(-h1)) / dh : exp(-h0);
+                }
+                float haze = 1.0 - exp(-opticalDepth);
                 haze = saturate(haze + exp(-max(0.0, P.y) * 0.06) * 0.11);
                 float clockActive = saturate(_AthenTerrainTime.x);
                 float3 hazeColor = _Haze.rgb * lerp(float3(1, 1, 1), _AthenTerrainHazeScale.rgb, clockActive);
+                // high, strong sun (noon, not the evening sun or the night key): optional cooler, lighter haze
+                float highSun = smoothstep(0.3, 0.6, _MainLightPosition.y) * smoothstep(0.8, 1.5, dot(_MainLightColor.rgb, float3(0.2126, 0.7152, 0.0722)));
+                hazeColor *= lerp(float3(1, 1, 1), _HazeNoonTint.rgb, highSun);
                 color = lerp(color, hazeColor, haze);
 
                 outColor = half4(color, 1.0);

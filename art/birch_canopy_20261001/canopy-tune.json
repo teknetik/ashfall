@@ -1,0 +1,182 @@
+{
+  "note": "Birch canopy pass (1 Oct 2026). Every value BirchCanopyPass build/apply sets. Edit, then run --steps apply,verify -nographics (materials, uplights, lens) or --steps build,apply,verify -nographics (mesh bake values). Originals: originals.json.",
+  "bake": {
+    "cell": 0.3,
+    "directions": 64,
+    "step": 0.25,
+    "maxDistance": 9.0,
+    "startOffset": 0.35,
+    "extinction": 0.05,
+    "groundWeight": 0.25,
+    "aoFloor": 0.38,
+    "aoGamma": 0.9,
+    "aoLowPercentile": 4,
+    "aoHighPercentile": 97,
+    "normalBlend": 0.6,
+    "gradientBlurRadius": 3,
+    "gradientBlurPasses": 2
+  },
+  "trees": {
+    "birch 4b": {
+      "key": "Birch4b",
+      "leafMaterial": "leaf y",
+      "seasonMean": 0.55,
+      "seasonExposure": 0.35,
+      "seasonHeight": 0.15,
+      "seasonNoise": 0.3,
+      "seasonRandom": 0.3,
+      "dryFraction": 0.08,
+      "jitterSpread": 1.0,
+      "crownXZ": [
+        -0.25,
+        0.61
+      ]
+    },
+    "birch 3": {
+      "key": "Birch3",
+      "leafMaterial": "leaf",
+      "seasonMean": 0.1,
+      "seasonExposure": 0.2,
+      "seasonHeight": 0.1,
+      "seasonNoise": 0.25,
+      "seasonRandom": 0.2,
+      "dryFraction": 0.04,
+      "jitterSpread": 1.0,
+      "crownXZ": [
+        0.0,
+        -0.4
+      ]
+    }
+  },
+  "materials": {
+    "leaf": {
+      "_BaseColor": [
+        0.8,
+        0.78,
+        0.72,
+        1
+      ],
+      "_Cutoff": 0.5,
+      "_Smoothness": 0.18,
+      "_Metallic": 0,
+      "_BumpScale": 0.45,
+      "_WardWindStrength": 0.09,
+      "_WardLeafFlutter": 0.012,
+      "_WardTranslucency": 0.32,
+      "_WardIndirectTranslucency": 0.15,
+      "_WardSeasonScale": 1,
+      "_WardSeasonBias": 0,
+      "_WardJitter": 0.12,
+      "_WardDryColor": [
+        0.62,
+        0.46,
+        0.32,
+        1
+      ],
+      "_WardDryAmount": 0.8,
+      "_WardSaturation": 0.85,
+      "_WardCrownAO": 1,
+      "_WardCrownAODirect": 0.35,
+      "_WardTransmissionFill": 0.35
+    },
+    "bark": {
+      "_BaseColor": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "_Smoothness": 0.12,
+      "_Metallic": 0,
+      "_BumpScale": 1,
+      "_WardWindStrength": 0.09,
+      "_WardLeafFlutter": 0,
+      "_WardTranslucency": 0,
+      "_WardIndirectTranslucency": 0,
+      "_WardSeasonScale": 0,
+      "_WardSeasonBias": 0,
+      "_WardJitter": 0,
+      "_WardDryAmount": 0,
+      "_WardSaturation": 1,
+      "_WardCrownAO": 1,
+      "_WardCrownAODirect": 0.3,
+      "_WardTransmissionFill": 0
+    },
+    "perTree": {
+      "birch 4b": {
+        "_WardBendStart": 3.5,
+        "_WardBendEnd": 17.5,
+        "_WardWindStrength": 0.1,
+        "leaf": {
+          "_WardSaturation": 1.0
+        }
+      },
+      "birch 3": {
+        "_WardBendStart": 2.5,
+        "_WardBendEnd": 12.5,
+        "_WardWindStrength": 0.08,
+        "leaf": {
+          "_WardSaturation": 0.95
+        }
+      }
+    }
+  },
+  "uplights": {
+    "note": "two roles per bed: a wide low trunk wash on the avenue side, a narrow crown beam opposite (aim = crown centre - radial*aimPastTrunk + up*aimHeight, tree-local)",
+    "birch 4b": {
+      "Tree uplight 42": {
+        "role": "trunk wash",
+        "aimHeight": 2.6,
+        "aimPastTrunk": -0.2,
+        "intensity": 10,
+        "range": 8,
+        "spotAngle": 75,
+        "innerSpotAngle": 35
+      },
+      "Tree uplight 222": {
+        "role": "crown beam",
+        "aimHeight": 10.5,
+        "aimPastTrunk": 0.6,
+        "intensity": 45,
+        "range": 18,
+        "spotAngle": 46,
+        "innerSpotAngle": 16
+      }
+    },
+    "birch 3": {
+      "Tree uplight 26": {
+        "role": "trunk wash",
+        "aimHeight": 3.0,
+        "aimPastTrunk": -0.2,
+        "intensity": 5.5,
+        "range": 7,
+        "spotAngle": 75,
+        "innerSpotAngle": 35
+      },
+      "Tree uplight 206": {
+        "role": "crown beam",
+        "aimHeight": 7.0,
+        "aimPastTrunk": 0.5,
+        "intensity": 34,
+        "range": 14,
+        "spotAngle": 50,
+        "innerSpotAngle": 16
+      }
+    }
+  },
+  "lens": {
+    "material": "BC_UplightLens",
+    "_EmissionColor": [
+      0.55,
+      0.38,
+      0.2,
+      1
+    ],
+    "_BaseColor": [
+      0.9,
+      0.82,
+      0.7,
+      1
+    ]
+  }
+}
