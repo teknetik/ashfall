@@ -204,6 +204,9 @@ old 6k guard cap and district-wide texture atlas are not current quality rules.
 
 ## Post-war salvage
 
+*30 Sep 2026: the trash, crate, scrap and generator instances here are retired (inactive, kept for rollback) and replaced by
+the kit under **Ward street dressing** — see "Street dressing" below.*
+
 **Post-war salvage** contains 98 editable prefab instances: repaired shop fronts,
 Basic General, Vanguard Hall, the community board, crates, generators, litter and
 industrial scrap. **Prefabs/Salvage** has the eight reusable assets. Their imported
@@ -516,6 +519,33 @@ The porch and step colliders are the original `AuthoredWorld/COL_BLD_shop_*` box
 - Real-input QA: `tools/check_hall_district_city_loop.py` (walks Vex → Torr → Linn → Mira trade → shop porches and door
   recesses → Lattice link). Evidence and defects: `evidence/hall-district/20260930/README.md`.
 
+## North avenue: Salvage, Repairs, Thread + Hide and Basic General (30 September 2026)
+
+**Ward shops (north avenue)** (scene root) holds four prefab instances from `Prefabs/WardShops`: Salvage (−18.1, 18) (yaw 90),
+Repairs (18.1, 9) and Thread + Hide (18.1, 18) (yaw −90), and the Basic General booth (8, 0, 15.1) (yaw 0). The shops have
+the same children as the hall-district shops (`LOD0`/`LOD1`, `Colliders` with walkable door recesses, `Fittings`,
+`Practical lights` on the Ward lighting clock, `Sign mounts`); Thread + Hide's `Display light` is warm and practical only.
+The booth has `Colliders` for its two new front piers only: the rear, side, roof, porch and step collision is still the
+six original `AuthoredWorld/COL_BLD_general_*` boxes. Mira, **Basic General counter dressing**, **Basic General back
+panel**, **Basic General sign (hall district family)** and *Basic General authored frontage/Stock* are separate and
+untouched; the frontage's structural groups are inactive.
+
+- Sources: `art/north_avenue_20260930/author_north_shops.py` (the three shops, on the hall-district `Shop` class and the
+  shared masonry kit), `author_basic_general.py` (the booth), signs through `art/hall_district_20260930/author_ward_signs.py
+  -- salvage repairs thread_hide`. After re-running them use **Athen Hill → Ward shops → Refresh models and materials**: it
+  re-imports every shop model and re-maps each prefab renderer's material slots from the model's material names (a model
+  that gains or loses a material shifts its sub-mesh order; without the re-map the wrong materials land on surfaces).
+- One-time: **North avenue: install (one-time)** (refuses to run twice; *North avenue: dry-run install* lists what it
+  would retire), then **North avenue: install signs**. **North avenue: verify saved scene** checks the group, lamps on the
+  clock, retired layers, kept colliders and the untouched Basic General pieces.
+- Retired layers stay inactive (`evidence/north-avenue/20260930/north-install.json`). The *Shop retrofits* meshes now use
+  `Art/WardShops/Retrofit/*_north_avenue.asset` (filtered again for these three parcels); the `_hall_district` copies stay.
+- New materials in `Art/WardShops/Materials`: WS_PaintOlive/Ochre/Yellow, WS_ContainerRust, WS_Cloth{Indigo,Ochre,Madder,Bone},
+  WS_Hide (double-sided cloth) and WS_LedWarm (emissive, on the lighting clock).
+- Real-input QA: `tools/check_north_avenue_native.py` (the whole city loop plus every new porch and door recess, profiled
+  north-avenue legs, first-person stills); frame-cost A/B: `tools/profile_north_walk.py`. Evidence and defects:
+  `evidence/north-avenue/20260930/README.md`.
+
 ## Hill, tree ring, terminals and hall floodlights (30 September 2026)
 
 **Ward hill** (scene root) is a saved instance of `Prefabs/WardHill/WardHill.prefab` at the origin. It replaces the hill's
@@ -590,3 +620,36 @@ Gameplay v2 content is serialized data; nothing is hard-coded in the scripts. Ed
 - UI: the fabricator window and *Sell salvage* list are laid out in **UI/CityHUD.uxml** (`fabricator-panel`,
   `salvage-list`) and styled in **CityHUD.uss** (sections "Gameplay v2 · …"); `FabricatorPanel` and
   `SalvageSalePanel` fill them from data. Keep the named elements.
+
+## Courtyard tree beds (30 September 2026)
+
+**Courtyard tree beds** holds two prefab instances (`Prefabs/CourtyardTrees/TreeBed_Birch3/Birch4b.prefab`) centred on
+the birches `birch 3` (moved to −19.60, 25.55) and `birch 4b` (moved to −16.34, −1.85): the hero tree's ring at street
+level in Ward stone (seat 0.49 m), leaf litter, roots, a drip line and riser, apron flags, planting, two uplights each on
+the **Ward lighting clock**, an annulus collider (wall and coping) and a convex soil collider. To move a bed, move it
+*with its tree* (the tree root keeps its prefab link, LODs and trunk capsule). Geometry changes go through
+`art/courtyard_trees_20260930/author_tree_beds.py` (Blender) → **Athen Hill → Courtyard trees → Build assets**; the
+install is one-time. Materials are the hall's stone/fittings and the hill's litter, root bark and plants (shared).
+Review cameras `cam_tree_bed_*`; evidence `evidence/courtyard-trees/20260930`.
+
+## Street dressing (30 September 2026)
+
+**Ward street dressing** holds 145 prefab instances of the street kit (`Prefabs/StreetDressing/SD_<id>.prefab`: Poly
+Haven scans, four Meshy pieces, Blender-made sacks, tarp, scrap skip and litter) in 30 vignette groups
+(*Relay Works frontage: parts stock*, *East yard: generator and fuel*, *Windblown litter* …), each group's origin at its
+centre so a vignette moves as one. Each group also carries its **Ground grime / Ground scuffs** URP decal projectors
+(the weathering atlas; fade factor, size and UV bias are Inspector edits). The dressing is **not** a render-chunk source:
+select, move, duplicate or delete instances directly; no chunk rebuild is needed.
+
+- Props have LODGroups (switch heights tuned on the native A/B), box colliders where you could walk into them (litter
+  and hand-sized pieces have none) and, on stools and benches, **NPC sit point** markers (+Z facing) for the crowd pass.
+- Keep the avenue lanes, doors and bays (front, rear, side), stair approaches, walker/mechanic/droid routes and NPC
+  stand points clear; `art/street_dressing_20260930/layout.py` checks all of these for the source layout.
+- Materials: `Art/StreetDressing/Materials` (URP Lit, instancing on; `SD_Potted_*` are the hill plant materials with the
+  wind bend starting higher). Change a prop's look on its material; change its geometry through the scripts in
+  `art/street_dressing_20260930` and **Athen Hill → Street dressing → Build assets** (re-imports and rebuilds the prefabs;
+  instances in the scene update).
+- The old salvage scatter, the cube *Street cargo crate / Street bollard / Plaza bench* and four retrofit collider
+  proxies that rendered as grey slabs (`Ward district retrofit/Shop retrofits/COL_*_bin`, renderer off, collider kept)
+  were retired by the one-time **Install**. Review cameras `cam_sd_*` (**Street dressing review cameras**); evidence and
+  A/B frame times in `evidence/street-dressing/20260930`.

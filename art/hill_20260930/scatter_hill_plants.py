@@ -306,4 +306,5 @@ def main():
     (OUT / "hill-plants.json").write_text(json.dumps(report, indent=1))
 
 
-main()
+if __name__ == "__main__":   # importable for its helpers (art/courtyard_trees_20260930)
+    main()

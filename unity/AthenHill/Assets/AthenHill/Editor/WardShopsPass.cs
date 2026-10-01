@@ -24,6 +24,13 @@ namespace AthenHill.Editor
     /// Replaced shop layers stay in the scene inactive; the combined district retrofit meshes get filtered copies
     /// (originals untouched) so rollback is a re-activation plus a mesh reassignment recorded in the install report.
     /// The shops are not render-chunk sources: each keeps its own LODGroup and vertex-colour masonry.
+    ///
+    /// North avenue (30 Sep 2026, Carl: "we still need to rebuild. general, salvage, thread and repairs. same stone work,
+    /// same signage, same weathering"): NorthSites (Salvage, Repairs, Thread + Hide from art/north_avenue_20260930/
+    /// author_north_shops.py; the Basic General booth from author_basic_general.py) go through the same build / plan /
+    /// install / signs / verify path under their own group and evidence folder (menu Athen Hill → Ward shops → North avenue).
+    /// The booth is retired by an explicit list only (no parcel sweep), so Mira, the counter dressing, the Stock panels,
+    /// the back panel and the family sign are never touched.
     /// </summary>
     public static class WardShopsPass
     {
@@ -35,15 +42,22 @@ namespace AthenHill.Editor
         const string PrefabDir = "Assets/AthenHill/Prefabs/WardShops/";
         const string HallMatDir = "Assets/AthenHill/Art/VanguardHall/Materials/";
         const string HallTexDir = "Assets/AthenHill/Art/VanguardHall/Textures/";
+        const string BoothDir = Root + "Booth/";
         const string Evidence = "../evidence/hall-district/20260930/";
+        const string NorthEvidence = "../evidence/north-avenue/20260930/";
         public const string GroupName = "Ward shops (hall district)";
+        public const string NorthGroupName = "Ward shops (north avenue)";
         public const float Lod0ScreenHeight = .45f;
 
         public sealed class Site
         {
             public string key, model, name; public Vector3 pos; public float yaw; public string[] retire;
+            /// booth: an open stall with its own footprint (Basic General); no parcel sweep, explicit retire list only
+            public bool booth;
             public Site(string key, string model, string name, Vector3 pos, float yaw, params string[] retire)
             { this.key = key; this.model = model; this.name = name; this.pos = pos; this.yaw = yaw; this.retire = retire; }
+            public string ModelPath(int lod) => (booth ? BoothDir : ModelDir) + $"{model}_LOD{lod}.glb";
+            public string RecordPath => (booth ? BoothDir : ModelDir) + key + ".json";
         }
 
         static string[] Porch(string id) => new[] { $"AuthoredWorld/BLD_shop_{id}_porch", $"AuthoredWorld/BLD_shop_{id}_first_step", $"AuthoredWorld/BLD_shop_{id}_interior_floor" };
@@ -63,13 +77,31 @@ namespace AthenHill.Editor
                 new[] { "Ward shop architecture/field_supply", "Post-war salvage/BLD_shop_w_02 repaired", "Field Supply and Finery weathering/field_supply" }.Concat(Porch("w_02")).ToArray()),
         };
 
+        const string BG = "Basic General authored frontage/";
+        public static readonly Site[] NorthSites =
+        {
+            new Site("salvage", "Salvage", "Salvage", new Vector3(-18.1f, 0, 18f), 90f,
+                new[] { "Ward shop architecture/salvage", "Post-war salvage/BLD_shop_e_04 repaired" }.Concat(Porch("e_04")).ToArray()),
+            new Site("repairs", "Repairs", "Repairs", new Vector3(18.1f, 0, 9f), -90f,
+                new[] { "Ward shop architecture/repairs", "Post-war salvage/BLD_shop_w_03 repaired" }.Concat(Porch("w_03")).ToArray()),
+            new Site("thread_hide", "ThreadHide", "Thread + Hide", new Vector3(18.1f, 0, 18f), -90f,
+                new[] { "Ward shop architecture/thread_hide", "Post-war salvage/BLD_shop_w_04 repaired" }.Concat(Porch("w_04")).ToArray()),
+            // the booth's structure only: Stock, counter rivets, counter wear, the counter dressing, back panel, sign and Mira stay
+            new Site("basic_general", "BasicGeneral", "Basic General", new Vector3(8f, 0, 15.1f), 0f,
+                BG + "Masonry", BG + "Walls", BG + "Rear services", BG + "Structure", BG + "Canopy", BG + "Signs", BG + "Lights", BG + "Threshold",
+                BG + "Hardware/Bearer_anchor*", BG + "Hardware/Rear_panel_fixing*", BG + "Hardware/Service_lid_screw*", BG + "Hardware/Sign_mounting_screw*",
+                BG + "Localized wear/Sign_plate_corner_contact_wear*", "AuthoredWorld/BLD_general_porch", "AuthoredWorld/BLD_general_first_step",
+                "Post-war salvage/Basic General repaired") { booth = true },
+        };
+
         // roots whose contents are never swept by the parcel rules (gameplay, actors, other passes' accepted assets)
         static readonly string[] Protected =
         {
             "Colonists", "Landmarks", "CitySession", "Player", "MainCamera", "Vanguard Hall", "City Render Chunks", "Paving",
             "Paving Joints", "Desert Landscape", "Ward oasis tree", "Outer Berms", "Karaveen", "Ward mining droid", "Mining droid route",
             "Ward shop architecture/Air + Water filter fittings", "Ward lighting clock", "Character preview", "First-person view model",
-            GroupName,
+            GroupName, NorthGroupName, "Basic General counter dressing", "Basic General back panel", "Basic General sign (hall district family)",
+            "City Audio",
         };
 
         static readonly string[] RetrofitMeshes =
@@ -84,8 +116,9 @@ namespace AthenHill.Editor
         /// building volume, facade band (things mounted on the old facade) and porch surface layer
         static bool InParcel(Site s, Vector3 world, Bounds wb, out string zone)
         {
-            var p = SiteMatrix(s).inverse.MultiplyPoint3x4(world);
             zone = null;
+            if (s.booth) return false;
+            var p = SiteMatrix(s).inverse.MultiplyPoint3x4(world);
             if (p.x > -4.05f && p.x < 4.05f && p.z > -7.35f && p.z < 0.3f && p.y > 0.45f && p.y < 16f) { zone = "building"; return true; }
             if (p.x > -4.3f && p.x < 4.3f && p.z >= 0.3f && p.z < 1.9f && p.y > 1.0f && p.y < 13f) { zone = "facade"; return true; }
             if (p.x > -4.0f && p.x < 4.0f && p.z >= 0.3f && p.z < 4.6f && wb.max.y < 0.66f && wb.size.y < 0.4f) { zone = "porch"; return true; }
@@ -103,6 +136,17 @@ namespace AthenHill.Editor
             var t = top.transform;
             for (int i = 1; i < parts.Length && t; i++) t = t.Cast<Transform>().FirstOrDefault(c => c.name == parts[i]);
             return t;
+        }
+
+        /// A retire entry is a path, or "parent/prefix*" for every child of parent whose name starts with prefix.
+        static IEnumerable<Transform> FindRetire(string path)
+        {
+            if (!path.EndsWith("*")) { var t = FindPath(path); if (t) yield return t; yield break; }
+            var cut = path.LastIndexOf('/');
+            var parent = FindPath(path.Substring(0, cut));
+            var prefix = path.Substring(cut + 1).TrimEnd('*');
+            if (!parent) yield break;
+            foreach (Transform c in parent) if (c.name.StartsWith(prefix)) yield return c;
         }
 
         // ------------------------------------------------------------------ materials
@@ -199,6 +243,22 @@ namespace AthenHill.Editor
             Make("WS_SignLetter", lit, m => Emissive(m, new Color(.93f, .6f, .26f), new Color(1f, .56f, .19f) * 2.6f));
             Make("WS_SignRed", lit, m => Emissive(m, new Color(.45f, .07f, .05f), new Color(1f, .1f, .06f) * 3.2f));
             Make("WS_SignCyan", lit, m => Emissive(m, new Color(.1f, .2f, .22f), new Color(.25f, .95f, 1.1f) * 2.4f));
+            // north avenue (30 Sep): door and trim paints, safety yellow, container rust, dyed cloth, hides, warm display LEDs
+            Make("WS_PaintOlive", lit, m => SetupLit(m, "VH_Paint", new Color(.27f, .29f, .19f), 1.4f, .9f));
+            Make("WS_PaintOchre", lit, m => SetupLit(m, "VH_Paint", new Color(.5f, .34f, .13f), 1.4f, .9f));
+            Make("WS_PaintYellow", lit, m => SetupLit(m, "VH_Paint", new Color(.58f, .44f, .1f), 1.2f, .9f));
+            Make("WS_ContainerRust", lit, m => SetupLit(m, "VH_Rust", new Color(.5f, .27f, .18f), 1.6f, .85f));
+            void Cloth(string n, Color c, float smooth = .5f, float bump = .8f) => Make(n, lit, m =>
+            {
+                SetupLit(m, "VH_Linen", c, .7f, smooth, bump);
+                m.SetFloat("_Cull", 0); m.doubleSidedGI = true; EditorUtility.SetDirty(m);
+            });
+            Cloth("WS_ClothIndigo", new Color(.13f, .17f, .33f));
+            Cloth("WS_ClothOchre", new Color(.64f, .43f, .17f));
+            Cloth("WS_ClothMadder", new Color(.5f, .15f, .1f));
+            Cloth("WS_ClothBone", new Color(.76f, .7f, .58f));
+            Cloth("WS_Hide", new Color(.44f, .29f, .18f), .35f, .45f);
+            Make("WS_LedWarm", lit, m => Emissive(m, new Color(.3f, .22f, .15f), new Color(1f, .7f, .42f) * 2.2f));
             AssetDatabase.SaveAssets();
             return mats;
         }
@@ -213,6 +273,7 @@ namespace AthenHill.Editor
 
         static Vector3 V3(JToken t) => new Vector3((float)t[0], (float)t[1], (float)t[2]);
         static JObject Record(string key) => JObject.Parse(File.ReadAllText(ModelDir + key + ".json"));
+        static JObject Record(Site s) => JObject.Parse(File.ReadAllText(s.RecordPath));
 
         // ------------------------------------------------------------------ prefabs
         [MenuItem("Athen Hill/Ward shops/Build assets")]
@@ -221,14 +282,19 @@ namespace AthenHill.Editor
         [MenuItem("Athen Hill/Ward shops/Build assets (rebuild materials)")]
         public static void BuildAssetsRebuildMaterials() => Build(true);
 
-        public static string Build(bool rebuildMaterials)
+        public static string Build(bool rebuildMaterials) => Build(rebuildMaterials, Sites);
+
+        [MenuItem("Athen Hill/Ward shops/North avenue: build assets")]
+        public static string BuildNorth() => Build(false, NorthSites);
+
+        public static string Build(bool rebuildMaterials, Site[] sites)
         {
-            foreach (var s in Sites)
+            foreach (var s in sites)
                 foreach (var lod in new[] { 0, 1 })
-                    AssetDatabase.ImportAsset(ModelDir + $"{s.model}_LOD{lod}.glb", ImportAssetOptions.ForceUpdate);
+                    AssetDatabase.ImportAsset(s.ModelPath(lod), ImportAssetOptions.ForceUpdate);
             var mats = BuildMaterials(rebuildMaterials);
             var log = new List<string>();
-            foreach (var s in Sites) log.Add(BuildPrefab(s, mats));
+            foreach (var s in sites) log.Add(BuildPrefab(s, mats));
             AssetDatabase.SaveAssets();
             return string.Join("\n", log);
         }
@@ -236,7 +302,7 @@ namespace AthenHill.Editor
         static string BuildPrefab(Site s, Dictionary<string, Material> mats)
         {
             Directory.CreateDirectory(PrefabDir);
-            var rec = Record(s.key);
+            var rec = Record(s);
             var root = new GameObject(s.model);
             var missing = new HashSet<string>();
             int lamps = 0;
@@ -245,7 +311,7 @@ namespace AthenHill.Editor
                 var levels = new List<LOD>();
                 foreach (var (lod, cut) in new[] { (0, Lod0ScreenHeight), (1, .01f) })
                 {
-                    var model = AssetDatabase.LoadAssetAtPath<GameObject>(ModelDir + $"{s.model}_LOD{lod}.glb");
+                    var model = AssetDatabase.LoadAssetAtPath<GameObject>(s.ModelPath(lod));
                     if (!model) throw new Exception($"Model not imported: {s.model} LOD{lod}");
                     var inst = (GameObject)PrefabUtility.InstantiatePrefab(model);
                     inst.transform.SetParent(root.transform, false);
@@ -282,7 +348,7 @@ namespace AthenHill.Editor
 
                 var fit = new GameObject("Fittings").transform; fit.SetParent(root.transform, false);
                 var lights = new GameObject("Practical lights").transform; lights.SetParent(root.transform, false);
-                foreach (var mnt in rec["mounts"])
+                foreach (var mnt in rec["mounts"] ?? new JArray())
                 {
                     var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/AthenHill/Prefabs/WestGate/" + (string)mnt["prefab"] + ".prefab");
                     if (!prefab) { Debug.LogWarning("Ward shops: missing prefab " + mnt["prefab"]); continue; }
@@ -323,6 +389,9 @@ namespace AthenHill.Editor
                     var lp = V3(disp["light"]["pos"]); lgo.transform.localPosition = lp;
                     lgo.transform.localRotation = Quaternion.LookRotation(V3(disp["light"]["target"]) - lp, Vector3.forward);
                     var l = lgo.AddComponent<Light>(); l.type = LightType.Spot; l.color = new Color(.78f, .92f, 1f); l.intensity = 5f; l.range = 3.2f;
+                    if (disp["light"]["color"] is JArray lc) l.color = new Color((float)lc[0], (float)lc[1], (float)lc[2]);
+                    if (disp["light"]["intensity"] != null) l.intensity = (float)disp["light"]["intensity"];
+                    if (disp["light"]["range"] != null) l.range = (float)disp["light"]["range"];
                     l.spotAngle = 115f; l.innerSpotAngle = 70f; l.shadows = LightShadows.None;
                 }
 
@@ -343,16 +412,17 @@ namespace AthenHill.Editor
             public List<(Site site, string path, string why)> keep = new List<(Site, string, string)>();
         }
 
-        public static Plan MakePlan()
+        public static Plan MakePlan() => MakePlan(Sites);
+
+        public static Plan MakePlan(Site[] sites)
         {
+            var Sites = sites;      // the parcel sweep below runs over the given sites only
             var plan = new Plan();
             var seen = new HashSet<GameObject>();
             foreach (var s in Sites)
                 foreach (var p in s.retire)
-                {
-                    var t = FindPath(p);
-                    if (t && t.gameObject.activeSelf && seen.Add(t.gameObject)) plan.retire.Add((s, p, "root"));
-                }
+                    foreach (var t in FindRetire(p))
+                        if (t && t.gameObject.activeSelf && seen.Add(t.gameObject)) plan.retire.Add((s, PathOf(t), "root"));
             bool UnderRetired(Transform t) { for (; t; t = t.parent) if (seen.Contains(t.gameObject)) return true; return false; }
             void Consider(Component c, Vector3 world, Bounds wb, string kind)
             {
@@ -391,25 +461,31 @@ namespace AthenHill.Editor
         }
 
         [MenuItem("Athen Hill/Ward shops/Dry-run install")]
-        public static string DryRun()
+        public static string DryRun() => DryRun(Sites, Evidence);
+
+        [MenuItem("Athen Hill/Ward shops/North avenue: dry-run install")]
+        public static string DryRunNorth() => DryRun(NorthSites, NorthEvidence);
+
+        static string DryRun(Site[] sites, string evidence)
         {
-            var plan = MakePlan();
-            Directory.CreateDirectory(Evidence);
+            var plan = MakePlan(sites);
+            Directory.CreateDirectory(evidence);
             var lines = plan.retire.Select(r => $"RETIRE [{r.site.key}] {r.why} :: {r.path}").Concat(plan.keep.Select(k => $"KEEP   [{k.site.key}] {k.why} :: {k.path}"));
-            File.WriteAllLines(Evidence + "shops-install-dryrun.txt", lines);
-            return $"retire {plan.retire.Count}, keep-report {plan.keep.Count} -> {Evidence}shops-install-dryrun.txt";
+            File.WriteAllLines(evidence + "shops-install-dryrun.txt", lines);
+            return $"retire {plan.retire.Count}, keep-report {plan.keep.Count} -> {evidence}shops-install-dryrun.txt";
         }
 
         static Mesh FilteredRetrofit(MeshFilter mf, out int removed) => FilteredRetrofit(mf.sharedMesh, mf.transform, out removed);
+        static Mesh FilteredRetrofit(Mesh src, Transform tr, out int removed) => FilteredRetrofit(src, tr, Sites, out removed);
 
         /// Copy of a combined mesh without the triangles inside the shop parcels. The retrofit meshes use 16-bit
         /// indices with a base vertex per submesh, so indices are read and written relative to that base.
-        static Mesh FilteredRetrofit(Mesh src, Transform tr, out int removed)
+        static Mesh FilteredRetrofit(Mesh src, Transform tr, Site[] Sites, out int removed)
         {
             // fresh 32-bit mesh with every vertex channel copied and absolute indices (the glTF originals are 16-bit
             // with a base vertex per submesh; rewriting those in place produced wrapped/garbled triangles)
             var vs = src.vertices;
-            var m = new Mesh { name = src.name + " (hall district shops removed)", indexFormat = IndexFormat.UInt32 };
+            var m = new Mesh { name = src.name + (Sites == WardShopsPass.Sites ? " (hall district shops removed)" : " (north avenue shops removed)"), indexFormat = IndexFormat.UInt32 };
             m.SetVertices(vs);
             if (src.normals.Length == vs.Length) m.SetNormals(src.normals);
             if (src.tangents.Length == vs.Length) m.SetTangents(src.tangents);
@@ -697,6 +773,7 @@ namespace AthenHill.Editor
         {
             ["relay_works"] = "RELAY WORKS", ["air_water"] = "AIR + WATER", ["tool_exchange"] = "TOOL EXCHANGE",
             ["finery"] = "FINERY", ["field_supply"] = "FIELD SUPPLY",
+            ["salvage"] = "SALVAGE", ["repairs"] = "REPAIRS", ["thread_hide"] = "THREAD + HIDE",
         };
 
         static GameObject BuildSignPrefab(string key, Dictionary<string, Material> mats)
@@ -738,7 +815,7 @@ namespace AthenHill.Editor
             foreach (var kv in SignText)
             {
                 var prefab = BuildSignPrefab(kv.Key, mats);
-                var site = Sites.First(x => x.key == kv.Key);
+                var site = Sites.Concat(NorthSites).First(x => x.key == kv.Key);
                 var path = PrefabDir + site.model + ".prefab";
                 var root = PrefabUtility.LoadPrefabContents(path);
                 try
@@ -781,8 +858,8 @@ namespace AthenHill.Editor
         [MenuItem("Athen Hill/Ward shops/Refresh models and materials")]
         public static string RefreshModels()
         {
-            foreach (var s in Sites)
-                foreach (var lod in new[] { 0, 1 }) AssetDatabase.ImportAsset(ModelDir + $"{s.model}_LOD{lod}.glb", ImportAssetOptions.ForceUpdate);
+            foreach (var s in Sites.Concat(NorthSites))
+                foreach (var lod in new[] { 0, 1 }) AssetDatabase.ImportAsset(s.ModelPath(lod), ImportAssetOptions.ForceUpdate);
             foreach (var g in AssetDatabase.FindAssets("Sign_", new[] { SignDir.TrimEnd('/') }))
             {
                 var path = AssetDatabase.GUIDToAssetPath(g);
@@ -803,7 +880,39 @@ namespace AthenHill.Editor
                 mats[n].SetColor("_BaseColor", c);
             foreach (var m in mats.Values) EditorUtility.SetDirty(m);
             AssetDatabase.SaveAssets();
-            return "refreshed " + Sites.Length + " shops and signs";
+            var remapped = Sites.Concat(NorthSites).Select(x => x.model + " " + RemapPrefabMaterials(x, mats)).ToArray();
+            return "refreshed " + (Sites.Length + NorthSites.Length) + " shops and signs; material slots re-mapped: " + string.Join(", ", remapped);
+        }
+
+        /// The prefab stores one material per sub-mesh slot. When a re-authored model gains or loses a material (the Repairs gas
+        /// cage, 30 Sep: WS_PaintYellow/Teal/Red), the imported sub-mesh order shifts under the stored slots and surfaces pick up
+        /// the wrong material (its roller shutter rendered in yellow paint). Re-map every slot from the model's own names.
+        public static int RemapPrefabMaterials(Site s, Dictionary<string, Material> mats)
+        {
+            var path = PrefabDir + s.model + ".prefab";
+            if (!File.Exists(path)) return -1;
+            var root = PrefabUtility.LoadPrefabContents(path);
+            int changed = 0;
+            try
+            {
+                foreach (var lod in new[] { 0, 1 })
+                {
+                    var model = AssetDatabase.LoadAssetAtPath<GameObject>(s.ModelPath(lod));
+                    var lodRoot = root.transform.Find("LOD" + lod);
+                    if (!model || !lodRoot) continue;
+                    var dsts = lodRoot.GetComponentsInChildren<Renderer>(true);
+                    foreach (var src in model.GetComponentsInChildren<Renderer>(true))
+                    {
+                        var dst = dsts.FirstOrDefault(r => r.name == src.name);
+                        if (!dst) continue;
+                        var slots = src.sharedMaterials.Select(m => m ? (Lookup(mats, m.name) ?? m) : null).ToArray();
+                        if (!slots.SequenceEqual(dst.sharedMaterials)) { dst.sharedMaterials = slots; changed++; }
+                    }
+                }
+                if (changed > 0) PrefabUtility.SaveAsPrefabAsset(root, path);
+            }
+            finally { PrefabUtility.UnloadPrefabContents(root); }
+            return changed;
         }
 
         /// Finery's old ochre street canopy (Courtyard reference pass) hung off the old frontage; retire it by name
@@ -829,6 +938,174 @@ namespace AthenHill.Editor
             EditorSceneManager.MarkSceneDirty(scene); EditorSceneManager.SaveScene(scene);
             File.WriteAllText(Evidence + "shops-finery-canopy-retired.txt", string.Join("\n", log.Distinct()));
             return string.Join("\n", log.Distinct());
+        }
+
+        // ------------------------------------------------------------------ north avenue (30 Sep 2026)
+        static void Retire(Transform t)
+        {
+            Undo.RecordObject(t.gameObject, "Retire north avenue layer");
+            t.gameObject.SetActive(false);
+            if (PrefabUtility.IsPartOfPrefabInstance(t.gameObject)) PrefabUtility.RecordPrefabInstancePropertyModifications(t.gameObject);
+        }
+
+        /// One-time install of Salvage, Repairs, Thread + Hide and the Basic General booth: retires the replaced layers
+        /// (inactive, not deleted), filters the combined retrofit meshes again for the three shop parcels (new copies; the
+        /// hall-district copies stay as assets), retires retrofit colliders in those parcels, instantiates the prefabs under
+        /// their own group, puts their lamps on the Ward lighting clock and rebuilds the render chunks.
+        [MenuItem("Athen Hill/Ward shops/North avenue: install (one-time)")]
+        public static string InstallNorth()
+        {
+            if (EditorApplication.isPlaying) throw new Exception("Exit Play mode first.");
+            var scene = EditorSceneManager.GetActiveScene();
+            if (scene.path != ScenePath) scene = EditorSceneManager.OpenScene(ScenePath);
+            if (scene.GetRootGameObjects().Any(g => g.name == NorthGroupName)) throw new Exception("North avenue shops are already installed; edit them in place.");
+            if (scene.isDirty) throw new Exception("Save or discard scene changes before installing.");
+            Directory.CreateDirectory(NorthEvidence + "rollback");
+            File.Copy(ScenePath, NorthEvidence + "rollback/before-north-install.unity", true);
+
+            var plan = MakePlan(NorthSites);
+            var report = new Dictionary<string, object>();
+            var retired = new List<object>();
+            foreach (var (site, path, why) in plan.retire)
+            {
+                var t = FindPath(path);
+                if (!t) continue;
+                Retire(t);
+                retired.Add(new { site = site.key, path, why });
+            }
+            report["retired"] = retired;
+
+            Directory.CreateDirectory(RetrofitDir);
+            var retro = new List<object>();
+            foreach (var p in RetrofitMeshes)
+            {
+                var t = FindPath(p);
+                var mf = t ? t.GetComponent<MeshFilter>() : null;
+                if (!mf || !mf.sharedMesh) { retro.Add(new { path = p, found = false }); continue; }
+                var before = mf.sharedMesh;
+                var copy = FilteredRetrofit(before, t, NorthSites, out int removed);
+                var assetPath = RetrofitDir + t.name.Replace(' ', '_') + "_north_avenue.asset";
+                if (AssetDatabase.LoadAssetAtPath<Mesh>(assetPath)) AssetDatabase.DeleteAsset(assetPath);
+                AssetDatabase.CreateAsset(copy, assetPath);
+                Undo.RecordObject(mf, "Filter retrofit mesh");
+                mf.sharedMesh = copy;
+                var mc = t.GetComponent<MeshCollider>();
+                if (mc && mc.sharedMesh == before) mc.sharedMesh = copy;
+                retro.Add(new { path = p, removedTriangles = removed, before = AssetDatabase.GetAssetPath(before), filtered = assetPath });
+            }
+            var shopRetro = FindPath("Ward district retrofit/Shop retrofits");
+            if (shopRetro)
+                foreach (Transform c in shopRetro)
+                {
+                    if (!c.name.StartsWith("COL_") || !c.gameObject.activeSelf) continue;
+                    var col = c.GetComponent<Collider>();
+                    var center = col ? col.bounds.center : c.position;
+                    if (NorthSites.Any(x => InParcel(x, center, new Bounds(center, Vector3.one * .1f), out _)))
+                    { Retire(c); retro.Add(new { retiredCollider = PathOf(c) }); }
+                }
+            report["retrofit"] = retro;
+
+            var group = new GameObject(NorthGroupName);
+            SceneManagerMove(group, scene);
+            var circuit = UnityEngine.Object.FindAnyObjectByType<CityLightCircuit>();
+            var installed = new List<object>();
+            foreach (var s in NorthSites)
+            {
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabDir + s.model + ".prefab");
+                if (!prefab) throw new Exception("Prefab missing (run North avenue: build assets): " + s.model);
+                var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, scene);
+                go.name = s.name;
+                go.transform.SetParent(group.transform, false);
+                go.transform.SetPositionAndRotation(s.pos, Quaternion.Euler(0, s.yaw, 0));
+                var ls = go.GetComponentsInChildren<Light>(true);
+                var lamps = ls.Where(l => l.name != "Display light").ToArray();
+                circuit.practicalLights = circuit.practicalLights.Where(l => l && !l.transform.IsChildOf(go.transform)).Concat(ls).ToArray();
+                circuit.nightOnlyLights = circuit.nightOnlyLights.Where(l => l && !l.transform.IsChildOf(go.transform)).Concat(lamps).ToArray();
+                installed.Add(new { site = s.key, s.name, pos = new[] { s.pos.x, s.pos.y, s.pos.z }, s.yaw, lights = ls.Length });
+            }
+            foreach (var em in new[] { "WS_Glass", "WS_LedWarm" })
+            {
+                var mat = AssetDatabase.LoadAssetAtPath<Material>(MatDir + em + ".mat");
+                if (mat && !circuit.emissiveMaterials.Contains(mat)) circuit.emissiveMaterials = circuit.emissiveMaterials.Concat(new[] { mat }).ToArray();
+            }
+            EditorUtility.SetDirty(circuit);
+            report["installed"] = installed;
+
+            var chunks = UnityEngine.Object.FindAnyObjectByType<StaticRenderChunks>();
+            if (chunks) StaticRenderChunksEditor.Rebuild(chunks);
+            report["chunksRebuilt"] = chunks != null;
+
+            AssetDatabase.SaveAssets();
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            File.WriteAllText(NorthEvidence + "north-install.json", JsonConvert.SerializeObject(report, Formatting.Indented));
+            return $"installed {installed.Count} buildings, retired {retired.Count} objects, retrofit {retro.Count} entries";
+        }
+
+        /// Mounts the family signs for Salvage, Repairs and Thread + Hide on their prefabs' sign mounts. (Basic General
+        /// keeps the family sign already in the scene; the new lintel is built to carry it where it hangs.)
+        [MenuItem("Athen Hill/Ward shops/North avenue: install signs")]
+        public static string InstallNorthSigns()
+        {
+            var mats = BuildMaterials(false);
+            var log = new List<string>();
+            foreach (var key in new[] { "salvage", "repairs", "thread_hide" })
+            {
+                var prefab = BuildSignPrefab(key, mats);
+                var site = NorthSites.First(x => x.key == key);
+                var path = PrefabDir + site.model + ".prefab";
+                var root = PrefabUtility.LoadPrefabContents(path);
+                try
+                {
+                    var mount = root.transform.Find("Sign mounts/Sign mount: " + SignText[key]);
+                    if (!mount) { log.Add(key + ": mount missing"); continue; }
+                    foreach (Transform c in mount.Cast<Transform>().ToArray()) UnityEngine.Object.DestroyImmediate(c.gameObject);
+                    var sg = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+                    sg.transform.SetParent(mount, false); sg.transform.localPosition = Vector3.zero; sg.transform.localRotation = Quaternion.identity;
+                    PrefabUtility.SaveAsPrefabAsset(root, path);
+                    log.Add(key + ": sign mounted");
+                }
+                finally { PrefabUtility.UnloadPrefabContents(root); }
+            }
+            AssetDatabase.SaveAssets();
+            var scene = EditorSceneManager.GetActiveScene();
+            EditorSceneManager.MarkSceneDirty(scene); EditorSceneManager.SaveScene(scene);
+            Directory.CreateDirectory(NorthEvidence);
+            File.WriteAllText(NorthEvidence + "north-signs-install.txt", string.Join("\n", log));
+            return string.Join("\n", log);
+        }
+
+        [MenuItem("Athen Hill/Ward shops/North avenue: verify saved scene")]
+        public static string VerifyNorth()
+        {
+            var scene = EditorSceneManager.OpenScene(ScenePath);
+            var group = scene.GetRootGameObjects().FirstOrDefault(g => g.name == NorthGroupName);
+            var r = new Dictionary<string, object> { ["group"] = group != null };
+            if (group)
+            {
+                var circuit = UnityEngine.Object.FindAnyObjectByType<CityLightCircuit>();
+                r["buildings"] = group.transform.Cast<Transform>().Select(t => new
+                {
+                    t.name, pos = t.position.ToString("F2"), yaw = t.eulerAngles.y,
+                    lods = t.GetComponent<LODGroup>()?.lodCount, colliders = t.GetComponentsInChildren<Collider>(true).Length,
+                    lights = t.GetComponentsInChildren<Light>(true).Length,
+                    lightsOnCircuit = t.GetComponentsInChildren<Light>(true).Count(l => circuit.practicalLights.Contains(l)),
+                    signs = t.Find("Sign mounts") ? t.Find("Sign mounts").GetComponentsInChildren<Renderer>(true).Length : 0,
+                }).ToArray();
+            }
+            foreach (var s in NorthSites)
+                foreach (var p in s.retire)
+                    foreach (var t in FindRetire(p)) r["retired " + PathOf(t)] = !t.gameObject.activeSelf;
+            foreach (var n in new[] { "COL_BLD_shop_e_04_porch", "COL_BLD_shop_w_03_porch", "COL_BLD_shop_w_04_porch", "COL_BLD_shop_e_04_first_step",
+                                      "COL_BLD_shop_w_03_first_step", "COL_BLD_shop_w_04_first_step", "COL_BLD_general_back", "COL_BLD_general_porch",
+                                      "COL_BLD_general_awning", "COL_BLD_general_side_e", "COL_BLD_general_side_w", "COL_BLD_general_first_step" })
+            { var t = FindPath("AuthoredWorld/" + n); r["kept " + n] = t && t.gameObject.activeInHierarchy && t.GetComponent<Collider>() && t.GetComponent<Collider>().enabled; }
+            foreach (var n in new[] { "Colonists/npc_mira", "Basic General counter dressing", "Basic General back panel", "Basic General sign (hall district family)",
+                                      BG + "Stock", BG + "Hardware/Counter_plate_rivet_hex" })
+            { var t = FindPath(n); r["kept " + n] = t && t.gameObject.activeInHierarchy; }
+            Directory.CreateDirectory(NorthEvidence);
+            File.WriteAllText(NorthEvidence + "north-verify-saved-scene.json", JsonConvert.SerializeObject(r, Formatting.Indented));
+            return JsonConvert.SerializeObject(r);
         }
 
         static void SceneManagerMove(GameObject go, UnityEngine.SceneManagement.Scene scene) =>

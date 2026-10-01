@@ -995,4 +995,5 @@ def main():
     bpy.ops.wm.save_as_mainfile(filepath=str(HERE / "hill-source.blend"))
 
 
-main()
+if __name__ == "__main__":   # importable for its helpers (art/courtyard_trees_20260930)
+    main()

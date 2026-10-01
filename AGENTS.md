@@ -89,11 +89,14 @@ native evidence uses OpenGL. Do not silently change the graphics API or pipeline
 | Additional ambient actor | Yard mechanic, Humanoid Animator and its separate four-point service-yard loop. The current roster is one player, four talking NPCs and four ambient walkers. |
 | South Ring Gate | Accepted 12,009-triangle Meshy model, open aperture, console, approach step and current interaction/hum. The 6,263-triangle remesh was rejected. |
 | Mission terminals | Three saved Meshy terminal instances and the MissionTerminal prefab. Preserve the mission slab, nearby interaction access and `cam_terminal`; task records are in `meshy/mission-terminal-v1`. |
-| Shops and salvage | Restored Relay-based shops, Basic General, community board, crates, generators, litter and industrial scrap. Preserve the working salvage placements. |
+| Shops and salvage | Restored Relay-based shops, Basic General and the community board. The 8 Sep salvage scatter (trash, crates, scrap, generators) is retired and replaced by the street dressing kit (below). |
 | Vanguard Hall | Rebuilt 30 Sep 2026 from the accepted concept (`art/vanguard_hall_20260930`): authored ashlar hall with LODs, own colliders, lamps on the city light clock, weathering and old battle damage from the shared `art/ward_masonry_kit`. The two facade uplights are Carl's Meshy tripod floodlights (`Prefabs/WardHill/WardFloodlight`, 30 Sep) in place of the modelled boxes. The Meshy hall stays in the scene inactive for rollback. See [EDITING](unity/EDITING.md). |
 | Hall district shops | 30 Sep 2026: Relay Works, Air + Water, Tool Exchange (sci-fi display, Meshy props), Finery and Field Supply rebuilt in modelled stone (`art/hall_district_20260930`) with door recesses, clock-driven lamps and a new sign family (incl. Basic General). Old layers inactive; porch colliders, filter bank and routes kept. Not yet accepted by Carl. |
+| North avenue shops | 30 Sep 2026: Salvage (hoist, rubble-patched breach), Repairs (braced canopy, flue, roof container), Thread + Hide (balcony with cloth and hides, lit display) and the Basic General booth (stone walls and piers, red lintel carrying its family sign) rebuilt on the same masonry kit, signs and weathering (`art/north_avenue_20260930`). Mira, counter dressing, stock, colliders and routes kept; old layers inactive. Not yet accepted by Carl. |
 | District replacements | Two active west-gate arches and the mechanic remain. Seven rejected shop candidates under `District rebuild` stay inactive until revised and reviewed. |
 | Hill and hero tree | 30 Sep 2026 (`art/hill_20260930`, scene root **Ward hill**): the plinth, stairs, tree ring, paving, beds, soil and roots rebuilt on the Ward masonry kit (same stone as the hall and shops), Poly Haven planting on a wind shader, Carl's Meshy "Reclaim & Save Point" kiosks on the three terminal slots (decorative, as before), tree uplights on the light clock. The hero tree mesh itself is unchanged. Saved hill/stair colliders kept; old visuals inactive. Not yet accepted by Carl. |
+| Courtyard trees | 30 Sep 2026 (`art/courtyard_trees_20260930`, scene root **Courtyard tree beds**): `birch 3` and `birch 4b` moved north (1.2 m / 1.8 m) into stone beds built like the hero ring (seat coping, litter, roots, drip line, apron, uplights on the light clock). Trees keep their prefab links and trunk capsules. Not yet accepted by Carl. |
+| Street dressing | 30 Sep 2026 (`art/street_dressing_20260930`, scene root **Ward street dressing**): 145 instances of a 68-prop kit (CC0 Poly Haven scans, four Meshy pieces, Blender sacks/tarp/skip/litter) in 30 purposeful vignettes along walls, porch ends, lanes and yards, grime/scuff decals, NPC sit points on seats; old scatter and cube dressing inactive. Lanes, doors, stairs and routes kept clear (`layout.py`). Not yet accepted by Carl. |
 | World | Editable terrain basin, stone/soil detail, cloud/dust atmosphere, landmarks and collision sources. Existing assets are a baseline, not a permanent quality ceiling. |
 | Interface | Accepted worn bronze/metal UI Toolkit art, open center view, corner HUD, ten visible hotbar slots with six working actions and four empty reserves. |
 | Sound | Existing ElevenLabs music, ambience, spatial hums, footsteps and interaction cues; retain mixer, mute and reduced-motion behavior. |
@@ -270,19 +273,25 @@ Consult documentation matching installed versions before implementing a feature.
 
 ## 7. Performance and visual acceptance
 
-Retain **60 FPS at native 1920×1080** as the first playable performance target.
-The previously measured Linux host, **RTX 3060 / i9-10850K**, is the provisional
-reference machine; record actual hardware/VRAM, driver, API, quality and render
-scale for each run. A vague medium laptop is not a qualified platform. Establish
-additional named hardware and quality profiles when that becomes a delivery task.
+The first playable performance target is an **average of 60 FPS at native
+1920×1080 on the High preset** (render scale 100 %, no frame generation) on the
+reference machine, the Linux **RTX 3060 12 GB / i9-10850K** host. Revised
+30 September 2026: the 3060 is an older GPU, so occasional frame-time spikes are
+accepted; a p99 or maximum above 16.67 ms is reported, not a failure on its own.
+Record actual hardware/VRAM, driver, API, quality and render scale for each run.
+A vague medium laptop is not a qualified platform. Establish additional named
+hardware and quality profiles when that becomes a delivery task.
 Optional high-quality screenshots must state their settings and cannot substitute
 for the native gameplay target. Do not hide a lower render scale or frame generation.
 
 Measure a warmed, representative standalone traversal with all nine current actors,
 shadows, HUD and active effects, including shop/travel states. For new quality
-qualification, target average FPS >= 60 and p99 frame time <= 16.67 ms on the
-recorded baseline; report duration, p50/p95/p99/max, hitches, CPU/GPU time when
-available, memory and loading separately. Keep uncapped timing samples separate
+qualification, target average FPS >= 60 on the recorded baseline; report duration,
+p50/p95/p99/max, hitches, CPU/GPU time when available, memory and loading
+separately. Judge each pass's own cost with alternating before/after runs of the
+same walk (this desktop drifts about ±1–1.5 ms between runs) and state the change.
+A pass that takes the average below 60 FPS, or adds repeated hitches during normal
+walking, is a regression to fix or explain. Keep uncapped timing samples separate
 from VSync-limited play. Report unavailable counters as unavailable, never zero cost.
 Distinguish visible geometry from submitted triangles across shadow/depth/color
 passes; draw calls, batches and SetPass counts are different measurements.

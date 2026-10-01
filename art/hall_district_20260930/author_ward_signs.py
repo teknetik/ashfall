@@ -36,6 +36,10 @@ SIGNS = {
     "tool_exchange": dict(text="TOOL EXCHANGE", w=3.3, h=0.62, standoff=0.12, strong=True),
     "finery": dict(text="FINERY", w=2.2, h=0.62, standoff=0.12, spacing=1.18),
     "field_supply": dict(text="FIELD SUPPLY", w=3.2, h=0.66, standoff=0.1),
+    # north avenue (30 Sep, art/north_avenue_20260930)
+    "salvage": dict(text="SALVAGE", w=2.6, h=0.66, standoff=0.12, spacing=1.14),
+    "repairs": dict(text="REPAIRS", w=2.4, h=0.62, standoff=0.12, spacing=1.14),
+    "thread_hide": dict(text="THREAD + HIDE", w=3.2, h=0.62, standoff=0.12),
 }
 DEPTH = 0.13          # box depth
 RIM = 0.055           # front rim width
@@ -220,11 +224,20 @@ def build_sign(key, spec):
 
 
 def main():
+    """blender -b -P author_ward_signs.py [-- key ...]: only the named signs are rebuilt (their records merged into
+    signs.json); the source .blend is written only for a full run."""
+    keys = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else list(SIGNS)
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    recs = {k: build_sign(k, s) for k, s in SIGNS.items()}
-    (OUT / "signs.json").write_text(json.dumps({"source": "art/hall_district_20260930/author_ward_signs.py", "date": "2026-09-30",
-                                                "signs": recs}, indent=1))
-    bpy.ops.wm.save_as_mainfile(filepath=str(HERE / "signs-source.blend"))
+    path = OUT / "signs.json"
+    old = json.loads(path.read_text())["signs"] if path.exists() and len(keys) < len(SIGNS) else {}
+    recs = dict(old)
+    recs.update({k: build_sign(k, SIGNS[k]) for k in keys})
+    path.write_text(json.dumps({"source": "art/hall_district_20260930/author_ward_signs.py", "date": "2026-09-30",
+                                "signs": recs}, indent=1))
+    if len(keys) == len(SIGNS):
+        bpy.ops.wm.save_as_mainfile(filepath=str(HERE / "signs-source.blend"))
+    else:
+        bpy.ops.wm.save_as_mainfile(filepath=str(ROOT / "art/north_avenue_20260930/north-signs-source.blend"))
 
 
 main()

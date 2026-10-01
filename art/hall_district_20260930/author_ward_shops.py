@@ -926,4 +926,5 @@ def main():
     bpy.ops.wm.save_as_mainfile(filepath=str(HERE / "shops-source.blend"))
 
 
-main()
+if __name__ == "__main__":        # imported by art/north_avenue_20260930/author_north_shops.py
+    main()
