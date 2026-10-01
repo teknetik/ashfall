@@ -19,7 +19,7 @@ namespace AthenHill
   /// Grid rows are always completed with empty cells, and never fewer than this many cells are drawn.
   public const int MinimumCells=24;
   static readonly string[] rarityClasses={"rarity-common","rarity-uncommon","rarity-rare"};
-  static readonly Dictionary<RecipeGroup,string> groupChips=new Dictionary<RecipeGroup,string>{{RecipeGroup.Component,"Components"},{RecipeGroup.MarkI,"Mark I"},{RecipeGroup.MarkII,"Mark II"}};
+  static readonly Dictionary<RecipeGroup,string> groupChips=new Dictionary<RecipeGroup,string>{{RecipeGroup.Component,"Components"},{RecipeGroup.MarkI,"Mark I"},{RecipeGroup.MarkII,"Mark II"},{RecipeGroup.Weapon,"Weapons"},{RecipeGroup.WeaponMod,"Weapon mods"}};
 
   readonly VisualElement root,grid,empty,overview,overviewIcon,details,detailsIcon,filters,facts,stats,previewCol,previewView,previewFallback,progressFill,searchBox;
   readonly ScrollView scroll;
@@ -30,6 +30,7 @@ namespace AthenHill
   readonly CraftingSession crafting;
   readonly CharacterPreview preview;
   readonly CityTimeOfDay clock;
+  readonly CharacterLoadoutPanel characterPanel;
   readonly HashSet<string> iconClasses;
   readonly Dictionary<string,Button> tiles=new Dictionary<string,Button>();
   readonly List<string> keys=new List<string>();
@@ -82,6 +83,7 @@ namespace AthenHill
    previewView.RegisterCallback<PointerUpEvent>(DragEnd);
    previewView.RegisterCallback<PointerCaptureOutEvent>(_=>dragPointer=-1);
    previewView.RegisterCallback<ClickEvent>(e=>{if(e.clickCount==2&&preview)preview.Yaw=0;});
+   characterPanel=new CharacterLoadoutPanel(root,session,crafting,()=>selectedItem,Refresh);
   }
   /// Slots, facts and stat rows come from the crafting data, which the crafting session loads after the HUD starts.
   void EnsureBuilt()
@@ -108,6 +110,7 @@ namespace AthenHill
   public void Closed()
   {
    open=false;hoverKey=null;live?.Pause();
+   characterPanel.CancelDrag();
    if(dragPointer>=0&&previewView.HasPointerCapture(dragPointer))previewView.ReleasePointer(dragPointer);
    dragPointer=-1;
    if(preview)preview.SetActive(false);
@@ -125,6 +128,7 @@ namespace AthenHill
    UpdateOverview();
    UpdateDetails();
    UpdateYou();
+   characterPanel.Refresh();
    bool showPreview=open&&!DetailsOpen&&preview;
    if(preview)
    {
@@ -242,6 +246,7 @@ namespace AthenHill
    tile.RegisterCallback<ClickEvent>(ev=>{Select(key);if(ev.shiftKey)Inspect(key);});
    tile.RegisterCallback<KeyDownEvent>(ev=>{if(ev.keyCode==KeyCode.Return||ev.keyCode==KeyCode.KeypadEnter){Inspect(key);ev.StopPropagation();}});
    tiles[key]=tile;keys.Add(key);
+   if(key.StartsWith(ItemPrefix))characterPanel.BindInventory(tile,key.Substring(ItemPrefix.Length));
    return tile;
   }
   void Select(string key)
@@ -400,6 +405,7 @@ namespace AthenHill
     if(item!=null&&item.rarity!=ItemRarity.Common)detailsTitle.AddToClassList(rarityClasses[(int)item.rarity]);
     detailsPrices.text=item!=null&&!item.excludeFromTrade?item.sellOnly?$"Mira at Basic General buys this for {item.sellPrice} cr":$"Basic General list price - Buy {item.buyPrice} cr / Sell {item.sellPrice} cr":item!=null&&item.rarity==ItemRarity.Rare?"Rare part · Mira will not trade it":"";
     detailsDescription.text=item!=null&&!string.IsNullOrWhiteSpace(item.description)?item.description:"No description recorded.";
+    if(item!=null){var equipment=characterPanel.DescribeItem(item.id);if(equipment.Length>0)detailsDescription.text+="\n\n"+equipment;}
     if(Model!=null&&item!=null){var uses=KnownUses(Model,item);if(uses.Length>0)detailsDescription.text+="\n\nKnown uses: "+uses+" (Field fabricator)";}
     SetIcon(detailsIcon,item?.icon);
     if(lastDetailId!=session.DetailItemId){lastDetailId=session.DetailItemId;root.schedule.Execute(()=>detailsClose?.Focus());}
@@ -528,6 +534,7 @@ namespace AthenHill
   void UpdateLive()
   {
    if(!open)return;
+   characterPanel.UpdateVitals();
    var combat=Combat;
    if(combat&&combat.Health)
    {

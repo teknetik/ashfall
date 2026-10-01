@@ -28,6 +28,7 @@ MonoBehaviour:
     sellOnly: 0
     icon: flask-icon
     partsPrice: 0
+    weightKg: 0.65
   - id: medkit
     name: Medkit
     description: A compact pack of sealed dressings and colony first-aid supplies.
@@ -42,6 +43,7 @@ MonoBehaviour:
     sellOnly: 0
     icon: medkit-icon
     partsPrice: 0
+    weightKg: 0.9
   - id: scrap_coil
     name: Scrap Coil
     description: A worn induction coil. Someone at the market can still use the copper.
@@ -57,6 +59,7 @@ MonoBehaviour:
     sellOnly: 0
     icon: scrap-icon
     partsPrice: 0
+    weightKg: 0.8
   - id: droid_servo_damaged
     name: Damaged Servo
     description: A salvaged worker-droid servo, still fit for a field repair.
@@ -75,6 +78,7 @@ MonoBehaviour:
     sellOnly: 1
     icon: servo-icon
     partsPrice: 10
+    weightKg: 1.4
   - id: scrap_alloy
     name: Scrap Alloy
     description: Cleaned structural alloy recovered from feral machines.
@@ -92,6 +96,7 @@ MonoBehaviour:
     sellOnly: 1
     icon: alloy-icon
     partsPrice: 4
+    weightKg: 0.7
   - id: nanite_residue
     name: Nanite Residue
     description: Recoverable tier-one nanites from a damaged industrial core.
@@ -108,6 +113,7 @@ MonoBehaviour:
     sellOnly: 1
     icon: nanites-icon
     partsPrice: 3
+    weightKg: 0.08
   - id: copper_filament
     name: Copper Filament
     description: Fine conductor salvaged from a machine winding.
@@ -125,6 +131,7 @@ MonoBehaviour:
     sellOnly: 1
     icon: copper-icon
     partsPrice: 4
+    weightKg: 0.12
   - id: micro_capacitor
     name: Micro Capacitor
     description: An intact low-voltage capacitor from a drone's charge bus. Charge cell cores need two.
@@ -142,6 +149,7 @@ MonoBehaviour:
     sellOnly: 1
     icon: capacitor-icon
     partsPrice: 12
+    weightKg: 0.35
   - id: grip_stabilised_pistol
     name: Stabilised Pistol Grip
     description: A field-fabricated grip that steadies the scrap pistol.
@@ -158,6 +166,7 @@ MonoBehaviour:
     sellOnly: 0
     icon: grip-mk1-icon
     partsPrice: 0
+    weightKg: 0.45
   - id: optic_lens_cracked
     name: Cracked Optic Lens
     description: A scrap drone's targeting lens, cracked at the rim but still true at the centre.
@@ -176,6 +185,7 @@ MonoBehaviour:
     sellOnly: 1
     icon: optic-icon
     partsPrice: 14
+    weightKg: 0.25
   - id: actuator_intact
     name: Intact Actuator
     description: A heavy worker-droid joint actuator with its feedback loop unbroken. Rare in the Berms.
@@ -194,6 +204,7 @@ MonoBehaviour:
     sellOnly: 0
     icon: actuator-icon
     partsPrice: 0
+    weightKg: 2.2
   - id: lattice_shard
     name: Quantum Lattice Shard
     description: A sliver of quantum-stable lattice from Tir's old fabrication cores. It hums against the palm.
@@ -210,6 +221,7 @@ MonoBehaviour:
     sellOnly: 0
     icon: shard-icon
     partsPrice: 0
+    weightKg: 0.18
   - id: foreman_control_core
     name: Foreman Control Core
     description: The depot foreman's command core. Its stored shift schedules include full Mark II pistol schematics.
@@ -228,6 +240,7 @@ MonoBehaviour:
     sellOnly: 0
     icon: control-core-icon
     partsPrice: 0
+    weightKg: 0.75
   - id: alloy_plate
     name: Refined Alloy Plate
     description: Scrap alloy pressed and nanite-bonded into a true, stress-relieved plate.
@@ -243,6 +256,7 @@ MonoBehaviour:
     sellOnly: 0
     icon: alloy-plate-icon
     partsPrice: 0
+    weightKg: 1.3
   - id: wound_coil
     name: Wound Copper Coil
     description: Salvaged conductor rewound on a field jig; the heart of any charge circuit.
@@ -258,6 +272,7 @@ MonoBehaviour:
     sellOnly: 0
     icon: wound-coil-icon
     partsPrice: 0
+    weightKg: 0.4
   - id: charge_cell_core
     name: Charge Cell Core
     description: 'Two capacitors and a wound coil sealed in nanite resin: a stable nano-charge store.'
@@ -273,6 +288,7 @@ MonoBehaviour:
     sellOnly: 0
     icon: charge-core-icon
     partsPrice: 0
+    weightKg: 0.55
   - id: barrel_bored_alloy
     name: Bored Alloy Barrel
     description: A refined-alloy barrel bored true on the fabricator. Hits harder and carries further.
@@ -289,6 +305,7 @@ MonoBehaviour:
     sellOnly: 0
     icon: barrel-mk1-icon
     partsPrice: 0
+    weightKg: 1.1
   - id: cell_salvaged_capacitor
     name: Salvaged Capacitor Cell
     description: A larger nano cell built around a charge core. More shots before the pistol runs dry.
@@ -305,6 +322,7 @@ MonoBehaviour:
     sellOnly: 0
     icon: cell-mk1-icon
     partsPrice: 0
+    weightKg: 0.8
   - id: grip_gyro_braced
     name: Gyro-Braced Grip
     description: A grip braced by a live actuator loop. It fights recoil and nudges your aim onto moving machines.
@@ -321,6 +339,7 @@ MonoBehaviour:
     sellOnly: 0
     icon: grip-mk2-icon
     partsPrice: 0
+    weightKg: 0.6
   - id: barrel_lattice_focused
     name: Lattice-Focused Barrel
     description: A lattice shard seats behind a salvaged optic, focusing each nano pulse. Heavy hits, slightly slower cycling.
@@ -337,6 +356,7 @@ MonoBehaviour:
     sellOnly: 0
     icon: barrel-mk2-icon
     partsPrice: 0
+    weightKg: 1.35
   - id: cell_overclocked
     name: Overclocked Charge Cell
     description: 'Twin charge cores tuned through a lattice shard: deep reserves, cheap shots, fast refill.'
@@ -353,6 +373,168 @@ MonoBehaviour:
     sellOnly: 0
     icon: cell-mk2-icon
     partsPrice: 0
+    weightKg: 1.0
+  - id: scrap_pistol
+    name: Scrap Pistol
+    description: A nanite-fed sidearm rebuilt from Ward scrap. Its fit follows the field primer.
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - weapon
+    - weapon:secondary
+    maxStack: 1
+    excludeFromTrade: 1
+    rarity: 0
+    sellOnly: 0
+    icon: pistol-icon
+    partsPrice: 0
+    weightKg: 2.4
+  - id: field_rifle
+    name: Field Rifle
+    description: A practical long arm with a repairable receiver and room for field modifications.
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 1
+    tags:
+    - weapon
+    - weapon:primary
+    maxStack: 1
+    excludeFromTrade: 1
+    rarity: 1
+    sellOnly: 0
+    icon: pistol-icon
+    partsPrice: 0
+    weightKg: 4.8
+  - id: field_vest
+    name: Field Vest
+    description: Salvaged plates and stitched canvas protect the torso without sealing out the heat.
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - armour
+    - armour:chest
+    maxStack: 1
+    excludeFromTrade: 1
+    rarity: 0
+    sellOnly: 0
+    icon: pack-icon
+    partsPrice: 0
+    weightKg: 3.2
+  - id: field_boots
+    name: Field Boots
+    description: Reinforced boots with replaceable soles and dust seals.
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 1
+    tags:
+    - armour
+    - armour:feet
+    maxStack: 1
+    excludeFromTrade: 1
+    rarity: 0
+    sellOnly: 0
+    icon: pack-icon
+    partsPrice: 0
+    weightKg: 1.5
+  - id: targeting_implant_mk1
+    name: Neural Targeting Implant Mk I
+    description: A basic targeting lattice that improves sighting and pistol control.
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 1
+    tags:
+    - implant
+    - implant:head
+    maxStack: 1
+    excludeFromTrade: 1
+    rarity: 1
+    sellOnly: 0
+    icon: pack-icon
+    partsPrice: 0
+    weightKg: 0.15
+  - id: targeting_implant_mk2
+    name: Neural Targeting Implant Mk II
+    description: A higher-grade targeting lattice with finer tracking and signal stability.
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - implant
+    - implant:head
+    maxStack: 1
+    excludeFromTrade: 1
+    rarity: 2
+    sellOnly: 0
+    icon: pack-icon
+    partsPrice: 0
+    weightKg: 0.17
+  - id: myofibre_implant
+    name: Reinforced Myofibre Implant
+    description: A serviceable muscle-assist mesh for carrying and close work.
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - implant
+    - implant:arms
+    maxStack: 1
+    excludeFromTrade: 1
+    rarity: 1
+    sellOnly: 0
+    icon: pack-icon
+    partsPrice: 0
+    weightKg: 0.3
+  - id: field_backpack
+    name: Field Backpack
+    description: A braced canvas pack with modular external cargo straps.
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - storage
+    - storage:backpack
+    maxStack: 1
+    excludeFromTrade: 1
+    rarity: 0
+    sellOnly: 0
+    icon: pack-icon
+    partsPrice: 0
+    weightKg: 1.7
+  - id: rifle_precision_barrel
+    name: Precision Rifle Barrel
+    description: A field-machined barrel that trades some weight for steadier, longer shots.
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - weapon_mod
+    - weapon_mod:barrel
+    - rifle
+    maxStack: 3
+    excludeFromTrade: 1
+    rarity: 1
+    sellOnly: 0
+    icon: barrel-mk1-icon
+    partsPrice: 0
+    weightKg: 0.7
+  - id: field_toolkit
+    name: Field Toolkit
+    description: Reusable gauges and hand tools for fitting and fabrication work.
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 1
+    tags:
+    - tool
+    - fabrication
+    maxStack: 1
+    excludeFromTrade: 1
+    rarity: 0
+    sellOnly: 0
+    icon: pack-icon
+    partsPrice: 0
+    weightKg: 1
   destinations:
   - id: crosswind_reach
     name: Crosswind Reach

@@ -18,6 +18,16 @@ namespace AthenHill.Tests
    Assert.That(shop.Trade("scrap_coil",false,out _),Is.True);
    Assert.That(InventoryView.Items(items,shop).Select(x=>x.id),Is.EqualTo(new[]{"water_flask"}));
   }
+  [Test] public void FullPackRejectsPurchaseWithoutChangingCreditsOrItems()
+  {
+   var items=new[]{new ItemSpec{id="alloy",startingQuantity=1,weightKg=2},new ItemSpec{id="flask",name="Flask",buyPrice=4,weightKg=3}};
+   var shop=new ShopModel(items,25);
+   shop.CapacityFailure=next=>next["alloy"]*2+next["flask"]*3>4?"Not enough carrying or storage capacity.":null;
+   Assert.That(shop.Trade("flask",true,out var message),Is.False);
+   Assert.That(message,Does.Contain("capacity"));
+   Assert.That(shop.Credits,Is.EqualTo(25));Assert.That(shop.Quantity("flask"),Is.Zero);
+   Assert.That(shop.Purchases,Is.Zero);
+  }
   [Test] public void OverviewAndFullDetailsOnlyExposeSerializedFacts()
   {
    var item=Items()[1];

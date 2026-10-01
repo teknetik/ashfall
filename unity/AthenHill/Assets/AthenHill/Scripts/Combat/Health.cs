@@ -20,6 +20,7 @@ namespace AthenHill
   public Vector3 AimPoint=>transform.TransformPoint(aimOffset);
   public event Action<float,Vector3> Damaged;
   public event Action Died;
+  public Func<float,float> AdjustIncomingDamage {get;set;}
   public static readonly List<Health> Targets=new List<Health>();
   void Awake(){Current=max;}
   void OnEnable(){if(aimTarget)Targets.Add(this);}
@@ -28,12 +29,20 @@ namespace AthenHill
   public bool Damage(float amount,Vector3 point)
   {
    if(!Alive||amount<=0)return false;
+   if(AdjustIncomingDamage!=null)amount=Mathf.Max(0,AdjustIncomingDamage(amount));
+   if(amount<=0)return true;
    Current=Mathf.Max(0,Current-amount);LastDamageTime=Time.time;
    Damaged?.Invoke(amount,point);
    if(Current<=0)Died?.Invoke();
    return true;
   }
   public void Heal(float amount){if(Alive&&amount>0)Current=Mathf.Min(max,Current+amount);}
+  public void SetMaximum(float value)
+  {
+   float fraction=max>0?Current/max:1;
+   max=Mathf.Max(1,value);
+   Current=Mathf.Clamp(max*fraction,0,max);
+  }
   public void Restore(){Current=max;LastDamageTime=-99;}
  }
 }

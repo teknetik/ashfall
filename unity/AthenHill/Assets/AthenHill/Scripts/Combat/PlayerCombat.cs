@@ -68,6 +68,9 @@ namespace AthenHill
   /// The unmodified weapon: recoil presentation scales relative to its base recoil.
   public WeaponStats BaseStats {get;private set;}
   public WeaponLoadout Loadout {get;private set;}
+  public CharacterModel Character {get;private set;}
+  public CraftingModel Crafting {get;private set;}
+  public string ActiveSlot {get;private set;}="secondary";
   public float RecoilStat=>Stats.recoil;
   public float RecoilScale=>BaseStats.recoil>0?Stats.recoil/BaseStats.recoil:1;
   public float LastKickDegrees {get;private set;}
@@ -86,17 +89,73 @@ namespace AthenHill
    if(Loadout!=null)Loadout.Changed+=ApplyLoadout;
    ApplyLoadout();
   }
+  public void BindCharacter(CharacterModel character)
+  {
+   if(Character!=null)Character.Changed-=OnCharacterChanged;
+   Character=character;
+   if(Character!=null)Character.Changed+=OnCharacterChanged;
+   if(Health)Health.AdjustIncomingDamage=Character!=null?MitigateDamage:null;
+   OnCharacterChanged();
+  }
+  float MitigateDamage(float incoming)
+   =>ComputePhysicalDamage(Character,incoming);
+  public static float ComputePhysicalDamage(CharacterModel character,float incoming)
+  {
+   if(character==null)return incoming;
+   float armour=Mathf.Max(0,character.Stat("armour"));
+   float absorbed=armour*Mathf.Max(0,character.Data.armourAbsorptionPerPoint);
+   float resistance=Mathf.Clamp01(character.Stat("physicalResistance"));
+   return Mathf.Max(0,incoming*(1-resistance)-absorbed);
+  }
+  public void BindCraftingModel(CraftingModel model)
+  {
+   Crafting=model;
+   if(model==null){BindLoadout(null);return;}
+   RefreshEquippedWeapon();
+  }
+  public bool SelectWeapon(string slot)
+  {
+   if(slot!="primary"&&slot!="secondary"||Character==null||Crafting==null)return false;
+   var itemId=Character.Equipped(slot);
+   var weapon=Crafting.FindWeapon(itemId);
+   var loadout=weapon!=null?Crafting.GetLoadout(weapon.id):null;
+   if(loadout==null)return false;
+   if(ActiveSlot!=slot)Armed=false;
+   ActiveSlot=slot;BindLoadout(loadout);return true;
+  }
+  void RefreshEquippedWeapon()
+  {
+   if(SelectWeapon(ActiveSlot))return;
+   if(SelectWeapon("secondary"))return;
+   if(SelectWeapon("primary"))return;
+   Armed=false;
+   if(Crafting!=null)BindLoadout(Crafting.Loadout);
+  }
+  void OnCharacterChanged()
+  {
+   if(Health&&Character!=null)Health.SetMaximum(Character.Stat("health"));
+   if(Crafting!=null)RefreshEquippedWeapon();
+   else ApplyLoadout();
+  }
   void ApplyLoadout()
   {
    BaseStats=Loadout!=null?Loadout.Base:new WeaponStats{damage=damage,fireInterval=fireInterval,range=range,recoil=recoil,nanoMax=nanoMax,nanoPerShot=nanoPerShot,nanoRegen=nanoRegen,aimAssist=aimAssistDegrees};
-   Stats=Loadout!=null?Loadout.Stats:BaseStats;
+   Stats=Loadout!=null?Loadout.WithCharacter(Character):WeaponStatPipeline.ApplyCharacter(BaseStats,Character);
    if(Nano>Stats.nanoMax)Nano=Stats.nanoMax;
    StatsChanged?.Invoke();
   }
   /// Raised when the effective stats change (a mod fitted or removed, or a loadout bound).
   public event Action StatsChanged;
   /// Save restore: the pistol is carried (and charged) exactly when the save says so.
-  public void RestorePistol(bool carried){hasPistol=carried;Armed=false;Nano=Stats.nanoMax;}
+  public void RestorePistol(bool carried)
+  {
+   hasPistol=carried;Armed=false;
+   if(carried&&Character!=null&&Character.Equipped("secondary")!="scrap_pistol"&&session&&session.Shop.Quantity("scrap_pistol")==0)
+   {
+    if(!Character.TryGrantEquipped("scrap_pistol","secondary",out var reason))Debug.LogWarning("Pistol restore could not grant equipment: "+reason);
+   }
+   Nano=Stats.nanoMax;
+  }
   void Start()
   {
    if(!view&&follow)view=follow.GetComponent<Camera>();
@@ -107,12 +166,20 @@ namespace AthenHill
    if(tracer)tracer.enabled=false;if(muzzleLight)muzzleLight.enabled=false;
    if(heldPistol)heldPistol.SetActive(false);
   }
-  void OnDestroy(){if(Health){Health.Damaged-=OnDamaged;Health.Died-=OnDied;}if(Loadout!=null)Loadout.Changed-=ApplyLoadout;ReleaseCursor();}
-  public void GivePistol(){hasPistol=true;Nano=Stats.nanoMax;}
+  void OnDestroy(){if(Health){Health.Damaged-=OnDamaged;Health.Died-=OnDied;}if(Loadout!=null)Loadout.Changed-=ApplyLoadout;if(Character!=null)Character.Changed-=OnCharacterChanged;ReleaseCursor();}
+  public void GivePistol()
+  {
+   if(Character!=null&&Character.Equipped("secondary")!="scrap_pistol"&&session&&session.Shop.Quantity("scrap_pistol")==0)
+   {
+    if(!Character.TryGrantEquipped("scrap_pistol","secondary",out var reason))Debug.LogWarning("Pistol reward could not grant equipment: "+reason);
+   }
+   hasPistol=true;Nano=Stats.nanoMax;
+  }
   public void ToggleDraw()
   {
    if(session.State!=CityState.Play)return;
-   if(!hasPistol){session.Notify("You are not carrying a weapon.");return;}
+   if(!hasPistol){session.Notify("Complete the field primer before drawing a weapon.");return;}
+   if(Character!=null&&Character.Equipped(ActiveSlot)==null){session.Notify("Equip a weapon in your loadout first.");return;}
    if(!Armed&&!InBerms){session.Notify("Wardens keep weapons holstered inside the walls.","Ward");return;}
    Armed=!Armed;
    if(audioSource)
@@ -134,7 +201,7 @@ namespace AthenHill
    Aiming=play&&Armed&&input.Held("Aim");
    if(follow)follow.aimMode=Aiming;
    if(Aiming)Cursor.lockState=CursorLockMode.Locked;else ReleaseCursor();
-   motor.SpeedScale=Aiming?aimMoveScale:1;
+   motor.SpeedScale=(Aiming?aimMoveScale:1)*(Character!=null?Character.Stat("movementSpeed"):1);
    motor.FaceView=Aiming||Armed&&Time.time<faceUntil;
    if(view)motor.FaceYaw=view.transform.eulerAngles.y;
    if(!play||!Armed)return;
@@ -158,12 +225,15 @@ namespace AthenHill
    float skip=follow?follow.Distance:0;
    var origin=cam.position+cam.forward*skip;
    float range=stats.range;
-   Vector3 end=origin+cam.forward*range;Health target=null;
-   if(Physics.Raycast(origin,cam.forward,out var hit,range,shotMask,QueryTriggerInteraction.Ignore))
+   float cone=Mathf.Max(0,stats.spread)*(1-Mathf.Clamp01(stats.accuracy/100));
+   Vector2 scatter=UnityEngine.Random.insideUnitCircle*cone;
+   Vector3 direction=(Quaternion.AngleAxis(scatter.x,cam.up)*Quaternion.AngleAxis(-scatter.y,cam.right)*cam.forward).normalized;
+   Vector3 end=origin+direction*range;Health target=null;
+   if(Physics.Raycast(origin,direction,out var hit,range,shotMask,QueryTriggerInteraction.Ignore))
    {end=hit.point;target=hit.collider.GetComponentInParent<Health>();if(target==Health)target=null;}
    if(!target||!target.Alive)
    {
-    var assisted=AimAssist(origin,cam.forward,hit.collider?hit.distance:range,range,stats.aimAssist);
+    var assisted=AimAssist(origin,direction,hit.collider?hit.distance:range,range,stats.aimAssist);
     if(assisted){target=assisted;end=assisted.AimPoint;}
    }
    // The shot uses the pre-kick view. LateUpdate applies recovery before writing the next view.
@@ -179,7 +249,10 @@ namespace AthenHill
    if(impactSparks){impactSparks.transform.position=end;impactSparks.transform.forward=(muzzle-end).normalized;impactSparks.Emit(target?14:6);}
    if(target&&target.Alive)
    {
-    Hits++;target.Damage(stats.damage,end);
+    Hits++;
+    bool critical=stats.criticalChance>0&&UnityEngine.Random.value<Mathf.Clamp01(stats.criticalChance/100);
+    float hitDamage=stats.damage*(critical?Mathf.Max(1,stats.criticalMultiplier):1);
+    target.Damage(hitDamage,end);
     TargetHit?.Invoke(target,!target.Alive);
    }
   }

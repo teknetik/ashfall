@@ -5,10 +5,11 @@ namespace AthenHill
 {
  [Serializable] public class CityVisitState {public bool visitedHill,boughtFlask,soldScrap,linked;public string[] spoken;public string selectedDestination;}
  /// Everything a Ward save restores. JsonUtility-friendly (arrays of plain records, no dictionaries).
- /// Version 1 (29 September 2026). Player position is not saved: a loaded game resumes at West Gate.
+ /// Version 2 adds character progression and equipment. Version 1 starts with the catalog's character defaults.
+ /// Player position is not saved: a loaded game resumes at West Gate.
  [Serializable] public class WardSaveData
  {
-  public const int CurrentVersion=1;
+  public const int CurrentVersion=2;
   public int version;
   public string savedUtc,build;
   public int credits,purchases,sales;
@@ -19,6 +20,7 @@ namespace AthenHill
   public bool hasPistol;
   public FieldOrderState orders;
   public CityVisitState city;
+  public CharacterState character;
  }
  /// Reads and writes save files. Nothing here throws on bad input: unreadable files produce an error message.
  public static class WardSaveFile

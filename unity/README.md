@@ -10,8 +10,9 @@ saved field order) and **New Game**, which asks before replacing the save (Escap
 Progress autosaves after fabricating, fitting or removing a mod, collecting salvage,
 completing a field order, trading, and on quit, to `ward-save.json` in
 `Application.persistentDataPath` (Linux: `~/.config/unity3d/Free Column/Athen Hill/`).
-A continued game resumes at West Gate with credits, pack, fitted mods, schematics, the
-Berms primer step, field orders and loot luck restored; world drops and heap timers reset.
+A continued game resumes at West Gate with credits, pack, character training,
+equipment, fitted mods, schematics, the Berms primer step, field orders and loot
+luck restored; world drops and heap timers reset.
 An unreadable or newer save is moved aside and a new game starts with a notice.
 Development QA runs with `--athen-qa <dir>` save under `<dir>/save`; `--athen-save-dir <dir>`
 overrides the folder.
@@ -60,7 +61,7 @@ See [terrain evidence](evidence/terrain/20260908/acceptance.md) and the
 | 1 / 2 | Flask / medkit information |
 | 3 / 4 | Lattice / talk shortcut |
 | 5 or Tab / 6 | Field pack / notes |
-| In the pack | Arrows choose · Enter or Shift+click inspects · type in Search · drag the colonist to turn |
+| In the pack | Arrows choose · Enter or Shift+click inspects · type in Search · drag items onto equipment or weapon sockets · drag the colonist to turn |
 | Tab / Enter | Focus / activate UI controls |
 | Drag UI frame, header or bronze grip | Move that panel; position is saved |
 | Ctrl + drag over a UI control | Move its panel without activating the control |
@@ -84,6 +85,17 @@ elite; its control core reveals the Mark II schematics. Mira at Basic General bu
 (*Sell salvage*); rare parts, components and mods are never traded. See
 [the Gameplay v2 evidence](evidence/gameplay-v2/20260929/README.md) and
 [editing notes](EDITING.md#scavengers-arc-fabrication-loot-and-field-orders-29-september-2026).
+
+The pack's **YOU** column has Primary, Secondary, Stats, Implants and Armour
+sections. Equipment can be moved between compatible slots or returned to the pack;
+invalid drops leave the item in place and explain why. Physical carry weight and
+pack storage capacity are separate limits. The starting field backpack adds storage;
+other storage devices can be defined in the character catalog. Attribute and skill
+training, equipment and implants recalculate the same stats used by combat and
+crafting. The fabricator also lists a field rifle and a rifle modification with
+their own requirements and sockets. The rifle currently uses the existing pistol
+presentation in combat; its dedicated model and animation are future art work.
+See [character progression](CHARACTER_PROGRESSION.md) for data ownership and limits.
 
 The south-court Ring Gate now uses the user's sandstone/gunmetal reference,
 generated through Meshy MCP. Its editable prefab includes the control console,

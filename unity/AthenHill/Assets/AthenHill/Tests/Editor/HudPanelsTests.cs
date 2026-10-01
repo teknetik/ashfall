@@ -46,8 +46,9 @@ namespace AthenHill.Tests
    panel.Opened();
    var buttons=root.Query<Button>(className:"fab-recipe").ToList();
    Assert.That(buttons.Count,Is.EqualTo(Data().recipes.Length));
-   Assert.That(root.Query<Label>(className:"fab-group").ToList().Select(l=>l.text),Is.EqualTo(new[]{"REFINED COMPONENTS","MARK I PISTOL MODS","MARK II PISTOL MODS"}));
-   Assert.That(buttons.All(b=>b.ClassListContains("locked")),"nothing known on a new game");
+   Assert.That(root.Query<Label>(className:"fab-group").ToList().Select(l=>l.text),Is.EqualTo(new[]{"REFINED COMPONENTS","MARK I PISTOL MODS","MARK II PISTOL MODS","WEAPONS","WEAPON MODS"}));
+   Assert.That(buttons.Where(b=>!b.name.EndsWith("recipe_field_rifle")&&!b.name.EndsWith("recipe_rifle_precision_barrel")).All(b=>b.ClassListContains("locked")),"the field-order recipes are still discovered in play");
+   panel.Select("recipe_grip_stabilised_pistol");
    Assert.That(root.Query(className:"fab-slot").ToList().Count,Is.EqualTo(3));
    Assert.That(root.Query(className:"fab-stat-row").ToList().Count,Is.EqualTo(1+Data().statLabels.Length));
    // Know the grip, carry part of it: have/need rows and a worded reason, Fabricate disabled.

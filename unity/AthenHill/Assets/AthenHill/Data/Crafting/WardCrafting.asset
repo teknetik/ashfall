@@ -15,6 +15,7 @@ MonoBehaviour:
   weapons:
   - id: weapon_scrap_pistol
     name: Scrap Pistol
+    itemId: scrap_pistol
     stats:
       damage: 34
       fireInterval: 0.28
@@ -46,7 +47,92 @@ MonoBehaviour:
     - grip
     - barrel
     - cell
+  - id: weapon_field_rifle
+    name: Field Rifle
+    itemId: field_rifle
+    recipeId: recipe_field_rifle
+    stats:
+      damage: 27
+      fireInterval: 0.18
+      range: 100
+      recoil: 44
+      nanoMax: 100
+      nanoPerShot: 8
+      nanoRegen: 30
+      aimAssist: 2
+      accuracy: 82
+      spread: 1.2
+      criticalChance: 5
+      criticalMultiplier: 1.5
+      projectileVelocity: 800
+      reloadTime: 2.4
+      heatGeneration: 7
+      cooling: 15
+      durability: 100
+      armourPenetration: 8
+    minStats:
+      damage: 1
+      fireInterval: 0.08
+      range: 10
+      recoil: 0
+      nanoMax: 20
+      nanoPerShot: 1
+      nanoRegen: 1
+      aimAssist: 0
+      accuracy: 0
+      spread: 0
+      criticalChance: 0
+      criticalMultiplier: 1
+      projectileVelocity: 0
+      reloadTime: 0
+      heatGeneration: 0
+      cooling: 0
+      durability: 0
+      armourPenetration: 0
+    maxStats:
+      damage: 400
+      fireInterval: 2
+      range: 200
+      recoil: 100
+      nanoMax: 400
+      nanoPerShot: 60
+      nanoRegen: 200
+      aimAssist: 12
+      accuracy: 100
+      spread: 180
+      criticalChance: 100
+      criticalMultiplier: 10
+      projectileVelocity: 10000
+      reloadTime: 60
+      heatGeneration: 1000
+      cooling: 1000
+      durability: 100000
+      armourPenetration: 100
+    slots:
+    - barrel
+    - cell
   modifiers:
+  - id: mod_rifle_precision_barrel
+    itemId: rifle_precision_barrel
+    slot: barrel
+    weaponIds:
+    - weapon_field_rifle
+    effects:
+    - stat: accuracy
+      op: add
+      value: 8
+    - stat: spread
+      op: percent
+      value: -25
+    - stat: range
+      op: add
+      value: 15
+    - stat: criticalChance
+      op: add
+      value: 3
+    - stat: armourPenetration
+      op: add
+      value: 4
   - id: mod_grip_stabilised
     itemId: grip_stabilised_pistol
     slot: grip
@@ -126,6 +212,56 @@ MonoBehaviour:
   - id: station_field_fabricator
     name: Warden Field Fabricator
   recipes:
+  - id: recipe_field_rifle
+    name: Field Rifle
+    stationId: station_field_fabricator
+    outputWeaponId: weapon_field_rifle
+    outputSlots:
+    - barrel
+    - cell
+    outputItemId: field_rifle
+    inputs:
+    - kind: item
+      id: scrap_alloy
+      quantity: 8
+    - kind: item
+      id: copper_filament
+      quantity: 4
+    - kind: tag
+      id: nanite:tier1
+      quantity: 6
+    outputQuantity: 1
+    knownByDefault: 1
+    requirements:
+    - stat: engineering
+      minimum: 45
+    requiredTools:
+    - field_toolkit
+    unlocks: []
+    group: 3
+  - id: recipe_rifle_precision_barrel
+    name: Precision Rifle Barrel
+    stationId: station_field_fabricator
+    requiresWeaponId: weapon_field_rifle
+    outputItemId: rifle_precision_barrel
+    inputs:
+    - kind: item
+      id: scrap_alloy
+      quantity: 3
+    - kind: item
+      id: copper_filament
+      quantity: 2
+    outputQuantity: 1
+    knownByDefault: 1
+    requirements:
+    - stat: engineering
+      minimum: 35
+    requiredTools:
+    - field_toolkit
+    requiredSchematics:
+    - recipe_field_rifle
+    unlocks: []
+    group: 4
   - id: recipe_wound_coil
     name: Wound Copper Coil
     stationId: station_field_fabricator
@@ -565,6 +701,10 @@ MonoBehaviour:
     label: Mark I pistol mods
   - id: MarkII
     label: Mark II pistol mods
+  - id: Weapon
+    label: Weapons
+  - id: WeaponMod
+    label: Weapon mods
   statLabels:
   - stat: damage
     label: Damage

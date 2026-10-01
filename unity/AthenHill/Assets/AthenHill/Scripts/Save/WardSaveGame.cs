@@ -62,6 +62,7 @@ namespace AthenHill
   {
    if(subscribed||!Ready)return;subscribed=true;
    crafting.Model.Changed+=MarkDirty;crafting.Collected+=OnCollected;Session.Traded+=MarkDirty;
+   if(Session.Character!=null)Session.Character.Changed+=MarkDirty;
    if(orders)orders.Completed+=OnOrderCompleted;
   }
   void OnDestroy()
@@ -69,6 +70,7 @@ namespace AthenHill
    if(!subscribed)return;
    if(crafting){if(crafting.Model!=null)crafting.Model.Changed-=MarkDirty;crafting.Collected-=OnCollected;}
    if(Session)Session.Traded-=MarkDirty;
+   if(Session&&Session.Character!=null)Session.Character.Changed-=MarkDirty;
    if(orders)orders.Completed-=OnOrderCompleted;
   }
   void MarkDirty(){if(!applying)dirty=true;}
@@ -88,7 +90,7 @@ namespace AthenHill
     items=shop.Carried.OrderBy(x=>x.Key,StringComparer.Ordinal).Select(x=>new ItemStack(x.Key,x.Value)).ToArray(),
     crafting=crafting.Model.Capture(),loot=crafting.Loot.Capture(),
     bermsStep=tutorial?tutorial.Step.ToString():BermsStep.Approach.ToString(),hasPistol=combat&&combat.hasPistol,
-    orders=orders?orders.Capture():null,city=Session.CaptureCityVisit()
+    orders=orders?orders.Capture():null,city=Session.CaptureCityVisit(),character=Session.Character?.Capture()
    };
   }
   public bool SaveNow(string reason)
@@ -108,6 +110,7 @@ namespace AthenHill
     var known=new HashSet<string>(Session.catalog.items.Select(x=>x.id));
     if(data.items!=null)skipped.AddRange(data.items.Where(x=>x!=null&&!known.Contains(x.itemId)).Select(x=>x.itemId));
     Session.Shop.Restore(data.credits,data.purchases,data.sales,data.items?.Where(x=>x!=null).Select(x=>new KeyValuePair<string,int>(x.itemId,x.quantity)));
+    if(Session.Character!=null)skipped.AddRange(Session.Character.Restore(data.character));
     skipped.AddRange(crafting.Model.Restore(data.crafting));
     if(data.loot!=null&&!crafting.Loot.Restore(data.loot))skipped.Add("loot generator state");
     var step=Enum.TryParse(data.bermsStep,out BermsStep parsed)?parsed:BermsStep.Approach;

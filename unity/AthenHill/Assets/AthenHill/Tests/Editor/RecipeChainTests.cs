@@ -25,7 +25,7 @@ namespace AthenHill.Tests
    var ids=city.items.Select(x=>x.id).ToHashSet();
    foreach(var r in craft.recipes){Assert.That(ids.Contains(r.outputItemId),r.id);foreach(var i in r.inputs)Assert.That(i.kind=="item"?ids.Contains(i.id):city.items.Any(x=>x.HasTag(i.id)),r.id+"/"+i.id);}
    foreach(var t in craft.lootTables)foreach(var e in t.entries)Assert.That(ids.Contains(e.itemId),t.id+"/"+e.itemId);
-   foreach(var m in craft.modifiers)Assert.That(ids.Contains(m.itemId)&&craft.weapons.Single().slots.Contains(m.slot),m.id);
+   foreach(var m in craft.modifiers)Assert.That(ids.Contains(m.itemId)&&craft.weapons.Any(w=>m.weaponIds.Contains(w.id)&&w.slots.Contains(m.slot)),m.id);
    // Every mod has exactly one schematic; every Mark II schematic needs a rare part.
    foreach(var mod in craft.modifiers)Assert.That(craft.recipes.Count(r=>r.outputItemId==mod.itemId),Is.EqualTo(1),mod.itemId);
    var rare=city.items.Where(x=>x.rarity==ItemRarity.Rare).Select(x=>x.id).ToHashSet();
@@ -90,7 +90,7 @@ namespace AthenHill.Tests
   [Test] public void SchematicsUnlockByOrderAndByAcquisition()
   {
    var pack=new ShopModel(City().items);var model=new CraftingModel(Data(),City().items,pack,()=>true);
-   Assert.That(model.KnownRecipes,Is.Empty);
+   Assert.That(model.KnownRecipes,Is.EquivalentTo(new[]{"recipe_field_rifle","recipe_rifle_precision_barrel"}));
    Assert.That(model.Acquire("droid_servo_damaged").Select(r=>r.id),Is.EqualTo(new[]{"recipe_grip_stabilised_pistol"}));
    Assert.That(model.Acquire("droid_servo_damaged"),Is.Empty);
    Assert.That(model.Acquire("micro_capacitor").Select(r=>r.id),Is.EqualTo(new[]{"recipe_charge_cell_core"}));
@@ -111,7 +111,7 @@ namespace AthenHill.Tests
    Give(pack,("scrap_alloy",8),("nanite_residue",4),("copper_filament",2));
    Craft(model,"recipe_alloy_plate",2);Craft(model,"recipe_wound_coil");
    Assert.That(model.TryCraft("recipe_barrel_bored_alloy",Station,out var reason),Is.False);Assert.That(reason,Is.EqualTo("missing_weapon"));
-   Assert.That(CraftingText.Reason(reason,model),Does.Contain("arms locker"));
+   Assert.That(CraftingText.Reason(reason,model),Does.Contain("carry or equip the required weapon"));
    pistol=true;Craft(model,"recipe_barrel_bored_alloy");
   }
 

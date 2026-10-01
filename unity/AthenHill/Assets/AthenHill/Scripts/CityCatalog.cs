@@ -14,6 +14,8 @@ namespace AthenHill
   public string icon;
   [Tooltip("Basic General's Buy parts price (Mira's premium over what she pays). 0 = not stocked. Rare parts are never stocked.")]
   [Min(0)]public int partsPrice;
+  [Tooltip("Mass of one item in kilograms while it is in the field pack.")]
+  [Min(0)]public float weightKg;
   public bool HasTag(string tag)=>tags!=null&&Array.IndexOf(tags,tag)>=0;
  }
  [Serializable] public class TravelNode {public string id,name;[TextArea] public string description;}

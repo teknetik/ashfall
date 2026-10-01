@@ -50,13 +50,42 @@ namespace AthenHill.Tests
   {
    string good=WardSaveFile.Serialize(new WardSaveData{version=1,credits=5,items=new[]{new ItemStack("scrap_alloy",2)},bermsStep="Depot"});
    Assert.That(WardSaveFile.TryParse(good,out var data,out var error),error);Assert.That(data.items.Single().quantity,Is.EqualTo(2));
-   foreach(var (text,expect) in new[]{("",'e'),("   ",'e'),("not json at all",'n'),("{\"version\":1,\"credits\":",'d'),("{\"credits\":4}",'v'),("{\"version\":2}",'b'),("{\"version\":1,\"credits\":-5}",'i'),("{\"version\":1,\"bermsStep\":\"Moon\"}",'u'),("[1,2,3]",'n')})
+   foreach(var (text,expect) in new[]{("",'e'),("   ",'e'),("not json at all",'n'),("{\"version\":1,\"credits\":",'d'),("{\"credits\":4}",'v'),("{\"version\":99}",'b'),("{\"version\":1,\"credits\":-5}",'i'),("{\"version\":1,\"bermsStep\":\"Moon\"}",'u'),("[1,2,3]",'n')})
    {
     Assert.That(WardSaveFile.TryParse(text,out data,out error),Is.False,text);
     Assert.That(data,Is.Null,text);Assert.That(error,Is.Not.Empty,text);
     if(expect=='b')Assert.That(error,Does.Contain("newer build"));
    }
    Assert.That(WardSaveFile.TryRead(Path.Combine(folder,"missing.json"),out _,out error),Is.False);Assert.That(error,Is.EqualTo("no save file"));
+  }
+
+  [Test] public void CharacterEquipmentAndTrainingRoundTripAndV1UsesDefaults()
+  {
+   using var rig=new Rig(folder);
+   var catalog=ScriptableObject.CreateInstance<CharacterCatalog>();
+   try
+   {
+    catalog.attributes=new[]{new CharacterAttribute{id="strength",initial=10}};
+    catalog.skills=new[]{new CharacterSkill{id="engineering",initial=20}};
+    catalog.slots=new[]{new CharacterSlot{id="primary"}};
+    catalog.equipment=new[]{new CharacterEquipment{itemId="field_rifle",slots=new[]{"primary"}}};
+    var character=new CharacterModel(catalog,rig.pack);Set(rig.session,"Character",character);
+    Assert.That(character.TryRaiseAttribute("strength",out var reason),reason);
+    Assert.That(character.TryRaiseSkill("engineering",out reason),reason);
+    Assert.That(character.TryEquip("field_rifle","primary",out reason),reason);
+    var data=rig.save.Capture();
+    Assert.That(data.version,Is.EqualTo(2));
+    Assert.That(WardSaveFile.TryParse(WardSaveFile.Serialize(data),out var parsed,out reason),reason);
+    character.Restore(null);
+    Assert.That(rig.save.Apply(parsed),Is.Empty);
+    Assert.That(character.BaseAttribute("strength"),Is.EqualTo(11));Assert.That(character.TrainedSkill("engineering"),Is.EqualTo(25));
+    Assert.That(character.Equipped("primary"),Is.EqualTo("field_rifle"));Assert.That(rig.pack.Quantity("field_rifle"),Is.Zero);
+    parsed.version=1;parsed.character=null;parsed.crafting.weapons=null;
+    rig.save.Apply(parsed);
+    Assert.That(character.BaseAttribute("strength"),Is.EqualTo(10));Assert.That(character.TrainedSkill("engineering"),Is.EqualTo(20));
+    Assert.That(character.Equipped("primary"),Is.Null);Assert.That(character.AttributePoints,Is.EqualTo(catalog.initialAttributePoints));
+   }
+   finally{Object.DestroyImmediate(catalog);}
   }
 
   [Test] public void FullRoundTripRestoresEveryStateMachine()
@@ -116,6 +145,8 @@ namespace AthenHill.Tests
     data.items=data.items.Append(new ItemStack("retired_widget",3)).ToArray();
     data.crafting.known=new[]{"recipe_wound_coil","recipe_from_the_future"};
     data.crafting.fitted=new[]{new SlotEntry{slot="grip",itemId="barrel_bored_alloy"}};// wrong slot
+    data.crafting.weapons=null; // Exercise the legacy loadout migration with its wrong-slot entry.
+    data.version=1;
     File.WriteAllText(a.save.SavePath,WardSaveFile.Serialize(data));
    }
    using var b=new Rig(folder);
