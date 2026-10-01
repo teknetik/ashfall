@@ -125,7 +125,15 @@ namespace AthenHill
    foreach(var s in stacks)
    {
     int room=pack.Spec(s.itemId)!=null?pack.Room(s.itemId):0;
-    int take=Math.Min(room,s.quantity);
+    int high=Math.Min(room,s.quantity),low=0;
+    while(low<high)
+    {
+     int middle=low+(high-low+1)/2;
+     var proposal=taken.Select(x=>new KeyValuePair<string,int>(x.itemId,x.quantity)).ToList();
+     proposal.Add(new KeyValuePair<string,int>(s.itemId,middle));
+     if(pack.CanApply(proposal,0,out _))low=middle;else high=middle-1;
+    }
+    int take=low;
     if(take>0)taken.Add(new ItemStack(s.itemId,take));
     if(take<s.quantity)left.Add(new ItemStack(s.itemId,s.quantity-take));
    }

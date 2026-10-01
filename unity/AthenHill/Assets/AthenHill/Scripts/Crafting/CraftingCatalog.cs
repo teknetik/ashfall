@@ -5,15 +5,23 @@ namespace AthenHill
  [Serializable] public class CraftIngredient {public string kind,id;public int quantity;}
  /// type: acquireItem (the item first enters the pack) or orderStart (a field order becomes current).
  [Serializable] public class CraftUnlock {public string type,id;}
- /// Fabricator window grouping: refined components, then Mark I and Mark II pistol mods.
- public enum RecipeGroup { Component, MarkI, MarkII }
+ /// Fabricator window grouping; new weapon families can have their own sections.
+ public enum RecipeGroup { Component, MarkI, MarkII, Weapon, WeaponMod }
  [Serializable] public class CraftRecipe
  {
   public string id,name,stationId,requiresWeaponId,outputItemId;
+  [Tooltip("Weapon definition produced by this schematic. Its socket layout is defined by Output Slots.")]
+  public string outputWeaponId;
+  public string[] outputSlots;
   public CraftIngredient[] inputs;
   public int outputQuantity=1;
   public bool knownByDefault;
   public CraftUnlock[] unlocks;
+  public CharacterRequirement[] requirements;
+  [Tooltip("Carried tools required for fabrication. Tools are not consumed.")]
+  public string[] requiredTools;
+  [Tooltip("Additional schematic IDs that must be known before this recipe can be made.")]
+  public string[] requiredSchematics;
   public RecipeGroup group;
   [Tooltip("Shown in the fabricator while the schematic is unknown: where it can be learned.")]
   [TextArea]public string lockedHint;
@@ -21,10 +29,17 @@ namespace AthenHill
  /// stat: a WeaponStats field name (damage, fireInterval, range, recoil, nanoMax, nanoPerShot, nanoRegen, aimAssist).
  /// op: add (flat) or percent (summed, applied once after the flat terms).
  [Serializable] public class CraftEffect {public string stat,op;public float value;}
- [Serializable] public class CraftModifier {public string id,itemId,slot;public string[] weaponIds;public CraftEffect[] effects;}
+ [Serializable] public class CraftModifier
+ {
+  public string id,itemId,slot;
+  public string[] weaponIds;
+  public CraftEffect[] effects;
+  public CharacterRequirement[] requirements;
+  public string[] requiredTools;
+ }
  [Serializable] public class CraftWeapon
  {
-  public string id,name;
+  public string id,name,itemId,recipeId;
   [Tooltip("Unmodified weapon numbers. PlayerCombat reads the effective values from the fitted loadout.")]
   public WeaponStats stats=WeaponStats.ScrapPistol;
   [Tooltip("Effective stats are clamped to these bounds after every fitted mod applies.")]

@@ -10,6 +10,9 @@ namespace AthenHill
  public class GameSession:MonoBehaviour
  {
   public CityCatalog catalog;
+  [Tooltip("Character progression rules. When unassigned, loads Resources/CharacterCatalog.")]
+  public CharacterCatalog characterCatalog;
+  public CharacterModel Character {get;private set;}
   public GameSettings Settings {get;private set;}
   void Awake(){Settings=GetComponent<GameSettings>();if(!Settings)Settings=gameObject.AddComponent<GameSettings>();reducedMotion=Settings.ReadReducedMotion(reducedMotion);RadioLine.timing=radioTiming??new RadioQueue.Timing();}
   void SettingsChanged(){muted=Settings.Sound.muted;Changed?.Invoke();}
@@ -48,8 +51,27 @@ namespace AthenHill
   public bool Complete=>visitedHill&&Spoken.Count==4&&boughtFlask&&soldScrap&&linked;
   public string Objective=>!visitedHill?"Reach the Hill Tree.":Spoken.Count<4?$"Meet the colonists · {Spoken.Count}/4 conversations":!boughtFlask||!soldScrap?"Buy a flask and sell your scrap at Basic General.":!linked?"Use the Lattice Jack in the north court.":"A place on the hill. City visit complete.";
   public DialogueNode Dialogue=>ActiveNpc?ActiveNpc.definition.nodes.First(x=>x.id==dialogueNode):null;
-  void Start(){Settings.Changed+=SettingsChanged;muted=Settings.Sound.muted;Settings.ApplySound();Shop=new ShopModel(catalog.items,catalog.startingCredits);Log.Add("Linn: Meet me on the hill.");SetState(CityState.MainMenu);}
-  void OnDestroy(){if(Settings)Settings.Changed-=SettingsChanged;Time.timeScale=1;AudioListener.pause=false;AudioListener.volume=1;}
+  void Start()
+  {
+   Settings.Changed+=SettingsChanged;muted=Settings.Sound.muted;Settings.ApplySound();
+   Shop=new ShopModel(catalog.items,catalog.startingCredits);
+   if(!characterCatalog)characterCatalog=Resources.Load<CharacterCatalog>("CharacterCatalog");
+   if(characterCatalog)
+   {
+    Character=new CharacterModel(characterCatalog,Shop);
+    Shop.CapacityFailure=Character.CapacityFailure;
+    Character.Changed+=OnCharacterChanged;
+    if(player)
+    {
+     var combat=player.GetComponent<PlayerCombat>();
+     if(combat)combat.BindCharacter(Character);
+    }
+   }
+   else Debug.LogError("CharacterCatalog is missing from Resources; progression is unavailable.");
+   Log.Add("Linn: Meet me on the hill.");SetState(CityState.MainMenu);
+  }
+  void OnCharacterChanged()=>Changed?.Invoke();
+  void OnDestroy(){if(Settings)Settings.Changed-=SettingsChanged;if(Character!=null)Character.Changed-=OnCharacterChanged;Time.timeScale=1;AudioListener.pause=false;AudioListener.volume=1;}
   // Do not change session state from OnApplicationFocus. Linux launchers and
   // window managers can report a transient focus loss while the player window is
   // still opening, which otherwise starts the game paused with movement disabled.

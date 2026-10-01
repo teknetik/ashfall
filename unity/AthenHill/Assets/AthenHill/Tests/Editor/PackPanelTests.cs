@@ -102,14 +102,13 @@ namespace AthenHill.Tests
    var root=Hud();var panel=new PackPanel(root,rig.session,rig.crafting,null,Icons());
    panel.Opened();
    panel.SetTab(PackPanel.Tab.Schematics);
-   Assert.That(Tiles(root),Is.Empty);
-   Assert.That(root.Q<Label>("inventory-empty-title").text,Is.EqualTo("No schematics known yet."));
+   Assert.That(Tiles(root),Is.EqualTo(new[]{"sch-recipe_field_rifle","sch-recipe_rifle_precision_barrel"}));
    Assert.That(rig.model.Unlock("recipe_alloy_plate"));Assert.That(rig.model.Unlock("recipe_grip_stabilised_pistol"));
    panel.Refresh();
-   Assert.That(Tiles(root),Is.EqualTo(new[]{"sch-recipe_alloy_plate","sch-recipe_grip_stabilised_pistol"}));
+   Assert.That(Tiles(root),Is.EqualTo(new[]{"sch-recipe_alloy_plate","sch-recipe_grip_stabilised_pistol","sch-recipe_field_rifle","sch-recipe_rifle_precision_barrel"}));
    Assert.That(root.Q<Button>("sch-recipe_alloy_plate").ClassListContains("short"),"no parts carried");
    Assert.That(root.Q<Label>("inventory-overview-description").text,Does.StartWith("Parts: ").And.Contain("field fabricator"));
-   Assert.That(root.Query<Button>(className:"pack-chip").ToList().Select(b=>b.text),Is.EqualTo(new[]{"ALL","COMPONENTS","MARK I","MARK II"}));
+   Assert.That(root.Query<Button>(className:"pack-chip").ToList().Select(b=>b.text),Is.EqualTo(new[]{"ALL","COMPONENTS","MARK I","MARK II","WEAPONS","WEAPON MODS"}));
    panel.SetFilter("MarkI");
    Assert.That(Tiles(root),Is.EqualTo(new[]{"sch-recipe_grip_stabilised_pistol"}));
    panel.SetTab(PackPanel.Tab.Items);

@@ -128,5 +128,46 @@ namespace AthenHill.Tests
    }
    finally{UnityEngine.Object.DestroyImmediate(go);}
   }
+
+  [Test] public void KnownRecipeStillRequiresSkillToolsAndStationWithoutConsumingInputs()
+  {
+   var catalog=ScriptableObject.CreateInstance<CharacterCatalog>();
+   try
+   {
+    catalog.skills=new[]{new CharacterSkill{id="engineering",initial=30,trainingStep=5}};
+    var pack=new ShopModel(City().items);var character=new CharacterModel(catalog,pack);
+    var model=new CraftingModel(Data(),City().items,pack,()=>true,character:character);
+    const string recipe="recipe_rifle_precision_barrel",station="station_field_fabricator";
+    Assert.That(pack.TryApply(new[]{Delta("scrap_alloy",3),Delta("copper_filament",2)},0,out _));
+    Assert.That(model.Knows(recipe));
+    Assert.That(model.TryCraft(recipe,station,out var reason),Is.False);Assert.That(reason,Is.EqualTo("unmet_requirements"));
+    Assert.That(pack.Quantity("scrap_alloy"),Is.EqualTo(3));Assert.That(model.CraftCount(recipe),Is.Zero);
+    Assert.That(character.TryRaiseSkill("engineering",out reason),reason);
+    Assert.That(pack.TryApply(new[]{Delta("field_toolkit",-1)},0,out reason),reason);
+    Assert.That(model.TryCraft(recipe,station,out reason),Is.False);Assert.That(reason,Is.EqualTo("missing_tool"));
+    Assert.That(pack.TryApply(new[]{Delta("field_toolkit",1)},0,out reason),reason);
+    Assert.That(model.TryCraft(recipe,"wrong_station",out reason),Is.False);Assert.That(reason,Is.EqualTo("wrong_station"));
+    Assert.That(model.TryCraft(recipe,station,out reason),reason);
+    Assert.That(pack.Quantity("field_toolkit"),Is.EqualTo(1));Assert.That(pack.Quantity("rifle_precision_barrel"),Is.EqualTo(1));
+    Assert.That(pack.Quantity("scrap_alloy"),Is.Zero);
+   }
+   finally{UnityEngine.Object.DestroyImmediate(catalog);}
+  }
+
+  [Test] public void TaggedIngredientAllocationReservesReusableTools()
+  {
+   var data=ScriptableObject.CreateInstance<CraftingCatalog>();
+   try
+   {
+    var items=new[]{new ItemSpec{id="tool",sellPrice=0,tags=new[]{"metal"}},new ItemSpec{id="alloy",sellPrice=1,tags=new[]{"metal"}},new ItemSpec{id="output"}};
+    var pack=new ShopModel(items);Assert.That(pack.TryApply(new[]{Delta("tool",1),Delta("alloy",1)},0,out _));
+    data.weapons=new[]{new CraftWeapon{id="weapon"}};data.modifiers=Array.Empty<CraftModifier>();
+    data.recipes=new[]{new CraftRecipe{id="recipe",knownByDefault=true,outputItemId="output",requiredTools=new[]{"tool"},inputs=new[]{new CraftIngredient{kind="tag",id="metal",quantity=1}}}};
+    var model=new CraftingModel(data,items,pack,()=>true);
+    Assert.That(model.TryCraft("recipe",null,out var reason),reason);
+    Assert.That(pack.Quantity("tool"),Is.EqualTo(1));Assert.That(pack.Quantity("alloy"),Is.Zero);Assert.That(pack.Quantity("output"),Is.EqualTo(1));
+   }
+   finally{UnityEngine.Object.DestroyImmediate(data);}
+  }
  }
 }

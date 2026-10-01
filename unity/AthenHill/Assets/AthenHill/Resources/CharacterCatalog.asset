@@ -1,0 +1,892 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4268b9049014e28943db0ce62a90101, type: 3}
+  m_Name: CharacterCatalog
+  m_EditorClassIdentifier:
+  attributes:
+  - id: strength
+    label: Strength
+    initial: 10
+    maximum: 100
+    cost: 1
+  - id: agility
+    label: Agility
+    initial: 10
+    maximum: 100
+    cost: 1
+  - id: endurance
+    label: Endurance
+    initial: 10
+    maximum: 100
+    cost: 1
+  - id: intellect
+    label: Intellect
+    initial: 10
+    maximum: 100
+    cost: 1
+  - id: perception
+    label: Perception
+    initial: 10
+    maximum: 100
+    cost: 1
+  - id: resolve
+    label: Resolve
+    initial: 10
+    maximum: 100
+    cost: 1
+  skills:
+  - id: pistol
+    label: Pistol
+    category: Weapons
+    initial: 20
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: perception
+      factor: 0.5
+    - stat: agility
+      factor: 0.3
+    - stat: intellect
+      factor: 0.2
+  - id: rifle
+    label: Rifle
+    category: Weapons
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: perception
+      factor: 0.5
+    - stat: agility
+      factor: 0.3
+    - stat: intellect
+      factor: 0.2
+  - id: shotgun
+    label: Shotgun
+    category: Weapons
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: perception
+      factor: 0.5
+    - stat: strength
+      factor: 0.3
+    - stat: agility
+      factor: 0.2
+  - id: smg
+    label: SMG
+    category: Weapons
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: agility
+      factor: 0.5
+    - stat: perception
+      factor: 0.3
+    - stat: strength
+      factor: 0.2
+  - id: heavyWeapons
+    label: Heavy Weapons
+    category: Weapons
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: strength
+      factor: 0.5
+    - stat: endurance
+      factor: 0.3
+    - stat: perception
+      factor: 0.2
+  - id: energyWeapons
+    label: Energy Weapons
+    category: Weapons
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: intellect
+      factor: 0.5
+    - stat: perception
+      factor: 0.3
+    - stat: resolve
+      factor: 0.2
+  - id: blades
+    label: Blades
+    category: Melee
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: agility
+      factor: 0.5
+    - stat: strength
+      factor: 0.5
+  - id: blunt
+    label: Blunt
+    category: Melee
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: strength
+      factor: 0.7
+    - stat: endurance
+      factor: 0.3
+  - id: unarmed
+    label: Unarmed
+    category: Melee
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: strength
+      factor: 0.5
+    - stat: agility
+      factor: 0.5
+  - id: engineering
+    label: Engineering
+    category: Technology
+    initial: 20
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: intellect
+      factor: 0.6
+    - stat: perception
+      factor: 0.25
+    - stat: resolve
+      factor: 0.15
+  - id: electronics
+    label: Electronics
+    category: Technology
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: intellect
+      factor: 0.7
+    - stat: perception
+      factor: 0.3
+  - id: hacking
+    label: Hacking
+    category: Technology
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: intellect
+      factor: 0.6
+    - stat: perception
+      factor: 0.25
+    - stat: resolve
+      factor: 0.15
+  - id: nanotechnology
+    label: Nanotechnology
+    category: Technology
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: intellect
+      factor: 0.7
+    - stat: resolve
+      factor: 0.3
+  - id: robotics
+    label: Robotics
+    category: Technology
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: intellect
+      factor: 0.6
+    - stat: perception
+      factor: 0.4
+  - id: quantumTechnology
+    label: Quantum Technology
+    category: Technology
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: intellect
+      factor: 0.6
+    - stat: resolve
+      factor: 0.4
+  - id: weaponsmithing
+    label: Weaponsmithing
+    category: Fabrication
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: intellect
+      factor: 0.5
+    - stat: perception
+      factor: 0.3
+    - stat: strength
+      factor: 0.2
+  - id: armourcraft
+    label: Armourcraft
+    category: Fabrication
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: intellect
+      factor: 0.5
+    - stat: strength
+      factor: 0.3
+    - stat: endurance
+      factor: 0.2
+  - id: chemistry
+    label: Chemistry
+    category: Fabrication
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: intellect
+      factor: 0.8
+    - stat: perception
+      factor: 0.2
+  - id: fabrication
+    label: Fabrication
+    category: Fabrication
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: intellect
+      factor: 0.6
+    - stat: agility
+      factor: 0.4
+  - id: medicine
+    label: Medicine
+    category: Medicine
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: intellect
+      factor: 0.6
+    - stat: perception
+      factor: 0.4
+  - id: fieldcraft
+    label: Fieldcraft
+    category: Survival
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: endurance
+      factor: 0.4
+    - stat: perception
+      factor: 0.4
+    - stat: resolve
+      factor: 0.2
+  - id: scavenging
+    label: Scavenging
+    category: Survival
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: perception
+      factor: 0.6
+    - stat: intellect
+      factor: 0.2
+    - stat: strength
+      factor: 0.2
+  - id: tracking
+    label: Tracking
+    category: Survival
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: perception
+      factor: 0.7
+    - stat: resolve
+      factor: 0.3
+  - id: stealth
+    label: Stealth
+    category: Stealth
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: agility
+      factor: 0.6
+    - stat: perception
+      factor: 0.4
+  - id: awareness
+    label: Awareness
+    category: Survival
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: perception
+      factor: 0.8
+    - stat: resolve
+      factor: 0.2
+  - id: lockpicking
+    label: Lockpicking
+    category: Stealth
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: agility
+      factor: 0.5
+    - stat: intellect
+      factor: 0.5
+  - id: dodging
+    label: Dodging
+    category: Defence
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: agility
+      factor: 0.7
+    - stat: perception
+      factor: 0.3
+  - id: armourHandling
+    label: Armour Handling
+    category: Defence
+    initial: 0
+    maximum: 1200
+    cost: 1
+    trainingStep: 5
+    dependencies:
+    - stat: endurance
+      factor: 0.6
+    - stat: strength
+      factor: 0.4
+  derivedStats:
+  - id: health
+    label: Health
+    unit: ''
+    initial: 50
+    perLevel: 2
+    minimum: 0
+    maximum: 100000
+    dependencies:
+    - stat: endurance
+      factor: 5
+  - id: stamina
+    label: Stamina
+    unit: ''
+    initial: 50
+    perLevel: 2
+    minimum: 0
+    maximum: 100000
+    dependencies:
+    - stat: endurance
+      factor: 5
+  - id: nano
+    label: Nano
+    unit: ''
+    initial: 30
+    perLevel: 1
+    minimum: 0
+    maximum: 100000
+    dependencies:
+    - stat: intellect
+      factor: 3
+    - stat: resolve
+      factor: 2
+  - id: carryCapacity
+    label: Carry capacity
+    unit: 'kg'
+    initial: 10
+    perLevel: 0
+    minimum: 0
+    maximum: 100000
+    dependencies:
+    - stat: strength
+      factor: 2
+  - id: storageCapacity
+    label: Storage capacity
+    unit: 'kg'
+    initial: 5
+    perLevel: 0
+    minimum: 0
+    maximum: 100000
+    dependencies: []
+  - id: movementSpeed
+    label: Movement
+    unit: '%'
+    initial: 0.95
+    perLevel: 0
+    minimum: 0
+    maximum: 3
+    dependencies:
+    - stat: agility
+      factor: 0.005
+  - id: armour
+    label: Armour
+    unit: ''
+    initial: 0
+    perLevel: 0
+    minimum: 0
+    maximum: 100000
+    dependencies: []
+  - id: physicalResistance
+    label: Physical resistance
+    unit: '%'
+    initial: 0
+    perLevel: 0
+    minimum: 0
+    maximum: 0.9
+    dependencies:
+    - stat: endurance
+      factor: 0.002
+  - id: energyResistance
+    label: Energy resistance
+    unit: '%'
+    initial: 0
+    perLevel: 0
+    minimum: 0
+    maximum: 0.9
+    dependencies: []
+  - id: thermalResistance
+    label: Thermal resistance
+    unit: '%'
+    initial: 0
+    perLevel: 0
+    minimum: 0
+    maximum: 0.9
+    dependencies:
+    - stat: endurance
+      factor: 0.001
+  - id: radiationResistance
+    label: Radiation resistance
+    unit: '%'
+    initial: 0
+    perLevel: 0
+    minimum: 0
+    maximum: 0.9
+    dependencies:
+    - stat: endurance
+      factor: 0.001
+  - id: toxinResistance
+    label: Toxin resistance
+    unit: '%'
+    initial: 0
+    perLevel: 0
+    minimum: 0
+    maximum: 0.9
+    dependencies:
+    - stat: endurance
+      factor: 0.001
+  - id: nanoResistance
+    label: Nano resistance
+    unit: '%'
+    initial: 0
+    perLevel: 0
+    minimum: 0
+    maximum: 0.9
+    dependencies:
+    - stat: resolve
+      factor: 0.002
+  - id: criticalChance
+    label: Critical chance
+    unit: '%'
+    initial: 0
+    perLevel: 0
+    minimum: 0
+    maximum: 0.75
+    dependencies:
+    - stat: perception
+      factor: 0.001
+  - id: healingEfficiency
+    label: Healing efficiency
+    unit: '%'
+    initial: 1
+    perLevel: 0
+    minimum: 0
+    maximum: 100000
+    dependencies:
+    - stat: medicine
+      factor: 0.001
+  - id: staminaRegeneration
+    label: Stamina regeneration
+    unit: '/s'
+    initial: 1
+    perLevel: 0
+    minimum: 0
+    maximum: 100000
+    dependencies:
+    - stat: endurance
+      factor: 0.1
+  - id: nanoRegeneration
+    label: Nano regeneration
+    unit: '/s'
+    initial: 1
+    perLevel: 0
+    minimum: 0
+    maximum: 100000
+    dependencies:
+    - stat: resolve
+      factor: 0.1
+  - id: meleeDamage
+    label: Melee damage
+    unit: '%'
+    initial: 1
+    perLevel: 0
+    minimum: 0
+    maximum: 100000
+    dependencies:
+    - stat: strength
+      factor: 0.01
+  - id: rangedDamage
+    label: Ranged damage
+    unit: '%'
+    initial: 1
+    perLevel: 0
+    minimum: 0
+    maximum: 100000
+    dependencies:
+    - stat: perception
+      factor: 0.002
+  - id: accuracy
+    label: Accuracy
+    unit: ''
+    initial: 0
+    perLevel: 0
+    minimum: 0
+    maximum: 100000
+    dependencies:
+    - stat: perception
+      factor: 1
+  - id: recoilControl
+    label: Recoil control
+    unit: '%'
+    initial: 0
+    perLevel: 0
+    minimum: 0
+    maximum: 100000
+    dependencies:
+    - stat: agility
+      factor: 0.003
+  - id: nanoStability
+    label: Nano stability
+    unit: '%'
+    initial: 0
+    perLevel: 0
+    minimum: 0
+    maximum: 100000
+    dependencies:
+    - stat: resolve
+      factor: 0.002
+  - id: suppressionResistance
+    label: Suppression resistance
+    unit: '%'
+    initial: 0
+    perLevel: 0
+    minimum: 0
+    maximum: 0.9
+    dependencies:
+    - stat: resolve
+      factor: 0.002
+  slots:
+  - id: primary
+    label: Primary
+    section: PRIMARY
+  - id: secondary
+    label: Secondary
+    section: SECONDARY
+  - id: armour_head
+    label: Head
+    section: ARMOUR
+  - id: armour_arms
+    label: Arms
+    section: ARMOUR
+  - id: armour_hands
+    label: Hands
+    section: ARMOUR
+  - id: armour_chest
+    label: Chest
+    section: ARMOUR
+  - id: armour_legs
+    label: Legs
+    section: ARMOUR
+  - id: armour_feet
+    label: Feet
+    section: ARMOUR
+  - id: implant_head
+    label: Head
+    section: IMPLANTS
+  - id: implant_arms
+    label: Arms
+    section: IMPLANTS
+  - id: implant_wrist
+    label: Wrist
+    section: IMPLANTS
+  - id: implant_hand
+    label: Hand
+    section: IMPLANTS
+  - id: implant_chest
+    label: Chest
+    section: IMPLANTS
+  - id: implant_waist
+    label: Waist
+    section: IMPLANTS
+  - id: implant_legs
+    label: Legs
+    section: IMPLANTS
+  - id: implant_feet
+    label: Feet
+    section: IMPLANTS
+  - id: storage
+    label: Backpack / device
+    section: STORAGE
+  equipment:
+  - itemId: scrap_pistol
+    slots:
+    - secondary
+    tier: 0
+    upgradeLevel: 0
+    weight: 2.4
+    requirements: []
+    operatingRequirements: []
+    modifiers: []
+    installationFacility:
+    upgradeToItemId:
+    upgradeIngredients: []
+    upgradeCredits: 0
+    comfortableStrength: 0
+    comfortableEndurance: 0
+    movementPenalty: 0
+    staminaPenalty: 0
+  - itemId: field_rifle
+    slots:
+    - primary
+    tier: 0
+    upgradeLevel: 0
+    weight: 4.8
+    requirements:
+    - stat: rifle
+      minimum: 20
+    operatingRequirements: []
+    modifiers:
+    - stat: rangedDamage
+      flat: 0
+      percent: 0.05
+    installationFacility:
+    upgradeToItemId:
+    upgradeIngredients: []
+    upgradeCredits: 0
+    comfortableStrength: 0
+    comfortableEndurance: 0
+    movementPenalty: 0
+    staminaPenalty: 0
+  - itemId: field_vest
+    slots:
+    - armour_chest
+    tier: 0
+    upgradeLevel: 0
+    weight: 3.2
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: armour
+      flat: 12
+      percent: 0
+    - stat: physicalResistance
+      flat: 0.08
+      percent: 0
+    installationFacility:
+    upgradeToItemId:
+    upgradeIngredients: []
+    upgradeCredits: 0
+    comfortableStrength: 8
+    comfortableEndurance: 8
+    movementPenalty: 0.08
+    staminaPenalty: 0.1
+  - itemId: field_boots
+    slots:
+    - armour_feet
+    tier: 0
+    upgradeLevel: 0
+    weight: 1.5
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: armour
+      flat: 3
+      percent: 0
+    - stat: movementSpeed
+      flat: 0
+      percent: 0.03
+    installationFacility:
+    upgradeToItemId:
+    upgradeIngredients: []
+    upgradeCredits: 0
+    comfortableStrength: 0
+    comfortableEndurance: 0
+    movementPenalty: 0
+    staminaPenalty: 0
+  - itemId: targeting_implant_mk1
+    slots:
+    - implant_head
+    tier: 1
+    upgradeLevel: 0
+    weight: 0.15
+    requirements:
+    - stat: intellect
+      minimum: 10
+    operatingRequirements: []
+    modifiers:
+    - stat: perception
+      flat: 2
+      percent: 0
+    - stat: rifle
+      flat: 8
+      percent: 0
+    - stat: criticalChance
+      flat: 0.01
+      percent: 0
+    installationFacility:
+    upgradeToItemId: targeting_implant_mk2
+    upgradeIngredients:
+    - id: scrap_coil
+      count: 2
+    upgradeCredits: 15
+    comfortableStrength: 0
+    comfortableEndurance: 0
+    movementPenalty: 0
+    staminaPenalty: 0
+  - itemId: targeting_implant_mk2
+    slots:
+    - implant_head
+    tier: 2
+    upgradeLevel: 1
+    weight: 0.17
+    requirements:
+    - stat: intellect
+      minimum: 12
+    - stat: nanotechnology
+      minimum: 20
+    operatingRequirements: []
+    modifiers:
+    - stat: perception
+      flat: 3
+      percent: 0
+    - stat: rifle
+      flat: 16
+      percent: 0
+    - stat: criticalChance
+      flat: 0.02
+      percent: 0
+    installationFacility:
+    upgradeToItemId:
+    upgradeIngredients: []
+    upgradeCredits: 0
+    comfortableStrength: 0
+    comfortableEndurance: 0
+    movementPenalty: 0
+    staminaPenalty: 0
+  - itemId: myofibre_implant
+    slots:
+    - implant_arms
+    tier: 1
+    upgradeLevel: 0
+    weight: 0.3
+    requirements:
+    - stat: endurance
+      minimum: 11
+    operatingRequirements: []
+    modifiers:
+    - stat: strength
+      flat: 3
+      percent: 0
+    - stat: meleeDamage
+      flat: 0
+      percent: 0.05
+    - stat: carryCapacity
+      flat: 5
+      percent: 0
+    installationFacility:
+    upgradeToItemId:
+    upgradeIngredients: []
+    upgradeCredits: 0
+    comfortableStrength: 0
+    comfortableEndurance: 0
+    movementPenalty: 0
+    staminaPenalty: 0
+  - itemId: field_backpack
+    slots:
+    - storage
+    tier: 0
+    upgradeLevel: 0
+    weight: 1.7
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: storageCapacity
+      flat: 25
+      percent: 0
+    installationFacility:
+    upgradeToItemId:
+    upgradeIngredients: []
+    upgradeCredits: 0
+    comfortableStrength: 0
+    comfortableEndurance: 0
+    movementPenalty: 0
+    staminaPenalty: 0
+  itemWeights: []
+  initialEquipment:
+  - slot: storage
+    itemId: field_backpack
+  - slot: armour_chest
+    itemId: field_vest
+  initialAttributePoints: 4
+  initialSkillPoints: 20
+  attributePointsPerLevel: 2
+  skillPointsPerLevel: 10
+  experiencePerLevel: 100
+  armourAbsorptionPerPoint: 0.2
+  defaultItemWeight: 0.1

@@ -35,11 +35,11 @@ namespace AthenHill
    if(!combat)combat=FindAnyObjectByType<PlayerCombat>();
    if(!data){Debug.LogError("Ward crafting data is missing.");yield break;}
    Loot=new LootBook(freshSeedPerNewGame?unchecked((ulong)DateTime.UtcNow.Ticks):unchecked((ulong)lootSeed));
-   Model=new CraftingModel(data,Session.catalog.items,Session.Shop,()=>combat&&combat.hasPistol);
-   if(combat)combat.BindLoadout(Model.Loadout);
+   Model=new CraftingModel(data,Session.catalog.items,Session.Shop,()=>combat&&combat.hasPistol,character:Session.Character);
+   if(combat){combat.BindLoadout(Model.Loadout);combat.BindCraftingModel(Model);}
    Session.PartBought+=OnPartBought;
   }
-  void OnDestroy(){if(combat)combat.BindLoadout(null);if(Session)Session.PartBought-=OnPartBought;}
+  void OnDestroy(){if(combat){combat.BindCraftingModel(null);combat.BindLoadout(null);}if(Session)Session.PartBought-=OnPartBought;}
   /// A part bought from Mira reveals the schematics that use it, exactly like finding one.
   void OnPartBought(PartPurchase purchase)
   {
@@ -66,23 +66,28 @@ namespace AthenHill
    if(!AtStation(out reason))return false;
    var recipe=Model.Recipe(recipeId);
    bool ok=Model.TryCraft(recipeId,Session.ActiveStationId,out reason);
-   Session.Notify(ok?$"{CraftingText.ItemName(Model,recipe.outputItemId)} fabricated."+(Model.Loadout.Modifier(recipe.outputItemId)!=null?" Fit it to your pistol.":""):"Fabrication failed. "+CraftingText.Reason(reason,Model,recipe),"Field Fabricator");
+   Session.Notify(ok?$"{CraftingText.ItemName(Model,recipe.outputItemId)} fabricated."+(Model.Loadout.Modifier(recipe.outputItemId)!=null?" Fit it to a compatible weapon.":""):"Fabrication failed. "+CraftingText.Reason(reason,Model,recipe),"Field Fabricator");
    return ok;
   }
   public bool Fit(string itemId,out string reason)
+   =>Fit(Model?.Loadout.WeaponId,itemId,out reason);
+  public bool Fit(string weaponId,string itemId,out string reason)
   {
    if(!AtStation(out reason))return false;
-   var before=Model.Loadout.Stats;
-   bool ok=Model.TryFit(itemId,out reason);
-   var mod=Model.Loadout.Modifier(itemId);
-   Session.Notify(ok?$"{CraftingText.ItemName(Model,itemId)} fitted. {CraftingText.StatChanges(data,before,Model.Loadout.Stats)}":"Cannot fit. "+CraftingText.Reason(reason,Model,null,reason=="stack_full"&&mod!=null?Model.Loadout.Fitted(mod.slot):itemId),"Field Fabricator");
+   var loadout=Model.GetLoadout(weaponId);
+   var before=loadout?.Stats??default;
+   bool ok=Model.TryFit(weaponId,itemId,out reason);
+   var mod=loadout?.Modifier(itemId);
+   Session.Notify(ok?$"{CraftingText.ItemName(Model,itemId)} fitted. {CraftingText.StatChanges(data,before,loadout.Stats)}":"Cannot fit. "+CraftingText.Reason(reason,Model,null,reason=="stack_full"&&mod!=null?loadout.Fitted(mod.slot):itemId),"Field Fabricator");
    return ok;
   }
   public bool Remove(string slot,out string reason)
+   =>Remove(Model?.Loadout.WeaponId,slot,out reason);
+  public bool Remove(string weaponId,string slot,out string reason)
   {
    if(!AtStation(out reason))return false;
-   var itemId=Model.Loadout.Fitted(slot);
-   bool ok=Model.TryRemove(slot,out reason);
+   var itemId=Model.GetLoadout(weaponId)?.Fitted(slot);
+   bool ok=Model.TryRemove(weaponId,slot,out reason);
    Session.Notify(ok?$"{CraftingText.ItemName(Model,itemId)} returned to your pack.":"Cannot remove. "+CraftingText.Reason(reason,Model,null,itemId),"Field Fabricator");
    return ok;
   }

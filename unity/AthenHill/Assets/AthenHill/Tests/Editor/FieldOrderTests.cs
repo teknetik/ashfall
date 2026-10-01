@@ -33,8 +33,8 @@ namespace AthenHill.Tests
    }
    Assert.That(set.orders[0].requireTestFire);Assert.That(set.orders[3].activateEncounter,Is.EqualTo("foreman"));
    // Orders 2 and 3 reveal their schematics when they start.
-   Assert.That(Data().recipes.Where(r=>r.unlocks.Any(u=>u.type=="orderStart"&&u.id==set.orders[1].id)).Select(r=>r.outputItemId),Does.Contain("cell_salvaged_capacitor"));
-   Assert.That(Data().recipes.Where(r=>r.unlocks.Any(u=>u.type=="orderStart"&&u.id==set.orders[2].id)).Select(r=>r.outputItemId),Does.Contain("barrel_bored_alloy"));
+   Assert.That(Data().recipes.Where(r=>r.unlocks?.Any(u=>u.type=="orderStart"&&u.id==set.orders[1].id)==true).Select(r=>r.outputItemId),Does.Contain("cell_salvaged_capacitor"));
+   Assert.That(Data().recipes.Where(r=>r.unlocks?.Any(u=>u.type=="orderStart"&&u.id==set.orders[2].id)==true).Select(r=>r.outputItemId),Does.Contain("barrel_bored_alloy"));
   }
 
   [Test] public void GripOrderWalksGatherFabricateFitTestFireAndCompletesOnce()

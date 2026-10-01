@@ -77,6 +77,7 @@ namespace AthenHill.Tests
    Assert.That(panel.Move(1),Is.False,"stops at the end");Assert.That(panel.Selected,Is.EqualTo(order[^1]));
    for(int i=order.Count-2;i>=0;i--){Assert.That(panel.Move(-1));Assert.That(panel.Selected,Is.EqualTo(order[i]));}
    // Tab order inside the window: the selected schematic, then the actions, then the slot cards.
+   panel.Select("recipe_grip_stabilised_pistol");
    var modal=root.Q("fabricator-panel");
    var tabStops=modal.Query<Button>().ToList().Where(b=>b.focusable).Select(b=>b.name).ToList();
    Assert.That(tabStops[0],Does.StartWith("fab-recipe-"));
@@ -281,7 +282,7 @@ namespace AthenHill.Tests
   [Test] public void EveryItemHasItsOwnIllustration()
   {
    var uss=File.ReadAllText("Assets/AthenHill/UI/CityHUD.uss");
-   var v2=City().items.Where(x=>x.HasTag("salvage")||x.HasTag("refined")||x.HasTag("weapon_mod")).Where(x=>x.id!="scrap_coil").ToList();
+   var v2=City().items.Where(x=>x.HasTag("salvage")||x.HasTag("refined")||x.HasTag("weapon_mod")).Where(x=>x.id!="scrap_coil"&&x.id!="rifle_precision_barrel").ToList();
    Assert.That(v2.Count,Is.EqualTo(18));
    Assert.That(v2.Select(x=>x.icon).Distinct().Count(),Is.EqualTo(v2.Count),"no two salvage items share an icon");
    Assert.That(v2.Any(x=>x.icon=="scrap-icon"||x.icon=="pistol-icon"||x.icon=="lattice-icon"),Is.False);

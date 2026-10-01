@@ -128,6 +128,19 @@ namespace AthenHill.Tests
    Assert.That(new SalvageContents(new[]{new ItemStack("scrap_alloy",0),null}).Empty);
   }
 
+  [Test] public void CacheTakesPartialStacksWithinWeightCapacity()
+  {
+   var pack=new ShopModel(new[]{new ItemSpec{id="alloy",name="Alloy",weightKg=2},new ItemSpec{id="wire",name="Wire",weightKg=1}});
+   pack.CapacityFailure=future=>future["alloy"]*2+future["wire"]>5?"over_capacity":null;
+   var cache=new SalvageContents(new[]{new ItemStack("alloy",3),new ItemStack("wire",3)});
+   Assert.That(cache.Collect(pack,out var taken,out var left));
+   Assert.That(AsMap(taken),Is.EquivalentTo(new Dictionary<string,int>{{"alloy",2},{"wire",1}}));
+   Assert.That(AsMap(left),Is.EquivalentTo(new Dictionary<string,int>{{"alloy",1},{"wire",2}}));
+   Assert.That(pack.PackWeightKg,Is.EqualTo(5));
+   Assert.That(pack.CanApply(new[]{new KeyValuePair<string,int>("wire",1)},0,out _),Is.False);
+   Assert.That(pack.Quantity("wire"),Is.EqualTo(1),"Dry-run validation must not commit inventory.");
+  }
+
   [Test] public void HeapSearchCancelsCompletesAndRespawnsOnTheClock()
   {
    var s=new SalvageSearch(1.2f,270,.6f);

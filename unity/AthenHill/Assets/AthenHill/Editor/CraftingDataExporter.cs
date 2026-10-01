@@ -62,6 +62,9 @@ namespace AthenHill.Editor
    {
     if(!ids.Contains(recipe.outputItemId)||recipe.outputQuantity<1||!craft.stations.Any(x=>x.id==recipe.stationId)||!string.IsNullOrEmpty(recipe.requiresWeaponId)&&!craft.weapons.Any(x=>x.id==recipe.requiresWeaponId))throw new Exception("Recipe reference invalid: "+recipe.id);
     if(craft.recipes.Count(x=>x.id==recipe.id)!=1)throw new Exception("Duplicate recipe: "+recipe.id);
+    if(recipe.requiredTools!=null&&recipe.requiredTools.Any(id=>!ids.Contains(id)))throw new Exception("Invalid recipe tool: "+recipe.id);
+    if(recipe.requiredSchematics!=null&&recipe.requiredSchematics.Any(id=>!craft.recipes.Any(r=>r.id==id)))throw new Exception("Invalid prerequisite schematic: "+recipe.id);
+    if(!string.IsNullOrEmpty(recipe.outputWeaponId)&&!craft.weapons.Any(w=>w.id==recipe.outputWeaponId&&w.itemId==recipe.outputItemId&&recipe.outputQuantity==1&&recipe.outputSlots!=null&&recipe.outputSlots.All(s=>!string.IsNullOrEmpty(s))&&recipe.outputSlots.Distinct().Count()==recipe.outputSlots.Length))throw new Exception("Invalid weapon schematic: "+recipe.id);
     if(recipe.unlocks!=null)foreach(var u in recipe.unlocks)if(u==null||u.type!="acquireItem"&&u.type!="orderStart"||u.type=="acquireItem"&&!ids.Contains(u.id))throw new Exception("Invalid unlock on "+recipe.id);
     if(recipe.inputs.Select(x=>x.kind+":"+x.id).Distinct().Count()!=recipe.inputs.Length)throw new Exception("Duplicate ingredient");
     foreach(var input in recipe.inputs)
@@ -70,7 +73,8 @@ namespace AthenHill.Editor
    foreach(var weapon in craft.weapons)for(int i=0;i<WeaponStats.Count;i++)if(weapon.minStats[i]>weapon.maxStats[i]||weapon.stats[i]<weapon.minStats[i]||weapon.stats[i]>weapon.maxStats[i])throw new Exception($"Weapon {weapon.id} {WeaponStats.Ids[i]} outside its bounds");
    foreach(var mod in craft.modifiers)
    {
-    if(!ids.Contains(mod.itemId)||mod.weaponIds==null||!mod.weaponIds.All(w=>craft.weapons.Any(x=>x.id==w&&x.slots.Contains(mod.slot))))throw new Exception("Invalid modifier: "+mod.id);
+    if(!ids.Contains(mod.itemId)||mod.weaponIds==null||!mod.weaponIds.All(w=>craft.weapons.Any(x=>x.id==w&&((craft.recipes.FirstOrDefault(r=>r.outputWeaponId==w&&(string.IsNullOrEmpty(x.recipeId)||r.id==x.recipeId))?.outputSlots??x.slots)?.Contains(mod.slot)??false))))throw new Exception("Invalid modifier: "+mod.id);
+    if(mod.requiredTools!=null&&mod.requiredTools.Any(id=>!ids.Contains(id)))throw new Exception("Invalid modifier tool: "+mod.id);
     if(mod.effects==null||mod.effects.Any(e=>WeaponStats.IndexOf(e.stat)<0||e.op!="add"&&e.op!="percent"))throw new Exception("Invalid modifier effect: "+mod.id);
    }
    foreach(var table in craft.lootTables)foreach(var entry in table.entries)

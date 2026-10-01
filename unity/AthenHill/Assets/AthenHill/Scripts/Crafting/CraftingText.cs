@@ -27,12 +27,20 @@ namespace AthenHill
   }
   public static string Reason(string code,CraftingModel model,CraftRecipe recipe=null,string itemId=null)
   {
+   if(!string.IsNullOrEmpty(code)&&code.Contains(" "))return code;
    switch(code)
    {
     case "ok":return "";
     case "recipe_locked":return "Schematic not yet known."+(string.IsNullOrEmpty(recipe?.lockedHint)?"":" "+recipe.lockedHint);
-    case "wrong_station":return "This schematic needs the Warden field fabricator.";
-    case "missing_weapon":return "Take the scrap pistol from the Warden arms locker first.";
+    case "wrong_station":
+    {
+     var station=model?.Data.stations?.FirstOrDefault(x=>x.id==recipe?.stationId);
+     return station!=null?$"This schematic needs {station.name}.":"Use the station specified by this schematic.";
+    }
+    case "missing_weapon":return "You need to carry or equip the required weapon first.";
+    case "unmet_requirements":return "Your attributes or skills do not yet meet the requirements.";
+    case "missing_tool":return "A required reusable tool is missing from your pack.";
+    case "missing_schematic":return "Learn the prerequisite schematic first.";
     case "missing_ingredients":
     {
      var shortfall=model!=null&&recipe!=null?Shortfall(model,recipe):"";
@@ -43,8 +51,8 @@ namespace AthenHill
     case "stack_full":return itemId!=null&&model!=null?$"No room in your pack to take back the {ItemName(model,itemId)}.":"No room in your pack for that.";
     case "already_fitted":return "That mod is already fitted.";
     case "not_carried":return itemId!=null&&model!=null?$"You are not carrying a {ItemName(model,itemId)}. Fabricate one first.":"You are not carrying that mod.";
-    case "not_a_mod":return "That is a component for other schematics, not a pistol mod.";
-    case "wrong_slot":return "That part does not fit the scrap pistol.";
+    case "not_a_mod":return "That item is not a weapon mod.";
+    case "wrong_slot":return "That part does not fit this weapon's sockets.";
     case "empty_slot":return "Nothing is fitted in that slot.";
     case "overflow":return "The fabricator's counters are full.";
     case "insufficient_items":return "Those parts are no longer in your pack.";

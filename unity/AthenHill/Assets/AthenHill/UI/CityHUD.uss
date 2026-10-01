@@ -145,6 +145,40 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .tech-panel { background-color: rgba(8, 25, 29, 0.94); border-width: 1px; border-color: #2c5a5f; border-top-color: #3d7479; padding: 12px 14px 12px; }
 .pack-col { width: 616px; flex-shrink: 0; }
 .you-col { flex-grow: 1; flex-shrink: 1; flex-basis: 0; min-width: 0; margin-left: 12px; }
+.character-legacy-hidden { display: none; }
+.character-loadout { flex-grow: 1; min-height: 0; }
+.character-tabs { flex-direction: row; flex-wrap: wrap; flex-shrink: 0; border-bottom-width: 1px; border-bottom-color: #2c5a5f; padding-bottom: 5px; }
+.character-tab { flex-grow: 1; font-size: 14px; height: 30px; min-width: 74px; margin: 0 3px 3px 0; padding: 2px 5px; background-image: none; background-color: #10292e; border-width: 1px; border-color: #426166; color: #c4d1ca; letter-spacing: 0; }
+.character-tab.active-tab { border-color: #58d5d7; color: #eee9dc; background-color: #1a434a; }
+.character-tab:focus, .character-action:focus, .character-slot:focus, .character-stat-increase:focus { border-color: #58d5d7; }
+.character-capacity { font-size: 14px; white-space: normal; padding: 8px 0; color: #c4d1ca; }
+.character-capacity.overburdened { color: #f0b99e; }
+.character-vitals { font-size: 15px; white-space: normal; padding-bottom: 8px; color: #c4d1ca; }
+.character-scroll { flex-grow: 1; flex-shrink: 1; min-height: 0; }
+.character-heading { font-size: 16px; color: #bca581; margin: 12px 0 7px; letter-spacing: 0; }
+.character-slot { flex-direction: row; align-items: center; flex-shrink: 0; min-height: 67px; margin: 0 3px 6px 0; padding: 5px 8px; background-image: none; background-color: #0f2a30; border-width: 1px; border-color: #426166; border-radius: 0; }
+.character-slot:hover, .character-slot.selected { background-color: #1a434a; border-color: #58d5d7; }
+.character-slot.empty { background-color: #0b2025; }
+.character-slot-icon { width: 48px; height: 48px; flex-shrink: 0; margin-right: 10px; -unity-background-scale-mode: scale-to-fit; }
+.character-slot.empty .character-slot-icon { opacity: 0.25; }
+.character-slot-copy { flex-grow: 1; flex-shrink: 1; min-width: 0; }
+.character-slot-label { font-size: 14px; color: #bca581; white-space: normal; }
+.character-slot-value { font-size: 18px; color: #eee9dc; white-space: normal; }
+.character-selection { font-size: 16px; color: #bca581; margin-top: 7px; white-space: normal; }
+.character-actions { flex-direction: row; flex-wrap: wrap; flex-shrink: 0; margin-top: 5px; }
+.character-action { flex-grow: 1; height: 33px; font-size: 16px; margin: 0 4px 4px 0; padding: 3px 7px; }
+.character-result { font-size: 16px; min-height: 42px; color: #a5d8c2; white-space: normal; margin-top: 4px; }
+.character-result.rejected { color: #f0b99e; }
+.equipment-description { font-size: 14px; color: #bdccc4; white-space: normal; margin: 0 4px 8px; }
+.character-stat-row { flex-direction: row; align-items: center; min-height: 34px; flex-shrink: 0; border-bottom-width: 1px; border-bottom-color: #29454a; font-size: 17px; }
+.character-stat-name { flex-grow: 1; flex-shrink: 1; white-space: normal; }
+.character-stat-name Label { white-space: normal; }
+.character-stat-increase { width: 29px; height: 27px; margin-left: 8px; font-size: 20px; padding: 0; }
+.character-breakdown { font-size: 16px; margin: 5px 0; }
+.character-breakdown Label { white-space: normal; }
+.equipment-drag-ghost { position: absolute; max-width: 280px; padding: 8px 12px; background-color: #16373e; border-width: 1px; border-color: #58d5d7; color: #eee9dc; font-size: 18px; white-space: normal; }
+.small-window .character-tab { font-size: 18px; min-width: 90px; height: 34px; }
+.small-window .character-capacity, .small-window .character-slot-label, .small-window .equipment-description, .small-window .character-result { font-size: 18px; }
 .preview-col, .inventory-details { width: 400px; flex-shrink: 0; margin-left: 12px; }
 
 /* Tabs: large caps lettering over a cyan underline, like the reference's INVENTORY / YOU headers. */
