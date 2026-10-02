@@ -1,0 +1,195 @@
+{
+  "result": "passed",
+  "source": "unity/AthenHill/Assets/AthenHill/Data/Crafting/Export/ward-crafting.v1.json",
+  "sourceSha256": "841be99f577bdb4dcca39701d52a2ce9c005976588055860bc54fe762f0813be",
+  "exportCounts": {
+    "items": 50,
+    "equipment": 15,
+    "modifications": 12
+  },
+  "copiedActualItems": [
+    {
+      "id": "targeting_implant_mk2",
+      "name": "Neural Targeting Implant Mk II",
+      "category": "Item",
+      "subtype": "",
+      "tier": 2,
+      "rarity": "Rare",
+      "weightKg": 0.17,
+      "stack": 1,
+      "tags": [
+        "implant",
+        "implant:head"
+      ],
+      "stats": {},
+      "description": "A higher-grade targeting lattice with finer tracking and signal stability.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "equipment": {
+        "kind": "implant",
+        "slots": [
+          "implant_head"
+        ],
+        "socketTypes": [],
+        "modificationSockets": [
+          {
+            "id": "augmentation_1",
+            "label": "Augmentation 1",
+            "type": "implant"
+          },
+          {
+            "id": "augmentation_2",
+            "label": "Augmentation 2",
+            "type": "implant"
+          },
+          {
+            "id": "augmentation_3",
+            "label": "Augmentation 3",
+            "type": "implant"
+          }
+        ],
+        "modifiers": [
+          {
+            "stat": "perception",
+            "flat": 3,
+            "percent": 0
+          },
+          {
+            "stat": "rifle",
+            "flat": 16,
+            "percent": 0
+          },
+          {
+            "stat": "criticalChance",
+            "flat": 0.02,
+            "percent": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "field_leggings",
+      "name": "Field Leg Armour",
+      "category": "Item",
+      "subtype": "",
+      "tier": 0,
+      "rarity": "Common",
+      "weightKg": 2.6,
+      "stack": 1,
+      "tags": [
+        "armour"
+      ],
+      "stats": {},
+      "description": "Articulated thigh and shin panels with a serviceable powered-assist rail.",
+      "buyPrice": 38,
+      "sellPrice": 13,
+      "equipment": {
+        "kind": "armour",
+        "slots": [
+          "armour_legs"
+        ],
+        "socketTypes": [],
+        "modificationSockets": [
+          {
+            "id": "motor",
+            "label": "Assist motor",
+            "type": "armour_motor"
+          },
+          {
+            "id": "lining",
+            "label": "Liner",
+            "type": "armour_lining"
+          }
+        ],
+        "modifiers": [
+          {
+            "stat": "armour",
+            "flat": 6,
+            "percent": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "aug_cognition",
+      "name": "Cognition Relay",
+      "category": "Item",
+      "subtype": "",
+      "tier": 1,
+      "rarity": "Uncommon",
+      "weightKg": 0.08,
+      "stack": 4,
+      "tags": [
+        "augmentation"
+      ],
+      "stats": {},
+      "description": "A ceramic relay that stabilises the implant signal path during complex work.",
+      "buyPrice": 18,
+      "sellPrice": 6,
+      "equipment": {
+        "kind": "augmentation",
+        "slots": [],
+        "socketTypes": [
+          "implant"
+        ],
+        "modificationSockets": [],
+        "modifiers": [
+          {
+            "stat": "intellect",
+            "flat": 1,
+            "percent": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "armour_leg_motor",
+      "name": "Stride-assist Motor",
+      "category": "Item",
+      "subtype": "",
+      "tier": 1,
+      "rarity": "Common",
+      "weightKg": 0.9,
+      "stack": 4,
+      "tags": [
+        "armour_mod"
+      ],
+      "stats": {},
+      "description": "A compact motor pair for powered leg rails. Increases movement speed while fitted.",
+      "buyPrice": 20,
+      "sellPrice": 7,
+      "equipment": {
+        "kind": "armour_mod",
+        "slots": [
+          "armour_legs"
+        ],
+        "socketTypes": [
+          "armour_motor"
+        ],
+        "modificationSockets": [],
+        "modifiers": [
+          {
+            "stat": "movementSpeed",
+            "flat": 0,
+            "percent": 0.08
+          }
+        ]
+      }
+    }
+  ],
+  "checks": [
+    "50 actual Unity catalogue entries exposed in picker",
+    "Four actual records copy identity, description, prices, weight, rarity, tags and stack",
+    "Host tiers preserved, including Mk.II tier 2 and armour tier 0",
+    "Implant has exactly three augmentation sockets",
+    "Armour socket IDs, labels and types preserved",
+    "Component compatibility and all fractional modifiers preserved",
+    "Motor .08 displays 8 percent and edited 12 percent stores .12",
+    "Editing copied effects and sockets leaves read-only export unchanged",
+    "Recopy selects existing draft without overwriting edits",
+    "Backend validation and disk persistence pass; reload preserves records",
+    "No browser errors; no OpenAI calls; isolated draft and QA directories"
+  ],
+  "paidRequests": 0,
+  "browserErrors": []
+}

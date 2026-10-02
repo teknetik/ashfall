@@ -13,7 +13,11 @@ This work is isolated on `codex/ashfall-inventory`. Commit `4d991cf9` preserves 
 
 ## Verification
 
-Native validation is pending the shared machine's Unity/player test window. Earlier full EditMode run: 210/229 passed; remaining failures were missing LFS objects and stale UI assumptions. Objects have been verified/hydrated and assertions migrated. A subsequent run was deliberately stopped when Claude started a native player, respecting the one-job limit. This is not a passing final suite.
+Final full EditMode run: **233/233 passed**, Unity 6000.6.0f1, headless, final source revision `835bf6a0`. See `editmode-release.xml` and `editmode-summary.json`. The Linux development build succeeded; `build-record.json` records source and built-runtime hashes. The saved scene remains unchanged.
+
+Native iteration 5 passed the inventory, capacity, click/search/keyboard, fixed X-ray, augmentation/motor effects, equipment drag, weapon preview/rotation, merchant pointer trading and 1280×720 checks. Its walked city route revealed a double-Tab issue leaving the merchant search field; this is fixed in the final source, and the final native harness now explicitly tests forward Tab, Shift+Tab and text editing. Final run `../inventory/20261002/native-redesign-6/report.json` is queued behind the user's open game and has not yet completed. Do not treat the compiled fix or earlier screenshots as final native verification.
+
+The isolated fixture's short native-5 samples showed similar open/closed inventory frame times. These are scene-specific samples, not a whole-game performance qualification. Failed iterations are retained as diagnostic history.
 
 Developer tooling: 27 backend/security tests, existing browser regression, focused authoring regression and JavaScript syntax checks pass. The one explicitly approved live text test succeeded (2,257 input + 94 output tokens); it did not edit game content. Image and voice transports were exercised with fixtures only. See `../inventory/20261002/developer-ui/verification.json` and screenshots.
 
@@ -22,5 +26,9 @@ Developer tooling: 27 backend/security tests, existing browser regression, focus
 - Run native UI regression: `uv run --offline --with python-xlib --with pillow python unity/tools/check_inventory_redesign.py OUT --exe unity/AthenHill/Builds/LinuxDevelopment/AthenHill.x86_64 --profile-seconds 6` from this worktree, only with other Unity/player jobs stopped.
 - Combined headless authoring export/build entrypoint: `AthenHill.Editor.CraftingDataExporter.BuildDevelopmentWithAuthoringExport`.
 - Start Item Lab: `python unity/tools/devui/server.py --qa-dir "$HOME/ward-native-qa" --port 8765`, then open its loopback URL. It discovers the primary checkout's `.env` without copying keys into the worktree, browser or player.
-- Reference images are in `references/`. X-ray generation record: `implant-art.json`. Rifle prompts, task IDs and source exports: `meshy/field-rifle-20261002/`.
+- Reference images are in `references/`. Six equipment icon cells, originals and generation prompts: `art/inventory_icons_20261002/`. X-ray generation record: `implant-art.json`. Rifle prompts, task IDs and source exports: `meshy/field-rifle-20261002/`.
 - Save schema is version 3, character schema version 2. Existing version 1/2 saves load; older builds must not rewrite saves containing the new nested module state. Native QA uses its own fixture/save directory.
+
+## Continue verification
+
+The queued native command uses the shared `/home/teknetik/.local/state/ward-programme/unity.lock` and waits for manually launched players to close. It uses an isolated save and stops its own player/scope when finished. Read `native-redesign-6/report.json`, inspect the new equipment art at 1080p/720p, confirm the forward/reverse merchant Tab checks and full city route, then update this verification record. If a check fails, use its focus trace and screenshots before changing source. The Item Lab service is `ashfall-item-lab.service` and stays available at http://localhost:8765.
