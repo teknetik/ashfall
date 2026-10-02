@@ -9,16 +9,66 @@ Phase B, Continue on a fixture save at Ossa's "Long Arm" order with the receiver
 fabricating the Field Rifle at his bench, equipping it (inventory drag), drawing it with 8 at the range (held-fire burst,
 aim, switch to the pistol and back), then the "Plate Carrier" order: the caravan scavengers, the strongbox, equipping the
 carrier and seeing it on the colonist. Fails on any runtime exception in Player.log.
+
+Requires the combined inventory/rifle build: RifleArmourInstall scene bindings and QA landmarks, the re-applied
+rifle/plate-carrier catalog and order data, and NativeQa dev.state character diagnostics. Run under the shared Unity
+job lock with other Unity/player jobs stopped. Phase B deliberately loads a version-2 save to exercise migration;
+its equipped backpack and trained rifle/engineering skills provide room and meet the rifle's requirements.
 """
-import json, math, os, shutil, sys, time, traceback
+import json, math, os, shutil, subprocess, sys, time, traceback, uuid
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'unity/evidence/gameplay-v2/20260930-reqa2'))
 import qa  # noqa: E402
+from check_inventory_redesign import launch as launch_capped_player  # noqa: E402
 if os.environ.get('ATHEN_EXE'): qa.EXE = Path(os.environ['ATHEN_EXE'])
 OUT = Path(os.environ.get('ATHEN_RIFLE_EVIDENCE', ROOT / 'unity/evidence/rifle-armour/20261002/native-check')).resolve()
 OUT.mkdir(parents=True, exist_ok=True)
-report = {'passed': False, 'checks': [], 'failures': [], 'captures': [], 'phases': {}}
+report = {'passed': False, 'checks': [], 'failures': [], 'captures': [], 'phases': {}, 'players': {}}
+_owned_player = None
+
+
+def launch_player(phase, save):
+    """Use the inventory harness's exact-PID launcher and own only this phase's unique scope."""
+    global _owned_player
+    if _owned_player is not None: raise RuntimeError('A rifle QA player is already owned')
+    out = OUT / ('run-' + phase)
+    out.mkdir()  # A fresh evidence path also prevents accidentally continuing a previous phase-A save.
+    unit = 'ashfall-rifle-qa-' + phase + '-' + uuid.uuid4().hex[:10]
+    record = {'unit': unit + '.scope', 'run': str(out / 'run'), 'saveDir': str(save)}
+    report['players'][phase] = record
+    # Register ownership before launch so its scope is still cleaned up if startup raises.
+    _owned_player = {'unit': unit, 'proc': None, 'record': record}
+    proc = launch_capped_player(out, save.resolve(), qa.EXE.resolve(), unit)
+    _owned_player['proc'] = proc
+    record['pid'] = qa.pid()
+
+
+def stop_player():
+    global _owned_player
+    owned = _owned_player
+    if owned is None: return
+    record, unit, proc = owned['record'], owned['unit'] + '.scope', owned['proc']
+    try:
+        try: record['stop'] = qa.stop(timeout=8)
+        except Exception as e: record['stopError'] = str(e)
+        try:
+            stopped = subprocess.run(['systemctl', '--user', 'stop', unit], capture_output=True, text=True, timeout=15)
+            record['scopeStop'] = {'exitCode': stopped.returncode, 'message': stopped.stderr.strip()}
+        except Exception as e:
+            record['scopeStopError'] = str(e)
+            # This unique scope contains only our phase's player; never stop another player or Unity job.
+            try: subprocess.run(['systemctl', '--user', 'kill', '--kill-whom=all', unit], capture_output=True, timeout=5)
+            except Exception as kill_error: record['scopeKillError'] = str(kill_error)
+        if proc is not None:
+            try: record['launcherExitCode'] = proc.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                proc.terminate()
+                try: record['launcherExitCode'] = proc.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    proc.kill(); record['launcherExitCode'] = proc.wait(timeout=5)
+    finally:
+        _owned_player = None
 
 
 def ok(cond, what, detail=None):
@@ -38,10 +88,27 @@ def weapon():
     return qa.snap()['combat'].get('weaponId')
 
 
+def panel_bounds(layout):
+    return (qa.el(layout, 'hud') or {}).get('bounds', [0, 0, layout['width'], layout['height']])
+
+
+def pixels(point, layout):
+    """UI Toolkit bounds use reference-panel units, while XTEST uses client pixels."""
+    x, y, w, h = panel_bounds(layout)
+    return (point[0] - x) * layout['width'] / w, (point[1] - y) * layout['height'] / h
+
+
+def inside(point, bounds, inset=3):
+    x, y = point; bx, by, w, h = bounds
+    return bx + inset <= x <= bx + w - inset and by + inset <= y <= by + h - inset
+
+
 def centre(layout, name):
     e = qa.el(layout, name)
-    if not e or not e['visible']: raise AssertionError(name + ' is not visible')
-    x, y, w, h = e['bounds']; return x + w / 2, y + h / 2
+    if not e or not e['visible'] or not e.get('enabled', True): raise AssertionError(name + ' is not available')
+    x, y, w, h = e['bounds']; point = (x + w / 2, y + h / 2)
+    if not inside(point, panel_bounds(layout)): raise AssertionError(name + ' is outside the visible panel')
+    return pixels(point, layout)
 
 
 def move(x, y):
@@ -64,31 +131,47 @@ def scroll_into_view(name, scroll_name, tries=12):
     for _ in range(tries):
         layout = qa.ui(); e = qa.el(layout, name); sv = qa.el(layout, scroll_name)
         if not e or not e['visible']: raise AssertionError(name + ' is not visible')
-        if not sv: return layout
-        x, y, w, h = e['bounds']; sx, sy, sw, sh = sv['bounds']; cy = y + h / 2
-        if sy + 16 <= cy <= sy + sh - 16: return layout
-        qa.focus(center=False); move(sx + sw / 2, sy + sh / 2); b = 5 if cy > sy + sh - 16 else 4
+        if not sv or not sv['visible']: raise AssertionError(scroll_name + ' is not visible')
+        x, y, w, h = e['bounds']; sx, sy, sw, sh = sv['bounds']; point = (x + w / 2, y + h / 2)
+        if inside(point, sv['bounds'], 16) and inside(point, panel_bounds(layout)): return layout
+        # Anatomy slots are fixed beside the independently scrolling details, never in the inspector's scroll area.
+        if scroll_name == 'armour-body-map': raise AssertionError(name + ' is clipped on the fixed armour map')
+        qa.focus(center=False); move(*pixels((sx + sw / 2, sy + sh / 2), layout)); b = 5 if point[1] > sy + sh - 16 else 4
         qa.button(b, True); qa.button(b, False); time.sleep(.25)
-    return qa.ui()
+    raise AssertionError(name + ' did not become reachable in ' + scroll_name)
 
 
-def click_tab(layout, *names):
-    for n in names:
-        if qa.el(layout, n) and qa.el(layout, n)['visible']: qa.click_at(*centre(layout, n)); time.sleep(.3); return n
-    return None
+def equipped(slot):
+    qa.cmd('dev.state')
+    character = qa.dev().get('character')
+    if not character or not character.get('available'): raise AssertionError('Build lacks character equipment diagnostics')
+    return character['equipped'].get(slot)
 
 
-def equip(item, slot, tabs):
+def equip(item, slot, tab):
     """Open the pack (Tab), drag inv-<item> onto equipment-<slot>, close. Returns the equipped state from the dev snapshot."""
     qa.tap('Tab', settle=.8); qa.wait(lambda: qa.state() == 'Inventory', 6, what='inventory')
-    layout = qa.ui(); tab = click_tab(layout, *tabs)
-    layout = scroll_into_view('equipment-' + slot, 'character-scroll'); target = centre(layout, 'equipment-' + slot)
-    layout = scroll_into_view('inv-' + item, 'inventory-scroll'); source = centre(layout, 'inv-' + item)
+    before = qa.qty(item)
+    if not before or before < 1: raise AssertionError(item + ' is not carried before the equipment drag')
+    qa.click_at(*centre(qa.ui(), tab))
+    qa.wait(lambda: 'active-tab' in (qa.el(qa.ui(), tab) or {}).get('classes', []), 5, what=tab)
+    target_viewport = 'armour-body-map' if slot.startswith('armour_') else 'character-scroll'
+    scroll_into_view('equipment-' + slot, target_viewport)
+    layout = scroll_into_view('inv-' + item, 'inventory-scroll')
+    # Read both endpoints from the same settled layout after scrolling; pack and loadout rebuild independently.
+    for name, viewport_name in [('inv-' + item, 'inventory-scroll'), ('equipment-' + slot, target_viewport)]:
+        e, viewport = qa.el(layout, name), qa.el(layout, viewport_name)
+        if not e or not viewport: raise AssertionError(name + ' is missing before the drag')
+        x, y, w, h = e['bounds']
+        if not inside((x + w / 2, y + h / 2), viewport['bounds']): raise AssertionError(name + ' is clipped before the drag')
+    source, target = centre(layout, 'inv-' + item), centre(layout, 'equipment-' + slot)
     (OUT / f'equip-{item}-layout.json').write_text(json.dumps(layout, indent=1))
     drag(source, target)
     result = (qa.el(qa.ui(), 'equipment-result') or {}).get('text')
+    qa.wait(lambda: equipped(slot) == item, 5, what=item + ' equipped by real drag; UI result=' + str(result))
+    installed = equipped(slot)
     qa.tap('Escape', settle=.6); qa.wait(lambda: qa.state() == 'Play', 6, what='pack closed')
-    return {'tab': tab, 'result': result, 'left': qa.qty(item)}
+    return {'tab': tab, 'result': result, 'before': before, 'left': qa.qty(item), 'slot': slot, 'equipped': installed}
 
 
 def fixture_save(folder):
@@ -118,8 +201,10 @@ def fixture_save(folder):
 def phase_a():
     """New game: the primer with real input; the moved first contact and the pistol carry."""
     r = {}
-    qa.launch(OUT / 'run-a')
+    save = OUT / 'save-a'
+    save.mkdir()  # Explicit empty QA save; the user's save and any prior run are never loaded.
     try:
+        launch_player('a', save)
         qa.wait_menu(); qa.focus(); qa.tap('Return'); qa.wait(lambda: qa.state() == 'Play', 40, what='new game'); qa.release_all()
         qa.cmd('resize', width=1920, height=1080); time.sleep(1.5)
         qa.cmd('timeSet', hour=13); qa.cmd('timePause', paused=True)
@@ -159,7 +244,7 @@ def phase_a():
         ok(qa.snap()['combat']['step'] == 'Complete', 'A: depot nest cleared, primer complete', {'shots': r['depot'].get('shots'), 'seconds': r['depot'].get('seconds'), 'kills': len(d2)})
         r['errors'] = qa.log_errors(); ok(not r['errors'], 'A: no runtime exceptions in Player.log', r['errors'][:3])
     finally:
-        qa.stop()
+        stop_player()
     report['phases']['a'] = r
 
 
@@ -167,8 +252,8 @@ def phase_b():
     """Continue on the fixture: Long Arm, the rifle in hand, then the plate carrier."""
     r = {}
     save = fixture_save(OUT / 'save')
-    qa.launch(OUT / 'run-b', save_dir=save)
     try:
+        launch_player('b', save)
         qa.wait_menu(); qa.focus(); qa.tap('Return'); qa.wait(lambda: qa.state() == 'Play', 40, what='Play after Continue'); qa.release_all()
         qa.cmd('resize', width=1920, height=1080); time.sleep(1.5)
         qa.cmd('timeSet', hour=13); qa.cmd('timePause', paused=True)
@@ -195,8 +280,8 @@ def phase_b():
         qa.tap('Escape', settle=.6); qa.wait(lambda: qa.state() == 'Play', 6, what='fabricator closed')
         c = qa.craft(); ok(c.get('fieldOrder') == 2, 'B: Long Arm complete, Plate Carrier is the current order', {k: c.get(k) for k in ('fieldOrder', 'orderStage', 'objective')})
         # equip the rifle (primary) and draw it at the range
-        r['equipRifle'] = equip('field_rifle', 'primary', ('character-tab-primary', 'character-tab-weapons', 'character-tab-loadout'))
-        ok(r['equipRifle']['left'] in (0, None), 'B: the rifle is equipped in the primary slot by drag', r['equipRifle'])
+        r['equipRifle'] = equip('field_rifle', 'primary', 'character-tab-primary')
+        ok(r['equipRifle']['equipped'] == 'field_rifle' and (r['equipRifle']['left'] or 0) == r['equipRifle']['before'] - 1, 'B: the rifle is equipped in the primary slot by drag', r['equipRifle'])
         qa.goto('rifle_stand'); qa.view('follow'); time.sleep(.5); qa.yaw(270)
         qa.tap('8', settle=.8); s = qa.snap(); w = weapon()
         ok(s['combat']['Armed'] and w == 'weapon_field_rifle' and s['combat'].get('rifleShown') and not s['combat'].get('pistolShown'), 'B: 8 draws the field rifle (rifle model shown, pistol hidden)', {'armed': s['combat']['Armed'], 'weapon': w, 'rifleShown': s['combat'].get('rifleShown'), 'notice': s['session']['notice']})
@@ -238,8 +323,8 @@ def phase_b():
         qa.wait(lambda: (qa.qty('warden_plate_carrier') or 0) >= 1, 8, what='plate carrier from the strongbox')
         ok((qa.qty('warden_plate_carrier') or 0) >= 1, 'B: the Warden plate carrier comes out of the strongbox', {'got': {k: v - q0.get(k, 0) for k, v in qa.snap()['session']['quantities'].items() if v != q0.get(k, 0)}})
         c = qa.craft(); ok(c.get('fieldOrder') == 3, 'B: Plate Carrier complete, the Depot Foreman order is next', {k: c.get(k) for k in ('fieldOrder', 'orderStage')})
-        r['equipVest'] = equip('warden_plate_carrier', 'armour_chest', ('character-tab-armour', 'character-tab-equipment', 'character-tab-primary'))
-        ok(r['equipVest']['left'] in (0, None), 'B: the plate carrier is equipped in the chest slot by drag', r['equipVest'])
+        r['equipVest'] = equip('warden_plate_carrier', 'armour_chest', 'character-tab-armour')
+        ok(r['equipVest']['equipped'] == 'warden_plate_carrier' and (r['equipVest']['left'] or 0) == r['equipVest']['before'] - 1, 'B: the plate carrier is equipped in the chest slot by drag', r['equipVest'])
         qa.goto('rifle_stand'); qa.view('follow'); time.sleep(.6)
         for cam, name in [('cam_vest_front', 'b-vest-front'), ('cam_vest_quarter', 'b-vest-quarter')]: qa.view(cam); time.sleep(.6); cap(name)
         qa.view('follow'); qa.cmd('cameraBoom', boom=2.2); qa.yaw(90); qa.pitch(6); time.sleep(.8); cap('b-vest-follow')
@@ -252,7 +337,7 @@ def phase_b():
         ok(eq.get('primary') == 'field_rifle' and eq.get('armour_chest') == 'warden_plate_carrier', 'B: the save records the rifle and the plate carrier equipped', eq)
         r['errors'] = qa.log_errors(); ok(not r['errors'], 'B: no runtime exceptions in Player.log', r['errors'][:3])
     finally:
-        qa.stop()
+        stop_player()
     report['phases']['b'] = r
 
 
