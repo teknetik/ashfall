@@ -1,7 +1,8 @@
 {
-  "sourceRevision": "52eb8ae3",
-  "complete": false,
-  "failure": "Walked city loop preserves dialogue, atomic trading, porch access and Lattice travel: {'exitCode': 1}",
+  "sourceRevision": "835bf6a0468a57b223652585674aa77af49b7137",
+  "complete": true,
+  "failure": null,
+  "checkCount": 40,
   "checks": [
     {
       "label": "Native High settings are applied at full render scale",
@@ -116,6 +117,22 @@
       "pass": true
     },
     {
+      "label": "Shift Tab returns from All to merchant search",
+      "pass": true
+    },
+    {
+      "label": "Tab leaves merchant search on All without skipping it",
+      "pass": true
+    },
+    {
+      "label": "Merchant search remains editable",
+      "pass": true
+    },
+    {
+      "label": "Ctrl A and clearing restore merchant stock",
+      "pass": true
+    },
+    {
       "label": "Merchant list responds to real wheel scrolling",
       "pass": true
     },
@@ -141,38 +158,65 @@
     },
     {
       "label": "Walked city loop preserves dialogue, atomic trading, porch access and Lattice travel",
-      "pass": false
+      "pass": true
+    },
+    {
+      "label": "No runtime errors in player log",
+      "pass": true
     }
   ],
+  "errors": [],
+  "environment": {
+    "unity": "6000.6.0f1",
+    "os": "Linux 7.2 Omarchy 4.0.4 64bit",
+    "gpu": "NVIDIA GeForce RTX 3060/PCIe/SSE2",
+    "api": "OpenGLCore",
+    "driver": "OpenGL 4.5.0 NVIDIA 610.57.04",
+    "cpu": "Intel(R) Core(TM) i9-10850K CPU @ 3.60GHz",
+    "graphicsMemoryMB": 12288,
+    "systemMemoryMB": 31969,
+    "quality": "PC",
+    "width": 1890,
+    "height": 1029,
+    "vsync": 0,
+    "targetFrameRate": -1,
+    "drawCounter": true,
+    "triangleCounter": true,
+    "mainThreadCounter": true,
+    "renderThreadCounter": false,
+    "actorCount": 13,
+    "runInBackground": true,
+    "isBatchMode": false
+  },
   "closedFrames": {
-    "frames": 228,
+    "frames": 229,
     "seconds": 6.2,
-    "averageFps": 37.0,
-    "p50Ms": 26.72,
-    "p95Ms": 29.76,
-    "p99Ms": 32.36,
-    "maxMs": 43.47,
-    "over16_67": 227,
-    "over33": 1,
+    "averageFps": 37.1,
+    "p50Ms": 26.67,
+    "p95Ms": 34.7,
+    "p99Ms": 39.12,
+    "maxMs": 41.06,
+    "over16_67": 219,
+    "over33": 15,
     "cpuMs": {
-      "mean": 27.06,
-      "p95": 29.67,
-      "max": 43.47
+      "mean": 27.02,
+      "p95": 34.7,
+      "max": 41.05
     },
     "gpuMs": "unavailable",
     "mainMs": {
-      "mean": 27.05,
-      "p95": 29.75,
-      "max": 43.47
+      "mean": 26.95,
+      "p95": 34.7,
+      "max": 41.05
     },
     "tris": {
-      "mean": 20831272.32,
-      "p95": 20837553,
-      "max": 20837565
+      "mean": 20831296.94,
+      "p95": 20837545,
+      "max": 20837603
     },
     "setPass": {
-      "mean": 704.68,
-      "p95": 706,
+      "mean": 706.05,
+      "p95": 707,
       "max": 708
     },
     "batches": "unavailable",
@@ -182,35 +226,35 @@
     ]
   },
   "openFrames": {
-    "frames": 225,
-    "seconds": 6.1,
-    "averageFps": 36.6,
-    "p50Ms": 26.91,
-    "p95Ms": 31.33,
-    "p99Ms": 32.94,
-    "maxMs": 34.03,
-    "over16_67": 225,
-    "over33": 2,
+    "frames": 240,
+    "seconds": 6.2,
+    "averageFps": 38.9,
+    "p50Ms": 25.7,
+    "p95Ms": 27.54,
+    "p99Ms": 29.49,
+    "maxMs": 30.06,
+    "over16_67": 240,
+    "over33": 0,
     "cpuMs": {
-      "mean": 27.3,
-      "p95": 31.33,
-      "max": 34.03
+      "mean": 25.72,
+      "p95": 27.55,
+      "max": 30.06
     },
     "gpuMs": "unavailable",
     "mainMs": {
-      "mean": 27.32,
-      "p95": 31.32,
-      "max": 34.02
+      "mean": 25.7,
+      "p95": 27.54,
+      "max": 30.06
     },
     "tris": {
-      "mean": 20856640.4,
-      "p95": 20856685,
-      "max": 20856709
+      "mean": 20856633.05,
+      "p95": 20856687,
+      "max": 20856701
     },
     "setPass": {
-      "mean": 712.87,
-      "p95": 715,
-      "max": 715
+      "mean": 713.9,
+      "p95": 716,
+      "max": 716
     },
     "batches": "unavailable",
     "draws": "unavailable",
@@ -218,7 +262,120 @@
       "Inventory"
     ]
   },
-  "rawEvidence": "unity/evidence/inventory/20261002/native-redesign-5",
-  "nextRun": "native-redesign-6",
-  "nextRunStatus": "Queued until the manually launched game closes"
+  "cityLoop": {
+    "complete": true,
+    "utc": "2026-10-02T11:56:46Z",
+    "walkedLegs": 37,
+    "final": {
+      "state": "Play",
+      "spoken": [
+        "npc_mira",
+        "npc_vex",
+        "npc_torr",
+        "npc_linn"
+      ],
+      "boughtFlask": true,
+      "soldScrap": true,
+      "linked": true,
+      "visitedHill": true,
+      "objective": null,
+      "credits": 994
+    }
+  },
+  "captures": [
+    {
+      "name": "01-pack-details-1080",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "a2212772352fee19"
+    },
+    {
+      "name": "02-implants-augmentation-1080",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "36335d4d3f302793"
+    },
+    {
+      "name": "03-armour-motor-1080",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "5ea0da69d3a22b18"
+    },
+    {
+      "name": "04-primary-overview-1080",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "2bd5a039618c2080"
+    },
+    {
+      "name": "04-primary-rotated-1080",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "3580680aec21a379"
+    },
+    {
+      "name": "05-secondary-overview-1080",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "2d626fa30920f593"
+    },
+    {
+      "name": "05-secondary-rotated-1080",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "fca0758b0a47653e"
+    },
+    {
+      "name": "06-merchant-details-1080",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "96eae6026a0543f0"
+    },
+    {
+      "name": "07-merchant-1280x720",
+      "size": [
+        1280,
+        720
+      ],
+      "sha256": "310a35fc8fdcdbc8"
+    },
+    {
+      "name": "08-implants-1280x720",
+      "size": [
+        1280,
+        720
+      ],
+      "sha256": "d31e46b09d01d682"
+    }
+  ],
+  "visualReview": {
+    "reviewed": true,
+    "captureCount": 10,
+    "findings": [
+      "Pack inspector, atlas icons, fixed full-body X-ray, augmentation sockets, armour modules and merchant details render without blocking overlap in the reviewed captures.",
+      "At 1280x720, merchant controls and implant actions remain reachable; nested details scroll independently of the fixed anatomy.",
+      "The 3D rifle appears small and dark in the narrow preview pane; its larger 2D illustration remains clear.",
+      "Separate visible plate and motor meshes are not authored in this inventory pass."
+    ]
+  },
+  "rawEvidence": "unity/evidence/inventory/20261002/native-redesign-6",
+  "compactEvidence": "unity/evidence/inventory-redesign-20261002/native-final",
+  "buildRecord": "unity/evidence/inventory-redesign-20261002/build-record.json",
+  "integrationScope": "Isolated inventory worktree only; combined main-checkout verification is a separate run."
 }
