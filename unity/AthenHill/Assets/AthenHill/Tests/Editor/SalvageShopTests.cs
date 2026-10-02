@@ -111,8 +111,20 @@ namespace AthenHill.Tests
   {
    var root=AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/AthenHill/UI/CityHUD.uxml").CloneTree();
    foreach(var n in new[]{"choice0","choice1","choice2"})Assert.That(root.Q<Button>(n),Is.Not.Null,n);
-   foreach(var n in new[]{"supplies-heading","parts-heading","salvage-heading","parts-help","salvage-empty"})Assert.That(root.Q<Label>(n),Is.Not.Null,n);
-   Assert.That(root.Query(className:"supply-row").ToList().Count,Is.EqualTo(3));
+   Assert.That(root.Q("shop-panel"),Is.Not.Null);
+   var go=new GameObject("merchant policy test");go.SetActive(false);
+   try
+   {
+    var session=go.AddComponent<GameSession>();session.catalog=AssetDatabase.LoadAssetAtPath<CityCatalog>("Assets/AthenHill/Data/CityCatalog.asset");
+    typeof(GameSession).GetProperty("Shop").SetValue(session,new ShopModel(session.catalog.items));
+    var merchant=new MerchantPanel(root,session,null);merchant.Refresh();
+    foreach(var n in new[]{"merchant-name","merchant-balance","merchant-empty","merchant-capacity"})Assert.That(root.Q<Label>(n),Is.Not.Null,n);
+    foreach(var n in new[]{"merchant-tab-buy","merchant-tab-sell","merchant-trade","merchant-sell-all"})Assert.That(root.Q<Button>(n),Is.Not.Null,n);
+    Assert.That(root.Query<Button>(className:"merchant-row").ToList().Count,Is.GreaterThan(9),"Expanded catalogue includes supplies, parts and authored equipment");
+    var brann=new ShopProfile{supplies=false,parts=true,salvage=true};
+    Assert.That(MerchantStock.Items(session.catalog,session.Shop,brann,false).All(i=>ShopModel.SellsAsPart(i)),"Brann remains a parts and salvage dealer");
+   }
+   finally{Object.DestroyImmediate(go);}
   }
 
   [Test] public void SceneHasTheWalkInShopWiredIntoTheFirstOrder()

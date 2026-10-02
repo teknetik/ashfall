@@ -28,7 +28,10 @@ def city(s):
         vest = block(s, '  - id: field_vest')
         pc = vest.replace('field_vest', 'warden_plate_carrier').replace('Field Vest', 'Warden Plate Carrier')
         pc = re.sub(r'description: .*', 'description: A Warden-issue plate carrier recovered from the ambushed caravan, with hard plates front and back under sand-tan canvas, magazine pouches and a grab handle. Wear it in the chest slot.', pc, 1)
-        pc = re.sub(r'rarity: \d', 'rarity: 1', pc, count=1).replace('weightKg: 3.2', 'weightKg: 5.5').replace('icon: pack-icon', 'icon: carrier-icon')
+        pc = re.sub(r'rarity: \d', 'rarity: 1', pc, count=1).replace('weightKg: 3.2', 'weightKg: 5.5')
+        # The vest is sold after the inventory redesign; the caravan reward stays quest-only.
+        for key, value in {'buyPrice': '0', 'sellPrice': '0', 'startingQuantity': '0', 'excludeFromTrade': '1', 'icon': 'carrier-icon'}.items():
+            pc = re.sub(rf'^    {key}: .*$', f'    {key}: {value}', pc, count=1, flags=re.M)
         s = s.replace(vest, vest + pc, 1)
     # the rifle is built in the Long Arm order, not issued at the start
     fr = block(s, '  - id: field_rifle')
@@ -44,6 +47,23 @@ def character(s):
         pc = pc.replace('      flat: 12\n', '      flat: 24\n', 1).replace('      flat: 0.08\n', '      flat: 0.12\n', 1)
         pc = pc.replace('comfortableStrength: 8', 'comfortableStrength: 10').replace('comfortableEndurance: 8', 'comfortableEndurance: 10')
         s = s.replace(vest, vest + pc, 1)
+    # Existing quest carriers predate modular armour. Add sockets without replacing their stats.
+    pc = block(s, '  - itemId: warden_plate_carrier', r'\n  - itemId: ')
+    sockets = """    modificationSockets:
+    - id: outer_plate
+      label: Outer plate
+      type: armour_plate
+    - id: inner_plate
+      label: Inner plate
+      type: armour_plate
+    - id: lining
+      label: Liner
+      type: armour_lining
+"""
+    if '    modificationSockets:' not in pc:
+        s = s.replace(pc, pc.replace('    requirements:', sockets + '    requirements:', 1), 1)
+    elif '    modificationSockets: []\n' in pc:
+        s = s.replace(pc, pc.replace('    modificationSockets: []\n', sockets, 1), 1)
     return s
 patch('Resources/CharacterCatalog.asset', character)
 

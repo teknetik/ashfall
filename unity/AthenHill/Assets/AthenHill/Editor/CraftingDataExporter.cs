@@ -11,22 +11,34 @@ namespace AthenHill.Editor
  {
   const string Root="Assets/AthenHill/Data/Crafting/Export/";
   static readonly JsonSerializerSettings Json=new JsonSerializerSettings{Formatting=Formatting.Indented,ContractResolver=new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()};
+  // One headless Editor invocation refreshes the Item Lab snapshot and builds
+  // the same authored data for the native player.
+  public static void BuildDevelopmentWithAuthoringExport()
+  {
+   Export();
+   HudArtImporter.BuildDevelopment();
+  }
   public static void Export()
   {
    var city=AssetDatabase.LoadAssetAtPath<CityCatalog>("Assets/AthenHill/Data/CityCatalog.asset");
    var craft=AssetDatabase.LoadAssetAtPath<CraftingCatalog>("Assets/AthenHill/Data/Crafting/WardCrafting.asset");
+   var character=AssetDatabase.LoadAssetAtPath<CharacterCatalog>("Assets/AthenHill/Resources/CharacterCatalog.asset");
    if(!city||!craft)throw new Exception("Missing crafting source assets");
    Validate(city,craft);
    var records=new
    {
     schema="ward-crafting/1",
-    generated=new{utc=DateTime.UtcNow.ToString("o"),unity=Application.unityVersion,sources=new[]{"Assets/AthenHill/Data/CityCatalog.asset","Assets/AthenHill/Data/Crafting/WardCrafting.asset"}},
+    generated=new{utc=DateTime.UtcNow.ToString("o"),unity=Application.unityVersion,sources=new[]{"Assets/AthenHill/Data/CityCatalog.asset","Assets/AthenHill/Data/Crafting/WardCrafting.asset","Assets/AthenHill/Resources/CharacterCatalog.asset"}},
     // Additive to schema 1: rarity/sellOnly/icon on items, all base stats and bounds on weapons, recipe groups,
     // loot min/max quantity, bad-luck protection and first-collection guarantees. "quantity" mirrors minQuantity.
     // 30 Sep 2026: partsPrice on items (Basic General Buy parts; 0 = not stocked) and the Foreman's two escorts.
-    items=city.items.Select((x,i)=>new{x.id,x.name,x.description,tags=x.tags??Array.Empty<string>(),x.maxStack,x.excludeFromTrade,x.buyPrice,x.sellPrice,x.startingQuantity,rarity=x.rarity.ToString(),x.sellOnly,x.icon,x.partsPrice,catalogIndex=i}).ToArray(),
+    items=city.items.Select((x,i)=>new{x.id,x.name,x.description,tags=x.tags??Array.Empty<string>(),x.maxStack,x.excludeFromTrade,x.buyPrice,x.sellPrice,x.startingQuantity,rarity=x.rarity.ToString(),x.sellOnly,x.icon,x.partsPrice,x.weightKg,catalogIndex=i}).ToArray(),
     weapons=craft.weapons.Select(x=>new{x.id,x.name,baseStats=Stats(x.stats),minStats=Stats(x.minStats),maxStats=Stats(x.maxStats),x.slots,stateSource="PlayerCombat.hasPistol"}).ToArray(),
     modifiers=craft.modifiers,stations=craft.stations,
+    // Optional authoring context: same stable item/slot IDs used by the character runtime.
+    character=character?new{character.basePackSlots,character.slots,character.equipment,character.modifications,
+     stats=character.attributes.Select(x=>new{x.id,x.label}).Concat(character.skills.Select(x=>new{x.id,x.label})).Concat(character.derivedStats.Select(x=>new{x.id,x.label})).ToArray(),
+     modifierPercentConvention="fraction: 0.08 means +8%"}:null,
     recipes=craft.recipes.Select(x=>new{x.id,x.name,group=x.group.ToString(),x.stationId,x.requiresWeaponId,x.outputItemId,x.outputQuantity,x.inputs,x.knownByDefault,x.unlocks,x.lockedHint}).ToArray(),
     lootTables=craft.lootTables.Select(t=>new{t.id,entries=t.entries.Select(e=>new{e.itemId,quantity=e.minQuantity,e.minQuantity,maxQuantity=Math.Max(e.minQuantity,e.maxQuantity),e.chance,e.pityAfter,e.guaranteeUntilCollected}).ToArray()}).ToArray(),
     enemies=new[]{new{id="feral_scrap_drone",prefab="Assets/AthenHill/Prefabs/OuterBerms/FeralScrapDrone.prefab",lootTableId="loot_feral_scrap_drone"},new{id="feral_worker_droid",prefab="Assets/AthenHill/Prefabs/OuterBerms/FeralWorkerDroid.prefab",lootTableId="loot_feral_worker_droid"},new{id="depot_foreman",prefab="Assets/AthenHill/Prefabs/OuterBerms/FeralDepotForeman.prefab",lootTableId="loot_depot_foreman"}},

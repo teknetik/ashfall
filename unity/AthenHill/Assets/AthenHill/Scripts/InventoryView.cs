@@ -11,7 +11,7 @@ namespace AthenHill
   {
    public readonly string id,label,tag;
    public Category(string id,string label,string tag){this.id=id;this.label=label;this.tag=tag;}
-   public bool Contains(ItemSpec item)=>item!=null&&(tag==null||item.HasTag(tag));
+   public bool Contains(ItemSpec item)=>item!=null&&(tag==null||item.HasTag(tag)||id=="mods"&&(item.HasTag("augmentation")||item.HasTag("armour_mod")));
   }
   /// Pack filters, in chip order. Tags come from CityCatalog; an item appears under every tag it carries.
   public static readonly Category[] Categories=

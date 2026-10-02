@@ -19,8 +19,7 @@ namespace AthenHill
   WardSaveGame saveGame;
   bool hasSave;
   FabricatorPanel fabricator;
-  SalvageSalePanel salvageSale;
-  PartsShopPanel partsShop;
+  MerchantPanel merchant;
   VisualElement modalFocus,radio,notice;
   readonly HashSet<string> iconClasses=new HashSet<string>{"flask-icon","medkit-icon","scrap-icon","pack-icon","pistol-icon","lattice-icon"};
   readonly Dictionary<NpcAgent,VisualElement> tags=new Dictionary<NpcAgent,VisualElement>();
@@ -72,7 +71,7 @@ namespace AthenHill
 
    Bind("close",session.Close);Bind("resume",session.Close);Bind("reset",session.ResetPlayer);
    if(crafting)fabricator=new FabricatorPanel(root,session,crafting);
-   salvageSale=new SalvageSalePanel(root,session);partsShop=new PartsShopPanel(root,session);
+   merchant=new MerchantPanel(root,session,crafting);
    Bind("details-close",session.CloseItemDetails);
    Bind("inventory-button",()=>session.Open(CityState.Inventory));Bind("notes-button",()=>session.Open(CityState.Notes));Bind("pause-button",()=>session.Open(CityState.Paused));Bind("credits-button",()=>session.Open(CityState.Credits));Bind("interaction",session.Interact);
    Bind("hint-pause",()=>session.Open(CityState.Paused));
@@ -87,7 +86,7 @@ namespace AthenHill
    Bind("mute",session.ToggleMute);Bind("reduced-motion",session.ToggleReducedMotion);
    Bind("reset-ui",()=>{windowLayout.Reset();session.Notify("UI positions reset.");});
    for(int i=0;i<GameSession.MaxChoices;i++){int index=i;Bind("choice"+i,()=>session.Choose(index));}
-   for(int i=0;i<3;i++){int index=i;Bind("buy"+i,()=>session.Trade(session.catalog.items[index].id,true));Bind("sell"+i,()=>session.Trade(session.catalog.items[index].id,false));Bind("node"+i,()=>session.SelectDestination(index));}
+   for(int i=0;i<3;i++){int index=i;Bind("node"+i,()=>session.SelectDestination(index));}
    for(int i=1;i<=6;i++){int slot=i;Bind("slot"+i,()=>{SelectSlot(slot);session.Hotbar(slot);});}
    // Spare slots complete the 1–0 row; the six existing actions keep their bindings.
    for(int i=7;i<=10;i++)root.Q<Button>("slot"+i).SetEnabled(false);
@@ -162,7 +161,7 @@ namespace AthenHill
    {
     case CityState.Play:case CityState.Boot:case CityState.Settings:return null;
     case CityState.MainMenu:{var confirm=root.Q("new-game-confirm");return confirm!=null&&confirm.resolvedStyle.display==DisplayStyle.Flex?confirm:root.Q("startup-content");}
-    case CityState.Inventory:return !string.IsNullOrEmpty(session.DetailItemId)?root.Q("inventory-details"):root.Q("modal");
+    case CityState.Inventory:return root.Q("modal");
     default:return root.Q("modal");
    }
   }
@@ -251,6 +250,7 @@ namespace AthenHill
    if(radioUp){Text("radio-text",session.RadioLine.Text);Text("radio-speaker",(session.RadioLine.Speaker??"Radio").ToUpperInvariant()+" · RADIO");}
    PlaceNotice();
    root.Q("modal").EnableInClassList("wide-modal",session.State==CityState.Fabricator||session.State==CityState.Shop);
+   root.Q("modal").EnableInClassList("merchant-modal",session.State==CityState.Shop);
    root.Q("modal").EnableInClassList("pack-modal",session.State==CityState.Inventory);
    Text("objective",session.visitedHill&&session.Spoken.Count<4?"Meet the colonists":session.Objective);Text("progress",$"{session.Spoken.Count} / 4 conversations");
    for(int i=0;i<4;i++)root.Q("mark"+i).EnableInClassList("complete",i<session.Spoken.Count);
@@ -280,14 +280,9 @@ namespace AthenHill
    if(session.State==CityState.Shop)
    {
     var shop=session.ActiveShop;
-    Text("modal-title",shop.title);Text("modal-subtitle",shop.subtitle);Text("shop-credit",$"Available balance: {session.Shop.Credits} credits");
-    // A counter shows only the lists its trader runs (Brann at Salvage: parts and salvage, no supplies).
-    Show("supplies-heading",shop.supplies);root.Query(className:"supply-row").ForEach(e=>e.style.display=shop.supplies?DisplayStyle.Flex:DisplayStyle.None);
-    Show("parts-heading",shop.parts);Show("parts-list",shop.parts);Show("parts-help",shop.parts);
-    var partsHeading=root.Q<Label>("parts-heading");if(partsHeading!=null){partsHeading.text=$"BUY PARTS · {session.Vendor.ToUpperInvariant()}'S PRICES";partsHeading.EnableInClassList("shop-first-heading",!shop.supplies);}
-    Show("salvage-heading",shop.salvage);Show("salvage-list",shop.salvage);Show("salvage-empty",shop.salvage);
-    salvageSale.Refresh();partsShop.Refresh();
-    for(int i=0;i<3;i++){var item=session.catalog.items[i];Text("item"+i,$"{item.name} · {session.Shop.Quantity(item.id)} carried\n{item.description}");var b=root.Q<Button>("buy"+i);b.text=$"Buy · {item.buyPrice} cr";b.SetEnabled(session.Shop.Credits>=item.buyPrice);var s=root.Q<Button>("sell"+i);s.text=$"Sell · {item.sellPrice} cr";s.SetEnabled(session.Shop.Quantity(item.id)>0);}
+    Text("modal-title",shop.title);Text("modal-subtitle",shop.subtitle);
+    merchant.Refresh();
+    if(footerRight!=null)footerRight.text="Select · Inspect     Buy / Sell · Trade     Esc · Close";
    }
    if(session.State==CityState.Grid)
    {
@@ -301,7 +296,7 @@ namespace AthenHill
    {
     Text("modal-title","Field pack");Text("modal-subtitle","Pack, loadout and colonist");
     pack.Refresh();
-    if(footerRight!=null)footerRight.text=pack.DetailsOpen?"Esc · Close details     Tab · Close pack":"Arrows · Choose     Enter / Shift+click · Inspect     Drag · Turn colonist     Tab / Esc · Close";
+    if(footerRight!=null)footerRight.text="Select to inspect · Drag to equip · Drag preview to turn · Tab / Esc close";
    }
    if(session.State==CityState.Notes){Text("modal-title","City notes");Text("modal-subtitle","Field journal · Colony district");Text("panel-text",session.Objective+"\n\n"+$"Conversations {session.Spoken.Count}/4 · Flask {(session.boughtFlask?"acquired":"needed")} · Scrap {(session.soldScrap?"sold":"to sell")} · Link {(session.linked?"established":"pending")}"+"\n\n"+session.catalog.notes+FieldOrderNotes());}
    if(session.State==CityState.Credits){Text("modal-title","Credits and licences");Text("modal-subtitle","Athen Hill · An original colony city homage");Text("panel-text",session.catalog.credits?session.catalog.credits.text:"Credits unavailable.");}
@@ -318,7 +313,8 @@ namespace AthenHill
      if(session.State==CityState.Inventory)pack.Opened();
      else
      {
-      if(session.State==CityState.Fabricator&&fabricator!=null)fabricator.Opened();
+      if(session.State==CityState.Shop)merchant.Opened();
+      else if(session.State==CityState.Fabricator&&fabricator!=null)fabricator.Opened();
       else
       {
        if(session.State==CityState.MainMenu)RefreshStartupSave();

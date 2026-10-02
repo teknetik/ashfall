@@ -19,17 +19,25 @@ namespace AthenHill.Tests
    var g=new GameObject(name);g.transform.position=centre;g.AddComponent<BoxCollider>().size=size;made.Add(g);return g;
   }
 
+  MerchantPanel Merchant(VisualElement root)
+  {
+   var go=new GameObject("merchant focus test");go.SetActive(false);made.Add(go);
+   var session=go.AddComponent<GameSession>();session.catalog=AssetDatabase.LoadAssetAtPath<CityCatalog>("Assets/AthenHill/Data/CityCatalog.asset");
+   typeof(GameSession).GetProperty("Shop").SetValue(session,new ShopModel(session.catalog.items));typeof(GameSession).GetProperty("State").SetValue(session,CityState.Shop);
+   var panel=new MerchantPanel(root,session,null);panel.Refresh();return panel;
+  }
+
   // ------------------------------------------------------------------ focus
   [Test] public void TabCyclesOnlyThroughTheModalsOwnControls()
   {
    Assert.That(UiNavigation.Cycle(-1,4,true),Is.EqualTo(0));Assert.That(UiNavigation.Cycle(-1,4,false),Is.EqualTo(3));
    Assert.That(UiNavigation.Cycle(3,4,true),Is.EqualTo(0),"wraps");Assert.That(UiNavigation.Cycle(0,4,false),Is.EqualTo(3));
-   var root=Hud();
+   var root=Hud();Merchant(root);
    var shop=UiNavigation.TabStops(root.Q("modal"));
    Assert.That(shop,Is.Not.Empty);
    Assert.That(shop.Any(v=>v is Scroller||v.GetFirstAncestorOfType<Scroller>()!=null||v.name=="unity-slider"),Is.False,"no scrollbars in the Tab cycle");
    Assert.That(shop.Any(v=>root.Q("hud").Contains(v)),Is.False,"nothing behind the modal");
-   Assert.That(shop.Select(v=>v.name),Does.Contain("close").And.Contain("buy0").And.Contain("sell2"));
+   Assert.That(shop.Select(v=>v.name),Does.Contain("close").And.Contain("merchant-tab-buy").And.Contain("merchant-tab-sell").And.Contain("merchant-trade"));
    // A disabled control is skipped; a field that delegates focus is one stop.
    var scope=new VisualElement();var a=new Button{name="a"};var b=new Button{name="b"};b.SetEnabled(false);var field=new TextField{name="field"};var scroll=new ScrollView();var inner=new Button{name="inner"};scroll.Add(inner);
    scope.Add(a);scope.Add(b);scope.Add(field);scope.Add(scroll);
@@ -40,9 +48,11 @@ namespace AthenHill.Tests
 
   [Test] public void BasicGeneralLayoutAndInventoryDetails()
   {
-   var root=Hud();
-   Assert.That(root.Q("shop-credit").parent,Is.EqualTo(root.Q("shop-sell")),"the balance heads the shorter column");
+   var root=Hud();Merchant(root);
+   Assert.That(root.Q("merchant-balance").parent,Is.EqualTo(root.Q("merchant-toolbar")),"the balance stays above both browsing and checkout");
+   Assert.That(root.Q("merchant-columns").Children().Select(c=>c.name),Is.EqualTo(new[]{"merchant-browser","merchant-detail"}),"scrollable stock stays left of its inspector");
    Assert.That(root.Q("inventory-details").parent,Is.EqualTo(root.Q("inventory-content")));
+   Assert.That(root.Q("inventory-content").Children().Take(2).Select(c=>c.name),Is.EqualTo(new[]{"pack-col","inventory-details"}),"item detail is immediately beside the grid");
    var uss=System.IO.File.ReadAllText("Assets/AthenHill/UI/CityHUD.uss");
    Assert.That(uss,Does.Contain("#fabricator-craft:disabled"));
    Assert.That(System.Text.RegularExpressions.Regex.Match(uss,@"\.inventory-details \{[^}]*\}").Value,Does.Not.Contain("position: absolute"));

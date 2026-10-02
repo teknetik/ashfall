@@ -102,7 +102,7 @@ namespace AthenHill
     if(rifleShown&&rifleMarker!=null)
     {
      rifleMarker.RemoveFromHierarchy();
-     slot8.Add(Element("item-art rifle-icon",null));
+     slot8.Add(Element("item-art rifle-slot-icon",null));
      var label=new Label("Rifle"){pickingMode=PickingMode.Ignore};label.AddToClassList("slot-label");slot8.Add(label);
      slot8.tooltip="Draw or holster the field rifle · 8";
     }

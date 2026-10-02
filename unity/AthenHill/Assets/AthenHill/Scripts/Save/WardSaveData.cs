@@ -6,11 +6,12 @@ namespace AthenHill
  /// flags (1 Oct 2026): story flags set by dialogue choices; absent in older saves (none set).
  [Serializable] public class CityVisitState {public bool visitedHill,boughtFlask,soldScrap,linked;public string[] spoken;public string selectedDestination;public string[] flags;}
  /// Everything a Ward save restores. JsonUtility-friendly (arrays of plain records, no dictionaries).
+ /// Version 3 preserves nested implant/armour components; earlier builds reject it rather than losing modules.
  /// Version 2 adds character progression and equipment. Version 1 starts with the catalog's character defaults.
  /// Player position is not saved: a loaded game resumes at West Gate.
  [Serializable] public class WardSaveData
  {
-  public const int CurrentVersion=2;
+  public const int CurrentVersion=3;
   public int version;
   public string savedUtc,build;
   public int credits,purchases,sales;
@@ -38,6 +39,7 @@ namespace AthenHill
    if(data==null){error="the file is damaged or incomplete";return false;}
    if(data.version<=0){error="the file is not a Ward save";data=null;return false;}
    if(data.version>WardSaveData.CurrentVersion){Debug.LogWarning($"Ward save version {data.version} is newer than this build reads ({WardSaveData.CurrentVersion}).");error="it was made by a newer build of the game";data=null;return false;}
+   if(data.character!=null&&data.character.version>CharacterState.CurrentVersion){error="its character data was made by a newer build of the game";data=null;return false;}
    if(data.credits<0||data.purchases<0||data.sales<0){error="the file is damaged (impossible balances)";data=null;return false;}
    if(!string.IsNullOrEmpty(data.bermsStep)&&!Enum.TryParse(data.bermsStep,out BermsStep _)){error="the file is damaged (unknown Outer Berms progress)";data=null;return false;}
    error=null;return true;

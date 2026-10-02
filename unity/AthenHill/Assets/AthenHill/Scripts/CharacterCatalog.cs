@@ -21,6 +21,20 @@ namespace AthenHill
   public CharacterDependency[] dependencies=Array.Empty<CharacterDependency>();
  }
  [Serializable] public class CharacterSlot { public string id,label,section; }
+ [Serializable] public class CharacterModificationSocket
+ {
+  public string id,label,type;
+ }
+ [Serializable] public class CharacterModification
+ {
+  public string itemId;
+  [Tooltip("Equipment slot IDs. Empty permits any slot whose socket type matches.")]
+  public string[] slots=Array.Empty<string>();
+  public string[] socketTypes=Array.Empty<string>();
+  public CharacterRequirement[] requirements=Array.Empty<CharacterRequirement>();
+  public CharacterRequirement[] operatingRequirements=Array.Empty<CharacterRequirement>();
+  public CharacterModifier[] modifiers=Array.Empty<CharacterModifier>();
+ }
  [Serializable] public class CharacterEquipment
  {
   public string itemId;
@@ -28,6 +42,8 @@ namespace AthenHill
   public ImplantTier tier;
   public int upgradeLevel;
   public float weight;
+  [Tooltip("Armour component sockets. Implants always expose exactly three augmentation sockets.")]
+  public CharacterModificationSocket[] modificationSockets=Array.Empty<CharacterModificationSocket>();
   public CharacterRequirement[] requirements=Array.Empty<CharacterRequirement>();
   public CharacterRequirement[] operatingRequirements=Array.Empty<CharacterRequirement>();
   public CharacterModifier[] modifiers=Array.Empty<CharacterModifier>();
@@ -50,6 +66,9 @@ namespace AthenHill
   public CharacterDerivedStat[] derivedStats=Array.Empty<CharacterDerivedStat>();
   public CharacterSlot[] slots=Array.Empty<CharacterSlot>();
   public CharacterEquipment[] equipment=Array.Empty<CharacterEquipment>();
+  public CharacterModification[] modifications=Array.Empty<CharacterModification>();
+  [Min(1),Tooltip("Carried stacks available before equipment packSlots bonuses. Each item type uses one stack.")]
+  public int basePackSlots=24;
   public CharacterItemWeight[] itemWeights=Array.Empty<CharacterItemWeight>();
   public SlotEntry[] initialEquipment=Array.Empty<SlotEntry>();
   public int initialAttributePoints=4,initialSkillPoints=20,attributePointsPerLevel=2,skillPointsPerLevel=10;
@@ -57,6 +76,7 @@ namespace AthenHill
   [Min(0)]public float armourAbsorptionPerPoint=.2f;
   public float defaultItemWeight=.1f;
   public CharacterEquipment Equipment(string itemId)=>equipment.FirstOrDefault(x=>x!=null&&x.itemId==itemId);
+  public CharacterModification Modification(string itemId)=>(modifications??Array.Empty<CharacterModification>()).FirstOrDefault(x=>x!=null&&x.itemId==itemId);
   public string Label(string id)=>attributes.FirstOrDefault(x=>x.id==id)?.label??skills.FirstOrDefault(x=>x.id==id)?.label??derivedStats.FirstOrDefault(x=>x.id==id)?.label??id;
   public float Weight(string itemId)=>Mathf.Max(0,Equipment(itemId)?.weight??itemWeights.FirstOrDefault(x=>x.itemId==itemId)?.weight??defaultItemWeight);
  }

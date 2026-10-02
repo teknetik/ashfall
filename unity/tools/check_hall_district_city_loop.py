@@ -1,20 +1,23 @@
-"""Real-input city loop over the rebuilt hall district (30 Sep 2026).
+"""Real-input city loop over the rebuilt hall district (merchant update: 2 Oct 2026).
 
   unity/tools/run_native.sh <native-dir> check_hall_district_city_loop.py
 
+Attaches only to the existing QA player identified by <native-dir>/pid; never launches or stops a player.
+
 Carl asked for the rest of the loop to be re-checked after the Vanguard Hall rebuild (only Vex had been): Mira, Torr and
 Linn, trading at Basic General and Lattice travel. Everything here is walked with real X11 W presses (camera yaw set
-through the development bridge each step); E, Tab, Return and Escape are real key events. The only bridge commands are
-view/camera/reset/time/capture. Per stop: prompt, E -> Dialogue, movement blocked while modal, first choice, Escape.
-Basic General: E -> Dialogue -> choice0 -> Shop, buy the water flask (buy0), sell a scrap coil (sell2), credit and
-inventory deltas recorded. The route also steps onto the rebuilt Field Supply, Air + Water, Relay Works and Tool Exchange
+through the development bridge each step); E, Tab, Return and Escape are real key events. Bridge commands only read state or set
+view/camera/reset/time/resolution/capture. Per stop: prompt, E -> Dialogue, movement blocked while modal, first choice, Escape.
+Basic General: E -> Dialogue -> choice0 -> Shop; use merchant tabs/filters, arrow-select a water flask and a scrap coil,
+then Tab to the explicit trade action. Exact credit and inventory deltas are asserted. The route also steps onto the rebuilt Field Supply, Air + Water, Relay Works and Tool Exchange
 porches and into two door recesses (collision/access check). Lattice: E -> Grid, wait for the link, node0 -> linked.
 Writes city-loop.json (+ captures) into the native dir; raises on any failed check or a stall (6 steps without progress).
 """
 import asyncio, json, math, os, time
 from pathlib import Path
-from native_client import Client
-from desktop_input import focus, key
+from native_client import Client, select_merchant_item
+from desktop_input import focus, focus_window, key
+from Xlib import X
 
 OUT = Path(os.environ['ATHEN_NATIVE_DIR'])
 
@@ -49,6 +52,11 @@ async def main():
     d = focus(); c = Client(); log = []; t0 = time.time(); rec = dict(utc=time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), legs={}, stops={})
 
     async def tap(name, seconds=.1, settle=.35):
+        # Match the inventory harness: input always targets this run's exact PID.
+        nonlocal d
+        d, window = focus_window()
+        window.set_input_focus(X.RevertToParent, X.CurrentTime)
+        d.sync()
         key(d, name, True)
         try: await asyncio.sleep(seconds)
         finally: key(d, name, False)
@@ -81,11 +89,19 @@ async def main():
         for name, target in ROUTES[key_]:
             await walk_to(name, target); note('walked ' + name)
 
+    focus_trace = []
+
     async def focus_and_press(name):
-        for _ in range(40):
-            if snap()['session']['focused'] == name: await tap('Return'); return
+        for attempt in range(40):
+            current = await c.snapshot()
+            focused = current['session']['focused']
+            focus_trace.append(dict(target=name, attempt=attempt, frame=current['frame'], focused=focused))
+            (OUT / 'city-loop-focus.json').write_text(json.dumps(focus_trace, indent=1))
+            if focused == name:
+                await tap('Return')
+                return
             await tap('Tab', settle=.2)
-        raise RuntimeError('could not keyboard-focus ' + name)
+        raise RuntimeError('could not keyboard-focus %s; observed %s' % (name, [x['focused'] for x in focus_trace[-40:]]))
 
     async def capture(name):
         await c.command({'action': 'capture', 'name': name}); await asyncio.sleep(1.0)
@@ -132,14 +148,23 @@ async def main():
     assert s['session']['state'] == 'Shop', 'Mira choice0 should open the shop: %s' % s['session']['state']
     before = dict(credits=s['session']['credits'], q=dict(s['session']['quantities']))
     await capture('shop_open')
-    await focus_and_press('buy0'); s = note('buy0')
+    await focus_and_press('merchant-tab-buy')
+    await focus_and_press('merchant-filter-supplies')
+    await select_merchant_item(c, 'water_flask', tap)
+    await focus_and_press('merchant-trade'); s = note('buy water flask')
     after_buy = dict(credits=s['session']['credits'], q=dict(s['session']['quantities']))
     assert after_buy['q'].get('water_flask', 0) == before['q'].get('water_flask', 0) + 1, (before, after_buy)
-    assert after_buy['credits'] < before['credits'], (before, after_buy)
-    await focus_and_press('sell2'); s = note('sell2')
+    assert after_buy['credits'] == before['credits'] - 4, (before, after_buy)
+    assert after_buy['q'] == dict(before['q'], water_flask=before['q'].get('water_flask', 0) + 1), (before, after_buy)
+    await focus_and_press('merchant-tab-sell')
+    await focus_and_press('merchant-filter-all')
+    await select_merchant_item(c, 'scrap_coil', tap)
+    await focus_and_press('merchant-trade'); s = note('sell scrap coil')
     after_sell = dict(credits=s['session']['credits'], q=dict(s['session']['quantities']))
     assert after_sell['q'].get('scrap_coil', 0) == after_buy['q'].get('scrap_coil', 0) - 1, (after_buy, after_sell)
-    assert after_sell['credits'] > after_buy['credits'], (after_buy, after_sell)
+    assert after_sell['credits'] == after_buy['credits'] + 1, (after_buy, after_sell)
+    assert after_sell['q'] == dict(after_buy['q'], scrap_coil=after_buy['q'].get('scrap_coil', 0) - 1), (after_buy, after_sell)
+    assert s['session']['boughtFlask'] and s['session']['soldScrap'], s['session']
     await capture('shop_after_trade')
     stop.update(before=before, afterBuy=after_buy, afterSell=after_sell, boughtFlask=s['session'].get('boughtFlask'), soldScrap=s['session'].get('soldScrap'))
     rec['stops']['mira'] = stop
@@ -171,8 +196,11 @@ async def main():
     rec['complete'] = True; rec['log'] = log
     (OUT / 'city-loop.json').write_text(json.dumps(rec, indent=1)); print('CITY LOOP PASS', flush=True)
 
-try:
-    asyncio.run(main())
-finally:
-    d = focus()
-    for k in ['w', 'a', 's', 'd', 'e', 'Return', 'Escape', 'Tab', 'Shift_L']: key(d, k, False)
+if __name__ == '__main__':
+    if not os.environ.get('ATHEN_NATIVE_PID'):
+        raise SystemExit('Run through unity/tools/run_native.sh with the existing QA run directory.')
+    try:
+        asyncio.run(main())
+    finally:
+        d = focus()
+        for k in ['w', 'a', 's', 'd', 'e', 'Return', 'Escape', 'Tab', 'Shift_L']: key(d, k, False)

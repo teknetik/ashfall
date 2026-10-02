@@ -137,14 +137,14 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 /* Field pack, after the user's Ark-style reference (30 Sep 2026; PackPanel.cs, CharacterPreview.cs).
    Three instrument panels inside the bronze modal: pack grid | colonist and loadout | turnable colonist view.
    Panels are deep teal enamel with thin cyan rules; cyan marks focus and selection, bronze marks headings,
-   rarity keeps its colours (Common warm white, Uncommon cyan, Rare amber). The details panel takes the view's place. */
-#modal.pack-modal { width: 1580px; max-width: 97%; }
+   rarity keeps its colours (Common warm white, Uncommon cyan, Rare amber). The adjacent inspector keeps the grid live. */
+#modal.pack-modal { width: 1740px; max-width: 97%; }
 #modal.pack-modal #modal-scroll { max-height: 700px; }
 #modal.pack-modal #modal-subtitle { margin-bottom: 12px; }
 #inventory-content { flex-direction: row; align-items: stretch; height: 680px; }
 .tech-panel { background-color: rgba(8, 25, 29, 0.94); border-width: 1px; border-color: #2c5a5f; border-top-color: #3d7479; padding: 12px 14px 12px; }
-.pack-col { width: 616px; flex-shrink: 0; }
-.you-col { flex-grow: 1; flex-shrink: 1; flex-basis: 0; min-width: 0; margin-left: 12px; }
+.pack-col { width: 450px; flex-shrink: 0; }
+.you-col { flex-grow: 1; flex-shrink: 1; flex-basis: 0; min-width: 470px; margin-left: 10px; }
 .character-legacy-hidden { display: none; }
 .character-loadout { flex-grow: 1; min-height: 0; }
 .character-tabs { flex-direction: row; flex-wrap: wrap; flex-shrink: 0; border-bottom-width: 1px; border-bottom-color: #2c5a5f; padding-bottom: 5px; }
@@ -160,7 +160,8 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .character-slot:hover, .character-slot.selected { background-color: #1a434a; border-color: #58d5d7; }
 .character-slot.empty { background-color: #0b2025; }
 .character-slot-icon { width: 48px; height: 48px; flex-shrink: 0; margin-right: 10px; -unity-background-scale-mode: scale-to-fit; }
-.character-slot.empty .character-slot-icon { opacity: 0.25; }
+.character-slot.empty .character-slot-icon { opacity: 0.8; }
+.character-slot-empty-mark { -unity-text-align: middle-center; color: #72cbd1; font-size: 28px; padding: 0; margin-top: 0; margin-bottom: 0; }
 .character-slot-copy { flex-grow: 1; flex-shrink: 1; min-width: 0; }
 .character-slot-label { font-size: 14px; color: #bca581; white-space: normal; }
 .character-slot-value { font-size: 18px; color: #eee9dc; white-space: normal; }
@@ -179,7 +180,8 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .equipment-drag-ghost { position: absolute; max-width: 280px; padding: 8px 12px; background-color: #16373e; border-width: 1px; border-color: #58d5d7; color: #eee9dc; font-size: 18px; white-space: normal; }
 .small-window .character-tab { font-size: 18px; min-width: 90px; height: 34px; }
 .small-window .character-capacity, .small-window .character-slot-label, .small-window .equipment-description, .small-window .character-result { font-size: 18px; }
-.preview-col, .inventory-details { width: 400px; flex-shrink: 0; margin-left: 12px; }
+.preview-col { width: 260px; flex-shrink: 0; margin-left: 10px; }
+.inventory-details { width: 252px; flex-shrink: 0; margin-left: 10px; }
 
 /* Tabs: large caps lettering over a cyan underline, like the reference's INVENTORY / YOU headers. */
 .pack-tabs { flex-direction: row; flex-shrink: 0; align-items: flex-end; height: 42px; margin-bottom: 8px; border-bottom-width: 1px; border-bottom-color: #2c5a5f; }
@@ -210,14 +212,14 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 #inventory-grid { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
 .inventory-empty { display: none; flex-direction: column; padding: 18px 6px; }
 #inventory-empty-subtitle { font-size: 18px; margin-top: -6px; }
-.inventory-tile, .pack-cell { width: 89px; height: 89px; margin: 0 5px 5px 0; padding: 0; background-image: none; background-color: #0f2a30; border-width: 1px; border-color: #2a5157; border-radius: 0; justify-content: center; align-items: center; min-height: 0; }
+.inventory-tile, .pack-cell { width: 64px; height: 64px; margin: 0 5px 5px 0; padding: 0; background-image: none; background-color: #0f2a30; border-width: 1px; border-color: #2a5157; border-radius: 0; justify-content: center; align-items: center; min-height: 0; }
 .pack-cell { background-color: #0b2025; border-color: #1c3a3f; }
 .inventory-tile:hover { background-color: #16373e; border-color: #4aa9ad; }
 .inventory-tile:focus, .inventory-tile.selected { background-image: none; background-color: #1a434a; border-color: #58d5d7; }
 .inventory-tile:focus { border-width: 2px; border-color: #8be6df; }
-.inventory-tile-icon { width: 60px; height: 60px; margin-top: -9px; -unity-background-scale-mode: scale-to-fit; }
-.inventory-tile-qty { position: absolute; left: 5px; top: 3px; font-size: 14px; color: #eee9dc; text-shadow: 1px 1px 1px rgba(0,0,0,0.9); }
-.inventory-tile-name { position: absolute; left: 3px; right: 3px; bottom: 7px; font-size: 14px; color: #e6e1d3; -unity-text-align: lower-center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 1px 1px 1px rgba(0,0,0,0.95); }
+.inventory-tile-icon { width: 47px; height: 47px; margin-top: -5px; -unity-background-scale-mode: scale-to-fit; }
+.inventory-tile-qty { position: absolute; right: 5px; bottom: 5px; font-size: 14px; color: #eee9dc; text-shadow: 1px 1px 1px rgba(0,0,0,0.9); }
+.inventory-tile-name { display: none; position: absolute; left: 3px; right: 3px; bottom: 7px; font-size: 14px; color: #e6e1d3; -unity-text-align: lower-center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 1px 1px 1px rgba(0,0,0,0.95); }
 .inventory-tile-bar { position: absolute; left: 4px; right: 4px; bottom: 3px; height: 3px; background-color: #30494c; }
 .inventory-tile.tile-uncommon .inventory-tile-bar { background-color: #58d5d7; }
 .inventory-tile.tile-rare .inventory-tile-bar { background-color: #e7a94a; }
@@ -299,7 +301,7 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .preview-name { font-size: 15px; letter-spacing: 2px; color: #eee9dc; }
 .preview-hint { font-size: 14px; }
 
-/* Item details take the colonist view's place, never floating over the grid. */
+/* The item inspector sits immediately beside the grid, independent of the selected loadout tab. */
 .inventory-details { display: none; padding: 14px 16px 12px; }
 .details-heading { padding-bottom: 10px; border-bottom-color: #2c5a5f; }
 .details-heading #details-title { font-size: 23px; flex-shrink: 1; white-space: normal; margin-right: 12px; }
@@ -325,6 +327,94 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .small-window .you-stat-heading { margin: 8px 0 4px; }
 .small-window .you-stat-cell .you-stat-delta { display: none; }
 .small-window .pack-search-box { width: 150px; }
+/* Ashfall inventory revision, 2 Oct 2026. The references specify compact equipment instruments:
+   the pack and its inspector stay adjacent; implants use a static anatomical scan, weapons and armour a real preview. */
+#modal.pack-modal #modal-subtitle { margin-bottom: 8px; }
+#inventory-content { height: 690px; }
+.pack-tools { flex-direction: column; align-items: stretch; }
+.pack-search-box { width: auto; margin-right: 0; margin-bottom: 8px; }
+.pack-filters { flex-wrap: wrap; }
+.pack-chip { font-size: 14px; letter-spacing: 0; height: 30px; padding: 0 8px; margin-right: 4px; margin-bottom: 4px; flex-grow: 1; }
+.pack-tab, .pack-tab-label { font-size: 20px; letter-spacing: 0.5px; }
+.pack-credit { font-size: 18px; }
+.pack-search-placeholder { color: #aebfba; }
+.pack-capacity { flex-direction: row; flex-wrap: wrap; flex-shrink: 0; padding: 3px 0 10px; margin-bottom: 7px; border-bottom-width: 1px; border-bottom-color: #29454a; }
+.pack-capacity-meter { width: 50%; padding-right: 12px; }
+.pack-capacity-value { font-size: 16px; color: #e5e8dc; margin-bottom: 5px; }
+.pack-capacity-track { height: 4px; background-color: #243f44; }
+.pack-capacity-fill { height: 4px; background-color: #58d5d7; }
+.pack-capacity-fill.capacity-full { background-color: #d8ac72; }
+.pack-capacity-help { width: 100%; white-space: normal; font-size: 14px; color: #bdccc4; margin-top: 6px; }
+.inventory-overview { display: none; }
+.inventory-details { padding: 12px; }
+.details-heading { min-height: 43px; margin-bottom: 0; }
+.details-heading .modal-emblem { display: none; }
+.details-heading #details-title { font-size: 24px; margin-right: 0; }
+.details-heading #details-close { display: none; }
+.details-icon-frame { width: 176px; height: 156px; border-width: 0; background-color: transparent; }
+.details-icon { width: 170px; height: 150px; }
+#details-quantity { font-size: 16px; white-space: normal; color: #d4ded6; margin-bottom: 10px; }
+#details-prices { font-size: 16px; white-space: normal; color: #daca9e; }
+#details-description { font-size: 17px; }
+.character-capacity { display: none; }
+.character-vitals { font-size: 14px; padding-top: 7px; padding-bottom: 6px; }
+.character-tab { font-size: 15px; min-width: 74px; height: 32px; }
+.character-scroll .unity-scroll-view__content-container { flex-grow: 1; }
+.character-scroll .unity-scroll-view__content-container > * { flex-shrink: 0; }
+.equipment-inspector > *, .augmentation-details > * { flex-shrink: 0; }
+.character-result { min-height: 22px; font-size: 15px; }
+.character-slot { min-height: 52px; padding: 4px 6px; margin-bottom: 6px; }
+.character-slot-icon { width: 36px; height: 36px; margin-right: 7px; }
+.character-slot-label { font-size: 13px; }
+.character-slot-value { font-size: 16px; }
+.character-actions { margin-top: 2px; }
+.character-action { height: 32px; font-size: 15px; }
+.character-selection { font-size: 14px; margin-top: 4px; }
+.character-heading { font-size: 15px; margin: 10px 0 6px; }
+.character-breakdown { font-size: 16px; margin-top: 3px; margin-bottom: 3px; }
+.weapon-picture { height: 162px; min-height: 162px; margin: 4px 18px 8px; -unity-background-scale-mode: scale-to-fit; }
+.weapon-picture.rifle-icon { background-size: 470px 470px; background-position: center center; background-repeat: no-repeat no-repeat; }
+.weapon-sockets { flex-direction: row; flex-wrap: wrap; }
+.weapon-socket { width: 31%; flex-grow: 1; min-width: 103px; min-height: 90px; flex-direction: column; align-items: center; margin-right: 5px; }
+.weapon-socket .character-slot-icon { width: 38px; height: 38px; margin: 0 0 4px; }
+.weapon-socket .character-slot-copy { align-items: center; }
+.weapon-socket .character-slot-value { font-size: 14px; -unity-text-align: middle-center; }
+.anatomy-layout { flex-direction: row; flex-grow: 0; flex-shrink: 0; overflow: hidden; }
+.anatomy-map { width: 306px; min-width: 306px; height: 100%; flex-shrink: 0; position: relative; margin-right: 12px; }
+.anatomy-image { position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.9; }
+.armour-anatomy-image { opacity: 0.5; }
+.anatomy-slot { position: absolute; width: 112px; min-height: 50px; height: 50px; margin: -25px 0 0; padding: 4px; background-color: rgba(7, 29, 35, 0.98); }
+.anatomy-slot .character-slot-icon { width: 23px; height: 28px; margin-right: 4px; }
+.anatomy-slot .character-slot-label { font-size: 13px; white-space: nowrap; }
+.anatomy-slot .character-slot-value { font-size: 13px; max-height: 29px; overflow: hidden; text-overflow: ellipsis; }
+.anatomy-leader { position: absolute; width: 25px; height: 1px; background-color: #58b9c2; }
+.anatomy-node { position: absolute; width: 9px; height: 9px; margin-top: -4px; border-width: 1px; border-color: #83e2e3; background-color: #16434b; border-radius: 5px; }
+.equipment-inspector-scroll { flex-grow: 1; flex-shrink: 1; flex-basis: 0; min-width: 170px; height: 100%; border-left-width: 1px; border-left-color: #294f56; }
+.equipment-inspector-scroll .unity-scroll-view__content-viewport { overflow: hidden; }
+.equipment-inspector { flex-grow: 1; flex-shrink: 0; min-width: 0; padding: 3px 5px 8px 9px; }
+.equipment-inspector-heading { color: #8fdbdf; font-size: 14px; white-space: normal; margin-bottom: 5px; }
+.equipment-inspector-title { color: #eee9dc; font-size: 23px; white-space: normal; margin-bottom: 8px; }
+.equipment-inspector-icon { height: 92px; width: 112px; align-self: center; -unity-background-scale-mode: scale-to-fit; margin-bottom: 8px; }
+.equipment-description { font-size: 15px; }
+.modification-sockets { flex-direction: row; flex-wrap: wrap; }
+.modification-socket { min-width: 65px; flex-basis: 30%; flex-grow: 1; flex-direction: column; align-items: center; min-height: 94px; margin-right: 4px; padding: 5px 3px; }
+.modification-socket .character-slot-icon { width: 32px; height: 32px; margin-right: 0; margin-bottom: 4px; }
+.modification-socket .character-slot-copy { align-items: center; }
+.modification-socket .character-slot-label, .modification-socket .character-slot-value { font-size: 13px; -unity-text-align: middle-center; }
+.augmentation-details { padding: 12px 8px 7px; margin-top: 10px; background-color: #102d34; border-width: 1px; border-color: #43818a; }
+.augmentation-details .equipment-inspector-title { font-size: 20px; }
+.preview-col { background-color: #081d22; }
+.preview-caption { flex-direction: column; align-items: flex-start; left: 16px; right: 16px; }
+.preview-name { font-size: 17px; white-space: normal; letter-spacing: 0; }
+.preview-hint { font-size: 14px; color: #bdccc4; white-space: normal; }
+.small-window .pack-search-box { width: auto; }
+.small-window .pack-chip { font-size: 17px; }
+.small-window .pack-capacity-value { font-size: 18px; }
+.small-window .inventory-tile-qty { font-size: 17px; }
+.small-window .character-tab { font-size: 17px; min-width: 80px; }
+.small-window .character-slot-label, .small-window .equipment-description, .small-window .character-result { font-size: 16px; }
+.small-window .anatomy-slot .character-slot-label { font-size: 13px; }
+.small-window .anatomy-slot .character-slot-value { font-size: 14px; }
 #grid-nodes { margin-top: 20px; }
 #grid-nodes Button { min-height: 76px; padding: 16px 25px; -unity-text-align: middle-left; font-size: 20px; }
 #pause-panel Button { min-height: 49px; padding: 12px 25px; }
@@ -442,7 +532,8 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .enemy-bar-fill { height: 100%; width: 100%; background-color: #c65c4f; border-top-width: 1px; border-top-color: #db7d6b; }
 .enemy-bar-name { position: absolute; bottom: 9px; left: -30px; width: 160px; -unity-text-align: lower-center; font-size: 14px; color: #eee9dc; text-shadow: 1px 1px 0 rgba(0,0,0,0.8); }
 .pistol-icon { background-image: url("Art/pistol.png"); }
-.rifle-icon { background-image: url("Art/rifle_slot.png"); }
+.rifle-icon { background-image: url("Art/rifle.png"); }
+.rifle-slot-icon { background-image: url("Art/rifle_slot.png"); }
 .receiver-icon { background-image: url("Art/receiver.png"); }
 .carrier-icon { background-image: url("Art/carrier.png"); }
 .small-window .enemy-bar-name, .small-window .berms-objective-text { font-size: 20px; }
