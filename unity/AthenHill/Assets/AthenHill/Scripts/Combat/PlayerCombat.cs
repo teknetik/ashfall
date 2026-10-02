@@ -78,6 +78,8 @@ namespace AthenHill
   /// Hit marker: (target, killed).
   public event Action<Health,bool> TargetHit;
   public event Action<float> Hurt;
+  /// Damage with where it came from (the attacker's position), for the HUD's direction indicator.
+  public event Action<float,Vector3> HurtFrom;
   public event Action Downed;
   float nextFire,faceUntil,tracerOff,emptyNotice;
   void Awake(){Health=GetComponent<Health>();ApplyLoadout();Nano=Stats.nanoMax;Health.Damaged+=OnDamaged;Health.Died+=OnDied;}
@@ -297,13 +299,16 @@ namespace AthenHill
   void OnDamaged(float amount,Vector3 from)
   {
    if(audioSource&&hurtClip)audioSource.PlayOneShot(hurtClip,.9f);
-   Hurt?.Invoke(amount);
+   Hurt?.Invoke(amount);HurtFrom?.Invoke(amount,from);
   }
   void OnDied()
   {
    Downs++;Armed=false;
-   session.Notify("You go down in the dust. A Warden patrol drags you back to the post.","Outer Berms");
-   if(respawnPoint){motor.Teleport(respawnPoint.position);motor.visual.rotation=respawnPoint.rotation;}
+   // the nearest Warden waystation the player has found, else the gate post
+   var station=WardenWaystation.NearestFound(transform.position,respawnPoint?respawnPoint.position:transform.position);
+   var point=station&&station.respawnPoint?station.respawnPoint:respawnPoint;
+   session.Notify(station?$"You go down in the dust. A Warden patrol drags you back to the {station.displayName.ToLowerInvariant()}.":"You go down in the dust. A Warden patrol drags you back to the post.","Outer Berms");
+   if(point){motor.Teleport(point.position);motor.visual.rotation=point.rotation;}
    Health.Restore();Nano=Stats.nanoMax;
    Downed?.Invoke();
   }

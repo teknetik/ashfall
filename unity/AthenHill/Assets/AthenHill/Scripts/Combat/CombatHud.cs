@@ -26,6 +26,9 @@ namespace AthenHill
   Button slot7;
   readonly Dictionary<FeralDroid,VisualElement> bars=new Dictionary<FeralDroid,VisualElement>();
   float hitUntil,flashAlpha,toastUntil;
+  /// Damage direction indicators (ranged droids): pooled, each tracks its attacker's position and fades.
+  class DamageDir{public VisualElement el;public Vector3 from;public float alpha;}
+  readonly List<DamageDir> damageDirs=new List<DamageDir>();
   VisualElement toast,toastLines,search,searchFill;
   Label searchLabel;
   void Start()
@@ -69,6 +72,8 @@ namespace AthenHill
    if(slot7!=null)slot7.clicked+=()=>combat.ToggleDraw();
    combat.TargetHit+=(_,killed)=>{hitUntil=Time.unscaledTime+(killed?.28f:.14f);hitMarker.EnableInClassList("kill",killed);};
    combat.Hurt+=amount=>flashAlpha=Mathf.Clamp01(flashAlpha+amount/30f);
+   for(int i=0;i<4;i++){var pivot=Element("damage-dir",hud);Element("damage-dir-arc",pivot);damageDirs.Add(new DamageDir{el=pivot});}
+   combat.HurtFrom+=ShowDamageDirection;
    combat.StatsChanged+=UpdatePistolTooltip;UpdatePistolTooltip();
    Refresh(true);
   }
@@ -128,6 +133,29 @@ namespace AthenHill
    }
    UpdateGuidance(play);
    UpdateBars(play);
+   UpdateDamageDirections();
+  }
+  void ShowDamageDirection(float amount,Vector3 from)
+  {
+   if(damageDirs.Count==0||(from-combat.transform.position).sqrMagnitude<1)return;
+   // the same attacker refreshes its indicator; otherwise take the faintest
+   DamageDir pick=null;
+   foreach(var d in damageDirs)if(d.alpha>0&&(d.from-from).sqrMagnitude<4){pick=d;break;}
+   if(pick==null){pick=damageDirs[0];foreach(var d in damageDirs)if(d.alpha<pick.alpha)pick=d;}
+   pick.from=from;pick.alpha=Mathf.Clamp01(Mathf.Max(pick.alpha,.55f+amount/40f));
+  }
+  void UpdateDamageDirections()
+  {
+   if(!worldCamera)return;
+   var fwd=worldCamera.transform.forward;fwd.y=0;
+   foreach(var d in damageDirs)
+   {
+    if(d.alpha<=0){if(d.el.style.opacity.value!=0)d.el.style.opacity=0;continue;}
+    d.alpha=Mathf.MoveTowards(d.alpha,0,Time.unscaledDeltaTime*.6f);
+    var to=d.from-combat.transform.position;to.y=0;
+    float angle=fwd.sqrMagnitude>1e-4f&&to.sqrMagnitude>1e-4f?Vector3.SignedAngle(fwd,to,Vector3.up):0;
+    d.el.style.rotate=new Rotate(angle);d.el.style.opacity=d.alpha;
+   }
   }
   string pistolTooltip="";
   /// Rebuilt only when the loadout changes, never per frame.
@@ -137,7 +165,7 @@ namespace AthenHill
    var mods=model!=null?string.Join(", ",model.Loadout.FittedMods.Select(x=>CraftingText.ItemName(model,x.Value))):"";
    pistolTooltip=$"Draw or holster the scrap pistol · 7 · Damage {combat.Stats.damage:0.#} · Recoil {combat.Stats.recoil:0.#}"+(mods.Length>0?" · "+mods:"");
   }
-  void OnDestroy(){if(combat)combat.StatsChanged-=UpdatePistolTooltip;if(crafting)crafting.Collected-=ShowPickup;}
+  void OnDestroy(){if(combat){combat.StatsChanged-=UpdatePistolTooltip;combat.HurtFrom-=ShowDamageDirection;}if(crafting)crafting.Collected-=ShowPickup;}
   static string RarityClass(ItemRarity r)=>r==ItemRarity.Rare?"rarity-rare":r==ItemRarity.Uncommon?"rarity-uncommon":"rarity-common";
   void ToastLine(string text,params string[] classes)
   {

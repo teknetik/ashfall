@@ -16,6 +16,7 @@ MonoBehaviour:
   - id: weapon_scrap_pistol
     name: Scrap Pistol
     itemId: scrap_pistol
+    recipeId: 
     stats:
       damage: 34
       fireInterval: 0.28
@@ -25,6 +26,16 @@ MonoBehaviour:
       nanoPerShot: 9
       nanoRegen: 30
       aimAssist: 3.5
+      accuracy: 0
+      spread: 0
+      criticalChance: 0
+      criticalMultiplier: 0
+      projectileVelocity: 0
+      reloadTime: 0
+      heatGeneration: 0
+      cooling: 0
+      durability: 0
+      armourPenetration: 0
     minStats:
       damage: 1
       fireInterval: 0.08
@@ -34,6 +45,16 @@ MonoBehaviour:
       nanoPerShot: 1
       nanoRegen: 1
       aimAssist: 0
+      accuracy: 0
+      spread: 0
+      criticalChance: 0
+      criticalMultiplier: 0
+      projectileVelocity: 0
+      reloadTime: 0
+      heatGeneration: 0
+      cooling: 0
+      durability: 0
+      armourPenetration: 0
     maxStats:
       damage: 400
       fireInterval: 2
@@ -43,6 +64,16 @@ MonoBehaviour:
       nanoPerShot: 60
       nanoRegen: 200
       aimAssist: 12
+      accuracy: 100
+      spread: 180
+      criticalChance: 100
+      criticalMultiplier: 10
+      projectileVelocity: 10000
+      reloadTime: 60
+      heatGeneration: 1000
+      cooling: 1000
+      durability: 100000
+      armourPenetration: 100
     slots:
     - grip
     - barrel
@@ -133,6 +164,8 @@ MonoBehaviour:
     - stat: armourPenetration
       op: add
       value: 4
+    requirements: []
+    requiredTools: []
   - id: mod_grip_stabilised
     itemId: grip_stabilised_pistol
     slot: grip
@@ -142,6 +175,8 @@ MonoBehaviour:
     - stat: recoil
       op: add
       value: -7
+    requirements: []
+    requiredTools: []
   - id: mod_barrel_bored_alloy
     itemId: barrel_bored_alloy
     slot: barrel
@@ -154,6 +189,8 @@ MonoBehaviour:
     - stat: range
       op: add
       value: 10
+    requirements: []
+    requiredTools: []
   - id: mod_cell_salvaged_capacitor
     itemId: cell_salvaged_capacitor
     slot: cell
@@ -166,6 +203,8 @@ MonoBehaviour:
     - stat: nanoRegen
       op: percent
       value: 15
+    requirements: []
+    requiredTools: []
   - id: mod_grip_gyro_braced
     itemId: grip_gyro_braced
     slot: grip
@@ -178,6 +217,8 @@ MonoBehaviour:
     - stat: aimAssist
       op: add
       value: 1
+    requirements: []
+    requiredTools: []
   - id: mod_barrel_lattice_focused
     itemId: barrel_lattice_focused
     slot: barrel
@@ -193,6 +234,8 @@ MonoBehaviour:
     - stat: fireInterval
       op: percent
       value: 8
+    requirements: []
+    requiredTools: []
   - id: mod_cell_overclocked
     itemId: cell_overclocked
     slot: cell
@@ -208,18 +251,21 @@ MonoBehaviour:
     - stat: nanoRegen
       op: percent
       value: 30
+    requirements: []
+    requiredTools: []
   stations:
   - id: station_field_fabricator
-    name: Warden Field Fabricator
+    name: Salvage workbench
   recipes:
   - id: recipe_field_rifle
     name: Field Rifle
     stationId: station_field_fabricator
+    requiresWeaponId: 
+    outputItemId: field_rifle
     outputWeaponId: weapon_field_rifle
     outputSlots:
     - barrel
     - cell
-    outputItemId: field_rifle
     inputs:
     - kind: item
       id: scrap_alloy
@@ -232,18 +278,22 @@ MonoBehaviour:
       quantity: 6
     outputQuantity: 1
     knownByDefault: 1
+    unlocks: []
     requirements:
     - stat: engineering
       minimum: 45
     requiredTools:
     - field_toolkit
-    unlocks: []
+    requiredSchematics: []
     group: 3
+    lockedHint: 
   - id: recipe_rifle_precision_barrel
     name: Precision Rifle Barrel
     stationId: station_field_fabricator
     requiresWeaponId: weapon_field_rifle
     outputItemId: rifle_precision_barrel
+    outputWeaponId: 
+    outputSlots: []
     inputs:
     - kind: item
       id: scrap_alloy
@@ -253,6 +303,7 @@ MonoBehaviour:
       quantity: 2
     outputQuantity: 1
     knownByDefault: 1
+    unlocks: []
     requirements:
     - stat: engineering
       minimum: 35
@@ -260,13 +311,15 @@ MonoBehaviour:
     - field_toolkit
     requiredSchematics:
     - recipe_field_rifle
-    unlocks: []
     group: 4
+    lockedHint: 
   - id: recipe_wound_coil
     name: Wound Copper Coil
     stationId: station_field_fabricator
     requiresWeaponId: 
     outputItemId: wound_coil
+    outputWeaponId: 
+    outputSlots: []
     inputs:
     - kind: item
       id: copper_filament
@@ -279,6 +332,9 @@ MonoBehaviour:
     unlocks:
     - type: orderStart
       id: order_keep_charge
+    requirements: []
+    requiredTools: []
+    requiredSchematics: []
     group: 0
     lockedHint: Ossa issues this schematic with her Keep the Charge order.
   - id: recipe_charge_cell_core
@@ -286,6 +342,8 @@ MonoBehaviour:
     stationId: station_field_fabricator
     requiresWeaponId: 
     outputItemId: charge_cell_core
+    outputWeaponId: 
+    outputSlots: []
     inputs:
     - kind: tag
       id: component:capacitor
@@ -303,6 +361,9 @@ MonoBehaviour:
       id: order_keep_charge
     - type: acquireItem
       id: micro_capacitor
+    requirements: []
+    requiredTools: []
+    requiredSchematics: []
     group: 0
     lockedHint: Recover a micro capacitor from a scrap drone to learn this.
   - id: recipe_alloy_plate
@@ -310,6 +371,8 @@ MonoBehaviour:
     stationId: station_field_fabricator
     requiresWeaponId: 
     outputItemId: alloy_plate
+    outputWeaponId: 
+    outputSlots: []
     inputs:
     - kind: item
       id: scrap_alloy
@@ -322,6 +385,9 @@ MonoBehaviour:
     unlocks:
     - type: orderStart
       id: order_bore_true
+    requirements: []
+    requiredTools: []
+    requiredSchematics: []
     group: 0
     lockedHint: Ossa issues this schematic with her Bore It True order.
   - id: recipe_grip_stabilised_pistol
@@ -329,6 +395,8 @@ MonoBehaviour:
     stationId: station_field_fabricator
     requiresWeaponId: weapon_scrap_pistol
     outputItemId: grip_stabilised_pistol
+    outputWeaponId: 
+    outputSlots: []
     inputs:
     - kind: tag
       id: component:servo
@@ -344,6 +412,9 @@ MonoBehaviour:
     unlocks:
     - type: acquireItem
       id: droid_servo_damaged
+    requirements: []
+    requiredTools: []
+    requiredSchematics: []
     group: 1
     lockedHint: Salvage a worker-droid servo at the machine depot to learn this.
   - id: recipe_cell_salvaged_capacitor
@@ -351,6 +422,8 @@ MonoBehaviour:
     stationId: station_field_fabricator
     requiresWeaponId: weapon_scrap_pistol
     outputItemId: cell_salvaged_capacitor
+    outputWeaponId: 
+    outputSlots: []
     inputs:
     - kind: item
       id: charge_cell_core
@@ -363,6 +436,9 @@ MonoBehaviour:
     unlocks:
     - type: orderStart
       id: order_keep_charge
+    requirements: []
+    requiredTools: []
+    requiredSchematics: []
     group: 1
     lockedHint: Ossa issues this schematic with her Keep the Charge order.
   - id: recipe_barrel_bored_alloy
@@ -370,6 +446,8 @@ MonoBehaviour:
     stationId: station_field_fabricator
     requiresWeaponId: weapon_scrap_pistol
     outputItemId: barrel_bored_alloy
+    outputWeaponId: 
+    outputSlots: []
     inputs:
     - kind: item
       id: alloy_plate
@@ -382,6 +460,9 @@ MonoBehaviour:
     unlocks:
     - type: orderStart
       id: order_bore_true
+    requirements: []
+    requiredTools: []
+    requiredSchematics: []
     group: 1
     lockedHint: Ossa issues this schematic with her Bore It True order.
   - id: recipe_grip_gyro_braced
@@ -389,6 +470,8 @@ MonoBehaviour:
     stationId: station_field_fabricator
     requiresWeaponId: weapon_scrap_pistol
     outputItemId: grip_gyro_braced
+    outputWeaponId: 
+    outputSlots: []
     inputs:
     - kind: item
       id: actuator_intact
@@ -401,6 +484,9 @@ MonoBehaviour:
     unlocks:
     - type: acquireItem
       id: foreman_control_core
+    requirements: []
+    requiredTools: []
+    requiredSchematics: []
     group: 2
     lockedHint: Ossa thinks the depot foreman's control core still holds Mark II schematics.
   - id: recipe_barrel_lattice_focused
@@ -408,6 +494,8 @@ MonoBehaviour:
     stationId: station_field_fabricator
     requiresWeaponId: weapon_scrap_pistol
     outputItemId: barrel_lattice_focused
+    outputWeaponId: 
+    outputSlots: []
     inputs:
     - kind: item
       id: lattice_shard
@@ -426,6 +514,9 @@ MonoBehaviour:
     unlocks:
     - type: acquireItem
       id: foreman_control_core
+    requirements: []
+    requiredTools: []
+    requiredSchematics: []
     group: 2
     lockedHint: Ossa thinks the depot foreman's control core still holds Mark II schematics.
   - id: recipe_cell_overclocked
@@ -433,6 +524,8 @@ MonoBehaviour:
     stationId: station_field_fabricator
     requiresWeaponId: weapon_scrap_pistol
     outputItemId: cell_overclocked
+    outputWeaponId: 
+    outputSlots: []
     inputs:
     - kind: item
       id: charge_cell_core
@@ -445,6 +538,9 @@ MonoBehaviour:
     unlocks:
     - type: acquireItem
       id: foreman_control_core
+    requirements: []
+    requiredTools: []
+    requiredSchematics: []
     group: 2
     lockedHint: Ossa thinks the depot foreman's control core still holds Mark II schematics.
   lootTables:

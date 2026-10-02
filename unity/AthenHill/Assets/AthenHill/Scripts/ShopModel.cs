@@ -34,11 +34,12 @@ namespace AthenHill
   /// Crafting parts Mira stocks under Buy parts: a premium price is set, the part is common or uncommon (rare parts stay
   /// loot-only) and it is tradeable.
   public static bool SellsAsPart(ItemSpec item)=>item!=null&&item.partsPrice>0&&item.rarity!=ItemRarity.Rare&&!item.excludeFromTrade;
-  /// One atomic purchase of crafting parts at Mira's premium price. Nothing changes if the credits or pack room fall short.
-  public bool BuyPart(string id,int count,out string message)
+  /// One atomic purchase of crafting parts at the counter's premium price. Nothing changes if the credits or pack room
+  /// fall short. vendor names the trader in refusals (Mira at Basic General, Brann at Salvage).
+  public bool BuyPart(string id,int count,out string message,string vendor="Mira")
   {
    if(id==null||!items.TryGetValue(id,out var item)){message="That item is not available.";return false;}
-   if(!SellsAsPart(item)){message=item.rarity==ItemRarity.Rare?$"Mira does not stock {item.name}. Rare parts only come out of the Berms.":$"Mira does not stock {item.name}.";return false;}
+   if(!SellsAsPart(item)){message=item.rarity==ItemRarity.Rare?$"{vendor} does not stock {item.name}. Rare parts only come out of the Berms.":$"{vendor} does not stock {item.name}.";return false;}
    if(count<1){message="Choose at least one part to buy.";return false;}
    long total=(long)item.partsPrice*count;
    if(total>Credits){message=$"You need {total-Credits} more credits for {(count==1?item.name:$"{count} × {item.name}")}.";return false;}
@@ -119,12 +120,12 @@ namespace AthenHill
    message=$"Removed {amount} credits.";return true;
   }
 #endif
-  public bool Trade(string id,bool buy,out string message)
+  public bool Trade(string id,bool buy,out string message,string vendor="Mira")
   {
    if(id==null||!items.TryGetValue(id,out var item)){message="That item is not available.";return false;}
    if(!buy)return Sell(id,1,out message);
    if(item.excludeFromTrade){message="This item is not tradeable.";return false;}
-   if(item.sellOnly){message=$"Mira buys {item.name} but does not stock it.";return false;}
+   if(item.sellOnly){message=$"{vendor} buys {item.name} but does not stock it.";return false;}
    int price=item.buyPrice;
    if(Credits<price){message=$"You need {price-Credits} more credits for {item.name}.";return false;}
    if(Purchases==int.MaxValue){message="This trade cannot be completed.";return false;}

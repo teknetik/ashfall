@@ -4,11 +4,16 @@ using UnityEngine;
 namespace AthenHill
 {
  public enum DroidKind { Walker, Hover }
- public enum DroidState { Idle, Alert, Chase, Windup, Recover, Stagger, Returning, Dead }
+ public enum DroidAttack { Melee, Ranged }
+ public enum DroidState { Idle, Alert, Chase, Windup, Recover, Stagger, Returning, Dead, Firing }
  /// Feral industrial droid of the Outer Berms: guards its home ground, telegraphs each strike
  /// (optic flares, then a lunge), gives up past its leash and repairs itself when left alone.
  /// Elite variants (the Depot Foreman) use the same behaviour with extra tuning: stagger resistance (damage needed
  /// between staggers) and a periodic heavy slam with a longer tell that hits all around it.
+ /// Ranged droids (Attack Mode = Ranged, 2 Oct 2026) keep their distance instead: they manoeuvre in a band around
+ /// Preferred Range, aim with a visible laser (the tell), then fire a burst of slow, dodgeable bolts (DroidBolt).
+ /// Pack: a droid that turns on the player raises Alerted, and its encounter brings nearby droids into the fight.
+ /// Melee droids close in from a flank instead of in a straight line, so a pack spreads around the player.
  /// Enemies stand still while any city modal is open, so dialogue and menus are always safe.
  [RequireComponent(typeof(Health))]
  public class FeralDroid:MonoBehaviour
@@ -38,9 +43,39 @@ namespace AthenHill
   [Tooltip("Hover wrecks: the death tumble may carry the wreck at most this far (metres, horizontal) before it is stopped; it then settles in place and its cache drops there.")]
   [Min(0)]public float wreckMaxTravel=2.5f;
   public LayerMask groundMask=~(1<<8);
+  [Tooltip("Melee chase: how far (fraction of the distance, up to 4 m) the droid swings out to the side it approaches from. 0 = straight in.")]
+  [Range(0,1)]public float flank=.35f;
+  [Header("Ranged attack (Attack Mode = Ranged)")]
+  public DroidAttack attackMode;
+  public DroidBolt boltPrefab;
+  [Tooltip("Where bolts leave the weapon (+Z out of the barrel). Falls back to the chest.")]
+  public Transform muzzle;
+  [Tooltip("It opens fire within this distance (with a clear line of sight) and closes in from beyond it.")]
+  [Min(1)]public float fireRange=28;
+  [Tooltip("The distance it tries to hold while manoeuvring between volleys.")]
+  [Min(1)]public float preferredRange=17;
+  [Tooltip("Closer than this it backs away (and still shoots).")]
+  [Min(0)]public float retreatRange=7;
+  [Min(1)]public int burstCount=3;
+  [Min(0)]public float burstInterval=.2f,boltSpeed=34,boltDamage=8;
+  [Tooltip("Random spread per bolt (degrees).")]
+  [Range(0,10)]public float aimSpread=1.6f;
+  [Tooltip("How far it leads a moving player (0 = aims where they stand, 1 = perfect lead). Strafing beats a partial lead.")]
+  [Range(0,1)]public float leadFactor=.45f;
+  [Min(0)]public float strafeSpeed=2.1f;
+  [Tooltip("Seconds of manoeuvring between volleys (random in this range).")]
+  public Vector2 volleyPause=new Vector2(1.4f,2.6f);
+  [Tooltip("Aiming laser shown during the wind-up (the tell).")]
+  public LineRenderer aimLaser;
+  public AudioClip fireClip;
+  [Range(0,1)]public float fireVolume=.9f;
+  [Tooltip("Restart the fire clip for every bolt (a single-recoil clip) instead of once per burst.")]
+  public bool fireClipPerShot;
   [Header("Presentation")]
   public Animation animationSource;
   public AnimationClip idle,walk,run,attack,hit,death;
+  [Tooltip("Optional (ranged walkers): aim pose held during the wind-up, and side-steps used while strafing.")]
+  public AnimationClip aim,strafeLeft,strafeRight;
   [Min(.01f)]public float walkStrideSpeed=1.2f,runStrideSpeed=3.2f;
   [Tooltip("Normalized time in the attack clip where the blow lands.")]
   [Range(0,1)]public float attackImpact=.45f;
@@ -97,6 +132,13 @@ namespace AthenHill
   Vector3 deathPoint;
   Renderer mainRenderer;
   public event Action<FeralDroid> Killed;
+  /// Raised when the droid turns on the player (its encounter calls the rest of the pack).
+  public event Action<FeralDroid> Alerted;
+  public bool Ranged=>attackMode==DroidAttack.Ranged&&boltPrefab;
+  public int BoltsFired {get;private set;}
+  float pauseFor,nextShot,strafeSign=1,strafeClock,joinAt=-1,flankSide=1;int shotsThisBurst;
+  Vector3 lastPlayerPos,playerVelocity;
+  bool HasStrafe=>strafeLeft&&strafeRight;
   float timer,staggerReady,wanderWait,bob;
   Vector3 wanderTarget,velocity;
   bool struck;
@@ -114,12 +156,14 @@ namespace AthenHill
   {
    Health=GetComponent<Health>();body=GetComponent<Rigidbody>();
    Health.Damaged+=OnDamaged;Health.Died+=OnDied;
-   if(animationSource)foreach(var clip in new[]{idle,walk,run,attack,hit,death})
+   if(animationSource)foreach(var clip in new[]{idle,walk,run,attack,hit,death,aim,strafeLeft,strafeRight})
    {
     if(!clip||animationSource[clip.name]!=null)continue;
     animationSource.AddClip(clip,clip.name);
    }
-   Loop(idle);Loop(walk);Loop(run);
+   Loop(idle);Loop(walk);Loop(run);Loop(aim);Loop(strafeLeft);Loop(strafeRight);
+   if(aimLaser)aimLaser.enabled=false;
+   strafeSign=UnityEngine.Random.value<.5f?-1:1;flankSide=UnityEngine.Random.value<.5f?-1:1;
    bob=UnityEngine.Random.value*10;
    footBase=new float[feet.Length];footUp=new bool[feet.Length];
    for(int i=0;i<footBase.Length;i++)footBase[i]=float.MaxValue;
@@ -172,14 +216,15 @@ namespace AthenHill
    foreach(var c in GetComponentsInChildren<Collider>())c.enabled=true;
    if(smoke)smoke.Stop();
    Health.Restore();SetState(DroidState.Idle);Play(idle,1);SnapToGround(1);
-   poise=0;Strikes=0;Slamming=false;WreckSettled=false;wreckGrounded=false;
+   poise=0;Strikes=0;Slamming=false;WreckSettled=false;wreckGrounded=false;joinAt=-1;shotsThisBurst=0;
+   if(aimLaser)aimLaser.enabled=false;
    if(body){body.linearDamping=baseLinearDamping;body.angularDamping=baseAngularDamping;}
    if(revive&&wasDead){var loot=GetComponent<LootSource>();if(loot)loot.Revived();}
    flash=0;rotorSpin=rotorSpeed;
    if(motorLoop&&motorLoop.clip){motorLoop.volume=1;if(!motorLoop.isPlaying)motorLoop.Play();}
   }
 
-  bool Hostile=>State==DroidState.Alert||State==DroidState.Chase||State==DroidState.Windup||State==DroidState.Recover||State==DroidState.Stagger;
+  bool Hostile=>State==DroidState.Alert||State==DroidState.Chase||State==DroidState.Windup||State==DroidState.Recover||State==DroidState.Stagger||State==DroidState.Firing;
   bool PlayerAvailable=>Player&&Player.Health.Alive&&Player.InBerms;
   float PlayerDistance=>Flat(Player.transform.position-transform.position).magnitude;
 
@@ -198,7 +243,10 @@ namespace AthenHill
     return;
    }
    farClock=0;timer+=dt;
+   if(Player){var pp=Player.transform.position;if(dt>0)playerVelocity=Vector3.Lerp(playerVelocity,Flat(pp-lastPlayerPos)/dt,1-Mathf.Exp(-5*dt));lastPlayerPos=pp;}
    if(State==DroidState.Idle||State==DroidState.Returning)RepairStep(dt);
+   // called in by the pack: turn on the player even without a line of sight
+   if(joinAt>=0&&Time.time>=joinAt){joinAt=-1;if((State==DroidState.Idle||State==DroidState.Returning)&&PlayerAvailable)Alert();}
    switch(State)
    {
     case DroidState.Idle:
@@ -211,6 +259,7 @@ namespace AthenHill
      break;
     case DroidState.Chase:
      if(!PlayerAvailable||Flat(transform.position-Home).magnitude>leashRadius){SetState(DroidState.Returning);break;}
+     if(Ranged){RangedManoeuvre(dt,true);break;}
      if(PlayerDistance<=attackRange)
      {
       Strikes++;Slamming=IsSlam(Strikes,slamEvery);windupNow=Slamming?slamWindupSeconds:windupSeconds;
@@ -218,15 +267,20 @@ namespace AthenHill
       if(voice&&windupClip)voice.PlayOneShot(windupClip,windupVolume);
       break;
      }
-     Steer(Player.transform.position,chaseSpeed,dt);Play(run?run:walk,Mathf.Max(.6f,velocity.magnitude/runStrideSpeed));
+     Steer(FlankTarget(),chaseSpeed,dt);Play(run?run:walk,Mathf.Max(.6f,velocity.magnitude/runStrideSpeed));
      break;
     case DroidState.Windup:
+     if(Ranged){RangedWindup(dt);break;}
      if(!struck)Face(Player.transform.position,dt);
      if(kind==DroidKind.Hover)HoverLunge(dt);
      if(!struck&&timer>=windupNow){struck=true;Strike();}
      if(timer>=windupNow+.2f)SetState(DroidState.Recover);
      break;
+    case DroidState.Firing:
+     RangedFiring(dt);
+     break;
     case DroidState.Recover:
+     if(Ranged){if(!PlayerAvailable){SetState(DroidState.Returning);break;}RangedManoeuvre(dt,false);if(timer>=pauseFor)SetState(DroidState.Chase);break;}
      if(kind==DroidKind.Hover)Steer(transform.position,0,dt);
      if(timer>=(Slamming?slamRecoverSeconds:recoverSeconds))SetState(DroidState.Chase);
      break;
@@ -241,7 +295,7 @@ namespace AthenHill
    }
    if(eyeLight)
    {
-    float target=State==DroidState.Windup?eyeHostile*(1.3f+.4f*Mathf.Sin(Time.time*40)):Hostile?eyeHostile:eyeCalm;
+    float target=State==DroidState.Windup||State==DroidState.Firing?eyeHostile*(1.3f+.4f*Mathf.Sin(Time.time*40)):Hostile?eyeHostile:eyeCalm;
     eyeLight.intensity=Mathf.MoveTowards(eyeLight.intensity,target,dt*12);
    }
    if(kind==DroidKind.Hover)HoverPose(dt);
@@ -252,8 +306,117 @@ namespace AthenHill
   {
    SetState(DroidState.Alert);Play(idle,1.6f);
    if(voice&&alertClip)voice.PlayOneShot(alertClip);
+   Alerted?.Invoke(this);
   }
-  void SetState(DroidState s){State=s;timer=0;UpdateAnimationCulling();}
+  /// The pack calls this droid in: it turns on the player after the delay (if it is still idle or heading home).
+  public void JoinFight(float delay){if(State==DroidState.Idle||State==DroidState.Returning)joinAt=joinAt>=0?Mathf.Min(joinAt,Time.time+delay):Time.time+delay;}
+  void SetState(DroidState s)
+  {
+   if(State==DroidState.Windup&&s!=DroidState.Windup&&aimLaser)aimLaser.enabled=false;
+   State=s;timer=0;UpdateAnimationCulling();
+  }
+
+  // ------------------------------------------------------------------ melee approach
+  /// Melee chase target: the player, offset to this droid's flank side while still far, so a pack spreads around them.
+  Vector3 FlankTarget()
+  {
+   var p=Player.transform.position;
+   if(flank<=0)return p;
+   var to=Flat(p-transform.position);float d=to.magnitude;
+   if(d<4)return p;
+   var side=Vector3.Cross(Vector3.up,to/d)*flankSide;
+   return p+side*Mathf.Min(4,d*flank);
+  }
+
+  // ------------------------------------------------------------------ ranged
+  Vector3 MuzzlePoint=>muzzle?muzzle.position:transform.position+Vector3.up*(kind==DroidKind.Hover?0:1.4f)+transform.forward*.6f;
+  Vector3 PlayerAim=>Player.Health?Player.Health.AimPoint:Player.transform.position+Vector3.up*1.2f;
+  /// Clear line of fire from the muzzle to the player's chest (droids and the player don't block it).
+  bool LineOfFire()
+  {
+   var from=MuzzlePoint;var to=PlayerAim;var dir=to-from;float len=dir.magnitude;if(len<.01f)return true;
+   int n=Physics.RaycastNonAlloc(from,dir/len,hits,len,groundMask,QueryTriggerInteraction.Ignore);
+   for(int i=0;i<n;i++){var c=hits[i].collider;if(!c.transform.IsChildOf(transform)&&!c.GetComponentInParent<PlayerMotor>()&&!c.GetComponentInParent<FeralDroid>())return false;}
+   return true;
+  }
+  /// Between volleys: close in when out of range or blind, back off when crowded, otherwise strafe around the player
+  /// drifting toward Preferred Range. In Chase it opens fire once it has a clear shot and its pause is over.
+  void RangedManoeuvre(float dt,bool mayFire)
+  {
+   float d=PlayerDistance;var to=Flat(Player.transform.position-transform.position);var dir=d>.01f?to/d:transform.forward;
+   bool clear=d<=fireRange&&LineOfFire();
+   strafeClock-=dt;
+   if(strafeClock<=0||(velocity.sqrMagnitude<.05f&&timer>.6f)){strafeSign=-strafeSign;strafeClock=UnityEngine.Random.Range(1.6f,3.4f);}
+   var side=Vector3.Cross(Vector3.up,dir)*strafeSign;
+   Vector3 goal;float speed;bool facePlayer=kind==DroidKind.Hover||HasStrafe;
+   if(!clear&&d>retreatRange){goal=Player.transform.position+side*Mathf.Min(6,d*.3f);speed=chaseSpeed;facePlayer=kind==DroidKind.Hover;}
+   else if(d<retreatRange){goal=transform.position-dir*4+side*2;speed=chaseSpeed;}
+   else{goal=transform.position+side*3+dir*Mathf.Clamp((d-preferredRange)*.35f,-3,3);speed=strafeSpeed;}
+   Steer(goal,speed,dt,facePlayer?Player.transform.position:(Vector3?)null);
+   if(kind==DroidKind.Walker)
+   {
+    var local=Quaternion.Inverse(transform.rotation)*velocity;
+    if(HasStrafe&&Mathf.Abs(local.x)>Mathf.Abs(local.z)&&Mathf.Abs(local.x)>.3f)Play(local.x>0?strafeRight:strafeLeft,Mathf.Max(.6f,Mathf.Abs(local.x)/walkStrideSpeed));
+    else if(velocity.magnitude>walkStrideSpeed*1.4f&&run)Play(run,Mathf.Max(.6f,velocity.magnitude/runStrideSpeed));
+    else if(velocity.sqrMagnitude>.04f)Play(walk,Mathf.Max(.5f,velocity.magnitude/walkStrideSpeed));
+    else Play(aim?aim:idle,1);
+   }
+   if(mayFire&&clear&&timer>=pauseFor)
+   {
+    windupNow=windupSeconds;SetState(DroidState.Windup);
+    if(aim)Play(aim,1);
+    if(voice&&windupClip)voice.PlayOneShot(windupClip,windupVolume);
+   }
+  }
+  void RangedWindup(float dt)
+  {
+   if(!PlayerAvailable){SetState(DroidState.Returning);return;}
+   Steer(transform.position,0,dt,Player.transform.position);
+   Face(Player.transform.position,dt*1.6f);
+   if(kind==DroidKind.Walker)Play(aim?aim:idle,1);
+   var from=MuzzlePoint;var at=PredictedAim(from);
+   if(aimLaser)
+   {
+    float p=Mathf.Clamp01(timer/Mathf.Max(.05f,windupNow));
+    aimLaser.enabled=true;aimLaser.SetPosition(0,from);aimLaser.SetPosition(1,Vector3.Lerp(from,at,Mathf.Min(1,.15f+p*1.2f)));
+    aimLaser.widthMultiplier=Mathf.Lerp(.012f,.035f,p*p);
+   }
+   // the tell is broken if the player gets behind cover: back to manoeuvring, short pause
+   if(timer>.25f&&!LineOfFire()){pauseFor=.5f;SetState(DroidState.Chase);return;}
+   if(timer>=windupNow){shotsThisBurst=0;nextShot=0;SetState(DroidState.Firing);if(!fireClipPerShot&&attack)Play(attack,1);}
+  }
+  void RangedFiring(float dt)
+  {
+   if(!PlayerAvailable){SetState(DroidState.Returning);return;}
+   Steer(transform.position,0,dt,Player.transform.position);
+   Face(Player.transform.position,dt*1.6f);
+   if(timer>=nextShot&&shotsThisBurst<burstCount)
+   {
+    FireBolt();shotsThisBurst++;nextShot+=burstInterval;
+    if(fireClipPerShot&&attack&&animationSource&&animationSource[attack.name]!=null){animationSource[attack.name].time=0;animationSource.CrossFade(attack.name,.05f);}
+   }
+   if(shotsThisBurst>=burstCount&&timer>=nextShot)
+   {
+    pauseFor=UnityEngine.Random.Range(volleyPause.x,Mathf.Max(volleyPause.x,volleyPause.y));
+    SetState(DroidState.Recover);strafeSign=-strafeSign;
+   }
+  }
+  Vector3 PredictedAim(Vector3 from)
+  {
+   var at=PlayerAim;float t=Vector3.Distance(from,at)/Mathf.Max(1,boltSpeed);
+   return at+playerVelocity*t*leadFactor;
+  }
+  void FireBolt()
+  {
+   var from=MuzzlePoint;var at=PredictedAim(from);
+   var dir=(at-from).normalized;
+   var spread=UnityEngine.Random.insideUnitCircle*aimSpread;
+   dir=Quaternion.AngleAxis(spread.x,Vector3.up)*Quaternion.AngleAxis(spread.y,Vector3.Cross(dir,Vector3.up).normalized)*dir;
+   DroidBolt.Fire(boltPrefab,this,from,dir,boltSpeed,boltDamage);BoltsFired++;
+   flash=Mathf.Max(flash,.45f);
+   if(voice&&fireClip)voice.PlayOneShot(fireClip,fireVolume*UnityEngine.Random.Range(.85f,1f));
+   if(sparks&&(!Session||!Session.reducedMotion)){sparks.transform.position=from;sparks.Emit(4);}
+  }
   // A slam may play the attack slower (a heavier swing that still lands on the blow); ordinary strikes keep the old floor.
   float AttackRate(){return attack?Mathf.Max(Slamming?.3f:.5f,attack.length*attackImpact/Mathf.Max(.05f,windupNow)):1;}
   /// Strike number n (1-based) is a slam when every is set and n is a multiple of it.
@@ -299,7 +462,9 @@ namespace AthenHill
   }
 
   /// Ground steering: go around blocking colliders, keep apart from other droids, stay on the terrain.
-  void Steer(Vector3 target,float speed,float dt)
+  void Steer(Vector3 target,float speed,float dt)=>Steer(target,speed,dt,null);
+  /// faceAt: keep facing this point (ranged strafing) instead of the direction of travel.
+  void Steer(Vector3 target,float speed,float dt,Vector3? faceAt)
   {
    var to=Flat(target-transform.position);
    Vector3 dir=to.sqrMagnitude>.01f?to.normalized:Vector3.zero;
@@ -316,7 +481,8 @@ namespace AthenHill
    }
    dir=Flat(dir);if(dir.sqrMagnitude>1)dir.Normalize();
    velocity=Vector3.Lerp(velocity,dir*speed,1-Mathf.Exp(-6*dt));
-   if(velocity.sqrMagnitude>.01f)Face(transform.position+velocity,dt);
+   if(faceAt.HasValue)Face(faceAt.Value,dt);
+   else if(velocity.sqrMagnitude>.01f)Face(transform.position+velocity,dt);
    transform.position+=velocity*dt;
    SnapToGround(dt);
   }
@@ -440,10 +606,10 @@ namespace AthenHill
     float t=Time.time-deadAt;rate=40;
     target=t<.7f&&!reduced&&Mathf.PerlinNoise(Time.time*28,3.1f)>.45f?glowHostile*.5f:Color.black;
    }
-   else if(State==DroidState.Windup)
+   else if(State==DroidState.Windup||State==DroidState.Firing)
    {
     // flare builds through the wind-up and peaks as the blow lands
-    float p=Mathf.Clamp01(timer/Mathf.Max(.05f,windupNow));rate=30;
+    float p=State==DroidState.Firing?1:Mathf.Clamp01(timer/Mathf.Max(.05f,windupNow));rate=30;
     target=Color.Lerp(glowHostile,glowWindup,p*p)*(Slamming?1.35f:1);
     if(!reduced)target*=1+.3f*Mathf.Sin(Time.time*38);
    }
@@ -514,10 +680,10 @@ namespace AthenHill
    if(sparks){sparks.transform.position=point;sparks.Emit(10);}
    if(voice&&hitClip)voice.PlayOneShot(hitClip,.8f);
    if(!Health.Alive)return;
-   if(State==DroidState.Idle||State==DroidState.Returning||State==DroidState.Alert)SetState(DroidState.Chase);
+   if(State==DroidState.Idle||State==DroidState.Returning||State==DroidState.Alert){bool wasCalm=State!=DroidState.Alert;SetState(DroidState.Chase);if(wasCalm)Alerted?.Invoke(this);}
    poise+=amount;
    // A slam in progress cannot be interrupted; elites need enough damage between staggers.
-   if(Time.time>=staggerReady&&State!=DroidState.Windup&&Staggers(poise,staggerThreshold))
+   if(Time.time>=staggerReady&&(State!=DroidState.Windup||Ranged)&&State!=DroidState.Firing&&Staggers(poise,staggerThreshold))
    {
     poise=0;staggerReady=Time.time+staggerImmunity;SetState(DroidState.Stagger);Play(hit,1.4f);
     if(Player)transform.position+=Flat(transform.position-Player.transform.position).normalized*.25f;
@@ -525,7 +691,8 @@ namespace AthenHill
   }
   void OnDied()
   {
-   SetState(DroidState.Dead);velocity=Vector3.zero;deadAt=Time.time;
+   SetState(DroidState.Dead);velocity=Vector3.zero;deadAt=Time.time;joinAt=-1;
+   if(aimLaser)aimLaser.enabled=false;
    deathPoint=transform.position;wreckGrounded=false;settleClock=0;WreckSettled=kind!=DroidKind.Hover||!body;
    if(voice&&deathClip)voice.PlayOneShot(deathClip);
    if(eyeLight)eyeLight.intensity=0;

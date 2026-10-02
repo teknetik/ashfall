@@ -4,12 +4,15 @@ using System.Linq;
 using System.Text;
 namespace AthenHill
 {
- public enum OrderStage { NotStarted, Gather, Fabricate, Fit, TestFire, Hunt, Craft, FreePlay }
+ /// Report: the parts are gathered and the order's report-to colonist has not been visited yet (appended last, so
+ /// existing numeric values are unchanged).
+ public enum OrderStage { NotStarted, Gather, Fabricate, Fit, TestFire, Hunt, Craft, FreePlay, Report }
  /// Pure field-order state machine. The index only ever moves forward, so repeating a finished task (crafting or
  /// fitting again, firing again) can never restart an order or repeat Ossa's completion line.
  public sealed class FieldOrderProgress
  {
   readonly HashSet<string> testFired=new HashSet<string>();
+  readonly HashSet<string> reported=new HashSet<string>();
   public FieldOrderSet Data {get;}
   /// −1 before the primer is complete; orders.Length once every order is done (free play).
   public int Index {get;private set;}=-1;
@@ -21,6 +24,16 @@ namespace AthenHill
   public FieldOrder Begin(){if(Started)return null;Index=0;return Current;}
   static bool Fitted(CraftingModel model,string itemId)=>model.Loadout.FittedMods.Any(x=>x.Value==itemId);
   public bool TestFired(string orderId)=>testFired.Contains(orderId);
+  public bool Reported(string orderId)=>reported.Contains(orderId);
+  /// The current order names a report-to colonist and the player has spoken to them during it.
+  public bool CurrentReported=>Current!=null&&reported.Contains(Current.id);
+  static bool HasReport(FieldOrder o)=>o!=null&&o.goal==FieldOrderGoal.FitMod&&!string.IsNullOrEmpty(o.reportTo);
+  /// The player spoke to a colonist: counts as the current order's report when it is the one the order names.
+  public bool NoteReport(string npcId)
+  {
+   var o=Current;
+   return HasReport(o)&&o.reportTo==npcId&&reported.Add(o.id);
+  }
   /// A shot was fired: counts as the current order's test fire when its mod is fitted.
   public bool NoteShot(CraftingModel model)
   {
@@ -57,7 +70,8 @@ namespace AthenHill
    if(Fitted(model,o.targetItemId))return OrderStage.TestFire;
    if(pack.Quantity(o.targetItemId)>0)return OrderStage.Fit;
    var recipe=RecipeFor(model,o);
-   return recipe!=null&&model.CanCraft(recipe.id,recipe.stationId,out _)?OrderStage.Fabricate:OrderStage.Gather;
+   if(recipe==null||!model.CanCraft(recipe.id,recipe.stationId,out _))return OrderStage.Gather;
+   return HasReport(o)&&!reported.Contains(o.id)?OrderStage.Report:OrderStage.Fabricate;
   }
   public string GuidanceKey(CraftingModel model,ShopModel pack)
   {
@@ -65,6 +79,7 @@ namespace AthenHill
    {
     case OrderStage.Fabricate:case OrderStage.Fit:case OrderStage.Craft:return "fabricator";
     case OrderStage.Gather:case OrderStage.Hunt:return Current.guidance;
+    case OrderStage.Report:return Current.reportGuidance;
     case OrderStage.FreePlay:return Data.freePlayGuidance;
     default:return null;
    }
@@ -77,6 +92,7 @@ namespace AthenHill
    if(stage==OrderStage.FreePlay)return Data.freePlayObjective;
    var o=Current;var recipe=RecipeFor(model,o);
    string item=CraftingText.ItemName(model,o.targetItemId);
+   if(stage==OrderStage.Report)return Fill(o.reportBrief??"",("item",item)).Trim();
    string template=stage switch
    {
     OrderStage.Gather=>Data.gatherFormat,
@@ -98,14 +114,17 @@ namespace AthenHill
    foreach(var (key,value) in values)sb.Replace("{"+key+"}",value??"");
    return sb.ToString();
   }
-  public FieldOrderState Capture()=>new FieldOrderState{index=Index,testFired=testFired.OrderBy(x=>x,StringComparer.Ordinal).ToArray()};
+  public FieldOrderState Capture()=>new FieldOrderState{index=Index,testFired=testFired.OrderBy(x=>x,StringComparer.Ordinal).ToArray(),reported=reported.OrderBy(x=>x,StringComparer.Ordinal).ToArray()};
   public void Restore(FieldOrderState state)
   {
-   testFired.Clear();
+   testFired.Clear();reported.Clear();
    if(state==null){Index=-1;return;}
    Index=Math.Max(-1,Math.Min(Data.orders.Length,state.index));
    if(state.testFired!=null)foreach(var id in state.testFired)if(!string.IsNullOrEmpty(id))testFired.Add(id);
+   if(state.reported!=null)foreach(var id in state.reported)if(!string.IsNullOrEmpty(id))reported.Add(id);
   }
  }
- [Serializable] public class FieldOrderState {public int index=-1;public string[] testFired;}
+ /// reported (1 Oct 2026): orders whose report-to colonist was visited; absent in older saves (none reported, so an
+ /// order in progress asks for the visit once).
+ [Serializable] public class FieldOrderState {public int index=-1;public string[] testFired;public string[] reported;}
 }

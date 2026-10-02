@@ -7,7 +7,7 @@ namespace AthenHill
  /// One Buy parts purchase; listeners may append words to the notice (e.g. " Schematic discovered: …").
  public sealed class PartPurchase{public string itemId,note="";}
  public enum CityState { Boot,Play,Dialogue,Shop,Grid,Paused,Inventory,Notes,Credits,Error,Settings,MainMenu,Fabricator }
- public class GameSession:MonoBehaviour
+ public class GameSession:MonoBehaviour,IQuestState
  {
   public CityCatalog catalog;
   [Tooltip("Character progression rules. When unassigned, loads Resources/CharacterCatalog.")]
@@ -29,6 +29,8 @@ namespace AthenHill
   public bool HasStarted {get;private set;}
   public string DetailItemId {get;private set;}
   public string ActiveStationId {get;private set;}
+  /// The workbench the fabricator window was opened at (its title and subtitle head the window).
+  public CraftingStationMarker ActiveStation {get;private set;}
   CityState settingsReturn=CityState.Paused;
   public ShopModel Shop {get;private set;}
   public NpcAgent ActiveNpc {get;private set;}
@@ -36,6 +38,8 @@ namespace AthenHill
   public float GridProgress {get;private set;}
   public readonly List<string> Log=new List<string>();
   public readonly HashSet<string> Spoken=new HashSet<string>();
+  /// Story flags set by dialogue choices (DialogueChoice.setFlag); saved with the game.
+  public readonly HashSet<string> Flags=new HashSet<string>();
   public bool visitedHill,boughtFlask,soldScrap,linked;
   [Header("Messages")]
   [Tooltip("Warden radio lines: on screen for Base + Seconds Per Word × words (clamped), one at a time, and only counting down during play.")]
@@ -51,6 +55,35 @@ namespace AthenHill
   public bool Complete=>visitedHill&&Spoken.Count==4&&boughtFlask&&soldScrap&&linked;
   public string Objective=>!visitedHill?"Reach the Hill Tree.":Spoken.Count<4?$"Meet the colonists · {Spoken.Count}/4 conversations":!boughtFlask||!soldScrap?"Buy a flask and sell your scrap at Basic General.":!linked?"Use the Lattice Jack in the north court.":"A place on the hill. City visit complete.";
   public DialogueNode Dialogue=>ActiveNpc?ActiveNpc.definition.nodes.First(x=>x.id==dialogueNode):null;
+  public const int MaxChoices=3;
+  /// The current node's choices whose conditions hold (at most MaxChoices; the HUD shows one button each).
+  public DialogueChoice[] Choices=>DialogueFlow.Choices(Dialogue,this,MaxChoices);
+  /// The node a colonist opens with: the first entry whose condition holds, else "greeting".
+  public string StartNode(NpcDefinition d)=>DialogueFlow.StartNode(d,this);
+  /// A conversation started (after the opening node was chosen): field orders count report visits from it.
+  public event Action<NpcAgent> Talked;
+  // ---- IQuestState (dialogue conditions)
+  FieldOrders questOrders;BermsTutorial questTutorial;PlayerCombat questCombat;bool questBound;
+  void BindQuest()
+  {
+   if(questBound)return;questBound=true;
+   questOrders=GetComponent<FieldOrders>();
+   questTutorial=questOrders&&questOrders.tutorial?questOrders.tutorial:FindAnyObjectByType<BermsTutorial>();
+   questCombat=player?player.GetComponent<PlayerCombat>():null;
+  }
+  bool IQuestState.PrimerComplete{get{BindQuest();return questTutorial&&questTutorial.Step==BermsStep.Complete;}}
+  bool IQuestState.HasPistol{get{BindQuest();return questCombat&&questCombat.hasPistol;}}
+  string IQuestState.CurrentOrderId{get{BindQuest();return questOrders&&questOrders.Progress!=null?questOrders.Progress.Current?.id:null;}}
+  OrderStage IQuestState.Stage{get{BindQuest();return questOrders&&questOrders.Ready?questOrders.Progress.Stage(questOrders.crafting.Model,Shop):OrderStage.NotStarted;}}
+  bool IQuestState.CurrentReported{get{BindQuest();return questOrders&&questOrders.Progress!=null&&questOrders.Progress.CurrentReported;}}
+  public bool HasFlag(string id)=>!string.IsNullOrEmpty(id)&&Flags.Contains(id);
+  public void SetFlag(string id){if(!string.IsNullOrEmpty(id)&&Flags.Add(id)){FlagSet?.Invoke(id);Changed?.Invoke();}}
+  /// A story flag was recorded (autosave hook).
+  public event Action<string> FlagSet;
+  /// Display name of the colonist at the open counter (Mira when none, as Basic General was the only counter).
+  public string Vendor=>ActiveNpc&&ActiveNpc.definition?ActiveNpc.definition.displayName:"Mira";
+  public ShopProfile ActiveShop=>ActiveNpc&&ActiveNpc.definition&&ActiveNpc.definition.shop!=null?ActiveNpc.definition.shop:DefaultShop;
+  static readonly ShopProfile DefaultShop=new ShopProfile();
   void Start()
   {
    Settings.Changed+=SettingsChanged;muted=Settings.Sound.muted;Settings.ApplySound();
@@ -103,47 +136,57 @@ namespace AthenHill
   {
    if(State!=CityState.Play)return;
    var n=Nearest;
-   if(n){ActiveNpc=n;dialogueNode="greeting";n.talking=true;if(n.countsForCityVisit)Spoken.Add(n.definition.id);SetState(CityState.Dialogue);AddLog(n.definition.displayName,Dialogue.text);}
+   if(n){ActiveNpc=n;dialogueNode=StartNode(n.definition);n.talking=true;if(n.countsForCityVisit)Spoken.Add(n.definition.id);SetState(CityState.Dialogue);AddLog(n.definition.displayName,Dialogue.text);Talked?.Invoke(n);}
    else if(NearLattice){GridProgress=0;selectedDestination="";SetState(CityState.Grid);AddLog("Lattice Jack","Signal acquired. Opening the sector lattice.");SoundRequested?.Invoke(CitySoundCue.LatticeOpen);}
    else if(!NearRing&&NearWorld)NearWorld.Use();
    else {Notify(NearRing?"Destination offline. The far ring has gone quiet.":"Move closer to a colonist or terminal.",NearRing?"Ring Gate":"System");SoundRequested?.Invoke(CitySoundCue.Unavailable);}
   }
   public void Choose(int index)
   {
-   if(State!=CityState.Dialogue||index<0||index>=Dialogue.choices.Length)return;
-   var choice=Dialogue.choices[index];AddLog("You",choice.label);
+   if(State!=CityState.Dialogue)return;
+   var choices=Choices;if(index<0||index>=choices.Length)return;
+   var choice=choices[index];AddLog("You",choice.label);
+   SetFlag(choice.setFlag);
    if(choice.action=="shop")SetState(CityState.Shop);
    else if(choice.action=="close")Close();
+   else if(choice.action=="fabricator"&&ActiveNpc.workbench)
+   {
+    // "Use the bench": straight from the conversation to the workbench the colonist keeps.
+    var bench=ActiveNpc.workbench;ActiveNpc.talking=false;ActiveNpc=null;
+    ActiveStation=bench;ActiveStationId=bench.stationId;SetState(CityState.Fabricator);
+   }
    else {dialogueNode=choice.next;AddLog(ActiveNpc.definition.displayName,Dialogue.text);Changed?.Invoke();}
   }
   public bool Trade(string id,bool buy)
   {
    if(State!=CityState.Shop)return false;
-   bool ok=Shop.Trade(id,buy,out string message);
+   bool ok=Shop.Trade(id,buy,out string message,Vendor);
    if(ok&&buy&&id=="water_flask")boughtFlask=true;
    if(ok&&!buy&&id=="scrap_coil")soldScrap=true;
-   Notify(message,"Mira");SoundRequested?.Invoke(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);
+   Notify(message,Vendor);SoundRequested?.Invoke(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);
    if(ok)Traded?.Invoke();
    return ok;
   }
-  /// Basic General's Sell salvage list: one atomic sale of several units of salvage Mira buys but does not stock.
+  /// A counter's Sell salvage list (Basic General, Salvage): one atomic sale of several units of salvage the trader buys
+  /// but does not stock.
   public bool SellSalvage(string id,int count)
   {
    if(State!=CityState.Shop)return false;
-   string message="Mira does not buy that.";
-   bool ok=ShopModel.BuysAsSalvage(Shop.Spec(id))&&Shop.Sell(id,count,out message);
-   Notify(message,"Mira");SoundRequested?.Invoke(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);
+   string message=$"{Vendor} does not buy that.";
+   bool ok=ActiveShop.salvage&&ShopModel.BuysAsSalvage(Shop.Spec(id))&&Shop.Sell(id,count,out message);
+   Notify(message,Vendor);SoundRequested?.Invoke(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);
    if(ok)Traded?.Invoke();
    return ok;
   }
-  /// Basic General's Buy parts list: one common or uncommon crafting part at Mira's premium price.
+  /// A counter's Buy parts list: one common or uncommon crafting part at its premium parts price.
   public bool BuyPart(string id)
   {
    if(State!=CityState.Shop)return false;
-   bool ok=Shop.BuyPart(id,1,out string message);
+   string message=$"{Vendor} does not sell parts.";
+   bool ok=ActiveShop.parts&&Shop.BuyPart(id,1,out message,Vendor);
    var purchase=new PartPurchase{itemId=id};
    if(ok)PartBought?.Invoke(purchase);
-   Notify(message+purchase.note,"Mira");SoundRequested?.Invoke(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);
+   Notify(message+purchase.note,Vendor);SoundRequested?.Invoke(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);
    if(ok)Traded?.Invoke();
    return ok;
   }
@@ -166,7 +209,7 @@ namespace AthenHill
    else Open(slot==5?CityState.Inventory:CityState.Notes);
   }
   public void StartGame(){if(State!=CityState.MainMenu)return;HasStarted=true;SetState(CityState.Play);}
-  public CityVisitState CaptureCityVisit()=>new CityVisitState{visitedHill=visitedHill,boughtFlask=boughtFlask,soldScrap=soldScrap,linked=linked,spoken=Spoken.OrderBy(x=>x).ToArray(),selectedDestination=selectedDestination};
+  public CityVisitState CaptureCityVisit()=>new CityVisitState{visitedHill=visitedHill,boughtFlask=boughtFlask,soldScrap=soldScrap,linked=linked,spoken=Spoken.OrderBy(x=>x).ToArray(),selectedDestination=selectedDestination,flags=Flags.OrderBy(x=>x,StringComparer.Ordinal).ToArray()};
   /// Save restore of the city-visit checklist (conversations, flask, scrap sale, lattice link).
   public void RestoreCityVisit(CityVisitState city)
   {
@@ -174,6 +217,7 @@ namespace AthenHill
    visitedHill=city.visitedHill;boughtFlask=city.boughtFlask;soldScrap=city.soldScrap;linked=city.linked;
    Spoken.Clear();if(city.spoken!=null)foreach(var id in city.spoken)if(!string.IsNullOrEmpty(id)&&npcs!=null&&npcs.Any(n=>n&&n.definition&&n.definition.id==id))Spoken.Add(id);
    selectedDestination=city.selectedDestination??"";
+   Flags.Clear();if(city.flags!=null)foreach(var f in city.flags)if(!string.IsNullOrEmpty(f))Flags.Add(f);
    Changed?.Invoke();
   }
   /// Field rewards (Outer Berms patrols): credits and items change together, then the log records it.
@@ -205,10 +249,11 @@ namespace AthenHill
    DetailItemId=id;Changed?.Invoke();
   }
   public void CloseItemDetails(){if(DetailItemId==null)return;DetailItemId=null;Changed?.Invoke();}
-  public void OpenFabricator(string stationId)
+  /// A workbench (CraftingStationMarker) was used: its fabricator window opens. Only a nearby station can open it.
+  public void OpenFabricator(CraftingStationMarker station)
   {
-   if(State!=CityState.Play||stationId!="station_field_fabricator")return;
-   ActiveStationId=stationId;SetState(CityState.Fabricator);
+   if(State!=CityState.Play||!station||string.IsNullOrEmpty(station.stationId))return;
+   ActiveStation=station;ActiveStationId=station.stationId;SetState(CityState.Fabricator);
   }
   public void Open(CityState state)
   {
@@ -216,7 +261,7 @@ namespace AthenHill
    if(State==CityState.MainMenu){if(state!=CityState.Settings)return;settingsReturn=CityState.MainMenu;Settings.BeginEdit();SetState(state);return;}
    if(State==CityState.Play||State==CityState.Paused){if(state==CityState.Settings){settingsReturn=CityState.Paused;Settings.BeginEdit();}SetState(state);}
   }
-  public void Close(){if(State==CityState.Settings){if(Settings.Previewing){Settings.RevertVideo();return;}Settings.EndEdit();SetState(settingsReturn);return;}if(State==CityState.MainMenu||State==CityState.Boot)return;if(State==CityState.Inventory&&DetailItemId!=null){CloseItemDetails();return;}DetailItemId=null;ActiveStationId=null;if(ActiveNpc)ActiveNpc.talking=false;ActiveNpc=null;GridProgress=0;SetState(CityState.Play);}
+  public void Close(){if(State==CityState.Settings){if(Settings.Previewing){Settings.RevertVideo();return;}Settings.EndEdit();SetState(settingsReturn);return;}if(State==CityState.MainMenu||State==CityState.Boot)return;if(State==CityState.Inventory&&DetailItemId!=null){CloseItemDetails();return;}DetailItemId=null;ActiveStationId=null;ActiveStation=null;if(ActiveNpc)ActiveNpc.talking=false;ActiveNpc=null;GridProgress=0;SetState(CityState.Play);}
   public void ResetPlayer(){if(!HasStarted)return;Close();player.ReturnToGate();follow.yaw=-90;follow.pitch=17;follow.FixedView=false;}
   public void ToggleMute(){Settings.Sound.muted=!Settings.Sound.muted;Settings.SaveSound();Settings.Flush();}
   public void ToggleReducedMotion(){reducedMotion=!reducedMotion;Settings.SaveReducedMotion(reducedMotion);Changed?.Invoke();}

@@ -21,6 +21,13 @@ namespace AthenHill
   public string activateEncounter;
   [Tooltip("Guidance key while gathering (fabricator guidance is automatic once the part can be fabricated or fitted).")]
   public string guidance;
+  [Header("Report (optional)")]
+  [Tooltip("FitMod only: NpcDefinition id of the colonist the player takes the parts to before fabricating (Brann at Salvage for the first order). Until the player has spoken to them, a gathered order waits at its Report stage.")]
+  public string reportTo;
+  [Tooltip("Field Notes text for the Report stage. {item} = target item name.")]
+  [TextArea(2,4)]public string reportBrief;
+  [Tooltip("Guidance key for the Report stage (FieldOrders guidance target).")]
+  public string reportGuidance;
   [Tooltip("The order's instruction, shown in Field Notes. {item} = target item name.")]
   [TextArea(2,4)]public string brief;
   [Tooltip("Radio line when the order becomes current. Empty = silent (e.g. the primer already briefed it).")]

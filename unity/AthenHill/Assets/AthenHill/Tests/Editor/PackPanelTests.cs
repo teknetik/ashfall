@@ -107,7 +107,7 @@ namespace AthenHill.Tests
    panel.Refresh();
    Assert.That(Tiles(root),Is.EqualTo(new[]{"sch-recipe_alloy_plate","sch-recipe_grip_stabilised_pistol","sch-recipe_field_rifle","sch-recipe_rifle_precision_barrel"}));
    Assert.That(root.Q<Button>("sch-recipe_alloy_plate").ClassListContains("short"),"no parts carried");
-   Assert.That(root.Q<Label>("inventory-overview-description").text,Does.StartWith("Parts: ").And.Contain("field fabricator"));
+   Assert.That(root.Q<Label>("inventory-overview-description").text,Does.StartWith("Parts: ").And.Contain("workbench at Salvage"));
    Assert.That(root.Query<Button>(className:"pack-chip").ToList().Select(b=>b.text),Is.EqualTo(new[]{"ALL","COMPONENTS","MARK I","MARK II","WEAPONS","WEAPON MODS"}));
    panel.SetFilter("MarkI");
    Assert.That(Tiles(root),Is.EqualTo(new[]{"sch-recipe_grip_stabilised_pistol"}));
@@ -161,7 +161,7 @@ namespace AthenHill.Tests
    Assert.That(root.Q("inventory-details").style.display.value,Is.EqualTo(DisplayStyle.Flex));
    Assert.That(root.Q("preview-col").style.display.value,Is.EqualTo(DisplayStyle.None));
    Assert.That(root.Q<Label>("details-title").ClassListContains("rarity-rare"));
-   Assert.That(root.Q<Label>("details-prices").text,Is.EqualTo("Rare part · Mira will not trade it"));
+   Assert.That(root.Q<Label>("details-prices").text,Is.EqualTo("Rare part · neither Mira nor Brann will trade it"));
    rig.session.CloseItemDetails();panel.Refresh();
    Assert.That(root.Q("inventory-details").style.display.value,Is.EqualTo(DisplayStyle.None));
    Assert.That(root.Q("preview-col").style.display.value,Is.EqualTo(DisplayStyle.Flex));

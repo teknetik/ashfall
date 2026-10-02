@@ -34,6 +34,8 @@ from ward_masonry import (Frame, stone_tint, ashlar_block, eroded_bevel, block_w
 import author_ward_shops as AWS
 sys.path.insert(0, str(HERE))
 from north_kit import corrugated_sheet
+sys.path.insert(0, str(ROOT / "art/salvage_shop_20261001"))
+import salvage_interior as walkin
 from author_ward_shops import Shop, BASE, HW, D, OUT, UP
 
 
@@ -627,9 +629,12 @@ class NShop(Shop):
 
 # ====================================================================== the shops
 def salvage(lod):
-    """West row, z 18 (local +X = south towards the Tool Exchange). Loading bay, loading door and hoist, shell-hole repair."""
+    """West row, z 18 (local +X = south towards the Tool Exchange). Loading bay, loading door and hoist, shell-hole repair.
+    Since 1 Oct 2026 a walk-in shop: the bay's shutter is rolled up and the ground floor is fitted out
+    (art/salvage_shop_20261001/salvage_interior.py; the exterior's random layout is unchanged)."""
     s = NShop("Salvage", lod, (1.02, 0.95, 0.86), 1818 + 4)
-    s.shutter("front", -3.0, 0.3)
+    walkin.prepare(s)
+    s.shutter("front", -3.0, 0.3, open=True)
     s.portal("front", 1.95, 0.95, 3.15, kind="single", door_mat="WS_PaintOlive", arch=False)
     s.upper_door("front", -1.35, 1.3)
     s.window("front", 1.35, 2.25, 5.50, 7.18, kind="bars")
@@ -660,6 +665,7 @@ def salvage(lod):
     s.fitting("right", 1.4, 5.2, "PH_SecurityLight", "Side security light")
     s.fitting("rear", 2.5, BASE, "PH_AirconRusted", "Rear air conditioner", off=0.35)
     s.fitting("left", -2.2, 1.5, "PH_PowerBox", "Side power box")
+    walkin.add(s)
     return s
 
 

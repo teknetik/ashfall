@@ -13,7 +13,8 @@ namespace AthenHill.Tests
    try {
     var all=scene.GetRootGameObjects();var session=all.SelectMany(g=>g.GetComponentsInChildren<GameSession>(true)).Single();
     Assert.That(session.npcs.Count(n=>n.countsForCityVisit),Is.EqualTo(4),"New guards must preserve the four-colonist city objective.");
-    var guards=session.npcs.Where(n=>!n.countsForCityVisit).ToArray();Assert.That(guards.Length,Is.EqualTo(2));
+    // the Wardens (Brann at Salvage, 1 Oct 2026, is the other non-visit colonist; SalvageShopTests covers him)
+    var guards=session.npcs.Where(n=>!n.countsForCityVisit&&n.name.StartsWith("Warden")).ToArray();Assert.That(guards.Length,Is.EqualTo(2));
     foreach(var guard in guards)
     {
      Assert.That(guard.definition.nodes.Any(n=>n.id=="greeting"));

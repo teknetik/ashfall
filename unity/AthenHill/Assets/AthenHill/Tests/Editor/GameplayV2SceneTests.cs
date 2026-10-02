@@ -44,11 +44,13 @@ namespace AthenHill.Tests
     Assert.That(foreman.player&&foreman.session,Is.True);Assert.That(foreman.respawnSeconds,Is.GreaterThan(0));
     var tutorial=All<BermsTutorial>(scene).Single();var depot=tutorial.depot;
     foreach(var s in depot.spawns)foreach(var f in foreman.spawns)Assert.That(Vector3.Distance(s.point.position,f.point.position),Is.GreaterThan(2.5f));
-    // Re-form rule: working at the field fabricator never counts as "away" from the depot nest or the Foreman.
+    // Since 1 Oct 2026 the workbench is Brann's, in the Salvage shop inside the walls: the depot nest and the Foreman
+    // re-form while the player is in town (the "away" rule), never while they stand next to them.
     var bench=crafting.fabricator.position;
+    Assert.That(bench.x,Is.GreaterThan(All<PlayerCombat>(scene).Single().cityEdgeX),"the workbench is inside Ward");
     foreach(var e in new[]{depot,foreman})
     {
-     Assert.That(e.respawnClearance,Is.GreaterThan(Flat(bench-e.transform.position)+5),e.name);
+     Assert.That(e.respawnClearance,Is.LessThan(Flat(bench-e.transform.position)),e.name);
      Assert.That(e.awaySeconds,Is.GreaterThanOrEqualTo(30),e.name);
     }
     Assert.That(tutorial.depotRespawnSeconds,Is.InRange(180,360));
@@ -92,7 +94,8 @@ namespace AthenHill.Tests
     Assert.That(tutorial.depot.spawns.Select(s=>s.point.position.x),Is.EqualTo(new[]{-82.2f,-75.2f,-84.9f}).Within(.05f));
     var names=All<NpcAgent>(scene).Select(n=>n.name).ToArray();
     foreach(var n in new[]{"npc_mira","npc_torr","npc_vex","npc_linn","Warden Ossa","Warden Rell"})Assert.That(names,Does.Contain(n));
-    var fab=All<CraftingStationMarker>(scene).Single();Assert.That(fab.transform.position.x,Is.EqualTo(-75f).Within(.01f));
+    var fab=All<CraftingStationMarker>(scene).Single(m=>m.name=="Field fabricator");Assert.That(fab.transform.position.x,Is.EqualTo(-75f).Within(.01f));
+    Assert.That(fab.enabled,Is.False,"since 1 Oct 2026 crafting is at Brann's workbench in Salvage; the cart stays as outpost dressing");
    }
    finally{EditorSceneManager.ClosePreviewScene(scene);}
   }

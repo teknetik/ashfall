@@ -21,7 +21,10 @@ MonoBehaviour:
     requireTestFire: 1
     activateEncounter: 
     guidance: depot
-    brief: Salvage a worker-droid servo at the machine depot, then steady the scrap pistol with a fabricated grip.
+    reportTo: npc_brann
+    reportBrief: Take the servo to Brann at Salvage, on the north avenue inside the walls. His workbench can make the {item}.
+    reportGuidance: dealer
+    brief: Salvage a worker-droid servo at the machine depot, then take it to Brann at Salvage for a steadier pistol grip.
     startLine: 
     completeLine: Stabilised grip tested. Your pistol holds steadier.
     urgentStart: 0
@@ -38,8 +41,11 @@ MonoBehaviour:
     requireTestFire: 0
     activateEncounter: 
     guidance: depot
+    reportTo: 
+    reportBrief: 
+    reportGuidance: 
     brief: 'Build a bigger nano cell: wind a copper coil, seal two micro capacitors into a charge core, then fabricate and fit the {item}.'
-    startLine: That pistol runs dry after a dozen shots. I've sent charge-cell schematics to the fabricator. Scrap drones carry micro capacitors, and the scrap heaps hide a few. Wind a coil, seal a core, fit the cell.
+    startLine: That pistol runs dry after a dozen shots. I've sent charge-cell schematics to Brann's bench. Scrap drones carry micro capacitors, and the scrap heaps hide a few. Wind a coil, seal a core, fit the cell.
     completeLine: That cell holds a proper charge now. You'll outlast a drone swarm.
     urgentStart: 0
     engageLine: 
@@ -55,8 +61,11 @@ MonoBehaviour:
     requireTestFire: 0
     activateEncounter: 
     guidance: depot
+    reportTo: 
+    reportBrief: 
+    reportGuidance: 
     brief: Press scrap alloy into refined plates, wind a coil, then fabricate and fit the {item}.
-    startLine: 'Your barrel is rolled sheet scrap. The fabricator can press alloy into proper plate: three measures of alloy and two of nanites a plate. Bore a true barrel and your shots will hit like they mean it.'
+    startLine: 'Your barrel is rolled sheet scrap. Brann''s bench can press alloy into proper plate: three measures of alloy and two of nanites a plate. Bore a true barrel and your shots will hit like they mean it.'
     completeLine: Now it hits like it means it. The workers won't shrug that off.
     urgentStart: 0
     engageLine: 
@@ -72,11 +81,14 @@ MonoBehaviour:
     requireTestFire: 0
     activateEncounter: foreman
     guidance: foreman
+    reportTo: 
+    reportBrief: 
+    reportGuidance: 
     brief: Destroy the Depot Foreman in the processing hall and recover the {item} from its wreck.
     startLine: 'Listen. Something big just woke in the depot''s processing hall: a foreman unit, still running its old shift. It''s slow, but it hits hard and shrugs off a stagger. When its optics flare red, step back. Put it down and bring me its control core.'
-    completeLine: That core still holds its shift schedules, and Mark II pistol schematics with them. They're in the fabricator now.
+    completeLine: That core still holds its shift schedules, and Mark II pistol schematics with them. They're on Brann's bench now.
     urgentStart: 1
-    engageLine: "It's seen you. When its optics flare red, a slam is coming: step back out of reach."
+    engageLine: 'It''s seen you. When its optics flare red, a slam is coming: step back out of reach.'
     speaker: Warden Ossa
     rewardCredits: 40
     rewardItems: []
@@ -89,6 +101,9 @@ MonoBehaviour:
     requireTestFire: 0
     activateEncounter: 
     guidance: foreman
+    reportTo: 
+    reportBrief: 
+    reportGuidance: 
     brief: Fabricate any Mark II pistol mod. The foreman carries actuators and quantum lattice shards, and its cradle keeps reviving it.
     startLine: 'Mark II work needs rare parts: intact actuators and quantum lattice shards. The foreman carries both, and its charging cradle keeps reviving it. Build me something Warden-grade.'
     completeLine: That's Warden-grade work. The Berms are yours to hunt now; the depot always fills up again.
@@ -101,8 +116,8 @@ MonoBehaviour:
   gatherFormat: '{brief}
 
     {recipe}: {inputs}'
-  fabricateFormat: Fabricate the {item} at the field fabricator by Ossa's post.
-  fitFormat: Fit the {item} to your {weapon} at the field fabricator.
+  fabricateFormat: Fabricate the {item} at Brann's workbench in Salvage, on the north avenue.
+  fitFormat: Fit the {item} to your {weapon} at Brann's workbench in Salvage.
   testFireFormat: Fire your upgraded pistol in the Outer Berms.
   collectFormat: '{brief}'
   craftGroupFormat: '{brief}
@@ -110,6 +125,6 @@ MonoBehaviour:
     Known schematics: {count}'
   inputFormat: '{name} {have}/{need}'
   inputSeparator: " \xB7 "
-  freePlayObjective: 'Free hunting: the Depot Foreman re-forms in the processing hall. Recover lattice shards and actuators for the other Mark II mods, and sell surplus salvage to Mira at Basic General.'
+  freePlayObjective: 'Free hunting: the Depot Foreman re-forms in the processing hall. Recover lattice shards and actuators for the other Mark II mods, and sell surplus salvage to Brann at Salvage or Mira at Basic General.'
   freePlayGuidance: 
   nextLineDelay: 4.5

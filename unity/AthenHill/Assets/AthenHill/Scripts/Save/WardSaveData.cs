@@ -3,7 +3,8 @@ using System.IO;
 using UnityEngine;
 namespace AthenHill
 {
- [Serializable] public class CityVisitState {public bool visitedHill,boughtFlask,soldScrap,linked;public string[] spoken;public string selectedDestination;}
+ /// flags (1 Oct 2026): story flags set by dialogue choices; absent in older saves (none set).
+ [Serializable] public class CityVisitState {public bool visitedHill,boughtFlask,soldScrap,linked;public string[] spoken;public string selectedDestination;public string[] flags;}
  /// Everything a Ward save restores. JsonUtility-friendly (arrays of plain records, no dictionaries).
  /// Version 2 adds character progression and equipment. Version 1 starts with the catalog's character defaults.
  /// Player position is not saved: a loaded game resumes at West Gate.

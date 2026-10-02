@@ -32,7 +32,7 @@ namespace AthenHill
    {
     if(!rows.TryGetValue(item.id,out var row))continue;
     int q=shop.Quantity(item.id);
-    row.copy.text=$"{item.name} · {q} carried\n{Rarity(item.rarity)} part"+(ShopModel.BuysAsSalvage(item)?$" · Mira pays {item.sellPrice} cr":"");
+    row.copy.text=$"{item.name} · {q} carried\n{Rarity(item.rarity)} part"+(ShopModel.BuysAsSalvage(item)?$" · {session.Vendor} pays {item.sellPrice} cr":"");
     row.copy.EnableInClassList("rarity-uncommon",item.rarity==ItemRarity.Uncommon);
     row.buy.text=$"Buy · {item.partsPrice} cr";
     bool room=shop.Room(item.id)>0;

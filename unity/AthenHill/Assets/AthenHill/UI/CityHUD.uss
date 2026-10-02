@@ -423,6 +423,11 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .hit-marker-stroke.b { rotate: -45deg; }
 .hit-marker.kill .hit-marker-stroke { background-color: #c65c4f; width: 4px; }
 .damage-flash { position: absolute; left: 0; top: 0; right: 0; bottom: 0; opacity: 0; border-width: 46px; border-color: rgba(150,38,30,0.55); }
+/* Direction of incoming damage (2 Oct 2026, ranged droids): a zero-size pivot at screen centre, rotated toward the
+   attacker; its bar sits on a ring around the crosshair. */
+.damage-dir { position: absolute; left: 50%; top: 50%; width: 0; height: 0; opacity: 0; }
+.damage-dir-arc { position: absolute; left: -58px; top: -178px; width: 116px; height: 9px; border-radius: 5px; background-color: rgba(198,92,79,0.9); border-width: 1px; border-color: rgba(238,233,220,0.55); }
+.small-window .damage-dir-arc { top: -150px; width: 96px; left: -48px; }
 .berms-objective { border-top-width: 1px; border-color: #65706a; margin-top: 8px; padding-top: 6px; }
 .berms-heading { color: #a48a62; }
 .berms-objective-text { white-space: normal; margin-top: 2px; }

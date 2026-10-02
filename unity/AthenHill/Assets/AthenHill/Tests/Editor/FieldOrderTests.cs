@@ -49,6 +49,12 @@ namespace AthenHill.Tests
    Give(run.pack,("droid_servo_damaged",1),("scrap_alloy",2),("nanite_residue",3));
    Assert.That(run.orders.Objective(run.model,run.pack),Does.Contain("Any servo 1/1 · Scrap Alloy 2/2 · Any tier-one nanites 3/5"));
    Give(run.pack,("nanite_residue",2));run.model.Acquire("droid_servo_damaged");
+   // 1 Oct 2026: with the parts in the pack the order waits for the visit to Brann at Salvage
+   Assert.That(run.orders.Stage(run.model,run.pack),Is.EqualTo(OrderStage.Report));Assert.That(run.orders.GuidanceKey(run.model,run.pack),Is.EqualTo("dealer"));
+   Assert.That(run.orders.Objective(run.model,run.pack),Does.Contain("Brann at Salvage"));
+   Assert.That(run.orders.NoteReport("npc_mira"),Is.False,"only the named colonist counts");
+   Assert.That(run.orders.NoteReport("npc_brann"));Assert.That(run.orders.NoteReport("npc_brann"),Is.False,"once");
+   Assert.That(run.orders.CurrentReported);
    Assert.That(run.orders.Stage(run.model,run.pack),Is.EqualTo(OrderStage.Fabricate));Assert.That(run.orders.GuidanceKey(run.model,run.pack),Is.EqualTo("fabricator"));
    Assert.That(run.orders.Objective(run.model,run.pack),Does.Contain("Fabricate the Stabilised Pistol Grip"));
    run.Craft("recipe_grip_stabilised_pistol");

@@ -86,7 +86,7 @@ namespace AthenHill
    root.Q("new-game-confirm").RegisterCallback<KeyDownEvent>(e=>{if(e.keyCode==KeyCode.Escape){ShowNewGameConfirm(false);root.Q<Button>("start-game").Focus();e.StopPropagation();}},TrickleDown.TrickleDown);
    Bind("mute",session.ToggleMute);Bind("reduced-motion",session.ToggleReducedMotion);
    Bind("reset-ui",()=>{windowLayout.Reset();session.Notify("UI positions reset.");});
-   for(int i=0;i<2;i++){int index=i;Bind("choice"+i,()=>session.Choose(index));}
+   for(int i=0;i<GameSession.MaxChoices;i++){int index=i;Bind("choice"+i,()=>session.Choose(index));}
    for(int i=0;i<3;i++){int index=i;Bind("buy"+i,()=>session.Trade(session.catalog.items[index].id,true));Bind("sell"+i,()=>session.Trade(session.catalog.items[index].id,false));Bind("node"+i,()=>session.SelectDestination(index));}
    for(int i=1;i<=6;i++){int slot=i;Bind("slot"+i,()=>{SelectSlot(slot);session.Hotbar(slot);});}
    // Spare slots complete the 1–0 row; the six existing actions keep their bindings.
@@ -265,11 +265,27 @@ namespace AthenHill
    if(footerLeft!=null)footerLeft.text="FREE COLUMN  /  ATHEN HILL";
    if(footerRight!=null)footerRight.text="Tab · Select     Enter · Confirm";
    Text("modal-title",session.State.ToString());Text("modal-subtitle","");
-   if(session.State==CityState.Fabricator){Text("modal-title","Field fabricator");Text("modal-subtitle","Warden outpost · Fabricate parts and fit pistol mods");if(footerRight!=null)footerRight.text="↑↓ · Schematic     → · Actions     Tab · Next     Enter · Confirm";}
-   if(session.State==CityState.Dialogue){Text("modal-title",session.ActiveNpc.definition.displayName);Text("modal-subtitle",session.Dialogue.title);Text("dialogue-text",session.Dialogue.text);for(int i=0;i<2;i++)root.Q<Button>("choice"+i).text=session.Dialogue.choices[i].label;}
+   if(session.State==CityState.Fabricator)
+   {
+    var station=session.ActiveStation;
+    Text("modal-title",station&&!string.IsNullOrEmpty(station.title)?station.title:"Field fabricator");Text("modal-subtitle",station?station.subtitle:"Fabricate parts and fit pistol mods");
+    if(footerRight!=null)footerRight.text="↑↓ · Schematic     → · Actions     Tab · Next     Enter · Confirm";
+   }
+   if(session.State==CityState.Dialogue)
+   {
+    Text("modal-title",session.ActiveNpc.definition.displayName);Text("modal-subtitle",session.Dialogue.title);Text("dialogue-text",session.Dialogue.text);
+    var choices=session.Choices;
+    for(int i=0;i<GameSession.MaxChoices;i++){var b=root.Q<Button>("choice"+i);if(b==null)continue;bool on=i<choices.Length;b.style.display=on?DisplayStyle.Flex:DisplayStyle.None;if(on)b.text=choices[i].label;}
+   }
    if(session.State==CityState.Shop)
    {
-    Text("modal-title","Basic General");Text("modal-subtitle","Mira · Supplies, parts and salvage");Text("shop-credit",$"Available balance: {session.Shop.Credits} credits");
+    var shop=session.ActiveShop;
+    Text("modal-title",shop.title);Text("modal-subtitle",shop.subtitle);Text("shop-credit",$"Available balance: {session.Shop.Credits} credits");
+    // A counter shows only the lists its trader runs (Brann at Salvage: parts and salvage, no supplies).
+    Show("supplies-heading",shop.supplies);root.Query(className:"supply-row").ForEach(e=>e.style.display=shop.supplies?DisplayStyle.Flex:DisplayStyle.None);
+    Show("parts-heading",shop.parts);Show("parts-list",shop.parts);Show("parts-help",shop.parts);
+    var partsHeading=root.Q<Label>("parts-heading");if(partsHeading!=null){partsHeading.text=$"BUY PARTS · {session.Vendor.ToUpperInvariant()}'S PRICES";partsHeading.EnableInClassList("shop-first-heading",!shop.supplies);}
+    Show("salvage-heading",shop.salvage);Show("salvage-list",shop.salvage);Show("salvage-empty",shop.salvage);
     salvageSale.Refresh();partsShop.Refresh();
     for(int i=0;i<3;i++){var item=session.catalog.items[i];Text("item"+i,$"{item.name} · {session.Shop.Quantity(item.id)} carried\n{item.description}");var b=root.Q<Button>("buy"+i);b.text=$"Buy · {item.buyPrice} cr";b.SetEnabled(session.Shop.Credits>=item.buyPrice);var s=root.Q<Button>("sell"+i);s.text=$"Sell · {item.sellPrice} cr";s.SetEnabled(session.Shop.Quantity(item.id)>0);}
    }
@@ -332,10 +348,21 @@ namespace AthenHill
    foreach(var pair in tags)
    {
     var world=pair.Key.transform.position+Vector3.up*2.15f;var p=worldCamera.WorldToViewportPoint(world);
-    bool visible=session.State==CityState.Play&&pair.Key!=prompted&&p.z>0&&p.x>0&&p.x<1&&p.y>0&&p.y<1&&Vector3.Distance(world,session.player.transform.position)<34;
+    bool visible=session.State==CityState.Play&&pair.Key!=prompted&&p.z>0&&p.x>0&&p.x<1&&p.y>0&&p.y<1&&Vector3.Distance(world,session.player.transform.position)<34&&InSight(world);
     pair.Value.style.display=visible?DisplayStyle.Flex:DisplayStyle.None;
     if(visible){var point=RuntimePanelUtils.CameraTransformWorldToPanel(root.panel,world,worldCamera);pair.Value.style.left=point.x-28;pair.Value.style.top=point.y-30;}
    }
+  }
+  static readonly RaycastHit[] sightHits=new RaycastHit[8];
+  /// A nametag only shows when nothing solid stands between the camera and it (Brann works inside the Salvage shop;
+  /// his name must not float on the street wall). The player's own capsule never hides a tag.
+  bool InSight(Vector3 world)
+  {
+   var from=worldCamera.transform.position;var d=world-from;float len=d.magnitude;if(len<.01f)return true;
+   var mask=session.follow?session.follow.worldMask:(LayerMask)~(1<<8);
+   int n=Physics.RaycastNonAlloc(from,d/len,sightHits,len-.1f,mask,QueryTriggerInteraction.Ignore);
+   for(int i=0;i<n;i++)if(!sightHits[i].collider.transform.IsChildOf(session.player.transform))return false;
+   return true;
   }
   void UpdateCompass()
   {

@@ -9,7 +9,7 @@ namespace AthenHill
  /// test that proves the fitted bounds still cover the animation. Edit-time / tooling only (bakes meshes).
  public static class DroidBounds
  {
-  public static IEnumerable<AnimationClip> Clips(FeralDroid d)=>new[]{d.idle,d.walk,d.run,d.attack,d.hit,d.death}.Where(c=>c).Distinct();
+  public static IEnumerable<AnimationClip> Clips(FeralDroid d)=>new[]{d.idle,d.walk,d.run,d.attack,d.hit,d.death,d.aim,d.strafeLeft,d.strafeRight}.Where(c=>c).Distinct();
   public static Bounds Measure(GameObject instance,float samplesPerSecond=30)
   {
    var droid=instance.GetComponent<FeralDroid>();
