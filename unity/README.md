@@ -55,6 +55,7 @@ See [terrain evidence](evidence/terrain/20260908/acceptance.md) and the
 | Space | Jump |
 | E | Talk / use nearby terminal, field fabricator, salvage cache or scrap heap |
 | 7 | Draw / holster the scrap pistol (Outer Berms only) |
+| 8 | Draw / holster the field rifle once one is equipped in the primary slot (Outer Berms only; hold fire for bursts) |
 | Hold right mouse · left click / F | Aim · fire (left click while aiming; F fires from the hip) |
 | Escape | Close panel / pause |
 | R | Return to West Gate |

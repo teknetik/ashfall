@@ -32,7 +32,7 @@ namespace AthenHill
   [TextArea]public string lineTargets="Hold right mouse to steady your aim, then left click to fire. F fires from the hip. Knock down those three plates.";
   [TextArea]public string lineFirstContact="Movement on the service road. A scrap drone's slipped its cluster. They back off before they dart in, so shoot on the tell.";
   [TextArea]public string lineDepot="The rest of its cluster is nested at the old machine depot, south along the road. Clear it out. Break contact if you're hurt; vitality comes back, and nano refills when you stop firing.";
-  [TextArea]public string lineComplete="Clean work. Take the salvage to Mira. The depot always fills up again. The Berms go on a long way; come back when you're ready.";
+  [TextArea]public string lineComplete="Clean work. Take that salvage to Brann at Salvage, on the north avenue inside the walls. His bench can turn a worker servo into a steadier grip for that pistol. The depot always fills up again.";
   public BermsStep Step {get;private set;}=BermsStep.Approach;
   public int TargetsDown=>targets.Count(t=>t&&t.Down);
   public bool ShowObjective=>Step!=BermsStep.Approach||(combat&&combat.transform.position.x<showObjectiveWestOf);
@@ -44,9 +44,30 @@ namespace AthenHill
    BermsStep.Targets=>$"Aim with right mouse, fire with left click · plates {TargetsDown}/{targets.Length}",
    BermsStep.FirstContact=>"Put down the scrap drone on the service road.",
    BermsStep.Depot=>$"Clear the machine depot · {(depot?depot.Remaining:0)} droids left",
-   _=>"Outer Berms primer complete. Sell the salvage at Basic General."
+   _=>"Outer Berms primer complete. Take the salvage to Brann at Salvage, north avenue."
   };
-  public Transform GuidanceTarget=>Step==BermsStep.Approach?briefingWarden:Step==BermsStep.TakePistol&&locker?locker.transform:null;
+  public Transform GuidanceTarget=>Step switch
+  {
+   BermsStep.Approach=>briefingWarden,
+   BermsStep.TakePistol=>locker?locker.transform:null,
+   BermsStep.FirstContact=>NearestLive(firstContact),
+   BermsStep.Depot=>NearestLive(depot),
+   _=>null
+  };
+  /// HUD marker text for the current step's guidance target.
+  public string GuidanceLabel=>Step switch{BermsStep.TakePistol=>"ARMS LOCKER",BermsStep.FirstContact=>"SCRAP DRONE",BermsStep.Depot=>"MACHINE DEPOT",_=>"WARDEN OSSA"};
+  /// The closest living droid of an encounter (the marker leads the player to the fight), or the encounter itself before it spawns.
+  Transform NearestLive(DroidEncounter enc)
+  {
+   if(!enc)return null;
+   Transform best=null;float bestD=float.MaxValue;var from=combat?combat.transform.position:Vector3.zero;
+   foreach(var d in enc.Droids)
+   {
+    if(!d||!d.Health.Alive||!d.gameObject.activeInHierarchy)continue;
+    float dist=(d.transform.position-from).sqrMagnitude;if(dist<bestD){bestD=dist;best=d.transform;}
+   }
+   return best?best:enc.Spawned?null:enc.transform;
+  }
   public event Action Changed;
   void Start()
   {

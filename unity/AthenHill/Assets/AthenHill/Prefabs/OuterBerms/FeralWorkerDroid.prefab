@@ -2351,7 +2351,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dcea789fccaa31e384460bea9b8a725, type: 3}
   m_Name: 
   m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.Health
-  max: 100
+  max: 130
   regenPerSecond: 0
   regenDelay: 5
   aimTarget: 1
@@ -2371,18 +2371,18 @@ MonoBehaviour:
   kind: 0
   displayName: Feral worker droid
   wanderSpeed: 1
-  chaseSpeed: 3.1
+  chaseSpeed: 3.6
   turnSpeed: 7
-  aggroRadius: 15
-  leashRadius: 30
+  aggroRadius: 18
+  leashRadius: 40
   attackRange: 1.9
   wanderRadius: 3.5
   alertSeconds: 0.7
-  windupSeconds: 0.65
-  recoverSeconds: 1
+  windupSeconds: 0.55
+  recoverSeconds: 0.85
   staggerSeconds: 0.25
   staggerImmunity: 1.3
-  strikeDamage: 16
+  strikeDamage: 18
   repairPerSecond: 12
   hoverHeight: 1.6
   corpseSeconds: 14
@@ -2399,6 +2399,25 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 4294967039
+  flank: 0.4
+  attackMode: 0
+  boltPrefab: {fileID: 0}
+  muzzle: {fileID: 0}
+  fireRange: 28
+  preferredRange: 17
+  retreatRange: 7
+  burstCount: 3
+  burstInterval: 0.2
+  boltSpeed: 34
+  boltDamage: 8
+  aimSpread: 1.6
+  leadFactor: 0.45
+  strafeSpeed: 2.1
+  volleyPause: {x: 1.4, y: 2.6}
+  aimLaser: {fileID: 0}
+  fireClip: {fileID: 0}
+  fireVolume: 0.9
+  fireClipPerShot: 0
   animationSource: {fileID: 4216024593411310453}
   idle: {fileID: -2474113961476506421, guid: 181a344968be6a943bb191a967a7caaf, type: 3}
   walk: {fileID: -4832708865683171987, guid: 181a344968be6a943bb191a967a7caaf, type: 3}
@@ -2406,6 +2425,9 @@ MonoBehaviour:
   attack: {fileID: -7633015044865952520, guid: 181a344968be6a943bb191a967a7caaf, type: 3}
   hit: {fileID: 3723007598225210139, guid: 181a344968be6a943bb191a967a7caaf, type: 3}
   death: {fileID: 7718827398164767274, guid: 181a344968be6a943bb191a967a7caaf, type: 3}
+  aim: {fileID: 0}
+  strafeLeft: {fileID: 0}
+  strafeRight: {fileID: 0}
   walkStrideSpeed: 1.25
   runStrideSpeed: 3.4
   attackImpact: 0.42

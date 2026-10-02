@@ -138,7 +138,8 @@ namespace AthenHill.Tests
     var pack=new ShopModel(City().items);var character=new CharacterModel(catalog,pack);
     var model=new CraftingModel(Data(),City().items,pack,()=>true,character:character);
     const string recipe="recipe_rifle_precision_barrel",station="station_field_fabricator";
-    Assert.That(pack.TryApply(new[]{Delta("scrap_alloy",3),Delta("copper_filament",2)},0,out _));
+    // 2 Oct 2026: the rifle is earned in the Long Arm order, not issued; the barrel mod needs the rifle carried
+    Assert.That(pack.TryApply(new[]{Delta("scrap_alloy",3),Delta("copper_filament",2),Delta("field_rifle",1)},0,out _));
     Assert.That(model.Knows(recipe));
     Assert.That(model.TryCraft(recipe,station,out var reason),Is.False);Assert.That(reason,Is.EqualTo("unmet_requirements"));
     Assert.That(pack.Quantity("scrap_alloy"),Is.EqualTo(3));Assert.That(model.CraftCount(recipe),Is.Zero);

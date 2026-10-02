@@ -7,8 +7,9 @@ using UnityEngine;
 namespace AthenHill
 {
  /// Ward save game: one versioned JSON file (credits, pack, fitted mods, schematics, craft counts, the primer step and
- /// pistol, field-order progress, loot bad-luck counters and generator state, city-visit checklist).
- /// Autosaves after fabrication, fitting/removal, salvage pickups, completed orders and trades, and on quit.
+ /// pistol, field-order progress and report visits, loot bad-luck counters and generator state, city-visit checklist and
+ /// story flags). Autosaves after fabrication, fitting/removal, salvage pickups, completed orders, trades, conversations
+ /// and story flags, and on quit.
  /// Continue restores every state machine consistently; an unreadable or newer save falls back to a new game with a
  /// notice and is kept aside, never deleted.
  [RequireComponent(typeof(GameSession))]
@@ -62,6 +63,7 @@ namespace AthenHill
   {
    if(subscribed||!Ready)return;subscribed=true;
    crafting.Model.Changed+=MarkDirty;crafting.Collected+=OnCollected;Session.Traded+=MarkDirty;
+   Session.FlagSet+=OnFlag;Session.Talked+=OnTalked;
    if(Session.Character!=null)Session.Character.Changed+=MarkDirty;
    if(orders)orders.Completed+=OnOrderCompleted;
   }
@@ -69,13 +71,16 @@ namespace AthenHill
   {
    if(!subscribed)return;
    if(crafting){if(crafting.Model!=null)crafting.Model.Changed-=MarkDirty;crafting.Collected-=OnCollected;}
-   if(Session)Session.Traded-=MarkDirty;
+   if(Session){Session.Traded-=MarkDirty;Session.FlagSet-=OnFlag;Session.Talked-=OnTalked;}
    if(Session&&Session.Character!=null)Session.Character.Changed-=MarkDirty;
    if(orders)orders.Completed-=OnOrderCompleted;
   }
   void MarkDirty(){if(!applying)dirty=true;}
   void OnCollected(LootPickup _)=>MarkDirty();
   void OnOrderCompleted(FieldOrder _)=>MarkDirty();
+  void OnFlag(string _)=>MarkDirty();
+  // A conversation can record a field-order report visit (Brann for the first order).
+  void OnTalked(NpcAgent _)=>MarkDirty();
   // Coalesce every change in a frame into one write.
   void LateUpdate(){if(dirty&&Session&&Session.HasStarted){dirty=false;SaveNow("autosave");}}
   void OnApplicationQuit(){if(Session&&Session.HasStarted&&Ready)SaveNow("quit");}
@@ -118,6 +123,12 @@ namespace AthenHill
     if(combat)combat.RestorePistol(step>=BermsStep.Draw);
     if(tutorial)tutorial.Restore(step);
     if(orders)orders.Restore(data.orders);
+    // 2 Oct 2026: the field rifle is built in Ossa's Long Arm order. A rifle issued by the earlier catalog's starting
+    // pack (never equipped) is withdrawn from saves that have not completed that order.
+    if(orders&&orders.Progress!=null&&!orders.Progress.Completed("order_long_arm")&&Session.Shop.Quantity("field_rifle")>0&&(Session.Character==null||Session.Character.Equipped("primary")!="field_rifle"))
+    {
+     if(Session.Shop.Remove("field_rifle",Session.Shop.Quantity("field_rifle"),out _))skipped.Add("a test-issue field rifle (Ossa's Long Arm order builds yours)");
+    }
     Session.RestoreCityVisit(data.city);
    }
    finally{applying=false;dirty=false;}

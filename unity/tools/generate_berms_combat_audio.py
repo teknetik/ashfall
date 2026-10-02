@@ -30,6 +30,13 @@ SOUNDS = [
     ('droid-step-1', .5, 'One heavy metal robot foot stepping onto gravelly desert sand: dull metallic clank with a gritty crunch. Single step only, close dry foley, no background.', -20),
     ('droid-step-2', .5, 'A single heavy steel robot footfall on dusty rocky ground: low thud, small servo tick and a sandy scrape. One step only, dry, no background.', -20),
     ('drone-rotor', 3, 'A small rusty hovering drone with two rotors: steady buzzing propeller hum with a slight mechanical rattle, constant pitch. No music, no voices. Seamless continuous loop.', -22, True),
+    # 2 Oct 2026 Outer Berms expansion: ranged droids (gunner, lancer) and their bolts
+    ('gunner-aim', .9, 'A salvaged robot arm cannon charging to fire: quick rising electric whine with a crackling capacitor buzz and a short mechanical lock click at the end, no shot. Close game sound, no music.', -18),
+    ('gunner-fire', .5, 'One shot from a heavy salvaged robot rivet gun firing a glowing energy bolt: sharp metallic thunk with a hissing electric crack and a brief fizz. Single shot, dry, no echo, no music.', -15),
+    ('lancer-charge', 1.4, 'A flying gun drone charging a heavy arc cannon: deep electric hum rising steadily in pitch with crackling arcs, ending at a tense high whine, no shot. Game sound, no music.', -18),
+    ('lancer-fire', .9, 'A heavy arc cannon on a drone discharging one bolt: deep punchy electric boom with a snapping crackle and a short descending zap tail. Single shot, no echo, no music.', -14),
+    ('bolt-impact', .6, 'A glowing energy bolt hitting sand and rock: sharp sizzling crack with a small burst of grit and a short electric fizz. Single impact, outdoor, no echo, no music.', -17),
+    ('bolt-flyby', .5, 'A fast energy bolt whizzing past the listener: brief electric hiss doppler whoosh from left to right with a crackle. Single flyby, no impact, no music.', -19),
 ]
 
 

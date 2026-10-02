@@ -26,6 +26,12 @@ namespace AthenHill
   Button slot7;
   readonly Dictionary<FeralDroid,VisualElement> bars=new Dictionary<FeralDroid,VisualElement>();
   float hitUntil,flashAlpha,toastUntil;
+  /// Damage direction indicators (ranged droids): pooled, each tracks its attacker's position and fades.
+  class DamageDir{public VisualElement el;public Vector3 from;public float alpha;}
+  readonly List<DamageDir> damageDirs=new List<DamageDir>();
+  /// Compass markers for the Outer Berms sites, the waystation and the gate (BermsCompassPoint).
+  readonly Dictionary<BermsCompassPoint,VisualElement> pois=new Dictionary<BermsCompassPoint,VisualElement>();
+  VisualElement compassTrack;Label poiLabel;
   VisualElement toast,toastLines,search,searchFill;
   Label searchLabel;
   void Start()
@@ -65,10 +71,15 @@ namespace AthenHill
    searchLabel=new Label{pickingMode=PickingMode.Ignore};searchLabel.AddToClassList("search-progress-label");search.Add(searchLabel);
    searchFill=Element("search-progress-fill",Element("search-progress-track",search));Show(search,false);
    if(crafting)crafting.Collected+=ShowPickup;
-   slot7=root.Q<Button>("slot7");
+   slot7=root.Q<Button>("slot7");slot8=root.Q<Button>("slot8");
    if(slot7!=null)slot7.clicked+=()=>combat.ToggleDraw();
    combat.TargetHit+=(_,killed)=>{hitUntil=Time.unscaledTime+(killed?.28f:.14f);hitMarker.EnableInClassList("kill",killed);};
    combat.Hurt+=amount=>flashAlpha=Mathf.Clamp01(flashAlpha+amount/30f);
+   for(int i=0;i<4;i++){var pivot=Element("damage-dir",hud);Element("damage-dir-arc",pivot);damageDirs.Add(new DamageDir{el=pivot});}
+   combat.HurtFrom+=ShowDamageDirection;
+   compassTrack=root.Q("compass-track");
+   var compass=root.Q("compass");
+   if(compass!=null){poiLabel=new Label{pickingMode=PickingMode.Ignore};poiLabel.AddToClassList("compass-poi-label");compass.Add(poiLabel);Show(poiLabel,false);}
    combat.StatsChanged+=UpdatePistolTooltip;UpdatePistolTooltip();
    Refresh(true);
   }
@@ -78,9 +89,24 @@ namespace AthenHill
    foreach(var c in classes.Split(' '))e.AddToClassList(c);
    parent?.Add(e);return e;
   }
-  bool pistolShown;
+  bool pistolShown,rifleShown;
+  Button slot8;
   void Refresh(bool force)
   {
+   // Slot 8: the field rifle, once one is equipped in the primary slot (2 Oct 2026).
+   if(slot8!=null&&(force||rifleShown!=combat.HasRifle))
+   {
+    rifleShown=combat.HasRifle;
+    slot8.SetEnabled(rifleShown);slot8.EnableInClassList("empty-slot",!rifleShown);
+    var rifleMarker=slot8.Q(className:"empty-slot-marker");
+    if(rifleShown&&rifleMarker!=null)
+    {
+     rifleMarker.RemoveFromHierarchy();
+     slot8.Add(Element("item-art rifle-icon",null));
+     var label=new Label("Rifle"){pickingMode=PickingMode.Ignore};label.AddToClassList("slot-label");slot8.Add(label);
+     slot8.tooltip="Draw or holster the field rifle · 8";
+    }
+   }
    if(slot7!=null&&(force||pistolShown!=combat.hasPistol))
    {
     pistolShown=combat.hasPistol;
@@ -102,6 +128,7 @@ namespace AthenHill
    // CityHud disables the reserve slots at start; keep slot 7 in step with the pistol.
    if(slot7!=null&&slot7.enabledSelf!=pistolShown)slot7.SetEnabled(pistolShown);
    if(slot7!=null&&pistolShown&&slot7.tooltip!=pistolTooltip)slot7.tooltip=pistolTooltip;
+   if(slot8!=null&&slot8.enabledSelf!=rifleShown)slot8.SetEnabled(rifleShown);
    var h=combat.Health;
    if(vitalBar!=null)vitalBar.style.width=Length.Percent(h.Fraction*100);
    if(vitalValue!=null)vitalValue.text=$"{Mathf.CeilToInt(h.Current)} / {Mathf.RoundToInt(h.max)}";
@@ -128,6 +155,59 @@ namespace AthenHill
    }
    UpdateGuidance(play);
    UpdateBars(play);
+   UpdateDamageDirections();
+   UpdateCompassPoints(play);
+  }
+  void UpdateCompassPoints(bool play)
+  {
+   if(compassTrack==null||!worldCamera)return;
+   bool berms=play&&combat.InBerms;
+   float width=compassTrack.resolvedStyle.width;
+   float heading=worldCamera.transform.eulerAngles.y;
+   BermsCompassPoint centred=null;float best=7;
+   foreach(var p in BermsCompassPoint.All)
+   {
+    if(!p)continue;
+    if(!pois.TryGetValue(p,out var marker))
+    {
+     marker=new VisualElement{pickingMode=PickingMode.Ignore,usageHints=UsageHints.DynamicTransform};
+     marker.AddToClassList("compass-poi");marker.AddToClassList(p.kind.ToString().ToLowerInvariant());
+     compassTrack.Add(marker);pois[p]=marker;
+    }
+    var to=p.transform.position-combat.transform.position;to.y=0;float dist=to.magnitude;
+    float delta=Mathf.DeltaAngle(heading,Mathf.Atan2(to.x,to.z)*Mathf.Rad2Deg);
+    bool visible=berms&&!float.IsNaN(width)&&p.Shown&&dist<p.maxDistance&&dist>6&&Mathf.Abs(delta)<92;
+    Show(marker,visible);
+    if(!visible)continue;
+    marker.EnableInClassList("cleared",p.Cleared);
+    marker.style.translate=new Translate(new Length(width*.5f+delta*(width/190f)-5),new Length(0),0);
+    if(Mathf.Abs(delta)<best){best=Mathf.Abs(delta);centred=p;}
+   }
+   if(poiLabel==null)return;
+   Show(poiLabel,centred);
+   if(centred)poiLabel.text=$"{centred.displayName.ToUpperInvariant()} · {Mathf.RoundToInt(Vector3.Distance(centred.transform.position,combat.transform.position))} m"+(centred.Cleared?" · cleared":"");
+  }
+  void ShowDamageDirection(float amount,Vector3 from)
+  {
+   if(damageDirs.Count==0||(from-combat.transform.position).sqrMagnitude<1)return;
+   // the same attacker refreshes its indicator; otherwise take the faintest
+   DamageDir pick=null;
+   foreach(var d in damageDirs)if(d.alpha>0&&(d.from-from).sqrMagnitude<4){pick=d;break;}
+   if(pick==null){pick=damageDirs[0];foreach(var d in damageDirs)if(d.alpha<pick.alpha)pick=d;}
+   pick.from=from;pick.alpha=Mathf.Clamp01(Mathf.Max(pick.alpha,.55f+amount/40f));
+  }
+  void UpdateDamageDirections()
+  {
+   if(!worldCamera)return;
+   var fwd=worldCamera.transform.forward;fwd.y=0;
+   foreach(var d in damageDirs)
+   {
+    if(d.alpha<=0){if(d.el.style.opacity.value!=0)d.el.style.opacity=0;continue;}
+    d.alpha=Mathf.MoveTowards(d.alpha,0,Time.unscaledDeltaTime*.6f);
+    var to=d.from-combat.transform.position;to.y=0;
+    float angle=fwd.sqrMagnitude>1e-4f&&to.sqrMagnitude>1e-4f?Vector3.SignedAngle(fwd,to,Vector3.up):0;
+    d.el.style.rotate=new Rotate(angle);d.el.style.opacity=d.alpha;
+   }
   }
   string pistolTooltip="";
   /// Rebuilt only when the loadout changes, never per frame.
@@ -137,7 +217,7 @@ namespace AthenHill
    var mods=model!=null?string.Join(", ",model.Loadout.FittedMods.Select(x=>CraftingText.ItemName(model,x.Value))):"";
    pistolTooltip=$"Draw or holster the scrap pistol · 7 · Damage {combat.Stats.damage:0.#} · Recoil {combat.Stats.recoil:0.#}"+(mods.Length>0?" · "+mods:"");
   }
-  void OnDestroy(){if(combat)combat.StatsChanged-=UpdatePistolTooltip;if(crafting)crafting.Collected-=ShowPickup;}
+  void OnDestroy(){if(combat){combat.StatsChanged-=UpdatePistolTooltip;combat.HurtFrom-=ShowDamageDirection;}if(crafting)crafting.Collected-=ShowPickup;}
   static string RarityClass(ItemRarity r)=>r==ItemRarity.Rare?"rarity-rare":r==ItemRarity.Uncommon?"rarity-uncommon":"rarity-common";
   void ToastLine(string text,params string[] classes)
   {
@@ -161,7 +241,7 @@ namespace AthenHill
   {
    Transform target;string label;
    if(OrdersActive){target=orders.GuidanceTarget;label=orders.GuidanceLabel;}
-   else{target=tutorial?tutorial.GuidanceTarget:null;label=tutorial&&tutorial.Step==BermsStep.TakePistol?"ARMS LOCKER":"WARDEN OSSA";}
+   else{target=tutorial?tutorial.GuidanceTarget:null;label=tutorial?tutorial.GuidanceLabel:"WARDEN OSSA";}
    bool visible=play&&target&&tutorial&&tutorial.ShowObjective;
    // A tracked droid (the Depot Foreman) carries its own name and health bar once engaged; the marker steps aside.
    var droid=OrdersActive?orders.GuidanceDroid:null;

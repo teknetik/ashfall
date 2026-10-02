@@ -1,0 +1,335 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a584a25f7a2f6c23a420ed9d0c79f73, type: 3}
+  m_Name: npc_brann
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.NpcDefinition
+  id: npc_brann
+  displayName: Brann
+  role: Salvage dealer
+  entries:
+  - node: first_visit
+    requires: '!primer, !flag:brann_met'
+  - node: report_ready
+    requires: order:order_steady_hands, !reported, stage:Report
+  - node: report_early
+    requires: order:order_steady_hands, !reported
+  - node: steady_gather
+    requires: order:order_steady_hands, stage:Gather
+  - node: steady_bench
+    requires: order:order_steady_hands, stage:Fabricate
+  - node: steady_fit
+    requires: order:order_steady_hands, stage:Fit
+  - node: steady_test
+    requires: order:order_steady_hands, stage:TestFire
+  - node: long_report
+    requires: order:order_long_arm, !reported, stage:Report
+  - node: long_gather
+    requires: order:order_long_arm, stage:Gather
+  - node: long_bench
+    requires: order:order_long_arm, stage:Fabricate
+  - node: orders
+    requires: primer, !freeplay
+  nodes:
+  - id: long_report
+    title: Rifle receiver
+    text: A Warden receiver, off a gunner's rack. Bolt's still true. Give me alloy for the barrel and stock, filament for the charge path and nanite for the cell seat, and the bench will build the rest of it around this. Train your rifle hand before you carry it; it kicks harder than the pistol.
+    choices:
+    - id: bench
+      label: Let's build it.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: long_gather
+    title: Long arm
+    text: Ossa wants you on a long arm? Bring me a Warden receiver off the relay-knoll gunners, six alloy, three filament and four nanite grade. I can build a field rifle around it.
+    choices:
+    - id: leave
+      label: I'll get them.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: long_bench
+    title: Long arm
+    text: Receiver, alloy, filament, nanite. It's all here. Use the workbench behind me and fabricate the Field Rifle.
+    choices:
+    - id: leave
+      label: Will do.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: greeting
+    title: Salvage
+    text: Salvage. I buy what comes back over the Berms, strip it, and sell the parts that still work. What do you need?
+    choices:
+    - id: shop_722
+      label: Show me what you trade.
+      next: 
+      action: shop
+      requires: 
+      setFlag: 
+    - id: fabricator_460
+      label: Let me use the bench.
+      next: 
+      action: fabricator
+      requires: pistol
+      setFlag: 
+    - id: about_839
+      label: Who are you?
+      next: about
+      action: 
+      requires: 
+      setFlag: 
+  - id: first_visit
+    title: Salvage
+    text: 'Brann. This is Salvage: I buy what the machines out on the Berms leave behind, strip it, and sell what still works. You''ve no sidearm and nothing to sell yet. The Wardens issue arms at Ossa''s post beyond the market gate. Come back when the Berms have given you something.'
+    choices:
+    - id: shop_199
+      label: Show me what you trade anyway.
+      next: 
+      action: shop
+      requires: 
+      setFlag: brann_met
+    - id: about_839
+      label: Who are you?
+      next: about
+      action: 
+      requires: 
+      setFlag: brann_met
+    - id: close_361
+      label: I'll be back.
+      next: 
+      action: close
+      requires: 
+      setFlag: brann_met
+  - id: about
+    title: Brann
+    text: 'Ward runs on what comes back over the Berms. Servos, coils, charge cells: the depot out there used to make them. Now we pull them out of the machines that kept working after the people stopped. I pay fair for salvage, and my bench at the back is the best in Ward for turning it into something useful.'
+    choices:
+    - id: shop_722
+      label: Show me what you trade.
+      next: 
+      action: shop
+      requires: 
+      setFlag: 
+    - id: greeting_594
+      label: Back to business.
+      next: greeting
+      action: 
+      requires: 
+      setFlag: 
+    - id: close_93
+      label: Later, Brann.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: report_ready
+    title: Steady Hands
+    text: 'Ossa radioed ahead: said you cleared the depot nest. Let''s see the haul... a worker servo, still twitching. Good. A scrap pistol kicks like a mule; a grip built round that servo takes the kick out of it. The bench is at the back.'
+    choices:
+    - id: bench_how_373
+      label: Show me the bench.
+      next: bench_how
+      action: 
+      requires: 
+      setFlag: 
+    - id: shop_227
+      label: Trade first.
+      next: 
+      action: shop
+      requires: 
+      setFlag: 
+    - id: close_182
+      label: Later.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: report_early
+    title: Steady Hands
+    text: Ossa radioed ahead about you. Want a steadier grip on that pistol? I build them round a worker servo, and I'm out of servos. The worker droids at the old machine depot carry them, south along the service road. Bring one back with a couple of measures of scrap alloy and the bench is yours.
+    choices:
+    - id: depot_490
+      label: Where's the depot?
+      next: depot
+      action: 
+      requires: 
+      setFlag: 
+    - id: shop_722
+      label: Show me what you trade.
+      next: 
+      action: shop
+      requires: 
+      setFlag: 
+    - id: close_832
+      label: I'll find one.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: bench_how
+    title: The workbench
+    text: 'Pick the Stabilised Pistol Grip from the schematics and fabricate it: one servo, two measures of scrap alloy, five of tier-one nanites. Then fit it to the pistol at the same bench. Short of alloy or nanites? I sell both, and servos too if you''ve the credits.'
+    choices:
+    - id: fabricator_630
+      label: Use the bench.
+      next: 
+      action: fabricator
+      requires: pistol
+      setFlag: 
+    - id: shop_722
+      label: Show me what you trade.
+      next: 
+      action: shop
+      requires: 
+      setFlag: 
+    - id: close_132
+      label: Thanks, Brann.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: depot
+    title: The machine depot
+    text: Out through the market gate, past Ossa's post, then south along the service road. The old machine depot is where the worker droids nest. They drop servos when you put them down. Watch their clamps.
+    choices:
+    - id: shop_722
+      label: Show me what you trade.
+      next: 
+      action: shop
+      requires: 
+      setFlag: 
+    - id: close_832
+      label: I'll find one.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: steady_gather
+    title: Steady Hands
+    text: No servo yet? The worker droids at the depot carry them. Bring one back, with two measures of scrap alloy and some nanites, and the bench is yours.
+    choices:
+    - id: shop_722
+      label: Show me what you trade.
+      next: 
+      action: shop
+      requires: 
+      setFlag: 
+    - id: depot_490
+      label: Where's the depot?
+      next: depot
+      action: 
+      requires: 
+      setFlag: 
+    - id: close_93
+      label: Later, Brann.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: steady_bench
+    title: Steady Hands
+    text: 'That servo''s ready. Bench is at the back: fabricate the grip, then fit it to the pistol right there.'
+    choices:
+    - id: fabricator_630
+      label: Use the bench.
+      next: 
+      action: fabricator
+      requires: pistol
+      setFlag: 
+    - id: bench_how_676
+      label: How does the bench work?
+      next: bench_how
+      action: 
+      requires: 
+      setFlag: 
+    - id: close_93
+      label: Later, Brann.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: steady_fit
+    title: Steady Hands
+    text: That's a good grip. Fit it to the pistol at the bench before you walk out with it in your pocket.
+    choices:
+    - id: fabricator_630
+      label: Use the bench.
+      next: 
+      action: fabricator
+      requires: pistol
+      setFlag: 
+    - id: shop_722
+      label: Show me what you trade.
+      next: 
+      action: shop
+      requires: 
+      setFlag: 
+    - id: close_93
+      label: Later, Brann.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: steady_test
+    title: Steady Hands
+    text: Feels steadier, doesn't it? Take it out past the gate and put a few shots into something. Ossa won't believe it until she hears it.
+    choices:
+    - id: shop_722
+      label: Show me what you trade.
+      next: 
+      action: shop
+      requires: 
+      setFlag: 
+    - id: fabricator_460
+      label: Let me use the bench.
+      next: 
+      action: fabricator
+      requires: pistol
+      setFlag: 
+    - id: close_86
+      label: On my way.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: orders
+    title: Salvage
+    text: Ossa keeps sending schematics to my bench. Whatever she's after next, the bench is yours, and I'm buying whatever the Berms give up.
+    choices:
+    - id: fabricator_460
+      label: Let me use the bench.
+      next: 
+      action: fabricator
+      requires: pistol
+      setFlag: 
+    - id: shop_722
+      label: Show me what you trade.
+      next: 
+      action: shop
+      requires: 
+      setFlag: 
+    - id: close_93
+      label: Later, Brann.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  shop:
+    title: Salvage
+    subtitle: "Brann \xB7 Parts and salvage"
+    supplies: 0
+    parts: 1
+    salvage: 1

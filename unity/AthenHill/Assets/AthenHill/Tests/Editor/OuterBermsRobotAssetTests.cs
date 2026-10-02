@@ -70,9 +70,10 @@ namespace AthenHill.Tests
    var scene=EditorSceneManager.OpenPreviewScene("Assets/AthenHill/Scenes/AthenHill.unity");
    try {
     var nest=scene.GetRootGameObjects().SelectMany(g=>g.GetComponentsInChildren<DroidEncounter>(true)).Single(e=>e.name=="Machine depot nest");
-    Assert.That(nest.spawns.Length,Is.EqualTo(3));
-    Assert.That(nest.spawns.Count(s=>s.prefab&&s.prefab.name=="FeralWorkerDroid"),Is.EqualTo(2));
-    Assert.That(nest.spawns.Count(s=>s.prefab&&s.prefab.name=="FeralScrapDrone"),Is.EqualTo(1));
+    // 2 Oct 2026 expansion: the nest is five strong (three workers, two drones)
+    Assert.That(nest.spawns.Length,Is.EqualTo(5));
+    Assert.That(nest.spawns.Count(s=>s.prefab&&s.prefab.name=="FeralWorkerDroid"),Is.EqualTo(3));
+    Assert.That(nest.spawns.Count(s=>s.prefab&&s.prefab.name=="FeralScrapDrone"),Is.EqualTo(2));
     Assert.That(nest.player,Is.Not.Null);Assert.That(nest.session,Is.Not.Null);
     var hum=scene.GetRootGameObjects().SelectMany(g=>g.GetComponentsInChildren<AudioSource>(true)).Single(a=>a.name=="Cradle hum");
     Assert.That(hum.clip,Is.Not.Null);Assert.That(hum.loop,Is.True);

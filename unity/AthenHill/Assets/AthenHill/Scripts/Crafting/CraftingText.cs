@@ -6,6 +6,9 @@ namespace AthenHill
  /// Player-facing words for crafting results. Names come from the catalogs; reason codes never reach the screen.
  public static class CraftingText
  {
+  /// Where crafting happens (1 Oct 2026: Brann's workbench in the Salvage shop on the north avenue).
+  public const string WorkbenchName="Salvage workbench";
+  public const string Workbench="the workbench at Salvage";
   public static string InputName(CraftingModel model,CraftIngredient input)
   {
    if(input==null)return "";

@@ -6,12 +6,13 @@ namespace AthenHill
  ///  FitMod: the target mod is fitted (and, with Require Test Fire, a shot is fired with it fitted).
  ///  CollectItem: the target item has been collected into the pack at least once.
  ///  CraftFromGroup: any schematic of the target group has been fabricated.
- public enum FieldOrderGoal { FitMod, CollectItem, CraftFromGroup }
+ ///  CraftItem: the target item has been fabricated from its schematic (gather its inputs, optionally report, fabricate).
+ public enum FieldOrderGoal { FitMod, CollectItem, CraftFromGroup, CraftItem }
  [Serializable] public class FieldOrder
  {
   public string id,title;
   public FieldOrderGoal goal;
-  [Tooltip("FitMod: the mod item. CollectItem: the item to recover.")]
+  [Tooltip("FitMod: the mod item. CollectItem: the item to recover. CraftItem: the item to fabricate.")]
   public string targetItemId;
   [Tooltip("CraftFromGroup: any schematic in this group counts.")]
   public RecipeGroup targetGroup;
@@ -21,6 +22,13 @@ namespace AthenHill
   public string activateEncounter;
   [Tooltip("Guidance key while gathering (fabricator guidance is automatic once the part can be fabricated or fitted).")]
   public string guidance;
+  [Header("Report (optional)")]
+  [Tooltip("FitMod and CraftItem: NpcDefinition id of the colonist the player takes the parts to before fabricating (Brann at Salvage for the first order). Until the player has spoken to them, a gathered order waits at its Report stage.")]
+  public string reportTo;
+  [Tooltip("Field Notes text for the Report stage. {item} = target item name.")]
+  [TextArea(2,4)]public string reportBrief;
+  [Tooltip("Guidance key for the Report stage (FieldOrders guidance target).")]
+  public string reportGuidance;
   [Tooltip("The order's instruction, shown in Field Notes. {item} = target item name.")]
   [TextArea(2,4)]public string brief;
   [Tooltip("Radio line when the order becomes current. Empty = silent (e.g. the primer already briefed it).")]

@@ -1,0 +1,401 @@
+{
+ "params": {
+  "front_warp": 12.0,
+  "crest_warp": 26.0,
+  "rise_lo": -6.0,
+  "rise_hi": 8.0,
+  "berms_front_shift": 0.0,
+  "shoulder_lift": 0.0,
+  "seed_relief": 0.12,
+  "table_mix": 0.75,
+  "cliff_at": 0.5,
+  "cliff_wander": 0.14,
+  "cliff_w": 0.05,
+  "talus_frac": 0.32,
+  "dome": 0.12,
+  "sp_cell": 2.0,
+  "sp_K": 0.022,
+  "sp_m": 0.45,
+  "sp_iters": 160,
+  "sp_dt": 1.0,
+  "sp_diff": 0.004,
+  "sp_area_cap": 12000.0,
+  "peak_restore_max": 1.0,
+  "sp_uplift": 0.0,
+  "terrace_beds": 3,
+  "terrace_riser": 0.28,
+  "terrace_strength": 1.0,
+  "rock_detail": 1.9,
+  "hard_lo": -0.65,
+  "drops_fine": 400000,
+  "erode_capacity": 1.2,
+  "erode_speed": 0.15,
+  "deposit_speed": 0.3,
+  "sp1_K": 0.016,
+  "sp1_m": 0.33,
+  "sp1_iters": 60,
+  "sp1_diff": 0.01,
+  "gully_seed": 0.8,
+  "detail_amp": 0.55
+ },
+ "footprint": {
+  "note": "Outer Berms expansion (2 Oct 2026), about 500 m across. Unity world metres (X east, Z north). Grid: 2049 x 2049 nodes at 1 m from (grid.ox, grid.oz). 'old' is the original Berms ground footprint, kept exactly (installed content stands on it). 'bowl' is the hand-drawn foot of the new western mountains (warped by noise in the generator); new mountains grow outward from it (front escarpment, crest and distant rings, same tableland profile and erosion as the basin pass) and replace the original ring west of x -220, blending with it toward the city. 'playable' (derived: the warped bowl inset by outline.inset) is the walkable floor; boundary colliders follow it; the expanse ground mesh covers it grown by 'skirt' metres; basin triangles more than 3 m inside that are dropped.",
+  "grid": {
+   "n": 2049,
+   "ox": -1088.0,
+   "oz": -1024.0,
+   "cell": 1.0
+  },
+  "old": [
+   -104.0,
+   -60.0,
+   -54.0,
+   48.0
+  ],
+  "bowl": [
+   [
+    -60,
+    80
+   ],
+   [
+    -110,
+    92
+   ],
+   [
+    -150,
+    122
+   ],
+   [
+    -205,
+    165
+   ],
+   [
+    -270,
+    196
+   ],
+   [
+    -335,
+    214
+   ],
+   [
+    -395,
+    204
+   ],
+   [
+    -440,
+    222
+   ],
+   [
+    -490,
+    196
+   ],
+   [
+    -525,
+    150
+   ],
+   [
+    -542,
+    95
+   ],
+   [
+    -566,
+    40
+   ],
+   [
+    -552,
+    -15
+   ],
+   [
+    -562,
+    -70
+   ],
+   [
+    -532,
+    -118
+   ],
+   [
+    -488,
+    -160
+   ],
+   [
+    -430,
+    -200
+   ],
+   [
+    -370,
+    -214
+   ],
+   [
+    -318,
+    -234
+   ],
+   [
+    -262,
+    -212
+   ],
+   [
+    -215,
+    -180
+   ],
+   [
+    -172,
+    -150
+   ],
+   [
+    -140,
+    -118
+   ],
+   [
+    -112,
+    -96
+   ],
+   [
+    -85,
+    -86
+   ],
+   [
+    -60,
+    -84
+   ]
+  ],
+  "bowl_warp": {
+   "a1": 16.0,
+   "w1": 70.0,
+   "a2": 6.0,
+   "w2": 22.0
+  },
+  "west": {
+   "front": 3.0,
+   "summit": 42.0,
+   "summit_var": 14.0,
+   "crest": 105.0,
+   "crest_var": 60.0,
+   "distant": 270.0,
+   "blend_x": [
+    -90.0,
+    -220.0
+   ]
+  },
+  "outline": {
+   "inset": 12.0,
+   "simplify": 5.0
+  },
+  "skirt": 12.0,
+  "floor": {
+   "edge_ramp": 16.0,
+   "edge_slope": 0.55,
+   "west_rise": 7.0,
+   "macro": 3.0,
+   "dunes": 0.9,
+   "small": 0.22
+  },
+  "washes": [
+   {
+    "name": "north wash",
+    "width": 11.0,
+    "depth": 1.3,
+    "pts": [
+     [
+      -545,
+      70
+     ],
+     [
+      -470,
+      48
+     ],
+     [
+      -400,
+      58
+     ],
+     [
+      -330,
+      46
+     ],
+     [
+      -262,
+      34
+     ],
+     [
+      -205,
+      24
+     ],
+     [
+      -150,
+      28
+     ],
+     [
+      -118,
+      32
+     ]
+    ]
+   },
+   {
+    "name": "south wash",
+    "width": 13.0,
+    "depth": 1.5,
+    "pts": [
+     [
+      -520,
+      -150
+     ],
+     [
+      -440,
+      -128
+     ],
+     [
+      -372,
+      -104
+     ],
+     [
+      -300,
+      -92
+     ],
+     [
+      -235,
+      -70
+     ],
+     [
+      -178,
+      -66
+     ],
+     [
+      -135,
+      -62
+     ]
+    ]
+   }
+  ],
+  "outcrops": [
+   {
+    "name": "relay knoll",
+    "x": -330,
+    "z": 8,
+    "r": 26,
+    "h": 6.5,
+    "elong": 1.4,
+    "yaw": 20,
+    "top": 0.55
+   },
+   {
+    "name": "split butte",
+    "x": -232,
+    "z": -22,
+    "r": 17,
+    "h": 13.0,
+    "elong": 1.7,
+    "yaw": 65,
+    "top": 0.35
+   },
+   {
+    "name": "north mesa",
+    "x": -390,
+    "z": 112,
+    "r": 30,
+    "h": 17.0,
+    "elong": 1.3,
+    "yaw": -30,
+    "top": 0.5
+   },
+   {
+    "name": "fan rocks",
+    "x": -455,
+    "z": -40,
+    "r": 14,
+    "h": 7.0,
+    "elong": 1.9,
+    "yaw": 100,
+    "top": 0.25
+   },
+   {
+    "name": "wash pillar",
+    "x": -168,
+    "z": 108,
+    "r": 10,
+    "h": 9.0,
+    "elong": 1.2,
+    "yaw": 0,
+    "top": 0.2
+   },
+   {
+    "name": "south ridge",
+    "x": -395,
+    "z": -175,
+    "r": 22,
+    "h": 11.0,
+    "elong": 2.4,
+    "yaw": -15,
+    "top": 0.3
+   }
+  ]
+ },
+ "playable_points": 28,
+ "envelope_max": 70.62719633702439,
+ "playable": {
+  "points": 28,
+  "area_m2": 150599.0
+ },
+ "west_envelope_max": 56.06776114884949,
+ "bowl": {
+  "area_m2": 167247.0,
+  "extent_x": [
+   -569.0,
+   -60.0
+  ],
+  "extent_z": [
+   -229.0,
+   220.0
+  ]
+ },
+ "old_cover": 0.1596893674520371,
+ "incision": {
+  "min": -51.89508243886617,
+  "p1": -29.40804834927828,
+  "max": 1.8707019915460625
+ },
+ "incision1": {
+  "min": -11.288036330750245,
+  "p1": -4.765180845215209
+ },
+ "terrace_area_frac": 0.1519978677596542,
+ "lock": {
+  "berms": [
+   -104.0,
+   -60.0,
+   -54.0,
+   48.0
+  ],
+  "berms_exact_margin": 0.75,
+  "berms_blend_to": 7.0,
+  "drop_inside": 3.0,
+  "ground": "playable + skirt"
+ },
+ "stats": {
+  "h_min": -1.8,
+  "h_max": 68.3506650782614,
+  "lock_max_dev": 0.0005984379502335102,
+  "playable_h": [
+   -1.8,
+   1.710577336472797,
+   16.879152967988077
+  ],
+  "floor_slope_p50_p95_p99_max": [
+   2.3330791675044176,
+   10.597096774002637,
+   17.62868741393138,
+   32.39881722231848
+  ],
+  "playable_area_m2": 150190.0,
+  "old_area_m2": 4635.0,
+  "playable_extent": {
+   "x": [
+    -555.0,
+    -60.0
+   ],
+   "z": [
+    -217.0,
+    208.0
+   ]
+  },
+  "seconds": 251.87645149230957
+ }
+}

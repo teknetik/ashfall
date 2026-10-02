@@ -40,7 +40,7 @@ namespace AthenHill
    Session.PartBought+=OnPartBought;
   }
   void OnDestroy(){if(combat){combat.BindCraftingModel(null);combat.BindLoadout(null);}if(Session)Session.PartBought-=OnPartBought;}
-  /// A part bought from Mira reveals the schematics that use it, exactly like finding one.
+  /// A part bought at a counter reveals the schematics that use it, exactly like finding one.
   void OnPartBought(PartPurchase purchase)
   {
    if(Model==null||purchase==null)return;
@@ -60,13 +60,15 @@ namespace AthenHill
    cache.Fill(this,items,source);
    return cache;
   }
+  /// Who signs the fabrication notices: the open workbench's title.
+  string Bench=>Session&&Session.ActiveStation&&!string.IsNullOrEmpty(Session.ActiveStation.title)?Session.ActiveStation.title:"Workbench";
   bool AtStation(out string reason){if(Model==null||Session.State!=CityState.Fabricator){reason="wrong_station";return false;}reason="ok";return true;}
   public bool Craft(string recipeId,out string reason)
   {
    if(!AtStation(out reason))return false;
    var recipe=Model.Recipe(recipeId);
    bool ok=Model.TryCraft(recipeId,Session.ActiveStationId,out reason);
-   Session.Notify(ok?$"{CraftingText.ItemName(Model,recipe.outputItemId)} fabricated."+(Model.Loadout.Modifier(recipe.outputItemId)!=null?" Fit it to a compatible weapon.":""):"Fabrication failed. "+CraftingText.Reason(reason,Model,recipe),"Field Fabricator");
+   Session.Notify(ok?$"{CraftingText.ItemName(Model,recipe.outputItemId)} fabricated."+(Model.Loadout.Modifier(recipe.outputItemId)!=null?" Fit it to a compatible weapon.":""):"Fabrication failed. "+CraftingText.Reason(reason,Model,recipe),Bench);
    return ok;
   }
   public bool Fit(string itemId,out string reason)
@@ -78,7 +80,7 @@ namespace AthenHill
    var before=loadout?.Stats??default;
    bool ok=Model.TryFit(weaponId,itemId,out reason);
    var mod=loadout?.Modifier(itemId);
-   Session.Notify(ok?$"{CraftingText.ItemName(Model,itemId)} fitted. {CraftingText.StatChanges(data,before,loadout.Stats)}":"Cannot fit. "+CraftingText.Reason(reason,Model,null,reason=="stack_full"&&mod!=null?loadout.Fitted(mod.slot):itemId),"Field Fabricator");
+   Session.Notify(ok?$"{CraftingText.ItemName(Model,itemId)} fitted. {CraftingText.StatChanges(data,before,loadout.Stats)}":"Cannot fit. "+CraftingText.Reason(reason,Model,null,reason=="stack_full"&&mod!=null?loadout.Fitted(mod.slot):itemId),Bench);
    return ok;
   }
   public bool Remove(string slot,out string reason)
@@ -88,7 +90,7 @@ namespace AthenHill
    if(!AtStation(out reason))return false;
    var itemId=Model.GetLoadout(weaponId)?.Fitted(slot);
    bool ok=Model.TryRemove(weaponId,slot,out reason);
-   Session.Notify(ok?$"{CraftingText.ItemName(Model,itemId)} returned to your pack.":"Cannot remove. "+CraftingText.Reason(reason,Model,null,itemId),"Field Fabricator");
+   Session.Notify(ok?$"{CraftingText.ItemName(Model,itemId)} returned to your pack.":"Cannot remove. "+CraftingText.Reason(reason,Model,null,itemId),Bench);
    return ok;
   }
   LootTable Table(string id)=>data&&data.lootTables!=null?data.lootTables.FirstOrDefault(x=>x.id==id):null;

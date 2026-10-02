@@ -1,0 +1,491 @@
+{
+ "generated": "make_handoff.py from unity/evidence/ranged-enemies/20261002/verify.json (Unity batch verify, 0 failures)",
+ "editor_script": "unity/AthenHill/Assets/AthenHill/Editor/OuterBermsRangedEnemies.cs (RunBatch --steps import,prefab,verify)",
+ "feral_gunner": {
+  "prefab": "Assets/AthenHill/Prefabs/OuterBerms/Visuals/FeralGunnerVisual.prefab",
+  "guid": "6da107934c199b4a98c31a944db88ad2",
+  "model": "Assets/AthenHill/Art/OuterBerms/Ranged/Models/FeralGunner.glb",
+  "structure": "FeralGunnerVisual (origin at the feet, faces +Z, unscaled) > Visual (uniform scale 1.0010; the legacy Animation lives here) > Armature (glTFast instance of the model, renamed so the clip paths Armature/Hips/... resolve) > char1 (SkinnedMeshRenderer, body) + Hips/... bones; the forearm gun is a MeshRenderer node ForearmGun under the RightForeArm bone, with Muzzle under it.",
+  "standing_height_m": 2.0,
+  "faces_plus_z": true,
+  "animation": {
+   "host_path": "Visual",
+   "playAutomatically": false,
+   "clip": "idle",
+   "culling": "BasedOnRenderers",
+   "clips": [
+    "idle",
+    "walk",
+    "run",
+    "aim",
+    "strafe_left",
+    "strafe_right",
+    "fire",
+    "fire_raise",
+    "hit",
+    "death"
+   ]
+  },
+  "clips": {
+   "idle": {
+    "length_s": 4.033,
+    "wrap": "Loop",
+    "sole_at_frame0": 0.0,
+    "height_at_frame0": 2.0,
+    "note": "Meshy library 2 \"Alert\", as is"
+   },
+   "walk": {
+    "length_s": 1.067,
+    "wrap": "Loop",
+    "sole_at_frame0": 0.0111,
+    "height_at_frame0": 2.0015,
+    "note": "Meshy rig basic walk (in place)"
+   },
+   "run": {
+    "length_s": 0.667,
+    "wrap": "Loop",
+    "sole_at_frame0": 0.0216,
+    "height_at_frame0": 1.8734,
+    "note": "Meshy rig basic run (in place)"
+   },
+   "aim": {
+    "length_s": 4.033,
+    "wrap": "Loop",
+    "sole_at_frame0": 0.0,
+    "height_at_frame0": 2.0,
+    "note": "idle_alert_2 base + aim override (loop)"
+   },
+   "strafe_left": {
+    "length_s": 1.2,
+    "wrap": "Loop",
+    "sole_at_frame0": 0.0238,
+    "height_at_frame0": 1.6808,
+    "note": "Meshy library 525 cautious crouch side-step, in place (native sideways speed 1.15 m/s) + aim override"
+   },
+   "strafe_right": {
+    "length_s": 1.3,
+    "wrap": "Loop",
+    "sole_at_frame0": 0.036,
+    "height_at_frame0": 1.708,
+    "note": "Meshy library 526 cautious crouch side-step, in place (native sideways speed 0.98 m/s) + aim override"
+   },
+   "fire": {
+    "length_s": 0.6,
+    "wrap": "Clamp",
+    "sole_at_frame0": 0.0,
+    "height_at_frame0": 1.9863,
+    "note": "one shot from the aim pose at 0.05 s, settled by 0.6 s; starts and ends in the aim pose"
+   },
+   "fire_raise": {
+    "length_s": 1.2,
+    "wrap": "Clamp",
+    "sole_at_frame0": 0.0,
+    "height_at_frame0": 2.0,
+    "note": "raise 0-0.30 s, shot at 0.55 s, recoil settles by 1.2 s; ends in the aim pose"
+   },
+   "hit": {
+    "length_s": 1.0,
+    "wrap": "Clamp",
+    "sole_at_frame0": 0.0029,
+    "height_at_frame0": 1.9763,
+    "note": "Meshy library 177 \"Gunshot Reaction\", first 1.0 s, eased back to its first frame over the last 0.35 s"
+   },
+   "death": {
+    "length_s": 3.533,
+    "wrap": "ClampForever",
+    "sole_at_frame0": 0.0,
+    "height_at_frame0": 2.0151,
+    "note": "Meshy library 183 \"Shot and Fall Backward\", falls ~1.1 m back"
+   }
+  },
+  "shot_times_s": {
+   "fire": 0.05,
+   "fire_raise": 0.55
+  },
+  "shot_normalized_time": {
+   "fire": 0.083,
+   "fire_raise": 0.458
+  },
+  "locomotion_native_speeds_mps": {
+   "walk": 1.647,
+   "run": 5.847,
+   "strafe_left": 1.154,
+   "strafe_right": 0.983
+  },
+  "muzzle": {
+   "path": "Visual/Armature/Hips/Spine02/Spine01/Spine/RightShoulder/RightArm/RightForeArm/ForearmGun/Muzzle",
+   "parent": "ForearmGun",
+   "local_position": [
+    0.0045,
+    0.1552,
+    0.545
+   ],
+   "local_rotation_xyzw": [
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ],
+   "relative_to_RightForeArm": {
+    "position": [
+     -14.0973,
+     80.5,
+     -6.5066
+    ],
+    "rotation": [
+     -0.59,
+     0.38974,
+     0.38974,
+     0.59
+    ]
+   },
+   "plus_z_out_of_barrel": true,
+   "aim_pose_prefab_space": {
+    "position": [
+     0.273,
+     1.653,
+     0.98
+    ],
+    "forward": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "aheadOfWrist": 0.504
+   },
+   "fire_recoil_peak": {
+    "forward": [
+     0.0,
+     0.305,
+     0.952
+    ],
+    "elevationDeg": 17.8
+   },
+   "note": "Muzzle is 1 cm ahead of the bore on the gun, which is rigidly parented to the RightForeArm bone (gun local scale 100 cancels the centimetre armature). In aim/fire/strafe clips the barrel points along the prefab +Z, level, at about 1.65 m height and 0.98 m ahead; in idle/walk/run it follows the arm."
+  },
+  "gun": {
+   "path": "Visual/Armature/Hips/Spine02/Spine01/Spine/RightShoulder/RightArm/RightForeArm/ForearmGun",
+   "parent": "RightForeArm",
+   "triangles": 33446,
+   "localPosition": [
+    0.0,
+    26.0,
+    0.0
+   ],
+   "localRotation": [
+    -0.59,
+    0.38974,
+    0.38974,
+    0.59
+   ],
+   "localScale": [
+    100.0,
+    100.0,
+    100.0
+   ],
+   "material": {
+    "name": "FR_FeralGunnerGun",
+    "textures": [
+     {
+      "property": "_MainTex",
+      "name": "FeralGunnerGun_BaseMap",
+      "width": 2048,
+      "height": 2048,
+      "format": "BC7",
+      "asset": "Assets/AthenHill/Art/OuterBerms/Ranged/Textures/FeralGunnerGun_BaseMap.png"
+     },
+     {
+      "property": "_BumpMap",
+      "name": "FeralGunnerGun_Normal",
+      "width": 2048,
+      "height": 2048,
+      "format": "BC7",
+      "asset": "Assets/AthenHill/Art/OuterBerms/Ranged/Textures/FeralGunnerGun_Normal.png"
+     },
+     {
+      "property": "_BaseMap",
+      "name": "FeralGunnerGun_BaseMap",
+      "width": 2048,
+      "height": 2048,
+      "format": "BC7",
+      "asset": "Assets/AthenHill/Art/OuterBerms/Ranged/Textures/FeralGunnerGun_BaseMap.png"
+     },
+     {
+      "property": "_MetallicGlossMap",
+      "name": "FeralGunnerGun_Mask",
+      "width": 2048,
+      "height": 2048,
+      "format": "BC7",
+      "asset": "Assets/AthenHill/Art/OuterBerms/Ranged/Textures/FeralGunnerGun_Mask.png"
+     }
+    ]
+   }
+  },
+  "optic": {
+   "renderer_path": "Visual/Armature/char1",
+   "material": "Assets/AthenHill/Art/OuterBerms/Ranged/Materials/FR_FeralGunner.mat",
+   "emission": "optics-only emission map (FeralGunner_Emission.png): drive _EmissionColor on this renderer (glowRenderers = [char1])",
+   "optic_rest_position_prefab": [
+    0.003,
+    1.8,
+    0.109
+   ],
+   "head_bone": "Visual/Armature/Hips/Spine02/Spine01/Spine/neck/Head",
+   "suggested_glow": {
+    "calm": [
+     1.1,
+     0.45,
+     0.1
+    ],
+    "hostile": [
+     3.2,
+     1.0,
+     0.2
+    ],
+    "windup": [
+     8,
+     4.6,
+     2
+    ]
+   },
+   "eye_light_note": "parent an eye light to the Head bone, ~0.1 m in front of the optic, pointing forward"
+  },
+  "toe_bones": [
+   "Visual/Armature/Hips/LeftUpLeg/LeftLeg/LeftFoot/LeftToeBase",
+   "Visual/Armature/Hips/RightUpLeg/RightLeg/RightFoot/RightToeBase"
+  ],
+  "skinned_renderer": {
+   "path": "Visual/Armature/char1",
+   "root_bone": "Hips",
+   "local_bounds_cm_in_root_bone_space": {
+    "center": [
+     -0.46,
+     -6.62,
+     6.93
+    ],
+    "size": [
+     249.57,
+     272.76,
+     222.24
+    ]
+   },
+   "bounds_cover_all_clips": true,
+   "update_when_offscreen": false,
+   "note": "localBounds = the skinned envelope over all ten clips + 12 % per side; the gun has its own MeshRenderer bounds"
+  },
+  "triangles": {
+   "body": 86644,
+   "gun": 33446,
+   "total": 120090
+  },
+  "materials": [
+   {
+    "name": "FR_FeralGunner",
+    "path": "Assets/AthenHill/Art/OuterBerms/Ranged/Materials/FR_FeralGunner.mat",
+    "emission": true,
+    "gi": "RealtimeEmissive"
+   },
+   {
+    "name": "FR_FeralGunnerGun",
+    "path": "Assets/AthenHill/Art/OuterBerms/Ranged/Materials/FR_FeralGunnerGun.mat",
+    "emission": false,
+    "gi": "EmissiveIsBlack"
+   }
+  ],
+  "recommended_FeralDroid_wiring": {
+   "kind": "Walker",
+   "animationSource": "Visual (Animation)",
+   "idle": "idle",
+   "walk": "walk",
+   "run": "run",
+   "attack": "fire (with fireClipPerShot = true: one recoil per bolt, shot at 0.05 s) or fire_raise (single shot at 0.55 s, normalized 0.458) without an aim wind-up",
+   "aim": "aim",
+   "strafeLeft": "strafe_left",
+   "strafeRight": "strafe_right",
+   "hit": "hit",
+   "death": "death",
+   "muzzle": "Muzzle",
+   "glowRenderers": "[char1]",
+   "feet": "[LeftToeBase, RightToeBase]"
+  }
+ },
+ "feral_lancer": {
+  "prefab": "Assets/AthenHill/Prefabs/OuterBerms/Visuals/FeralLancerVisual.prefab",
+  "guid": "c5c70ce095970fc14b184bf00dc02a6a",
+  "model": "Assets/AthenHill/Art/OuterBerms/Ranged/Models/FeralLancer.glb",
+  "structure": "FeralLancerVisual (origin at the centre of lift = rotor hubs' centroid, at the hull mid-height; faces +Z) > Visual (glTFast instance of the model) > Body, Rotor A..D (each with a Blur disc child), Lens cap, Muzzle. No skinning, no animation.",
+  "size_m": {
+   "x": 1.8,
+   "y": 0.67,
+   "z": 2.15,
+   "boundsCenter": [
+    -0.006,
+    0.0,
+    0.231
+   ]
+  },
+  "faces_plus_z": true,
+  "rotors": [
+   {
+    "path": "Visual/Rotor A",
+    "pivot": [
+     -0.6281,
+     0.1728,
+     0.5141
+    ],
+    "spinAxisLocal": "Y",
+    "triangles": 448,
+    "blurDisc": "Visual/Rotor A/Blur disc",
+    "bladeRadius": 0.224
+   },
+   {
+    "path": "Visual/Rotor B",
+    "pivot": [
+     0.6276,
+     0.1726,
+     0.5206
+    ],
+    "spinAxisLocal": "Y",
+    "triangles": 448,
+    "blurDisc": "Visual/Rotor B/Blur disc",
+    "bladeRadius": 0.2128
+   },
+   {
+    "path": "Visual/Rotor C",
+    "pivot": [
+     -0.5308,
+     0.1728,
+     -0.5166
+    ],
+    "spinAxisLocal": "Y",
+    "triangles": 448,
+    "blurDisc": "Visual/Rotor C/Blur disc",
+    "bladeRadius": 0.2707
+   },
+   {
+    "path": "Visual/Rotor D",
+    "pivot": [
+     0.5315,
+     0.1728,
+     -0.5181
+    ],
+    "spinAxisLocal": "Y",
+    "triangles": 448,
+    "blurDisc": "Visual/Rotor D/Blur disc",
+    "bladeRadius": 0.264
+   }
+  ],
+  "rotor_layout": "A front-left, B front-right, C rear-left, D rear-right (Unity: left = -X)",
+  "recommended_rotor_order": [
+   "Rotor A",
+   "Rotor B",
+   "Rotor D",
+   "Rotor C"
+  ],
+  "rotor_order_note": "FeralDroid counter-rotates alternate rotors by index; [A, B, D, C] spins the diagonal pairs A/D and B/C the same way, matching the blade hands",
+  "blur_discs": "RB_RotorBlur.mat on RB_RotorDisc (shared with the scrap drone), scaled to each blade radius x 1.02, 5 mm above the hub, shadows off",
+  "muzzle": {
+   "path": "Visual/Muzzle",
+   "localPosition": [
+    -0.0031,
+    -0.2397,
+    1.3163
+   ],
+   "localRotation": [
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ],
+   "prefabPosition": [
+    -0.0031,
+    -0.2397,
+    1.3163
+   ],
+   "forward": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "plus_z_out_of_barrel": true
+  },
+  "lens_cap": {
+   "path": "Visual/Lens cap",
+   "position": [
+    0.0023,
+    0.1069,
+    0.9293
+   ],
+   "triangles": 308,
+   "material": {
+    "name": "FR_FeralLancerLens",
+    "emission": true,
+    "gi": "RealtimeEmissive",
+    "emissionColor": "RGBA(1.200, 0.320, 0.070, 1.000)"
+   }
+  },
+  "eye": {
+   "glow_renderer": "Visual/Lens cap",
+   "suggested_glow": {
+    "calm": [
+     1.2,
+     0.32,
+     0.07
+    ],
+    "hostile": [
+     3.6,
+     0.9,
+     0.15
+    ],
+    "windup": [
+     8,
+     2.6,
+     0.6
+    ]
+   },
+   "eye_light_note": "a forward spot ~0.1 m in front of the lens cap (prefab z ~1.03, y ~0.1), like the scrap drone"
+  },
+  "body": {
+   "path": "Visual/Body",
+   "triangles": 64594
+  },
+  "triangles_total": 66694,
+  "materials": [
+   {
+    "name": "FR_FeralLancer",
+    "path": "Assets/AthenHill/Art/OuterBerms/Ranged/Materials/FR_FeralLancer.mat",
+    "emission": false,
+    "gi": "EmissiveIsBlack"
+   },
+   {
+    "name": "FR_FeralLancerLens",
+    "path": "Assets/AthenHill/Art/OuterBerms/Ranged/Materials/FR_FeralLancerLens.mat",
+    "emission": true,
+    "gi": "RealtimeEmissive"
+   }
+  ],
+  "recommended_FeralDroid_wiring": {
+   "kind": "Hover",
+   "rotors": "[Rotor A, Rotor B, Rotor D, Rotor C]",
+   "muzzle": "Muzzle",
+   "glowRenderers": "[Lens cap]",
+   "note": "hoverHeight: the hull is 0.67 m tall and the lance hangs 0.24 m below the origin (lowest point about -0.33 m)"
+  }
+ },
+ "known_defects": {
+  "gunner": [
+   "three-fingered claw hands with partly fused fingers, no finger bones (Meshy auto-rig)",
+   "a few small inner shell faces are back-facing: pin-holes at close range with back-face culling",
+   "run: the gun passes within 1.5 cm of the thigh/torso for a few frames; aim/fire_raise brush the torso armour when the alert idle leans",
+   "death: the barrel rests on the ground at the end",
+   "strap bands carry a stretched patch of the gun texture",
+   "no LOD: 86.6k body + 33.4k gun triangles"
+  ],
+  "lancer": [
+   "the lower inner lip of each duct keeps a ragged, toothed edge (visible from below at close range)",
+   "front ducts slightly smaller than the rear pair (as generated)",
+   "authored rotor blades are plain twisted plates on a small dark-steel UV patch",
+   "no LOD: 64.6k body triangles"
+  ]
+ }
+}

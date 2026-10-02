@@ -15,6 +15,7 @@ MonoBehaviour:
   id: npc_mira
   displayName: Mira
   role: Basic General
+  entries: []
   nodes:
   - id: greeting
     title: Basic General
@@ -24,7 +25,17 @@ MonoBehaviour:
       label: Show me your stock.
       next: 
       action: shop
+      requires: 
+      setFlag: 
     - id: leave
       label: Just looking. Thanks, Mira.
       next: 
       action: close
+      requires: 
+      setFlag: 
+  shop:
+    title: Basic General
+    subtitle: "Mira \xB7 Supplies, parts and salvage"
+    supplies: 1
+    parts: 1
+    salvage: 1

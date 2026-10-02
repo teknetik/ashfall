@@ -77,7 +77,9 @@ namespace AthenHill.Tests
    var orders=AssetDatabase.LoadAssetAtPath<FieldOrderSet>("Assets/AthenHill/Data/Crafting/WardFieldOrders.asset").orders;
    var foreman=orders.Single(o=>o.id=="order_depot_foreman");
    Assert.That(foreman.urgentStart);Assert.That(foreman.engageLine,Does.Contain("step back"));
-   Assert.That(orders.Where(o=>o!=foreman).All(o=>!o.urgentStart&&string.IsNullOrEmpty(o.engageLine)));
+   // 2 Oct 2026: the Long Arm order's gunner leader also has an engage warning (the laser tell); nothing else does
+   var longArm=orders.Single(o=>o.id=="order_long_arm");Assert.That(longArm.engageLine,Does.Contain("laser"));Assert.That(longArm.urgentStart,Is.False);
+   Assert.That(orders.Where(o=>o!=foreman&&o!=longArm).All(o=>!o.urgentStart&&string.IsNullOrEmpty(o.engageLine)));
   }
 
   // ------------------------------------------------------------------ caches

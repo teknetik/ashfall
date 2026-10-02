@@ -52,7 +52,7 @@ namespace AthenHill
    if(empty!=null)
    {
     empty.style.display=items.Count==0?DisplayStyle.Flex:DisplayStyle.None;
-    empty.text="Mira buys "+string.Join(", ",session.catalog.items.Where(ShopModel.BuysAsSalvage).Select(x=>x.name))+". You are carrying none of it.";
+    empty.text=session.Vendor+" buys "+string.Join(", ",session.catalog.items.Where(ShopModel.BuysAsSalvage).Select(x=>x.name))+". You are carrying none of it.";
    }
    // The focused row was sold out: keep keyboard focus in the list.
    if(focusedId!=null&&!rows.ContainsKey(focusedId))

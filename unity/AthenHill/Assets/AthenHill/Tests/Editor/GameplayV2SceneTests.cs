@@ -44,20 +44,26 @@ namespace AthenHill.Tests
     Assert.That(foreman.player&&foreman.session,Is.True);Assert.That(foreman.respawnSeconds,Is.GreaterThan(0));
     var tutorial=All<BermsTutorial>(scene).Single();var depot=tutorial.depot;
     foreach(var s in depot.spawns)foreach(var f in foreman.spawns)Assert.That(Vector3.Distance(s.point.position,f.point.position),Is.GreaterThan(2.5f));
-    // Re-form rule: working at the field fabricator never counts as "away" from the depot nest or the Foreman.
+    // Since 1 Oct 2026 the workbench is Brann's, in the Salvage shop inside the walls: the depot nest and the Foreman
+    // re-form while the player is in town (the "away" rule), never while they stand next to them.
     var bench=crafting.fabricator.position;
+    Assert.That(bench.x,Is.GreaterThan(All<PlayerCombat>(scene).Single().cityEdgeX),"the workbench is inside Ward");
     foreach(var e in new[]{depot,foreman})
     {
-     Assert.That(e.respawnClearance,Is.GreaterThan(Flat(bench-e.transform.position)+5),e.name);
+     Assert.That(e.respawnClearance,Is.LessThan(Flat(bench-e.transform.position)),e.name);
      Assert.That(e.awaySeconds,Is.GreaterThanOrEqualTo(30),e.name);
     }
     Assert.That(tutorial.depotRespawnSeconds,Is.InRange(180,360));
     Assert.That(session.GetComponentsInChildren<Transform>(true).Any(t=>t.name=="Gameplay v2 · patch 1 (GameplayV2Patch1)"),"patch 1 marker");
-    Assert.That(All<DroidEncounter>(scene).Length,Is.EqualTo(3));
-    // Heaps: 6–10 searchable nodes with real tables, clear of colonists and Wardens.
+    // Since 2 Oct 2026 the Outer Berms run ~500 m west: the three primer/order encounters stay as they were and the
+    // expansion's site encounters live under "Outer Berms/Berms expanse" (BermsExpanseTests checks them).
+    bool InExpanse(Component c)=>c.GetComponentsInParent<Transform>(true).Any(t=>t.name=="Berms expanse");
+    Assert.That(All<DroidEncounter>(scene).Count(e=>!InExpanse(e)),Is.EqualTo(3));
+    // Heaps: 6–10 searchable nodes in the original Berms with real tables, clear of colonists and Wardens (the
+    // expansion's heaps follow the same rules below).
     var catalog=AssetDatabase.LoadAssetAtPath<CraftingCatalog>("Assets/AthenHill/Data/Crafting/WardCrafting.asset");
     var nodes=All<SalvageNode>(scene);
-    Assert.That(nodes.Length,Is.InRange(6,10));
+    Assert.That(nodes.Count(n=>!InExpanse(n)),Is.InRange(6,10));
     foreach(var n in nodes)
     {
      Assert.That(catalog.lootTables.Any(t=>t.id==n.lootTableId),n.name);Assert.That(n.crafting,Is.EqualTo(crafting),n.name);
@@ -89,10 +95,13 @@ namespace AthenHill.Tests
    {
     var tutorial=All<BermsTutorial>(scene).Single();
     Assert.That(tutorial.firstContact.name,Is.EqualTo("First contact · service road"));Assert.That(tutorial.depot.name,Is.EqualTo("Machine depot nest"));
-    Assert.That(tutorial.depot.spawns.Select(s=>s.point.position.x),Is.EqualTo(new[]{-82.2f,-75.2f,-84.9f}).Within(.05f));
+    // the original three nest spawns are untouched; the 2 Oct 2026 expansion adds two, marked "(expanse)"
+    Assert.That(tutorial.depot.spawns.Where(s=>!s.point.name.EndsWith("(expanse)")).Select(s=>s.point.position.x),Is.EqualTo(new[]{-82.2f,-75.2f,-84.9f}).Within(.05f));
+    Assert.That(tutorial.depot.spawns.Length,Is.EqualTo(5));
     var names=All<NpcAgent>(scene).Select(n=>n.name).ToArray();
     foreach(var n in new[]{"npc_mira","npc_torr","npc_vex","npc_linn","Warden Ossa","Warden Rell"})Assert.That(names,Does.Contain(n));
-    var fab=All<CraftingStationMarker>(scene).Single();Assert.That(fab.transform.position.x,Is.EqualTo(-75f).Within(.01f));
+    var fab=All<CraftingStationMarker>(scene).Single(m=>m.name=="Field fabricator");Assert.That(fab.transform.position.x,Is.EqualTo(-75f).Within(.01f));
+    Assert.That(fab.enabled,Is.False,"since 1 Oct 2026 crafting is at Brann's workbench in Salvage; the cart stays as outpost dressing");
    }
    finally{EditorSceneManager.ClosePreviewScene(scene);}
   }

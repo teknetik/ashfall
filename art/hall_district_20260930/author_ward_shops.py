@@ -384,9 +384,10 @@ class Shop:
             F.box(metal, uc - hw, uc + hw, BASE + 0.005, BASE + 0.02, DZ - 0.02, DZ + 0.3, "VH_Bronze")
         self.later.append(build)
 
-    def shutter(self, face, u0, u1, top=3.57, depth=0.35, note=""):
+    def shutter(self, face, u0, u1, top=3.57, depth=0.35, note="", open=False):
         """Workshop opening: stone reveals with steel guide angles, painted steel beam lintel, roller box, closed
-        slatted curtain with bottom bar, handles and a padlocked hasp."""
+        slatted curtain with bottom bar, handles and a padlocked hasp. open=True (1 Oct 2026, the walk-in Salvage
+        shop): the curtain is rolled up into the box, its bottom bar and pull handles hang just under it."""
         F = self.faces[face][0]
         lt = top + 0.42
         self.holes[face] += [(u0, u1, BASE, top), (u0 - 0.2, u1 + 0.2, top, lt)]
@@ -420,6 +421,22 @@ class Shop:
             # curtain: corrugated slats
             DZ = -0.14
             n = int((top - 0.42 - BASE - 0.12) / 0.085)
+            if open:
+                # rolled up: two slats still showing under the box, the bottom bar and its pull handles below them
+                yb = top - 0.42 - 2 * 0.085
+                for k in range(2):
+                    y = yb + k * 0.085
+                    c = [F.P(u0 + 0.1, y, DZ), F.P(u1 - 0.1, y, DZ), F.P(u1 - 0.1, y, DZ + 0.02), F.P(u0 + 0.1, y, DZ + 0.02),
+                         F.P(u0 + 0.1, y + 0.085, DZ), F.P(u1 - 0.1, y + 0.085, DZ), F.P(u1 - 0.1, y + 0.085, DZ + 0.035), F.P(u0 + 0.1, y + 0.085, DZ + 0.035)]
+                    metal.hexa(c, "WS_Shutter")
+                F.box(metal, u0 + 0.1, u1 - 0.1, yb - 0.11, yb, DZ - 0.01, DZ + 0.06, "VH_Steel")
+                for a in (u0 + 0.5, u1 - 0.5):
+                    metal.cyl(F.P(a, yb - 0.11, DZ + 0.02), F.P(a, yb - 0.3, DZ + 0.02), 0.008, "VH_Steel", 6)
+                    metal.cyl(F.P(a - 0.06, yb - 0.3, DZ + 0.02), F.P(a + 0.06, yb - 0.3, DZ + 0.02), 0.014, "VH_Steel", 6)
+                self.fdrip(F, u0 + 0.1, u1 - 0.1, top - 0.42, 0.5, 0.3, "rust", soft=0.2)
+                bid = self.pod.new_block(tint=stone_tint("rough"))
+                F.box(self.pod, u0 + 0.07, u1 - 0.07, BASE - 0.1, BASE + 0.012, -depth, 0.02, "VH_PodiumSlab", bid, skip=("bottom",))
+                return
             for k in range(n):
                 y = BASE + 0.12 + k * 0.085
                 c = [F.P(u0 + 0.1, y, DZ), F.P(u1 - 0.1, y, DZ), F.P(u1 - 0.1, y, DZ + 0.02), F.P(u0 + 0.1, y, DZ + 0.02),
@@ -690,8 +707,10 @@ class Shop:
         scatter_impacts(self.scars, faces, 2, self.scar_rng, 4.5, top, 0.5, 1.1)
         self.colliders()
         parts = [self.mas, self.trim, self.pod, self.metal, self.glass, self.roof, self.canvas, self.sand, self.glow, self.clear]
-        finalize_parts(parts)
-        ao = AOBaker(parts, ground_y=0.0, samples=24 if self.lod == 0 else 10)
+        # walk-in interiors (1 Oct 2026, Salvage): extra parts as (part, build kwargs); they shade with the shell
+        extra = getattr(self, "extra_parts", [])
+        finalize_parts(parts + [p for p, _ in extra])
+        ao = AOBaker(parts + [p for p, _ in extra], ground_y=0.0, samples=24 if self.lod == 0 else 10)
         objs = [self.mas.build(self.coll, ao=ao, drips=self.drips, ground_y=BASE, scars=self.scars),
                 self.trim.build(self.coll, ao=ao, drips=self.drips, ground_y=BASE, scars=self.scars),
                 self.pod.build(self.coll, ao=ao, drips=self.drips, ground_y=0.0, splash=0.22, scars=self.scars),
@@ -703,6 +722,13 @@ class Shop:
         for p in (self.canvas, self.sand, self.glow, self.clear):
             if len(p.bm.faces):
                 objs.append(p.build(self.coll))
+        for p, kw in extra:
+            if len(p.bm.faces):
+                ob = p.build(self.coll, ao=ao if kw.pop("ao", True) else None, **kw)
+                post = getattr(self, "post_build", None)
+                if post:
+                    post(p, ob)
+                objs.append(ob)
         # two-sided canvas: duplicate faces reversed
         rec = self.rec
         rec["triangles"] = tri_count(objs)

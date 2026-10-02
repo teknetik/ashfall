@@ -123,10 +123,14 @@ namespace AthenHill.Editor
         // Two-handed pistol hold: the settled end frame of the retargeted Meshy "Gun Hold Left Turn" (action 95),
         // frozen into a static clip. Auditioned against the other library holds in first person (27 Sep): only this one
         // keeps both hands on the grip; "Walk Forward While Shooting" leaves the support hand floating.
-        static string HoldClip()
+        static string HoldClip()=>HoldClip("Assets/AthenHill/Art/CharacterMotion/Player/lib_aim_95.anim",.97f,HoldPath,"pistol_hold");
+        /// A static upper-body hold frozen from a retargeted library clip at a fraction of its length, squared over the
+        /// idle legs (also used for the rifle holds, 2 Oct 2026).
+        public static string HoldClip(string srcPath,float fraction,string outPath,string clipName)
         {
-            var src=AssetDatabase.LoadAssetAtPath<AnimationClip>("Assets/AthenHill/Art/CharacterMotion/Player/lib_aim_95.anim");
-            float t=src.length*.97f;
+            var src=AssetDatabase.LoadAssetAtPath<AnimationClip>(srcPath);
+            if(!src)throw new InvalidOperationException("Missing retargeted clip "+srcPath);
+            float t=src.length*fraction;
             var motor=Object.FindAnyObjectByType<PlayerMotor>();var root=motor.actor.animationSource.gameObject;var body=motor.visual;
             Transform B(string n)=>Bone(motor.actor,n);
             // The clip's turn lives in the hips. In game the hips and legs come from idle/walk/run, so take them from the
@@ -147,7 +151,7 @@ namespace AthenHill.Editor
             var chestUp=(B("neck").position-spine.position).normalized;
             float lean=Vector3.SignedAngle(Vector3.ProjectOnPlane(chestUp,body.right),body.up,body.right);
             spine.rotation=Quaternion.AngleAxis(lean*.8f,body.right)*spine.rotation;
-            var clip=new AnimationClip{name="pistol_hold",legacy=true,frameRate=30,wrapMode=WrapMode.Loop};
+            var clip=new AnimationClip{name=clipName,legacy=true,frameRate=30,wrapMode=WrapMode.Loop};
             var animRoot=motor.actor.animationSource.transform;
             foreach(var b in AnimationUtility.GetCurveBindings(src))
             {
@@ -159,11 +163,11 @@ namespace AthenHill.Editor
             }
             clip.EnsureQuaternionContinuity();
             if(motor.actor.idle)motor.actor.idle.SampleAnimation(root,0);
-            var existing=AssetDatabase.LoadAssetAtPath<AnimationClip>(HoldPath);
+            var existing=AssetDatabase.LoadAssetAtPath<AnimationClip>(outPath);
             if(existing){EditorUtility.CopySerialized(clip,existing);Object.DestroyImmediate(clip);EditorUtility.SetDirty(existing);}
-            else AssetDatabase.CreateAsset(clip,HoldPath);
+            else AssetDatabase.CreateAsset(clip,outPath);
             AssetDatabase.SaveAssets();
-            return "hold clip from lib_aim_95 at "+t.ToString("F2")+" s, lower spine yawed "+yaw.ToString("F0")+" deg, lean corrected "+(lean*.8f).ToString("F0")+" deg";
+            return clipName+" from "+System.IO.Path.GetFileName(srcPath)+" at "+t.ToString("F2")+" s, lower spine yawed "+yaw.ToString("F0")+" deg, lean corrected "+(lean*.8f).ToString("F0")+" deg";
         }
 
         static Material FlashMaterial()

@@ -181,6 +181,22 @@ namespace AthenHill.Editor
             return string.Join("\n",log);
         }
 
+        /// Retarget one Meshy player clip (Source/Player/Player_<name>.glb) onto the installed player skeleton
+        /// (Player/lib_<name>.anim). Used by the rifle install, 2 Oct 2026.
+        public static string RetargetPlayerClip(string name)
+        {
+            var prefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/AthenHill/Prefabs/MeshyPlayer.prefab");
+            var target=(GameObject)Object.Instantiate(prefab);target.hideFlags=HideFlags.HideAndDontSave;
+            try
+            {
+                var tRoot=target.GetComponent<ActorAnimation>().animationSource.transform;
+                target.transform.SetPositionAndRotation(Vector3.zero,Quaternion.identity);
+                var r=Retarget(PlayerSource+"/Player_"+name+".glb",tRoot,PlayerFolder+"/lib_"+name+".anim");
+                AssetDatabase.SaveAssets();return r;
+            }
+            finally{Object.DestroyImmediate(target);}
+        }
+
         static Dictionary<string,Quaternion> BindRotations(Transform root,out Dictionary<string,Vector3> bindPositions)
         {
             var rot=new Dictionary<string,Quaternion>();bindPositions=new Dictionary<string,Vector3>();

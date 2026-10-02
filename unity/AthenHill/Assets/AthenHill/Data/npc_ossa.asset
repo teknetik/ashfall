@@ -15,7 +15,44 @@ MonoBehaviour:
   id: npc_ossa
   displayName: Warden Ossa
   role: West Gate watch
+  entries:
+  - node: plate_carrier
+    requires: order:order_plate_carrier
+  - node: long_arm
+    requires: order:order_long_arm
   nodes:
+  - id: long_arm
+    title: Long arm
+    text: The relay knoll is west along the trail, past the waystation; two gunner droids nest on it with a worker. Their lasers walk before they fire, so move off the line and shoot the optic. The receiver is on the gunner's rack. Brann builds the rest. Train Rifle in your pack, equip it in your loadout, and 8 draws it out here.
+    choices:
+    - id: range
+      label: Remind me of the controls.
+      next: range
+      action: 
+      requires: 
+      setFlag: 
+    - id: leave
+      label: On my way.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: plate_carrier
+    title: Plate carrier
+    text: The caravan is north of the trail, past the northgate drones; the scavengers picking it are workers with a drone. The strongbox is by the lead truck. Wear the carrier in your chest slot; it is heavier than your vest, so mind your carry weight.
+    choices:
+    - id: range
+      label: Remind me of the controls.
+      next: range
+      action: 
+      requires: 
+      setFlag: 
+    - id: leave
+      label: Understood.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
   - id: greeting
     title: West Gate watch
     text: Ossa. West Gate watch. Nobody walks the Berms unarmed. The ARMS LOCKER is under the canopy at the post, left of my issue window; the cyan light on top marks it. Rell keeps the return lane clear.

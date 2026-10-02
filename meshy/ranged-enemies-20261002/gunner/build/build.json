@@ -1,0 +1,123 @@
+{
+ "forearm_dorsal_local": [
+  0.9198,
+  0.0,
+  -0.3924
+ ],
+ "merged": {
+  "path": "gunner/build/FeralGunner.glb",
+  "gun_parent": "RightForeArm",
+  "gun_local_rotation": [
+   -0.590002,
+   -0.389741,
+   -0.389741,
+   0.590002
+  ],
+  "gun_local_translation": [
+   0.0,
+   26.0,
+   0.0
+  ],
+  "gun_local_scale": 100.0,
+  "bone_world_scale": 0.009999998807906713
+ },
+ "clips": {
+  "idle": {
+   "frames": 122,
+   "seconds": 4.033,
+   "note": "Meshy library 2 \"Alert\", as is"
+  },
+  "walk": {
+   "frames": 33,
+   "seconds": 1.067,
+   "note": "Meshy rig basic walk (in place)"
+  },
+  "run": {
+   "frames": 21,
+   "seconds": 0.667,
+   "note": "Meshy rig basic run (in place)"
+  },
+  "death": {
+   "frames": 107,
+   "seconds": 3.533,
+   "note": "Meshy library 183 \"Shot and Fall Backward\", falls ~1.1 m back"
+  },
+  "hit": {
+   "frames": 31,
+   "seconds": 1.0,
+   "note": "Meshy library 177 \"Gunshot Reaction\", first 1.0 s, eased back to its first frame over the last 0.35 s"
+  },
+  "aim": {
+   "frames": 122,
+   "seconds": 4.033,
+   "note": "idle_alert_2 base + aim override (loop)"
+  },
+  "fire_raise": {
+   "frames": 37,
+   "seconds": 1.2,
+   "note": "raise 0-0.30 s, shot at 0.55 s, recoil settles by 1.2 s; ends in the aim pose"
+  },
+  "fire": {
+   "frames": 19,
+   "seconds": 0.6,
+   "note": "one shot from the aim pose at 0.05 s, settled by 0.6 s; starts and ends in the aim pose"
+  },
+  "strafe_left": {
+   "frames": 37,
+   "seconds": 1.2,
+   "note": "Meshy library 525 cautious crouch side-step, in place (native sideways speed 1.15 m/s) + aim override",
+   "native_speed_mps": 1.154
+  },
+  "strafe_right": {
+   "frames": 40,
+   "seconds": 1.3,
+   "note": "Meshy library 526 cautious crouch side-step, in place (native sideways speed 0.98 m/s) + aim override",
+   "native_speed_mps": 0.983
+  }
+ },
+ "shot_times": {
+  "fire": 0.05,
+  "fire_raise": 0.55
+ },
+ "muzzle_checks": {
+  "aim_t0": {
+   "muzzle": [
+    -0.273,
+    1.618,
+    0.979
+   ],
+   "barrel_dir": [
+    0.0,
+    -0.0,
+    1.0
+   ],
+   "elevation_deg": -0.0
+  },
+  "fire_recoil_peak": {
+   "muzzle": [
+    -0.288,
+    1.891,
+    0.831
+   ],
+   "barrel_dir": [
+    0.0,
+    0.309,
+    0.951
+   ],
+   "elevation_deg": 18.0
+  },
+  "idle_t0": {
+   "muzzle": [
+    -0.707,
+    1.053,
+    0.596
+   ],
+   "barrel_dir": [
+    -0.292,
+    -0.271,
+    0.917
+   ],
+   "elevation_deg": -15.7
+  }
+ }
+}

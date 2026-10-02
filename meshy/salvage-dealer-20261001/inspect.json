@@ -1,0 +1,455 @@
+{
+  "model": {
+    "triangles": 41416,
+    "vertices": 46622,
+    "bones": [
+      "Hips",
+      "Spine02",
+      "Spine01",
+      "Spine",
+      "neck",
+      "Head",
+      "head_end",
+      "headfront",
+      "LeftShoulder",
+      "LeftArm",
+      "LeftForeArm",
+      "LeftHand",
+      "RightShoulder",
+      "RightArm",
+      "RightForeArm",
+      "RightHand",
+      "LeftUpLeg",
+      "LeftLeg",
+      "LeftFoot",
+      "LeftToeBase",
+      "RightUpLeg",
+      "RightLeg",
+      "RightFoot",
+      "RightToeBase"
+    ],
+    "bone_count": 24,
+    "bounds_min": [
+      -0.7124000191688538,
+      -0.3431999981403351,
+      -0.0
+    ],
+    "bounds_max": [
+      0.7111999988555908,
+      0.3571000099182129,
+      1.8200000524520874
+    ],
+    "height": 1.82,
+    "armature_scale": [
+      0.009999999776482582,
+      0.009999999776482582,
+      0.009999999776482582
+    ],
+    "images": [
+      {
+        "name": "Image_0",
+        "size": [
+          2048,
+          2048
+        ],
+        "colorspace": "sRGB",
+        "mean": [
+          0.39,
+          0.318,
+          0.255,
+          1.0
+        ],
+        "p95": [
+          0.761,
+          0.518,
+          0.455,
+          1.0
+        ]
+      },
+      {
+        "name": "Image_1",
+        "size": [
+          2048,
+          2048
+        ],
+        "colorspace": "Non-Color",
+        "mean": [
+          1.0,
+          0.65,
+          0.003,
+          1.0
+        ],
+        "p95": [
+          1.0,
+          0.769,
+          0.012,
+          1.0
+        ]
+      },
+      {
+        "name": "Image_2",
+        "size": [
+          2048,
+          2048
+        ],
+        "colorspace": "Non-Color",
+        "mean": [
+          0.499,
+          0.499,
+          0.999,
+          1.0
+        ],
+        "p95": [
+          0.525,
+          0.525,
+          1.0,
+          1.0
+        ]
+      }
+    ],
+    "material": "Material_0",
+    "bsdf_links": {
+      "Base Color": [
+        "TEX_IMAGE",
+        "Image_0",
+        "Color"
+      ],
+      "Metallic": [
+        "SEPARATE_COLOR",
+        null,
+        "Blue"
+      ],
+      "Roughness": [
+        "SEPARATE_COLOR",
+        null,
+        "Green"
+      ],
+      "Normal": [
+        "NORMAL_MAP",
+        null,
+        "Normal"
+      ]
+    }
+  },
+  "renders": {
+    "rest_front": "renders/rest_front.png",
+    "rest_side": "renders/rest_side.png",
+    "rest_threequarter": "renders/rest_threequarter.png",
+    "rest_back": "renders/rest_back.png",
+    "face": "renders/face.png",
+    "hand_left": "renders/hand_left.png",
+    "hand_right": "renders/hand_right.png",
+    "feet": "renders/feet.png"
+  },
+  "clips": {
+    "basic_walk": {
+      "action": "Armature|walking_man|baselayer",
+      "frames": [
+        0,
+        25
+      ],
+      "fps": 24,
+      "seconds": 0.83,
+      "min_vertex_z": [
+        -0.0664,
+        -0.0057
+      ],
+      "max_vertex_z": [
+        1.7765,
+        1.8513
+      ],
+      "max_edge_stretch": 15.877,
+      "edges_stretched_over_1_8x": 1111,
+      "bone_motion_deg": [
+        [
+          "RightToeBase",
+          356.6
+        ],
+        [
+          "LeftArm",
+          349.8
+        ],
+        [
+          "LeftToeBase",
+          334.5
+        ],
+        [
+          "LeftHand",
+          83.4
+        ],
+        [
+          "RightFoot",
+          74.8
+        ],
+        [
+          "LeftForeArm",
+          70.2
+        ]
+      ],
+      "hips_motion_deg": 6.7,
+      "head_motion_deg": 7.4,
+      "renders": {
+        "mid_front": "renders/basic_walk_mid_front.png",
+        "mid_threequarter": "renders/basic_walk_mid_threequarter.png"
+      }
+    },
+    "idle_246": {
+      "action": "Armature|Idle_6|baselayer",
+      "frames": [
+        0,
+        177
+      ],
+      "fps": 24,
+      "seconds": 5.9,
+      "min_vertex_z": [
+        -0.1221,
+        -0.1198
+      ],
+      "max_vertex_z": [
+        1.7652,
+        1.7696
+      ],
+      "max_edge_stretch": 17.189,
+      "edges_stretched_over_1_8x": 1306,
+      "bone_motion_deg": [
+        [
+          "RightHand",
+          356.8
+        ],
+        [
+          "RightShoulder",
+          22.7
+        ],
+        [
+          "LeftShoulder",
+          20.5
+        ],
+        [
+          "LeftHand",
+          17.6
+        ],
+        [
+          "RightForeArm",
+          17.1
+        ],
+        [
+          "LeftForeArm",
+          16.0
+        ]
+      ],
+      "hips_motion_deg": 2.7,
+      "head_motion_deg": 11.5,
+      "renders": {
+        "mid_front": "renders/idle_246_mid_front.png",
+        "mid_threequarter": "renders/idle_246_mid_threequarter.png"
+      }
+    },
+    "idle_252": {
+      "action": "Armature|Idle_12|baselayer",
+      "frames": [
+        0,
+        144
+      ],
+      "fps": 24,
+      "seconds": 4.8,
+      "min_vertex_z": [
+        -0.1084,
+        -0.1078
+      ],
+      "max_vertex_z": [
+        1.7884,
+        1.791
+      ],
+      "max_edge_stretch": 8.24,
+      "edges_stretched_over_1_8x": 648,
+      "bone_motion_deg": [
+        [
+          "LeftHand",
+          358.8
+        ],
+        [
+          "RightArm",
+          6.3
+        ],
+        [
+          "RightForeArm",
+          5.6
+        ],
+        [
+          "LeftForeArm",
+          4.0
+        ],
+        [
+          "RightShoulder",
+          3.7
+        ],
+        [
+          "RightHand",
+          3.7
+        ]
+      ],
+      "hips_motion_deg": 1.2,
+      "head_motion_deg": 3.4,
+      "renders": {
+        "mid_front": "renders/idle_252_mid_front.png",
+        "mid_threequarter": "renders/idle_252_mid_threequarter.png"
+      }
+    },
+    "talk_309": {
+      "action": "Armature|Talk_with_Left_Hand_on_Hip|baselayer",
+      "frames": [
+        0,
+        124
+      ],
+      "fps": 24,
+      "seconds": 4.13,
+      "min_vertex_z": [
+        -0.1139,
+        -0.1113
+      ],
+      "max_vertex_z": [
+        1.7866,
+        1.7928
+      ],
+      "max_edge_stretch": 9.689,
+      "edges_stretched_over_1_8x": 836,
+      "bone_motion_deg": [
+        [
+          "RightHand",
+          351.7
+        ],
+        [
+          "RightArm",
+          319.4
+        ],
+        [
+          "RightForeArm",
+          295.8
+        ],
+        [
+          "neck",
+          6.1
+        ],
+        [
+          "Head",
+          6.0
+        ],
+        [
+          "headfront",
+          6.0
+        ]
+      ],
+      "hips_motion_deg": 2.3,
+      "head_motion_deg": 6.0,
+      "renders": {
+        "mid_front": "renders/talk_309_mid_front.png",
+        "mid_threequarter": "renders/talk_309_mid_threequarter.png",
+        "q3_front": "renders/talk_309_q3_front.png"
+      }
+    },
+    "talk_313": {
+      "action": "Armature|Talk_with_Hands_Open|baselayer",
+      "frames": [
+        0,
+        96
+      ],
+      "fps": 24,
+      "seconds": 3.2,
+      "min_vertex_z": [
+        -0.1003,
+        -0.0906
+      ],
+      "max_vertex_z": [
+        1.7664,
+        1.7865
+      ],
+      "max_edge_stretch": 13.202,
+      "edges_stretched_over_1_8x": 481,
+      "bone_motion_deg": [
+        [
+          "LeftHand",
+          344.7
+        ],
+        [
+          "RightHand",
+          337.8
+        ],
+        [
+          "RightForeArm",
+          311.7
+        ],
+        [
+          "LeftForeArm",
+          295.0
+        ],
+        [
+          "LeftArm",
+          56.5
+        ],
+        [
+          "RightArm",
+          38.9
+        ]
+      ],
+      "hips_motion_deg": 7.4,
+      "head_motion_deg": 10.6,
+      "renders": {
+        "mid_front": "renders/talk_313_mid_front.png",
+        "mid_threequarter": "renders/talk_313_mid_threequarter.png",
+        "q3_front": "renders/talk_313_q3_front.png"
+      }
+    },
+    "talk_314": {
+      "action": "Armature|Talk_with_Right_Hand_Open|baselayer",
+      "frames": [
+        0,
+        90
+      ],
+      "fps": 24,
+      "seconds": 3.0,
+      "min_vertex_z": [
+        -0.0918,
+        -0.0853
+      ],
+      "max_vertex_z": [
+        1.77,
+        1.7855
+      ],
+      "max_edge_stretch": 9.957,
+      "edges_stretched_over_1_8x": 472,
+      "bone_motion_deg": [
+        [
+          "LeftHand",
+          345.2
+        ],
+        [
+          "RightHand",
+          316.7
+        ],
+        [
+          "RightForeArm",
+          291.3
+        ],
+        [
+          "RightArm",
+          43.2
+        ],
+        [
+          "LeftForeArm",
+          38.5
+        ],
+        [
+          "LeftArm",
+          33.7
+        ]
+      ],
+      "hips_motion_deg": 7.8,
+      "head_motion_deg": 12.5,
+      "renders": {
+        "mid_front": "renders/talk_314_mid_front.png",
+        "mid_threequarter": "renders/talk_314_mid_threequarter.png",
+        "q3_front": "renders/talk_314_q3_front.png"
+      }
+    }
+  }
+}

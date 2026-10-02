@@ -170,7 +170,7 @@ namespace AthenHill.Tests
   [Test] public void RecipeSocketsAndIndependentWeaponModsSurviveSaveRestore()
   {
    var (pack,model)=Model();
-   Give(pack,("rifle_precision_barrel",1),("grip_stabilised_pistol",1));
+   Give(pack,("field_rifle",1),("rifle_precision_barrel",1),("grip_stabilised_pistol",1));   // 2 Oct 2026: the rifle is earned, not issued
    var rifle=model.GetLoadout("weapon_field_rifle");
    Assert.That(rifle.Slots,Is.EqualTo(Data().recipes.Single(x=>x.id=="recipe_field_rifle").outputSlots));
    Assert.That(model.TryFit(rifle.WeaponId,"grip_stabilised_pistol",out var reason),Is.False);

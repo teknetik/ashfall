@@ -667,6 +667,62 @@ the one-time install, verify and editor captures. Batch:
   range's wide view, +0.17 ms looking out of the West Gate and nothing at `cam_hill`; evidence and the tutorial check:
   `evidence/training-range/20261001/README.md`.
 
+## Outer Berms expansion (2 October 2026)
+
+Carl: "expand the outer berms, push back the mountains if required ... spread [the loot] and enemies out a little. Make them
+more challenging. Use meshy to create 2 more enemies a bit further out that use ranged weapons" and "it needs to be quite
+big and spread out like 500m". The Berms are now a desert bowl about **495 x 425 m** (x −555…−60, z −217…208,
+150,000 m², up from 44 x 102 m). Sources, run order and parameters: `art/berms_expanse_20261002/README.md`.
+
+**Terrain.** Scene root **Basin expanse** (84 spatial chunks of `Art/BermsExpanse/BasinExpanse.glb`, 128 m cells near the city and
+the bowl, 256 m beyond, so shadow cascades skip distant terrain; 323k triangles, on `SandstoneBasinV3`) replaces **Basin mountains**, which stays in the scene inactive for rollback: the same ring around the
+city, with the western mountains rebuilt around the bowl. Under **Outer Berms/Berms expanse**:
+- `Ground`: 54 tiles of `Art/BermsExpanse/BermsExpanseGround.glb` on `BermsGroundV2.mat` (outside its splat rect it shows
+  the natural ground), each a LODGroup (LOD0 to about 110 m) with a MeshCollider on LOD0. The original **Berms ground**
+  mesh, its road splat and everything on it are unchanged; the new tiles meet its 1 m edge exactly. Footsteps outside the
+  old rect read as sand.
+- `Boundary`: box walls along the playable polygon (`footprint.json` `playable`), open where the edge runs along the city
+  wall (the West Gate). The old `Boundary colliders` are inactive.
+- `Scatter` (rocks, boulders, stones, scrub, dead wood; Poly Haven kit prefabs) and `Trail cairns` (Warden route markers
+  between the sites). Move or delete freely; keep the cairn lines readable.
+- The terrain itself is generated: change `footprint.json` (bowl, floor, washes, outcrops) and run `work/rebuild.sh`, then
+  `install`. Don't edit the GLBs.
+
+**Sites** (`Sites/<name>`, each with `Props`, an encounter and salvage nodes; layout in `sites.json` via `layout.py`):
+Northgate scrap, Caravan ambush, Scrapper camp, **Warden waystation**, Relay knoll (gunner nest), Aquifer derrick, Wash
+scrapyard, Mesa roost, Fallen Tube pylon (lancer roost), West fans outpost (the hardest: gunners, a lancer, workers),
+South ridge roost, North dunes wreck. Landmarks `berms_<site>` are the sites' approach points (QA teleports, guidance).
+Props are ordinary prefab instances; big ones without colliders got a box from their renderers. The three hero
+landmarks (caravan hauler wreck, aquifer derrick, Tube pylon) are Meshy pieces, `meshy/berms-landmarks-20261002`.
+
+**Encounters.** Site encounters activate on their own when the armed player comes within *Activate Within* (75 m), park
+(droids switched off, state kept) beyond *Park Beyond* (170 m) unless fighting, call the pack within *Pack Radius* when one
+droid turns (18 m; the primer's nest 14 m), and re-form 420 s after clearing once the player is 90 m away. Move a spawn
+child to reposition it. The primer changed: first contact is now two scrap drones past the depot rise (`Landmarks/
+berms_first_contact`), the depot nest has five droids (two spawns marked "(expanse)"); the Foreman is unchanged. Ossa's
+lines say so, and her completion line points at the waystation and the outer sites.
+
+**Droids** (`Prefabs/OuterBerms`): workers 130 HP, quicker tells, 18 damage, flank approach; scrap drones 75 HP; both alert
+from further and leash further. New: **FeralGunnerDroid** (2 m biped, arm gun, 150 HP: holds 17 m, aims with a laser for
+0.9 s, fires 3 bolts) and **FeralLancerDrone** (hover, 95 HP: 3.4 m up, holds 21 m, charges 1.25 s, one heavy bolt with
+splash). Both wrap the Meshy visual prefabs in `Prefabs/OuterBerms/Visuals` (`meshy/ranged-enemies-20261002`,
+`Editor/OuterBermsRangedEnemies.cs`). Ranged tuning is on *FeralDroid → Ranged attack*; bolts are
+`Prefabs/BermsExpanse/DroidBolt_Gunner|Lancer` (speed, damage, hit radius, splash). Loot tables `loot_feral_gunner`,
+`loot_feral_lancer`, `loot_berms_outer`, `loot_berms_outpost` in `WardCrafting.asset`.
+
+**Waystation.** `Sites/Warden waystation` carries `WardenWaystation` (flag `waystation:berms_mid`, saved): once the player
+has walked in, a knocked-down player is brought to its respawn point when it is nearer than the gate post. The HUD shows a
+red bar on a ring round the crosshair toward whatever hurt the player (CombatHud, `.damage-dir` in CityHUD.uss).
+
+**Camera.** The gameplay camera's far clip is 1,600 m (was 650) so the far side of the bowl and the ring render.
+
+**Batch** (`-nographics -quit`): `BermsExpansePass.RunBatch --steps survey|prefabs|loot|droids|install|verify`,
+`capture:<dir>:cam_a+cam_b` (graphics, at most six), `abbuild:on|off` (expansion on/off builds from one scene snapshot,
+`Builds/bx-ab-*`). `install` is re-runnable: it deletes its own roots, spawns and landmarks and re-applies its edits;
+the pre-install scene is `evidence/berms-expanse/20261002/rollback/before-berms-expanse.unity` (local) and git.
+Review cameras `cam_bx_*` (under `Berms expanse/Berms expanse review cameras`). Native check:
+`art/berms_expanse_20261002/run/native_check.sh <out>`. Evidence: `evidence/berms-expanse/20261002/README.md`.
+
 ## Air + Water filter bank (29 September 2026)
 
 **Air + Water filter fittings** (under *Ward shop architecture*, a render-chunk source root) is a saved instance of
@@ -847,7 +903,7 @@ Gameplay v2 content is serialized data; nothing is hard-coded in the scripts. Ed
   **FeralDepotForeman.prefab** — a prefab *variant* of FeralWorkerDroid: change its overrides (health, strike, wind-up,
   stagger immunity, optics) there; worker changes flow through.
 - Scene (installed by `GameplayV2Installer`): **CitySession → FieldOrders** (data, guidance targets
-  `fabricator`/`depot`/`foreman`, encounter binding `foreman`), **CitySession → CraftingSession.cachePrefab**,
+  `fabricator`/`depot`/`foreman`, plus `dealer` since 1 Oct 2026 when `fabricator` moved to Brann's workbench; encounter binding `foreman`), **CitySession → CraftingSession.cachePrefab**,
   **Outer Berms/Encounters/Depot Foreman · processing hall** (move the spawn child to reposition; respawn 300 s),
   **Outer Berms/Salvage heaps** (one `Salvage node · …` per searchable prop; move a node with its prop, set its loot
   table and prompt range per node), Landmarks `berms_foreman_hall` and `berms_scrap_heap`.
@@ -862,6 +918,79 @@ Gameplay v2 content is serialized data; nothing is hard-coded in the scripts. Ed
 - UI: the fabricator window and *Sell salvage* list are laid out in **UI/CityHUD.uxml** (`fabricator-panel`,
   `salvage-list`) and styled in **CityHUD.uss** (sections "Gameplay v2 · …"); `FabricatorPanel` and
   `SalvageSalePanel` fill them from data. Keep the named elements.
+
+## Walk-in Salvage shop, Brann and the first field order (1 October 2026)
+
+Carl: "make the salvage shop walkable. i want it part of the tutorial mission ... the salvage shop should be open to trade
+and have the equipment in there and an npc to trade with and some quest dialog. from the robot tutorial part i get the
+loot and go to salvage shop and get to upgrade my pistol". Since this pass, crafting happens at **Brann's workbench in
+the Salvage shop** (north avenue, world (-18.1, 0, 18)); the West Gate tool cart stays as outpost dressing with its
+station components disabled.
+
+**The building.** The Salvage model's loading-bay shutter is rolled up and its ground floor is a room (6.76 x 6.06 m,
+3.95 m to the deck): rough-stone dado and coursed ashlar on an inner skin 0.42 m inside the facing, stone linings at the
+bay and the two closed doors, flagged floor with a checker plate at the bench and a drain, two steel beams (the east one
+the yellow monorail of a chain hoist) carrying timber joists and a board deck, a counter of salvaged sheet panels with a
+timber top, conduit, a breaker panel and three enamel pendants. Geometry: `art/salvage_shop_20261001/salvage_interior.py`
+(called by `art/north_avenue_20260930/author_north_shops.py` `salvage()`; the exterior's random layout is unchanged).
+The interior parts are separate meshes (`Salvage_Interior*_LOD0/1`). `salvage.json` carries the walk-in colliders (walls,
+piers, the bay header and roller box, the closed doors, the upper storey, the counter) and the room record (bounds, lamp
+points, hook, counter). Change the room in the Python, run it through `blender.sh`, then **SalvageShopPass** `models`.
+
+**Scene root `Salvage shop interior`** (same transform as the shop; shop-local coordinates: +X south, +Z out to the
+avenue, floor at y 0.5), built by `Editor/SalvageShopPass.cs` `install` (re-runnable: it replaces its own root and
+re-wires the session):
+- `npc_brann`: NpcAgent (definition `Data/npc_brann.asset`, not counted in the four-colonist city visit, `workbench` =
+  the station) over a `Prefabs/SalvageDealer.prefab` instance (Meshy salvage hauler, re-rigged; record
+  `meshy/salvage-dealer-20261001/`; `Editor/ImportSalvageDealer.cs`). He stands behind the counter facing the room.
+- `Workbench` (`Prefabs/SalvageShop/SS_Workbench.prefab`, Meshy; `meshy/salvage-shop-props-20261001/`,
+  `Editor/SalvageShopProps.cs`) and `Workbench station` (WorldInteractable "E · Use Brann's workbench" +
+  CraftingStationMarker, station id `station_field_fabricator` so every recipe works unchanged, title "Salvage workbench").
+  `CraftingSession.fabricator` points at the station.
+- `Props`: four `SS_PartsRack` bays and the `SS_PartsRackHeavy` stand, street-kit and range props (tool cart, compressor,
+  drums, gas bottle, hand truck, broom, stool, tote, tyre and rim, counter clutter, a Tool Exchange drone chassis on the
+  counter) and a crashed scrap drone from the depot kit hanging from the hoist hook (with one box collider). Move, add
+  or remove them in the Scene view; keep the path from the bay to the counter front and the bench clear (`verify`
+  sweeps a player capsule along it).
+- `Lamps`: three pendant spots, a soft room bounce and the cyan fabricator glow, all on **rendering layer 7** ("Light
+  Layer 7"): every interior renderer carries that layer as well as Default, so the lamps never shine through the walls
+  onto the street. They are indoor lights (on day and night, not on the Ward lighting clock) and `InteriorLighting`
+  switches them off beyond 34 m. `Bay spill` (Default layer) is the lamplight falling out of the bay onto the porch at
+  night: practical + night-only on the Ward lighting clock.
+- `InteriorLighting` (on the root): the city has no baked probes, so a closed room would take the sky's trilight ambient.
+  The component gives the room's renderers a custom ambient probe (sky ambient x *Ambient Scale*, warm tint, plus sky
+  light from the bay) and blends the player (and first-person arms) to it while they stand inside. Tune *Ambient
+  Scale*, *Ambient Tint* and *Opening Light* in the Inspector. It also stands in for occlusion culling (the city has
+  none): the room is drawn only while the camera is inside it or in front of the facade, and from outside each prop is
+  drawn only when its bounds can be seen through the bay (*Opening Corners*, a portal test); the lamps switch off with
+  the room. Interior props use their LOD1 beyond about 6 m and cast no sun shadows. In development builds
+  `ATHEN_INTERIOR_OFF=lamps|room|probe|sh|portal|all` switches parts off for a cost A/B within one build.
+- `Interior reflection`: a box-projected probe over the room (importance 2), baked by `bake` after the room's lighting
+  is applied (`Art/SalvageShop/SalvageInteriorReflection.exr`). Re-bake after changing the room.
+- `Decals` (training-range oil), review cameras `cam_ss_bay`, `cam_ss_counter`, `cam_ss_bench`, `cam_ss_racks`,
+  `cam_ss_brann`, `cam_ss_inside_out`, and Landmarks `salvage_shop`, `salvage_counter`, `salvage_bench`.
+
+**Quest flow (data).** Ossa's primer completion line (BermsTutorial *Line Complete*) sends the player to Brann. The first
+field order (`WardFieldOrders.asset`, *Steady Hands*) has a new optional **Report** block: *Report To* `npc_brann`,
+*Report Brief* and *Report Guidance* `dealer`. Once its parts are gathered the order waits at the **Report** stage (Field
+Notes and the guidance marker point at Brann) until the player speaks to him; then the bench takes over (Fabricate, Fit,
+then the test fire in the Berms). Talking to him early counts too. Report visits are saved (`FieldOrderState.reported`).
+FieldOrders guidance targets: `fabricator` = the workbench, `dealer` = Brann.
+
+**Dialogue (data).** `NpcDefinition` now has *Entries* (openings tried in order, each with a condition; none matching
+opens at `greeting`), per-choice *Requires* and *Set Flag*, the `fabricator` action (opens the colonist's workbench)
+and a *Shop* profile (title, subtitle and which lists the counter shows: supplies, parts, salvage). Conditions are
+comma-separated terms, `!` negates: `primer`, `pistol`, `order:ID`, `stage:NAME` (an `OrderStage`), `reported`,
+`freeplay`, `flag:ID` (`Scripts/QuestConditions.cs`). The HUD shows up to three choices (`choice0..2`). Story flags are
+saved with the city visit (`CityVisitState.flags`). Brann's counter shows parts and salvage, not supplies; Mira's is
+unchanged. Validation: `SalvageShopPass` `verify` checks every NpcDefinition's conditions and links.
+
+**Steps.** `SalvageShopPass.RunBatch --steps materials,models,data,install,verify -nographics`; graphics steps `bake` and
+`capture:HOUR:cam+cam` (at most six cameras; batch Unity needs `DISPLAY=:0 WAYLAND_DISPLAY=wayland-1` from a tool shell).
+`data` rewrites Brann's dialogue and the order texts from the pass: edit the asset in the Inspector afterwards, or the
+pass and re-run it. Rollback: `evidence/salvage-shop/20261001/rollback/` (pre-pass scene, Salvage models, record and
+prefab); re-enabling the cart's two components restores the old station. Real-input check:
+`tools/check_salvage_shop_native.py`. Evidence: `evidence/salvage-shop/20261001/README.md`.
 
 ## Courtyard tree beds (30 September 2026)
 

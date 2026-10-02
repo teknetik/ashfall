@@ -2,8 +2,9 @@ using System;
 using UnityEngine;
 namespace AthenHill
 {
- /// The player's nanite-fed scrap pistol, vitality and knock-down/respawn.
- /// Controls: 7 draws/holsters; hold right mouse to aim over the shoulder, then left click fires; F fires from the hip.
+ /// The player's nanite-fed scrap pistol and field rifle, vitality and knock-down/respawn.
+ /// Controls: 7 draws/holsters the sidearm, 8 the rifle (drawing one holsters the other); hold right mouse to aim over
+ /// the shoulder, then left click fires; F fires from the hip. Automatic weapons (the rifle) fire while the button is held.
  /// Wardens keep weapons holstered inside the walls, so the pistol only draws in the Outer Berms (x below City Edge X).
  [RequireComponent(typeof(Health))]
  public class PlayerCombat:MonoBehaviour
@@ -30,6 +31,12 @@ namespace AthenHill
   [Tooltip("Pistol model in the colonist's right hand, shown while drawn.")]
   public GameObject heldPistol;
   public Transform muzzlePoint;
+  [Header("Field rifle")]
+  [Tooltip("Rifle model in the colonist's hands, shown while the primary weapon is drawn (2 Oct 2026).")]
+  public GameObject heldRifle;
+  public Transform rifleMuzzle;
+  [Tooltip("Weapon definition ids that keep firing while the fire button is held.")]
+  public string[] automaticWeaponIds={"weapon_field_rifle"};
   [Tooltip("Muzzle position relative to the colonist when no held pistol is shown.")]
   public Vector3 muzzleOffset=new Vector3(.3f,1.36f,.62f);
   public LayerMask shotMask=~(1<<8);
@@ -71,6 +78,13 @@ namespace AthenHill
   public CharacterModel Character {get;private set;}
   public CraftingModel Crafting {get;private set;}
   public string ActiveSlot {get;private set;}="secondary";
+  /// A primary weapon (the field rifle) is equipped and has a crafting definition, so 8 can draw it.
+  public bool HasRifle=>Character!=null&&Crafting!=null&&Crafting.FindWeapon(Character.Equipped("primary"))!=null;
+  public bool RifleActive=>ActiveSlot=="primary";
+  /// The held model of the active slot (rifle or pistol), shown while drawn.
+  public GameObject HeldWeapon=>RifleActive?heldRifle:heldPistol;
+  public Transform HeldMuzzle=>RifleActive?rifleMuzzle:muzzlePoint;
+  public bool Automatic=>Loadout!=null&&automaticWeaponIds!=null&&Array.IndexOf(automaticWeaponIds,Loadout.WeaponId)>=0;
   public float RecoilStat=>Stats.recoil;
   public float RecoilScale=>BaseStats.recoil>0?Stats.recoil/BaseStats.recoil:1;
   public float LastKickDegrees {get;private set;}
@@ -78,6 +92,8 @@ namespace AthenHill
   /// Hit marker: (target, killed).
   public event Action<Health,bool> TargetHit;
   public event Action<float> Hurt;
+  /// Damage with where it came from (the attacker's position), for the HUD's direction indicator.
+  public event Action<float,Vector3> HurtFrom;
   public event Action Downed;
   float nextFire,faceUntil,tracerOff,emptyNotice;
   void Awake(){Health=GetComponent<Health>();ApplyLoadout();Nano=Stats.nanoMax;Health.Damaged+=OnDamaged;Health.Died+=OnDied;}
@@ -165,6 +181,7 @@ namespace AthenHill
    if(group){if(audioSource)audioSource.outputAudioMixerGroup=group;if(tailSource)tailSource.outputAudioMixerGroup=group;}
    if(tracer)tracer.enabled=false;if(muzzleLight)muzzleLight.enabled=false;
    if(heldPistol)heldPistol.SetActive(false);
+   if(heldRifle)heldRifle.SetActive(false);
   }
   void OnDestroy(){if(Health){Health.Damaged-=OnDamaged;Health.Died-=OnDied;}if(Loadout!=null)Loadout.Changed-=ApplyLoadout;if(Character!=null)Character.Changed-=OnCharacterChanged;ReleaseCursor();}
   public void GivePistol()
@@ -175,29 +192,41 @@ namespace AthenHill
    }
    hasPistol=true;Nano=Stats.nanoMax;
   }
-  public void ToggleDraw()
+  public void ToggleDraw()=>ToggleDraw("secondary");
+  /// 7 draws or holsters the sidearm, 8 the rifle. Drawing the other slot's weapon switches to it (holstering this one).
+  public void ToggleDraw(string slot)
   {
    if(session.State!=CityState.Play)return;
    if(!hasPistol){session.Notify("Complete the field primer before drawing a weapon.");return;}
-   if(Character!=null&&Character.Equipped(ActiveSlot)==null){session.Notify("Equip a weapon in your loadout first.");return;}
+   if(Character!=null&&Character.Equipped(slot)==null){session.Notify(slot=="primary"?"No rifle equipped. Fit one in your loadout first.":"Equip a weapon in your loadout first.");return;}
    if(!Armed&&!InBerms){session.Notify("Wardens keep weapons holstered inside the walls.","Ward");return;}
-   Armed=!Armed;
+   if(slot!=ActiveSlot)
+   {
+    if(!SelectWeapon(slot)){session.Notify(slot=="primary"?"That rifle has no field pattern yet.":"That weapon has no field pattern yet.");return;}
+    if(!InBerms)return;
+    Armed=true;
+   }
+   else Armed=!Armed;
    if(audioSource)
    {
     var clips=Armed?drawClips:holsterClips;
     var clip=clips!=null&&clips.Length>0?Pick(clips,ref lastFoley):Armed?drawClip:null;
     if(clip)audioSource.PlayOneShot(clip,.8f);
    }
-   session.Notify(Armed?"Scrap pistol drawn. Hold right mouse to aim.":"Scrap pistol holstered.");
+   string name=RifleActive?"Field rifle":"Scrap pistol";
+   session.Notify(Armed?(RifleActive?"Field rifle drawn. Hold right mouse to aim; hold fire for bursts.":"Scrap pistol drawn. Hold right mouse to aim."):name+" holstered.");
   }
   void Update()
   {
    if(tracer&&tracer.enabled&&Time.time>tracerOff){tracer.enabled=false;if(muzzleLight)muzzleLight.enabled=false;}
    if(Time.time-LastShotTime>nanoRegenDelay)Nano=Mathf.Min(Stats.nanoMax,Nano+Stats.nanoRegen*Time.deltaTime);
    bool play=session.State==CityState.Play;
-   if(play&&input.Pressed("Slot7"))ToggleDraw();
-   if(Armed&&!InBerms){Armed=false;session.Notify("Back inside the walls. Scrap pistol holstered.","Ward");}
-   if(heldPistol&&heldPistol.activeSelf!=Armed)heldPistol.SetActive(Armed);
+   if(play&&input.Pressed("Slot7"))ToggleDraw("secondary");
+   if(play&&input.Pressed("Slot8"))ToggleDraw("primary");
+   if(Armed&&!InBerms){Armed=false;session.Notify(RifleActive?"Back inside the walls. Field rifle holstered.":"Back inside the walls. Scrap pistol holstered.","Ward");}
+   bool showPistol=Armed&&!RifleActive,showRifle=Armed&&RifleActive;
+   if(heldPistol&&heldPistol.activeSelf!=showPistol)heldPistol.SetActive(showPistol);
+   if(heldRifle&&heldRifle.activeSelf!=showRifle)heldRifle.SetActive(showRifle);
    Aiming=play&&Armed&&input.Held("Aim");
    if(follow)follow.aimMode=Aiming;
    if(Aiming)Cursor.lockState=CursorLockMode.Locked;else ReleaseCursor();
@@ -205,7 +234,7 @@ namespace AthenHill
    motor.FaceView=Aiming||Armed&&Time.time<faceUntil;
    if(view)motor.FaceYaw=view.transform.eulerAngles.y;
    if(!play||!Armed)return;
-   if(input.Pressed("Fire")||Aiming&&input.Pressed("Orbit"))Fire();
+   if(input.Pressed("Fire")||Aiming&&input.Pressed("Orbit")||Automatic&&(input.Held("Fire")||Aiming&&input.Held("Orbit")))Fire();
   }
   void ReleaseCursor(){if(Cursor.lockState==CursorLockMode.Locked)Cursor.lockState=CursorLockMode.None;}
   public void Fire()
@@ -241,7 +270,8 @@ namespace AthenHill
    if(follow)follow.ApplyShotKick(LastKickDegrees,recoilRecoverFraction,recoilRecoverSeconds);
    ShotFired?.Invoke();
    bool firstPerson=viewModel&&viewModel.Visible&&viewModel.muzzle;
-   var muzzle=firstPerson?viewModel.muzzle.position:muzzlePoint&&heldPistol&&heldPistol.activeInHierarchy?muzzlePoint.position:motor.visual?motor.visual.TransformPoint(muzzleOffset):transform.TransformPoint(muzzleOffset);
+   var held=HeldWeapon;var heldMuzzle=HeldMuzzle;
+   var muzzle=firstPerson?viewModel.muzzle.position:heldMuzzle&&held&&held.activeInHierarchy?heldMuzzle.position:motor.visual?motor.visual.TransformPoint(muzzleOffset):transform.TransformPoint(muzzleOffset);
    if(!firstPerson&&thirdPersonFlash)thirdPersonFlash.Fire();
    if(tracer){tracer.enabled=true;tracer.SetPosition(0,muzzle);tracer.SetPosition(1,end);tracerOff=Time.time+tracerSeconds;}
    if(muzzleLight){muzzleLight.transform.position=muzzle;muzzleLight.enabled=true;}
@@ -297,13 +327,16 @@ namespace AthenHill
   void OnDamaged(float amount,Vector3 from)
   {
    if(audioSource&&hurtClip)audioSource.PlayOneShot(hurtClip,.9f);
-   Hurt?.Invoke(amount);
+   Hurt?.Invoke(amount);HurtFrom?.Invoke(amount,from);
   }
   void OnDied()
   {
    Downs++;Armed=false;
-   session.Notify("You go down in the dust. A Warden patrol drags you back to the post.","Outer Berms");
-   if(respawnPoint){motor.Teleport(respawnPoint.position);motor.visual.rotation=respawnPoint.rotation;}
+   // the nearest Warden waystation the player has found, else the gate post
+   var station=WardenWaystation.NearestFound(transform.position,respawnPoint?respawnPoint.position:transform.position);
+   var point=station&&station.respawnPoint?station.respawnPoint:respawnPoint;
+   session.Notify(station?$"You go down in the dust. A Warden patrol drags you back to the {station.displayName.ToLowerInvariant()}.":"You go down in the dust. A Warden patrol drags you back to the post.","Outer Berms");
+   if(point){motor.Teleport(point.position);motor.visual.rotation=point.rotation;}
    Health.Restore();Nano=Stats.nanoMax;
    Downed?.Invoke();
   }

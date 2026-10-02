@@ -70,6 +70,7 @@ namespace AthenHill.Tests
     catalog.slots=new[]{new CharacterSlot{id="primary"}};
     catalog.equipment=new[]{new CharacterEquipment{itemId="field_rifle",slots=new[]{"primary"}}};
     var character=new CharacterModel(catalog,rig.pack);Set(rig.session,"Character",character);
+    Assert.That(rig.pack.TryApply(new[]{new KeyValuePair<string,int>("field_rifle",1)},0,out var give),give);   // 2 Oct 2026: no rifle in the starting pack
     Assert.That(character.TryRaiseAttribute("strength",out var reason),reason);
     Assert.That(character.TryRaiseSkill("engineering",out reason),reason);
     Assert.That(character.TryEquip("field_rifle","primary",out reason),reason);
@@ -108,9 +109,9 @@ namespace AthenHill.Tests
     var expectedStats=a.model.Loadout.Stats;var expectedLoot=a.crafting.Loot.Capture();
     using(var b=new Rig(folder))
     {
-     Assert.That(b.save.HasSave);Assert.That(b.save.Summary(),Does.StartWith("Field order 3/5 · Bore It True · 37 cr"));
+     Assert.That(b.save.HasSave);Assert.That(b.save.Summary(),Does.StartWith("Field order 3/7 · Plate Carrier · 37 cr"));
      Assert.That(b.save.Continue());
-     Assert.That(b.session.State,Is.EqualTo(CityState.Play));Assert.That(b.session.notice,Does.Contain("Bore It True"));
+     Assert.That(b.session.State,Is.EqualTo(CityState.Play));Assert.That(b.session.notice,Does.Contain("Plate Carrier"));
      Assert.That(b.pack.Credits,Is.EqualTo(37));Assert.That(b.pack.Quantity("scrap_alloy"),Is.EqualTo(7));Assert.That(b.pack.Quantity("lattice_shard"),Is.EqualTo(1));
      Assert.That(b.pack.Quantity("wound_coil"),Is.EqualTo(1));Assert.That(b.pack.Quantity("scrap_coil"),Is.Zero,"the conductor went into the coil");
      Assert.That(b.model.Loadout.Fitted("barrel"),Is.EqualTo("barrel_bored_alloy"));Assert.That(b.model.Loadout.Fitted("grip"),Is.EqualTo("grip_stabilised_pistol"));

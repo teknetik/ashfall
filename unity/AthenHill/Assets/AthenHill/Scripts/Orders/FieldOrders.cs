@@ -50,7 +50,7 @@ namespace AthenHill
    Progress??=new FieldOrderProgress(data);
    session.RadioLine.IsStale=StaleRadioTag;
    crafting.Model.Changed+=MarkDirty;crafting.Collected+=OnCollected;
-   session.Changed+=MarkDirty;
+   session.Changed+=MarkDirty;session.Talked+=OnTalked;
    if(combat)combat.ShotFired+=OnShot;
    if(tutorial)tutorial.Changed+=MarkDirty;
    MarkDirty();
@@ -58,13 +58,15 @@ namespace AthenHill
   void OnDestroy()
   {
    if(crafting){if(crafting.Model!=null)crafting.Model.Changed-=MarkDirty;crafting.Collected-=OnCollected;}
-   if(session)session.Changed-=MarkDirty;
+   if(session){session.Changed-=MarkDirty;session.Talked-=OnTalked;}
    if(combat)combat.ShotFired-=OnShot;
    if(tutorial)tutorial.Changed-=MarkDirty;
   }
   void MarkDirty()=>dirty=true;
   void OnCollected(LootPickup _)=>dirty=true;
   void OnShot(){if(Ready&&Progress.NoteShot(crafting.Model))dirty=true;}
+  /// Speaking to the current order's report-to colonist (Brann for the first order) moves it on to fabrication.
+  void OnTalked(NpcAgent npc){if(Ready&&npc&&npc.definition&&Progress.NoteReport(npc.definition.id))dirty=true;}
   bool Collected(string itemId)=>crafting.Loot.HasCollected(itemId)||session.Shop.Quantity(itemId)>0;
   void Update()
   {
@@ -187,7 +189,7 @@ namespace AthenHill
    dirty=true;
   }
   public FieldOrderState Capture()=>Progress?.Capture()??new FieldOrderState();
-  /// Pre-v2 tooling name for the grip tutorial state (Dormant, Salvage, Fabricate, Fit, TestFire, Done).
-  public string LegacyGripStep=>Progress==null||!Progress.Started?"Dormant":Progress.Index>0?"Done":Stage switch{OrderStage.Gather=>"Salvage",OrderStage.Fabricate=>"Fabricate",OrderStage.Fit=>"Fit",_=>"TestFire"};
+  /// Pre-v2 tooling name for the grip tutorial state (Dormant, Salvage, Report, Fabricate, Fit, TestFire, Done).
+  public string LegacyGripStep=>Progress==null||!Progress.Started?"Dormant":Progress.Index>0?"Done":Stage switch{OrderStage.Gather=>"Salvage",OrderStage.Report=>"Report",OrderStage.Fabricate=>"Fabricate",OrderStage.Fit=>"Fit",_=>"TestFire"};
  }
 }

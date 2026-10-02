@@ -423,6 +423,18 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .hit-marker-stroke.b { rotate: -45deg; }
 .hit-marker.kill .hit-marker-stroke { background-color: #c65c4f; width: 4px; }
 .damage-flash { position: absolute; left: 0; top: 0; right: 0; bottom: 0; opacity: 0; border-width: 46px; border-color: rgba(150,38,30,0.55); }
+/* Direction of incoming damage (2 Oct 2026, ranged droids): a zero-size pivot at screen centre, rotated toward the
+   attacker; its bar sits on a ring around the crosshair. */
+.damage-dir { position: absolute; left: 50%; top: 50%; width: 0; height: 0; opacity: 0; }
+/* Outer Berms places on the compass (2 Oct 2026, BermsCompassPoint): amber sites (dim once cleared), cyan waystation, pale gate. */
+.compass-poi { position: absolute; top: 3px; width: 10px; height: 10px; rotate: 45deg; background-color: #d39a4a; border-width: 1px; border-color: rgba(10,14,13,0.7); }
+.compass-poi.waystation { background-color: #5fc7c9; }
+.compass-poi.gate { background-color: #eee9dc; }
+.compass-poi.cleared { opacity: 0.4; }
+.compass-poi-label { position: absolute; top: 49px; left: 50%; width: 300px; margin-left: -150px; -unity-text-align: upper-center; font-size: 14px; color: #eee9dc; text-shadow: 1px 1px 0 rgba(0,0,0,0.85); }
+.small-window .compass-poi-label { font-size: 20px; }
+.damage-dir-arc { position: absolute; left: -58px; top: -178px; width: 116px; height: 9px; border-radius: 5px; background-color: rgba(198,92,79,0.9); border-width: 1px; border-color: rgba(238,233,220,0.55); }
+.small-window .damage-dir-arc { top: -150px; width: 96px; left: -48px; }
 .berms-objective { border-top-width: 1px; border-color: #65706a; margin-top: 8px; padding-top: 6px; }
 .berms-heading { color: #a48a62; }
 .berms-objective-text { white-space: normal; margin-top: 2px; }
@@ -430,6 +442,9 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .enemy-bar-fill { height: 100%; width: 100%; background-color: #c65c4f; border-top-width: 1px; border-top-color: #db7d6b; }
 .enemy-bar-name { position: absolute; bottom: 9px; left: -30px; width: 160px; -unity-text-align: lower-center; font-size: 14px; color: #eee9dc; text-shadow: 1px 1px 0 rgba(0,0,0,0.8); }
 .pistol-icon { background-image: url("Art/pistol.png"); }
+.rifle-icon { background-image: url("Art/rifle_slot.png"); }
+.receiver-icon { background-image: url("Art/receiver.png"); }
+.carrier-icon { background-image: url("Art/carrier.png"); }
 .small-window .enemy-bar-name, .small-window .berms-objective-text { font-size: 20px; }
 
 .checkpoint-guidance { position: absolute; width: 170px; padding: 5px; color: rgb(173, 233, 232); background-color: rgba(20, 29, 29, 0.88); border-bottom-width: 2px; border-bottom-color: rgb(77, 170, 174); font-size: 13px; -unity-text-align: middle-center; }

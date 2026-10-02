@@ -59,7 +59,8 @@ namespace AthenHill
   void LateUpdate()
   {
    if(!viewCamera||!rig||!pistol)return;
-   bool want=follow&&follow.FirstPerson&&combat&&combat.Armed&&(!session||session.State==CityState.Play);
+   // The view model is the pistol's; with the rifle drawn, first person shows no weapon yet (2 Oct 2026).
+   bool want=follow&&follow.FirstPerson&&combat&&combat.Armed&&!combat.RifleActive&&(!session||session.State==CityState.Play);
    float dt=Time.deltaTime;
    draw=Mathf.MoveTowards(draw,want?1:0,dt/drawSeconds);
    Visible=draw>0;

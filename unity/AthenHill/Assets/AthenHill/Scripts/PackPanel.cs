@@ -339,7 +339,7 @@ namespace AthenHill
      var output=Model.Item(r.outputItemId);
      var parts=r.inputs==null?"":string.Join(" · ",r.inputs.Select(i=>$"{CraftingText.InputName(Model,i)} {Mathf.Min(Model.Available(i),99)}/{i.quantity}"));
      ShowOverview(r.name,output?.icon,output?.rarity??ItemRarity.Common,$"{Model.Data.GroupName(r.group).ToUpperInvariant()} · {(Ready(r)?"PARTS ON HAND":"PARTS SHORT")}",
-      (parts.Length>0?"Parts: "+parts+"\n":"")+"Fabricate at the field fabricator.");
+      (parts.Length>0?"Parts: "+parts+"\n":"")+"Fabricate at "+CraftingText.Workbench+".");
      return;
     }
    }
@@ -372,7 +372,7 @@ namespace AthenHill
     if(combat&&combat.hasPistol&&model!=null)
     {
      int fitted=model.Loadout.FittedMods.Count(),total=model.Loadout.Slots.Count;
-     ShowOverview(model.Loadout.WeaponName,"pistol-icon",ItemRarity.Common,$"SIDEARM · {fitted} OF {total} MODS FITTED","Nanite-fed scrap pistol. Its shots draw on nano. Mods are fitted at the field fabricator.");
+     ShowOverview(model.Loadout.WeaponName,"pistol-icon",ItemRarity.Common,$"SIDEARM · {fitted} OF {total} MODS FITTED","Nanite-fed scrap pistol. Its shots draw on nano. Mods are fitted at "+CraftingText.Workbench+".");
     }
     else ShowOverview("No sidearm",null,ItemRarity.Common,"SIDEARM · EMPTY","No sidearm carried.",false);
     return;
@@ -385,7 +385,7 @@ namespace AthenHill
     var changes=CraftingText.StatChanges(model.Data,model.Loadout.Preview(slot,null),model.Loadout.Stats);
     ShowOverview(item.name,item.icon,item.rarity,$"{slotName.ToUpperInvariant()} MOD · FITTED · {RarityName(item.rarity).ToUpperInvariant()}",(string.IsNullOrWhiteSpace(item.description)?"":item.description+"\n")+(changes.Length>0?"Fitted: "+changes:""));
    }
-   else ShowOverview($"Empty {slotName.ToLowerInvariant()} slot",null,ItemRarity.Common,$"{slotName.ToUpperInvariant()} MOD · EMPTY",combat&&combat.hasPistol?$"Fit a {slotName.ToLowerInvariant()} mod at the field fabricator.":"No sidearm carried.",false);
+   else ShowOverview($"Empty {slotName.ToLowerInvariant()} slot",null,ItemRarity.Common,$"{slotName.ToUpperInvariant()} MOD · EMPTY",combat&&combat.hasPistol?$"Fit a {slotName.ToLowerInvariant()} mod at "+CraftingText.Workbench+".":"No sidearm carried.",false);
   }
   static string RarityName(ItemRarity r)=>r==ItemRarity.Rare?"Rare":r==ItemRarity.Uncommon?"Uncommon":"Common";
 
@@ -403,10 +403,10 @@ namespace AthenHill
     detailsQuantity.text=item!=null?$"{quantity} carried · {RarityName(item.rarity)}":$"{quantity} carried";
     foreach(var c in rarityClasses)detailsTitle.RemoveFromClassList(c);
     if(item!=null&&item.rarity!=ItemRarity.Common)detailsTitle.AddToClassList(rarityClasses[(int)item.rarity]);
-    detailsPrices.text=item!=null&&!item.excludeFromTrade?item.sellOnly?$"Mira at Basic General buys this for {item.sellPrice} cr":$"Basic General list price - Buy {item.buyPrice} cr / Sell {item.sellPrice} cr":item!=null&&item.rarity==ItemRarity.Rare?"Rare part · Mira will not trade it":"";
+    detailsPrices.text=item!=null&&!item.excludeFromTrade?item.sellOnly?$"Brann at Salvage and Mira at Basic General buy this for {item.sellPrice} cr":$"Basic General list price - Buy {item.buyPrice} cr / Sell {item.sellPrice} cr":item!=null&&item.rarity==ItemRarity.Rare?"Rare part · neither Mira nor Brann will trade it":"";
     detailsDescription.text=item!=null&&!string.IsNullOrWhiteSpace(item.description)?item.description:"No description recorded.";
     if(item!=null){var equipment=characterPanel.DescribeItem(item.id);if(equipment.Length>0)detailsDescription.text+="\n\n"+equipment;}
-    if(Model!=null&&item!=null){var uses=KnownUses(Model,item);if(uses.Length>0)detailsDescription.text+="\n\nKnown uses: "+uses+" (Field fabricator)";}
+    if(Model!=null&&item!=null){var uses=KnownUses(Model,item);if(uses.Length>0)detailsDescription.text+="\n\nKnown uses: "+uses+" ("+CraftingText.WorkbenchName+")";}
     SetIcon(detailsIcon,item?.icon);
     if(lastDetailId!=session.DetailItemId){lastDetailId=session.DetailItemId;root.schedule.Execute(()=>detailsClose?.Focus());}
    }
