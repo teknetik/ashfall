@@ -54,6 +54,7 @@ namespace AthenHill
    var browser=Element(columns,"merchant-browser","merchant-browser");
    search=new TextField{name="merchant-search",tooltip="Search the merchant's items"};search.AddToClassList("merchant-search");search.label="Search";browser.Add(search);
    search.RegisterValueChangedCallback(e=>{query=e.newValue??"";signature=null;Refresh();});
+   search.RegisterCallback<KeyDownEvent>(RouteSearchTab,TrickleDown.TrickleDown);
    filters=Element(browser,"merchant-filters","merchant-filters");
    foreach(var title in new[]{"All","Supplies","Parts","Equipment","Implants","Mods"})
    {string c=title;chips[c]=Button(filters,"merchant-filter-"+c.ToLowerInvariant(),c,()=>{category=c;signature=null;Refresh();},"merchant-chip");}
@@ -159,6 +160,12 @@ namespace AthenHill
    Refresh();if(!trade.enabledSelf&&selected!=null&&rows.TryGetValue(selected,out var row))row.Focus();
   }
   void SellStack(){if(selected!=null)session.SellSalvage(selected,session.Shop.Quantity(selected));Refresh();}
+  static void RouteSearchTab(KeyDownEvent e)
+  {
+   // Unity 6000.6's single-line text editor also moves focus on KeyDown Tab.
+   // Let CityHud handle the separate NavigationMove event once, or All is skipped.
+   if(e.keyCode==KeyCode.Tab&&!e.ctrlKey&&!e.altKey&&!e.commandKey&&(e.modifiers&EventModifiers.FunctionKey)==0)e.StopImmediatePropagation();
+  }
   void Navigate(NavigationMoveEvent e)
   {
    if(e.direction!=NavigationMoveEvent.Direction.Up&&e.direction!=NavigationMoveEvent.Direction.Down)return;

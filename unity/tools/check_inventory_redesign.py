@@ -448,6 +448,21 @@ def main():
         offers = visible_ids('merchant-item-', layout)
         browser, details = qa.el(layout, 'merchant-browser')['bounds'], qa.el(layout, 'merchant-detail')['bounds']
         expect('Merchant has expanded scrollable stock left and detailed inspector right', len(offers) >= 20 and details[0] >= browser[0] + browser[2] - 3, {'offers': len(offers), 'browser': browser, 'details': details})
+        click('merchant-filter-all')
+        qa.key('Shift_L', True)
+        try:
+            time.sleep(.12)
+            qa.tap('Tab', secs=.12, settle=.3)
+        finally:
+            qa.key('Shift_L', False)
+        expect('Shift Tab returns from All to merchant search', qa.focused() == 'merchant-search', qa.focused())
+        qa.tap('Tab', secs=.12, settle=.3)
+        expect('Tab leaves merchant search on All without skipping it', qa.focused() == 'merchant-filter-all', qa.focused())
+        set_text('merchant-search', 'motor')
+        expect('Merchant search remains editable', visible_ids('merchant-item-') == ['merchant-item-armour_leg_motor'], visible_ids('merchant-item-'))
+        set_text('merchant-search', '')
+        expect('Ctrl A and clearing restore merchant stock', len(visible_ids('merchant-item-')) == len(offers), visible_ids('merchant-item-'))
+        layout = qa.ui()
         first = qa.el(layout, offers[0])['bounds']
         wheel('merchant-scroll', 1, 7)
         after = qa.el(qa.ui(), offers[0])['bounds']

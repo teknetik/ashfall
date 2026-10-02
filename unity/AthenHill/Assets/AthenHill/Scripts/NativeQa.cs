@@ -172,11 +172,11 @@ namespace AthenHill
    {
     bool visible=ancestorsVisible&&e.resolvedStyle.display!=DisplayStyle.None&&e.resolvedStyle.visibility==Visibility.Visible;
     var b=e.worldBound;
-    if(!string.IsNullOrEmpty(e.name)||e is TextElement)elements.Add(new{name=e.name,type=e.GetType().Name,visible,enabled=e.enabledInHierarchy,text=(e as TextElement)?.text,value=(e as DropdownField)?.value,choices=(e as DropdownField)?.choices,bounds=new[]{b.x,b.y,b.width,b.height},fontSize=e.resolvedStyle.fontSize,classes=e.GetClasses().ToArray(),hasBackground=e.resolvedStyle.backgroundImage.texture!=null});
+    if(!string.IsNullOrEmpty(e.name)||e is TextElement)elements.Add(new{name=e.name,type=e.GetType().Name,visible,enabled=e.enabledInHierarchy,e.focusable,e.tabIndex,e.delegatesFocus,text=(e as TextElement)?.text,value=(e as DropdownField)?.value,choices=(e as DropdownField)?.choices,bounds=new[]{b.x,b.y,b.width,b.height},fontSize=e.resolvedStyle.fontSize,classes=e.GetClasses().ToArray(),hasBackground=e.resolvedStyle.backgroundImage.texture!=null});
     foreach(var child in e.hierarchy.Children())Visit(child,visible);
    }
    Visit(document.rootVisualElement.panel.visualTree,true);
-   Write("ui-layout.json",new{width=Screen.width,height=Screen.height,state=session.State.ToString(),elements});
+   Write("ui-layout.json",new{width=Screen.width,height=Screen.height,state=session.State.ToString(),focused=(document.rootVisualElement.focusController?.focusedElement as VisualElement)?.name,modalTabStops=UiNavigation.TabStops(document.rootVisualElement.Q("modal")).Select(e=>e.name).ToArray(),elements});
   }
   void OnDestroy(){
 #if UNITY_EDITOR || DEBUG
