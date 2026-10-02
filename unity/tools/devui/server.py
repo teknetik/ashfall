@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import re
 import secrets
+import sqlite3
 import stat
 import threading
 import time
@@ -16,6 +17,7 @@ import uuid
 from urllib.parse import urlsplit
 
 from model import seed, validate, diagnostics
+from npc_db import initialize as initialize_npcs, list_npcs
 from ai_authoring import AuthoringJobs, AuthoringError
 
 HERE = Path(__file__).resolve().parent
@@ -120,6 +122,8 @@ class App(ThreadingHTTPServer):
         self.qa = safe_dir(qa)
         self.drafts = safe_dir(drafts)
         self.draft_file = safe_file(self.drafts, 'drafts.v1.json')
+        self.npc_file = safe_file(self.drafts, 'npcs.sqlite3')
+        initialize_npcs(self.npc_file)
         self.authoring = AuthoringJobs(HERE.parents[2], safe_dir(self.drafts / 'generated'), env_file)
         self.token = secrets.token_urlsafe(32)
         self.lock = threading.Lock()
@@ -185,6 +189,9 @@ class Handler(BaseHTTPRequestHandler):
         if not self.safe_request(): return
         path = urlsplit(self.path).path
         if path == '/api/status': return self.response(200, self.server.status())
+        if path == '/api/npcs':
+            try: return self.response(200, {'source': 'npc-database', 'npcs': list_npcs(self.server.npc_file)})
+            except (OSError, ValueError, sqlite3.DatabaseError): return self.reject(409, 'NPC database unavailable')
         if path == '/api/ai':
             return self.response(200, {'config': self.server.authoring.config(), 'jobs': self.server.authoring.list()})
         if path.startswith('/api/ai/assets/'):

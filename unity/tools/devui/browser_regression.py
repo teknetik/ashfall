@@ -61,6 +61,16 @@ def main():
                 page.on('pageerror', lambda error: errors.append(str(error)))
                 page.goto(f'http://127.0.0.1:{app.server_port}/')
                 page.get_by_text('LIVE · UNITY').first.wait_for()
+                page.locator('[data-tab="npcs"]').click()
+                page.get_by_role('heading', name='NPC voice roster').wait_for()
+                assert page.locator('tbody tr').count() == 7
+                vex = page.locator('tbody tr').filter(has_text='npc_vex')
+                assert 'Ward / West Gate' in vex.inner_text()
+                assert 'IKne3meq5aSn9XLyUdCD' in vex.inner_text()
+                preview = Path(__file__).resolve().parents[2] / 'evidence/npc-voices/20261002/devui-npcs.png'
+                preview.parent.mkdir(parents=True, exist_ok=True)
+                page.screenshot(path=str(preview), full_page=True)
+                page.locator('[data-tab="session"]').click()
                 item = page.locator('select[name="itemId"]')
                 item.select_option('scrap_alloy')
                 for name, value in [('quantity', '4'), ('amount', '37'), ('hour', '15.3'), ('speed', '3.5')]:

@@ -37,6 +37,19 @@ class ModelTests(unittest.TestCase):
 
 
 class ServerTests(unittest.TestCase):
+    def test_npc_roster_is_sqlite_backed_and_persists_restart(self):
+        code, response = self.call('GET', '/api/npcs')
+        self.assertEqual(200, code)
+        self.assertEqual('npc-database', response['source'])
+        self.assertEqual(7, len(response['npcs']))
+        self.assertEqual(30, sum(n['lineCount'] for n in response['npcs']))
+        vex = next(n for n in response['npcs'] if n['id'] == 'npc_vex')
+        self.assertEqual(('Ward / West Gate', 'Australian', 'IKne3meq5aSn9XLyUdCD'),
+                         (vex['area'], vex['accent'], vex['voiceId']))
+        self.assertTrue((Path(self.tmp.name) / 'draft/npcs.sqlite3').is_file())
+        self.restart()
+        self.assertEqual(response, self.call('GET', '/api/npcs')[1])
+
     def test_ai_routes_keep_csrf_origin_and_path_defences(self):
         before=self.call('GET','/api/ai')[1]
         self.assertIn('configured',before['config'])

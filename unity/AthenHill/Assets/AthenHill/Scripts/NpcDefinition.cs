@@ -6,7 +6,7 @@ namespace AthenHill
  /// choice is taken. action: "" (go to next), "close", "shop" (this colonist's counter) or "fabricator" (the workbench
  /// the colonist keeps, NpcAgent.workbench).
  [Serializable] public class DialogueChoice {public string id,label,next,action;[Tooltip("QuestConditions expression; empty = always offered.")]public string requires;public string setFlag;}
- [Serializable] public class DialogueNode {public string id,title;[TextArea(3,8)]public string text;public DialogueChoice[] choices;}
+ [Serializable] public class DialogueNode {public string id,title;[TextArea(3,8)]public string text;[Tooltip("Offline spoken take for this node; the text remains the subtitle and fallback.")]public AudioClip voice;public DialogueChoice[] choices;}
  /// A conversation opening: the first entry whose condition holds picks the node the colonist greets with.
  [Serializable] public class DialogueEntry {public string node;[Tooltip("QuestConditions expression; empty = always.")]public string requires;}
  /// What this colonist's counter offers ("shop" choices). Basic General shows all three lists.

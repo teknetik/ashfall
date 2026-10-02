@@ -15,7 +15,7 @@ namespace AthenHill
   public CharacterModel Character {get;private set;}
   public GameSettings Settings {get;private set;}
   void Awake(){Settings=GetComponent<GameSettings>();if(!Settings)Settings=gameObject.AddComponent<GameSettings>();reducedMotion=Settings.ReadReducedMotion(reducedMotion);RadioLine.timing=radioTiming??new RadioQueue.Timing();}
-  void SettingsChanged(){muted=Settings.Sound.muted;Changed?.Invoke();}
+  void SettingsChanged(){muted=Settings.Sound.muted;if(ActiveNpc)ActiveNpc.SetVoiceLevel(Settings.Sound.effects);Changed?.Invoke();}
   public GameInput input;
   public PlayerMotor player;
   public FollowCamera follow;
@@ -136,7 +136,7 @@ namespace AthenHill
   {
    if(State!=CityState.Play)return;
    var n=Nearest;
-   if(n){ActiveNpc=n;dialogueNode=StartNode(n.definition);n.talking=true;if(n.countsForCityVisit)Spoken.Add(n.definition.id);SetState(CityState.Dialogue);AddLog(n.definition.displayName,Dialogue.text);Talked?.Invoke(n);}
+   if(n){ActiveNpc=n;dialogueNode=StartNode(n.definition);n.talking=true;if(n.countsForCityVisit)Spoken.Add(n.definition.id);SetState(CityState.Dialogue);AddLog(n.definition.displayName,Dialogue.text);SpeakDialogue();Talked?.Invoke(n);}
    else if(NearLattice){GridProgress=0;selectedDestination="";SetState(CityState.Grid);AddLog("Lattice Jack","Signal acquired. Opening the sector lattice.");SoundRequested?.Invoke(CitySoundCue.LatticeOpen);}
    else if(!NearRing&&NearWorld)NearWorld.Use();
    else {Notify(NearRing?"Destination offline. The far ring has gone quiet.":"Move closer to a colonist or terminal.",NearRing?"Ring Gate":"System");SoundRequested?.Invoke(CitySoundCue.Unavailable);}
@@ -152,10 +152,10 @@ namespace AthenHill
    else if(choice.action=="fabricator"&&ActiveNpc.workbench)
    {
     // "Use the bench": straight from the conversation to the workbench the colonist keeps.
-    var bench=ActiveNpc.workbench;ActiveNpc.talking=false;ActiveNpc=null;
+    var bench=ActiveNpc.workbench;ActiveNpc.StopSpeaking();ActiveNpc.talking=false;ActiveNpc=null;
     ActiveStation=bench;ActiveStationId=bench.stationId;SetState(CityState.Fabricator);
    }
-   else {dialogueNode=choice.next;AddLog(ActiveNpc.definition.displayName,Dialogue.text);Changed?.Invoke();}
+   else {dialogueNode=choice.next;AddLog(ActiveNpc.definition.displayName,Dialogue.text);SpeakDialogue();Changed?.Invoke();}
   }
   public bool Trade(string id,bool buy)
   {
@@ -261,11 +261,12 @@ namespace AthenHill
    if(State==CityState.MainMenu){if(state!=CityState.Settings)return;settingsReturn=CityState.MainMenu;Settings.BeginEdit();SetState(state);return;}
    if(State==CityState.Play||State==CityState.Paused){if(state==CityState.Settings){settingsReturn=CityState.Paused;Settings.BeginEdit();}SetState(state);}
   }
-  public void Close(){if(State==CityState.Settings){if(Settings.Previewing){Settings.RevertVideo();return;}Settings.EndEdit();SetState(settingsReturn);return;}if(State==CityState.MainMenu||State==CityState.Boot)return;if(State==CityState.Inventory&&DetailItemId!=null){CloseItemDetails();return;}DetailItemId=null;ActiveStationId=null;ActiveStation=null;if(ActiveNpc)ActiveNpc.talking=false;ActiveNpc=null;GridProgress=0;SetState(CityState.Play);}
+  public void Close(){if(State==CityState.Settings){if(Settings.Previewing){Settings.RevertVideo();return;}Settings.EndEdit();SetState(settingsReturn);return;}if(State==CityState.MainMenu||State==CityState.Boot)return;if(State==CityState.Inventory&&DetailItemId!=null){CloseItemDetails();return;}DetailItemId=null;ActiveStationId=null;ActiveStation=null;if(ActiveNpc){ActiveNpc.StopSpeaking();ActiveNpc.talking=false;}ActiveNpc=null;GridProgress=0;SetState(CityState.Play);}
   public void ResetPlayer(){if(!HasStarted)return;Close();player.ReturnToGate();follow.yaw=-90;follow.pitch=17;follow.FixedView=false;}
   public void ToggleMute(){Settings.Sound.muted=!Settings.Sound.muted;Settings.SaveSound();Settings.Flush();}
   public void ToggleReducedMotion(){reducedMotion=!reducedMotion;Settings.SaveReducedMotion(reducedMotion);Changed?.Invoke();}
-  void SetState(CityState state){State=state;input.SetGameplay(state==CityState.Play);player.Blocked=state!=CityState.Play;player.Talking=state==CityState.Dialogue;Time.timeScale=state==CityState.MainMenu||state==CityState.Paused||state==CityState.Settings?0:1;AudioListener.pause=state==CityState.Paused;Changed?.Invoke();}
+  void SpeakDialogue(){if(ActiveNpc)ActiveNpc.Speak(Dialogue,Settings,FindAnyObjectByType<CityAudio>()?.steps);}
+  void SetState(CityState state){if(State==CityState.Dialogue&&state!=CityState.Dialogue&&ActiveNpc)ActiveNpc.StopSpeaking();State=state;input.SetGameplay(state==CityState.Play);player.Blocked=state!=CityState.Play;player.Talking=state==CityState.Dialogue;Time.timeScale=state==CityState.MainMenu||state==CityState.Paused||state==CityState.Settings?0:1;AudioListener.pause=state==CityState.Paused;Changed?.Invoke();}
   public void Notify(string text,string speaker="System"){notice=text;noticeTime=Mathf.Clamp(2.5f+noticeSecondsPerWord*RadioQueue.Words(text),4,10);AddLog(speaker,text);Changed?.Invoke();}
   /// A radio line (field briefings): logged now, shown on the radio channel when its turn comes. gapBefore leaves a
   /// short silence after the previous line; tag lets stale lines be dropped (RadioQueue.IsStale); urgent jumps the queue.

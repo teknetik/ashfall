@@ -61,6 +61,36 @@ available response IDs, timestamps, hashes and the mastered-file measurements in
 `manifest.json`. These files contain no credentials. The generated WAVs and their
 Unity import settings live in `AthenHill/Assets/AthenHill/Audio/ElevenLabs/`.
 
+## NPC dialogue voices (2 October 2026)
+
+Seven named NPCs have 30 offline ElevenLabs dialogue takes. Each `NpcDefinition`
+node keeps its original text and choices and now references its own AudioClip.
+Opening or changing a node starts its clip at the NPC; leaving dialogue stops it.
+The dialogue text remains visible if a clip is absent. Voice playback uses the
+Effects mixer group and Effects volume; Master mute still applies. These clips do
+not use the API at runtime.
+
+| NPC | Area | Voice | Accent | ElevenLabs voice ID | Takes |
+| --- | --- | --- | --- | --- | ---: |
+| Mira | Ward / Basic General | Clara | British | `aj0fZfXTBc7E3By4X8L2` | 1 |
+| Torr | Ward / Terminal court | Chris | American | `iP95p4xoKVk53GoZ742B` | 2 |
+| Vex | Ward / West Gate | Charlie | Australian | `IKne3meq5aSn9XLyUdCD` | 2 |
+| Linn | Ward / Hill | Amelia | British | `ZF6FPAbjXT4488VcRRnw` | 2 |
+| Brann | Ward / Salvage shop | Callum | American | `N2lVS1w4EtoT3dr4eOWO` | 15 |
+| Warden Ossa | Outer Berms / West Gate post | Victoria | British | `N8SmJJ4vvs5Mz9VaT6u5` | 6 |
+| Warden Rell | Outer Berms / Checkpoint | Roger | American | `CwhRBWXzGAHq8TQ4Fs17` | 2 |
+
+The source MP3s, exact requests, response IDs and checksums are in
+`staging/elevenlabs-audio/npc-voices/`. The 44.1 kHz mono WAVs and Unity `.meta`
+files are in `AthenHill/Assets/AthenHill/Audio/ElevenLabs/NpcVoices/`.
+`unity/tools/generate_npc_voices.py --install` verifies cached takes and restores
+references without API calls; `--generate` creates only missing takes. It refuses
+to reuse a take after its text or voice assignment changes. The developer
+console's NPC page reads the same roster from a local SQLite database seeded by
+`unity/tools/devui/npc_roster.json`. New voice assignments require generating
+new clips and updating the Unity node references before they affect the game.
+Credit the generated performances as AI voices in the shipped game credits.
+
 From the repository root:
 
 ```sh
