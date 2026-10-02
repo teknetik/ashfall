@@ -2,6 +2,10 @@
 
 This work is isolated on `codex/ashfall-inventory`. Commit `4d991cf9` preserves the main checkout's in-progress source as it existed at intake. Inventory changes are the diff after that commit. Claude's subsequent Outer Berms work stays in the main checkout and is not overwritten or merged here.
 
+## Main-checkout integration
+
+Merged into `ward/next-level` on 2 October 2026, preserving the completed Berms and rifle work. The normal development player was rebuilt. Combined verification and build identity are recorded in [the integration report](../inventory-merged-20261002/README.md); the results below remain the isolated-build history.
+
 ## Implemented
 
 - Compact carried-item grid, persistent inspector on its right, search/filtering and actual pack-slot and carried-weight limits. A slot is one carried item stack; equipped gear contributes to carried weight.
