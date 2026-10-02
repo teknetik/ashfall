@@ -80,8 +80,11 @@ node --check unity/tools/devui/app.js
 node --check unity/tools/devui/authoring.js
 uv run --offline --with playwright python unity/tools/devui/browser_regression.py
 uv run --offline --with playwright python unity/tools/devui/browser_authoring_regression.py
+uv run --offline --with playwright python unity/tools/devui/browser_unity_export_regression.py
 ```
 
 The browser authoring regression verifies that comparison text follows edits while preserving selected fields, selective proposal application, save persistence, three implant sockets, editable armour sockets, percent conversion, generated-image attachment, ideas, voice playback markup, history reload and narrow-screen overflow. Its images/audio are test fixtures, not evidence of live OpenAI image or voice quality.
+
+The Unity export regression uses the actual exported catalogue with an isolated draft store. It copies a Mk.II implant, leg armour, cognition augmentation and assist motor through the browser, verifies supported fields and fractional effects against the export, saves and reloads them, and checks that copying an existing ID preserves local edits. Editing copied sockets or effects cannot alter the read-only export snapshot. It makes no provider calls and writes its report/screenshots under `unity/evidence/inventory-redesign-20261002/authoring-export`.
 
 A separately approved **single live text request** succeeded on 2 October 2026 using `gpt-6-astra`: 2,257 input tokens, 94 output tokens, 2,351 total. The returned name/description/design-notes passed local validation. No proposal was applied to game data. Image and voice transport paths have mock coverage only; no live image/voice request was made for this change.

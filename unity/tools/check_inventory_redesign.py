@@ -94,7 +94,7 @@ def launch(out, save, exe, unit):
         (folder / 'prefs').write_text('<?xml version="1.0" encoding="utf-8"?><unity_prefs version_major="1" version_minor="1"><pref name="AthenHill.Settings.v1.QA.Video" type="string">' + encoded + '</pref></unity_prefs>')
     args = [str(exe), '-force-glcore', '-screen-width', '1920', '-screen-height', '1080', '-screen-fullscreen', '0', '-logFile', str(run / 'Player.log'), '--athen-qa', str(run), '--athen-qa-background', '--athen-save-dir', str(save)]
     # $1 is a local output filename; no shell interpolation of user strings.
-    command = ['systemd-run', '--user', '--scope', '--unit=' + unit, '-q', '-p', 'MemoryMax=12G', '-p', 'MemoryHigh=10G', '-p', 'MemorySwapMax=512M', 'bash', '-c', 'printf "%s\\n" "$$" > "$1"; shift; exec "$@"', 'ashfall-inventory-qa', str(run / 'pid')] + args
+    command = ['systemd-run', '--user', '--scope', '--expand-environment=no', '--unit=' + unit, '-q', '-p', 'MemoryMax=12G', '-p', 'MemoryHigh=10G', '-p', 'MemorySwapMax=512M', 'bash', '-c', 'printf "%s\\n" "$$" > "$1"; shift; exec "$@"', 'ashfall-inventory-qa', str(run / 'pid')] + args
     log = (run / 'scope.log').open('w')
     proc = subprocess.Popen(command, env=dict(os.environ, XDG_CONFIG_HOME=str(run / 'config')), stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
     log.close()
@@ -174,9 +174,14 @@ def text(name, layout=None):
 def set_text(name, value):
     click(name)
     qa.key('Control_L', True)
-    qa.key('a', True)
-    qa.key('a', False)
-    qa.key('Control_L', False)
+    try:
+        # Let Unity observe the modifier and chord on separate input frames.
+        # Zero-duration XTEST chords can arrive after their modifier is released.
+        time.sleep(.12)
+        qa.tap('a', secs=.12, settle=.12)
+    finally:
+        qa.key('Control_L', False)
+    time.sleep(.12)
     qa.tap('BackSpace', settle=.12)
     for char in value:
         qa.tap(char, secs=.03, settle=.06)
@@ -197,6 +202,37 @@ def drag_preview():
         qa.button(1, False)
     move(qa.snap()['width'] - 25, 30)
     time.sleep(.4)
+
+
+def drag_equipment(source_name, target_name, source_scroll, target_scroll):
+    """Drag visible controls with held real input, crossing the 7px capture threshold."""
+    layout = qa.ui()
+    points = []
+    for name, viewport_name in [(source_name, source_scroll), (target_name, target_scroll)]:
+        element = qa.el(layout, name)
+        viewport = qa.el(layout, viewport_name)
+        if not element or not element['visible'] or not element['enabled'] or not viewport:
+            raise AssertionError(f'Drag endpoint {name} is unavailable in {viewport_name}')
+        point = centre(element['bounds'])
+        if not point_inside(point, viewport['bounds']) or not point_inside(point, panel_bounds(layout)):
+            raise AssertionError(f'Drag endpoint {name} is clipped: {element["bounds"]}; viewport={viewport["bounds"]}')
+        points.append(pixels(point, layout))
+    start, end = points
+    move(*start)
+    qa.button(1, True)
+    try:
+        # One slow sweep gives PointerDown time to arrive before real movement;
+        # release only at the target, never using a bridge equip/unequip verb.
+        time.sleep(.12)
+        for step in range(1, 17):
+            move(start[0] + (end[0] - start[0]) * step / 16,
+                 start[1] + (end[1] - start[1]) * step / 16)
+        time.sleep(.12)
+    finally:
+        qa.button(1, False)
+    move(qa.snap()['width'] - 25, 30)
+    time.sleep(.4)
+    return {'source': source_name, 'target': target_name, 'startPixels': start, 'endPixels': end}
 
 
 def dev():
@@ -230,6 +266,7 @@ def main():
     parser.add_argument('--exe', type=Path, default=qa.EXE)
     parser.add_argument('--prepare-only', action='store_true')
     parser.add_argument('--profile-seconds', type=float, default=0)
+    parser.add_argument('--city-loop', action='store_true', help='Walk the existing city dialogue, trade and Lattice regression before stopping this player')
     args = parser.parse_args()
     out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=False)
@@ -314,34 +351,84 @@ def main():
         sockets = visible_ids('modification-socket-', layout)
         preview = dev()['preview']
         expect('Implants use the body map with exactly three sockets and no 3D camera', len(sockets) == 3 and (qa.el(layout, 'implant-body-map') or {}).get('visible') and not (qa.el(layout, 'preview-col') or {}).get('visible') and not preview['active'], {'sockets': sockets, 'preview': preview})
-        click('modification-socket-0', 'character-scroll')
+        click('modification-socket-0', 'equipment-inspector-scroll')
         expect('Clicking an implant socket opens its nested panel', bool((qa.el(qa.ui(), 'augmentation-details') or {}).get('visible')))
         intellect, mass, quantity = stat('intellect'), character()['carryWeight'], qa.qty('aug_cognition')
-        click('install-augmentation-aug_cognition', 'character-scroll')
+        click('install-augmentation-aug_cognition', 'equipment-inspector-scroll')
         qa.wait(lambda: installed('implant_head', 0) == 'aug_cognition', what='augmentation model commit')
         expect('Installing augmentation transfers one item and applies stat without changing total mass', qa.qty('aug_cognition') == quantity - 1 and abs(stat('intellect') - intellect - 1) < .001 and abs(character()['carryWeight'] - mass) < .001, character())
+        layout = qa.ui()
+        map_bounds = qa.el(layout, 'implant-body-map')['bounds']
+        viewport = qa.el(layout, 'character-scroll')['bounds']
+        expect('Full X-ray stays visible while the augmentation inspector scrolls',
+               map_bounds[1] >= viewport[1] - 1 and map_bounds[1] + map_bounds[3] <= viewport[1] + viewport[3] + 1,
+               {'map': map_bounds, 'viewport': viewport})
         capture('02-implants-augmentation-1080')
-        click('remove-augmentation', 'character-scroll')
+        click('remove-augmentation', 'equipment-inspector-scroll')
         qa.wait(lambda: installed('implant_head', 0) is None, what='augmentation removal')
         expect('Removing augmentation returns item and restores stat', qa.qty('aug_cognition') == quantity and abs(stat('intellect') - intellect) < .001, character())
 
         click('character-tab-armour')
         click('equipment-armour_legs', 'character-scroll')
-        click('modification-socket-0', 'character-scroll')
+        click('modification-socket-0', 'equipment-inspector-scroll')
         speed, quantity = stat('movementSpeed'), qa.qty('armour_leg_motor')
-        click('install-augmentation-armour_leg_motor', 'character-scroll')
+        click('install-augmentation-armour_leg_motor', 'equipment-inspector-scroll')
         qa.wait(lambda: installed('armour_legs', 0) == 'armour_leg_motor', what='leg motor commit')
         expect('Armour motor applies actual movement stat and character preview stays active', stat('movementSpeed') > speed and qa.qty('armour_leg_motor') == quantity - 1 and dev()['preview']['active'] and not dev()['preview']['showingWeapon'], {'beforeSpeed': speed, 'afterSpeed': stat('movementSpeed'), 'preview': dev()['preview']})
         capture('03-armour-motor-1080')
-        click('remove-augmentation', 'character-scroll')
+        click('remove-augmentation', 'equipment-inspector-scroll')
         qa.wait(lambda: installed('armour_legs', 0) is None, what='leg motor removal')
         expect('Motor removal restores movement and inventory', abs(stat('movementSpeed') - speed) < .001 and qa.qty('armour_leg_motor') == quantity, character())
+
+        # Round-trip an armour host with no modules: a click-only implementation
+        # cannot pass these model assertions, and the final fixture is unchanged.
+        click('equipment-armour_head', 'character-scroll')
+        drag_before = character()
+        pack_before = {item: count for item, count in qa.snap()['session']['quantities'].items() if count}
+        helmet_before = qa.qty('field_helmet') or 0
+        helmet_mass = 1.2  # Authored Field Helmet weight in both current catalogs.
+        expect('Armour drag fixture has an equipped helmet and room to return it',
+               drag_before['equipped'].get('armour_head') == 'field_helmet'
+               and helmet_before == 0
+               and drag_before['packSlotsUsed'] < drag_before['packSlotCapacity']
+               and drag_before['packWeight'] + helmet_mass <= drag_before['storageCapacity'], drag_before)
+        drag_out = drag_equipment('equipment-armour_head', 'inv-water_flask', 'character-scroll', 'inventory-scroll')
+        qa.wait(lambda: character()['equipped'].get('armour_head') != 'field_helmet'
+                and (qa.qty('field_helmet') or 0) == helmet_before + 1, what='real armour drag returns helmet to pack')
+        drag_removed = character()
+        expected_pack = dict(pack_before, field_helmet=helmet_before + 1)
+        expect('Real armour drag unequips one helmet without losing mass or other pack items',
+               not drag_removed['equipped'].get('armour_head')
+               and drag_removed['packSlotsUsed'] == drag_before['packSlotsUsed'] + 1
+               and abs(drag_removed['packWeight'] - drag_before['packWeight'] - helmet_mass) < .001
+               and abs(drag_removed['carryWeight'] - drag_before['carryWeight']) < .001
+               and drag_removed['stats']['armour'] < drag_before['stats']['armour']
+               and {item: count for item, count in qa.snap()['session']['quantities'].items() if count} == expected_pack,
+               {'drag': drag_out, 'before': drag_before, 'after': drag_removed})
+        # The returned item occupies the next pack cell. Select it and the empty
+        # host first so both endpoints are scrolled into view before pressing.
+        click('inv-field_helmet', 'inventory-scroll')
+        click('equipment-armour_head', 'character-scroll')
+        drag_back = drag_equipment('inv-field_helmet', 'equipment-armour_head', 'inventory-scroll', 'character-scroll')
+        qa.wait(lambda: character()['equipped'].get('armour_head') == 'field_helmet'
+                and (qa.qty('field_helmet') or 0) == helmet_before, what='real armour drag re-equips helmet')
+        drag_restored = character()
+        expect('Dragging helmet back restores equipment, stats, quantities and carry weights',
+               drag_restored['equipped'] == drag_before['equipped']
+               and drag_restored['modifications'] == drag_before['modifications']
+               and drag_restored['packSlotsUsed'] == drag_before['packSlotsUsed']
+               and abs(drag_restored['packWeight'] - drag_before['packWeight']) < .001
+               and abs(drag_restored['carryWeight'] - drag_before['carryWeight']) < .001
+               and all(abs(drag_restored['stats'][key] - value) < .001 for key, value in drag_before['stats'].items())
+               and {item: count for item, count in qa.snap()['session']['quantities'].items() if count} == pack_before,
+               {'drag': drag_back, 'before': drag_before, 'after': drag_restored})
 
         for index, tab, item in [(4, 'primary', 'Field Rifle'), (5, 'secondary', 'Scrap Pistol')]:
             click('character-tab-' + tab)
             layout = qa.ui()
             preview = dev()['preview']
             expect(tab.title() + ' has a 2D weapon image, attachment slots and live 3D weapon', (qa.el(layout, 'weapon-picture') or {}).get('visible') and len(visible_ids('socket-', layout)) > 0 and preview['active'] and preview['showingWeapon'] and text('preview-name', layout) == item, {'preview': preview, 'name': text('preview-name', layout), 'sockets': visible_ids('socket-', layout)})
+            capture(f'{index:02d}-{tab}-overview-1080')
             old_yaw = preview['yaw']
             drag_preview()
             expect(tab.title() + ' preview rotates from real pointer drag', abs(dev()['preview']['yaw'] - old_yaw) > 5, {'before': old_yaw, 'after': dev()['preview']['yaw']})
@@ -396,13 +483,19 @@ def main():
         qa.tap('Tab', settle=.6)
         click('character-tab-implants')
         click('equipment-implant_head', 'character-scroll')
-        click('modification-socket-1', 'character-scroll')
+        click('modification-socket-1', 'equipment-inspector-scroll')
         layout = qa.ui()
         capture('08-implants-1280x720')
         expect('Narrow implants retain reachable nested controls and hide 3D pane', (qa.el(layout, 'augmentation-details') or {}).get('visible') and not (qa.el(layout, 'preview-col') or {}).get('visible'), {'modal': qa.el(layout, 'modal')['bounds'], 'details': qa.el(layout, 'augmentation-details')['bounds']})
         qa.tap('Tab', settle=.4)
         qa.wait(lambda: qa.state() == 'Play', what='close narrow inventory')
         qa.cmd('resize', width=1920, height=1080)
+        if args.city_loop:
+            with (out / 'city-loop-console.log').open('w') as log:
+                route = subprocess.run(['bash', str(ROOT / 'unity/tools/run_native.sh'), str(out / 'run'), 'check_hall_district_city_loop.py'], cwd=ROOT, stdout=log, stderr=subprocess.STDOUT, timeout=480)
+            route_file = out / 'run/city-loop.json'
+            report['cityLoop'] = json.loads(route_file.read_text()) if route_file.exists() else {'exitCode': route.returncode}
+            expect('Walked city loop preserves dialogue, atomic trading, porch access and Lattice travel', route.returncode == 0 and report['cityLoop'].get('complete'), report['cityLoop'].get('final', report['cityLoop']))
         report['errors'] = qa.log_errors()
         expect('No runtime errors in player log', not report['errors'], report['errors'])
         report['complete'] = True

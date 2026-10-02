@@ -160,7 +160,8 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .character-slot:hover, .character-slot.selected { background-color: #1a434a; border-color: #58d5d7; }
 .character-slot.empty { background-color: #0b2025; }
 .character-slot-icon { width: 48px; height: 48px; flex-shrink: 0; margin-right: 10px; -unity-background-scale-mode: scale-to-fit; }
-.character-slot.empty .character-slot-icon { opacity: 0.25; }
+.character-slot.empty .character-slot-icon { opacity: 0.8; }
+.character-slot-empty-mark { -unity-text-align: middle-center; color: #72cbd1; font-size: 28px; padding: 0; margin-top: 0; margin-bottom: 0; }
 .character-slot-copy { flex-grow: 1; flex-shrink: 1; min-width: 0; }
 .character-slot-label { font-size: 14px; color: #bca581; white-space: normal; }
 .character-slot-value { font-size: 18px; color: #eee9dc; white-space: normal; }
@@ -359,6 +360,8 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .character-vitals { font-size: 14px; padding-top: 7px; padding-bottom: 6px; }
 .character-tab { font-size: 15px; min-width: 74px; height: 32px; }
 .character-scroll .unity-scroll-view__content-container { flex-grow: 1; }
+.character-scroll .unity-scroll-view__content-container > * { flex-shrink: 0; }
+.equipment-inspector > *, .augmentation-details > * { flex-shrink: 0; }
 .character-result { min-height: 22px; font-size: 15px; }
 .character-slot { min-height: 52px; padding: 4px 6px; margin-bottom: 6px; }
 .character-slot-icon { width: 36px; height: 36px; margin-right: 7px; }
@@ -370,22 +373,25 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .character-heading { font-size: 15px; margin: 10px 0 6px; }
 .character-breakdown { font-size: 16px; margin-top: 3px; margin-bottom: 3px; }
 .weapon-picture { height: 162px; min-height: 162px; margin: 4px 18px 8px; -unity-background-scale-mode: scale-to-fit; }
+.weapon-picture.rifle-icon { background-size: 470px 470px; background-position: center center; background-repeat: no-repeat no-repeat; }
 .weapon-sockets { flex-direction: row; flex-wrap: wrap; }
 .weapon-socket { width: 31%; flex-grow: 1; min-width: 103px; min-height: 90px; flex-direction: column; align-items: center; margin-right: 5px; }
 .weapon-socket .character-slot-icon { width: 38px; height: 38px; margin: 0 0 4px; }
 .weapon-socket .character-slot-copy { align-items: center; }
 .weapon-socket .character-slot-value { font-size: 14px; -unity-text-align: middle-center; }
-.anatomy-layout { flex-direction: row; flex-grow: 1; }
-.anatomy-map { width: 282px; min-width: 282px; height: 520px; flex-shrink: 0; position: relative; margin-right: 12px; }
-.anatomy-image { position: absolute; top: 0; left: 28px; right: 28px; bottom: 0; opacity: 0.9; }
+.anatomy-layout { flex-direction: row; flex-grow: 0; flex-shrink: 0; overflow: hidden; }
+.anatomy-map { width: 306px; min-width: 306px; height: 100%; flex-shrink: 0; position: relative; margin-right: 12px; }
+.anatomy-image { position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.9; }
 .armour-anatomy-image { opacity: 0.5; }
-.anatomy-slot { position: absolute; width: 104px; min-height: 50px; height: 50px; margin: 0; padding: 4px; background-color: rgba(7, 29, 35, 0.98); }
+.anatomy-slot { position: absolute; width: 112px; min-height: 50px; height: 50px; margin: -25px 0 0; padding: 4px; background-color: rgba(7, 29, 35, 0.98); }
 .anatomy-slot .character-slot-icon { width: 23px; height: 28px; margin-right: 4px; }
-.anatomy-slot .character-slot-label { font-size: 12px; }
+.anatomy-slot .character-slot-label { font-size: 13px; white-space: nowrap; }
 .anatomy-slot .character-slot-value { font-size: 13px; max-height: 29px; overflow: hidden; text-overflow: ellipsis; }
 .anatomy-leader { position: absolute; width: 25px; height: 1px; background-color: #58b9c2; }
-.anatomy-node { position: absolute; width: 9px; height: 9px; border-width: 1px; border-color: #83e2e3; background-color: #16434b; border-radius: 5px; }
-.equipment-inspector { flex-grow: 1; flex-shrink: 1; min-width: 170px; padding: 3px 5px 8px 9px; border-left-width: 1px; border-left-color: #294f56; }
+.anatomy-node { position: absolute; width: 9px; height: 9px; margin-top: -4px; border-width: 1px; border-color: #83e2e3; background-color: #16434b; border-radius: 5px; }
+.equipment-inspector-scroll { flex-grow: 1; flex-shrink: 1; flex-basis: 0; min-width: 170px; height: 100%; border-left-width: 1px; border-left-color: #294f56; }
+.equipment-inspector-scroll .unity-scroll-view__content-viewport { overflow: hidden; }
+.equipment-inspector { flex-grow: 1; flex-shrink: 0; min-width: 0; padding: 3px 5px 8px 9px; }
 .equipment-inspector-heading { color: #8fdbdf; font-size: 14px; white-space: normal; margin-bottom: 5px; }
 .equipment-inspector-title { color: #eee9dc; font-size: 23px; white-space: normal; margin-bottom: 8px; }
 .equipment-inspector-icon { height: 92px; width: 112px; align-self: center; -unity-background-scale-mode: scale-to-fit; margin-bottom: 8px; }

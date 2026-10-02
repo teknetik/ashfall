@@ -66,8 +66,9 @@ function mountUnityItemPicker(){
   $('#copyUnityItem').onclick=()=>{
     const id=$('#unityItemSource').value,existing=work.items.findIndex(x=>x.id===id);
     if(existing>=0){selection=existing;render();notice('Existing draft selected; no fields overwritten.');return;}
-    const source=unityCraft.items.find(x=>x.id===id);if(!source)return;
-    work.items.push({id:source.id,name:source.name,category:source.tags?.includes('weapon')?'Weapon':'Item',subtype:'',tier:1,rarity:source.rarity||'Common',weightKg:source.weightKg||0,stack:Math.max(1,source.maxStack||20),tags:source.tags||[],stats:{},description:source.description||'',buyPrice:source.buyPrice||0,sellPrice:source.sellPrice||0});
+    const source=structuredClone(unityCraft.items.find(x=>x.id===id));if(!source)return;
+    const host=unityCraft.character?.equipment?.find(x=>x.itemId===id);
+    work.items.push({id:source.id,name:source.name,category:source.tags?.includes('weapon')?'Weapon':'Item',subtype:'',tier:host?.tier??1,rarity:source.rarity||'Common',weightKg:source.weightKg||0,stack:Math.max(1,source.maxStack||20),tags:source.tags||[],stats:{},description:source.description||'',buyPrice:source.buyPrice||0,sellPrice:source.sellPrice||0});
     const equipment=equipmentFromUnity(id);if(equipment)work.items[work.items.length-1].equipment=equipment;
     selection=work.items.length-1;dirty=true;render();notice('Copied the Unity export to a local draft. Unity assets remain unchanged.');
   };
@@ -150,8 +151,8 @@ const socketTypes=['implant','armour_plate','armour_lining','armour_motor','armo
 const implantSockets=()=>[1,2,3].map(n=>({id:'augmentation_'+n,label:'Augmentation '+n,type:'implant'}));
 const prettyId=id=>id.replaceAll('_',' ').replace(/([a-z])([A-Z])/g,'$1 $2').replace(/^./,v=>v.toUpperCase());
 function equipmentFromUnity(id){
-  const host=unityCraft?.character?.equipment?.find(x=>x.itemId===id);
-  const mod=unityCraft?.character?.modifications?.find(x=>x.itemId===id);
+  const host=structuredClone(unityCraft?.character?.equipment?.find(x=>x.itemId===id));
+  const mod=structuredClone(unityCraft?.character?.modifications?.find(x=>x.itemId===id));
   if(host){const kind=host.slots?.some(x=>x.startsWith('implant_'))?'implant':'armour';return {kind,slots:host.slots||[],socketTypes:[],modificationSockets:kind==='implant'?implantSockets():host.modificationSockets||[],modifiers:host.modifiers||[]};}
   if(mod)return {kind:mod.socketTypes?.includes('implant')?'augmentation':'armour_mod',slots:mod.slots||[],socketTypes:mod.socketTypes||[],modificationSockets:[],modifiers:mod.modifiers||[]};
   return null;
