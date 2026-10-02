@@ -16,6 +16,7 @@ import uuid
 from urllib.parse import urlsplit
 
 from model import seed, validate, diagnostics
+from ai_authoring import AuthoringJobs, AuthoringError
 
 HERE = Path(__file__).resolve().parent
 UNITY_CRAFT_EXPORT = HERE.parent.parent / 'AthenHill/Assets/AthenHill/Data/Crafting/Export/ward-crafting.v1.json'
@@ -115,10 +116,11 @@ def load_json(path, max_bytes=BODY_MAX):
 
 class App(ThreadingHTTPServer):
     daemon_threads = True
-    def __init__(self, port, qa, drafts):
+    def __init__(self, port, qa, drafts, env_file=None):
         self.qa = safe_dir(qa)
         self.drafts = safe_dir(drafts)
         self.draft_file = safe_file(self.drafts, 'drafts.v1.json')
+        self.authoring = AuthoringJobs(HERE.parents[2], safe_dir(self.drafts / 'generated'), env_file)
         self.token = secrets.token_urlsafe(32)
         self.lock = threading.Lock()
         existing = read_draft(self.draft_file)
@@ -183,6 +185,19 @@ class Handler(BaseHTTPRequestHandler):
         if not self.safe_request(): return
         path = urlsplit(self.path).path
         if path == '/api/status': return self.response(200, self.server.status())
+        if path == '/api/ai':
+            return self.response(200, {'config': self.server.authoring.config(), 'jobs': self.server.authoring.list()})
+        if path.startswith('/api/ai/assets/'):
+            match = re.fullmatch(r'/api/ai/assets/([0-9a-f]{32})\.(png|wav|json)', path)
+            if not match: return self.reject(404, 'Unknown generated asset')
+            try: data = self.server.authoring.media(*match.groups())
+            except (OSError, ValueError): return self.reject(404, 'Generated asset unavailable')
+            mime = {'png': 'image/png', 'wav': 'audio/wav', 'json': 'application/json'}[match[2]]
+            self.send_response(200); self.send_header('Content-Type', mime)
+            self.send_header('Content-Length', str(len(data))); self.send_header('Cache-Control', 'no-store')
+            self.send_header('X-Content-Type-Options', 'nosniff')
+            if match[2] == 'json': self.send_header('Content-Disposition', 'attachment; filename="ashfall-' + match[1] + '.json"')
+            self.end_headers(); self.wfile.write(data); return
         if path == '/api/unity-crafting':
             try:
                 data = load_json(UNITY_CRAFT_EXPORT, 2 * 1024 * 1024)
@@ -197,7 +212,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self.response(200, {'source': 'draft', 'revision': rev, 'data': data, 'diagnostics': diagnostics(data)})
             except (OSError, ValueError, json.JSONDecodeError) as e:
                 return self.reject(409, 'Draft store unavailable: ' + type(e).__name__)
-        static = {'/': ('index.html', 'text/html; charset=utf-8'), '/app.js': ('app.js', 'text/javascript; charset=utf-8'), '/style.css': ('style.css', 'text/css; charset=utf-8')}
+        static = {'/': ('index.html', 'text/html; charset=utf-8'), '/app.js': ('app.js', 'text/javascript; charset=utf-8'), '/style.css': ('style.css', 'text/css; charset=utf-8'), '/authoring.js': ('authoring.js', 'text/javascript; charset=utf-8')}
         if path not in static: return self.reject(404, 'Not found')
         filename, mime = static[path]; data = (HERE / filename).read_bytes()
         self.send_response(200); self.send_header('Content-Type', mime); self.send_header('Content-Length', str(len(data)))
@@ -208,10 +223,20 @@ class Handler(BaseHTTPRequestHandler):
         if not self.safe_request(): return
         if self.headers.get('X-Ward-CSRF') != self.server.token: return self.reject(403, 'Missing/invalid CSRF token')
         path = urlsplit(self.path).path
-        if path not in ('/api/command','/api/draft','/api/import'): return self.reject(404, 'Not found')
+        if path not in ('/api/command','/api/draft','/api/import','/api/ai/generate','/api/ai/cancel'): return self.reject(404, 'Not found')
         body = self.body(8192 if path == '/api/command' else BODY_MAX)
         if body is None: return
         if path == '/api/command': return self.send_command(body)
+        if path in ('/api/ai/generate', '/api/ai/cancel'):
+            try:
+                if path == '/api/ai/generate': job = self.server.authoring.start(body)
+                else:
+                    if not isinstance(body, dict) or set(body) != {'id'} or not isinstance(body['id'], str):
+                        return self.reject(400, 'Expected request ID')
+                    job = self.server.authoring.cancel(body['id'])
+                return self.response(202 if path.endswith('generate') else 200, {'job': job})
+            except AuthoringError as error: return self.reject(400, str(error))
+            except OSError: return self.reject(409, 'Local authoring storage is unavailable. Check the draft directory.')
         with self.server.lock:
             if not isinstance(body, dict) or set(body) != {'revision','data'} or not isinstance(body['revision'],str): return self.reject(400, 'Expected revision and data')
             try: current, revision = self.server.draft()
@@ -288,9 +313,10 @@ def main():
     p.add_argument('--qa-dir', required=True, help='Exact --athen-qa directory (under home)')
     p.add_argument('--draft-dir', default=str(HERE / 'data'), help='Local draft store directory (under home)')
     p.add_argument('--port', type=int, default=8765)
+    p.add_argument('--env-file', help='Optional local .env path; otherwise discover repository/worktree root .env')
     args=p.parse_args()
     if not 1 <= args.port <= 65535: p.error('Port must be 1..65535')
-    server=App(args.port,args.qa_dir,args.draft_dir)
+    server=App(args.port,args.qa_dir,args.draft_dir,args.env_file)
     print(f'Ward dev UI: http://127.0.0.1:{server.server_port}/ ; QA dir: {server.qa}',flush=True)
     try: server.serve_forever()
     except KeyboardInterrupt: pass

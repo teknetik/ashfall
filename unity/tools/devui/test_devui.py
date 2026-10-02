@@ -37,6 +37,19 @@ class ModelTests(unittest.TestCase):
 
 
 class ServerTests(unittest.TestCase):
+    def test_ai_routes_keep_csrf_origin_and_path_defences(self):
+        before=self.call('GET','/api/ai')[1]
+        self.assertIn('configured',before['config'])
+        self.assertNotIn('apiKey',before['config'])
+        body=json.dumps({'kind':'ideas','prompt':'test'})
+        self.assertEqual(403,self.call('POST','/api/ai/generate',body)[0])
+        headers={'X-Ward-CSRF':self.app.token,'Content-Type':'application/json'}
+        self.assertEqual(403,self.call('POST','/api/ai/generate',body,{**headers,'Origin':'http://evil.test'})[0])
+        self.assertEqual(400,self.call('POST','/api/ai/cancel',json.dumps({'id':'missing'}),headers)[0])
+        self.assertEqual(404,self.call('GET','/api/ai/assets/../../.env')[0])
+        self.assertEqual(404,self.call('GET','/api/ai/assets/'+('f'*32)+'.svg')[0])
+        self.assertIsNone(self.app.authoring.active)
+
     def test_unity_editor_export_is_separate_from_drafts(self):
         code, response = self.call('GET', '/api/unity-crafting')
         self.assertEqual(200, code)

@@ -32,11 +32,12 @@ namespace AthenHill.Tests
 
   [Test] public void UxmlKeepsEveryNamedControlTheCodeBinds()
   {
-   var root=Hud();
+   using var rig=new Rig(CityState.Shop);
+   var root=Hud();new MerchantPanel(root,rig.session,rig.crafting).Refresh();
    foreach(var name in new[]{"fab-recipe-list","fabricator-ingredients","fab-slots","fab-stats"})Assert.That(root.Q(name),Is.Not.Null,name);
-   foreach(var name in new[]{"fabricator-recipe","fab-description","fab-reason","fabricator-stat","salvage-empty"})Assert.That(root.Q<Label>(name),Is.Not.Null,name);
-   foreach(var name in new[]{"fabricator-craft","fabricator-fit","fabricator-remove","buy0","sell0","buy2","sell2","close"})Assert.That(root.Q<Button>(name),Is.Not.Null,name);
-   Assert.That(root.Q("salvage-list"),Is.Not.Null);
+   foreach(var name in new[]{"fabricator-recipe","fab-description","fab-reason","fabricator-stat","merchant-empty"})Assert.That(root.Q<Label>(name),Is.Not.Null,name);
+   foreach(var name in new[]{"fabricator-craft","fabricator-fit","fabricator-remove","merchant-tab-buy","merchant-tab-sell","merchant-trade","merchant-sell-all","close"})Assert.That(root.Q<Button>(name),Is.Not.Null,name);
+   Assert.That(root.Q("merchant-scroll"),Is.Not.Null);
   }
 
   [Test] public void FabricatorListsGroupsLocksStatsAndReasons()
@@ -79,19 +80,21 @@ namespace AthenHill.Tests
   [Test] public void SalvageListRowsSellAndDisappearWhenEmpty()
   {
    using var rig=new Rig(CityState.Shop);
-   var root=Hud();var panel=new SalvageSalePanel(root,rig.session);
-   panel.Refresh();
-   Assert.That(root.Q("salvage-list").childCount,Is.Zero);
-   Assert.That(root.Q<Label>("salvage-empty").text,Does.StartWith("Mira buys Damaged Servo, Scrap Alloy"));
+   var root=Hud();var panel=new MerchantPanel(root,rig.session,rig.crafting);
+   panel.Refresh();panel.SetMode(true);
+   Assert.That(root.Q("merchant-item-scrap_alloy"),Is.Null);
    Assert.That(rig.pack.TryApply(new[]{new KeyValuePair<string,int>("scrap_alloy",3),new KeyValuePair<string,int>("lattice_shard",1)},0,out _));
-   panel.Refresh();
-   var row=root.Q("salvage-scrap_alloy");Assert.That(row,Is.Not.Null);Assert.That(root.Q("salvage-list").childCount,Is.EqualTo(1));
-   Assert.That(root.Q<Button>("sell-all-scrap_alloy").text,Is.EqualTo("Sell all · 3 cr"));
-   Assert.That(rig.session.SellSalvage("scrap_alloy",1));panel.Refresh();
-   Assert.That(root.Q("salvage-scrap_alloy"),Is.SameAs(row),"rows update in place");
-   Assert.That(root.Q<Button>("sell-all-scrap_alloy").text,Is.EqualTo("Sell all · 2 cr"));
-   Assert.That(rig.session.SellSalvage("scrap_alloy",2));panel.Refresh();
-   Assert.That(root.Q("salvage-list").childCount,Is.Zero);Assert.That(rig.pack.Credits,Is.EqualTo(28));
+   panel.Refresh();panel.Select("scrap_alloy");
+   Assert.That(root.Q("merchant-item-scrap_alloy"),Is.Not.Null);
+   Assert.That(root.Q("merchant-item-lattice_shard"),Is.Null,"rare quest salvage cannot be sold");
+   Assert.That(root.Q<Button>("merchant-sell-all").text,Is.EqualTo("Sell 3 · 3 cr"));
+   typeof(MerchantPanel).GetMethod("Trade",Any).Invoke(panel,null);
+   Assert.That(rig.pack.Quantity("scrap_alloy"),Is.EqualTo(2));
+   Assert.That(root.Q<Button>("merchant-sell-all").text,Is.EqualTo("Sell 2 · 2 cr"));
+   typeof(MerchantPanel).GetMethod("SellStack",Any).Invoke(panel,null);
+   Assert.That(root.Q("merchant-item-scrap_alloy"),Is.Null);Assert.That(rig.pack.Quantity("scrap_alloy"),Is.Zero);
+   Assert.That(rig.pack.Credits,Is.EqualTo(28));
+   Assert.That(rig.pack.Quantity("lattice_shard"),Is.EqualTo(1));
   }
  }
 }

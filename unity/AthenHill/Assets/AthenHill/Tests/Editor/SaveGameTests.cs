@@ -74,7 +74,7 @@ namespace AthenHill.Tests
     Assert.That(character.TryRaiseSkill("engineering",out reason),reason);
     Assert.That(character.TryEquip("field_rifle","primary",out reason),reason);
     var data=rig.save.Capture();
-    Assert.That(data.version,Is.EqualTo(2));
+    Assert.That(data.version,Is.EqualTo(WardSaveData.CurrentVersion));
     Assert.That(WardSaveFile.TryParse(WardSaveFile.Serialize(data),out var parsed,out reason),reason);
     character.Restore(null);
     Assert.That(rig.save.Apply(parsed),Is.Empty);
@@ -86,6 +86,44 @@ namespace AthenHill.Tests
     Assert.That(character.Equipped("primary"),Is.Null);Assert.That(character.AttributePoints,Is.EqualTo(catalog.initialAttributePoints));
    }
    finally{Object.DestroyImmediate(catalog);}
+  }
+
+  [Test] public void InventoryModulesRoundTripWithoutChangingBermsProgress()
+  {
+   using var rig=new Rig(folder);
+   var catalog=AssetDatabase.LoadAssetAtPath<CharacterCatalog>("Assets/AthenHill/Resources/CharacterCatalog.asset");
+   var character=new CharacterModel(catalog,rig.pack);Set(rig.session,"Character",character);rig.pack.CapacityFailure=character.CapacityFailure;
+   Assert.That(character.TryEquip("targeting_implant_mk1","implant_head",out var reason),reason);
+   Assert.That(rig.pack.Grant("aug_cognition",1,0,out reason),reason);
+   Assert.That(character.TryInstallModification("implant_head",2,"aug_cognition",out reason),reason);
+   float mass=character.CarryWeight;var data=rig.save.Capture();
+   Assert.That(data.version,Is.EqualTo(3));string berms=data.bermsStep;
+   Assert.That(WardSaveFile.TryParse(WardSaveFile.Serialize(data),out var parsed,out reason),reason);
+   character.Restore(null);Assert.That(rig.save.Apply(parsed),Is.Empty);
+   Assert.That(character.InstalledModification("implant_head",2),Is.EqualTo("aug_cognition"));
+   Assert.That(character.Stat("intellect"),Is.EqualTo(11));Assert.That(rig.pack.Quantity("aug_cognition"),Is.Zero);
+   Assert.That(character.CarryWeight,Is.EqualTo(mass).Within(.0001f));Assert.That(rig.save.Capture().bermsStep,Is.EqualTo(berms));
+  }
+
+  [Test] public void PreviousSaveVersionsRemainReadableAndFutureCharacterVersionIsRejected()
+  {
+   foreach(int version in new[]{1,2})
+   {
+    Assert.That(WardSaveFile.TryParse("{\"version\":"+version+",\"credits\":25,\"character\":{\"version\":1,\"level\":2}}",out var data,out var error),error);
+    Assert.That(data.credits,Is.EqualTo(25));Assert.That(data.character.modifications,Is.Null);
+   }
+   var future=new WardSaveData{version=WardSaveData.CurrentVersion,character=new CharacterState{version=CharacterState.CurrentVersion+1}};
+   Assert.That(WardSaveFile.TryParse(WardSaveFile.Serialize(future),out var rejected,out var reason),Is.False);
+   Assert.That(rejected,Is.Null);Assert.That(reason,Does.Contain("newer build"));
+  }
+
+  [Test] public void FutureSaveVersionCannotMutateLiveInventoryOrEquipment()
+  {
+   using var rig=new Rig(folder);
+   int credits=rig.pack.Credits;int flasks=rig.pack.Quantity("water_flask");
+   var data=rig.save.Capture();data.version=WardSaveData.CurrentVersion+1;data.credits=9999;data.items=new[]{new ItemStack("water_flask",99)};
+   WardSaveFile.Write(rig.save.SavePath,data);
+   Assert.That(rig.save.Continue(),Is.False);Assert.That(rig.pack.Credits,Is.EqualTo(credits));Assert.That(rig.pack.Quantity("water_flask"),Is.EqualTo(flasks));
   }
 
   [Test] public void FullRoundTripRestoresEveryStateMachine()

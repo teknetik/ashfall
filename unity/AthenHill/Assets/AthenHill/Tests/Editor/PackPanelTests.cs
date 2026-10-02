@@ -49,11 +49,18 @@ namespace AthenHill.Tests
    foreach(var c in InventoryView.Categories.Where(c=>c.tag!=null))Assert.That(items.Any(i=>i.HasTag(c.tag)),c.tag+" is a real catalog tag");
   }
 
-  [Test] public void PackLayoutHasThreeColumnsAndDetailsTakeTheViewsPlace()
+  [Test] public void ModsFilterIncludesWeaponArmourAndImplantAugmentations()
+  {
+   var items=new[]{new ItemSpec{id="weapon",name="Weapon mod",tags=new[]{"weapon_mod"}},new ItemSpec{id="implant",name="Implant augmentation",tags=new[]{"augmentation"}},new ItemSpec{id="armour",name="Armour mod",tags=new[]{"armour_mod"}},new ItemSpec{id="plate",name="Raw plate",tags=new[]{"refined"}}};
+   var pack=new ShopModel(items);foreach(var item in items)Assert.That(pack.Grant(item.id,1,0,out _),Is.True);
+   Assert.That(InventoryView.Items(items,pack,InventoryView.FindCategory("mods"),null).Select(i=>i.id),Is.EqualTo(new[]{"weapon","implant","armour"}));
+  }
+
+  [Test] public void PackInspectorIsImmediatelyRightOfTheGridAndIndependentOfPreview()
   {
    var root=Hud();
    var content=root.Q("inventory-content");
-   Assert.That(content.Children().Select(c=>c.name),Is.EqualTo(new[]{"pack-col","you-col","preview-col","inventory-details"}));
+   Assert.That(content.Children().Select(c=>c.name),Is.EqualTo(new[]{"pack-col","inventory-details","you-col","preview-col"}));
    foreach(var name in new[]{"pack-tab-items","pack-tab-schematics","details-close"})Assert.That(root.Q<Button>(name),Is.Not.Null,name);
    Assert.That(root.Q<TextField>("pack-search"),Is.Not.Null);
    foreach(var name in new[]{"pack-filters","inventory-grid","inventory-overview","loadout-left","loadout-right","colonist-facts","you-stats","preview-view","you-progress-fill"})Assert.That(root.Q(name),Is.Not.Null,name);
@@ -150,7 +157,7 @@ namespace AthenHill.Tests
    Assert.That(root.Q<Label>(className:"you-stat-note").style.display.value,Is.EqualTo(DisplayStyle.Flex));
   }
 
-  [Test] public void DetailsReplaceTheColonistView()
+  [Test] public void DetailsPreserveTheLiveGridAndLoadoutPreview()
   {
    using var rig=new Rig();rig.Grant("lattice_shard",1);
    var root=Hud();var panel=new PackPanel(root,rig.session,rig.crafting,null,Icons());
@@ -159,12 +166,71 @@ namespace AthenHill.Tests
    Assert.That(root.Q("preview-fallback").style.display.value,Is.EqualTo(DisplayStyle.Flex),"no preview rig: the insignia stands in");
    rig.session.OpenItemDetails("lattice_shard");panel.Refresh();
    Assert.That(root.Q("inventory-details").style.display.value,Is.EqualTo(DisplayStyle.Flex));
-   Assert.That(root.Q("preview-col").style.display.value,Is.EqualTo(DisplayStyle.None));
+   Assert.That(root.Q("preview-col").style.display.value,Is.EqualTo(DisplayStyle.Flex));
+   Assert.That(root.Q("inventory-grid").enabledInHierarchy,Is.True);
    Assert.That(root.Q<Label>("details-title").ClassListContains("rarity-rare"));
    Assert.That(root.Q<Label>("details-prices").text,Is.EqualTo("Rare part · neither Mira nor Brann will trade it"));
    rig.session.CloseItemDetails();panel.Refresh();
-   Assert.That(root.Q("inventory-details").style.display.value,Is.EqualTo(DisplayStyle.None));
+   Assert.That(root.Q("inventory-details").style.display.value,Is.EqualTo(DisplayStyle.Flex));
+   Assert.That(root.Q<Label>("details-title").text,Is.EqualTo(rig.pack.Spec(panel.SelectedKey.Substring(4)).name));
    Assert.That(root.Q("preview-col").style.display.value,Is.EqualTo(DisplayStyle.Flex));
+  }
+
+  [Test] public void SelectingAnotherGridItemImmediatelyUpdatesTheAdjacentInspector()
+  {
+   using var rig=new Rig();rig.Grant("scrap_alloy",2);rig.Grant("lattice_shard",1);
+   var root=Hud();var panel=new PackPanel(root,rig.session,rig.crafting,null,Icons());panel.Opened();
+   typeof(PackPanel).GetMethod("Select",Any).Invoke(panel,new object[]{"inv-lattice_shard"});
+   Assert.That(root.Q<Label>("details-title").text,Is.EqualTo("Quantum Lattice Shard"));
+   Assert.That(root.Q<Label>("details-quantity").text,Does.Contain("Weight").And.Contain("Stack"));
+   Assert.That(root.Q("inventory-grid").enabledInHierarchy,Is.True);
+   typeof(PackPanel).GetMethod("Select",Any).Invoke(panel,new object[]{"inv-scrap_alloy"});
+   Assert.That(root.Q<Label>("details-title").text,Is.EqualTo(rig.pack.Spec("scrap_alloy").name));
+   Assert.That(rig.session.DetailItemId,Is.Null,"selection does not create another modal scope");
+  }
+
+  [TestCase(KeyCode.Return)]
+  [TestCase(KeyCode.KeypadEnter)]
+  public void EnterInspectsWithoutLatchingAnInvisibleDetailsModal(KeyCode key)
+  {
+   using var rig=new Rig();rig.Grant("lattice_shard",1);
+   var root=Hud();var panel=new PackPanel(root,rig.session,rig.crafting,null,Icons());panel.Opened();
+   using var ev=KeyDownEvent.GetPooled(new Event{type=EventType.KeyDown,keyCode=key});
+   typeof(PackPanel).GetMethod("OnTileKey",Any).Invoke(panel,new object[]{ev,"inv-lattice_shard"});
+   Assert.That(panel.SelectedKey,Is.EqualTo("inv-lattice_shard"));
+   Assert.That(root.Q<Label>("details-title").text,Is.EqualTo("Quantum Lattice Shard"));
+   Assert.That(rig.session.DetailItemId,Is.Null,"Esc can close the inventory immediately after keyboard inspection");
+   Assert.That(root.Q("inventory-grid").enabledInHierarchy,Is.True);
+  }
+
+  [Test] public void WeaponDisplayClonesOnlyMeshesAndRendersOnlyDuringItsOwnPass()
+  {
+   var rig=new GameObject("weapon preview test");
+   try
+   {
+    var actor=new GameObject("actor");actor.transform.SetParent(rig.transform);var motor=actor.AddComponent<PlayerMotor>();
+    var source=GameObject.CreatePrimitive(PrimitiveType.Cube);source.name="source weapon";source.transform.SetParent(rig.transform);source.transform.localScale=new Vector3(2,.4f,.6f);
+    var flashCard=GameObject.CreatePrimitive(PrimitiveType.Quad);flashCard.name="flash card";flashCard.transform.SetParent(source.transform,false);
+    var flash=source.AddComponent<MuzzleFlash>();flash.card=flashCard.GetComponent<Renderer>();flash.card.enabled=false;
+    var sourceRenderer=source.GetComponent<Renderer>();var cameraGo=new GameObject("camera");cameraGo.transform.SetParent(rig.transform);
+    var preview=rig.AddComponent<CharacterPreview>();preview.player=motor;preview.previewCamera=cameraGo.AddComponent<Camera>();preview.resolution=new Vector2Int(64,96);
+    var keyGo=new GameObject("studio key");keyGo.transform.SetParent(cameraGo.transform,false);keyGo.transform.localPosition=new Vector3(-2,1,2);
+    var key=keyGo.AddComponent<Light>();key.intensity=12;key.range=11;key.enabled=false;preview.studioLights=new[]{key};
+    var originalPosition=key.transform.localPosition;var originalRotation=key.transform.localRotation;
+    Assert.That(preview.SetWeapon(source,null),Is.True);preview.SetActive(true);
+    var copy=(GameObject)typeof(CharacterPreview).GetField("weaponRoot",Any).GetValue(preview);
+    Assert.That(copy.GetComponentsInChildren<Collider>(),Is.Empty);Assert.That(copy.GetComponentsInChildren<MonoBehaviour>(),Is.Empty);
+    Assert.That(copy.GetComponentsInChildren<Renderer>().Length,Is.EqualTo(1),"muzzle flash card is excluded from the static weapon display");
+    var display=copy.GetComponentInChildren<Renderer>();
+    Assert.That(display.bounds.size.x/display.bounds.size.y,Is.EqualTo(5).Within(.03f),"source proportions survive normalization");Assert.That(display.enabled,Is.False);Assert.That(sourceRenderer.enabled,Is.True);
+    typeof(CharacterPreview).GetMethod("Begin",Any).Invoke(preview,new object[]{default(ScriptableRenderContext),preview.previewCamera});
+    Assert.That(display.enabled,Is.True);Assert.That(sourceRenderer.enabled,Is.True);Assert.That(source.layer,Is.EqualTo(0));
+    typeof(CharacterPreview).GetMethod("End",Any).Invoke(preview,new object[]{default(ScriptableRenderContext),preview.previewCamera});
+    Assert.That(display.enabled,Is.False);preview.ShowCharacter();Assert.That(preview.ShowingWeapon,Is.False);Assert.That(source,Is.Not.Null);
+    Assert.That(key.transform.localPosition,Is.EqualTo(originalPosition));Assert.That(key.transform.localRotation,Is.EqualTo(originalRotation));
+    Assert.That(key.intensity,Is.EqualTo(12));Assert.That(key.range,Is.EqualTo(11));Assert.That(key.enabled,Is.False);
+   }
+   finally{Object.DestroyImmediate(rig);}
   }
 
   [Test] public void ColonistViewIsolatesThePlayerOnlyForItsOwnPass()

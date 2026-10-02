@@ -6,12 +6,9 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 namespace AthenHill
 {
- // THESIS: the field pack follows the user's Ark reference (30 Sep 2026) in Ward's own materials.
- // FORM: PACK column (tabs, search, filter chips, a dense cell grid, the selected-item strip) | YOU column (loadout slots
- // around the colonist card, a progress bar, vitals and pistol stats) | the colonist, turnable. Details replace the view.
- // Shows recorded facts only: carried items and quantities, fitted mods, live vitals, pistol stats and known schematics.
- // Keyboard: arrows move one cell; Up from the top row reaches the filter chips, then the tabs; Down returns to the grid.
- // Enter or Shift+click inspects an item. The search box keeps WASD for typing; its arrow keys leave it.
+ // Ashfall field pack: compact item cells, immediate adjacent inspection, real slot and weight limits.
+ // Loadout tabs expose an anatomical implant/armour map; the separate render pane follows the selected
+ // weapon or character. Implant inspection is strictly 2D. Grid arrows and search remain usable while inspecting.
  public sealed class PackPanel
  {
   public enum Tab { Items, Schematics }
@@ -38,7 +35,8 @@ namespace AthenHill
   readonly Dictionary<string,VisualElement> slotCells=new Dictionary<string,VisualElement>();
   readonly Dictionary<string,Label> factValues=new Dictionary<string,Label>();
   readonly List<(StatLabel label,Label value,Label delta)> statRows=new List<(StatLabel,Label,Label)>();
-  VisualElement vitalityFill,nanoFill,pistolHeading,pistolNote;
+  VisualElement vitalityFill,nanoFill,pistolHeading,pistolNote,slotCapacityFill,weightCapacityFill;
+  Label slotCapacityText,weightCapacityText,capacityHelp;
   Label vitalityValue,nanoValue;
   IVisualElementScheduledItem live;
   string itemFilter="all",schematicFilter="all",searchText="",selectedItem,selectedSchematic,hoverKey,lastDetailId,signature,chipsFor;
@@ -84,6 +82,7 @@ namespace AthenHill
    previewView.RegisterCallback<PointerCaptureOutEvent>(_=>dragPointer=-1);
    previewView.RegisterCallback<ClickEvent>(e=>{if(e.clickCount==2&&preview)preview.Yaw=0;});
    characterPanel=new CharacterLoadoutPanel(root,session,crafting,()=>selectedItem,Refresh);
+   BuildCapacity();
   }
   /// Slots, facts and stat rows come from the crafting data, which the crafting session loads after the HUD starts.
   void EnsureBuilt()
@@ -126,18 +125,66 @@ namespace AthenHill
    foreach(var chip in chips)chip.EnableInClassList("active-chip",(string)chip.userData==Filter);
    RebuildGrid();
    UpdateOverview();
+   UpdateCapacity();
    UpdateDetails();
    UpdateYou();
    characterPanel.Refresh();
-   bool showPreview=open&&!DetailsOpen&&preview;
+   RefreshPreview();
+  }
+  void BuildCapacity()
+  {
+   var box=root.Q("pack-capacity");if(box==null)return;
+   (Label text,VisualElement fill) Meter(string name)
+   {
+    var cell=new VisualElement();cell.AddToClassList("pack-capacity-meter");
+    var text=new Label{name=name};text.AddToClassList("pack-capacity-value");cell.Add(text);
+    var track=new VisualElement();track.AddToClassList("pack-capacity-track");
+    var fill=new VisualElement();fill.AddToClassList("pack-capacity-fill");track.Add(fill);cell.Add(track);box.Add(cell);return(text,fill);
+   }
+   var slots=Meter("pack-slot-capacity");slotCapacityText=slots.text;slotCapacityFill=slots.fill;
+   var weight=Meter("pack-weight-capacity");weightCapacityText=weight.text;weightCapacityFill=weight.fill;
+   capacityHelp=new Label("Limited by slots and weight.");capacityHelp.AddToClassList("pack-capacity-help");box.Add(capacityHelp);
+  }
+  void UpdateCapacity()
+  {
+   if(slotCapacityText==null)return;
+   var character=session.Character;
+   int used=character?.PackSlotsUsed??session.Shop.Carried.Count();int max=character?.PackSlotCapacity??0;
+   slotCapacityText.text=max>0?$"SLOTS  {used} / {max}":$"SLOTS  {used}";
+   float weight=character?.CarryWeight??session.Shop.Carried.Sum(x=>(session.Shop.Spec(x.Key)?.weightKg??0)*x.Value),limit=character?.CarryCapacity??0;
+   weightCapacityText.text=limit>0?$"WEIGHT  {weight:0.0} / {limit:0.#} kg":$"WEIGHT  {weight:0.0} kg";
+   slotCapacityFill.style.width=Length.Percent(max>0?Mathf.Clamp01(used/(float)max)*100:0);
+   weightCapacityFill.style.width=Length.Percent(limit>0?Mathf.Clamp01(weight/limit)*100:0);
+   weightCapacityFill.EnableInClassList("capacity-full",limit>0&&weight>=limit);slotCapacityFill.EnableInClassList("capacity-full",max>0&&used>=max);
+   capacityHelp.text=character!=null?$"One stack per slot · pack {character.PackWeight:0.0} / {character.StorageCapacity:0.#} kg":"One item stack occupies one slot.";
+  }
+  void RefreshPreview()
+  {
+   bool wants=characterPanel.WantsPreview;
+   bool weapon=characterPanel.CurrentSection=="PRIMARY"||characterPanel.CurrentSection=="SECONDARY";
+   string item=characterPanel.PreviewWeaponItem;
+   bool available=preview;
    if(preview)
    {
-    preview.SetActive(showPreview);
-    if(showPreview&&preview.Texture)previewView.style.backgroundImage=new StyleBackground(Background.FromRenderTexture(preview.Texture));
+    if(weapon)
+    {
+     var definition=Model?.FindWeapon(item);
+     GameObject source=definition?.previewPrefab;
+     if(!source&&item=="field_rifle")source=Resources.Load<GameObject>("WeaponPreviews/FieldRifle");
+     if(!source&&item=="scrap_pistol"&&Combat)source=Combat.heldPistol;
+     available=preview.SetWeapon(source,definition!=null?Model.GetLoadout(definition.id):null);
+    }
+    else preview.ShowCharacter();
+    preview.SetActive(open&&wants&&available);
+    if(preview.Active&&preview.Texture)previewView.style.backgroundImage=new StyleBackground(Background.FromRenderTexture(preview.Texture));
+    else previewView.style.backgroundImage=StyleKeyword.None;
    }
-   previewCol.style.display=DetailsOpen?DisplayStyle.None:DisplayStyle.Flex;
+   previewCol.style.display=wants?DisplayStyle.Flex:DisplayStyle.None;
    previewFallback.style.display=preview&&preview.Active?DisplayStyle.None:DisplayStyle.Flex;
-   previewHint.style.display=preview&&preview.Active?DisplayStyle.Flex:DisplayStyle.None;
+   previewHint.style.display=DisplayStyle.Flex;
+   previewHint.text=preview&&preview.Active?"Drag to rotate":weapon?(item==null?"Equip a weapon to inspect":"Preview model unavailable"):"Character preview unavailable";
+   var name=root.Q<Label>("preview-name");if(name!=null)name.text=weapon?(session.Shop.Spec(item)?.name??"NO WEAPON"):"COLONIST";
+
   }
 
   public void SetTab(Tab tab)
@@ -243,8 +290,8 @@ namespace AthenHill
    tile.RegisterCallback<PointerEnterEvent>(_=>{hoverKey=key;UpdateOverview();});
    tile.RegisterCallback<PointerLeaveEvent>(_=>{if(hoverKey==key)hoverKey=null;UpdateOverview();});
    tile.RegisterCallback<FocusInEvent>(_=>Select(key));
-   tile.RegisterCallback<ClickEvent>(ev=>{Select(key);if(ev.shiftKey)Inspect(key);});
-   tile.RegisterCallback<KeyDownEvent>(ev=>{if(ev.keyCode==KeyCode.Return||ev.keyCode==KeyCode.KeypadEnter){Inspect(key);ev.StopPropagation();}});
+   tile.RegisterCallback<ClickEvent>(ev=>Select(key));
+   tile.RegisterCallback<KeyDownEvent>(ev=>OnTileKey(ev,key));
    tiles[key]=tile;keys.Add(key);
    if(key.StartsWith(ItemPrefix))characterPanel.BindInventory(tile,key.Substring(ItemPrefix.Length));
    return tile;
@@ -253,9 +300,15 @@ namespace AthenHill
   {
    if(key.StartsWith(ItemPrefix))selectedItem=key.Substring(ItemPrefix.Length);else if(key.StartsWith(SchematicPrefix))selectedSchematic=key.Substring(SchematicPrefix.Length);
    foreach(var pair in tiles)pair.Value.EnableInClassList("selected",pair.Key==key);
-   UpdateOverview();
+   if(DetailsOpen)session.CloseItemDetails();
+   UpdateOverview();UpdateDetails();characterPanel.Refresh();
   }
-  void Inspect(string key){if(key.StartsWith(ItemPrefix))session.OpenItemDetails(key.Substring(ItemPrefix.Length));}
+  void OnTileKey(KeyDownEvent ev,string key)
+  {
+   if(ev.keyCode!=KeyCode.Return&&ev.keyCode!=KeyCode.KeypadEnter)return;
+   // Inspection is an adjacent selection, so Enter must not create a second modal state to dismiss.
+   Select(key);ev.StopPropagation();
+  }
   /// Grid columns, read from the laid-out cells (the grid wraps to its width); from the width before layout.
   public int Columns()
   {
@@ -263,18 +316,18 @@ namespace AthenHill
    bool laidOut=cells.Count>1&&!float.IsNaN(cells[0].width)&&cells[0].width>0;
    return laidOut?UiNavigation.Columns(cells):WidthColumns();
   }
-  /// Cells per row for the grid's width (89 px cells, 5 px gutters); the authored width before the first layout.
-  int WidthColumns(){float w=grid.resolvedStyle.width;if(float.IsNaN(w)||w<=0)w=586;return Mathf.Max(1,Mathf.FloorToInt((w+.5f)/94f));}
+  /// Cells per row for the grid's width (64 px cells, 5 px gutters); the authored width before the first layout.
+  int WidthColumns(){float w=grid.resolvedStyle.width;if(float.IsNaN(w)||w<=0)w=414;return Mathf.Max(1,Mathf.FloorToInt((w+.5f)/69f));}
 
   // ------------------------------------------------------------------ keyboard
   bool Focus(VisualElement v){if(v==null||v.panel==null||!v.enabledInHierarchy)return false;v.Focus();return true;}
-  bool FocusSelected()=>DetailsOpen?Focus(detailsClose):SelectedKey!=null&&tiles.TryGetValue(SelectedKey,out var b)&&Focus(b);
+  bool FocusSelected()=>SelectedKey!=null&&tiles.TryGetValue(SelectedKey,out var b)&&Focus(b);
   void FocusGrid(){if(!FocusSelected()&&keys.Count>0)Focus(tiles[keys[0]]);}
   Button ActiveChip()=>chips.FirstOrDefault(c=>(string)c.userData==Filter)??chips.FirstOrDefault();
   Button ActiveTabButton()=>ActiveTab==Tab.Items?tabItems:tabSchematics;
   void Navigate(NavigationMoveEvent e)
   {
-   if(session.State!=CityState.Inventory||DetailsOpen||!UiNavigation.IsArrow(e.direction))return;
+   if(session.State!=CityState.Inventory||!UiNavigation.IsArrow(e.direction))return;
    var focused=root.focusController?.focusedElement as VisualElement;
    if(focused==null)return;
    var dir=e.direction;
@@ -389,16 +442,18 @@ namespace AthenHill
   }
   static string RarityName(ItemRarity r)=>r==ItemRarity.Rare?"Rare":r==ItemRarity.Uncommon?"Uncommon":"Common";
 
-  // ------------------------------------------------------------------ details (Enter / Shift+click)
+  // ------------------------------------------------------------------ adjacent item details (click / keyboard selection)
   void UpdateDetails()
   {
-   bool detailsOpen=DetailsOpen;
-   details.style.display=detailsOpen?DisplayStyle.Flex:DisplayStyle.None;
-   scroll.SetEnabled(!detailsOpen);grid.SetEnabled(!detailsOpen);
+   string detailId=session.DetailItemId??(ActiveTab==Tab.Items?selectedItem:null);
+   bool detailsOpen=!string.IsNullOrEmpty(detailId);
+   details.style.display=DisplayStyle.Flex;
+   detailsClose.style.display=DisplayStyle.None;
+   scroll.SetEnabled(true);grid.SetEnabled(true);
    if(detailsOpen)
    {
-    var item=session.catalog.items.FirstOrDefault(i=>i!=null&&i.id==session.DetailItemId);
-    int quantity=session.Shop.Quantity(session.DetailItemId);
+    var item=session.catalog.items.FirstOrDefault(i=>i!=null&&i.id==detailId);
+    int quantity=session.Shop.Quantity(detailId);
     detailsTitle.text=item!=null?item.name:"Item details";
     detailsQuantity.text=item!=null?$"{quantity} carried · {RarityName(item.rarity)}":$"{quantity} carried";
     foreach(var c in rarityClasses)detailsTitle.RemoveFromClassList(c);
@@ -408,9 +463,26 @@ namespace AthenHill
     if(item!=null){var equipment=characterPanel.DescribeItem(item.id);if(equipment.Length>0)detailsDescription.text+="\n\n"+equipment;}
     if(Model!=null&&item!=null){var uses=KnownUses(Model,item);if(uses.Length>0)detailsDescription.text+="\n\nKnown uses: "+uses+" ("+CraftingText.WorkbenchName+")";}
     SetIcon(detailsIcon,item?.icon);
-    if(lastDetailId!=session.DetailItemId){lastDetailId=session.DetailItemId;root.schedule.Execute(()=>detailsClose?.Focus());}
+    lastDetailId=detailId;
+    string stack=item!=null&&item.maxStack>0?$"{quantity} / {item.maxStack}":$"{quantity} · no stack limit";
+    var measured=$"Weight   {item?.weightKg??0:0.00} kg each\nStack   {stack}\nSlot size   1 stack";
+    detailsQuantity.text+="\n"+measured;
    }
-   else if(lastDetailId!=null){lastDetailId=null;root.schedule.Execute(()=>FocusSelected());}
+   else
+   {
+    if(ActiveTab==Tab.Schematics&&Model!=null&&selectedSchematic!=null)
+    {
+     var recipe=Model.Recipe(selectedSchematic);
+     if(recipe!=null)
+     {
+      var output=Model.Item(recipe.outputItemId);detailsTitle.text=recipe.name;detailsQuantity.text=Ready(recipe)?"PARTS ON HAND":"PARTS SHORT";detailsPrices.text="Fabricate at Brann's workbench";
+      detailsDescription.text=(output?.description??"")+"\n\n"+string.Join("\n",(recipe.inputs??Array.Empty<CraftIngredient>()).Select(i=>$"{CraftingText.InputName(Model,i)}   {Model.Available(i)} / {i.quantity}"));SetIcon(detailsIcon,output?.icon);return;
+     }
+    }
+    lastDetailId=null;detailsTitle.text=ActiveTab==Tab.Schematics?"SCHEMATICS":"ITEM DETAILS";detailsQuantity.text="";detailsPrices.text="";
+    detailsDescription.text=ActiveTab==Tab.Schematics?"Select a schematic to see its parts in the pack. Fabrication takes place at Brann's workbench in Salvage.":"Select an item to inspect its weight, value, requirements and uses.";
+    SetIcon(detailsIcon,null,true);
+   }
   }
   /// Known schematics that consume this item, directly or through one of its tags.
   static string KnownUses(CraftingModel model,ItemSpec item)=>string.Join(", ",model.Data.recipes.Where(r=>model.Knows(r.id)&&r.outputItemId!=item.id&&r.inputs!=null&&r.inputs.Any(i=>i.kind=="item"?i.id==item.id:item.HasTag(i.id))).Select(r=>r.name));

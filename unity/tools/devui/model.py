@@ -60,7 +60,51 @@ def validate(data):
     for i, x in enumerate(data['items']):
         if not isinstance(x, dict): continue
         w = f'items[{i}]'
-        if set(x) != {'id','name','category','subtype','tier','rarity','weightKg','stack','tags','stats'}: errors.append(f'{w}: unexpected or missing fields')
+        required = {'id','name','category','subtype','tier','rarity','weightKg','stack','tags','stats'}
+        optional = {'description','designNotes','buyPrice','sellPrice','iconAsset','aiProvenance','equipment'}
+        if not required <= set(x) or set(x) - required - optional: errors.append(f'{w}: unexpected or missing fields')
+        for field, limit in [('description', 1200), ('designNotes', 2000)]:
+            if field in x and (not isinstance(x[field], str) or len(x[field]) > limit): errors.append(f'{w}.{field}: invalid text')
+        for field in ('buyPrice', 'sellPrice'):
+            if field in x: number(x[field], w+'.'+field, 0, 1000000, True)
+        if 'iconAsset' in x and (not isinstance(x['iconAsset'], str) or not re.fullmatch(r'/api/ai/assets/[0-9a-f]{32}\.png', x['iconAsset'])):
+            errors.append(f'{w}.iconAsset: expected a local generated PNG')
+        if 'aiProvenance' in x and (not isinstance(x['aiProvenance'], list) or len(x['aiProvenance']) > 32 or any(not isinstance(v, str) or not re.fullmatch('[0-9a-f]{32}', v) for v in x['aiProvenance'])):
+            errors.append(f'{w}.aiProvenance: expected at most 32 generation IDs')
+        if 'equipment' in x:
+            equipment = x['equipment']
+            if not isinstance(equipment, dict) or set(equipment) != {'kind','slots','socketTypes','modificationSockets','modifiers'}:
+                errors.append(f'{w}.equipment: invalid equipment definition')
+            else:
+                if equipment['kind'] not in ('implant','armour','augmentation','armour_mod'): errors.append(f'{w}.equipment: unsupported kind')
+                for field in ('slots','socketTypes'):
+                    values = equipment[field]
+                    if not isinstance(values, list) or len(values) > 16 or any(not isinstance(v, str) or not ID.fullmatch(v) for v in values) or len(set(v for v in values if isinstance(v,str))) != len(values):
+                        errors.append(f'{w}.equipment.{field}: invalid IDs')
+                if equipment['kind'] in ('implant', 'armour') and not equipment['slots']:
+                    errors.append(f'{w}.equipment: equipment hosts need at least one body slot')
+                if equipment['kind'] in ('augmentation', 'armour_mod') and not equipment['socketTypes']:
+                    errors.append(f'{w}.equipment: components need a compatible socket type')
+                sockets = equipment['modificationSockets']
+                if not isinstance(sockets, list) or len(sockets) > 8:
+                    errors.append(f'{w}.equipment.modificationSockets: expected at most 8 sockets')
+                else:
+                    socket_ids = set()
+                    for socket in sockets:
+                        if not isinstance(socket, dict) or set(socket) != {'id','label','type'} or not isinstance(socket.get('id'), str) or not ID.fullmatch(socket['id']) or not isinstance(socket.get('label'), str) or not 1 <= len(socket['label']) <= 80 or socket.get('type') not in ('implant','armour_plate','armour_lining','armour_motor','armour_utility'):
+                            errors.append(f'{w}.equipment: invalid socket')
+                        elif socket['id'] in socket_ids: errors.append(f'{w}.equipment: duplicate socket ID')
+                        else: socket_ids.add(socket['id'])
+                    if equipment['kind'] == 'implant' and (len(sockets) != 3 or any(not isinstance(v, dict) or v.get('type') != 'implant' for v in sockets)):
+                        errors.append(f'{w}.equipment: implants require exactly three augmentation sockets')
+                modifiers = equipment['modifiers']
+                if not isinstance(modifiers, list) or len(modifiers) > 32: errors.append(f'{w}.equipment.modifiers: expected at most 32 effects')
+                else:
+                    for modifier in modifiers:
+                        if not isinstance(modifier, dict) or set(modifier) != {'stat','flat','percent'} or not isinstance(modifier.get('stat'), str) or not re.fullmatch(r'[a-z][A-Za-z0-9]{1,63}', modifier['stat']):
+                            errors.append(f'{w}.equipment: invalid modifier'); continue
+                        number(modifier['flat'], w+'.equipment.flat', -100000, 100000)
+                        number(modifier['percent'], w+'.equipment.percent', -1, 100)
         for field in ('category','subtype','rarity'):
             if not isinstance(x.get(field), str) or len(x[field]) > 80: errors.append(f'{w}.{field}: invalid text')
         number(x.get('tier'), w+'.tier', 0, 100, True)

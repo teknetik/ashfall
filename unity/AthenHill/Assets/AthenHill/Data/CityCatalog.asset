@@ -403,20 +403,20 @@ MonoBehaviour:
     excludeFromTrade: 1
     rarity: 1
     sellOnly: 0
-    icon: pistol-icon
+    icon: rifle-icon
     partsPrice: 0
     weightKg: 4.8
   - id: field_vest
     name: Field Vest
     description: Salvaged plates and stitched canvas protect the torso without sealing out the heat.
-    buyPrice: 0
-    sellPrice: 0
+    buyPrice: 30
+    sellPrice: 10
     startingQuantity: 0
     tags:
     - armour
     - armour:chest
     maxStack: 1
-    excludeFromTrade: 1
+    excludeFromTrade: 0
     rarity: 0
     sellOnly: 0
     icon: pack-icon
@@ -425,14 +425,14 @@ MonoBehaviour:
   - id: field_boots
     name: Field Boots
     description: Reinforced boots with replaceable soles and dust seals.
-    buyPrice: 0
-    sellPrice: 0
+    buyPrice: 20
+    sellPrice: 7
     startingQuantity: 1
     tags:
     - armour
     - armour:feet
     maxStack: 1
-    excludeFromTrade: 1
+    excludeFromTrade: 0
     rarity: 0
     sellOnly: 0
     icon: pack-icon
@@ -441,14 +441,14 @@ MonoBehaviour:
   - id: targeting_implant_mk1
     name: Neural Targeting Implant Mk I
     description: A basic targeting lattice that improves sighting and pistol control.
-    buyPrice: 0
-    sellPrice: 0
+    buyPrice: 40
+    sellPrice: 13
     startingQuantity: 1
     tags:
     - implant
     - implant:head
     maxStack: 1
-    excludeFromTrade: 1
+    excludeFromTrade: 0
     rarity: 1
     sellOnly: 0
     icon: pack-icon
@@ -473,14 +473,14 @@ MonoBehaviour:
   - id: myofibre_implant
     name: Reinforced Myofibre Implant
     description: A serviceable muscle-assist mesh for carrying and close work.
-    buyPrice: 0
-    sellPrice: 0
+    buyPrice: 48
+    sellPrice: 16
     startingQuantity: 0
     tags:
     - implant
     - implant:arms
     maxStack: 1
-    excludeFromTrade: 1
+    excludeFromTrade: 0
     rarity: 1
     sellOnly: 0
     icon: pack-icon
@@ -489,14 +489,15 @@ MonoBehaviour:
   - id: field_backpack
     name: Field Backpack
     description: A braced canvas pack with modular external cargo straps.
-    buyPrice: 0
-    sellPrice: 0
+    buyPrice: 24
+    sellPrice: 8
     startingQuantity: 0
     tags:
     - storage
     - storage:backpack
+    - backpack
     maxStack: 1
-    excludeFromTrade: 1
+    excludeFromTrade: 0
     rarity: 0
     sellOnly: 0
     icon: pack-icon
@@ -535,6 +536,291 @@ MonoBehaviour:
     icon: pack-icon
     partsPrice: 0
     weightKg: 1
+  - id: aug_cognition
+    name: Cognition Relay
+    description: A ceramic relay that stabilises the implant signal path during complex work.
+    buyPrice: 18
+    sellPrice: 6
+    startingQuantity: 0
+    tags:
+    - augmentation
+    maxStack: 4
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: capacitor-icon
+    partsPrice: 0
+    weightKg: 0.08
+  - id: aug_sighting
+    name: Sighting Co-processor
+    description: A compact targeting co-processor for a cranial implant. Helps hold a steadier sight picture.
+    buyPrice: 22
+    sellPrice: 8
+    startingQuantity: 0
+    tags:
+    - augmentation
+    maxStack: 4
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: optic-icon
+    partsPrice: 0
+    weightKg: 0.1
+  - id: aug_reflex
+    name: Reflex Buffer
+    description: A low-latency buffer for neural and limb interfaces. Sharpens controlled movement.
+    buyPrice: 24
+    sellPrice: 8
+    startingQuantity: 0
+    tags:
+    - augmentation
+    maxStack: 4
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: control-core-icon
+    partsPrice: 0
+    weightKg: 0.12
+  - id: aug_capacitor
+    name: Reserve Nanocell
+    description: A sealed reserve cell that gives the implant additional nano capacity.
+    buyPrice: 20
+    sellPrice: 7
+    startingQuantity: 0
+    tags:
+    - augmentation
+    maxStack: 4
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: charge-core-icon
+    partsPrice: 0
+    weightKg: 0.18
+  - id: aug_recovery
+    name: Recovery Regulator
+    description: A regulator that smooths recovery demand after exertion.
+    buyPrice: 16
+    sellPrice: 5
+    startingQuantity: 0
+    tags:
+    - augmentation
+    maxStack: 4
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: nanites-icon
+    partsPrice: 0
+    weightKg: 0.1
+  - id: aug_loadbearing
+    name: Load-bearing Coupler
+    description: A reinforced coupler for limb implants. Shares load across the assisted muscle fibres.
+    buyPrice: 28
+    sellPrice: 10
+    startingQuantity: 0
+    tags:
+    - augmentation
+    maxStack: 4
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: servo-icon
+    partsPrice: 0
+    weightKg: 0.2
+  - id: armour_extra_plate
+    name: Ablative Chest Plate
+    description: A replaceable ceramic-faced plate. Fits an outer or inner chest plate pocket.
+    buyPrice: 14
+    sellPrice: 5
+    startingQuantity: 0
+    tags:
+    - armour_mod
+    maxStack: 4
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: alloy-plate-icon
+    partsPrice: 0
+    weightKg: 0.75
+  - id: armour_impact_liner
+    name: Impact Liner
+    description: A layered shock liner for modular armour. Reduces physical impact transfer.
+    buyPrice: 18
+    sellPrice: 6
+    startingQuantity: 0
+    tags:
+    - armour_mod
+    maxStack: 4
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: alloy-icon
+    partsPrice: 0
+    weightKg: 0.35
+  - id: armour_thermal_liner
+    name: Thermal Liner
+    description: A reflective woven liner that reduces heat transfer through armour.
+    buyPrice: 16
+    sellPrice: 5
+    startingQuantity: 0
+    tags:
+    - armour_mod
+    maxStack: 4
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: pack-icon
+    partsPrice: 0
+    weightKg: 0.25
+  - id: armour_leg_motor
+    name: Stride-assist Motor
+    description: A compact motor pair for powered leg rails. Increases movement speed while fitted.
+    buyPrice: 20
+    sellPrice: 7
+    startingQuantity: 0
+    tags:
+    - armour_mod
+    maxStack: 4
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: actuator-icon
+    partsPrice: 0
+    weightKg: 0.9
+  - id: armour_ankle_stabiliser
+    name: Ankle Stabiliser
+    description: A spring-damped ankle unit that eases sustained movement in field boots.
+    buyPrice: 15
+    sellPrice: 5
+    startingQuantity: 0
+    tags:
+    - armour_mod
+    maxStack: 4
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: servo-icon
+    partsPrice: 0
+    weightKg: 0.4
+  - id: armour_grip_damper
+    name: Grip Damper
+    description: A vibration-damped glove insert for steadier control of a held weapon.
+    buyPrice: 19
+    sellPrice: 6
+    startingQuantity: 0
+    tags:
+    - armour_mod
+    maxStack: 4
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: grip-mk1-icon
+    partsPrice: 0
+    weightKg: 0.15
+  - id: field_helmet
+    name: Field Helmet
+    description: A fitted composite shell with a replaceable liner and sealed utility mount.
+    buyPrice: 32
+    sellPrice: 11
+    startingQuantity: 0
+    tags:
+    - armour
+    maxStack: 1
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: pack-icon
+    partsPrice: 0
+    weightKg: 1.2
+  - id: field_armguards
+    name: Field Arm Guards
+    description: Segmented guards that leave the elbows clear for tool and weapon work.
+    buyPrice: 26
+    sellPrice: 9
+    startingQuantity: 0
+    tags:
+    - armour
+    maxStack: 1
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: pack-icon
+    partsPrice: 0
+    weightKg: 1.4
+  - id: field_gloves
+    name: Field Gloves
+    description: Reinforced gloves with a replaceable grip insert and thin inner liner.
+    buyPrice: 18
+    sellPrice: 6
+    startingQuantity: 0
+    tags:
+    - armour
+    maxStack: 1
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: pack-icon
+    partsPrice: 0
+    weightKg: 0.5
+  - id: field_leggings
+    name: Field Leg Armour
+    description: Articulated thigh and shin panels with a serviceable powered-assist rail.
+    buyPrice: 38
+    sellPrice: 13
+    startingQuantity: 0
+    tags:
+    - armour
+    maxStack: 1
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: pack-icon
+    partsPrice: 0
+    weightKg: 2.6
+  - id: cardiac_implant
+    name: Cardiac Regulator
+    description: A serviceable regulator that supports prolonged exertion. Accepts three augmentations.
+    buyPrice: 42
+    sellPrice: 14
+    startingQuantity: 0
+    tags:
+    - implant
+    maxStack: 1
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: capacitor-icon
+    partsPrice: 0
+    weightKg: 0.22
+  - id: stride_implant
+    name: Stride Interface
+    description: A limb-control interface that smooths the effort of moving in field gear. Accepts three augmentations.
+    buyPrice: 44
+    sellPrice: 15
+    startingQuantity: 0
+    tags:
+    - implant
+    maxStack: 1
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: servo-icon
+    partsPrice: 0
+    weightKg: 0.28
+  - id: dermal_implant
+    name: Dermal Support Mesh
+    description: A subdermal support mesh for exposed work. Accepts three augmentations.
+    buyPrice: 36
+    sellPrice: 12
+    startingQuantity: 0
+    tags:
+    - implant
+    maxStack: 1
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: alloy-icon
+    partsPrice: 0
+    weightKg: 0.25
   destinations:
   - id: crosswind_reach
     name: Crosswind Reach

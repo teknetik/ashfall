@@ -131,13 +131,15 @@ namespace AthenHill.Tests
 
   [Test] public void UxmlHasTheNewLayoutAndRadioElements()
   {
-   var root=Hud();
-   foreach(var name in new[]{"radio","fab-columns","fab-recipes","fab-detail","fab-pistol","shop-columns","shop-buy","shop-sell","parts-list"})Assert.That(root.Q(name),Is.Not.Null,name);
-   foreach(var name in new[]{"radio-text","radio-speaker","parts-help"})Assert.That(root.Q<Label>(name),Is.Not.Null,name);
-   // Tab order in the shop: the three legacy rows keep their names and order, then parts, then salvage.
+   using var rig=new Rig(CityState.Shop);
+   var root=Hud();var panel=new MerchantPanel(root,rig.session,rig.crafting);panel.Refresh();
+   foreach(var name in new[]{"radio","fab-columns","fab-recipes","fab-detail","fab-pistol","merchant-columns","merchant-browser","merchant-detail","merchant-scroll"})Assert.That(root.Q(name),Is.Not.Null,name);
+   foreach(var name in new[]{"radio-text","radio-speaker","merchant-balance","merchant-price"})Assert.That(root.Q<Label>(name),Is.Not.Null,name);
    var shop=root.Q("shop-panel");var names=shop.Query<Button>().ToList().Select(b=>b.name).ToList();
-   Assert.That(names.Take(6),Is.EqualTo(new[]{"buy0","sell0","buy1","sell1","buy2","sell2"}));
-   Assert.That(root.Q("parts-list").parent,Is.EqualTo(root.Q("shop-buy")));Assert.That(root.Q("salvage-list").parent,Is.EqualTo(root.Q("shop-sell")));
+   Assert.That(names.Take(2),Is.EqualTo(new[]{"merchant-tab-buy","merchant-tab-sell"}),"buy and sell are explicit modes above one stock browser");
+   Assert.That(root.Q("merchant-scroll").parent,Is.EqualTo(root.Q("merchant-browser")));
+   Assert.That(root.Q("merchant-trade").GetFirstAncestorOfType<ScrollView>(),Is.Not.EqualTo(root.Q("merchant-scroll")),"checkout is outside the scrolling stock");
+   Assert.That(root.Q("merchant-columns").Children().Select(c=>c.name),Is.EqualTo(new[]{"merchant-browser","merchant-detail"}));
    var startup=AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/AthenHill/UI/StartupMenu.uxml").CloneTree();
    Assert.That(startup.Q("new-game-confirm").parent,Is.EqualTo(startup.Q("startup-actions").parent),"the confirmation takes the actions' place");
   }
@@ -262,26 +264,31 @@ namespace AthenHill.Tests
   [Test] public void PartsListBuysThroughTheSessionAndRevealsSchematics()
   {
    using var rig=new Rig(CityState.Shop,40);
-   var root=Hud();var panel=new PartsShopPanel(root,rig.session);panel.Refresh();
-   Assert.That(root.Q("parts-list").childCount,Is.EqualTo(6));
-   Assert.That(root.Q<Button>("buy-part-micro_capacitor").text,Is.EqualTo("Buy · 12 cr"));
-   string found=null;rig.session.PartBought+=p=>found=p.itemId;
-   Assert.That(rig.session.BuyPart("micro_capacitor"));panel.Refresh();
-   Assert.That(found,Is.EqualTo("micro_capacitor"));Assert.That(rig.pack.Credits,Is.EqualTo(28));
-   Assert.That(root.Q("part-scrap_alloy").Q<Label>(className:"item-copy").text,Does.StartWith("Scrap Alloy · 0 carried"));
-   Assert.That(rig.session.BuyPart("optic_lens_cracked"));Assert.That(rig.session.BuyPart("optic_lens_cracked"));Assert.That(rig.pack.Credits,Is.Zero);
-   Assert.That(rig.session.BuyPart("optic_lens_cracked"),Is.False);panel.Refresh();
-   Assert.That(root.Q<Button>("buy-part-optic_lens_cracked").enabledSelf,Is.False,"disabled when credits fall short");
-   // A bought part reveals its schematics exactly like a pickup.
+   var root=Hud();var panel=new MerchantPanel(root,rig.session,rig.crafting);panel.Refresh();
+   var parts=City().items.Where(ShopModel.SellsAsPart).ToArray();Assert.That(parts.Length,Is.EqualTo(6));
+   foreach(var part in parts)Assert.That(root.Q<Button>("merchant-item-"+part.id),Is.Not.Null,part.id+" remains stocked");
+   panel.Select("micro_capacitor");Assert.That(root.Q<Button>("merchant-trade").text,Is.EqualTo("Buy one · 12 cr"));
    Assert.That(rig.model.Knows("recipe_charge_cell_core"),Is.False);
-   var purchase=new PartPurchase{itemId="micro_capacitor"};
-   typeof(CraftingSession).GetMethod("OnPartBought",Any).Invoke(rig.crafting,new object[]{purchase});
-   Assert.That(rig.model.Knows("recipe_charge_cell_core"));Assert.That(purchase.note,Is.EqualTo(" Schematic discovered: Charge Cell Core."));
+   string found=null,note=null;
+   rig.session.PartBought+=purchase=>
+   {
+    found=purchase.itemId;
+    typeof(CraftingSession).GetMethod("OnPartBought",Any).Invoke(rig.crafting,new object[]{purchase});note=purchase.note;
+   };
+   void Trade()=>typeof(MerchantPanel).GetMethod("Trade",Any).Invoke(panel,null);
+   Trade();
+   Assert.That(found,Is.EqualTo("micro_capacitor"));Assert.That(rig.pack.Credits,Is.EqualTo(28));Assert.That(rig.pack.Quantity("micro_capacitor"),Is.EqualTo(1));
+   Assert.That(rig.model.Knows("recipe_charge_cell_core"));Assert.That(note,Is.EqualTo(" Schematic discovered: Charge Cell Core."),"merchant purchase raises the same acquisition event as the old parts control");
+   Assert.That(root.Q("merchant-item-scrap_alloy").Q<Label>(className:"merchant-row-meta").text,Does.Contain("0 carried"));
+   panel.Select("optic_lens_cracked");Trade();Trade();Assert.That(rig.pack.Credits,Is.Zero);
+   Assert.That(root.Q<Button>("merchant-trade").enabledSelf,Is.False,"disabled when credits fall short");
+   int before=rig.pack.Quantity("optic_lens_cracked");Trade();
+   Assert.That(rig.pack.Quantity("optic_lens_cracked"),Is.EqualTo(before),"the underlying action also rejects an unaffordable purchase");Assert.That(rig.pack.Credits,Is.Zero);
   }
 
   [Test] public void EveryItemHasItsOwnIllustration()
   {
-   var uss=File.ReadAllText("Assets/AthenHill/UI/CityHUD.uss");
+   var uss=File.ReadAllText("Assets/AthenHill/UI/CityHUD.uss")+"\n"+File.ReadAllText("Assets/AthenHill/UI/MerchantPanel.uss");
    var v2=City().items.Where(x=>x.HasTag("salvage")||x.HasTag("refined")||x.HasTag("weapon_mod")).Where(x=>x.id!="scrap_coil"&&x.id!="rifle_precision_barrel").ToList();
    Assert.That(v2.Count,Is.EqualTo(18));
    Assert.That(v2.Select(x=>x.icon).Distinct().Count(),Is.EqualTo(v2.Count),"no two salvage items share an icon");

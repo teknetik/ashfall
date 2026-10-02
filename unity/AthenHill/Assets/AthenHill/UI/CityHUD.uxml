@@ -1,6 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
  <!-- THESIS: A worn colony field interface frames the city. OWN-WORLD: bronze rails, inset charcoal enamel, ivory lettering and cyan indicators. STORY: locate, meet, trade and connect. FIRST VIEWPORT: identity upper-left, heading centered, notes upper-right; log and illustrated equipment below, open world between. FORM: user-supplied reference composition, 8 September 2026; shared chrome across every menu. -->
  <Style src="CityHUD.uss" />
+ <Style src="MerchantPanel.uss" />
  <ui:Template name="StartupMenu" src="StartupMenu.uxml" />
  <ui:VisualElement usage-hints="DynamicColor" name="hud" picking-mode="Ignore">
   <ui:VisualElement usage-hints="DynamicColor" name="identity" class="panel" picking-mode="Ignore">
@@ -36,31 +37,12 @@
  <ui:Instance template="StartupMenu" name="startup-instance" picking-mode="Ignore" />
  <ui:VisualElement usage-hints="DynamicColor" name="shade">
   <ui:VisualElement usage-hints="DynamicColor" name="modal" class="panel">
-   <ui:VisualElement usage-hints="DynamicColor" class="modal-heading"><ui:VisualElement usage-hints="DynamicColor" class="modal-emblem diamond" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="modal-title" class="title"/><ui:Button usage-hints="DynamicColor" name="close" text="Close · Esc"/></ui:VisualElement>
+   <ui:VisualElement usage-hints="DynamicColor" class="modal-heading"><ui:VisualElement usage-hints="DynamicColor" class="modal-emblem diamond" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="modal-title" class="title"/><ui:Button usage-hints="DynamicColor" name="close" text="Clear"/></ui:VisualElement>
    <ui:Label usage-hints="DynamicColor" name="modal-subtitle" class="muted"/>
    <ui:VisualElement name="settings-panel"/>
    <ui:ScrollView name="modal-scroll" horizontal-scroller-visibility="Hidden">
     <ui:VisualElement usage-hints="DynamicColor" name="dialogue-panel"><ui:Label usage-hints="DynamicColor" name="dialogue-text" class="body-copy"/><ui:Label usage-hints="DynamicColor" text="YOUR RESPONSE" class="small muted response-heading"/><ui:Button usage-hints="DynamicColor" name="choice0"/><ui:Button usage-hints="DynamicColor" name="choice1"/><ui:Button usage-hints="DynamicColor" name="choice2"/></ui:VisualElement>
-    <ui:VisualElement usage-hints="DynamicColor" name="shop-panel">
-     <ui:VisualElement usage-hints="DynamicColor" name="shop-columns" class="shop-columns">
-      <ui:VisualElement usage-hints="DynamicColor" name="shop-buy" class="shop-col">
-       <ui:Label usage-hints="DynamicColor" name="supplies-heading" text="SUPPLIES" class="small shop-section-heading shop-first-heading"/>
-       <ui:VisualElement usage-hints="DynamicColor" class="trade-row supply-row"><ui:VisualElement usage-hints="DynamicColor" class="trade-art flask-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="item0" class="item-copy"/><ui:Button usage-hints="DynamicColor" name="buy0" text="Buy · 4 cr"/><ui:Button usage-hints="DynamicColor" name="sell0" text="Sell · 2 cr"/></ui:VisualElement>
-       <ui:VisualElement usage-hints="DynamicColor" class="trade-row supply-row"><ui:VisualElement usage-hints="DynamicColor" class="trade-art medkit-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="item1" class="item-copy"/><ui:Button usage-hints="DynamicColor" name="buy1" text="Buy · 9 cr"/><ui:Button usage-hints="DynamicColor" name="sell1" text="Sell · 4 cr"/></ui:VisualElement>
-       <ui:VisualElement usage-hints="DynamicColor" class="trade-row supply-row"><ui:VisualElement usage-hints="DynamicColor" class="trade-art scrap-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="item2" class="item-copy"/><ui:Button usage-hints="DynamicColor" name="buy2" text="Buy · 2 cr"/><ui:Button usage-hints="DynamicColor" name="sell2" text="Sell · 1 cr"/></ui:VisualElement>
-       <ui:Label usage-hints="DynamicColor" name="parts-heading" text="BUY PARTS · MIRA&apos;S PRICES" class="small shop-section-heading"/>
-       <ui:VisualElement usage-hints="DynamicColor" name="parts-list"/>
-       <ui:Label usage-hints="DynamicColor" name="parts-help" text="Common and uncommon parts at a premium. Rare parts only come out of the Berms." class="small muted trade-help"/>
-      </ui:VisualElement>
-      <ui:VisualElement usage-hints="DynamicColor" name="shop-sell" class="shop-col shop-col-sell">
-       <ui:Label usage-hints="DynamicColor" name="shop-credit" class="balance"/>
-       <ui:Label usage-hints="DynamicColor" name="salvage-heading" text="SELL SALVAGE" class="small shop-section-heading"/>
-       <ui:VisualElement usage-hints="DynamicColor" name="salvage-list"/>
-       <ui:Label usage-hints="DynamicColor" name="salvage-empty" class="small muted trade-help"/>
-       <ui:Label usage-hints="DynamicColor" text="Each trade moves one item; Sell all moves a whole stack in one trade. Your balance updates immediately." class="small muted trade-help"/>
-      </ui:VisualElement>
-     </ui:VisualElement>
-    </ui:VisualElement>
+    <ui:VisualElement usage-hints="DynamicColor" name="shop-panel"/>
     <ui:VisualElement usage-hints="DynamicColor" name="fabricator-panel">
      <ui:VisualElement usage-hints="DynamicColor" name="fab-columns" class="fab-columns">
       <ui:VisualElement usage-hints="DynamicColor" name="fab-recipes" class="fab-col fab-col-list">
@@ -88,7 +70,7 @@
      </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement usage-hints="DynamicColor" name="inventory-panel">
-     <!-- Field pack, after the user's Ark-style reference (30 Sep 2026): pack grid | colonist and loadout | colonist view. PackPanel.cs builds the tiles, chips, slots and stat rows. -->
+     <!-- Ashfall pack, 2 Oct 2026: compact grid | item inspector | anatomical loadout | appropriate live preview. -->
      <ui:VisualElement usage-hints="DynamicColor" name="inventory-content" class="inventory-content">
       <ui:VisualElement usage-hints="DynamicColor" name="pack-col" class="pack-col tech-panel">
        <ui:VisualElement usage-hints="DynamicColor" class="pack-tabs">
@@ -96,6 +78,7 @@
         <ui:Button usage-hints="DynamicColor" name="pack-tab-schematics" text="SCHEMATICS" class="pack-tab" tooltip="Known field-fabricator schematics and the parts they need"/>
         <ui:VisualElement usage-hints="DynamicColor" class="pack-credit-readout" picking-mode="Ignore"><ui:VisualElement usage-hints="DynamicColor" class="mini-icon coins-icon" picking-mode="Ignore"/><ui:Label usage-hints="DynamicColor" name="pack-credit" class="pack-credit" picking-mode="Ignore"/></ui:VisualElement>
        </ui:VisualElement>
+       <ui:VisualElement name="pack-capacity" class="pack-capacity" picking-mode="Ignore"/>
        <ui:VisualElement usage-hints="DynamicColor" class="pack-tools">
         <ui:VisualElement usage-hints="DynamicColor" class="pack-search-box"><ui:VisualElement usage-hints="DynamicColor" class="pack-search-glyph" picking-mode="Ignore"/><ui:TextField name="pack-search" class="pack-search" max-length="32"/><ui:Label usage-hints="DynamicColor" name="pack-search-placeholder" text="Search" class="pack-search-placeholder" picking-mode="Ignore"/></ui:VisualElement>
         <ui:VisualElement usage-hints="DynamicColor" name="pack-filters" class="pack-filters"/>
@@ -117,8 +100,23 @@
        </ui:VisualElement>
        <ui:VisualElement usage-hints="DynamicColor" class="pack-footer" picking-mode="Ignore"><ui:Label usage-hints="DynamicColor" name="pack-filter-name" class="pack-filter-name" text="ALL ITEMS"/><ui:Label usage-hints="DynamicColor" name="pack-summary" class="muted pack-summary"/></ui:VisualElement>
       </ui:VisualElement>
+      <ui:VisualElement usage-hints="DynamicColor" name="inventory-details" class="inventory-details tech-panel">
+       <ui:VisualElement usage-hints="DynamicColor" class="modal-heading details-heading">
+        <ui:VisualElement usage-hints="DynamicColor" class="modal-emblem diamond" picking-mode="Ignore" />
+        <ui:Label usage-hints="DynamicColor" name="details-title" class="title" text="Item details" />
+        <ui:Button usage-hints="DynamicColor" name="details-close" text="Clear" />
+       </ui:VisualElement>
+       <ui:VisualElement usage-hints="DynamicColor" class="details-body">
+        <ui:VisualElement usage-hints="DynamicColor" class="details-icon-frame" picking-mode="Ignore"><ui:VisualElement usage-hints="DynamicColor" name="details-icon" class="details-icon" picking-mode="Ignore" /></ui:VisualElement>
+        <ui:Label usage-hints="DynamicColor" name="details-quantity" class="muted" text="" />
+        <ui:Label usage-hints="DynamicColor" name="details-prices" class="muted small" text="" />
+        <ui:ScrollView name="details-scroll" horizontal-scroller-visibility="Hidden">
+         <ui:Label usage-hints="DynamicColor" name="details-description" class="body-copy" text="" />
+        </ui:ScrollView>
+       </ui:VisualElement>
+      </ui:VisualElement>
       <ui:VisualElement usage-hints="DynamicColor" name="you-col" class="you-col tech-panel" picking-mode="Ignore">
-       <ui:VisualElement usage-hints="DynamicColor" class="pack-tabs" picking-mode="Ignore"><ui:Label usage-hints="DynamicColor" text="YOU" class="pack-tab-label active-tab"/></ui:VisualElement>
+       <ui:VisualElement usage-hints="DynamicColor" class="pack-tabs" picking-mode="Ignore"><ui:Label usage-hints="DynamicColor" text="LOADOUT" class="pack-tab-label active-tab"/></ui:VisualElement>
        <ui:VisualElement name="character-loadout" class="character-loadout"/>
        <ui:VisualElement usage-hints="DynamicColor" class="loadout" picking-mode="Ignore">
         <ui:VisualElement usage-hints="DynamicColor" name="loadout-left" class="loadout-slots" picking-mode="Ignore"/>
@@ -140,21 +138,6 @@
        <ui:VisualElement usage-hints="DynamicColor" name="preview-view" class="preview-view" tooltip="Drag to turn · double-click to face"/>
        <ui:VisualElement usage-hints="DynamicColor" class="preview-corner tl" picking-mode="Ignore"/><ui:VisualElement usage-hints="DynamicColor" class="preview-corner tr" picking-mode="Ignore"/><ui:VisualElement usage-hints="DynamicColor" class="preview-corner bl" picking-mode="Ignore"/><ui:VisualElement usage-hints="DynamicColor" class="preview-corner br" picking-mode="Ignore"/>
        <ui:VisualElement usage-hints="DynamicColor" class="preview-caption" picking-mode="Ignore"><ui:Label usage-hints="DynamicColor" name="preview-name" text="COLONIST" class="preview-name"/><ui:Label usage-hints="DynamicColor" name="preview-hint" text="Drag to turn" class="muted preview-hint"/></ui:VisualElement>
-      </ui:VisualElement>
-      <ui:VisualElement usage-hints="DynamicColor" name="inventory-details" class="inventory-details tech-panel">
-       <ui:VisualElement usage-hints="DynamicColor" class="modal-heading details-heading">
-        <ui:VisualElement usage-hints="DynamicColor" class="modal-emblem diamond" picking-mode="Ignore" />
-        <ui:Label usage-hints="DynamicColor" name="details-title" class="title" text="Item details" />
-        <ui:Button usage-hints="DynamicColor" name="details-close" text="Close · Esc" />
-       </ui:VisualElement>
-       <ui:VisualElement usage-hints="DynamicColor" class="details-body">
-        <ui:VisualElement usage-hints="DynamicColor" class="details-icon-frame" picking-mode="Ignore"><ui:VisualElement usage-hints="DynamicColor" name="details-icon" class="details-icon" picking-mode="Ignore" /></ui:VisualElement>
-        <ui:Label usage-hints="DynamicColor" name="details-quantity" class="muted" text="" />
-        <ui:Label usage-hints="DynamicColor" name="details-prices" class="muted small" text="" />
-        <ui:ScrollView name="details-scroll" horizontal-scroller-visibility="Hidden">
-         <ui:Label usage-hints="DynamicColor" name="details-description" class="body-copy" text="" />
-        </ui:ScrollView>
-       </ui:VisualElement>
       </ui:VisualElement>
      </ui:VisualElement>
     </ui:VisualElement>

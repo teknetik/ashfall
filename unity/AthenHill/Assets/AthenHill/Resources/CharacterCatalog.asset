@@ -447,6 +447,14 @@ MonoBehaviour:
     dependencies:
     - stat: strength
       factor: 2
+  - id: packSlots
+    label: Additional pack slots
+    unit: slots
+    initial: 0
+    perLevel: 0
+    minimum: 0
+    maximum: 100000
+    dependencies: []
   - id: storageCapacity
     label: Storage capacity
     unit: 'kg'
@@ -729,6 +737,16 @@ MonoBehaviour:
     tier: 0
     upgradeLevel: 0
     weight: 3.2
+    modificationSockets:
+    - id: outer_plate
+      label: Outer plate
+      type: armour_plate
+    - id: inner_plate
+      label: Inner plate
+      type: armour_plate
+    - id: lining
+      label: Liner
+      type: armour_lining
     requirements: []
     operatingRequirements: []
     modifiers:
@@ -752,6 +770,13 @@ MonoBehaviour:
     tier: 0
     upgradeLevel: 0
     weight: 1.5
+    modificationSockets:
+    - id: motor
+      label: Ankle motor
+      type: armour_motor
+    - id: lining
+      label: Liner
+      type: armour_lining
     requirements: []
     operatingRequirements: []
     modifiers:
@@ -869,6 +894,9 @@ MonoBehaviour:
     - stat: storageCapacity
       flat: 25
       percent: 0
+    - stat: packSlots
+      flat: 16
+      percent: 0
     installationFacility:
     upgradeToItemId:
     upgradeIngredients: []
@@ -877,6 +905,304 @@ MonoBehaviour:
     comfortableEndurance: 0
     movementPenalty: 0
     staminaPenalty: 0
+  - itemId: field_helmet
+    slots:
+    - armour_head
+    tier: 0
+    upgradeLevel: 0
+    weight: 1.2
+    modificationSockets:
+    - id: lining
+      label: Liner
+      type: armour_lining
+    - id: utility
+      label: Utility mount
+      type: armour_utility
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: armour
+      flat: 4
+      percent: 0
+    installationFacility:
+    upgradeToItemId:
+    upgradeIngredients: []
+    upgradeCredits: 0
+    comfortableStrength: 0
+    comfortableEndurance: 0
+    movementPenalty: 0
+    staminaPenalty: 0
+  - itemId: field_armguards
+    slots:
+    - armour_arms
+    tier: 0
+    upgradeLevel: 0
+    weight: 1.4
+    modificationSockets:
+    - id: lining
+      label: Liner
+      type: armour_lining
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: armour
+      flat: 4
+      percent: 0
+    installationFacility:
+    upgradeToItemId:
+    upgradeIngredients: []
+    upgradeCredits: 0
+    comfortableStrength: 0
+    comfortableEndurance: 0
+    movementPenalty: 0
+    staminaPenalty: 0
+  - itemId: field_gloves
+    slots:
+    - armour_hands
+    tier: 0
+    upgradeLevel: 0
+    weight: 0.5
+    modificationSockets:
+    - id: grip
+      label: Grip insert
+      type: armour_utility
+    - id: lining
+      label: Liner
+      type: armour_lining
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: armour
+      flat: 2
+      percent: 0
+    installationFacility:
+    upgradeToItemId:
+    upgradeIngredients: []
+    upgradeCredits: 0
+    comfortableStrength: 0
+    comfortableEndurance: 0
+    movementPenalty: 0
+    staminaPenalty: 0
+  - itemId: field_leggings
+    slots:
+    - armour_legs
+    tier: 0
+    upgradeLevel: 0
+    weight: 2.6
+    modificationSockets:
+    - id: motor
+      label: Assist motor
+      type: armour_motor
+    - id: lining
+      label: Liner
+      type: armour_lining
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: armour
+      flat: 6
+      percent: 0
+    installationFacility:
+    upgradeToItemId:
+    upgradeIngredients: []
+    upgradeCredits: 0
+    comfortableStrength: 0
+    comfortableEndurance: 0
+    movementPenalty: 0
+    staminaPenalty: 0
+  - itemId: cardiac_implant
+    slots:
+    - implant_chest
+    tier: 1
+    upgradeLevel: 0
+    weight: 0.22
+    modificationSockets: []
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: stamina
+      flat: 15
+      percent: 0
+    installationFacility:
+    upgradeToItemId:
+    upgradeIngredients: []
+    upgradeCredits: 0
+    comfortableStrength: 0
+    comfortableEndurance: 0
+    movementPenalty: 0
+    staminaPenalty: 0
+  - itemId: stride_implant
+    slots:
+    - implant_legs
+    tier: 1
+    upgradeLevel: 0
+    weight: 0.28
+    modificationSockets: []
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: movementSpeed
+      flat: 0
+      percent: 0.03
+    installationFacility:
+    upgradeToItemId:
+    upgradeIngredients: []
+    upgradeCredits: 0
+    comfortableStrength: 0
+    comfortableEndurance: 0
+    movementPenalty: 0
+    staminaPenalty: 0
+  - itemId: dermal_implant
+    slots:
+    - implant_waist
+    tier: 1
+    upgradeLevel: 0
+    weight: 0.25
+    modificationSockets: []
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: armour
+      flat: 3
+      percent: 0
+    installationFacility:
+    upgradeToItemId:
+    upgradeIngredients: []
+    upgradeCredits: 0
+    comfortableStrength: 0
+    comfortableEndurance: 0
+    movementPenalty: 0
+    staminaPenalty: 0
+  modifications:
+  - itemId: aug_cognition
+    slots: []
+    socketTypes:
+    - implant
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: intellect
+      flat: 1
+      percent: 0
+  - itemId: aug_sighting
+    slots:
+    - implant_head
+    socketTypes:
+    - implant
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: accuracy
+      flat: 5
+      percent: 0
+  - itemId: aug_reflex
+    slots: []
+    socketTypes:
+    - implant
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: agility
+      flat: 1
+      percent: 0
+  - itemId: aug_capacitor
+    slots: []
+    socketTypes:
+    - implant
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: nano
+      flat: 10
+      percent: 0
+  - itemId: aug_recovery
+    slots: []
+    socketTypes:
+    - implant
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: staminaRegeneration
+      flat: 0.3
+      percent: 0
+  - itemId: aug_loadbearing
+    slots:
+    - implant_arms
+    - implant_legs
+    - implant_feet
+    socketTypes:
+    - implant
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: carryCapacity
+      flat: 4
+      percent: 0
+  - itemId: armour_extra_plate
+    slots:
+    - armour_chest
+    socketTypes:
+    - armour_plate
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: armour
+      flat: 8
+      percent: 0
+  - itemId: armour_impact_liner
+    slots: []
+    socketTypes:
+    - armour_lining
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: physicalResistance
+      flat: 0.04
+      percent: 0
+  - itemId: armour_thermal_liner
+    slots: []
+    socketTypes:
+    - armour_lining
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: thermalResistance
+      flat: 0.08
+      percent: 0
+  - itemId: armour_leg_motor
+    slots:
+    - armour_legs
+    socketTypes:
+    - armour_motor
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: movementSpeed
+      flat: 0
+      percent: 0.08
+  - itemId: armour_ankle_stabiliser
+    slots:
+    - armour_feet
+    socketTypes:
+    - armour_motor
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: staminaRegeneration
+      flat: 0.2
+      percent: 0
+  - itemId: armour_grip_damper
+    slots:
+    - armour_hands
+    socketTypes:
+    - armour_utility
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: recoilControl
+      flat: 0.025
+      percent: 0
+  basePackSlots: 24
   itemWeights: []
   initialEquipment:
   - slot: storage

@@ -1,0 +1,54 @@
+/* Ashfall counter: compact catalogue, persistent item details, atomic checkout. */
+#modal.merchant-modal { width: 1280px; max-width: 96%; }
+#modal.merchant-modal #modal-scroll { max-height: 730px; }
+.merchant { flex-grow: 1; min-height: 0; }
+.merchant-toolbar { flex-direction: row; align-items: center; height: 46px; border-bottom-width: 1px; border-bottom-color: #397078; margin-bottom: 14px; }
+.merchant .merchant-tab { width: 100px; height: 38px; min-height: 38px; margin: 0 8px 0 0; padding: 0; font-size: 19px; background-image: none; background-color: #0c2429; border-width: 1px; border-color: #345b61; }
+.merchant .merchant-tab.active, .merchant .merchant-chip.active { background-color: #16454e; border-color: #69d7da; color: #f4eee2; }
+.merchant-balance { flex-grow: 1; -unity-text-align: middle-right; font-size: 25px; color: #eed9a4; }
+.merchant-columns { flex-direction: row; min-height: 0; height: 580px; flex-shrink: 1; }
+.merchant-browser { width: 51%; flex-shrink: 0; margin-right: 16px; padding: 12px; background-color: #081b20; border-width: 1px; border-color: #315c63; }
+.merchant-search { height: 35px; font-size: 18px; margin: 0 0 10px; }
+.merchant-search .unity-base-field__label { min-width: 58px; color: #b4cbcb; }
+.merchant-search .unity-base-text-field__input { background-color: #06171c; border-width: 1px; border-color: #356770; color: #f0ece0; padding: 4px 8px; }
+.merchant-filters { flex-direction: row; flex-wrap: wrap; margin-bottom: 10px; }
+.merchant .merchant-chip { min-width: 56px; height: 30px; min-height: 30px; padding: 0 8px; margin: 0 4px 4px 0; font-size: 15px; background-image: none; background-color: #102d34; border-width: 1px; border-color: #34565e; }
+.merchant-scroll { flex-grow: 1; flex-shrink: 1; min-height: 0; }
+.merchant .merchant-row { height: 64px; min-height: 64px; flex-direction: row; align-items: center; padding: 5px 9px; margin: 0 5px 5px 0; background-image: none; background-color: #0c242b; border-width: 1px; border-color: #24474e; }
+.merchant .merchant-row:hover { background-color: #14353d; border-color: #4e969c; }
+.merchant .merchant-row.selected, .merchant .merchant-row:focus { background-color: #143c43; border-color: #67dade; }
+.merchant-row-icon { width: 46px; height: 46px; flex-shrink: 0; margin-right: 10px; -unity-background-scale-mode: scale-to-fit; }
+.merchant-row-copy { flex-grow: 1; min-width: 0; }
+.merchant-row-name { font-size: 18px; color: #eee9dc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.merchant-row-meta { font-size: 14px; color: #adcbce; margin-top: 3px; }
+.merchant-row-price { font-size: 18px; color: #e6cca0; min-width: 68px; -unity-text-align: middle-right; }
+.merchant-count { font-size: 16px; color: #bed3d2; margin-top: 9px; padding-top: 8px; border-top-width: 1px; border-top-color: #254c53; }
+.merchant-empty { font-size: 18px; color: #c1d2cc; white-space: normal; padding: 20px 8px; }
+.merchant-detail { flex-grow: 1; flex-shrink: 1; min-width: 0; padding: 18px 20px; border-width: 1px; border-color: #397078; background-color: #091d22; }
+.merchant-detail-scroll { flex-grow: 1; flex-shrink: 1; min-height: 0; }
+.merchant-rarity { font-size: 15px; color: #8acacf; margin-bottom: 4px; }
+.merchant-title { font-size: 30px; color: #eee9dc; white-space: normal; margin-bottom: 6px; }
+.merchant-art { height: 144px; width: 100%; -unity-background-scale-mode: scale-to-fit; margin: 4px 0 12px; background-color: #07181d; }
+.merchant-description { font-size: 18px; color: #d4ded8; white-space: normal; margin-bottom: 14px; }
+.merchant-fact { flex-direction: row; padding: 5px 0; border-bottom-width: 1px; border-bottom-color: #27474d; }
+.merchant-fact-label { flex-grow: 1; color: #aec7ca; font-size: 17px; }
+.merchant-fact-value { font-size: 18px; color: #eee9dc; -unity-text-align: middle-right; }
+.merchant-stats-heading { font-size: 16px; color: #8ed1d4; margin-top: 16px; margin-bottom: 6px; white-space: normal; }
+.merchant-effect { font-size: 17px; color: #d5dfd8; white-space: normal; margin-bottom: 5px; }
+.merchant-checkout { border-top-width: 1px; border-top-color: #42727a; margin-top: 12px; padding-top: 12px; }
+.merchant-price { font-size: 22px; color: #efdbac; }
+.merchant-after { font-size: 16px; color: #b9d0ce; margin-top: 3px; }
+.merchant-actions { flex-direction: row; margin-top: 9px; }
+.merchant .merchant-primary { flex-grow: 1; height: 43px; margin: 0 7px 0 0; font-size: 20px; }
+.merchant .merchant-secondary { height: 43px; margin: 0; font-size: 18px; }
+.merchant-reason { font-size: 15px; color: #b4d1ce; white-space: normal; margin-top: 8px; }
+.merchant-reason.rejected { color: #f0b393; }
+.merchant-capacity { font-size: 16px; color: #b7d1cf; padding-top: 14px; white-space: normal; }
+.small-window .merchant-columns { height: 540px; }
+.small-window .merchant-browser { width: 49%; margin-right: 10px; padding: 9px; }
+.small-window .merchant-detail { padding: 12px; }
+.small-window .merchant-row-meta { font-size: 16px; }
+.small-window .merchant-art { height: 114px; }
+.small-window .merchant .merchant-chip { font-size: 17px; min-width: 63px; }
+
+.rifle-icon { background-image: url("Art/rifle.png"); }

@@ -40,6 +40,8 @@ namespace AthenHill
  [Serializable] public class CraftWeapon
  {
   public string id,name,itemId,recipeId;
+  [Tooltip("Optional source mesh for the inventory 3D inspection. A display-only copy is rendered; gameplay components never run.")]
+  public GameObject previewPrefab;
   [Tooltip("Unmodified weapon numbers. PlayerCombat reads the effective values from the fitted loadout.")]
   public WeaponStats stats=WeaponStats.ScrapPistol;
   [Tooltip("Effective stats are clamped to these bounds after every fitted mod applies.")]

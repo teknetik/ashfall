@@ -52,5 +52,37 @@ namespace AthenHill.Tests
    typeof(CharacterLoadoutPanel).GetField("selectedSlot",Private).SetValue(panel,"secondary");Call("RemoveSelected");
    Assert.That(character.Equipped("secondary"),Is.Null);Assert.That(pack.Quantity("test_weapon"),Is.EqualTo(1));
   }
+  [Test] public void CarriedModificationDetailsExplainCompatibilityEffectsAndRequirements()
+  {
+   data.modifications=new[]{new CharacterModification{itemId="test_module",slots=new[]{"armour_chest"},socketTypes=new[]{"armour_plate"},
+    modifiers=new[]{new CharacterModifier{stat="strength",flat=2,percent=.08f}},
+    requirements=new[]{new CharacterRequirement{stat="strength",minimum=12}},operatingRequirements=new[]{new CharacterRequirement{stat="strength",minimum=15}}}};
+   var text=panel.DescribeItem("test_module");
+   Assert.That(text,Does.Contain("Fits: Chest").And.Contain("Socket type: Armour plate"));
+   Assert.That(text,Does.Contain("Strength +2 +8%"),"fractional modifiers display as percentages");
+   Assert.That(text,Does.Contain("Requires: Strength 10/12").And.Contain("To operate: Strength 10/15"));
+   Assert.That(character.Equipped("armour_chest"),Is.Null,"inspection does not install the module");
+  }
+
+  [Test] public void ImplantBodyIsTwoDimensionalAndEachHostExposesThreeClickableAugmentations()
+  {
+   city.items=new[]{new ItemSpec{id="implant",name="Neural interface",maxStack=1,weightKg=.2f},new ItemSpec{id="augment",name="Cognition mesh",maxStack=2,weightKg=.05f}};
+   data.slots=new[]{new CharacterSlot{id="implant_head",label="Neural",section="IMPLANTS"}};
+   data.equipment=new[]{new CharacterEquipment{itemId="implant",slots=new[]{"implant_head"}}};
+   data.modifications=new[]{new CharacterModification{itemId="augment",slots=new[]{"implant_head"},socketTypes=new[]{"implant"}}};
+   pack=new ShopModel(city.items);character=new CharacterModel(data,pack);Set(session,"Shop",pack);Set(session,"Character",character);
+   Assert.That(character.TryGrantEquipped("implant","implant_head",out _),Is.True);Assert.That(pack.Grant("augment",1,0,out _),Is.True);
+   typeof(CharacterLoadoutPanel).GetField("section",Private).SetValue(panel,"IMPLANTS");panel.Refresh();
+   Assert.That(panel.WantsPreview,Is.False,"implants never start the 3D character camera");
+   Assert.That(root.Q<Image>("anatomy-image"),Is.Not.Null);Assert.That(root.Q("implant-body-map"),Is.Not.Null);
+   Assert.That(root.Query<Button>(className:"modification-socket").ToList().Count,Is.EqualTo(3));
+   Assert.That(root.Q("augmentation-details"),Is.Null);
+   Call("ChooseModification",1);
+   Assert.That(root.Q("augmentation-details"),Is.Not.Null);Assert.That(root.Q<Button>("install-augmentation-augment"),Is.Not.Null);
+   Assert.That(root.Q("modification-socket-1").ClassListContains("selected"),Is.True);
+   Assert.That(character.TryUnequip("implant_head",out _),Is.True);panel.Refresh();
+   Assert.That(root.Q("augmentation-details"),Is.Null,"removing a host clears its nested socket selection safely");
+  }
+
  }
 }

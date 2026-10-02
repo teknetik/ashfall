@@ -16,6 +16,10 @@ namespace AthenHill
   readonly Action changed;
   readonly ScrollView scroll;
   string section="SECONDARY",selectedSlot,selectedSocket,selectedWeapon,signature;
+  int selectedModification=-1;
+  public string CurrentSection=>section;
+  public bool WantsPreview=>section!="IMPLANTS";
+  public string PreviewWeaponItem=>Character?.Equipped(section=="PRIMARY"?"primary":"secondary");
   string dragItem,dragSlot,dragSocket,dragWeapon;
   int pointer=-1;
   Vector2 origin;
@@ -33,7 +37,7 @@ namespace AthenHill
    tabs=new VisualElement();tabs.AddToClassList("character-tabs");host.Add(tabs);
    foreach(var name in new[]{"PRIMARY","SECONDARY","STATS","IMPLANTS","ARMOUR"})
    {
-    string value=name;var tab=new Button(()=>{section=value;selectedSlot=null;selectedSocket=null;selectedWeapon=null;signature=null;Refresh();}){text=name,name="character-tab-"+name.ToLowerInvariant()};
+    string value=name;var tab=new Button(()=>{section=value;selectedSlot=null;selectedSocket=null;selectedWeapon=null;selectedModification=-1;signature=null;changed();}){text=name,name="character-tab-"+name.ToLowerInvariant()};
     tab.AddToClassList("character-tab");tabs.Add(tab);
    }
    capacity=new Label{name="character-capacity"};capacity.AddToClassList("character-capacity");host.Add(capacity);
@@ -63,24 +67,30 @@ namespace AthenHill
    root.Q("you-stats")?.EnableInClassList("character-legacy-hidden",active);
    root.Q("you-progress-fill")?.parent.parent.EnableInClassList("character-legacy-hidden",active);
    if(!active)return;
+   var availableSlots=Character.Data.slots.Where(s=>s.section==section||section=="ARMOUR"&&s.section=="STORAGE").ToArray();
+   if(section!="STATS"&&(selectedSlot==null||!availableSlots.Any(s=>s.id==selectedSlot))&&selectedSocket==null)selectedSlot=availableSlots.FirstOrDefault()?.id;
+   if(selectedModification>=0&&(selectedSlot==null||selectedModification>=Character.ModificationSockets(selectedSlot).Count))selectedModification=-1;
    capacity.text=$"CARRY {Character.CarryWeight:0.#} / {Character.CarryCapacity:0.#} kg   PACK {Character.PackWeight:0.#} / {Character.StorageCapacity:0.#} kg";
    capacity.EnableInClassList("overburdened",Character.Overburdened);UpdateVitals();
    foreach(var child in tabs.Children())child.EnableInClassList("active-tab",child.name=="character-tab-"+section.ToLowerInvariant());
-   string next=section+"|"+Character.AttributePoints+":"+Character.SkillPoints+"|"+string.Join(";",Character.Data.slots.Select(s=>s.id+":"+Character.Equipped(s.id)))+"|"+
+   string next=section+"|"+selectedSlot+":"+selectedSocket+":"+selectedModification+"|"+Character.AttributePoints+":"+Character.SkillPoints+"|"+string.Join(";",Character.Data.slots.Select(s=>s.id+":"+Character.Equipped(s.id)))+"|"+
     (Craft==null?"":string.Join(";",new[]{"primary","secondary"}.Select(s=>WeaponSignature(Character.Equipped(s)))))+"|"+
     string.Join(";",Character.Data.attributes.Select(a=>Character.Attribute(a.id)))+"|"+string.Join(";",Character.Data.skills.Select(s=>Character.Skill(s.id)))+"|"+
-    string.Join(";",Character.Data.derivedStats.Select(s=>Character.Stat(s.id)))+"|"+(crafting&&crafting.combat?crafting.combat.ActiveSlot:"");
+    string.Join(";",Character.Data.derivedStats.Select(s=>Character.Stat(s.id)))+"|"+(crafting&&crafting.combat?crafting.combat.ActiveSlot:"")+"|"+
+    string.Join(";",Character.Data.slots.SelectMany(s=>Character.ModificationSockets(s.id).Select((socket,index)=>s.id+":"+index+":"+Character.InstalledModification(s.id,index))))+"|"+selectedItem()+"|"+string.Join(";",session.Shop.Carried.Select(x=>x.Key+":"+x.Value));
    if(signature!=next)
    {
     signature=next;var focus=(root.focusController?.focusedElement as VisualElement)?.name;body.Clear();
     if(section=="STATS")BuildStats();else BuildEquipment();
     if(focus!=null)root.schedule.Execute(()=>{var target=root.Q(focus);if(target!=null&&target.enabledInHierarchy)target.Focus();else root.Q("character-tab-"+section.ToLowerInvariant())?.Focus();});
    }
-   foreach(var cell in body.Query<Button>(className:"character-slot").ToList())cell.EnableInClassList("selected",cell.name=="equipment-"+selectedSlot||cell.name=="socket-"+selectedSocket);
-   selection.text=selectedSlot!=null?SlotName(selectedSlot):selectedSocket!=null?"Socket: "+Craft?.Data.SlotName(selectedSocket):"";
+   foreach(var cell in body.Query<Button>(className:"character-slot").ToList())cell.EnableInClassList("selected",cell.name=="equipment-"+selectedSlot||cell.name=="socket-"+selectedSocket||selectedModification>=0&&cell.name=="modification-socket-"+selectedModification);
+   selection.style.display=section=="STATS"?DisplayStyle.None:DisplayStyle.Flex;
+   root.Q("character-equip").parent.style.display=section=="STATS"?DisplayStyle.None:DisplayStyle.Flex;
+   selection.text=selectedModification>=0?SlotName(selectedSlot)+" · "+Character.ModificationSockets(selectedSlot)[selectedModification].label:selectedSlot!=null?SlotName(selectedSlot):selectedSocket!=null?"Socket: "+Craft?.Data.SlotName(selectedSocket):"";
    root.Q("character-equip").SetEnabled(section!="STATS"&&(selectedSlot!=null||selectedSocket!=null)&&selectedItem()!=null);
-   root.Q("character-remove").SetEnabled(selectedSlot!=null&&Character.Equipped(selectedSlot)!=null||selectedSocket!=null&&Craft?.GetLoadout(selectedWeapon)?.Fitted(selectedSocket)!=null);
-   root.Q("character-upgrade").style.display=section=="IMPLANTS"?DisplayStyle.Flex:DisplayStyle.None;
+   root.Q("character-remove").SetEnabled(selectedModification>=0?Character.InstalledModification(selectedSlot,selectedModification)!=null:selectedSlot!=null&&Character.Equipped(selectedSlot)!=null||selectedSocket!=null&&Craft?.GetLoadout(selectedWeapon)?.Fitted(selectedSocket)!=null);
+   root.Q("character-upgrade").style.display=section=="IMPLANTS"&&selectedModification<0?DisplayStyle.Flex:DisplayStyle.None;
    root.Q("character-upgrade").SetEnabled(selectedSlot!=null&&Character.Equipped(selectedSlot)!=null);
   }
   void Heading(string text){var l=new Label(text);l.AddToClassList("character-heading");body.Add(l);}
@@ -102,6 +112,7 @@ namespace AthenHill
    var def=Character?.Equipment(item);
    if(def==null)
    {
+    if(Character?.Modification(item)!=null)return ModificationDescription(item);
     var mod=Craft?.Loadout.Modifier(item);if(mod==null)return "";
     string description="Socket: "+Craft.Data.SlotName(mod.slot);
     if(Character!=null&&mod.requirements?.Length>0)description+="\nRequires: "+string.Join(", ",mod.requirements.Select(r=>$"{Character.Data.Label(r.stat)} {Character.Stat(r.stat):0.#}/{r.minimum:0.#}"));
@@ -119,48 +130,156 @@ namespace AthenHill
   }
   void BuildEquipment()
   {
-   foreach(var slot in Character.Data.slots.Where(s=>s.section==section||section=="ARMOUR"&&s.section=="STORAGE"))
+   if(section=="IMPLANTS"||section=="ARMOUR"){BuildAnatomy();return;}
+   var slot=Character.Data.slots.FirstOrDefault(s=>s.section==section);
+   if(slot==null){Copy(body,"No equipment slot is configured for this section.");return;}
+   string item=Character.Equipped(slot.id);
+   var cell=EquipmentButton("equipment-"+slot.id,slot.label,item,()=>ChooseSlot(slot.id));
+   cell.userData=new Target{slot=slot.id};BindDrag(cell,item,slot.id,null,null);body.Add(cell);
+   var picture=new VisualElement{name="weapon-picture",pickingMode=PickingMode.Ignore};picture.AddToClassList("weapon-picture");
+   picture.AddToClassList(session.Shop.Spec(item)?.icon??"pack-icon");body.Add(picture);
+   if(item==null){Copy(body,"Choose a carried weapon and equip it here. Its attachment sockets and statistics appear when fitted.");return;}
+   if(crafting&&crafting.combat)
    {
-    string id=slot.id,item=Character.Equipped(id);
-    var cell=EquipmentButton("equipment-"+id,slot.label,item,()=>{selectedSlot=id;selectedSocket=null;selectedWeapon=null;Refresh();});
-    cell.userData=new Target{slot=id};BindDrag(cell,item,id,null,null);body.Add(cell);
-    if((id=="primary"||id=="secondary")&&item!=null&&crafting&&crafting.combat)
-    {
-     var combat=crafting.combat;
-     AddAction(body,combat.ActiveSlot==id?"Active weapon":"Make active",()=>{bool ok=combat.SelectWeapon(id);Result(ok,"This weapon is unavailable.","Active weapon changed.");},"activate-"+id);
-    }
-    if(item!=null)
-    {
-     var info=Character.Equipment(item);
-     if(info!=null){var line=new Label(DescribeItem(item));line.AddToClassList("equipment-description");body.Add(line);}
-     if(!Character.IsOperating(id,out string reason)){var warning=new Label(reason);warning.AddToClassList("character-result");warning.AddToClassList("rejected");body.Add(warning);}
-    }
-    var weapon=Craft?.FindWeapon(item);var loadout=weapon!=null?Craft.GetLoadout(weapon.id):null;
-    if(loadout!=null)
-    {
-     Heading("MOD SOCKETS");
-     foreach(var socket in loadout.Slots)
-     {
-      string key=socket,mod=loadout.Fitted(key),weaponId=weapon.id;
-      var socketCell=EquipmentButton("socket-"+key,Craft.Data.SlotName(key),mod,()=>{selectedSocket=key;selectedSlot=null;selectedWeapon=weaponId;Refresh();});
-      socketCell.userData=new Target{socket=key,weapon=weaponId};BindDrag(socketCell,mod,null,key,weaponId);body.Add(socketCell);
-     }
-     Heading("WEAPON STATS");
-     var effective=loadout.WithCharacter(Character);
-     foreach(var statId in WeaponStats.Ids)
-     {
-      int index=WeaponStats.IndexOf(statId);
-      var stat=Craft.Data.statLabels?.FirstOrDefault(x=>x.stat==statId);
-      string label=stat?.label??string.Concat(statId.Select((ch,i)=>i>0&&char.IsUpper(ch)?" "+char.ToLowerInvariant(ch):ch.ToString()));
-      float mod=loadout.Stats[index]-loadout.Base[index],character=effective[index]-loadout.Stats[index];
-      var row=new Foldout{text=$"{label}: {CraftingText.FormatStat(stat,effective[index])}",value=false,name="weapon-stat-"+statId};
-      row.AddToClassList("character-breakdown");
-      row.Add(new Label($"Base {CraftingText.FormatStat(stat,loadout.Base[index])}   Mod {mod:+0.##;-0.##;0}   Character {character:+0.##;-0.##;0}   Final {CraftingText.FormatStat(stat,effective[index])}"));
-      body.Add(row);
-     }
-    }
+    var combat=crafting.combat;
+    AddAction(body,combat.ActiveSlot==slot.id?"Active weapon":"Make active",()=>{bool ok=combat.SelectWeapon(slot.id);Result(ok,"This weapon is unavailable.","Active weapon changed.");},"activate-"+slot.id);
+   }
+   var weapon=Craft?.FindWeapon(item);var loadout=weapon!=null?Craft.GetLoadout(weapon.id):null;
+   if(loadout==null){Copy(body,DescribeItem(item));return;}
+   Heading("ATTACHMENT SLOTS");
+   var sockets=new VisualElement();sockets.AddToClassList("weapon-sockets");body.Add(sockets);
+   foreach(var socket in loadout.Slots)
+   {
+    string key=socket,mod=loadout.Fitted(key),weaponId=weapon.id;
+    var socketCell=EquipmentButton("socket-"+key,Craft.Data.SlotName(key),mod,()=>{selectedSocket=key;selectedSlot=null;selectedWeapon=weaponId;selectedModification=-1;signature=null;Refresh();});
+    socketCell.AddToClassList("weapon-socket");socketCell.userData=new Target{socket=key,weapon=weaponId};BindDrag(socketCell,mod,null,key,weaponId);sockets.Add(socketCell);
+   }
+   if(selectedSocket!=null)
+   {
+    var fitted=loadout.Fitted(selectedSocket);
+    Copy(body,fitted!=null?ItemName(fitted)+"\n"+(session.Shop.Spec(fitted)?.description??""):"Select a compatible mod in your pack, then Equip selected.");
+   }
+   Heading("WEAPON STATS");
+   var effective=loadout.WithCharacter(Character);
+   foreach(var statId in WeaponStats.Ids)
+   {
+    int index=WeaponStats.IndexOf(statId);var stat=Craft.Data.statLabels?.FirstOrDefault(x=>x.stat==statId);
+    string label=stat?.label??statId;
+    float mod=loadout.Stats[index]-loadout.Base[index],character=effective[index]-loadout.Stats[index];
+    var row=new Foldout{text=$"{label}   {CraftingText.FormatStat(stat,effective[index])}",value=false,name="weapon-stat-"+statId};
+    row.AddToClassList("character-breakdown");row.Add(new Label($"Base {CraftingText.FormatStat(stat,loadout.Base[index])} · Mod {mod:+0.##;-0.##;0} · Character {character:+0.##;-0.##;0}"));body.Add(row);
    }
   }
+  void ChooseSlot(string id)
+  {
+   selectedSlot=id;selectedSocket=null;selectedWeapon=null;selectedModification=-1;signature=null;Refresh();
+  }
+  void ChooseModification(int index){selectedModification=index;signature=null;Refresh();}
+  static void Copy(VisualElement target,string text,string cls="equipment-description")
+  {var l=new Label(text);foreach(var c in cls.Split(' '))l.AddToClassList(c);target.Add(l);}
+  void BuildAnatomy()
+  {
+   bool implants=section=="IMPLANTS";
+   var layout=new VisualElement{name="anatomy-layout"};layout.AddToClassList("anatomy-layout");body.Add(layout);
+   var map=new VisualElement{name=implants?"implant-body-map":"armour-body-map"};map.AddToClassList("anatomy-map");layout.Add(map);
+   var image=new Image{name="anatomy-image",pickingMode=PickingMode.Ignore,scaleMode=ScaleMode.ScaleToFit,image=Resources.Load<Texture2D>("UI/ImplantBody")};
+   image.AddToClassList("anatomy-image");if(!implants)image.AddToClassList("armour-anatomy-image");map.Add(image);
+   var all=Character.Data.slots.Where(s=>s.section==section||section=="ARMOUR"&&s.section=="STORAGE").ToArray();
+   for(int n=0;n<all.Length;n++)
+   {
+    var slot=all[n];string id=slot.id,item=Character.Equipped(id);var position=AnatomyPosition(id,n,implants);
+    var cell=EquipmentButton("equipment-"+id,slot.label,item,()=>ChooseSlot(id));cell.AddToClassList("anatomy-slot");
+    cell.style.top=position.y;if(position.x>0)cell.style.right=0;else cell.style.left=0;
+    cell.userData=new Target{slot=id};BindDrag(cell,item,id,null,null);map.Add(cell);
+    var lead=new VisualElement{pickingMode=PickingMode.Ignore};lead.AddToClassList("anatomy-leader");lead.style.top=position.y+24;
+    if(position.x>0)lead.style.right=103;else lead.style.left=103;map.Add(lead);
+    var dot=new VisualElement{pickingMode=PickingMode.Ignore};dot.AddToClassList("anatomy-node");dot.style.top=position.y+20;
+    if(position.x>0)dot.style.right=127;else dot.style.left=127;map.Add(dot);
+   }
+   var inspector=new VisualElement{name="equipment-inspector"};inspector.AddToClassList("equipment-inspector");layout.Add(inspector);
+   if(selectedSlot==null){Copy(inspector,"Select a body slot to inspect its equipment.");return;}
+   string equipped=Character.Equipped(selectedSlot);
+   Copy(inspector,SlotName(selectedSlot).ToUpperInvariant(),"equipment-inspector-heading");
+   Copy(inspector,ItemName(equipped),"equipment-inspector-title");
+   if(equipped==null)
+   {
+    Copy(inspector,implants?"No implant installed. Select a compatible implant from your pack and choose Equip selected. Each implant supports three augmentations.":"No armour fitted. Select a compatible component from your pack and choose Equip selected.");
+    CompatibleEquipment(inspector,selectedSlot);return;
+   }
+   var illustration=new VisualElement{pickingMode=PickingMode.Ignore};illustration.AddToClassList("equipment-inspector-icon");illustration.AddToClassList(session.Shop.Spec(equipped)?.icon??"pack-icon");inspector.Add(illustration);
+   Copy(inspector,session.Shop.Spec(equipped)?.description??"");Copy(inspector,DescribeItem(equipped));
+   if(!Character.IsOperating(selectedSlot,out string reason))Copy(inspector,reason,"character-result rejected");
+   var sockets=Character.ModificationSockets(selectedSlot);
+   if(sockets.Count==0){Copy(inspector,"This component has no augmentation sockets.");return;}
+   Copy(inspector,implants?$"AUGMENTATION SLOTS  {sockets.Count}":$"COMPONENT SLOTS  {sockets.Count}","character-heading");
+   var strip=new VisualElement{name="modification-sockets"};strip.AddToClassList("modification-sockets");inspector.Add(strip);
+   for(int i=0;i<sockets.Count;i++)
+   {
+    int index=i;string installed=Character.InstalledModification(selectedSlot,index);
+    var socket=EquipmentButton("modification-socket-"+index,sockets[i].label,installed,()=>ChooseModification(index));
+    socket.AddToClassList("modification-socket");socket.EnableInClassList("selected",selectedModification==index);strip.Add(socket);
+   }
+   if(selectedModification>=sockets.Count)selectedModification=-1;
+   if(selectedModification>=0)BuildModificationPanel(inspector,selectedSlot,selectedModification);
+   else Copy(inspector,"Select a socket to inspect, install or remove its augmentation.");
+  }
+  static Vector2 AnatomyPosition(string id,int fallback,bool implants)
+  {
+   string part=id.Contains("_")?id.Substring(id.IndexOf('_')+1):id;
+   if(implants)
+   {
+    switch(part){case "head":return new Vector2(0,12);case "arms":return new Vector2(1,83);case "chest":return new Vector2(0,142);case "wrist":return new Vector2(1,212);case "waist":return new Vector2(0,271);case "hand":return new Vector2(1,326);case "legs":return new Vector2(0,391);case "feet":return new Vector2(1,455);}
+   }
+   else
+   {
+    switch(part){case "head":return new Vector2(0,12);case "arms":return new Vector2(1, 90);case "chest":return new Vector2(0,153);case "hands":return new Vector2(1,236);case "legs":return new Vector2(0,320);case "feet":return new Vector2(1,434);case "storage":return new Vector2(1,153);}
+   }
+   return new Vector2(fallback%2,12+fallback*59);
+  }
+  void CompatibleEquipment(VisualElement target,string slot)
+  {
+   var candidates=session.Shop.Carried.Where(x=>Character.Equipment(x.Key)?.slots.Contains(slot)==true).ToArray();
+   foreach(var candidate in candidates)
+   {
+    string item=candidate.Key;AddAction(target,"Equip "+ItemName(item),()=>{bool ok=Character.TryEquip(item,slot,out string reason);Result(ok,reason,"Equipment updated.");},"equip-carried-"+item);
+   }
+   if(candidates.Length==0)Copy(target,"No compatible item carried.");
+  }
+  void BuildModificationPanel(VisualElement target,string slot,int index)
+  {
+   var pane=new VisualElement{name="augmentation-details"};pane.AddToClassList("augmentation-details");target.Add(pane);
+   string installed=Character.InstalledModification(slot,index);var socket=Character.ModificationSockets(slot)[index];
+   Copy(pane,socket.label.ToUpperInvariant(),"equipment-inspector-heading");
+   Copy(pane,installed!=null?ItemName(installed):"Empty augmentation slot","equipment-inspector-title");
+   if(installed!=null)
+   {
+    Copy(pane,session.Shop.Spec(installed)?.description??"");Copy(pane,ModificationDescription(installed));
+    AddAction(pane,"Remove augmentation",()=>{bool ok=Character.TryRemoveModification(slot,index,out string reason);Result(ok,reason,"Augmentation returned to pack.");},"remove-augmentation");
+   }
+   Copy(pane,"COMPATIBLE AUGMENTATIONS","character-heading");
+   int count=0;
+   foreach(var entry in session.Shop.Carried)
+   {
+    string item=entry.Key;var mod=Character.Modification(item);if(mod==null)continue;
+    if(mod.slots!=null&&mod.slots.Length>0&&!mod.slots.Contains(slot))continue;
+    if(mod.socketTypes!=null&&mod.socketTypes.Length>0&&!mod.socketTypes.Contains(socket.type))continue;
+    count++;bool can=Character.CanInstallModification(slot,index,item,out string why);
+    var option=EquipmentButton("install-augmentation-"+item,"INSTALL",item,()=>{bool ok=Character.TryInstallModification(slot,index,item,out string reason);Result(ok,reason,"Augmentation installed.");});
+    option.tooltip=can?ModificationDescription(item):HumanReason(why);option.SetEnabled(can);pane.Add(option);
+   }
+   if(count==0)Copy(pane,"No compatible augmentation carried. Merchant stock and the workbench list available parts.");
+  }
+  string ModificationDescription(string item)
+  {
+   var mod=Character.Modification(item);if(mod==null)return "";
+   string text=(mod.slots?.Length??0)>0?"Fits: "+string.Join(", ",mod.slots.Select(SlotName)):"Fits: any body slot with a matching socket";
+   text+="\nSocket type: "+((mod.socketTypes?.Length??0)>0?string.Join(", ",mod.socketTypes.Select(SocketTypeName)):"None configured");
+   if((mod.modifiers?.Length??0)>0)text+="\n"+string.Join("\n",mod.modifiers.Select(m=>Character.Data.Label(m.stat)+" "+(m.flat!=0?m.flat.ToString("+0.##;-0.##;0"):"")+(m.percent!=0?$" {m.percent*100:+0.##;-0.##;0}%":"")));
+   if((mod.requirements?.Length??0)>0)text+="\nRequires: "+string.Join(", ",mod.requirements.Select(r=>$"{Character.Data.Label(r.stat)} {Character.Stat(r.stat):0.#}/{r.minimum:0.#}"));
+   if((mod.operatingRequirements?.Length??0)>0)text+="\nTo operate: "+string.Join(", ",mod.operatingRequirements.Select(r=>$"{Character.Data.Label(r.stat)} {Character.Stat(r.stat):0.#}/{r.minimum:0.#}"));
+   return text;
+  }
+  static string SocketTypeName(string type)=>string.IsNullOrEmpty(type)?"Unspecified":char.ToUpperInvariant(type[0])+type.Substring(1).Replace('_',' ');
   Button EquipmentButton(string name,string label,string item,Action click)
   {
    var b=new Button(click){name=name,tooltip=label+": "+ItemName(item)};b.AddToClassList("character-slot");
@@ -207,7 +326,8 @@ namespace AthenHill
   void RemoveSelected()
   {
    string reason="Select an equipped item first.";bool ok=false;
-   if(selectedSocket!=null&&Craft!=null)ok=Craft.TryRemove(selectedWeapon,selectedSocket,out reason);
+   if(selectedModification>=0&&selectedSlot!=null)ok=Character.TryRemoveModification(selectedSlot,selectedModification,out reason);
+   else if(selectedSocket!=null&&Craft!=null)ok=Craft.TryRemove(selectedWeapon,selectedSocket,out reason);
    else if(selectedSlot!=null)ok=Character.TryUnequip(selectedSlot,out reason);
    Result(ok,reason,"Returned to pack.");
   }
@@ -237,7 +357,8 @@ namespace AthenHill
    }
    else if(toSlot!=null)
    {
-    if(fromSocket!=null)reason="Weapon mods belong in a compatible weapon socket.";
+    if(selectedModification>=0&&toSlot==selectedSlot&&fromSlot==null&&fromSocket==null&&Character.Modification(item)!=null)ok=Character.TryInstallModification(toSlot,selectedModification,item,out reason);
+    else if(fromSocket!=null)reason="Weapon mods belong in a compatible weapon socket.";
     else if(fromSlot!=null)ok=Character.TryMove(fromSlot,toSlot,out reason);
     else ok=Character.TryEquip(item,toSlot,out reason);
    }

@@ -13,7 +13,7 @@ namespace AthenHill
  [Serializable] public class ShopProfile
  {
   public string title="Basic General",subtitle="Mira · Supplies, parts and salvage";
-  [Tooltip("The catalog's first three items (flask, medkit, scrap coil) to buy and sell.")]public bool supplies=true;
+  [Tooltip("Tradeable catalog items with a buy price, including supplies and equipment.")]public bool supplies=true;
   [Tooltip("Common and uncommon crafting parts at their parts price.")]public bool parts=true;
   [Tooltip("Raw salvage bought at its sell price.")]public bool salvage=true;
  }

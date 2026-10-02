@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -48,6 +49,89 @@ namespace AthenHill
   // Shadow modes as authored (read before first person can hide the colonist): shadow-only proxies stay out.
   readonly Dictionary<Renderer,ShadowCastingMode> authored=new Dictionary<Renderer,ShadowCastingMode>();
   bool swapped;
+  GameObject weaponRoot;
+  string weaponSignature;
+  Bounds weaponBounds;
+  readonly List<Mesh> previewMeshes=new List<Mesh>();
+  readonly List<bool> savedEnabled=new List<bool>();
+  public bool ShowingWeapon {get;private set;}
+  sealed class StudioState{public Light light;public Vector3 position;public Quaternion rotation;public float intensity,range;}
+  readonly List<StudioState> studioState=new List<StudioState>();
+  void CaptureStudio()
+  {
+   if(studioState.Count>0)return;
+   foreach(var light in studioLights)if(light)studioState.Add(new StudioState{light=light,position=light.transform.localPosition,rotation=light.transform.localRotation,intensity=light.intensity,range=light.range});
+  }
+  void RestoreStudio()
+  {
+   foreach(var state in studioState)if(state.light){state.light.transform.localPosition=state.position;state.light.transform.localRotation=state.rotation;state.light.intensity=state.intensity;state.light.range=state.range;}
+   studioState.Clear();
+  }
+  void FrameWeaponStudio(float range,float radius)
+  {
+   float scale=Mathf.Max(.08f,radius/.95f);var subject=Vector3.forward*range;
+   foreach(var state in studioState)if(state.light)
+   {
+    var p=(state.position-Vector3.forward*distance)*scale+subject;
+    state.light.transform.localPosition=p;state.light.transform.localRotation=Quaternion.LookRotation(subject-p,Vector3.up);
+    state.light.intensity=state.intensity*scale*scale;state.light.range=Mathf.Max(.5f,state.range*scale);
+   }
+  }
+
+  /// A display-only mesh copy has no colliders, scripts, audio, animator or gameplay state.
+  /// Its renderers are enabled only for the preview camera pass, so it cannot leak into the world camera.
+  public bool SetWeapon(GameObject source,WeaponLoadout loadout)
+  {
+   string next=source?source.GetEntityId()+":"+(loadout==null?"":string.Join(";",loadout.Slots.Select(x=>loadout.Fitted(x)))):"missing";
+   if(ShowingWeapon&&weaponSignature==next)return weaponRoot!=null&&renderers.Count>0;
+   Restore();CaptureStudio();DestroyWeapon();ShowingWeapon=true;weaponSignature=next;Yaw=0;
+   if(!source){renderers.Clear();return false;}
+   var excluded=new HashSet<Renderer>(source.GetComponentsInChildren<MuzzleFlash>(true).Where(x=>x.card).Select(x=>x.card));
+   weaponRoot=new GameObject("Inventory weapon display"){hideFlags=HideFlags.DontSave};weaponRoot.transform.position=new Vector3(0,-10000,0);
+   void Copy(Transform from,Transform parent,bool first)
+   {
+    var node=new GameObject(from.name){hideFlags=HideFlags.DontSave};node.transform.SetParent(parent,false);
+    node.transform.localPosition=first?Vector3.zero:from.localPosition;node.transform.localRotation=first?Quaternion.identity:from.localRotation;
+    node.transform.localScale=first?from.lossyScale:from.localScale;
+    bool on=first||from.gameObject.activeSelf;
+    if(loadout?.Modifier(from.name)!=null)on=loadout.Slots.Any(x=>loadout.Fitted(x)==from.name);
+    node.SetActive(on);node.layer=previewLayer;
+    var filter=from.GetComponent<MeshFilter>();var meshRenderer=from.GetComponent<MeshRenderer>();
+    if(filter&&filter.sharedMesh&&meshRenderer&&!excluded.Contains(meshRenderer)&&meshRenderer.shadowCastingMode!=ShadowCastingMode.ShadowsOnly)
+    {
+     node.AddComponent<MeshFilter>().sharedMesh=filter.sharedMesh;
+     var output=node.AddComponent<MeshRenderer>();output.sharedMaterials=meshRenderer.sharedMaterials;output.shadowCastingMode=ShadowCastingMode.Off;output.receiveShadows=false;output.enabled=false;
+    }
+    var skin=from.GetComponent<SkinnedMeshRenderer>();
+    if(skin&&skin.sharedMesh&&!excluded.Contains(skin)&&skin.shadowCastingMode!=ShadowCastingMode.ShadowsOnly)
+    {
+     var mesh=new Mesh{name="Inventory weapon mesh"};skin.BakeMesh(mesh);previewMeshes.Add(mesh);node.AddComponent<MeshFilter>().sharedMesh=mesh;
+     var output=node.AddComponent<MeshRenderer>();output.sharedMaterials=skin.sharedMaterials;output.shadowCastingMode=ShadowCastingMode.Off;output.receiveShadows=false;output.enabled=false;
+    }
+    foreach(Transform child in from)Copy(child,node.transform,false);
+   }
+   Copy(source.transform,weaponRoot.transform,true);
+   renderers.Clear();renderers.AddRange(weaponRoot.GetComponentsInChildren<Renderer>(false));
+   if(renderers.Count==0){DestroyWeapon();return false;}
+   weaponBounds=renderers[0].bounds;foreach(var r in renderers)weaponBounds.Encapsulate(r.bounds);
+   float length=Mathf.Max(weaponBounds.size.x,weaponBounds.size.y,weaponBounds.size.z);
+   float metres=loadout!=null&&loadout.WeaponId.Contains("pistol")?.34f:.9f;
+   if(length>.0001f)weaponRoot.transform.localScale=Vector3.one*(metres/length);
+   weaponBounds=renderers[0].bounds;foreach(var r in renderers)weaponBounds.Encapsulate(r.bounds);
+   if(Active)Frame();return true;
+  }
+  public void ShowCharacter()
+  {
+   if(!ShowingWeapon)return;Restore();DestroyWeapon();RestoreStudio();ShowingWeapon=false;weaponSignature=null;Yaw=0;
+   if(Active){CollectRenderers();Frame();}
+  }
+  void DestroyWeapon()
+  {
+   if(weaponRoot){weaponRoot.SetActive(false);ReleasePreviewObject(weaponRoot);weaponRoot=null;}
+   foreach(var mesh in previewMeshes)if(mesh)ReleasePreviewObject(mesh);previewMeshes.Clear();
+  }
+
+  static void ReleasePreviewObject(Object value){if(Application.isPlaying)Destroy(value);else DestroyImmediate(value);}
 
   void Awake()
   {
@@ -57,11 +141,12 @@ namespace AthenHill
   }
   void OnEnable(){RenderPipelineManager.beginCameraRendering+=Begin;RenderPipelineManager.endCameraRendering+=End;}
   void OnDisable(){RenderPipelineManager.beginCameraRendering-=Begin;RenderPipelineManager.endCameraRendering-=End;Restore();SetActive(false);}
-  void OnDestroy(){if(Texture){Texture.Release();Destroy(Texture);Texture=null;}}
+  void OnDestroy(){DestroyWeapon();RestoreStudio();if(Texture){Texture.Release();ReleasePreviewObject(Texture);Texture=null;}}
 
   /// Starts or stops the preview camera. The texture is created on first use and kept for the session.
   public void SetActive(bool active)
   {
+   if(!active)Restore();
    if(active&&(!previewCamera||!player))active=false;
    if(active==Active&&(!previewCamera||previewCamera.enabled==active))return;
    Active=active;
@@ -89,6 +174,19 @@ namespace AthenHill
   void Frame()
   {
    if(!previewCamera||!player)return;
+   if(ShowingWeapon)
+   {
+    if(!weaponRoot)return;
+    var weaponFocus=weaponBounds.center;float radius=Mathf.Max(.05f,weaponBounds.extents.magnitude);
+    float aspect=Texture?Texture.width/(float)Texture.height:1;
+    float half=Mathf.Atan(Mathf.Tan(fieldOfView*Mathf.Deg2Rad*.5f)*Mathf.Min(1,aspect));
+    float range=radius/Mathf.Sin(half)*1.13f;
+    FrameWeaponStudio(range,radius);
+    var direction=Quaternion.Euler(0,Yaw,0)*new Vector3(.9f,.22f,1).normalized;
+    previewCamera.transform.SetPositionAndRotation(weaponFocus+direction*range,Quaternion.LookRotation(-direction,Vector3.up));
+    previewCamera.nearClipPlane=.01f;previewCamera.farClipPlane=Mathf.Max(10,range*3);previewCamera.fieldOfView=fieldOfView;return;
+   }
+   previewCamera.nearClipPlane=.1f;previewCamera.farClipPlane=100;
    var body=player.visual?player.visual:player.transform;
    var forward=Vector3.ProjectOnPlane(body.forward,Vector3.up);
    if(forward.sqrMagnitude<1e-4f)forward=Vector3.forward;
@@ -103,6 +201,11 @@ namespace AthenHill
   {
    renderers.Clear();sceneLights.Clear();
    if(!player)return;
+   if(ShowingWeapon)
+   {
+    if(weaponRoot)renderers.AddRange(weaponRoot.GetComponentsInChildren<Renderer>(false));
+    return;
+   }
    var body=player.visual?player.visual:player.transform;
    foreach(var r in body.GetComponentsInChildren<Renderer>(true))
    {
@@ -116,19 +219,20 @@ namespace AthenHill
   void Begin(ScriptableRenderContext context,Camera camera)
   {
    if(camera!=previewCamera||!Active||swapped)return;
-   savedLayers.Clear();savedShadows.Clear();
+   savedLayers.Clear();savedShadows.Clear();savedEnabled.Clear();
    foreach(var r in renderers)
    {
-    savedLayers.Add(r?r.gameObject.layer:0);savedShadows.Add(r?r.shadowCastingMode:ShadowCastingMode.On);
+    savedLayers.Add(r?r.gameObject.layer:0);savedShadows.Add(r?r.shadowCastingMode:ShadowCastingMode.On);savedEnabled.Add(r&&r.enabled);
     if(!r)continue;
     r.gameObject.layer=previewLayer;
+    if(ShowingWeapon)r.enabled=true;
     // First person hides the colonist by leaving only its shadow; the preview shows it whole.
     if(r.shadowCastingMode==ShadowCastingMode.ShadowsOnly)r.shadowCastingMode=ShadowCastingMode.On;
    }
    savedMuted.Clear();
    foreach(var l in muteLights){savedMuted.Add(l&&l.enabled);if(l)l.enabled=false;}
    nearbyMuted.Clear();
-   var at=player.transform.position+Vector3.up*.9f;
+   var at=ShowingWeapon?weaponBounds.center:player.transform.position+Vector3.up*.9f;
    foreach(var l in sceneLights)if(l&&l.enabled&&(l.transform.position-at).sqrMagnitude<(l.range+1.2f)*(l.range+1.2f)){l.enabled=false;nearbyMuted.Add(l);}
    SetStudio(true);
    swapped=true;
@@ -137,7 +241,7 @@ namespace AthenHill
   void Restore()
   {
    if(!swapped)return;
-   for(int i=0;i<renderers.Count&&i<savedLayers.Count;i++){var r=renderers[i];if(!r)continue;r.gameObject.layer=savedLayers[i];r.shadowCastingMode=savedShadows[i];}
+   for(int i=0;i<renderers.Count&&i<savedLayers.Count;i++){var r=renderers[i];if(!r)continue;r.gameObject.layer=savedLayers[i];r.shadowCastingMode=savedShadows[i];if(ShowingWeapon&&i<savedEnabled.Count)r.enabled=savedEnabled[i];}
    for(int i=0;i<muteLights.Length&&i<savedMuted.Count;i++)if(muteLights[i])muteLights[i].enabled=savedMuted[i];
    foreach(var l in nearbyMuted)if(l)l.enabled=true;
    nearbyMuted.Clear();

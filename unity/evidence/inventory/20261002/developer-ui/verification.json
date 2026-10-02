@@ -1,0 +1,67 @@
+{
+  "checkedUtc": "2026-10-02T09:29:54.832985+00:00",
+  "scope": "Local native Unity developer Item Lab; not retired browser game",
+  "tests": {
+    "backendSecurity": "27/27 passed",
+    "javascriptSyntax": "app.js and authoring.js passed",
+    "existingBrowserRegression": "passed",
+    "authoringBrowserRegression": "passed"
+  },
+  "checks": [
+    "Review-only generation and selective apply to unsaved draft",
+    "Hand-edited copy updates comparison without resetting apply choices",
+    "Save persistence and reload",
+    "Exactly three implant sockets",
+    "Editable armour socket types",
+    "8% UI input saved as fractional 0.08",
+    "Generated PNG attachment retains local provenance",
+    "Creative ideas, WAV playback markup and download",
+    "Journal reload",
+    "No page errors, browser key exposure or 390px horizontal overflow"
+  ],
+  "screenshots": {
+    "provider": "mock fixtures only, not live OpenAI image/voice quality",
+    "files": [
+      "item-copy-desktop-fixture.png",
+      "implant-authoring-desktop-fixture.png",
+      "creative-desk-desktop-fixture.png",
+      "creative-desk-mobile-fixture.png",
+      "voice-audition-desktop-fixture.png"
+    ]
+  },
+  "liveApi": {
+    "newCallsThisResume": 0,
+    "priorApprovedTextTest": {
+      "model": "gpt-6-astra",
+      "inputTokens": 2257,
+      "outputTokens": 94,
+      "totalTokens": 2351,
+      "validatedFields": [
+        "name",
+        "description",
+        "designNotes"
+      ],
+      "appliedToGame": false
+    },
+    "liveImageTested": false,
+    "liveVoiceTested": false
+  },
+  "limitations": [
+    "Draft authoring only: accepted definitions/media require deliberate Unity import; no automatic asset or balance mutations.",
+    "Voice auditions use built-in voices and do not assign dialogue to game characters.",
+    "No live image/voice call was performed."
+  ],
+  "sourceSha256": {
+    "unity/tools/devui/ai_authoring.py": "66ae58ddbab66e9740221b51814c584748b495845951ae1b971c1fd317ff93af",
+    "unity/tools/devui/app.js": "806e7e3378b41f1bcba995696713e741c748706e16199d0bf283bf79c3ab9d91",
+    "unity/tools/devui/authoring.js": "f97e9223376752b6840cdb7e48ee8ec1b1fcc6d77ee1ea14e512edbc183afc7d",
+    "unity/tools/devui/browser_authoring_regression.py": "191e57c62daa3e300a6094938b7ba3613d4374bf8fac49de5fcc7c74dedac63a",
+    "unity/tools/devui/browser_regression.py": "9a157b10d8877aa5d8bf25ecc6b139f6538c9ac7211d753b356397948721ea8c",
+    "unity/tools/devui/index.html": "7310af52064a8d4af57255328fbdd18d974615d1305b940c0e2f37bfa6d52dbf",
+    "unity/tools/devui/model.py": "87e81aff4cdd976bb87e55d8465e0ab8dea4ffc77b0173e6ee8cb4b0e07e14c3",
+    "unity/tools/devui/server.py": "553e6c6375683dee4462599f2de23d7394103624f42046123ac96b9db7482c88",
+    "unity/tools/devui/style.css": "09910dfe8b5c8988ada04054212e7770f1532ec9d2b1e600e2b9da735bd4e1a3",
+    "unity/tools/devui/test_ai_authoring.py": "180b00f5329bb59014ce56407b8340466c1838320adaba42251414bdeb38358c",
+    "unity/tools/devui/test_devui.py": "739bd7dab423f651a3e3e0ff5cf8d11323069aae5cf135f6e6f2fa71a9df20b9"
+  }
+}
