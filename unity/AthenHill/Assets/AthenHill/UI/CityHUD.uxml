@@ -60,6 +60,15 @@
         <ui:Button usage-hints="DynamicColor" name="fabricator-fit" text="Fit to pistol"/>
         <ui:Button usage-hints="DynamicColor" name="fabricator-remove" text="Remove"/>
        </ui:VisualElement>
+       <ui:VisualElement usage-hints="DynamicColor" name="fab-progress" class="fab-progress" style="display: none;">
+        <ui:Label usage-hints="DynamicColor" name="fab-progress-label" class="fab-progress-label"/>
+        <ui:VisualElement usage-hints="DynamicColor" class="fab-progress-row">
+         <ui:VisualElement usage-hints="DynamicColor" name="fab-progress-track" class="fab-progress-track">
+          <ui:VisualElement usage-hints="DynamicColor" name="fab-progress-fill" class="fab-progress-fill"/>
+         </ui:VisualElement>
+         <ui:Button usage-hints="DynamicColor" name="fabricator-cancel" text="Cancel" focusable="false" tooltip="Stop fabricating. Nothing is used until the piece is finished."/>
+        </ui:VisualElement>
+       </ui:VisualElement>
        <ui:Label usage-hints="DynamicColor" name="fab-reason" class="fab-reason"/>
       </ui:VisualElement>
       <ui:VisualElement usage-hints="DynamicColor" name="fab-pistol" class="fab-col fab-col-pistol">

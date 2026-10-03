@@ -31,6 +31,7 @@ namespace AthenHill.Editor
     generated=new{utc=DateTime.UtcNow.ToString("o"),unity=Application.unityVersion,sources=new[]{"Assets/AthenHill/Data/CityCatalog.asset","Assets/AthenHill/Data/Crafting/WardCrafting.asset","Assets/AthenHill/Resources/CharacterCatalog.asset"}},
     // Additive to schema 1: rarity/sellOnly/icon on items, all base stats and bounds on weapons, recipe groups,
     // loot min/max quantity, bad-luck protection and first-collection guarantees. "quantity" mirrors minQuantity.
+    // 3 Oct 2026: craftSeconds on recipes (bench time; 0 = instant).
     // 30 Sep 2026: partsPrice on items (Basic General Buy parts; 0 = not stocked) and the Foreman's two escorts.
     items=city.items.Select((x,i)=>new{x.id,x.name,x.description,tags=x.tags??Array.Empty<string>(),x.maxStack,x.excludeFromTrade,x.buyPrice,x.sellPrice,x.startingQuantity,rarity=x.rarity.ToString(),x.sellOnly,x.icon,x.partsPrice,x.weightKg,catalogIndex=i}).ToArray(),
     weapons=craft.weapons.Select(x=>new{x.id,x.name,baseStats=Stats(x.stats),minStats=Stats(x.minStats),maxStats=Stats(x.maxStats),x.slots,stateSource="PlayerCombat.hasPistol"}).ToArray(),
@@ -39,7 +40,7 @@ namespace AthenHill.Editor
     character=character?new{character.basePackSlots,character.slots,character.equipment,character.modifications,
      stats=character.attributes.Select(x=>new{x.id,x.label}).Concat(character.skills.Select(x=>new{x.id,x.label})).Concat(character.derivedStats.Select(x=>new{x.id,x.label})).ToArray(),
      modifierPercentConvention="fraction: 0.08 means +8%"}:null,
-    recipes=craft.recipes.Select(x=>new{x.id,x.name,group=x.group.ToString(),x.stationId,x.requiresWeaponId,x.outputItemId,x.outputQuantity,x.inputs,x.knownByDefault,x.unlocks,x.lockedHint}).ToArray(),
+    recipes=craft.recipes.Select(x=>new{x.id,x.name,group=x.group.ToString(),x.stationId,x.requiresWeaponId,x.outputItemId,x.outputQuantity,x.inputs,x.knownByDefault,x.unlocks,x.lockedHint,x.craftSeconds}).ToArray(),
     lootTables=craft.lootTables.Select(t=>new{t.id,entries=t.entries.Select(e=>new{e.itemId,quantity=e.minQuantity,e.minQuantity,maxQuantity=Math.Max(e.minQuantity,e.maxQuantity),e.chance,e.pityAfter,e.guaranteeUntilCollected}).ToArray()}).ToArray(),
     enemies=new[]{new{id="feral_scrap_drone",prefab="Assets/AthenHill/Prefabs/OuterBerms/FeralScrapDrone.prefab",lootTableId="loot_feral_scrap_drone"},new{id="feral_worker_droid",prefab="Assets/AthenHill/Prefabs/OuterBerms/FeralWorkerDroid.prefab",lootTableId="loot_feral_worker_droid"},new{id="depot_foreman",prefab="Assets/AthenHill/Prefabs/OuterBerms/FeralDepotForeman.prefab",lootTableId="loot_depot_foreman"}},
     encounters=new object[]{new{id="first_contact",spawns=new[]{"feral_scrap_drone"},tutorial=true},new{id="machine_depot",spawns=new[]{"feral_worker_droid","feral_worker_droid","feral_scrap_drone"},tutorial=true},new{id="depot_foreman",spawns=new[]{"depot_foreman","feral_worker_droid","feral_worker_droid"},fieldOrder="order_depot_foreman"}},
@@ -74,6 +75,7 @@ namespace AthenHill.Editor
    {
     if(!ids.Contains(recipe.outputItemId)||recipe.outputQuantity<1||!craft.stations.Any(x=>x.id==recipe.stationId)||!string.IsNullOrEmpty(recipe.requiresWeaponId)&&!craft.weapons.Any(x=>x.id==recipe.requiresWeaponId))throw new Exception("Recipe reference invalid: "+recipe.id);
     if(craft.recipes.Count(x=>x.id==recipe.id)!=1)throw new Exception("Duplicate recipe: "+recipe.id);
+    if(float.IsNaN(recipe.craftSeconds)||recipe.craftSeconds<0||recipe.craftSeconds>600)throw new Exception("Craft time out of range (0-600 s): "+recipe.id);
     if(recipe.requiredTools!=null&&recipe.requiredTools.Any(id=>!ids.Contains(id)))throw new Exception("Invalid recipe tool: "+recipe.id);
     if(recipe.requiredSchematics!=null&&recipe.requiredSchematics.Any(id=>!craft.recipes.Any(r=>r.id==id)))throw new Exception("Invalid prerequisite schematic: "+recipe.id);
     if(!string.IsNullOrEmpty(recipe.outputWeaponId)&&!craft.weapons.Any(w=>w.id==recipe.outputWeaponId&&w.itemId==recipe.outputItemId&&recipe.outputQuantity==1&&recipe.outputSlots!=null&&recipe.outputSlots.All(s=>!string.IsNullOrEmpty(s))&&recipe.outputSlots.Distinct().Count()==recipe.outputSlots.Length))throw new Exception("Invalid weapon schematic: "+recipe.id);

@@ -602,6 +602,7 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .fab-recipe.locked .fab-recipe-name { color: #8c958b; }
 .fab-recipe.ready .fab-recipe-state { color: #58d5d7; }
 .fab-recipe.fitted .fab-recipe-state { color: #daca9e; }
+.fab-recipe.working .fab-recipe-state { color: #58d5d7; }
 .fab-recipe.selected { border-left-width: 3px; border-left-color: #a48a62; background-image: url("Art/button-focus.png"); -unity-background-image-tint-color: #9fb5ad; }
 .fab-recipe.selected:focus { -unity-background-image-tint-color: #ffffff; border-left-color: #58d5d7; }
 .fab-title { font-size: 24px; color: #eee9dc; margin-bottom: 4px; white-space: normal; }
@@ -616,6 +617,14 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .fab-actions Button { margin: 4px 8px 4px 0; min-height: 44px; padding: 10px 16px; font-size: 17px; }
 #fabricator-craft { color: #8be6df; }
 #fabricator-craft:disabled { color: #8c958b; }
+/* Timed crafting (3 Oct 2026): the bench's progress under the actions, the salvage-search track in the fabricator. */
+.fab-progress { margin-top: 8px; padding: 8px 10px 10px; border-width: 1px; border-color: #535f58; background-color: #101a1b; }
+.fab-progress-label { font-size: 17px; color: #eee9dc; margin-bottom: 7px; white-space: normal; }
+.fab-progress-row { flex-direction: row; align-items: center; }
+.fab-progress-track { flex-grow: 1; flex-shrink: 1; height: 10px; background-color: #0b1213; border-width: 1px; border-color: #65706a; margin-right: 12px; }
+.fab-progress-fill { height: 100%; width: 0; background-color: #49cbd0; border-top-width: 1px; border-top-color: #86e6df; }
+#fabricator-cancel { flex-shrink: 0; min-height: 40px; padding: 8px 16px; margin: 0; font-size: 17px; }
+.small-window .fab-progress-label { font-size: 20px; }
 .fab-reason { font-size: 17px; white-space: normal; color: #bcbcad; margin-top: 6px; }
 .fab-reason.blocked { color: #db7d6b; }
 .fab-reason.fitted { color: #daca9e; }

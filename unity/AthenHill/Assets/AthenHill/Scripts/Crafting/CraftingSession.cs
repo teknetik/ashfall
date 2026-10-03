@@ -36,10 +36,58 @@ namespace AthenHill
    if(!data){Debug.LogError("Ward crafting data is missing.");yield break;}
    Loot=new LootBook(freshSeedPerNewGame?unchecked((ulong)DateTime.UtcNow.Ticks):unchecked((ulong)lootSeed));
    Model=new CraftingModel(data,Session.catalog.items,Session.Shop,()=>combat&&combat.hasPistol,character:Session.Character);
-   if(combat){combat.BindLoadout(Model.Loadout);combat.BindCraftingModel(Model);}
+   if(combat){combat.BindLoadout(Model.Loadout);combat.BindCraftingModel(Model);if(combat.Health)combat.Health.Damaged+=OnDamaged;}
    Session.PartBought+=OnPartBought;
+   Session.Changed+=OnSessionChanged;
   }
-  void OnDestroy(){if(combat){combat.BindCraftingModel(null);combat.BindLoadout(null);}if(Session)Session.PartBought-=OnPartBought;}
+  void OnDestroy(){if(combat){if(combat.Health)combat.Health.Damaged-=OnDamaged;combat.BindCraftingModel(null);combat.BindLoadout(null);}if(Session){Session.PartBought-=OnPartBought;Session.Changed-=OnSessionChanged;}}
+  // ---- Timed fabrication (3 Oct 2026). One job at a time; the bench window stays open (modal) while it runs.
+  /// The fabrication in progress, or null.
+  public CraftJob Job=>Model?.Job;
+  /// A timed job ended: (job, completed, reason). Completed = parts used and the output is in the pack; otherwise
+  /// nothing changed (cancelled, interrupted, or the parts were gone at completion).
+  public event Action<CraftJob,bool,string> CraftFinished;
+  string jobBench;
+  /// Leaving the bench (Esc, Close, any other state) stops the job at once; nothing was used.
+  void OnSessionChanged(){if(Model?.Job!=null&&Session.State!=CityState.Fabricator)CancelCraft("You left the bench.");}
+  void OnDamaged(float amount,Vector3 point){if(amount>0&&Model?.Job!=null)CancelCraft("You were hit.");}
+  void Update()
+  {
+   if(Model?.Job==null)return;
+   if(!Session||Session.State!=CityState.Fabricator){CancelCraft("You left the bench.");return;}
+   TickCraft(Time.time);
+  }
+  /// Advances the job to time now (Update passes Time.time; tests pass the job's end time). Completion commits the
+  /// craft atomically through CraftingModel.TickCraft.
+  public void TickCraft(float now)
+  {
+   if(Model==null)return;
+   var tick=Model.TickCraft(now,out var job,out var reason);
+   if(tick==CraftTick.None)return;
+   var recipe=Model.Recipe(job.recipeId);bool ok=tick==CraftTick.Completed;
+   string bench=jobBench??Bench;jobBench=null;
+   if(Session)
+   {
+    Session.Notify(ok?Fabricated(recipe):"Fabrication failed. "+CraftingText.Reason(reason,Model,recipe)+" Nothing was used.",bench);
+    Session.Cue(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);
+   }
+   CraftFinished?.Invoke(job,ok,reason);
+  }
+  /// Cancel button, Esc/close or damage. why: a short sentence for the notice (null = the Cancel button).
+  public bool CancelCraft(string why=null)
+  {
+   if(Model==null||!Model.CancelCraft(out var job))return false;
+   var recipe=Model.Recipe(job.recipeId);
+   string bench=jobBench??Bench;jobBench=null;
+   if(Session)
+   {
+    Session.Notify((string.IsNullOrEmpty(why)?"":why+" ")+$"{CraftingText.ItemName(Model,recipe?.outputItemId)} not made. Nothing was used.",bench);
+    Session.Cue(CitySoundCue.Unavailable);
+   }
+   CraftFinished?.Invoke(job,false,"cancelled");
+   return true;
+  }
+  string Fabricated(CraftRecipe recipe)=>$"{CraftingText.ItemName(Model,recipe.outputItemId)} fabricated."+(Model.Loadout.Modifier(recipe.outputItemId)!=null?" Fit it to a compatible weapon.":"");
   /// A part bought at a counter reveals the schematics that use it, exactly like finding one.
   void OnPartBought(PartPurchase purchase)
   {
@@ -63,19 +111,29 @@ namespace AthenHill
   /// Who signs the fabrication notices: the open workbench's title.
   string Bench=>Session&&Session.ActiveStation&&!string.IsNullOrEmpty(Session.ActiveStation.title)?Session.ActiveStation.title:"Workbench";
   bool AtStation(out string reason){if(Model==null||Session.State!=CityState.Fabricator){reason="wrong_station";return false;}reason="ok";return true;}
+  /// Fitting and removing wait while the bench is fabricating.
+  bool BenchFree(out string reason){if(!AtStation(out reason))return false;if(Model.Job!=null){reason="busy";return false;}return true;}
+  /// Fabricate: an instant schematic (craftSeconds 0) is made now; a timed one starts the bench timer (Job) and is made
+  /// when it completes. True when made or started.
   public bool Craft(string recipeId,out string reason)
   {
    if(!AtStation(out reason))return false;
    var recipe=Model.Recipe(recipeId);
-   bool ok=Model.TryCraft(recipeId,Session.ActiveStationId,out reason);
-   Session.Notify(ok?$"{CraftingText.ItemName(Model,recipe.outputItemId)} fabricated."+(Model.Loadout.Modifier(recipe.outputItemId)!=null?" Fit it to a compatible weapon.":""):"Fabrication failed. "+CraftingText.Reason(reason,Model,recipe),Bench);
+   bool ok=Model.BeginCraft(recipeId,Session.ActiveStationId,Time.time,out reason);
+   if(ok&&Model.Job!=null)
+   {
+    jobBench=Bench;
+    Session.Notify($"Fabricating the {CraftingText.ItemName(Model,recipe.outputItemId)}: {CraftingText.Duration(Model.Job.seconds)} at the bench. Cancel or Esc stops it; nothing is used until it is done.",jobBench);
+    return true;
+   }
+   Session.Notify(ok?Fabricated(recipe):"Fabrication failed. "+CraftingText.Reason(reason,Model,recipe),Bench);
    return ok;
   }
   public bool Fit(string itemId,out string reason)
    =>Fit(Model?.Loadout.WeaponId,itemId,out reason);
   public bool Fit(string weaponId,string itemId,out string reason)
   {
-   if(!AtStation(out reason))return false;
+   if(!BenchFree(out reason))return false;
    var loadout=Model.GetLoadout(weaponId);
    var before=loadout?.Stats??default;
    bool ok=Model.TryFit(weaponId,itemId,out reason);
@@ -87,7 +145,7 @@ namespace AthenHill
    =>Remove(Model?.Loadout.WeaponId,slot,out reason);
   public bool Remove(string weaponId,string slot,out string reason)
   {
-   if(!AtStation(out reason))return false;
+   if(!BenchFree(out reason))return false;
    var itemId=Model.GetLoadout(weaponId)?.Fitted(slot);
    bool ok=Model.TryRemove(weaponId,slot,out reason);
    Session.Notify(ok?$"{CraftingText.ItemName(Model,itemId)} returned to your pack.":"Cannot remove. "+CraftingText.Reason(reason,Model,null,itemId),Bench);

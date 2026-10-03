@@ -243,13 +243,24 @@ def phase_a():
         d1 = []
         r['firstContact'] = qa.fight(until=lambda s: s['combat']['step'] == 'Depot', seconds=150, deaths=d1)
         ok(qa.snap()['combat']['step'] == 'Depot', 'A: the service-road pair put down with real F; depot nest armed', r['firstContact'])
-        qa.face(-80.6, -36.2); time.sleep(.6)   # the marker only shows while its target is in view
-        marker = []
+        # The marker only shows while its target (the nearest live depot droid, BermsTutorial.NearestLive) is inside
+        # 5-95 % x / 8-92 % y of the view and within 60 m. 3 Oct 2026 flake fix (art/timed_crafting_20261003/FLAKES.md):
+        # face() sets only the yaw, so the pitch left by the fight's last aim_at (a drone killed ~3 m away; clamped
+        # -35..40 deg) could put a target 25 m away above or below the 50-degree view. Level the camera and face the
+        # nearest live droid within 60 m (the marker's own target), not the fixed depot centre; record what was seen.
+        marker = []; seen = []; r['cameraAfterFirstContact'] = {k: qa.snap()['camera'].get(k) for k in ('pitch', 'yaw', 'boom')}
         for _ in range(8):   # the marker refreshes with the HUD; poll briefly
+            s = qa.snap(); p = s['player']['position']
+            live = [e for e in s['combat']['enemies'] if e['alive'] and math.hypot(e['position'][0] - p[0], e['position'][2] - p[2]) < 60]
+            tgt = min(live, key=lambda e: math.hypot(e['position'][0] - p[0], e['position'][2] - p[2]))['position'] if live else (-80.6, 0, -36.2)
+            qa.face(tgt[0], tgt[2]); qa.pitch(6); time.sleep(.5)
             lay = qa.ui(); marker = [x['text'] for x in lay['elements'] if x['visible'] and x.get('text') and 'MACHINE DEPOT' in x['text']]
+            cam = qa.snap()['camera']
+            seen.append({'pitch': round(cam['pitch'], 1), 'yaw': round(cam['yaw'], 1), 'player': [round(v, 1) for v in p], 'target': [round(v, 1) for v in tgt], 'live': len(live),
+                         'guidance': [(x['text'], x['visible']) for x in lay['elements'] if 'checkpoint-guidance' in x.get('classes', [])][:1]})
             if marker: break
-            qa.face(-80.6, -36.2); time.sleep(.5)
-        ok(bool(marker), 'A: the HUD marker now points at the machine depot', marker[:2])
+        r['depotMarker'] = seen
+        ok(bool(marker), 'A: the HUD marker now points at the machine depot', marker[:2] or seen[-3:])
         qa.goto('depot_approach'); qa.view('follow'); time.sleep(.4)
         d2 = []
         r['depot'] = qa.fight(until=lambda s: s['combat']['step'] == 'Complete', seconds=300, deaths=d2, center=(-80.6, -36.2), leash=16, regroup='depot_approach')
@@ -287,7 +298,13 @@ def phase_b():
             if e and e['visible']: qa.click_at(*centre(lay, 'fab-recipe-recipe_field_rifle')); time.sleep(.4)
         cap('b-bench-rifle')
         e = qa.el(qa.ui(), 'fabricator-craft'); qa.click_at(*centre(qa.ui(), 'fabricator-craft')) if e and e['visible'] else qa.tap('Return', settle=.8)
-        time.sleep(.8); c = qa.craft()
+        # 3 Oct 2026: timed crafting. The rifle takes bench time (20 s); stay in the window until the job completes.
+        time.sleep(.8); job = qa.craft().get('craftJob') or {}; r['craftJob'] = job
+        ok(job.get('recipeId') == 'recipe_field_rifle' or (qa.qty('field_rifle') or 0) >= 1, 'B: Fabricate starts the rifle on the bench timer', job)
+        if job: cap('b-bench-rifle-progress')
+        try: qa.wait(lambda: (qa.qty('field_rifle') or 0) >= 1 and not qa.craft().get('craftJob'), float(job.get('seconds') or 0) + 10, step=.3, what='bench timer')
+        except TimeoutError: pass
+        c = qa.craft()
         ok((qa.qty('field_rifle') or 0) >= 1, 'B: the Field Rifle is fabricated at the bench', {'crafts': c.get('crafts'), 'rifle': qa.qty('field_rifle'), 'reason': (qa.el(qa.ui(), 'fab-reason') or {}).get('text')})
         qa.tap('Escape', settle=.6); qa.wait(lambda: qa.state() == 'Play', 6, what='fabricator closed')
         qa.wait(lambda: qa.craft().get('fieldOrder') == LONG_ARM + 1, 6, what='Long Arm order completion')

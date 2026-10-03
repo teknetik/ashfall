@@ -97,6 +97,31 @@ namespace AthenHill
    if(output.maxStack>0&&(long)pack.Quantity(output.id)+recipe.outputQuantity>output.maxStack){reason="output_stack_full";return false;}
    reason="ok";return true;
   }
+  /// The timed fabrication in progress (one at a time), or null. Nothing is reserved or consumed while it runs.
+  public CraftJob Job {get;private set;}
+  /// Bench seconds for a schematic (0 = instant).
+  public float CraftSeconds(string recipeId){var r=Recipe(recipeId);return r!=null&&r.craftSeconds>0?r.craftSeconds:0;}
+  /// Starts fabrication at time now. An instant schematic (0 s) commits straight away through TryCraft and leaves Job
+  /// null; a timed one only validates and starts the timer: the parts stay in the pack until TickCraft completes it.
+  public bool BeginCraft(string recipeId,string stationId,float now,out string reason)
+  {
+   if(Job!=null){reason="busy";return false;}
+   if(!ValidateCraft(recipeId,stationId,out _,out reason))return false;
+   float seconds=CraftSeconds(recipeId);
+   if(seconds<=0)return TryCraft(recipeId,stationId,out reason);
+   Job=new CraftJob(recipeId,stationId,now,seconds);reason="started";return true;
+  }
+  /// Completes the job once its time is up: validates again and commits inputs and output in one transaction, so parts
+  /// that left the pack meanwhile fail the craft with nothing changed. Returns None while it is still running.
+  public CraftTick TickCraft(float now,out CraftJob job,out string reason)
+  {
+   job=Job;reason="ok";
+   if(job==null||!job.Done(now))return CraftTick.None;
+   Job=null;
+   return TryCraft(job.recipeId,job.stationId,out reason)?CraftTick.Completed:CraftTick.Failed;
+  }
+  /// Stops the job; nothing was consumed. False when nothing was running.
+  public bool CancelCraft(out CraftJob job){job=Job;Job=null;return job!=null;}
   public bool TryCraft(string recipeId,string stationId,out string reason)
   {
    if(!ValidateCraft(recipeId,stationId,out var used,out reason))return false;
@@ -169,6 +194,7 @@ namespace AthenHill
   public List<string> Restore(CraftingState state)
   {
    var skipped=new List<string>();
+   Job=null; // a fabrication in progress is never saved: nothing was consumed, so nothing is lost
    known.Clear();crafted.Clear();Crafts=0;
    foreach(var loadout in loadouts.Values)loadout.Replace(null);
    foreach(var recipe in data.recipes)if(recipe.knownByDefault)known.Add(recipe.id);
@@ -193,6 +219,19 @@ namespace AthenHill
    Changed?.Invoke();
    return skipped;
   }
+ }
+ public enum CraftTick { None, Completed, Failed }
+ /// One timed fabrication: which schematic, at which station, when it started and how long it takes. Pure (the caller
+ /// supplies the clock), like SalvageSearch.
+ public sealed class CraftJob
+ {
+  public readonly string recipeId,stationId;
+  public readonly float startedAt,seconds;
+  public CraftJob(string recipeId,string stationId,float startedAt,float seconds){this.recipeId=recipeId;this.stationId=stationId;this.startedAt=startedAt;this.seconds=Math.Max(0,seconds);}
+  public float EndsAt=>startedAt+seconds;
+  public bool Done(float now)=>now>=EndsAt;
+  public float Progress(float now)=>seconds<=0?1:Math.Min(1,Math.Max(0,(now-startedAt)/seconds));
+  public float Remaining(float now)=>Math.Max(0,EndsAt-now);
  }
  [Serializable] public class CountEntry {public string id;public int count;}
  [Serializable] public class SlotEntry {public string slot,itemId;}

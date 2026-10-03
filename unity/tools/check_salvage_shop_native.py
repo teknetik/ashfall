@@ -28,6 +28,22 @@ items = {'droid_servo_damaged': 1, 'scrap_alloy': 2, 'nanite_residue': 5, 'coppe
 
 checks = []; report = {'checks': checks}
 
+def merchant_select(item_id):
+    """Real keyboard: only the selected stock row is a Tab stop; arrows move between rows, Return selects (as
+    native_client.select_merchant_item)."""
+    rows = [e['name'] for e in qa.ui()['elements'] if e.get('visible') and e.get('enabled') and (e.get('name') or '').startswith('merchant-item-')]
+    target = 'merchant-item-' + item_id
+    assert target in rows, ('stock row absent', target, rows)
+    for _ in range(40):
+        f = qa.snap()['session']['focused']
+        if f in rows: break
+        qa.tap('Tab', settle=.15)
+    else: raise AssertionError('could not keyboard-focus the merchant stock')
+    for _ in range(abs(rows.index(target) - rows.index(f))): qa.tap('Down' if rows.index(target) > rows.index(f) else 'Up', settle=.15)
+    assert qa.snap()['session']['focused'] == target, ('arrows focused', qa.snap()['session']['focused'], target)
+    qa.tap('Return', settle=.3)
+
+
 
 def ok(cond, what, detail=None):
     checks.append({'check': what, 'passed': bool(cond), 'detail': detail})
@@ -88,9 +104,16 @@ try:
     ok(qa.state() == 'Fabricator' and inter()['station'] == 'Salvage workbench', '"Use the bench." opens the Salvage workbench', inter())
     qa.capture('workbench-open')
 
-    # fabricate and fit with Enter (the window focuses the order's part)
+    # fabricate and fit with Enter (the window focuses the order's part). 3 Oct 2026: timed crafting; the grip takes
+    # bench time (8 s), so Enter starts the job (progress bar, Cancel focused) and the check waits with the window open.
     qa.tap('Return', settle=.8)
-    c = qa.craft(); ok(c['crafts'] >= 1 and (qa.qty('grip_stabilised_pistol') or 0) >= 1, 'Enter fabricates the stabilised grip', {'crafts': c['crafts'], 'grip': qa.qty('grip_stabilised_pistol'), 'notice': qa.snap()['session']['notice']})
+    job = qa.craft().get('craftJob') or {}
+    ok(job.get('recipeId') == 'recipe_grip_stabilised_pistol' or (qa.qty('grip_stabilised_pistol') or 0) >= 1, 'Enter starts fabricating the stabilised grip at the bench', job)
+    qa.capture('workbench-fabricating')
+    try: qa.wait(lambda: (qa.qty('grip_stabilised_pistol') or 0) >= 1 and not qa.craft().get('craftJob'), float(job.get('seconds') or 0) + 8, step=.3, what='bench timer')
+    except TimeoutError: pass
+    c = qa.craft(); ok(c['crafts'] >= 1 and (qa.qty('grip_stabilised_pistol') or 0) >= 1, 'the bench finishes the stabilised grip', {'crafts': c['crafts'], 'grip': qa.qty('grip_stabilised_pistol'), 'job': c.get('craftJob'), 'notice': qa.snap()['session']['notice']})
+    time.sleep(.5)   # focus moves to Fit on the next UI tick
     qa.tap('Return', settle=.8)
     c = qa.craft(); ok((c.get('slots') or {}).get('grip') == 'grip_stabilised_pistol', 'Enter fits it to the pistol', c.get('slots'))
     qa.capture('grip-fitted')
@@ -110,16 +133,18 @@ try:
     labels = i['choices'] or []
     qa.activate('choice%d' % next(n for n, l in enumerate(labels) if l.startswith('Show me what you trade')))
     ok(qa.state() == 'Shop' and inter()['shop'] == 'Salvage', 'his counter opens as Salvage', inter())
-    lay = qa.ui()
-    vis = lambda n: (qa.el(lay, n) or {}).get('visible')
-    ok(not vis('supplies-heading') and vis('parts-heading') and vis('salvage-heading'), 'Salvage shows parts and salvage, not supplies', {n: vis(n) for n in ('supplies-heading', 'parts-heading', 'salvage-heading')})
-    ok('BRANN' in ((qa.el(lay, 'parts-heading') or {}).get('text') or ''), 'parts heading names Brann', (qa.el(lay, 'parts-heading') or {}).get('text'))
+    # 3 Oct 2026: the merchant window was redesigned on 2 Oct (buy/sell tabs, filters, item rows, one Trade button);
+    # the old supplies/parts/salvage headings and buy-part-*/sell-salvage-* buttons are gone
+    qa.activate('merchant-tab-buy'); lay = qa.ui()
+    names = {e.get('name') for e in lay['elements'] if e.get('visible') and (e.get('name') or '').startswith('merchant-item-')}
+    ok('merchant-item-scrap_alloy' in names and not names & {'merchant-item-water_flask', 'merchant-item-medkit'},
+       'Salvage sells parts, not supplies', sorted(names)[:12])
     qa.capture('brann-shop')
     a0, cr0 = qa.qty('scrap_alloy') or 0, qa.snap()['session']['credits']
-    qa.activate('buy-part-scrap_alloy')
+    merchant_select('scrap_alloy'); qa.activate('merchant-trade')
     ok((qa.qty('scrap_alloy') or 0) == a0 + 1 and qa.snap()['session']['credits'] < cr0, 'bought scrap alloy from Brann', {'alloy': qa.qty('scrap_alloy'), 'credits': qa.snap()['session']['credits']})
     f0, cr1 = qa.qty('copper_filament') or 0, qa.snap()['session']['credits']
-    qa.activate('sell-salvage-copper_filament')
+    qa.activate('merchant-tab-sell'); merchant_select('copper_filament'); qa.activate('merchant-trade')
     ok((qa.qty('copper_filament') or 0) == f0 - 1 and qa.snap()['session']['credits'] > cr1, 'sold copper filament to Brann', {'filament': qa.qty('copper_filament'), 'credits': qa.snap()['session']['credits'], 'notice': qa.snap()['session']['notice']})
     qa.tap('Escape', settle=.5)
 

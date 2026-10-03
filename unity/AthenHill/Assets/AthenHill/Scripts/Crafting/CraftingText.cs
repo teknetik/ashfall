@@ -28,6 +28,12 @@ namespace AthenHill
    }
    return string.Join(", ",parts);
   }
+  /// Bench time for display: "8 s", "1:05" (whole seconds, rounded up so it never reads 0 while working).
+  public static string Duration(float seconds)
+  {
+   int s=Math.Max(0,(int)Math.Ceiling(seconds-1e-4));
+   return s<60?$"{s} s":$"{s/60}:{s%60:00}";
+  }
   public static string Reason(string code,CraftingModel model,CraftRecipe recipe=null,string itemId=null)
   {
    if(!string.IsNullOrEmpty(code)&&code.Contains(" "))return code;
@@ -58,6 +64,8 @@ namespace AthenHill
     case "wrong_slot":return "That part does not fit this weapon's sockets.";
     case "empty_slot":return "Nothing is fitted in that slot.";
     case "overflow":return "The fabricator's counters are full.";
+    case "busy":return "The bench is already working on a piece. Wait for it or cancel it.";
+    case "cancelled":return "Fabrication stopped. Nothing was used.";
     case "insufficient_items":return "Those parts are no longer in your pack.";
     case "unknown_recipe":case "invalid_recipe":case "unknown_item":return "This schematic record is damaged; check the crafting data.";
     default:return "The fabricator refused that operation.";

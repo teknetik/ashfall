@@ -9,6 +9,8 @@ namespace AthenHill
  // STORY: choose a schematic, see what you have against what it needs, fabricate, then fit it and watch the numbers move.
  // FORM: three columns (schematics | the selected schematic | the pistol's slots and a current vs. preview stats table).
  // Layout lives in CityHUD.uxml/.uss; every name and number here comes from the catalogs.
+ // TIMED (3 Oct 2026): Fabricate starts the bench timer for a schematic with a craft time; a progress bar, the time
+ // left and Cancel replace the actions until it finishes (focus moves to Cancel). Esc / closing the window cancels.
  // KEYBOARD: the schematic list is one Tab stop. Only the selected schematic can take focus, so Tab never passes
  // through (and never changes) the selection: Tab goes list → enabled actions → slot cards. ↑/↓ in the list (or a
  // click / Enter) is the only way to change the selection, and every action works on the visibly selected schematic.
@@ -18,7 +20,10 @@ namespace AthenHill
   readonly CraftingSession crafting;
   readonly VisualElement list,inputs,slots,stats;
   readonly Label title,description,reason,pistolTitle;
-  readonly Button craft,fit,remove;
+  readonly Button craft,fit,remove,cancel;
+  readonly VisualElement progress,progressFill;
+  readonly Label progressLabel;
+  string progressText;float progressShown=-1;
   readonly Dictionary<string,Button> recipeButtons=new Dictionary<string,Button>();
   readonly Dictionary<string,Button> slotButtons=new Dictionary<string,Button>();
   readonly List<(StatLabel label,Label current,Label preview,Label delta)> statRows=new List<(StatLabel,Label,Label,Label)>();
@@ -43,6 +48,11 @@ namespace AthenHill
    title=root.Q<Label>("fabricator-recipe");description=root.Q<Label>("fab-description");reason=root.Q<Label>("fab-reason");pistolTitle=root.Q<Label>("fabricator-stat");
    craft=root.Q<Button>("fabricator-craft");fit=root.Q<Button>("fabricator-fit");remove=root.Q<Button>("fabricator-remove");
    craft.clicked+=Craft;fit.clicked+=Fit;remove.clicked+=Remove;
+   progress=root.Q("fab-progress");progressFill=root.Q("fab-progress-fill");progressLabel=root.Q<Label>("fab-progress-label");cancel=root.Q<Button>("fabricator-cancel");
+   if(cancel!=null){cancel.clicked+=Cancel;cancel.focusable=false;}
+   if(crafting)crafting.CraftFinished+=OnCraftFinished;
+   // The bar and the seconds left move between session refreshes; the scheduler only runs while the HUD is shown.
+   root.schedule.Execute(()=>UpdateProgress(Time.time)).Every(100);
    list.RegisterCallback<NavigationMoveEvent>(ListNavigate,TrickleDown.TrickleDown);
   }
   void Build()
@@ -131,7 +141,7 @@ namespace AthenHill
   }
   void FocusSelected(){var b=SelectedButton;if(b!=null){b.focusable=true;b.Focus();}}
   /// Where an action hands focus: the first enabled action, else the selected schematic.
-  public Focusable ActionFocus=>craft.enabledSelf?craft:fit.enabledSelf?fit:remove.enabledSelf?remove:SelectedButton;
+  public Focusable ActionFocus=>crafting&&crafting.Job!=null&&cancel!=null?cancel:craft.enabledSelf?craft:fit.enabledSelf?fit:remove.enabledSelf?remove:SelectedButton;
   void FocusAction(){var f=ActionFocus;if(f==SelectedButton)FocusSelected();else f?.Focus();}
   /// Arrows inside the list: ↑/↓ step the selection, → jumps to the actions, ← stays. Each press is handled once
   /// here and withheld from UI Toolkit's own focus navigation (which previously moved focus a second time).
@@ -153,8 +163,36 @@ namespace AthenHill
   public void Craft()
   {
    var r=Recipe;if(r==null)return;
-   if(crafting.Craft(r.id,out _))AfterAction(Mod!=null?fit:craft);
+   if(!crafting.Craft(r.id,out _))return;
+   if(crafting.Job!=null)AfterAction(cancel);else AfterAction(Mod!=null?fit:craft);
   }
+  /// The Cancel button (Esc closes the window, which cancels too).
+  public void Cancel(){if(crafting.CancelCraft())AfterAction(craft);}
+  /// The bench finished (or stopped) a timed job: show the made part and offer its next action, as an instant craft does.
+  void OnCraftFinished(CraftJob job,bool ok,string reason)
+  {
+   if(session.State!=CityState.Fabricator||Model==null){Refresh();return;}
+   if(!ok){if(reason!="cancelled")AfterAction(craft);return;}
+   if(job!=null&&recipeButtons.ContainsKey(job.recipeId))Select(job.recipeId);
+   AfterAction(Mod!=null?fit:craft);
+  }
+  /// Progress bar and time left for the running job (hidden when idle). Reduced motion steps the bar in tenths.
+  public void UpdateProgress(float now)
+  {
+   if(progress==null)return;
+   var job=crafting?crafting.Job:null;var model=Model;
+   bool busy=job!=null&&model!=null;
+   var display=busy?DisplayStyle.Flex:DisplayStyle.None;
+   if(progress.style.display!=display)progress.style.display=display;
+   if(!busy){progressShown=-1;progressText=null;return;}
+   float p=job.Progress(now);if(session.reducedMotion)p=Mathf.Floor(p*10)/10f;
+   if(!Mathf.Approximately(p,progressShown)){progressShown=p;progressFill.style.width=Length.Percent(p*100);}
+   var text=$"Fabricating the {CraftingText.ItemName(model,model.Recipe(job.recipeId)?.outputItemId)} · {CraftingText.Duration(job.Remaining(now))} left";
+   if(text!=progressText){progressText=text;progressLabel.text=text;}
+  }
+  /// Fraction shown on the bar and its label (tests, QA).
+  public float ProgressShown=>progressShown;
+  public string ProgressText=>progressText;
   public void Fit(){var r=Recipe;if(r!=null&&crafting.Fit(SelectedLoadout.WeaponId,r.outputItemId,out _))AfterAction(null);}
   public void Remove(){var m=Mod;if(m!=null&&crafting.Remove(SelectedLoadout.WeaponId,m.slot,out _))AfterAction(fit);}
   /// The element focus moves to after a successful action (the pressed button usually disables itself).
@@ -174,6 +212,9 @@ namespace AthenHill
    Build();BuildSlots();
    var loadout=SelectedLoadout;
    var pack=session.Shop;
+   var job=crafting?crafting.Job:null;bool busy=job!=null;
+   if(cancel!=null){cancel.focusable=busy;cancel.SetEnabled(busy);}
+   UpdateProgress(Time.time);
    foreach(var pair in recipeButtons)
    {
     var r=model.Recipe(pair.Key);bool known=model.Knows(r.id);bool ready=known&&model.CanCraft(r.id,session.ActiveStationId,out _);
@@ -183,8 +224,11 @@ namespace AthenHill
     pair.Value.EnableInClassList("locked",!known);pair.Value.EnableInClassList("ready",ready);pair.Value.EnableInClassList("selected",selected);pair.Value.EnableInClassList("fitted",isFitted);
     // Roving tab stop: only the selected schematic is focusable.
     pair.Value.focusable=selected;
-    pair.Value.Q<Label>(className:"fab-recipe-state").text=!known?"Locked":isFitted?"Fitted":ready?"Ready":carried>0?$"×{carried}":"";
-    pair.Value.tooltip=!known?CraftingText.Reason("recipe_locked",model,r):r.name;
+    bool working=busy&&job.recipeId==r.id;
+    pair.Value.EnableInClassList("working",working);
+    pair.Value.Q<Label>(className:"fab-recipe-state").text=working?"Working":!known?"Locked":isFitted?"Fitted":ready?"Ready":carried>0?$"×{carried}":"";
+    float seconds=model.CraftSeconds(r.id);
+    pair.Value.tooltip=!known?CraftingText.Reason("recipe_locked",model,r):r.name+(seconds>0?$" · {CraftingText.Duration(seconds)} at the bench":"");
    }
    foreach(var pair in slotButtons)
    {
@@ -197,6 +241,7 @@ namespace AthenHill
    var recipe=Recipe;var selectedMod=Mod;
    inputs.Clear();
    if(recipe==null){title.text="Choose a schematic.";description.text="";reason.text="";craft.SetEnabled(false);fit.SetEnabled(false);remove.SetEnabled(false);FillStats(model,null);return;}
+   float craftSeconds=model.CraftSeconds(recipe.id);
    var output=model.Item(recipe.outputItemId);
    bool knownRecipe=model.Knows(recipe.id);
    title.text=recipe.name+(recipe.outputQuantity>1?$" ×{recipe.outputQuantity}":"");
@@ -210,6 +255,7 @@ namespace AthenHill
    }
    foreach(var tool in recipe.requiredTools??Array.Empty<string>())conditions.Add($"Tool: {CraftingText.ItemName(model,tool)} ({(pack.Quantity(tool)>0?"carried":"missing")})");
    foreach(var id in recipe.requiredSchematics??Array.Empty<string>())conditions.Add($"Schematic: {model.Recipe(id)?.name??id} ({(model.Knows(id)?"known":"unknown")})");
+   if(craftSeconds>0)conditions.Add($"Bench time: {CraftingText.Duration(craftSeconds)}");
    if(conditions.Count>0)description.text+="\n"+string.Join("\n",conditions);
    foreach(var input in recipe.inputs)
    {
@@ -220,14 +266,15 @@ namespace AthenHill
     row.Add(name);row.Add(count);inputs.Add(row);
    }
    bool canCraft=model.CanCraft(recipe.id,session.ActiveStationId,out var craftReason);
-   craft.SetEnabled(canCraft);craft.text="Fabricate";
+   craft.SetEnabled(canCraft&&!busy);craft.text="Fabricate";
+   craft.tooltip=craftSeconds>0?$"Takes {CraftingText.Duration(craftSeconds)} at the bench. Parts are used only when it is finished; Cancel or Esc stops it.":"";
    bool fitted=selectedMod!=null&&loadout.Fitted(selectedMod.slot)==recipe.outputItemId;
    int carriedOut=pack.Quantity(recipe.outputItemId);
    bool canFit=selectedMod!=null&&model.CanFit(loadout.WeaponId,recipe.outputItemId,out _);
-   fit.SetEnabled(canFit);fit.text=selectedMod!=null?$"Fit to {model.Data.SlotName(selectedMod.slot).ToLowerInvariant()}":"Fit to weapon";
+   fit.SetEnabled(canFit&&!busy);fit.text=selectedMod!=null?$"Fit to {model.Data.SlotName(selectedMod.slot).ToLowerInvariant()}":"Fit to weapon";
    bool canRemove=selectedMod!=null&&loadout.Fitted(selectedMod.slot)!=null&&model.HasWeapon(loadout.WeaponId);
-   remove.SetEnabled(canRemove);remove.text=selectedMod!=null?$"Remove {model.Data.SlotName(selectedMod.slot).ToLowerInvariant()} mod":"Remove";
-   var (why,blocked)=Guidance(model,recipe,selectedMod,knownRecipe,canCraft,craftReason,fitted,canFit,carriedOut);
+   remove.SetEnabled(canRemove&&!busy);remove.text=selectedMod!=null?$"Remove {model.Data.SlotName(selectedMod.slot).ToLowerInvariant()} mod":"Remove";
+   var (why,blocked)=busy?("The bench is working. Stay here: Cancel or Esc stops it, and nothing is used until it is finished.",false):Guidance(model,recipe,selectedMod,knownRecipe,canCraft,craftReason,fitted,canFit,carriedOut);
    reason.text=why;
    reason.EnableInClassList("blocked",blocked);
    reason.EnableInClassList("fitted",fitted);

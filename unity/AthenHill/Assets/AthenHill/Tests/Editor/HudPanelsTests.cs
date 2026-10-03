@@ -69,6 +69,8 @@ namespace AthenHill.Tests
    Assert.That(rig.pack.TryApply(new[]{new KeyValuePair<string,int>("nanite_residue",3)},0,out _));panel.Refresh();
    var craft=root.Q<Button>("fabricator-craft");Assert.That(craft.enabledSelf);
    typeof(FabricatorPanel).GetMethod("Craft",Any).Invoke(panel,null);// the Fabricate button's click handler
+   // 3 Oct 2026: the grip takes bench time; complete the timer (TimedCraftingTests covers the job itself).
+   if(rig.crafting.Job!=null){Assert.That(rig.pack.Quantity("grip_stabilised_pistol"),Is.Zero,"nothing made before the timer completes");rig.crafting.TickCraft(rig.crafting.Job.EndsAt);}
    Assert.That(rig.pack.Quantity("grip_stabilised_pistol"),Is.EqualTo(1),"Fabricate button crafted one grip");
    panel.Refresh();Assert.That(root.Q<Button>("fabricator-fit").enabledSelf);
    Assert.That(rig.crafting.Fit("grip_stabilised_pistol",out _));panel.Refresh();

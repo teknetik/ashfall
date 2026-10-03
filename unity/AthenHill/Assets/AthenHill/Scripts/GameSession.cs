@@ -50,6 +50,8 @@ namespace AthenHill
   public RadioQueue RadioLine {get;}=new RadioQueue();
   public event Action Changed;
   public event Action<CitySoundCue> SoundRequested;
+  /// Plays a UI cue through CityAudio (e.g. a finished or stopped fabrication at the workbench).
+  public void Cue(CitySoundCue cue)=>SoundRequested?.Invoke(cue);
   public int LogRevision {get;private set;}
   bool ringInside;float noticeTime;
   public bool Complete=>visitedHill&&Spoken.Count==4&&boughtFlask&&soldScrap&&linked;

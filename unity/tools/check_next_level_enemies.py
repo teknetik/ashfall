@@ -195,6 +195,44 @@ def search_crate(crate, landmark=None):
     return r
 
 
+def collect_cache(death, landmark):
+    """Collect the salvage cache a kill left (real E). 3 Oct 2026 flake fix (art/timed_crafting_20261003/FLAKES.md): the
+    old qa.collect_at walked a straight line from the site landmark to the death position and, at Post relay (toppled
+    relay mast) and Southern cache (pump-house props), stuck on the props ~10 m short every time, so the prompt stayed
+    empty although the cache existed. Now: aim at the cache itself (NativeQa crafting.json lists SalvageCache.Active;
+    the cache sits where the wreck settled, up to 1.5 m from the death spot) and come in from several sides through
+    6 m waypoints, as search_crate does for the crates."""
+    x, z = death['position'][0], death['position'][2]
+    caches = [c for c in (qa.craft().get('caches') or []) if math.hypot(c['position'][0] - x, c['position'][2] - z) < 4]
+    if caches:
+        c = min(caches, key=lambda c: math.hypot(c['position'][0] - x, c['position'][2] - z)); x, z = c['position'][0], c['position'][2]
+    r = dict(at=[round(x, 2), round(z, 2)], cacheListed=bool(caches)); pr = ''
+    p = qa.pos()
+    if landmark and math.hypot(p[0] - x, p[2] - z) > 40: qa.goto(landmark); qa.view('follow'); time.sleep(.4); p = qa.pos()
+    ang = math.atan2(p[0] - x, p[2] - z)
+    def tryside(a, dist):
+        try: qa.walk_to(x + math.sin(a) * dist, z + math.cos(a) * dist, tol=.4, timeout=10); return True
+        except TimeoutError as e: r.setdefault('walk', []).append(str(e)[:100]); return False
+    found = False
+    for dist in (1.0, .7, 1.4):
+        for a in [ang, ang + .9, ang - .9, ang + 1.8, ang - 1.8, ang + 2.7, ang + 3.6]:
+            if not tryside(a, dist):
+                for wa in (a + 1.57, a - 1.57, a + 3.14):
+                    try: qa.walk_to(x + math.sin(wa) * 6, z + math.cos(wa) * 6, tol=.8, timeout=12)
+                    except TimeoutError: continue
+                    if tryside(wa, dist): break
+            pr = qa.snap()['interaction']['prompt'] or ''
+            if 'Collect' in pr: found = True; break
+        if found: break
+    r['prompt'] = pr
+    q0 = qa.snap()['session']['quantities']
+    if found: qa.tap('e', settle=.4)
+    s = qa.snap(); q1 = s['session']['quantities']
+    r['got'] = {k: q1[k] - q0.get(k, 0) for k in q1 if q1[k] != q0.get(k, 0)}
+    r['notice'] = (s['session']['notice'] or '')[:200]; r['toast'] = qa.toast_lines() if found else []; r['promptAfter'] = s['interaction']['prompt']
+    return r
+
+
 def visit(site):
     sid = site['id']; r = {}; centre = site['centre']; names = {NAMES[sp['kind']] for sp in site['encounter']['spawns']}
     qa.goto(site['landmark']); qa.view('follow'); time.sleep(.5); qa.face(*centre); time.sleep(.3)
@@ -235,7 +273,11 @@ def visit(site):
     # back to the site (a knock-down may have moved the player), collect one cache at a wreck (real E)
     qa.goto(site['landmark']); qa.view('follow'); time.sleep(.5)
     if deaths:
-        lp = qa.pos(); d = min(deaths, key=lambda x: math.hypot(x['position'][0] - lp[0], x['position'][2] - lp[2])); col = qa.collect_at(d['position'][0], d['position'][2]); r['collected'] = col
+        lp = qa.pos(); live = [c['position'] for c in (qa.craft().get('caches') or [])]
+        # 3 Oct 2026: the pack is full in this run, so caches pile up and SalvageCache keeps at most 12 (the oldest is evicted);
+        # prefer a kill whose cache is still listed, nearest first
+        withcache = [x for x in deaths if any(math.hypot(c[0] - x['position'][0], c[2] - x['position'][2]) < 4 for c in live)]
+        d = min(withcache or deaths, key=lambda x: math.hypot(x['position'][0] - lp[0], x['position'][2] - lp[2])); col = collect_cache(d, site['landmark']); r['collected'] = col
         last = qa.craft().get('lastLoot') or ''; col['lastLoot'] = last
         # the pack has a slot cap: a collect that leaves loot in the cache still proves the cache, the prompt and E
         got = bool(col.get('got')) or ('Collected' in last and 'left in the cache:' in last and 'Collect' in (col.get('prompt') or ''))

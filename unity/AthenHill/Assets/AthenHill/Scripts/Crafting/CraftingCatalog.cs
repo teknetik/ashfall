@@ -26,6 +26,8 @@ namespace AthenHill
   public RecipeGroup group;
   [Tooltip("Shown in the fabricator while the schematic is unknown: where it can be learned.")]
   [TextArea]public string lockedHint;
+  [Tooltip("Seconds at the bench before the part is made (timed crafting, 3 Oct 2026). Parts are used and the output given only when the timer completes; closing the bench, Cancel or taking damage stops it and nothing is used. 0 = instant.")]
+  [Min(0)]public float craftSeconds;
  }
  /// stat: a WeaponStats field name (damage, fireInterval, range, recoil, nanoMax, nanoPerShot, nanoRegen, aimAssist).
  /// op: add (flat) or percent (summed, applied once after the flat terms).
