@@ -1,0 +1,366 @@
+{
+ "generated_by": "prep_models.py",
+ "inputs": {
+  "warden": {
+   "walk": "incoming-20261002/Meshy_AI_Ironclad_Warden_biped/Meshy_AI_Ironclad_Warden_biped_Animation_Walking_withSkin.glb",
+   "run": "incoming-20261002/Meshy_AI_Ironclad_Warden_biped/Meshy_AI_Ironclad_Warden_biped_Animation_Running_withSkin.glb"
+  },
+  "reaper": {
+   "walk": "incoming-20261002/Meshy_AI_Scrap_Reaper_biped/Meshy_AI_Scrap_Reaper_biped_Animation_Walking_withSkin.glb",
+   "run": "incoming-20261002/Meshy_AI_Scrap_Reaper_biped/Meshy_AI_Scrap_Reaper_biped_Animation_Running_withSkin.glb"
+  },
+  "sentinel": "incoming-20261002/Meshy_AI_Post_Sentinel_1002142607_texture.glb"
+ },
+ "warden": {
+  "source_walk": "Meshy_AI_Ironclad_Warden_biped_Animation_Walking_withSkin.glb",
+  "source_run": "Meshy_AI_Ironclad_Warden_biped_Animation_Running_withSkin.glb",
+  "textures": {
+   "size": [
+    2048,
+    2048
+   ],
+   "metallic_mean": 0.002,
+   "roughness_mean": 0.615,
+   "files": [
+    "IroncladWarden_BaseMap.png",
+    "IroncladWarden_Normal.png",
+    "IroncladWarden_Mask.png"
+   ]
+  },
+  "skin": {
+   "dropped_sets": [
+    "JOINTS_1",
+    "JOINTS_2",
+    "WEIGHTS_1",
+    "WEIGHTS_2"
+   ],
+   "weights0_sum_min_before": 0.444,
+   "joints": 66
+  },
+  "rest": {
+   "pelvis": [
+    0.017,
+    0.947,
+    0.035
+   ],
+   "head": [
+    0.003,
+    1.499,
+    -0.028
+   ],
+   "headfront": [
+    0.003,
+    1.499,
+    0.098
+   ],
+   "faces_plus_z": true,
+   "feet": {
+    "ball_l": [
+     0.277,
+     0.06,
+     0.069
+    ],
+    "ball_r": [
+     -0.247,
+     0.063,
+     0.065
+    ],
+    "foot_l": [
+     0.233,
+     0.142,
+     -0.032
+    ],
+    "foot_r": [
+     -0.209,
+     0.127,
+     -0.014
+    ]
+   },
+   "hands": {
+    "hand_l": [
+     0.398,
+     0.945,
+     -0.005
+    ],
+    "hand_r": [
+     -0.384,
+     0.957,
+     -0.005
+    ]
+   }
+  },
+  "clips": {
+   "walk": {
+    "seconds": 1.042,
+    "loop": true,
+    "native_speed_mps": 1.36,
+    "lowest_sole": 0.069,
+    "note": "Meshy delivered walk (in place), as is"
+   },
+   "run": {
+    "seconds": 0.667,
+    "loop": true,
+    "native_speed_mps": 4.523,
+    "lowest_sole": 0.075,
+    "note": "Meshy delivered run (in place), as is"
+   },
+   "idle": {
+    "frames": 91,
+    "seconds": 3.0,
+    "loop": true,
+    "note": "procedural: breathing sway on the rest pose (3 s loop)"
+   },
+   "attack": {
+    "frames": 34,
+    "seconds": 1.1,
+    "loop": false,
+    "note": "procedural hammer strike; blow lands at normalized 0.52",
+    "impact_normalized": 0.52
+   },
+   "hit": {
+    "frames": 19,
+    "seconds": 0.6,
+    "loop": false,
+    "note": "procedural flinch (0.6 s, returns to the stance)"
+   },
+   "death": {
+    "frames": 73,
+    "seconds": 2.4,
+    "loop": false,
+    "note": "procedural: stagger, drop to the knees, topple forward prone (ClampForever)"
+   },
+   "talk": {
+    "frames": 121,
+    "seconds": 4.0,
+    "loop": true,
+    "note": "procedural counter talk for Brann: nods, right-hand explaining gesture, weight shift (4 s loop)"
+   }
+  },
+  "geo": "warden/build/IroncladWarden_geo.glb",
+  "anim_dir": "warden/build/anim",
+  "bones": {
+   "root": "pelvis",
+   "feet": [
+    "ball_l",
+    "ball_r"
+   ],
+   "head": "head",
+   "headfront": "headfront",
+   "hand_r": "hand_r",
+   "hand_l": "hand_l"
+  }
+ },
+ "reaper": {
+  "source_walk": "Meshy_AI_Scrap_Reaper_biped_Animation_Walking_withSkin.glb",
+  "source_run": "Meshy_AI_Scrap_Reaper_biped_Animation_Running_withSkin.glb",
+  "textures": {
+   "size": [
+    2048,
+    2048
+   ],
+   "metallic_mean": 0.048,
+   "roughness_mean": 0.41,
+   "files": [
+    "ScrapReaper_BaseMap.png",
+    "ScrapReaper_Normal.png",
+    "ScrapReaper_Mask.png"
+   ]
+  },
+  "skin": {
+   "dropped_sets": [
+    "JOINTS_1",
+    "JOINTS_2",
+    "WEIGHTS_1",
+    "WEIGHTS_2"
+   ],
+   "weights0_sum_min_before": 0.4,
+   "joints": 43
+  },
+  "rest": {
+   "pelvis": [
+    0.043,
+    0.837,
+    -0.022
+   ],
+   "head": [
+    0.012,
+    1.409,
+    0.228
+   ],
+   "headfront": [
+    0.012,
+    1.409,
+    0.239
+   ],
+   "faces_plus_z": true,
+   "feet": {
+    "ball_l": [
+     0.32,
+     0.037,
+     0.087
+    ],
+    "ball_r": [
+     -0.286,
+     0.04,
+     -0.21
+    ],
+    "foot_l": [
+     0.284,
+     0.117,
+     0.003
+    ],
+    "foot_r": [
+     -0.261,
+     0.111,
+     -0.278
+    ]
+   },
+   "hands": {
+    "hand_l": [
+     0.464,
+     0.797,
+     -0.224
+    ],
+    "hand_r": [
+     -0.464,
+     0.797,
+     0.194
+    ]
+   }
+  },
+  "clips": {
+   "walk": {
+    "seconds": 1.042,
+    "loop": true,
+    "native_speed_mps": 1.29,
+    "lowest_sole": 0.023,
+    "note": "Meshy delivered walk (in place), as is"
+   },
+   "run": {
+    "seconds": 0.667,
+    "loop": true,
+    "native_speed_mps": 4.436,
+    "lowest_sole": 0.029,
+    "note": "Meshy delivered run (in place), as is"
+   },
+   "idle": {
+    "frames": 91,
+    "seconds": 3.0,
+    "loop": true,
+    "note": "procedural: breathing sway on the rest pose (3 s loop)"
+   },
+   "attack": {
+    "frames": 25,
+    "seconds": 0.8,
+    "loop": false,
+    "note": "procedural slash strike; blow lands at normalized 0.49",
+    "impact_normalized": 0.49
+   },
+   "hit": {
+    "frames": 19,
+    "seconds": 0.6,
+    "loop": false,
+    "note": "procedural flinch (0.6 s, returns to the stance)"
+   },
+   "death": {
+    "frames": 61,
+    "seconds": 2.0,
+    "loop": false,
+    "note": "procedural: stagger, drop to the knees, topple forward prone (ClampForever)"
+   }
+  },
+  "geo": "reaper/build/ScrapReaper_geo.glb",
+  "anim_dir": "reaper/build/anim",
+  "bones": {
+   "root": "pelvis",
+   "feet": [
+    "ball_l",
+    "ball_r"
+   ],
+   "head": "head",
+   "headfront": "headfront",
+   "hand_r": "hand_r",
+   "hand_l": "hand_l"
+  }
+ },
+ "sentinel": {
+  "source": "Meshy_AI_Post_Sentinel_1002142607_texture.glb",
+  "textures": {
+   "size": [
+    2048,
+    2048
+   ],
+   "metallic_mean": 0.43,
+   "roughness_mean": 0.437,
+   "files": [
+    "PostSentinel_BaseMap.png",
+    "PostSentinel_Normal.png",
+    "PostSentinel_Mask.png"
+   ]
+  },
+  "bounds": {
+   "min": [
+    -0.32100000977516174,
+    0.0,
+    -0.34599998593330383
+   ],
+   "max": [
+    0.3240000009536743,
+    1.8940000534057617,
+    0.3310000002384186
+   ],
+   "height": 1.894,
+   "lifted": 0.9448
+  },
+  "wheel": {
+   "hub": [
+    0.015599999576807022,
+    0.20980000495910645,
+    -0.008700000122189522
+   ],
+   "radius": 0.2098,
+   "triangles": 582,
+   "body_triangles": 8026
+  },
+  "rifle_cluster": {
+   "count": 631,
+   "min": [
+    -0.32100000977516174,
+    0.5440000295639038,
+    -0.11800000071525574
+   ],
+   "max": [
+    -0.1599999964237213,
+    1.25,
+    0.14300000667572021
+   ]
+  },
+  "head": [
+   0.006000000052154064,
+   1.531000018119812,
+   -0.014999999664723873
+  ],
+  "hat": {
+   "centre": [
+    0.026000000536441803,
+    1.7760000228881836,
+    -0.04699999839067459
+   ],
+   "radius": 0.254
+  },
+  "muzzle": [
+   -0.16599999368190765,
+   0.5440000295639038,
+   0.14300000667572021
+  ],
+  "geo": "sentinel/build/PostSentinel_geo.glb",
+  "triangles": 8608,
+  "nodes": [
+   "Body",
+   "Wheel",
+   "Muzzle",
+   "Head",
+   "Hat"
+  ]
+ }
+}

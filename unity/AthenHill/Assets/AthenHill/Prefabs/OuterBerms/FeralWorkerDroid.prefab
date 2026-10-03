@@ -2313,6 +2313,7 @@ GameObject:
   - component: {fileID: 667341620719741553}
   - component: {fileID: 6869890817585149342}
   - component: {fileID: 4253903304444168391}
+  - component: {fileID: 8815473696080526357}
   m_Layer: 0
   m_Name: FeralWorkerDroid
   m_TagString: Untagged
@@ -2400,6 +2401,14 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967039
   flank: 0.4
+  separation: 1.6
+  armour: 0
+  armourMinFraction: 0.25
+  wheel: {fileID: 0}
+  wheelRadius: 0.21
+  leanPerTurnRate: 0.05
+  pitchPerAccel: 1.5
+  maxLean: 12
   attackMode: 0
   boltPrefab: {fileID: 0}
   muzzle: {fileID: 0}
@@ -2625,6 +2634,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.LootSource
   lootTableId: loot_feral_worker_droid
+--- !u!114 &8815473696080526357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 289512320220182114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a4d1e9f949a43a4a92605d6327ca5c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.DroidThreat
+  level: 1
+  experience: 12
+  armour: 0
 --- !u!1 &2876753145653721020
 GameObject:
   m_ObjectHideFlags: 0

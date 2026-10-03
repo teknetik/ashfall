@@ -5194,6 +5194,7 @@ GameObject:
   - component: {fileID: 3081419661771933292}
   - component: {fileID: 2820554805297994232}
   - component: {fileID: 4914812562986337163}
+  - component: {fileID: 8629010374717082827}
   m_Layer: 0
   m_Name: FeralScrapDrone
   m_TagString: Untagged
@@ -5282,6 +5283,14 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967039
   flank: 0.5
+  separation: 1.6
+  armour: 0
+  armourMinFraction: 0.25
+  wheel: {fileID: 0}
+  wheelRadius: 0.21
+  leanPerTurnRate: 0.05
+  pitchPerAccel: 1.5
+  maxLean: 12
   attackMode: 0
   boltPrefab: {fileID: 0}
   muzzle: {fileID: 0}
@@ -5503,6 +5512,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.LootSource
   lootTableId: loot_feral_scrap_drone
+--- !u!114 &8629010374717082827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5027850054968605342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a4d1e9f949a43a4a92605d6327ca5c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.DroidThreat
+  level: 1
+  experience: 8
+  armour: 0
 --- !u!1 &7563049674869414582
 GameObject:
   m_ObjectHideFlags: 0
