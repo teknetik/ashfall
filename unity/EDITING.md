@@ -923,6 +923,20 @@ Ossa's `warden_kit` node; Brann's `kit_brief`, `kit_report`, `kit_gather`, `kit_
 re-applied idempotently by `art/armour_mission_20261003/apply_data.py` (run it after the `art/tutorial_set_20261002`,
 `art/rifle_armour_20261002` and `art/next_level_20261002/*/apply_data.py` scripts, then
 `CraftingDataExporter.Export`); design notes and drop maths in `art/armour_mission_20261003/README.md`.
+
+**Timed crafting (3 October 2026).** Carl: "collect, craft slowly, craft it to armour". Each recipe in
+`WardCrafting.asset` has **Craft Seconds** (bench time; `0` = instant, the old behaviour). Fabricate starts the timer at
+the bench; the window shows a progress bar, the time left and **Cancel** (focused, so Enter cancels; Tab reaches it),
+and Fabricate/Fit/Remove wait. The parts stay in the pack until the timer completes; then inputs and output change in
+one transaction (`CraftingModel.TickCraft` re-validates, so parts that left the pack fail the craft with nothing changed).
+Cancel, Esc/closing the window and taking damage stop it with nothing used. A craft in progress is **not saved**:
+quitting or saving mid-craft keeps the parts and loses only the timer. Current times: components 4–6 s, pistol/rifle
+mods 8–12 s, helmet 15, gloves 16, arm guards 20, leg armour 25, Field Rifle 20 s. Change one in the Inspector (Data →
+Crafting → WardCrafting → Recipes → *Craft Seconds*) or re-apply the set with
+`python3 art/timed_crafting_20261003/apply_data.py` (idempotent; run after `art/armour_mission_20261003/apply_data.py`),
+then `CraftingDataExporter.Export` (it rejects times outside 0–600 s). Tests: `Tests/Editor/TimedCraftingTests.cs`;
+native checks wait on `crafting.json` → `craftJob`. Rollback: set every Craft Seconds to 0 (backup of the asset before
+the patch in `art/timed_crafting_20261003/backup/`). Not yet accepted by Carl.
 - **Prefabs/OuterBerms/SalvageCache.prefab** — the droid drop (glow colours, light intensity, prompt).
   **SalvageHeapNode.prefab** — search time, respawn time, cancel distance, prompts, marker light/motes.
   **FeralDepotForeman.prefab** — a prefab *variant* of FeralWorkerDroid: change its overrides (health, strike, wind-up,
@@ -1314,6 +1328,22 @@ masonry kit has opt-in cylindrical UVs (`Part.new_block(cyl=(point, axis))`); pa
 sheet-steel `WB_CylBone`, `WB_CylRed`, `WB_TankBone`, `WB_TankTeal` (VH_Paint's texture streaks on curved faces).
 `round2_layout.py` re-applies the layout edits.
 
+## Ward life: gate gabions, water ration court, Node 07 dock (3 October 2026)
+
+Sources and rationale: [art/ward_life_20261003/README.md](../art/ward_life_20261003/README.md). Scene roots **Ward life:
+West Gate bastions**, **Ward life: Lattice court water ration**, **Ward life: Node 07 goods dock**, cameras under **Ward
+life review cameras** (`cam_wl_*`). Not render-chunk sources: move, add or delete instances in the Scene view.
+
+- Models are prefabs in `Prefabs/WardLife/` (LODGroup, box colliders, fittings). Re-author in Blender
+  (`author_life.py -- bastion|waterpoint|dock`), then `WardLifePass.RunBatch --steps build` updates the prefabs in place.
+- Placements, decals and cameras come from `layout.py` → `layout.json`; `--steps reinstall` rebuilds the three roots from
+  it (hand edits in the scene are lost), `install` refuses when they exist.
+- Gabion look: `Art/WardLife/Materials/WL_GabionFill` (Masonry Lit; `_BaseColor` brightens the bake, `_Parallax`),
+  `WL_GabionFillWired` (LOD1), `WL_GabionWire` / `WL_GabionWireFresh` (URP Lit, alpha clip 0.5, cull off). Textures from
+  `bake_gabion.py`; decal atlas and damp patch from `bake_marks.py`.
+- Rollback: `--steps rollback` (deactivates the Ward life roots, re-activates `Ward building: West Gate bastions`), or
+  restore `unity/evidence/ward-life/20261003/rollback/before-ward-life.unity`.
+
 ## MPFB2 player and the tutorial armour set (2–3 October 2026)
 
 The player colonist is an MPFB2 body built in Blender (`art/tutorial_set_20261002/blender/`, MPFB 2.0.17 as a Blender 5.2
@@ -1332,4 +1362,18 @@ player's own bones by name and are rejected if their bind poses differ from the 
 Item data is re-applied idempotently by `art/tutorial_set_20261002/apply_data.py`. The primer's kit grant
 (`BermsTutorial.kitItems`) is empty since 3 Oct 2026: the helmet, arm guards, gloves and leg armour are built through the
 Warden Kit orders (see *Scavenger's Arc*). Provenance: `meshy/tutorial-set-20261002/README.md`; the previous Meshy colonist is in its `previous/`.
+
+**Face, hair and first-person hands (3 Oct 2026, `art/player_face_20261003/README.md`).** `finish_body.py` now puts the
+Meshy-retextured skin (`art/player_face_20261003/tex/skin_*.png`, painted face/hair/beard) on the MPFB skin mesh and builds
+alpha-clipped hair/beard shells from `tex/hair_mask.png` (`art/player_face_20261003/blender/shells.py`) instead of the
+MakeHuman cards; `-- m0.25 face=old` rebuilds the old look. Re-run `art/player_face_20261003/blender/make_tex.py` only to
+change the texture grade, hair mask or eye tint. Install as before (copy the GLBs, `MainCharacterInstall.InstallBatch`) or
+`AthenHill.Editor.PlayerFace20261003.RunBatch --steps install,verify` (adds the `cam_player_face_20261003_*` cameras);
+`TutorialSetInstall.Attach` ends with `PlayerFace20261003.FirstPersonHands`: the pistol view model on the player's arms,
+weapon-driven (`ViewModelArmsRig` on the view model: arms at a camera-space anchor, `Right arm IK` + the arms' `SupportHandIK`
+onto `Shooting grip`/`Support grip` under the pistol; tune `ShoulderAnchor`, `PistolAimDistance`, elbow `poleHint`), finger
+grips solved against the weapons into `PlayerHandGrip.pistolRight/Left`, `rifleRight/Left` (empty = the procedural curl),
+gloves/arm guards mirrored by `ViewModelArmourMirror`. `--steps hands` re-solves the hands alone; `--steps capture --shots
+face|fp|tp` renders review frames to `art/player_face_20261003/unity/captures/`. Rollback: `--steps rollback` (previous GLBs,
+authored FP hands v2, procedural curl).
 Cost bisection in a dev build: `unity/tools/lookbook.py ... --set "<name prefix>=0"` (NativeQa `setActive`).
