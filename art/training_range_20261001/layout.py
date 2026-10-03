@@ -142,25 +142,27 @@ P(g, "wg:PH_RadioSet", 2.45, 6.0, -15, on=t, name="Range radio", collider=False)
 P(g, "trp:megaphone", 2.4, 5.45, 40, on=t, name="Megaphone", collider=False)
 P(g, "wg:PH_Binoculars", 2.2, 4.8, -30, on=t, name="Binoculars", collider=False)
 P(g, "tr:TR_Lantern", 2.5, 5.85, 0, on=t, name="Range officer's lantern")
-P(g, "sd:stool_folding", 1.6, 5.4, 10, name="Range officer's stool")
-c = P(g, "sd:ammo_crate_a", 1.45, 6.55, 88 + j(2), name="Nano cell crate")
-P(g, "sd:ammo_crate_b", 1.42, 6.58, 92 + j(2), on=c, name="Nano cell crate (open)")
-P(g, "sd:jerrycan_green", 2.35, 6.55, 20, name="Water can")
+# 3 Oct (Carl: "too many props in the way ... make sure it's easy to walk to the tables"): stool, crates and can moved to
+# the table's down-range side so its up-range side is open from the line
+P(g, "sd:stool_folding", 3.1, 5.3, 190, name="Range officer's stool")
+c = P(g, "sd:ammo_crate_a", 2.4, 7.15, 88 + j(2), name="Nano cell crate")
+P(g, "sd:ammo_crate_b", 2.37, 7.18, 92 + j(2), on=c, name="Nano cell crate (open)")
+P(g, "sd:jerrycan_green", 3.15, 4.6, 20, name="Water can")
 # distance posts down the left edge of the range (outside every line of fire), plates facing the firing line
 for k, fw in enumerate((5.0, 10.0, 15.0)):
     P("Distance posts", "tr:TR_DistanceMarker", fw, -4.6 - 0.1 * k, 180 + j(3), name=f"Distance post {int(fw)} m", extra={"number": k + 1})
 # spent-cell bin at the left end of the line (range order 6), recruits' waiting bench behind the bays
-P("Firing point", "sd:bin_galv_rust", -1.3, 4.45, 90 + j(4), name="Spent cell bin")
+P("Firing point", "sd:bin_galv_rust", -1.0, 6.6, 90 + j(4), name="Spent cell bin")   # 3 Oct: out of the walk behind the line
 P("Firing point", "sd:bench_painted", -3.3, 3.2, 0, name="Waiting bench")
 P("Firing point", "sd:jerrycan_green", -3.3, 4.15, 20, name="Water can (waiting bench)")
 # range orders board facing the approach from the gate, behind the line on the left
-P("Range orders", "tr:TR_RulesBoard", -2.3, 1.0, 0, y="ground-min", name="Range orders board", note="faces the path from the gate")
+P("Range orders", "tr:TR_RulesBoard", -2.4, 5.6, 0, y="ground-min", name="Range orders board", note="faces the path from the gate")   # 3 Oct: off the approach
 PL[-1]["euler"][1] = 160.0
 # red flag + range-live lamp at the right end of the firing point, second flag on the backstop crest (placed with the berm)
-fl = P("Range flags", "wg:WG_RangeFlag", -0.7, 5.25, 90, y="ground-min", name="Range flag (firing point)")
-P("Range flags", "tr:TR_RangeLamp", -0.7, 5.25, 0, y=PL[fl]["pos"][1] + 3.55, name="Range live lamp (firing point)")
+fl = P("Range flags", "wg:WG_RangeFlag", -0.3, 6.9, 90, y="ground-min", name="Range flag (firing point)")
+P("Range flags", "tr:TR_RangeLamp", -0.3, 6.9, 0, y=PL[fl]["pos"][1] + 3.55, name="Range live lamp (firing point)")
 # flood pole behind bay 1's left end, lighting the plates and the bay floor
-P("Night lighting", "tr:TR_FloodPole", -1.0, -1.35, 0, name="Range flood pole")
+P("Night lighting", "tr:TR_FloodPole", 1.5, -3.6, 0, name="Range flood pole")   # 3 Oct: out of the approach
 
 # ---- lane 4: the machine lane -----------------------------------------------------------------------------------
 g = "Machine lane"
@@ -408,6 +410,8 @@ class OBB:
 COLS = []
 retired_prefixes = RETIRE
 for c in S["colliders"]:
+    if c["path"].startswith("Outer Berms/Warden training range/"):
+        continue   # 3 Oct: a survey taken after install sees the range's own props; they are what this layout places
     if c["trigger"] or any(c["path"].startswith(p) for p in retired_prefixes):
         continue
     ccx, ccz = (c["min"][0] + c["max"][0]) / 2, (c["min"][2] + c["max"][2]) / 2
@@ -492,6 +496,15 @@ for i, p in enumerate(PL):
         if any(OB[i].dist(a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t) < 0.45 for t in np.linspace(0, 1, 40)):
             problems.append((i, "blocks the gate-to-firing-line walk"))
             break
+# 3 Oct: and along behind the line to every bay and up to the range officer's table (0.45 m clearance)
+for route in ([W(-1.1, 0.0), W(-1.1, 1.6), W(-1.1, 3.2), W(-1.1, 5.0), W(1.3, 5.45)],):
+    for i, p in enumerate(PL):
+        if not p["collider"] or p["prop"] == "tr:TR_RangeTable":
+            continue
+        for (a, b) in zip(route, route[1:]):
+            if any(OB[i].dist(a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t) < 0.45 for t in np.linspace(0, 1, 40)):
+                problems.append((i, "blocks the walk behind the line / to the officer's table"))
+                break
 
 for i, why in problems:
     name = PL[i]["name"] if i >= 0 else "backstop"

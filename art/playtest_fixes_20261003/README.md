@@ -1,0 +1,17 @@
+# Playtest fixes — 3 October 2026
+
+Carl's notes from the 3 Oct playtest of the `on3` overnight build, and what changed. The scene edits are in
+`unity/AthenHill/Assets/AthenHill/Editor/PlaytestFixes20261003.cs`. The original state of everything it touched is in
+`record.json`. `--steps rollback` restores it and rebuilds the render chunks.
+
+| Note | Change |
+| --- | --- |
+| "Shoulders are too high. back needs to be straighter" (player) | `art/tutorial_set_20261002/blender/finish_body.py`: the rest-pose match to the Meshy rig now covers limbs only. Matching the torso too copied the Meshy auto-rig's curved spine (18–29° per segment) and collarbone/head angles onto the MPFB body. The collarbones also drop 18° before the arms are matched, so lowering the arms no longer bunches the shoulder skin beside the neck. Body, armour and first-person arms were rebuilt and reinstalled (`MainCharacterInstall.InstallBatch`). Comparison: `art/tutorial_set_20261002/blender/restcmp/cmp_drop.png`. Previous outputs: `art/tutorial_set_20261002/blender/previous_restmatch_20261003/`. |
+| "we just need one lattice jack. try the meshy model ... remove the one near the vanguard building" | `lattice`: the old glb Jack behind Vanguard Hall (all `ENV_/PROP_/COL_*lattice*` nodes of AuthoredWorld) is inactive and the render chunks are rebuilt. The Meshy ring across the hill (formerly the offline Ring Gate) is now the Lattice Jack. The `Lattice interaction` marker and its hum sit at the ring's console stand point, `GameSession.ringPoint` is unbound (no more "Destination offline"), and `Landmarks/lattice_jack` and `cam_grid` moved with it. If the Meshy ring looks wrong as the Jack in play, rebuild it as a dedicated model. |
+| "this robot can go from the ward" | `droid`: `Ward mining droid` and `Mining droid route` are inactive. The Berms scrapyard copy stays. |
+| "remove that trolley, no longer needed" | `trolley`: `Outer Berms/West Gate outpost/Outpost/Field fabricator`, the old crafting tool cart, is inactive. Brann's workbench has been the station since 1 Oct. |
+| "those barrels block ... allow the broken bits to be walked over" | `barrels`: the Karaveen market `COL_barrels` box (4.3 × 4.8 m over the loose staves) shrinks to the two whole barrels, 0.85 × 2.7 m. |
+| "too many props in the way at the range ... easy to walk to the tables" | `outpost`: the West Gate light-tower trailer moves 12 m west beside the 10 m distance post, turned to keep its flood on the plates. The range sign moves to the barrier line and the didelta shrub in the approach is gone. `art/training_range_20261001/layout.py` (backup `layout.py.bak-20261003`) moves the range orders board, flood pole, spent-cell bin, range flag and lamp off the approach, and the officer's stool, crates and water can to the table's down-range side. Its walk check now also runs behind the line to every bay and up to the officer's table, with 0.45 m clearance. Applied with `TrainingRangePass --steps survey`, `layout.py`, then `--steps reinstall,verify`. |
+| "why after shooting the tutorial robots did I get a load of armour ... should be a crafting mission" | `art/armour_mission_20261003/` (see its README): no kit at primer completion. Four Warden Kit field orders follow Steady Hands, each crafting one piece at Brann's bench from scavenged webbing, liners, rivets and alloy plate. |
+
+Run (2026-10-03): `~/.local/state/ward-programme/posture/chain.sh`. Logs are in `unity/evidence/posture/20261003/`.
