@@ -290,7 +290,7 @@ namespace AthenHill.Tests
   {
    var sheets=AssetDatabase.GetDependencies("Assets/AthenHill/UI/CityHUD.uxml").Where(x=>x.EndsWith(".uss")).ToArray();
    var v2=City().items.Where(x=>x.HasTag("salvage")||x.HasTag("refined")||x.HasTag("weapon_mod")).Where(x=>x.id!="scrap_coil"&&x.id!="rifle_precision_barrel").ToList();
-   Assert.That(v2.Count,Is.EqualTo(19));   // 2 Oct 2026: + the Warden rifle receiver
+   Assert.That(v2.Count,Is.EqualTo(22));   // 2 Oct 2026: + the Warden rifle receiver; 3 Oct: + webbing, liner, rivets
    Assert.That(v2.Select(x=>x.icon).Distinct().Count(),Is.EqualTo(v2.Count),"no two salvage items share an icon");
    Assert.That(v2.Any(x=>x.icon=="scrap-icon"||x.icon=="pistol-icon"||x.icon=="lattice-icon"),Is.False);
    foreach(var item in City().items.Where(x=>!string.IsNullOrEmpty(x.icon)))

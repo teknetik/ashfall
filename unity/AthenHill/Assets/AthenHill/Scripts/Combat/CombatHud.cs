@@ -33,7 +33,16 @@ namespace AthenHill
   readonly Dictionary<BermsCompassPoint,VisualElement> pois=new Dictionary<BermsCompassPoint,VisualElement>();
   VisualElement compassTrack;Label poiLabel;
   VisualElement toast,toastLines,search,searchFill;
-  Label searchLabel;
+  Label searchLabel,toastHeading;
+  /// Threat tier per droid bar (DroidThreat): re-evaluated every TierRefreshSeconds and when the weapon stats change.
+  readonly Dictionary<FeralDroid,ThreatTier> tiers=new Dictionary<FeralDroid,ThreatTier>();
+  const float TierRefreshSeconds=.75f;
+  float nextTierCheck;
+  string lastKilledName;
+  // Bar tints: Easy grey, Normal green, Danger red (fill, fill top edge, name label).
+  static readonly Color EasyFill=new Color(.56f,.56f,.53f),EasyEdge=new Color(.72f,.72f,.68f),EasyName=new Color(.76f,.75f,.71f);
+  static readonly Color NormalFill=new Color(.36f,.72f,.42f),NormalEdge=new Color(.55f,.86f,.58f),NormalName=new Color(.82f,.93f,.82f);
+  static readonly Color DangerFill=new Color(.86f,.25f,.2f),DangerEdge=new Color(.98f,.5f,.42f),DangerName=new Color(.98f,.72f,.66f);
   void Start()
   {
    root=GetComponent<UIDocument>().rootVisualElement;hud=root.Q("hud");
@@ -63,7 +72,7 @@ namespace AthenHill
    guidance=new Label{pickingMode=PickingMode.Ignore};guidance.AddToClassList("checkpoint-guidance");hud.Add(guidance);
    // Salvage pickup toast (rarity-coloured lines) and the scrap-heap search progress.
    toast=Element("panel loot-toast",hud);
-   var toastHeading=new Label("SALVAGE"){pickingMode=PickingMode.Ignore};toastHeading.AddToClassList("small");toastHeading.AddToClassList("loot-toast-heading");toast.Add(toastHeading);
+   toastHeading=new Label("SALVAGE"){pickingMode=PickingMode.Ignore};toastHeading.AddToClassList("small");toastHeading.AddToClassList("loot-toast-heading");toast.Add(toastHeading);
    toastLines=Element("loot-toast-lines",toast);Show(toast,false);
    var actions=root.Q("top-actions");
    if(actions!=null)actions.RegisterCallback<GeometryChangedEvent>(e=>toast.style.top=e.newRect.yMax+8);
@@ -73,7 +82,8 @@ namespace AthenHill
    if(crafting)crafting.Collected+=ShowPickup;
    slot7=root.Q<Button>("slot7");slot8=root.Q<Button>("slot8");
    if(slot7!=null)slot7.clicked+=()=>combat.ToggleDraw();
-   combat.TargetHit+=(_,killed)=>{hitUntil=Time.unscaledTime+(killed?.28f:.14f);hitMarker.EnableInClassList("kill",killed);};
+   combat.TargetHit+=(target,killed)=>{hitUntil=Time.unscaledTime+(killed?.28f:.14f);hitMarker.EnableInClassList("kill",killed);if(killed&&target){var d=target.GetComponent<FeralDroid>();lastKilledName=d?d.displayName:null;}};
+   combat.ExperienceAwarded+=ShowExperience;
    combat.Hurt+=amount=>flashAlpha=Mathf.Clamp01(flashAlpha+amount/30f);
    for(int i=0;i<4;i++){var pivot=Element("damage-dir",hud);Element("damage-dir-arc",pivot);damageDirs.Add(new DamageDir{el=pivot});}
    combat.HurtFrom+=ShowDamageDirection;
@@ -81,6 +91,7 @@ namespace AthenHill
    var compass=root.Q("compass");
    if(compass!=null){poiLabel=new Label{pickingMode=PickingMode.Ignore};poiLabel.AddToClassList("compass-poi-label");compass.Add(poiLabel);Show(poiLabel,false);}
    combat.StatsChanged+=UpdatePistolTooltip;UpdatePistolTooltip();
+   combat.StatsChanged+=()=>nextTierCheck=0;
    Refresh(true);
   }
   static VisualElement Element(string classes,VisualElement parent)
@@ -217,7 +228,24 @@ namespace AthenHill
    var mods=model!=null?string.Join(", ",model.Loadout.FittedMods.Select(x=>CraftingText.ItemName(model,x.Value))):"";
    pistolTooltip=$"Draw or holster the scrap pistol · 7 · Damage {combat.Stats.damage:0.#} · Recoil {combat.Stats.recoil:0.#}"+(mods.Length>0?" · "+mods:"");
   }
-  void OnDestroy(){if(combat){combat.StatsChanged-=UpdatePistolTooltip;combat.HurtFrom-=ShowDamageDirection;}if(crafting)crafting.Collected-=ShowPickup;}
+  void OnDestroy(){if(combat){combat.StatsChanged-=UpdatePistolTooltip;combat.HurtFrom-=ShowDamageDirection;combat.ExperienceAwarded-=ShowExperience;}if(crafting)crafting.Collected-=ShowPickup;}
+  /// Experience toast on a kill ("+12 XP"), with the level-up line and a Ward notice when the character levels.
+  void ShowExperience(int amount,ThreatTier tier,bool levelled)
+  {
+   if(toast==null)return;
+   toastLines.Clear();toastHeading.text="EXPERIENCE";
+   string who=string.IsNullOrEmpty(lastKilledName)?"":" · "+lastKilledName;
+   if(amount>0)ToastLine($"+{amount} XP{who}",tier==ThreatTier.Danger?"rarity-rare":"rarity-uncommon");
+   else ToastLine($"Easy target · no XP{who}","loot-toast-muted");
+   var character=combat.Character;
+   if(levelled&&character!=null)
+   {
+    ToastLine($"Level {character.Level} · {character.Data.attributePointsPerLevel} attribute, {character.Data.skillPointsPerLevel} skill points","loot-toast-schematic");
+    session.Notify($"Level {character.Level} reached. Spend your new points in the character sheet.","Ward");
+   }
+   else if(character!=null)ToastLine($"Level {character.Level} · {character.Experience} / {character.Data.experiencePerLevel} XP","loot-toast-muted");
+   toastUntil=Time.unscaledTime+toastSeconds;Show(toast,true);
+  }
   static string RarityClass(ItemRarity r)=>r==ItemRarity.Rare?"rarity-rare":r==ItemRarity.Uncommon?"rarity-uncommon":"rarity-common";
   void ToastLine(string text,params string[] classes)
   {
@@ -229,7 +257,7 @@ namespace AthenHill
   void ShowPickup(LootPickup pickup)
   {
    if(toast==null||crafting.Model==null)return;
-   toastLines.Clear();
+   toastLines.Clear();toastHeading.text="SALVAGE";
    foreach(var s in pickup.taken){var spec=crafting.Model.Item(s.itemId);ToastLine($"+{s.quantity}  {(spec!=null?spec.name:s.itemId)}",RarityClass(spec!=null?spec.rarity:ItemRarity.Common));}
    if(pickup.taken.Count==0&&pickup.left.Count==0)ToastLine($"Nothing useful in the {(pickup.source??"heap").ToLowerInvariant()}.","loot-toast-muted");
    if(pickup.left.Count>0)ToastLine("Pack full · left in the cache: "+string.Join(", ",pickup.left.Select(x=>$"{CraftingText.ItemName(crafting.Model,x.itemId)} ×{x.quantity}")),"loot-toast-warning");
@@ -283,10 +311,18 @@ namespace AthenHill
     bars[d]=bar;
    }
    List<FeralDroid> gone=null;
+   bool refreshTiers=Time.unscaledTime>=nextTierCheck;
+   if(refreshTiers)nextTierCheck=Time.unscaledTime+TierRefreshSeconds;
    foreach(var pair in bars)
    {
     var d=pair.Key;var bar=pair.Value;
     if(!d||!d.isActiveAndEnabled){(gone??=new List<FeralDroid>()).Add(d);continue;}
+    // Threat tier tint (grey easy, green normal, red danger) relative to the equipped weapon and the character.
+    if(refreshTiers||!tiers.ContainsKey(d))
+    {
+     var tier=DroidThreat.Tier(d,combat);
+     if(!tiers.TryGetValue(d,out var shown)||shown!=tier){tiers[d]=tier;Tint(bar,tier);}
+    }
     // Just above the droid's head as it animates, so scaled variants (the 1.3× Foreman) are not over-lifted.
     var world=d.BarAnchor;var vp=worldCamera.WorldToViewportPoint(world);
     bool engaged=d.Health.Alive&&(d.Health.Current<d.Health.max||d.State!=DroidState.Idle&&d.State!=DroidState.Returning);
@@ -297,7 +333,17 @@ namespace AthenHill
     bar.style.left=p.x-50;bar.style.top=p.y-14;
     bar[0].style.width=Length.Percent(d.Health.Fraction*100);
    }
-   if(gone!=null)foreach(var d in gone){bars[d].RemoveFromHierarchy();bars.Remove(d);}
+   if(gone!=null)foreach(var d in gone){bars[d].RemoveFromHierarchy();bars.Remove(d);tiers.Remove(d);}
+  }
+  public ThreatTier TierShown(FeralDroid d)=>d&&tiers.TryGetValue(d,out var t)?t:ThreatTier.Normal;
+  static void Tint(VisualElement bar,ThreatTier tier)
+  {
+   var fill=bar[0];var name=bar.Q<Label>(className:"enemy-bar-name");
+   var (f,e,n)=tier==ThreatTier.Easy?(EasyFill,EasyEdge,EasyName):tier==ThreatTier.Danger?(DangerFill,DangerEdge,DangerName):(NormalFill,NormalEdge,NormalName);
+   fill.style.backgroundColor=f;fill.style.borderTopColor=e;
+   if(name!=null)name.style.color=n;
+   foreach(var t in new[]{"tier-easy","tier-normal","tier-danger"})bar.RemoveFromClassList(t);
+   bar.AddToClassList(tier==ThreatTier.Easy?"tier-easy":tier==ThreatTier.Danger?"tier-danger":"tier-normal");
   }
   static void Show(VisualElement e,bool show){if(e!=null)e.style.display=show?DisplayStyle.Flex:DisplayStyle.None;}
  }

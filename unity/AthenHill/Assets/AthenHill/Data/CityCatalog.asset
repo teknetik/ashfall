@@ -150,6 +150,60 @@ MonoBehaviour:
     icon: capacitor-icon
     partsPrice: 12
     weightKg: 0.35
+  - id: strap_webbing
+    name: Strap Webbing
+    description: Worn canvas and nylon webbing cut from caravan loads, buckles still threaded. Wardens stitch armour straps from it.
+    buyPrice: 0
+    sellPrice: 2
+    startingQuantity: 0
+    tags:
+    - salvage
+    - material
+    - material:armour
+    - tier:1
+    maxStack: 30
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 1
+    icon: webbing-icon
+    partsPrice: 0
+    weightKg: 0.15
+  - id: padded_liner
+    name: Padded Liner
+    description: A quilted liner salvaged from wrecked truck and drone seats. Pads a helmet or a plate where it meets the body.
+    buyPrice: 0
+    sellPrice: 3
+    startingQuantity: 0
+    tags:
+    - salvage
+    - material
+    - material:armour
+    - tier:1
+    maxStack: 20
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 1
+    icon: liner-icon
+    partsPrice: 0
+    weightKg: 0.3
+  - id: rivet_stock
+    name: Rivet Stock
+    description: A tin of steel rivets and washers pried from droid frames. Every Warden plate is riveted to its straps.
+    buyPrice: 0
+    sellPrice: 2
+    startingQuantity: 0
+    tags:
+    - salvage
+    - material
+    - material:armour
+    - tier:1
+    maxStack: 30
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 1
+    icon: rivets-icon
+    partsPrice: 0
+    weightKg: 0.2
   - id: grip_stabilised_pistol
     name: Stabilised Pistol Grip
     description: A field-fabricated grip that steadies the scrap pistol.
@@ -222,6 +276,42 @@ MonoBehaviour:
     icon: shard-icon
     partsPrice: 0
     weightKg: 0.18
+  - id: reaper_blade
+    name: Reaper Blade
+    description: A serrated scrap-steel claw blade from a Scrap Reaper, hydraulic knuckle still attached. Weaponsmiths will want the edge.
+    buyPrice: 0
+    sellPrice: 18
+    startingQuantity: 0
+    tags:
+    - component
+    - component:blade
+    - tier:3
+    - nextlevel
+    maxStack: 5
+    excludeFromTrade: 1
+    rarity: 2
+    sellOnly: 1
+    icon: reaper-blade-icon
+    partsPrice: 0
+    weightKg: 1.8
+  - id: sentinel_optic
+    name: Sentinel Optic
+    description: The brass-ringed targeting optic of a Post sentinel, amber lens intact. A rifle sight could be built around it.
+    buyPrice: 0
+    sellPrice: 20
+    startingQuantity: 0
+    tags:
+    - component
+    - component:optic_targeting
+    - tier:3
+    - nextlevel
+    maxStack: 5
+    excludeFromTrade: 1
+    rarity: 2
+    sellOnly: 1
+    icon: sentinel-optic-icon
+    partsPrice: 0
+    weightKg: 0.6
   - id: foreman_control_core
     name: Foreman Control Core
     description: The depot foreman's command core. Its stored shift schedules include full Mark II pistol schematics.
@@ -427,7 +517,7 @@ MonoBehaviour:
     weightKg: 4.8
   - id: field_vest
     name: Field Vest
-    description: Salvaged plates and stitched canvas protect the torso without sealing out the heat.
+    description: A canvas plate carrier with a riveted steel plate cut from a machine panel, front and back, and a scrap shoulder pad. Issued to new arrivals.
     buyPrice: 30
     sellPrice: 10
     startingQuantity: 0
@@ -459,10 +549,10 @@ MonoBehaviour:
     weightKg: 5.5
   - id: field_boots
     name: Field Boots
-    description: Reinforced boots with replaceable soles and dust seals.
+    description: Worn work boots with welded steel toe caps and a riveted ankle plate strapped over the instep.
     buyPrice: 20
     sellPrice: 7
-    startingQuantity: 1
+    startingQuantity: 0
     tags:
     - armour
     - armour:feet
@@ -753,14 +843,14 @@ MonoBehaviour:
     weightKg: 0.15
   - id: field_helmet
     name: Field Helmet
-    description: A fitted composite shell with a replaceable liner and sealed utility mount.
-    buyPrice: 32
+    description: An open-face cap beaten from a salvaged machine housing, with a riveted brow band, ear cups and a padded liner.
+    buyPrice: 0
     sellPrice: 11
     startingQuantity: 0
     tags:
     - armour
     maxStack: 1
-    excludeFromTrade: 0
+    excludeFromTrade: 1
     rarity: 0
     sellOnly: 0
     icon: equipment-helmet-icon
@@ -768,14 +858,14 @@ MonoBehaviour:
     weightKg: 1.2
   - id: field_armguards
     name: Field Arm Guards
-    description: Segmented guards that leave the elbows clear for tool and weapon work.
-    buyPrice: 26
+    description: Curved bracers cut from pipe and panel steel, buckled over the forearm and clear of the elbow for tool and weapon work.
+    buyPrice: 0
     sellPrice: 9
     startingQuantity: 0
     tags:
     - armour
     maxStack: 1
-    excludeFromTrade: 0
+    excludeFromTrade: 1
     rarity: 0
     sellOnly: 0
     icon: equipment-gloves-icon
@@ -783,14 +873,14 @@ MonoBehaviour:
     weightKg: 1.4
   - id: field_gloves
     name: Field Gloves
-    description: Reinforced gloves with a replaceable grip insert and thin inner liner.
-    buyPrice: 18
+    description: Fingerless leather work gloves with a wrist strap. Good grip on a weapon or a wrench.
+    buyPrice: 0
     sellPrice: 6
     startingQuantity: 0
     tags:
     - armour
     maxStack: 1
-    excludeFromTrade: 0
+    excludeFromTrade: 1
     rarity: 0
     sellOnly: 0
     icon: equipment-gloves-icon
@@ -798,14 +888,14 @@ MonoBehaviour:
     weightKg: 0.5
   - id: field_leggings
     name: Field Leg Armour
-    description: Articulated thigh and shin panels with a serviceable powered-assist rail.
-    buyPrice: 38
+    description: A riveted knee cap and a shin plate with a faded hazard stripe, strapped over the suit with buckled leather.
+    buyPrice: 0
     sellPrice: 13
     startingQuantity: 0
     tags:
     - armour
     maxStack: 1
-    excludeFromTrade: 0
+    excludeFromTrade: 1
     rarity: 0
     sellOnly: 0
     icon: equipment-legs-icon

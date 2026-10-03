@@ -31,8 +31,9 @@ namespace AthenHill.Tests
   {
    var set=Orders();Assert.That(set,Is.Not.Null);
    // 2 Oct 2026: Long Arm (the field rifle) and Plate Carrier (the Warden plate carrier) follow Steady Hands.
-   Assert.That(set.orders.Select(o=>o.title),Is.EqualTo(new[]{"Steady Hands","Long Arm","Plate Carrier","Keep the Charge","Bore It True","The Depot Foreman","Mark II"}));
-   Assert.That(set.orders.Select(o=>o.id).Distinct().Count(),Is.EqualTo(7));
+   // 3 Oct 2026: the four Warden Kit orders (armour built at Brann's bench) follow Steady Hands.
+   Assert.That(set.orders.Select(o=>o.title),Is.EqualTo(new[]{"Steady Hands","Warden Kit: Helm","Warden Kit: Bracers","Warden Kit: Gloves","Warden Kit: Leg Plates","Long Arm","Plate Carrier","Keep the Charge","Bore It True","The Depot Foreman","Mark II"}));
+   Assert.That(set.orders.Select(o=>o.id).Distinct().Count(),Is.EqualTo(11));
    foreach(var o in set.orders)
    {
     Assert.That(o.completeLine,Is.Not.Empty,o.id);Assert.That(o.brief,Is.Not.Empty,o.id);
@@ -80,7 +81,36 @@ namespace AthenHill.Tests
    Assert.That(run.orders.GuidanceKey(run.model,run.pack),Is.Null);
    Assert.That(run.orders.NoteShot(run.model));
    var done=run.Advance();Assert.That(done.Select(o=>o.id),Is.EqualTo(new[]{"order_steady_hands"}));
-   Assert.That(run.orders.Index,Is.EqualTo(1));Assert.That(run.orders.Current.id,Is.EqualTo("order_long_arm"));
+   Assert.That(run.orders.Index,Is.EqualTo(1));Assert.That(run.orders.Current.id,Is.EqualTo("order_kit_helmet"));
+  }
+
+  /// 3 Oct 2026: the Warden kit. Each piece is gathered from Berms salvage and built at Brann's bench (the order start
+  /// reveals its schematic; FieldOrders does that in play); the helm reports to Brann first.
+  static void WardenKit(Run run)
+  {
+   Assert.That(run.orders.Current.id,Is.EqualTo("order_kit_helmet"));run.model.OrderStarted(run.orders.Current.id);
+   Assert.That(run.model.Knows("recipe_alloy_plate"),"the first kit order reveals alloy plate");
+   Assert.That(run.orders.Stage(run.model,run.pack),Is.EqualTo(OrderStage.Gather));Assert.That(run.orders.GuidanceKey(run.model,run.pack),Is.Null.Or.Empty);
+   Assert.That(run.orders.Objective(run.model,run.pack),Does.Contain("Strap Webbing 0/2").And.Contain("Refined Alloy Plate 0/2"));
+   Give(run.pack,("scrap_alloy",6),("nanite_residue",4),("padded_liner",1),("strap_webbing",2),("rivet_stock",2));
+   Assert.That(run.orders.Stage(run.model,run.pack),Is.EqualTo(OrderStage.Gather),"the plate is still to be rolled");
+   run.Craft("recipe_alloy_plate",2);
+   Assert.That(run.orders.Stage(run.model,run.pack),Is.EqualTo(OrderStage.Report));Assert.That(run.orders.GuidanceKey(run.model,run.pack),Is.EqualTo("dealer"));
+   Assert.That(run.orders.NoteReport("npc_brann"));
+   Assert.That(run.orders.Stage(run.model,run.pack),Is.EqualTo(OrderStage.Fabricate));
+   run.Craft("recipe_field_helmet");Assert.That(run.Advance().Single().id,Is.EqualTo("order_kit_helmet"));
+   Assert.That(run.orders.Current.id,Is.EqualTo("order_kit_arms"));run.model.OrderStarted(run.orders.Current.id);
+   Give(run.pack,("scrap_alloy",6),("nanite_residue",4),("strap_webbing",2),("rivet_stock",2));run.Craft("recipe_alloy_plate",2);
+   Assert.That(run.orders.Stage(run.model,run.pack),Is.EqualTo(OrderStage.Fabricate),"only the helm reports to Brann");
+   run.Craft("recipe_field_armguards");Assert.That(run.Advance().Single().id,Is.EqualTo("order_kit_arms"));
+   Assert.That(run.orders.Current.id,Is.EqualTo("order_kit_hands"));run.model.OrderStarted(run.orders.Current.id);
+   Give(run.pack,("strap_webbing",2),("padded_liner",1),("rivet_stock",1),("copper_filament",2));
+   run.Craft("recipe_field_gloves");Assert.That(run.Advance().Single().id,Is.EqualTo("order_kit_hands"));
+   Assert.That(run.orders.Current.id,Is.EqualTo("order_kit_legs"));run.model.OrderStarted(run.orders.Current.id);
+   Give(run.pack,("scrap_alloy",9),("nanite_residue",6),("padded_liner",2),("strap_webbing",3),("rivet_stock",3));run.Craft("recipe_alloy_plate",3);
+   run.Craft("recipe_field_leggings");Assert.That(run.Advance().Single().id,Is.EqualTo("order_kit_legs"));
+   foreach(var piece in new[]{"field_helmet","field_armguards","field_gloves","field_leggings"})Assert.That(run.pack.Quantity(piece),Is.EqualTo(1),piece);
+   foreach(var used in new[]{"alloy_plate","strap_webbing","padded_liner","rivet_stock","scrap_alloy","nanite_residue","copper_filament"})Assert.That(run.pack.Quantity(used),Is.Zero,used);
   }
 
   /// 2 Oct 2026: the Long Arm order gathers the rifle's inputs, reports to Brann and fabricates the rifle; the Plate
@@ -123,6 +153,7 @@ namespace AthenHill.Tests
    var run=new Run();run.orders.Begin();
    Give(run.pack,("grip_stabilised_pistol",1));run.model.TryFit("grip_stabilised_pistol",out _);run.orders.NoteShot(run.model);
    Assert.That(run.Advance().Single().id,Is.EqualTo("order_steady_hands"));
+   WardenKit(run);
    RifleAndCarrier(run);
    // Keep the Charge: the objective lists the capacitor cell's parts from the recipe.
    Assert.That(run.orders.Objective(run.model,run.pack),Does.Contain("Salvaged Capacitor Cell: Charge Cell Core 0/1 · Scrap Alloy 0/2"));
@@ -151,13 +182,15 @@ namespace AthenHill.Tests
    var run=new Run();
    Give(run.pack,("grip_stabilised_pistol",1),("cell_salvaged_capacitor",1),("barrel_bored_alloy",1));
    foreach(var mod in new[]{"grip_stabilised_pistol","cell_salvaged_capacitor","barrel_bored_alloy"})run.model.TryFit(mod,out _);
+   Give(run.pack,("alloy_plate",7),("padded_liner",4),("strap_webbing",9),("rivet_stock",8),("copper_filament",2));
+   foreach(var piece in new[]{"recipe_field_helmet","recipe_field_armguards","recipe_field_gloves","recipe_field_leggings"})run.Craft(piece);
    Give(run.pack,("rifle_receiver",1),("scrap_alloy",6),("copper_filament",3),("nanite_residue",4));   // the field toolkit is in the starting pack
    run.Craft("recipe_field_rifle");
    run.collected.Add("warden_plate_carrier");
    run.orders.Begin();
    Assert.That(run.Advance(),Is.Empty,"order 1 still wants its test fire");
    run.orders.NoteShot(run.model);
-   Assert.That(run.Advance().Select(o=>o.id),Is.EqualTo(new[]{"order_steady_hands","order_long_arm","order_plate_carrier","order_keep_charge","order_bore_true"}));
+   Assert.That(run.Advance().Select(o=>o.id),Is.EqualTo(new[]{"order_steady_hands","order_kit_helmet","order_kit_arms","order_kit_hands","order_kit_legs","order_long_arm","order_plate_carrier","order_keep_charge","order_bore_true"}));
    Assert.That(run.orders.Current.id,Is.EqualTo("order_depot_foreman"));
   }
 
@@ -168,6 +201,12 @@ namespace AthenHill.Tests
    var json=JsonUtility.ToJson(run.orders.Capture());
    var copy=new FieldOrderProgress(Orders());copy.Restore(JsonUtility.FromJson<FieldOrderState>(json));
    Assert.That(copy.Index,Is.EqualTo(1));Assert.That(copy.TestFired("order_steady_hands"));
+   // 3 Oct 2026: the save names the current order; the id wins over the index (orders were inserted), unknown ids fall back
+   Assert.That(run.orders.Capture().id,Is.EqualTo("order_kit_helmet"));
+   copy.Restore(new FieldOrderState{index=1,id="order_long_arm"});Assert.That(copy.Current.id,Is.EqualTo("order_long_arm"));
+   copy.Restore(new FieldOrderState{index=2,id="order_retired"});Assert.That(copy.Index,Is.EqualTo(2));
+   copy.Restore(new FieldOrderState{index=3,id=FieldOrderState.FreePlayId});Assert.That(copy.FreePlay);
+   copy.Restore(JsonUtility.FromJson<FieldOrderState>("{\"index\":1,\"testFired\":[]}"));Assert.That(copy.Index,Is.EqualTo(1),"older saves keep their index");
    copy.Restore(new FieldOrderState{index=99});Assert.That(copy.FreePlay);Assert.That(copy.Index,Is.EqualTo(Orders().orders.Length));
    copy.Restore(new FieldOrderState{index=-7});Assert.That(copy.Started,Is.False);
    copy.Restore(null);Assert.That(copy.Index,Is.EqualTo(-1));

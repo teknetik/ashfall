@@ -23,7 +23,7 @@ namespace AthenHill.Tests
     else Assert.That(ShopModel.BuysAsSalvage(item),Is.False,item.id);
     if(item.rarity==ItemRarity.Rare||item.HasTag("refined")||item.HasTag("weapon_mod"))Assert.That(item.excludeFromTrade,item.id);
    }
-   Assert.That(City().items.Where(ShopModel.BuysAsSalvage).Select(x=>x.id),Is.EquivalentTo(new[]{"droid_servo_damaged","scrap_alloy","nanite_residue","copper_filament","micro_capacitor","optic_lens_cracked"}));
+   Assert.That(City().items.Where(ShopModel.BuysAsSalvage).Select(x=>x.id),Is.EquivalentTo(new[]{"droid_servo_damaged","scrap_alloy","nanite_residue","copper_filament","micro_capacitor","optic_lens_cracked","strap_webbing","padded_liner","rivet_stock"}));
   }
 
   [Test] public void SellListShowsOnlyCarriedSalvageMiraBuys()

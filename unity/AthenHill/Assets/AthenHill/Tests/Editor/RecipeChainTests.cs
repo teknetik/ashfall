@@ -53,7 +53,7 @@ namespace AthenHill.Tests
    Craft(model,"recipe_alloy_plate",2);Craft(model,"recipe_wound_coil");Craft(model,"recipe_barrel_bored_alloy");
    foreach(var id in new[]{"scrap_alloy","nanite_residue","copper_filament","scrap_coil","alloy_plate","wound_coil"})Assert.That(pack.Quantity(id),Is.Zero,id);
    Assert.That(model.TryFit("barrel_bored_alloy",out var r),r);
-   Assert.That(model.Loadout.Stats.damage,Is.EqualTo(40.8f).Within(1e-4));Assert.That(model.Loadout.Stats.range,Is.EqualTo(80));
+   Assert.That(model.Loadout.Stats.damage,Is.EqualTo(40.8f).Within(1e-4));Assert.That(model.Loadout.Stats.range,Is.EqualTo(36));   // 2 Oct 2026: 30 m pistol + 6 m bored barrel
   }
 
   [Test] public void MarkTwoChainsNeedTheirRareParts()
@@ -97,6 +97,11 @@ namespace AthenHill.Tests
    Assert.That(model.OrderStarted("order_keep_charge").Select(r=>r.id),Is.EquivalentTo(new[]{"recipe_wound_coil","recipe_cell_salvaged_capacitor"}));
    Assert.That(model.OrderStarted("order_bore_true").Select(r=>r.id),Is.EquivalentTo(new[]{"recipe_alloy_plate","recipe_barrel_bored_alloy"}));
    Assert.That(model.Acquire("foreman_control_core").Select(r=>r.id),Is.EquivalentTo(new[]{"recipe_grip_gyro_braced","recipe_barrel_lattice_focused","recipe_cell_overclocked"}));
+   // 3 Oct 2026: each Warden Kit order reveals its armour schematic (alloy plate is already known here)
+   Assert.That(model.OrderStarted("order_kit_helmet").Select(r=>r.id),Is.EqualTo(new[]{"recipe_field_helmet"}));
+   Assert.That(model.OrderStarted("order_kit_arms").Select(r=>r.id),Is.EqualTo(new[]{"recipe_field_armguards"}));
+   Assert.That(model.OrderStarted("order_kit_hands").Select(r=>r.id),Is.EqualTo(new[]{"recipe_field_gloves"}));
+   Assert.That(model.OrderStarted("order_kit_legs").Select(r=>r.id),Is.EqualTo(new[]{"recipe_field_leggings"}));
    Assert.That(model.KnownRecipes.Count,Is.EqualTo(Data().recipes.Length));
    // Locked schematics explain themselves in words.
    var fresh=new CraftingModel(Data(),City().items,pack,()=>true);

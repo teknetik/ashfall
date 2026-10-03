@@ -36,9 +36,121 @@ MonoBehaviour:
     requires: order:order_long_arm, stage:Gather
   - node: long_bench
     requires: order:order_long_arm, stage:Fabricate
+  - node: kit_report
+    requires: order:order_kit_helmet, !reported, stage:Report
+  - node: kit_brief
+    requires: order:order_kit_helmet, !reported
+  - node: kit_gather
+    requires: order:order_kit_helmet, stage:Gather
+  - node: kit_gather
+    requires: order:order_kit_arms, stage:Gather
+  - node: kit_gather
+    requires: order:order_kit_hands, stage:Gather
+  - node: kit_gather
+    requires: order:order_kit_legs, stage:Gather
+  - node: kit_bench
+    requires: order:order_kit_helmet, stage:Fabricate
+  - node: kit_bench
+    requires: order:order_kit_arms, stage:Fabricate
+  - node: kit_bench
+    requires: order:order_kit_hands, stage:Fabricate
+  - node: kit_bench
+    requires: order:order_kit_legs, stage:Fabricate
   - node: orders
     requires: primer, !freeplay
   nodes:
+  - id: kit_report
+    title: Warden kit
+    text: Ossa's got you building Warden kit? Good. Let's see the haul. Webbing, liner, rivets. The bench presses scrap alloy into plate, three measures and two of nanites a plate, and rivets the rest into a helm. Same again for bracers, gloves and leg plates. Nobody sells this; you earn every strap.
+    voice: {fileID: 8300000, guid: 086eedfb1d3f4515af07bf01d6630f41, type: 3}
+    choices:
+    - id: bench
+      label: Use the bench.
+      next: 
+      action: fabricator
+      requires: pistol
+      setFlag: 
+    - id: shop
+      label: Trade first.
+      next: 
+      action: shop
+      requires: 
+      setFlag: 
+    - id: close
+      label: Later.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: kit_brief
+    title: Warden kit
+    text: Ossa radioed. You're building Warden kit. I can't sell you that, but I can help you make it. Strap webbing from the scrap heaps, padded liner from the wrecks, rivet stock off the droids. The bench rolls plate from scrap alloy and nanites, three and two a plate. Helm first. Two plates, a liner, two webbing, two rivets.
+    voice: {fileID: 8300000, guid: 2d936d569bf743a593a04d0030d7b257, type: 3}
+    choices:
+    - id: bench
+      label: Use the bench.
+      next: 
+      action: fabricator
+      requires: pistol
+      setFlag: 
+    - id: shop
+      label: Show me what you trade.
+      next: 
+      action: shop
+      requires: 
+      setFlag: 
+    - id: close
+      label: I'll find them.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: kit_gather
+    title: Warden kit
+    text: Still short? Webbing turns up in the scrap heaps all over the Berms, liner in the wrecked trucks and drones, rivets on the droids. Scrap alloy and nanites I can sell you for plate. The rest you scavenge.
+    voice: {fileID: 8300000, guid: 95db47c062204ed68adc11cb7b833a67, type: 3}
+    choices:
+    - id: shop
+      label: Show me what you trade.
+      next: 
+      action: shop
+      requires: 
+      setFlag: 
+    - id: bench
+      label: Use the bench.
+      next: 
+      action: fabricator
+      requires: pistol
+      setFlag: 
+    - id: close
+      label: Later, Brann.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: kit_bench
+    title: Warden kit
+    text: That's enough for the next piece. Use the bench at the back. Roll any plate you need, then build it, and wear it in your loadout.
+    voice: {fileID: 8300000, guid: 93db7e02181f45d5a0ec1222c92cca1c, type: 3}
+    choices:
+    - id: bench
+      label: Use the bench.
+      next: 
+      action: fabricator
+      requires: pistol
+      setFlag: 
+    - id: shop
+      label: Show me what you trade.
+      next: 
+      action: shop
+      requires: 
+      setFlag: 
+    - id: close
+      label: Later, Brann.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
   - id: long_report
     title: Rifle receiver
     text: A Warden receiver, off a gunner's rack. Bolt's still true. Give me alloy for the barrel and stock, filament for the charge path and nanite for the cell seat, and the bench will build the rest of it around this. Train your rifle hand before you carry it; it kicks harder than the pistol.

@@ -25,7 +25,20 @@ namespace AthenHill.Editor
         public static float AimFraction=.95f,CarryFraction=.5f;   // tuned 2 Oct: editor/tune/tune.png
         // Rifle mount in the hand: grip point along the hand bone, and where the grip sits on the rifle (fraction of its
         // length from the butt, fraction of its height from the bottom). Tuned from the editor captures.
-        public static float GripAlong=.075f,GripFromButt=.40f,GripFromBottom=.15f,RifleLength=.9f;
+        // 2 Oct 2026 pm (character pass, main_char_OK rig): the new hand bone's palm centre is 0.121 m along the bone (was
+        // ~0.075 on the mpc colonist), and the old grip point (40 % from the butt, 15 % up) sat on the magazine bottom, so the
+        // receiver floated ~10 cm above the hands. Grip point now on the pistol grip (35 % from the butt, 38 % of the height:
+        // the grip spans 5-55 %, the magazine is the hanging part at 38-43 % from the butt); measured by
+        // MainCharacterInstall.MeasureGrips, profile in art/next_level_20261002/character/REPORT.md.
+        public static float GripAlong=.11f,GripFromButt=.35f,GripFromBottom=.38f,RifleLength=.9f;
+        // Muzzle end (2 Oct 2026, next-level combat pass). Measured, not guessed: a Blender side render of FieldRifle.glb
+        // (unity/evidence/next-level/20261002/combat/rifle-mesh/side_from_-Y.png) shows the barrel, gas block and folded
+        // bipod at glTF -X and the stock at +X; glTFast inverts X on import, so in the imported mesh frame the muzzle is
+        // at +X along the longest axis. The earlier "thinner 12 % end" heuristic chose the stock (the bipod block is
+        // thicker than the butt), which is why the colonist shot himself. Rifle() verifies the setting against the
+        // mesh: the 20-40 % band from the muzzle end (the bare barrel) must be thinner than the same band from the
+        // butt end (the receiver), and throws instead of flipping if the mesh ever changes.
+        public static int MuzzleSign=+1;
         // Vest: height in metres and offsets from the chest bone frame.
         public static float VestHeight=.58f;public static Vector3 VestOffset=new Vector3(0,-.07f,.03f);   // tuned 2 Oct: editor/tune/tune.png
         public static Vector3 VestEuler=Vector3.zero;
@@ -43,6 +56,23 @@ namespace AthenHill.Editor
             EditorSceneManager.MarkSceneDirty(scene);EditorSceneManager.SaveScene(scene);AssetDatabase.SaveAssets();
             Debug.Log("RifleArmourInstall landmarks: "+log);
             File.WriteAllText(Path.Combine(Application.dataPath,"../../evidence/rifle-armour/20261002/landmarks-install.txt"),log+"\n");
+        }
+
+        /// Batch-mode entry (-executeMethod, -nographics): opens the city scene, re-runs Rifle() only (the pistol, vest,
+        /// bindings, cameras and landmarks are untouched) and saves. 2 Oct 2026 next-level combat pass.
+        public static void InstallRifleBatch()
+        {
+            try
+            {
+                var scene=EditorSceneManager.OpenScene("Assets/AthenHill/Scenes/AthenHill.unity",OpenSceneMode.Single);
+                var log=Rifle();
+                EditorSceneManager.MarkSceneDirty(scene);EditorSceneManager.SaveScene(scene);AssetDatabase.SaveAssets();
+                Debug.Log("RifleArmourInstall rifle: "+log);
+                var dir=Path.Combine(Application.dataPath,"../../evidence/next-level/20261002/combat");Directory.CreateDirectory(dir);
+                File.WriteAllText(Path.Combine(dir,"rifle-install.txt"),log+"\n");
+                EditorApplication.Exit(0);
+            }
+            catch(Exception e){Debug.LogException(e);EditorApplication.Exit(1);}
         }
 
         public static string InstallAll()
@@ -105,9 +135,13 @@ namespace AthenHill.Editor
             var min=pts.Aggregate(Vector3.Min);var max=pts.Aggregate(Vector3.Max);var size=max-min;
             int axis=size.x>=size.y&&size.x>=size.z?0:size.y>=size.z?1:2;
             float len=size[axis];
-            // which end is thinner: cross-section extents of the outer 12 % at each end
-            float Section(bool high){var sel=pts.Where(p=>high?p[axis]>max[axis]-len*.12f:p[axis]<min[axis]+len*.12f).ToArray();if(sel.Length==0)return 0;var a=sel.Aggregate(Vector3.Min);var b=sel.Aggregate(Vector3.Max);var s=b-a;s[axis]=0;return s.magnitude;}
-            bool muzzleHigh=Section(true)<Section(false);
+            // explicit muzzle end (see MuzzleSign), checked against the mesh: the barrel band (20-40 % in from the
+            // muzzle) is the thinnest stretch of the rifle, the same band from the butt holds the receiver
+            float Band(bool high,float from,float to){var sel=pts.Where(p=>{float t=high?(max[axis]-p[axis])/len:(p[axis]-min[axis])/len;return t>=from&&t<=to;}).ToArray();if(sel.Length==0)return 0;var a=sel.Aggregate(Vector3.Min);var b=sel.Aggregate(Vector3.Max);var s=b-a;s[axis]=0;return s.magnitude;}
+            float Section(bool high)=>Band(high,0,.12f);
+            bool muzzleHigh=MuzzleSign>0;
+            float barrelBand=Band(muzzleHigh,.2f,.4f),receiverBand=Band(!muzzleHigh,.2f,.4f);
+            if(!(barrelBand<receiverBand*.5f))throw new InvalidOperationException($"Rifle mesh does not match MuzzleSign {MuzzleSign}: 20-40 % band from the chosen muzzle end {barrelBand:F3} vs from the butt {receiverBand:F3} (the barrel band must be the thin one). Re-measure the mesh before changing MuzzleSign.");
             var barrel=Vector3.zero;barrel[axis]=muzzleHigh?1:-1;
             int upAxis=axis==1?2:1;var up=Vector3.zero;up[upAxis]=1;
             float scale=RifleLength/len;
@@ -137,7 +171,7 @@ namespace AthenHill.Editor
             Undo.RecordObject(pose,"rifle pose");
             pose.rifleAimClip=hold;pose.rifleCarryClip=AssetDatabase.LoadAssetAtPath<AnimationClip>(PlayerFolder+"/rifle_carry.anim");
             PrefabUtility.RecordPrefabInstancePropertyModifications(pose);EditorUtility.SetDirty(pose);
-            return $"rifle {glb}: length axis {axis} muzzle {(muzzleHigh?"+":"-")} scale {scale:F4} tris {filters.Sum(f=>f.sharedMesh.triangles.Length/3)} holder local {holder.transform.localPosition:F3} / {holder.transform.localEulerAngles:F0}";
+            return $"rifle {glb}: length axis {axis} muzzle {(muzzleHigh?"+":"-")} (explicit MuzzleSign {MuzzleSign}; barrel band {barrelBand:F3} < receiver band {receiverBand:F3}; 12 % end sections muzzle {Section(muzzleHigh):F3} butt {Section(!muzzleHigh):F3}) scale {scale:F4} tris {filters.Sum(f=>f.sharedMesh.triangles.Length/3)} holder local {holder.transform.localPosition:F3} / {holder.transform.localEulerAngles:F0} muzzle point local {muzzlePoint.localPosition:F3}";
         }
 
         /// The plate carrier under the chest bone, shown by PlayerArmourVisuals while equipped.
@@ -172,7 +206,8 @@ namespace AthenHill.Editor
             Undo.RecordObject(vis,"armour");vis.combat=combat;
             vis.pieces=new[]{new PlayerArmourVisuals.Piece{itemId="warden_plate_carrier",slot="armour_chest",model=holder}};
             PrefabUtility.RecordPrefabInstancePropertyModifications(vis);EditorUtility.SetDirty(vis);
-            return $"vest {VestGlb}: scale {scale:F4} size {b.size:F2} tris {inst.GetComponentsInChildren<MeshFilter>(true).Sum(f=>f.sharedMesh.triangles.Length/3)} at {holder.transform.position:F2}";
+            var rigid=$"vest {VestGlb}: scale {scale:F4} size {b.size:F2} tris {inst.GetComponentsInChildren<MeshFilter>(true).Sum(f=>f.sharedMesh.triangles.Length/3)} at {holder.transform.position:F2}";
+            return TutorialSetInstall.Attach(combat,vis)+" | "+rigid;   // skinned tutorial-set pieces (2 Oct 2026); replaces the rigid carrier when its GLB exists
         }
 
         /// Field-order scene bindings: guidance targets and encounters for the two new orders, and the caravan strongbox.

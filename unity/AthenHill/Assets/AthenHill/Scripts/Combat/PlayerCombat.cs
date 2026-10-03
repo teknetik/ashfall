@@ -19,7 +19,9 @@ namespace AthenHill
   [Header("Scrap pistol")]
   public bool hasPistol;
   [Tooltip("Fallback numbers used only when no Ward crafting loadout is bound. The authoritative base stats and mods live in Data/Crafting/WardCrafting.asset.")]
-  [Min(1)]public float damage=34,range=70;
+  [Min(1)]public float damage=34,range=30;
+  [Tooltip("Fallback shot spread in degrees (WeaponBallistics narrows it by accuracy, aiming and movement).")]
+  [Min(0)]public float spread=4;
   [Min(.05f)]public float fireInterval=.28f;
   [Min(0)]public float nanoMax=100,nanoPerShot=9,nanoRegen=30,recoil=38;
   [Range(0,15)]public float aimAssistDegrees=3.5f;
@@ -55,6 +57,7 @@ namespace AthenHill
   public LineRenderer tracer;
   [Tooltip("First-person arms and pistol; when visible, shots start at its muzzle (it plays its own flash and recoil).")]
   public FirstPersonViewModel viewModel;
+  [Tooltip("First-person view model for the field rifle (3 Oct 2026).")]public FirstPersonViewModel rifleViewModel;
   public MuzzleFlash thirdPersonFlash;
   public Light muzzleLight;
   public ParticleSystem impactSparks;
@@ -67,6 +70,14 @@ namespace AthenHill
   public int ShotsFired {get;private set;}
   public int Hits {get;private set;}
   public int Downs {get;private set;}
+  /// Droid kills credited to the player's shots, and the experience they earned (2 Oct 2026).
+  public int Kills {get;private set;}
+  public int ExperienceEarned {get;private set;}
+  public ThreatTier LastKillTier {get;private set;}=ThreatTier.Normal;
+  /// The last landed shot: damage dealt after falloff and armour, its distance and the cone it was fired with.
+  public float LastHitDamage {get;private set;}
+  public float LastHitDistance {get;private set;}
+  public float LastCone {get;private set;}
   public float LastShotTime {get;private set;}=-99;
   [Header("Camera recoil")]
   public float recoilDegreesPerPoint=.05f,recoilRecoverFraction=.5f,recoilRecoverSeconds=.18f;
@@ -95,6 +106,8 @@ namespace AthenHill
   /// Damage with where it came from (the attacker's position), for the HUD's direction indicator.
   public event Action<float,Vector3> HurtFrom;
   public event Action Downed;
+  /// Experience awarded for a kill: (amount, tier, levelled up). Easy kills raise it with 0.
+  public event Action<int,ThreatTier,bool> ExperienceAwarded;
   float nextFire,faceUntil,tracerOff,emptyNotice;
   void Awake(){Health=GetComponent<Health>();ApplyLoadout();Nano=Stats.nanoMax;Health.Damaged+=OnDamaged;Health.Died+=OnDied;}
   /// CraftingSession binds the pistol's loadout once its model exists. Null returns to the serialized fallback.
@@ -155,7 +168,7 @@ namespace AthenHill
   }
   void ApplyLoadout()
   {
-   BaseStats=Loadout!=null?Loadout.Base:new WeaponStats{damage=damage,fireInterval=fireInterval,range=range,recoil=recoil,nanoMax=nanoMax,nanoPerShot=nanoPerShot,nanoRegen=nanoRegen,aimAssist=aimAssistDegrees};
+   BaseStats=Loadout!=null?Loadout.Base:new WeaponStats{damage=damage,fireInterval=fireInterval,range=range,recoil=recoil,nanoMax=nanoMax,nanoPerShot=nanoPerShot,nanoRegen=nanoRegen,aimAssist=aimAssistDegrees,spread=spread};
    Stats=Loadout!=null?Loadout.WithCharacter(Character):WeaponStatPipeline.ApplyCharacter(BaseStats,Character);
    if(Nano>Stats.nanoMax)Nano=Stats.nanoMax;
    StatsChanged?.Invoke();
@@ -254,7 +267,9 @@ namespace AthenHill
    float skip=follow?follow.Distance:0;
    var origin=cam.position+cam.forward*skip;
    float range=stats.range;
-   float cone=Mathf.Max(0,stats.spread)*(1-Mathf.Clamp01(stats.accuracy/100));
+   // Cone: weapon spread narrowed by effective accuracy (weapon + character + skill), halved while aiming, widened on the move.
+   bool moving=motor&&motor.Speed>WeaponBallistics.MovingSpeed;
+   float cone=WeaponBallistics.Cone(stats.spread,stats.accuracy,Aiming,moving);LastCone=cone;
    Vector2 scatter=UnityEngine.Random.insideUnitCircle*cone;
    Vector3 direction=(Quaternion.AngleAxis(scatter.x,cam.up)*Quaternion.AngleAxis(-scatter.y,cam.right)*cam.forward).normalized;
    Vector3 end=origin+direction*range;Health target=null;
@@ -269,9 +284,10 @@ namespace AthenHill
    LastKickDegrees=stats.recoil*recoilDegreesPerPoint;
    if(follow)follow.ApplyShotKick(LastKickDegrees,recoilRecoverFraction,recoilRecoverSeconds);
    ShotFired?.Invoke();
-   bool firstPerson=viewModel&&viewModel.Visible&&viewModel.muzzle;
+   var vm=RifleActive?rifleViewModel:viewModel;
+   bool firstPerson=vm&&vm.Visible&&vm.muzzle;
    var held=HeldWeapon;var heldMuzzle=HeldMuzzle;
-   var muzzle=firstPerson?viewModel.muzzle.position:heldMuzzle&&held&&held.activeInHierarchy?heldMuzzle.position:motor.visual?motor.visual.TransformPoint(muzzleOffset):transform.TransformPoint(muzzleOffset);
+   var muzzle=firstPerson?vm.muzzle.position:heldMuzzle&&held&&held.activeInHierarchy?heldMuzzle.position:motor.visual?motor.visual.TransformPoint(muzzleOffset):transform.TransformPoint(muzzleOffset);
    if(!firstPerson&&thirdPersonFlash)thirdPersonFlash.Fire();
    if(tracer){tracer.enabled=true;tracer.SetPosition(0,muzzle);tracer.SetPosition(1,end);tracerOff=Time.time+tracerSeconds;}
    if(muzzleLight){muzzleLight.transform.position=muzzle;muzzleLight.enabled=true;}
@@ -282,9 +298,36 @@ namespace AthenHill
     Hits++;
     bool critical=stats.criticalChance>0&&UnityEngine.Random.value<Mathf.Clamp01(stats.criticalChance/100);
     float hitDamage=stats.damage*(critical?Mathf.Max(1,stats.criticalMultiplier):1);
+    // Range falloff from the colonist to the hit, then the droid's flat armour against the weapon's penetration.
+    float distance=Vector3.Distance(transform.position,end);
+    hitDamage*=WeaponBallistics.Falloff(distance,range);
+    var threat=target.GetComponent<DroidThreat>();
+    if(threat)hitDamage=WeaponBallistics.ArmourReduced(hitDamage,threat.armour,stats.armourPenetration);
+    LastHitDamage=hitDamage;LastHitDistance=distance;
     target.Damage(hitDamage,end);
-    TargetHit?.Invoke(target,!target.Alive);
+    bool killed=!target.Alive;
+    TargetHit?.Invoke(target,killed);
+    if(killed)AwardKill(target);
    }
+  }
+  /// A droid put down by the player's shot: experience by its threat tier (DroidThreat), levelling the character.
+  void AwardKill(Health target)
+  {
+   var droid=target.GetComponent<FeralDroid>();
+   if(!droid)return;
+   Kills++;
+   var threat=target.GetComponent<DroidThreat>();
+   var tier=DroidThreat.Tier(droid,this);LastKillTier=tier;
+   int amount=DroidThreat.AwardFor(threat?threat.experience:DroidThreat.DefaultExperience,tier);
+   bool levelled=false;
+   if(amount>0&&Character!=null)
+   {
+    int before=Character.Level;
+    if(Character.GrantExperience(amount,out var reason)){ExperienceEarned+=amount;levelled=Character.Level>before;}
+    else{Debug.LogWarning("Experience not granted: "+reason);amount=0;}
+   }
+   else if(Character==null)amount=0;
+   ExperienceAwarded?.Invoke(amount,tier,levelled);
   }
   int lastMech=-1,lastBody=-1,lastTail=-1,lastEmpty=-1,lastFoley=-1;
   static AudioClip Pick(AudioClip[] clips,ref int last)

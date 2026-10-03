@@ -123,17 +123,22 @@ namespace AthenHill
    foreach(var (key,value) in values)sb.Replace("{"+key+"}",value??"");
    return sb.ToString();
   }
-  public FieldOrderState Capture()=>new FieldOrderState{index=Index,testFired=testFired.OrderBy(x=>x,StringComparer.Ordinal).ToArray(),reported=reported.OrderBy(x=>x,StringComparer.Ordinal).ToArray()};
+  public FieldOrderState Capture()=>new FieldOrderState{index=Index,id=FreePlay?FieldOrderState.FreePlayId:Current?.id??"",testFired=testFired.OrderBy(x=>x,StringComparer.Ordinal).ToArray(),reported=reported.OrderBy(x=>x,StringComparer.Ordinal).ToArray()};
   public void Restore(FieldOrderState state)
   {
    testFired.Clear();reported.Clear();
    if(state==null){Index=-1;return;}
    Index=Math.Max(-1,Math.Min(Data.orders.Length,state.index));
+   // 3 Oct 2026: orders can be inserted (the Warden kit chain), so a saved order id wins over its numeric index
+   if(state.id==FieldOrderState.FreePlayId)Index=Data.orders.Length;
+   else if(!string.IsNullOrEmpty(state.id)){int byId=Array.FindIndex(Data.orders,o=>o!=null&&o.id==state.id);if(byId>=0)Index=byId;}
    if(state.testFired!=null)foreach(var id in state.testFired)if(!string.IsNullOrEmpty(id))testFired.Add(id);
    if(state.reported!=null)foreach(var id in state.reported)if(!string.IsNullOrEmpty(id))reported.Add(id);
   }
  }
  /// reported (1 Oct 2026): orders whose report-to colonist was visited; absent in older saves (none reported, so an
  /// order in progress asks for the visit once).
- [Serializable] public class FieldOrderState {public int index=-1;public string[] testFired;public string[] reported;}
+ /// id (3 Oct 2026): the current order's id ("#freeplay" after the last order). Restore prefers it to the index, so
+ /// inserting orders keeps saves on the right order; saves without it fall back to the index.
+ [Serializable] public class FieldOrderState {public const string FreePlayId="#freeplay";public int index=-1;public string id;public string[] testFired;public string[] reported;}
 }

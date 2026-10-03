@@ -167,7 +167,7 @@ namespace AthenHill.Tests
 
   [Test] public void FullRoundTripRestoresEveryStateMachine()
   {
-   string path;
+   string path;int carrier=System.Array.FindIndex(Orders().orders,o=>o.id=="order_plate_carrier");   // 3 Oct 2026: index 6 after the kit orders
    using(var a=new Rig(folder))
    {
     a.session.StartGame();
@@ -178,14 +178,14 @@ namespace AthenHill.Tests
     Assert.That(a.pack.TryApply(new[]{new KeyValuePair<string,int>("copper_filament",2)},0,out _));Assert.That(a.model.TryCraft("recipe_wound_coil","station_field_fabricator",out _));
     for(int i=0;i<5;i++)a.crafting.Loot.Roll(Data().lootTables.Single(t=>t.id=="loot_feral_scrap_drone"));
     a.crafting.Loot.MarkCollected("foreman_control_core");
-    a.orders.Restore(new FieldOrderState{index=2,testFired=new[]{"order_steady_hands"}});
+    a.orders.Restore(new FieldOrderState{index=carrier,testFired=new[]{"order_steady_hands"}});
     a.session.visitedHill=true;a.session.boughtFlask=true;
     Assert.That(a.save.SaveNow("test"));path=a.save.SavePath;
     Assert.That(File.Exists(path));Assert.That(File.Exists(path+".tmp"),Is.False);
     var expectedStats=a.model.Loadout.Stats;var expectedLoot=a.crafting.Loot.Capture();
     using(var b=new Rig(folder))
     {
-     Assert.That(b.save.HasSave);Assert.That(b.save.Summary(),Does.StartWith("Field order 3/7 · Plate Carrier · 37 cr"));
+     Assert.That(b.save.HasSave);Assert.That(b.save.Summary(),Does.StartWith($"Field order {carrier+1}/{Orders().orders.Length} · Plate Carrier · 37 cr"));
      Assert.That(b.save.Continue());
      Assert.That(b.session.State,Is.EqualTo(CityState.Play));Assert.That(b.session.notice,Does.Contain("Plate Carrier"));
      Assert.That(b.pack.Credits,Is.EqualTo(37));Assert.That(b.pack.Quantity("scrap_alloy"),Is.EqualTo(7));Assert.That(b.pack.Quantity("lattice_shard"),Is.EqualTo(1));
@@ -195,7 +195,7 @@ namespace AthenHill.Tests
      Assert.That(b.model.KnownRecipes,Is.EquivalentTo(a.model.KnownRecipes));Assert.That(b.model.CraftCount("recipe_wound_coil"),Is.EqualTo(1));Assert.That(b.model.Crafts,Is.EqualTo(1));
      Assert.That(b.combat.hasPistol);Assert.That(b.combat.Nano,Is.EqualTo(b.combat.Stats.nanoMax));
      Assert.That(b.tutorial.Step,Is.EqualTo(BermsStep.Complete));
-     Assert.That(b.orders.Progress.Index,Is.EqualTo(2));Assert.That(b.orders.Progress.TestFired("order_steady_hands"));
+     Assert.That(b.orders.Progress.Index,Is.EqualTo(carrier));Assert.That(b.orders.Progress.TestFired("order_steady_hands"));
      Assert.That(JsonUtility.ToJson(b.crafting.Loot.Capture()),Is.EqualTo(JsonUtility.ToJson(expectedLoot)),"bad-luck counters and generator state");
      Assert.That(b.session.visitedHill&&b.session.boughtFlask);Assert.That(b.session.soldScrap,Is.False);
      // Continuing never re-grants rewards: orders 1–2 are simply behind us.

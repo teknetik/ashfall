@@ -26,6 +26,9 @@ namespace AthenHill
   [Tooltip("Once the primer is complete the depot nest re-forms this many seconds after each clear (plus the nest's own away rule), unless the nest sets its own Respawn Seconds.")]
   [Min(1)]public float depotRespawnSeconds=240;
   public string rewardItem="scrap_coil";
+  [Tooltip("Optional item:slot pairs equipped on the colonist when the primer completes (into the pack if that slot is already worn). Empty since 3 Oct 2026: the Field armour pieces are built through Ossa's Warden Kit orders at Brann's bench.")]
+  public string[] kitItems=new string[0];
+  [TextArea]public string kitNotice="";
   [Header("Radio")]
   [TextArea]public string lineStart="New scavenger? Nobody walks the Berms unarmed. I'm Ossa, on West Gate watch. Take the scrap pistol from the ARMS LOCKER under the canopy at my post; the cyan light marks it. Then use the range across the lane.";
   [TextArea]public string lineDraw="It runs on nano charge, not rounds. Press 7 to draw it.";
@@ -119,10 +122,26 @@ namespace AthenHill
    if(step==BermsStep.Complete&&depot){if(depot.respawnSeconds<=0)depot.respawnSeconds=depotRespawnSeconds;depot.Activate();}
    Changed?.Invoke();
   }
+  /// Equips the tutorial kit on the colonist (TryGrantEquipped never replaces worn gear); a piece whose slot is taken
+  /// goes into the pack instead. Returns how many pieces were issued.
+  public int GrantKit()
+  {
+   var character=combat?combat.Character:null;if(character==null||kitItems==null)return 0;
+   int issued=0;
+   foreach(var pair in kitItems)
+   {
+    var parts=(pair??"").Split(':');if(parts.Length!=2)continue;
+    if(character.Equipped(parts[1])==parts[0])continue;
+    if(character.TryGrantEquipped(parts[0],parts[1],out _)||(session&&session.Shop!=null&&session.Shop.Grant(parts[0],1,0,out _)))issued++;
+   }
+   if(issued>0&&session&&!string.IsNullOrEmpty(kitNotice))session.Notify(kitNotice);
+   return issued;
+  }
   void Finish()
   {
    Step=BermsStep.Complete;
    session.Reward(rewardCredits,rewardItem,rewardScrap,radioSpeaker,lineComplete);
+   GrantKit();
    // Plates go back up for practice; the depot re-forms while the player is away.
    foreach(var t in targets)if(t)t.Raise();
    if(depot&&depot.respawnSeconds<=0)depot.respawnSeconds=depotRespawnSeconds;

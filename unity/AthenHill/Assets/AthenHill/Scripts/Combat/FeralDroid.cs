@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace AthenHill
 {
- public enum DroidKind { Walker, Hover }
+ /// Wheeled (2 Oct 2026, the Post Sentinel): a rolling droid steered over the ground like a walker, with a wheel that spins
+ /// with its speed, a lean into turns and a physics topple when it dies.
+ public enum DroidKind { Walker, Hover, Wheeled }
  public enum DroidAttack { Melee, Ranged }
  public enum DroidState { Idle, Alert, Chase, Windup, Recover, Stagger, Returning, Dead, Firing }
  /// Feral industrial droid of the Outer Berms: guards its home ground, telegraphs each strike
@@ -15,6 +17,9 @@ namespace AthenHill
  /// Pack: a droid that turns on the player raises Alerted, and its encounter brings nearby droids into the fight.
  /// Melee droids close in from a flank instead of in a straight line, so a pack spreads around the player.
  /// Enemies stand still while any city modal is open, so dialogue and menus are always safe.
+ /// Armour (2 Oct 2026, next-level enemies): a flat amount off every hit after the player's weapon armour penetration,
+ /// never below Armour Min Fraction of the hit, so the starter pistol barely scratches the outer droids while a modded
+ /// field rifle gets through (MitigatedDamage is static for the threat-tier rule).
  [RequireComponent(typeof(Health))]
  public class FeralDroid:MonoBehaviour
  {
@@ -45,6 +50,18 @@ namespace AthenHill
   public LayerMask groundMask=~(1<<8);
   [Tooltip("Melee chase: how far (fraction of the distance, up to 4 m) the droid swings out to the side it approaches from. 0 = straight in.")]
   [Range(0,1)]public float flank=.35f;
+  [Tooltip("Droids keep at least this far from each other in every state, standing or moving (2 Oct 2026 fix for gunners stacking on one spot while they aim). Ranged droids use about 2.4 m.")]
+  [Min(0)]public float separation=1.6f;
+  [Header("Armour (next-level enemies)")]
+  [Tooltip("Flat damage taken off every hit after the player's armour penetration; the remainder never drops below Armour Min Fraction of the hit. 0 = none (the depot droids).")]
+  [Min(0)]public float armour;
+  [Range(0,1)]public float armourMinFraction=.25f;
+  [Header("Wheel (Wheeled kind)")]
+  [Tooltip("Spins about its local X with the ground speed (forward = +Z of the droid).")]
+  public Transform wheel;
+  [Min(.01f)]public float wheelRadius=.21f;
+  [Tooltip("Visual lean: degrees of roll per degree/s of heading change (scaled by speed) and degrees of pitch per m/s² of acceleration, both clamped to Max Lean.")]
+  [Min(0)]public float leanPerTurnRate=.05f,pitchPerAccel=1.5f,maxLean=12;
   [Header("Ranged attack (Attack Mode = Ranged)")]
   public DroidAttack attackMode;
   public DroidBolt boltPrefab;
@@ -156,6 +173,7 @@ namespace AthenHill
   {
    Health=GetComponent<Health>();body=GetComponent<Rigidbody>();
    Health.Damaged+=OnDamaged;Health.Died+=OnDied;
+   if(armour>0)Health.AdjustIncomingDamage=Mitigate;
    if(animationSource)foreach(var clip in new[]{idle,walk,run,attack,hit,death,aim,strafeLeft,strafeRight})
    {
     if(!clip||animationSource[clip.name]!=null)continue;
@@ -181,6 +199,9 @@ namespace AthenHill
    if(animationSource.cullingType!=want)animationSource.cullingType=want;
   }
   bool Visible=>!mainRenderer||mainRenderer.isVisible;
+  /// Flat armour after the attacker's penetration, never below the minimum fraction of the hit.
+  public static float MitigatedDamage(float incoming,float armour,float penetration,float minFraction)=>Mathf.Max(incoming*Mathf.Clamp01(minFraction),incoming-Mathf.Max(0,armour-Mathf.Max(0,penetration)));
+  float Mitigate(float incoming)=>MitigatedDamage(incoming,armour,Player?Player.Stats.armourPenetration:0,armourMinFraction);
   void Loop(AnimationClip c){if(animationSource&&c&&animationSource[c.name]!=null)animationSource[c.name].wrapMode=WrapMode.Loop;}
   void OnEnable(){Active.Add(this);}
   void OnDisable(){Active.Remove(this);}
@@ -254,7 +275,7 @@ namespace AthenHill
      if(PlayerAvailable&&PlayerDistance<aggroRadius&&CanSee())Alert();
      break;
     case DroidState.Alert:
-     Face(Player.transform.position,dt);
+     Steer(transform.position,0,dt,Player.transform.position);   // only the separation push moves it
      if(timer>=alertSeconds)SetState(DroidState.Chase);
      break;
     case DroidState.Chase:
@@ -298,7 +319,7 @@ namespace AthenHill
     float target=State==DroidState.Windup||State==DroidState.Firing?eyeHostile*(1.3f+.4f*Mathf.Sin(Time.time*40)):Hostile?eyeHostile:eyeCalm;
     eyeLight.intensity=Mathf.MoveTowards(eyeLight.intensity,target,dt*12);
    }
-   if(kind==DroidKind.Hover)HoverPose(dt);
+   if(kind==DroidKind.Hover)HoverPose(dt);else if(kind==DroidKind.Wheeled)WheelPose(dt);
   }
 
   void RepairStep(float dt){if(repairPerSecond>0&&Health.Alive&&Health.Current<Health.max&&Time.time-Health.LastDamageTime>4)Health.Heal(repairPerSecond*dt);}
@@ -351,7 +372,7 @@ namespace AthenHill
    Vector3 goal;float speed;bool facePlayer=kind==DroidKind.Hover||HasStrafe;
    if(!clear&&d>retreatRange){goal=Player.transform.position+side*Mathf.Min(6,d*.3f);speed=chaseSpeed;facePlayer=kind==DroidKind.Hover;}
    else if(d<retreatRange){goal=transform.position-dir*4+side*2;speed=chaseSpeed;}
-   else{goal=transform.position+side*3+dir*Mathf.Clamp((d-preferredRange)*.35f,-3,3);speed=strafeSpeed;}
+   else{goal=transform.position+side*3+dir*Mathf.Clamp((d-preferredRange+flankSide*1.5f)*.35f,-3,3)+Vector3.Cross(Vector3.up,dir)*flankSide*2f;speed=strafeSpeed;}   // each droid holds its own band and side
    Steer(goal,speed,dt,facePlayer?Player.transform.position:(Vector3?)null);
    if(kind==DroidKind.Walker)
    {
@@ -473,14 +494,18 @@ namespace AthenHill
     var left=Quaternion.Euler(0,-55,0)*dir;var right=Quaternion.Euler(0,55,0)*dir;
     dir=!Blocked(right)?right:!Blocked(left)?left:Quaternion.Euler(0,100,0)*dir;
    }
+   // separation from other droids: a push of its own, so it also works while standing, aiming or firing
+   var push=Vector3.zero;
    foreach(var other in Active)
    {
-    if(other==this||other.State==DroidState.Dead)continue;
+    if(other==this||other.State==DroidState.Dead||!other.gameObject.activeInHierarchy)continue;
+    float minSep=Mathf.Max(separation,other.separation);
     var away=Flat(transform.position-other.transform.position);float d=away.magnitude;
-    if(d<1.6f&&d>.001f)dir+=away/d*(1.6f-d);
+    if(d<minSep&&d>.001f)push+=away/d*(minSep-d);
+    else if(d<=.001f)push+=new Vector3(flankSide,0,0)*minSep;
    }
    dir=Flat(dir);if(dir.sqrMagnitude>1)dir.Normalize();
-   velocity=Vector3.Lerp(velocity,dir*speed,1-Mathf.Exp(-6*dt));
+   velocity=Vector3.Lerp(velocity,dir*speed+push*1.5f,1-Mathf.Exp(-6*dt));
    if(faceAt.HasValue)Face(faceAt.Value,dt);
    else if(velocity.sqrMagnitude>.01f)Face(transform.position+velocity,dt);
    transform.position+=velocity*dt;
@@ -542,6 +567,26 @@ namespace AthenHill
    visual.localPosition=new Vector3(0,Mathf.Sin(bob)*.08f,0);
    visual.localRotation=Quaternion.Euler(Mathf.Clamp(local.z*6,-20,20),0,Mathf.Clamp(-local.x*8,-20,20));
   }
+  // Wheeled droids: the body leans into turns and pitches with acceleration; the wheel rolls with the ground speed.
+  float wheelHeading,wheelSpeed,wheelRoll,wheelPitch;
+  void WheelPose(float dt)
+  {
+   var visual=transform.childCount>0?transform.GetChild(0):null;if(!visual||dt<=0)return;
+   float heading=transform.eulerAngles.y;float rate=Mathf.DeltaAngle(wheelHeading,heading)/dt;wheelHeading=heading;
+   float speed=Flat(velocity).magnitude;float accel=(speed-wheelSpeed)/dt;wheelSpeed=speed;
+   float roll=Mathf.Clamp(-rate*leanPerTurnRate*Mathf.Clamp01(speed/2f),-maxLean,maxLean);
+   float pitch=Mathf.Clamp(accel*pitchPerAccel,-maxLean,maxLean);
+   wheelRoll=Mathf.Lerp(wheelRoll,roll,1-Mathf.Exp(-6*dt));wheelPitch=Mathf.Lerp(wheelPitch,pitch,1-Mathf.Exp(-5*dt));
+   bob+=dt*(1.5f+speed*.6f);
+   visual.localRotation=Quaternion.Euler(wheelPitch+Mathf.Sin(bob)*.8f,0,wheelRoll+Mathf.Sin(bob*.7f)*.6f);
+   visual.localPosition=new Vector3(0,Mathf.Abs(Mathf.Sin(bob*1.3f))*.01f*Mathf.Min(speed,4),0);
+  }
+  void WheelSpin(float dt)
+  {
+   if(!wheel||State==DroidState.Dead)return;
+   float v=Vector3.Dot(velocity,transform.forward);
+   wheel.Rotate(v/Mathf.Max(.01f,wheelRadius)*Mathf.Rad2Deg*dt,0,0,Space.Self);
+  }
   void HoverLunge(float dt)
   {
    var to=Flat(Player.transform.position-transform.position);
@@ -574,7 +619,7 @@ namespace AthenHill
    // The optic light only matters where it can be seen, or in a fight.
    if(eyeLight){bool lit=visible||Hostile;if(eyeLight.enabled!=lit)eyeLight.enabled=lit;}
    if(FarIdle&&!visible)return;
-   if(kind==DroidKind.Walker)Footsteps(reduced);else Rotors(dt,reduced);
+   if(kind==DroidKind.Walker)Footsteps(reduced);else if(kind==DroidKind.Hover)Rotors(dt,reduced);else WheelSpin(dt);
   }
   // Hover wrecks: stop the tumble within Wreck Max Travel, damp it once it lands, then freeze it where it rests.
   void FixedUpdate()
@@ -693,12 +738,12 @@ namespace AthenHill
   {
    SetState(DroidState.Dead);velocity=Vector3.zero;deadAt=Time.time;joinAt=-1;
    if(aimLaser)aimLaser.enabled=false;
-   deathPoint=transform.position;wreckGrounded=false;settleClock=0;WreckSettled=kind!=DroidKind.Hover||!body;
+   deathPoint=transform.position;wreckGrounded=false;settleClock=0;WreckSettled=kind==DroidKind.Walker||!body;
    if(voice&&deathClip)voice.PlayOneShot(deathClip);
    if(eyeLight)eyeLight.intensity=0;
    if(sparks)sparks.Emit(30);
    if(smoke)smoke.Play();
-   if(kind==DroidKind.Hover&&body)
+   if(kind!=DroidKind.Walker&&body)
    {
     body.isKinematic=false;body.useGravity=true;
     body.AddForce(Vector3.up*1.5f+UnityEngine.Random.insideUnitSphere,ForceMode.VelocityChange);

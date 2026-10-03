@@ -16,11 +16,36 @@ MonoBehaviour:
   displayName: Warden Ossa
   role: West Gate watch
   entries:
+  - node: warden_kit
+    requires: order:order_kit_helmet
+  - node: warden_kit
+    requires: order:order_kit_arms
+  - node: warden_kit
+    requires: order:order_kit_hands
+  - node: warden_kit
+    requires: order:order_kit_legs
   - node: plate_carrier
     requires: order:order_plate_carrier
   - node: long_arm
     requires: order:order_long_arm
   nodes:
+  - id: warden_kit
+    title: Warden kit
+    text: Nobody issues Warden kit; you build it. Webbing turns up in the scrap heaps all over the Berms, padded liner in the wrecked trucks and drones, rivets on the droids you put down. Brann's bench rolls scrap alloy and nanites into plate and rivets the rest together. Helm, bracers, gloves, then leg plates.
+    voice: {fileID: 8300000, guid: de31c757d2014e30bc567429c0fb585e, type: 3}
+    choices:
+    - id: range
+      label: Remind me of the controls.
+      next: range
+      action: 
+      requires: 
+      setFlag: 
+    - id: leave
+      label: On my way.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
   - id: long_arm
     title: Long arm
     text: The relay knoll is west along the trail, past the waystation; two gunner droids nest on it with a worker. Their lasers walk before they fire, so move off the line and shoot the optic. The receiver is on the gunner's rack. Brann builds the rest. Train Rifle in your pack, equip it in your loadout, and 8 draws it out here.

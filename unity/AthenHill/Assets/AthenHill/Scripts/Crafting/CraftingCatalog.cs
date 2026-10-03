@@ -5,8 +5,9 @@ namespace AthenHill
  [Serializable] public class CraftIngredient {public string kind,id;public int quantity;}
  /// type: acquireItem (the item first enters the pack) or orderStart (a field order becomes current).
  [Serializable] public class CraftUnlock {public string type,id;}
- /// Fabricator window grouping; new weapon families can have their own sections.
- public enum RecipeGroup { Component, MarkI, MarkII, Weapon, WeaponMod }
+ /// Fabricator window grouping; new weapon families can have their own sections. New values are appended so the
+ /// serialized numbers stay valid (Armour = 5, 3 Oct 2026: the Warden kit pieces).
+ public enum RecipeGroup { Component, MarkI, MarkII, Weapon, WeaponMod, Armour }
  [Serializable] public class CraftRecipe
  {
   public string id,name,stationId,requiresWeaponId,outputItemId;

@@ -19,7 +19,8 @@ namespace AthenHill
   }
   public float this[string id]=>this[IndexOf(id)];
   // Initial values for new catalog entries only; the saved WardCrafting asset is authoritative.
-  public static WeaponStats ScrapPistol=>new WeaponStats{damage=34,fireInterval=.28f,range=70,recoil=38,nanoMax=100,nanoPerShot=9,nanoRegen=30,aimAssist=3.5f};
+  // 2 Oct 2026 next-level pass: range 30 m (full damage to 18 m, WeaponBallistics), 4° spread.
+  public static WeaponStats ScrapPistol=>new WeaponStats{damage=34,fireInterval=.28f,range=30,recoil=38,nanoMax=100,nanoPerShot=9,nanoRegen=30,aimAssist=3.5f,spread=4};
   public static WeaponStats DefaultMin=>new WeaponStats{damage=1,fireInterval=.08f,range=10,recoil=0,nanoMax=20,nanoPerShot=1,nanoRegen=1,aimAssist=0};
   public static WeaponStats DefaultMax=>new WeaponStats{damage=400,fireInterval=2,range=200,recoil=100,nanoMax=400,nanoPerShot=60,nanoRegen=200,aimAssist=12,accuracy=100,spread=180,criticalChance=100,criticalMultiplier=10,projectileVelocity=10000,reloadTime=60,heatGeneration=1000,cooling=1000,durability=100000,armourPenetration=100};
   public bool Approximately(WeaponStats other){for(int i=0;i<Count;i++)if(Math.Abs(this[i]-other[i])>.0005f)return false;return true;}
@@ -41,7 +42,7 @@ namespace AthenHill
   public WeaponStats Stats {get;private set;}
   public WeaponStats WithCharacter(CharacterModel character)
   {
-   var result=WeaponStatPipeline.ApplyCharacter(Stats,character);
+   var result=WeaponStatPipeline.ApplyCharacter(Stats,character,weapon.id);
    for(int i=0;i<WeaponStats.Count;i++)
    {
     float hi=weapon.maxStats[i];
@@ -126,15 +127,21 @@ namespace AthenHill
   }
  }
  /// The same character contribution is used by combat and inspection panels after socket effects.
+ /// Accuracy (2 Oct 2026): weapon base + the character's accuracy derived stat + the weapon's skill (pistol, rifle, …
+ /// by WeaponBallistics.SkillFor) × WeaponBallistics.SkillAccuracyPerPoint, clamped to 0..100.
  public static class WeaponStatPipeline
  {
-  public static WeaponStats ApplyCharacter(WeaponStats modified,CharacterModel character)
+  public static WeaponStats ApplyCharacter(WeaponStats modified,CharacterModel character)=>ApplyCharacter(modified,character,null);
+  public static WeaponStats ApplyCharacter(WeaponStats modified,CharacterModel character,string weaponId)
   {
    if(character==null)return modified;
    bool Has(string id)=>character.Data.derivedStats.Any(x=>x.id==id);
    if(Has("rangedDamage"))modified.damage*=Mathf.Max(0,character.Stat("rangedDamage"));
    if(Has("recoilControl"))modified.recoil*=1-Mathf.Clamp01(character.Stat("recoilControl"));
-   if(Has("accuracy"))modified.accuracy=Mathf.Clamp(modified.accuracy+character.Stat("accuracy"),0,100);
+   float characterAccuracy=Has("accuracy")?character.Stat("accuracy"):0;
+   var skill=WeaponBallistics.SkillFor(weaponId);
+   float skillValue=skill!=null&&character.Data.skills!=null&&character.Data.skills.Any(x=>x!=null&&x.id==skill)?character.Stat(skill):0;
+   modified.accuracy=WeaponBallistics.Accuracy(modified.accuracy,characterAccuracy,skillValue);
    if(Has("criticalChance"))modified.criticalChance=Mathf.Clamp(modified.criticalChance+character.Stat("criticalChance")*100,0,100);
    return modified;
   }

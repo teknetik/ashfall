@@ -23,7 +23,8 @@ namespace AthenHill.Tests
     var b=Data().weapons.Single(w=>w.id=="weapon_scrap_pistol").stats;
     Assert.That(new[]{b.damage,b.fireInterval,b.range,b.recoil,b.nanoMax,b.nanoPerShot,b.nanoRegen,b.aimAssist},
      Is.EqualTo(new[]{combat.damage,combat.fireInterval,combat.range,combat.recoil,combat.nanoMax,combat.nanoPerShot,combat.nanoRegen,combat.aimAssistDegrees}));
-    Assert.That(new[]{b.damage,b.fireInterval,b.range,b.recoil,b.nanoMax,b.nanoPerShot,b.nanoRegen,b.aimAssist},Is.EqualTo(new[]{34,.28f,70,38,100,9,30,3.5f}));
+    Assert.That(new[]{b.damage,b.fireInterval,b.range,b.recoil,b.nanoMax,b.nanoPerShot,b.nanoRegen,b.aimAssist},Is.EqualTo(new[]{34,.28f,30,38,100,9,30,3.5f}));   // 2 Oct 2026: 30 m pistol
+    Assert.That(b.spread,Is.EqualTo(combat.spread));Assert.That(b.spread,Is.EqualTo(4));
     Assert.That(Data().weapons.Single(w=>w.id=="weapon_scrap_pistol").slots,Is.EqualTo(new[]{"grip","barrel","cell"}));
    }
    finally{Object.DestroyImmediate(go);}
@@ -34,10 +35,10 @@ namespace AthenHill.Tests
    var w=Data().weapons.Single(w=>w.id=="weapon_scrap_pistol");
    WeaponStats With(string item)=>WeaponLoadout.Compute(w,new[]{Data().modifiers.Single(m=>m.itemId==item)});
    Assert.That(With("grip_stabilised_pistol").recoil,Is.EqualTo(31));
-   var bored=With("barrel_bored_alloy");Assert.That(bored.damage,Is.EqualTo(40.8f).Within(1e-4));Assert.That(bored.range,Is.EqualTo(80));
+   var bored=With("barrel_bored_alloy");Assert.That(bored.damage,Is.EqualTo(40.8f).Within(1e-4));Assert.That(bored.range,Is.EqualTo(36));Assert.That(bored.spread,Is.EqualTo(3.6f).Within(1e-4));
    var cell=With("cell_salvaged_capacitor");Assert.That(cell.nanoMax,Is.EqualTo(135));Assert.That(cell.nanoRegen,Is.EqualTo(34.5f).Within(1e-4));
    var gyro=With("grip_gyro_braced");Assert.That(gyro.recoil,Is.EqualTo(23));Assert.That(gyro.aimAssist,Is.EqualTo(4.5f));
-   var lattice=With("barrel_lattice_focused");Assert.That(lattice.damage,Is.EqualTo(49.3f).Within(1e-4));Assert.That(lattice.range,Is.EqualTo(95));Assert.That(lattice.fireInterval,Is.EqualTo(.302f).Within(1e-4));
+   var lattice=With("barrel_lattice_focused");Assert.That(lattice.damage,Is.EqualTo(49.3f).Within(1e-4));Assert.That(lattice.range,Is.EqualTo(42));Assert.That(lattice.spread,Is.EqualTo(3.2f).Within(1e-4));Assert.That(lattice.fireInterval,Is.EqualTo(.302f).Within(1e-4));
    var over=With("cell_overclocked");Assert.That(over.nanoMax,Is.EqualTo(160));Assert.That(over.nanoPerShot,Is.EqualTo(7));Assert.That(over.nanoRegen,Is.EqualTo(39));
    // Untouched stats stay at base.
    Assert.That(bored.recoil,Is.EqualTo(38));Assert.That(gyro.damage,Is.EqualTo(34));
@@ -177,7 +178,7 @@ namespace AthenHill.Tests
    Assert.That(reason,Is.EqualTo("wrong_slot"));Assert.That(pack.Quantity("grip_stabilised_pistol"),Is.EqualTo(1));
    Assert.That(model.TryFit(rifle.WeaponId,"rifle_precision_barrel",out reason),reason);
    Assert.That(model.TryFit("grip_stabilised_pistol",out reason),reason);
-   Assert.That(rifle.Stats.accuracy,Is.EqualTo(90));Assert.That(rifle.Stats.spread,Is.EqualTo(.9f));
+   Assert.That(rifle.Stats.accuracy,Is.EqualTo(28));Assert.That(rifle.Stats.spread,Is.EqualTo(1.35f).Within(1e-4));   // 2 Oct 2026: rifle base 20 / 1.8°
    Assert.That(model.Loadout.Stats.recoil,Is.EqualTo(31));
    var saved=model.Capture();
    var other=new CraftingModel(Data(),City().items,pack,()=>true);
@@ -220,7 +221,7 @@ namespace AthenHill.Tests
     var (pack,model)=Model();var character=new CharacterModel(catalog,pack);
     var rifle=model.GetLoadout("weapon_field_rifle");var result=rifle.WithCharacter(character);
     Assert.That(result.damage,Is.EqualTo(32.4f).Within(.001f));Assert.That(result.recoil,Is.EqualTo(33));
-    Assert.That(result.accuracy,Is.EqualTo(87));Assert.That(result.criticalChance,Is.EqualTo(15));
+    Assert.That(result.accuracy,Is.EqualTo(25));Assert.That(result.criticalChance,Is.EqualTo(15));   // rifle base accuracy 20 + 5; no skills in this catalog
     Assert.That(rifle.Stats.damage,Is.EqualTo(27),"inspection does not mutate the mod-only baseline");
    }
    finally{Object.DestroyImmediate(catalog);}

@@ -58,12 +58,15 @@ namespace AthenHill.Tests
     // Since 2 Oct 2026 the Outer Berms run ~500 m west: the three primer/order encounters stay as they were and the
     // expansion's site encounters live under "Outer Berms/Berms expanse" (BermsExpanseTests checks them).
     bool InExpanse(Component c)=>c.GetComponentsInParent<Transform>(true).Any(t=>t.name=="Berms expanse");
-    Assert.That(All<DroidEncounter>(scene).Count(e=>!InExpanse(e)),Is.EqualTo(3));
+    // 2 Oct 2026 (next-level enemies pass): the four outer POI encounters live under "Outer Berms/Next level sites"
+    // (NextLevelEnemiesInstall); they are counted by NextLevelEnemiesTests, not here. Minimal edit by the enemies agent.
+    bool InNextLevel(Component c)=>c.GetComponentsInParent<Transform>(true).Any(t=>t.name=="Next level sites");
+    Assert.That(All<DroidEncounter>(scene).Count(e=>!InExpanse(e)&&!InNextLevel(e)),Is.EqualTo(3));
     // Heaps: 6–10 searchable nodes in the original Berms with real tables, clear of colonists and Wardens (the
     // expansion's heaps follow the same rules below).
     var catalog=AssetDatabase.LoadAssetAtPath<CraftingCatalog>("Assets/AthenHill/Data/Crafting/WardCrafting.asset");
     var nodes=All<SalvageNode>(scene);
-    Assert.That(nodes.Count(n=>!InExpanse(n)),Is.InRange(6,10));
+    Assert.That(nodes.Count(n=>!InExpanse(n)&&!InNextLevel(n)),Is.InRange(6,10));   // next-level loot crates/heaps counted by NextLevelEnemiesTests
     foreach(var n in nodes)
     {
      Assert.That(catalog.lootTables.Any(t=>t.id==n.lootTableId),n.name);Assert.That(n.crafting,Is.EqualTo(crafting),n.name);

@@ -115,7 +115,7 @@ namespace AthenHill.Tests
    Assert.That(Tiles(root),Is.EqualTo(new[]{"sch-recipe_alloy_plate","sch-recipe_grip_stabilised_pistol","sch-recipe_field_rifle","sch-recipe_rifle_precision_barrel"}));
    Assert.That(root.Q<Button>("sch-recipe_alloy_plate").ClassListContains("short"),"no parts carried");
    Assert.That(root.Q<Label>("inventory-overview-description").text,Does.StartWith("Parts: ").And.Contain("workbench at Salvage"));
-   Assert.That(root.Query<Button>(className:"pack-chip").ToList().Select(b=>b.text),Is.EqualTo(new[]{"ALL","COMPONENTS","MARK I","MARK II","WEAPONS","WEAPON MODS"}));
+   Assert.That(root.Query<Button>(className:"pack-chip").ToList().Select(b=>b.text),Is.EqualTo(new[]{"ALL","COMPONENTS","MARK I","MARK II","WEAPONS","WEAPON MODS","ARMOUR"}));
    panel.SetFilter("MarkI");
    Assert.That(Tiles(root),Is.EqualTo(new[]{"sch-recipe_grip_stabilised_pistol"}));
    panel.SetTab(PackPanel.Tab.Items);

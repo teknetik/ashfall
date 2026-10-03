@@ -84,7 +84,7 @@ namespace AthenHill.Tests
    Assert.That(b.CurrentReported);Assert.That(b.Reported("order_steady_hands"));
    var old=new FieldOrderProgress(set);old.Restore(JsonUtility.FromJson<FieldOrderState>("{\"index\":0,\"testFired\":[]}"));
    Assert.That(old.CurrentReported,Is.False);
-   Assert.That(set.orders.Where(o=>!string.IsNullOrEmpty(o.reportTo)).Select(o=>o.id),Is.EqualTo(new[]{"order_steady_hands","order_long_arm"}),"the grip and the rifle orders ask for the visit");
+   Assert.That(set.orders.Where(o=>!string.IsNullOrEmpty(o.reportTo)).Select(o=>o.id),Is.EqualTo(new[]{"order_steady_hands","order_kit_helmet","order_long_arm"}),"the grip, the Warden helm and the rifle orders ask for the visit");
    Assert.That(set.orders[0].reportTo,Is.EqualTo("npc_brann"));Assert.That(set.orders[0].reportGuidance,Is.EqualTo("dealer"));
    Assert.That(set.fabricateFormat,Does.Contain("Brann"));Assert.That(set.fitFormat,Does.Contain("Brann"));
    foreach(var o in set.orders)foreach(var line in new[]{o.startLine,o.completeLine,o.brief})Assert.That(line??"",Does.Not.Contain("fabricator"),o.id);

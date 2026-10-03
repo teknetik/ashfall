@@ -19,7 +19,9 @@ namespace AthenHill.Tests
     {
      Assert.That(guard.definition.nodes.Any(n=>n.id=="greeting"));
      foreach(var n in guard.definition.nodes){Assert.That(n.choices.Length,Is.EqualTo(2));foreach(var choice in n.choices.Where(c=>c.action!="close"))Assert.That(guard.definition.nodes.Any(next=>next.id==choice.next),Is.True,"No dead-end dialogue choices");}
-     Assert.That(guard.GetComponentsInChildren<Transform>().Any(t=>t.name=="Warden secured sidearm"),Is.True);
+     // a visible weapon on the active model: the old open-hand sidearm, or (3 Oct 2026, WardNpcInstall) the holstered
+     // pistol / slung rifle mounted on the new Warden models
+     Assert.That(guard.GetComponentsInChildren<Transform>().Any(t=>t.name is "Warden secured sidearm" or "Warden holstered sidearm" or "Warden slung rifle"),Is.True,guard.name+" carries no visible weapon");
     }
     var tutorial=all.SelectMany(g=>g.GetComponentsInChildren<BermsTutorial>(true)).Single();
     Assert.That(tutorial.locker,Is.Not.Null);Assert.That(tutorial.targets.Length,Is.EqualTo(3));

@@ -16,7 +16,7 @@ namespace AthenHill
   /// Grid rows are always completed with empty cells, and never fewer than this many cells are drawn.
   public const int MinimumCells=24;
   static readonly string[] rarityClasses={"rarity-common","rarity-uncommon","rarity-rare"};
-  static readonly Dictionary<RecipeGroup,string> groupChips=new Dictionary<RecipeGroup,string>{{RecipeGroup.Component,"Components"},{RecipeGroup.MarkI,"Mark I"},{RecipeGroup.MarkII,"Mark II"},{RecipeGroup.Weapon,"Weapons"},{RecipeGroup.WeaponMod,"Weapon mods"}};
+  static readonly Dictionary<RecipeGroup,string> groupChips=new Dictionary<RecipeGroup,string>{{RecipeGroup.Component,"Components"},{RecipeGroup.MarkI,"Mark I"},{RecipeGroup.MarkII,"Mark II"},{RecipeGroup.Weapon,"Weapons"},{RecipeGroup.WeaponMod,"Weapon mods"},{RecipeGroup.Armour,"Armour"}};
 
   readonly VisualElement root,grid,empty,overview,overviewIcon,details,detailsIcon,filters,facts,stats,previewCol,previewView,previewFallback,progressFill,searchBox;
   readonly ScrollView scroll;

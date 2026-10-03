@@ -47,7 +47,7 @@ namespace AthenHill.Tests
    panel.Opened();
    var buttons=root.Query<Button>(className:"fab-recipe").ToList();
    Assert.That(buttons.Count,Is.EqualTo(Data().recipes.Length));
-   Assert.That(root.Query<Label>(className:"fab-group").ToList().Select(l=>l.text),Is.EqualTo(new[]{"REFINED COMPONENTS","MARK I PISTOL MODS","MARK II PISTOL MODS","WEAPONS","WEAPON MODS"}));
+   Assert.That(root.Query<Label>(className:"fab-group").ToList().Select(l=>l.text),Is.EqualTo(new[]{"REFINED COMPONENTS","MARK I PISTOL MODS","MARK II PISTOL MODS","WEAPONS","WEAPON MODS","ARMOUR"}));
    Assert.That(buttons.Where(b=>!b.name.EndsWith("recipe_field_rifle")&&!b.name.EndsWith("recipe_rifle_precision_barrel")).All(b=>b.ClassListContains("locked")),"the field-order recipes are still discovered in play");
    panel.Select("recipe_grip_stabilised_pistol");
    Assert.That(root.Query(className:"fab-slot").ToList().Count,Is.EqualTo(3));

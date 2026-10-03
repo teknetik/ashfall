@@ -15,7 +15,7 @@ namespace AthenHill.Editor
         static readonly Dictionary<string, int> Expected = new Dictionary<string, int>
         {
             {"npc_mira", 1}, {"npc_torr", 2}, {"npc_vex", 2}, {"npc_linn", 2},
-            {"npc_brann", 15}, {"npc_ossa", 6}, {"npc_rell", 2}
+            {"npc_brann", 19}, {"npc_ossa", 7}, {"npc_rell", 2}
         };
 
         public static void VerifyAndBuild()
