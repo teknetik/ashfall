@@ -174,6 +174,9 @@ def equip(item, slot, tab):
     return {'tab': tab, 'result': result, 'before': before, 'left': qa.qty(item), 'slot': slot, 'equipped': installed}
 
 
+LONG_ARM = 5   # 3 Oct 2026: Long Arm's order index after the four Warden Kit orders (was 1)
+
+
 def fixture_save(folder):
     """A version-2 save at the Long Arm order: primer done, Steady Hands done, receiver and parts carried, skills trained."""
     folder.mkdir(parents=True, exist_ok=True)
@@ -188,7 +191,7 @@ def fixture_save(folder):
                       'weapons': [{'weaponId': 'weapon_scrap_pistol', 'fitted': [{'slot': 'grip', 'itemId': 'grip_stabilised_pistol'}]}]},
          'loot': {'rng': 'bc1721a626f0570d', 'rolls': 8, 'misses': [], 'collected': ['scrap_alloy', 'copper_filament', 'nanite_residue', 'droid_servo_damaged', 'rifle_receiver']},
          'bermsStep': 'Complete', 'hasPistol': True,
-         'orders': {'index': 1, 'testFired': ['order_steady_hands'], 'reported': ['order_steady_hands']},
+         'orders': {'index': 5, 'id': 'order_long_arm', 'testFired': ['order_steady_hands'], 'reported': ['order_steady_hands', 'order_kit_helmet']},   # 3 Oct 2026: Long Arm follows the four Warden Kit orders
          'city': {'visitedHill': True, 'boughtFlask': False, 'soldScrap': False, 'linked': False, 'spoken': [], 'selectedDestination': '', 'flags': ['brann_met']},
          'character': {'version': 1, 'level': 1, 'experience': 0, 'attributePoints': 4, 'skillPoints': 12,
                        'attributes': [{'id': a, 'count': 10} for a in ['agility', 'endurance', 'intellect', 'perception', 'resolve', 'strength']],
@@ -216,6 +219,11 @@ def phase_a():
         # the carry: drawn, not aiming, standing (the 45-degree complaint)
         qa.goto('rifle_stand'); qa.view('follow'); qa.cmd('cameraBoom', boom=2.4); qa.yaw(110); qa.pitch(8); time.sleep(1.2); cap('a-pistol-carry-side')
         qa.yaw(160); time.sleep(.8); cap('a-pistol-carry-34'); qa.view('cam_rifle_side'); time.sleep(.6); cap('a-pistol-carry-cam_rifle_side'); qa.view('follow')
+        # 3 Oct 2026: first-person pistol view model on the MPFB arms (hip and aim)
+        qa.yaw(110); qa.pitch(2); qa.cmd('cameraBoom', boom=0.0); time.sleep(.9); s = qa.snap(); cap('a-pistol-first-person')
+        ok(s['combat'].get('viewModelVisible', False), 'A: the pistol view model shows in first person', s['combat'].get('viewModelVisible'))
+        qa.button(3, True); time.sleep(.9); cap('a-pistol-first-person-aim'); qa.button(3, False); time.sleep(.3)
+        qa.cmd('cameraBoom', boom=2.4); time.sleep(.4)
         qa.goto('checkpoint_firingline'); qa.view('follow'); time.sleep(.3)
         for i, (x, z) in enumerate([(-78, 11), (-80.5, 15.5), (-77.5, 20)]):
             for off in [-2.5, -3.5, -1.5, -4.5]:
@@ -236,7 +244,11 @@ def phase_a():
         r['firstContact'] = qa.fight(until=lambda s: s['combat']['step'] == 'Depot', seconds=150, deaths=d1)
         ok(qa.snap()['combat']['step'] == 'Depot', 'A: the service-road pair put down with real F; depot nest armed', r['firstContact'])
         qa.face(-80.6, -36.2); time.sleep(.6)   # the marker only shows while its target is in view
-        lay = qa.ui(); marker = [x['text'] for x in lay['elements'] if x['visible'] and x.get('text') and 'MACHINE DEPOT' in x['text']]
+        marker = []
+        for _ in range(8):   # the marker refreshes with the HUD; poll briefly
+            lay = qa.ui(); marker = [x['text'] for x in lay['elements'] if x['visible'] and x.get('text') and 'MACHINE DEPOT' in x['text']]
+            if marker: break
+            qa.face(-80.6, -36.2); time.sleep(.5)
         ok(bool(marker), 'A: the HUD marker now points at the machine depot', marker[:2])
         qa.goto('depot_approach'); qa.view('follow'); time.sleep(.4)
         d2 = []
@@ -258,7 +270,7 @@ def phase_b():
         qa.cmd('resize', width=1920, height=1080); time.sleep(1.5)
         qa.cmd('timeSet', hour=13); qa.cmd('timePause', paused=True)
         c = qa.craft(); r['start'] = {k: c.get(k) for k in ('fieldOrder', 'orderStage', 'objective')}
-        ok(c.get('fieldOrder') == 1 and c.get('orderStage') == 'Report', 'B: continued at Long Arm, waiting for the report to Brann', r['start'])
+        ok(c.get('fieldOrder') == LONG_ARM and c.get('orderStage') == 'Report', 'B: continued at Long Arm, waiting for the report to Brann', r['start'])
         ok(qa.qty('field_rifle') in (None, 0), 'B: no test-issue rifle in the pack', qa.qty('field_rifle'))
         # Brann: report line, then the bench
         qa.goto('salvage_counter'); qa.view('follow'); time.sleep(.5)
@@ -278,7 +290,8 @@ def phase_b():
         time.sleep(.8); c = qa.craft()
         ok((qa.qty('field_rifle') or 0) >= 1, 'B: the Field Rifle is fabricated at the bench', {'crafts': c.get('crafts'), 'rifle': qa.qty('field_rifle'), 'reason': (qa.el(qa.ui(), 'fab-reason') or {}).get('text')})
         qa.tap('Escape', settle=.6); qa.wait(lambda: qa.state() == 'Play', 6, what='fabricator closed')
-        c = qa.craft(); ok(c.get('fieldOrder') == 2, 'B: Long Arm complete, Plate Carrier is the current order', {k: c.get(k) for k in ('fieldOrder', 'orderStage', 'objective')})
+        qa.wait(lambda: qa.craft().get('fieldOrder') == LONG_ARM + 1, 6, what='Long Arm order completion')
+        c = qa.craft(); ok(c.get('fieldOrder') == LONG_ARM + 1, 'B: Long Arm complete, Plate Carrier is the current order', {k: c.get(k) for k in ('fieldOrder', 'orderStage', 'objective')})
         # equip the rifle (primary) and draw it at the range
         r['equipRifle'] = equip('field_rifle', 'primary', 'character-tab-primary')
         ok(r['equipRifle']['equipped'] == 'field_rifle' and (r['equipRifle']['left'] or 0) == r['equipRifle']['before'] - 1, 'B: the rifle is equipped in the primary slot by drag', r['equipRifle'])
@@ -303,6 +316,11 @@ def phase_b():
         qa.tap('8', settle=.6); ok(not qa.snap()['combat']['Armed'], 'B: 8 again holsters the rifle')
         # first person: no rifle view model, no pistol view model either
         qa.tap('8', settle=.6); qa.cmd('cameraBoom', boom=0.0); time.sleep(.8); s = qa.snap(); ok(not s['combat'].get('viewModelVisible', False), 'B: the pistol view model stays hidden with the rifle drawn in first person', s['combat'].get('viewModelVisible')); cap('b-rifle-first-person')
+        # 3 Oct 2026: the field rifle has its own first-person view model (arms + rifle); hip view above, aim view here
+        ok(s['combat'].get('rifleViewModelVisible', False), 'B: the rifle view model shows with the rifle drawn in first person', s['combat'].get('rifleViewModelVisible'))
+        qa.button(3, True); time.sleep(1.0); s = qa.snap(); cap('b-rifle-first-person-aim')
+        ok(s['combat'].get('rifleViewModelVisible', False), 'B: the rifle view model stays up while aiming in first person', s['combat'].get('rifleViewModelVisible'))
+        qa.button(3, False); time.sleep(.4)
         qa.cmd('cameraBoom', boom=2.4); qa.tap('8', settle=.5)
         # plate carrier: the caravan scavengers and the strongbox
         qa.goto('caravan_approach'); qa.view('follow'); time.sleep(.6); qa.face(-205, 74); time.sleep(.4)
@@ -322,7 +340,8 @@ def phase_b():
         q0 = qa.snap()['session']['quantities']; qa.tap('e', settle=.3); cap('b-strongbox-search')
         qa.wait(lambda: (qa.qty('warden_plate_carrier') or 0) >= 1, 8, what='plate carrier from the strongbox')
         ok((qa.qty('warden_plate_carrier') or 0) >= 1, 'B: the Warden plate carrier comes out of the strongbox', {'got': {k: v - q0.get(k, 0) for k, v in qa.snap()['session']['quantities'].items() if v != q0.get(k, 0)}})
-        c = qa.craft(); ok(c.get('fieldOrder') == 3, 'B: Plate Carrier complete, the Depot Foreman order is next', {k: c.get(k) for k in ('fieldOrder', 'orderStage')})
+        qa.wait(lambda: qa.craft().get('fieldOrder') == LONG_ARM + 2, 6, what='Plate Carrier order completion')   # the order evaluates on the next frame after the pickup
+        c = qa.craft(); ok(c.get('fieldOrder') == LONG_ARM + 2, 'B: Plate Carrier complete, the Depot Foreman order is next', {k: c.get(k) for k in ('fieldOrder', 'orderStage')})
         r['equipVest'] = equip('warden_plate_carrier', 'armour_chest', 'character-tab-armour')
         ok(r['equipVest']['equipped'] == 'warden_plate_carrier' and (r['equipVest']['left'] or 0) == r['equipVest']['before'] - 1, 'B: the plate carrier is equipped in the chest slot by drag', r['equipVest'])
         qa.goto('rifle_stand'); qa.view('follow'); time.sleep(.6)

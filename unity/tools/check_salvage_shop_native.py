@@ -161,7 +161,7 @@ finally:
     print('stop:', qa.stop())
 saved = json.loads((save / 'ward-save.json').read_text())
 report['savedOrders'] = saved.get('orders'); report['savedFlags'] = (saved.get('city') or {}).get('flags')
-ok((saved.get('orders') or {}).get('index') == 1 and 'order_steady_hands' in ((saved.get('orders') or {}).get('reported') or []), 'the save records order 2 and the report visit', saved.get('orders'))
+ok((saved.get('orders') or {}).get('index') == 1 and (saved.get('orders') or {}).get('id', 'order_kit_helmet') == 'order_kit_helmet' and 'order_steady_hands' in ((saved.get('orders') or {}).get('reported') or []), 'the save records order 2 (Warden Kit: Helm since 3 Oct 2026) and the report visit', saved.get('orders'))
 report['passed'] = all(c['passed'] for c in checks)
 (out / 'report.json').write_text(json.dumps(report, indent=1, default=str))
 print('PASSED' if report['passed'] else 'FAILED', sum(c['passed'] for c in checks), '/', len(checks))

@@ -130,6 +130,7 @@ async def main():
     p.add_argument('--profile', type=float, default=0, help='seconds of frame timing per hour at the first camera')
     p.add_argument('--exe', type=Path, default=ROOT / 'unity/AthenHill/Builds/LinuxDevelopment/AthenHill.x86_64')
     p.add_argument('--sheet', action='store_true')
+    p.add_argument('--set', default='', help='scene objects to switch after Play, e.g. "Ward building: =0;WardNpc_=0" (cost bisection)')
     p.add_argument('--video', default='', help='video option overrides, e.g. shadows=2,postProcessing=false,renderPercent=80')
     a = p.parse_args()
     out = a.out.resolve(); out.mkdir(parents=True, exist_ok=False)
@@ -142,6 +143,9 @@ async def main():
     player = launch(out, a.exe, overrides); run = Run(out)
     try:
         await start_play(run, player)
+        for item in filter(None, a.set.split(';')):
+            prefix, _, val = item.rpartition('=')
+            await run.command({'action': 'setActive', 'prefix': prefix, 'active': val.strip() not in ('0', 'false')})
         report['environment'] = run.read('environment.json')
         for h in hours:
             await run.command({'action': 'timeSet', 'hour': h}); await run.command({'action': 'timePause', 'paused': True})

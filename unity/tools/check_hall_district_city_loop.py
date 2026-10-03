@@ -44,7 +44,9 @@ ROUTES = {
                  ('air_water_door_recess', (-18.2, .5, -10.35)), ('air_water_off', (-12.8, 0, -10.35)),
                  ('relay_step', (-13.1, 0, -18.0)), ('relay_porch_shutter', (-16.9, .5, -17.3)), ('relay_off', (-12.8, 0, -20.0))],
     'lattice': [('plaza_west', (-6, 0, -22)), ('hall_front_step', (-10, .25, -23.9)), ('hall_terrace', (-10, .5, -25.3)),
-                ('plaza_back', (-4, 0, -23)), ('lattice_step', (0, .25, -33.6)), ('lattice_pad', (0, .5, -36.0))],
+                # 3 Oct 2026: one Lattice Jack, the Meshy ring in the north court (the old Jack behind the hall is retired)
+                ('hall_back_off', (-12.8, 0, -20.0)), ('east_lane_north', (-12.8, 0, 13.5)), ('lane_west_2', (-6, 0, 20.5)),
+                ('ring_clear_lane', (0, 0, 21)), ('ring_plaza', (0, 0, 28)), ('lattice_ring_step', (0, .25, 32.8))],
 }
 
 
