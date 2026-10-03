@@ -40,7 +40,13 @@ namespace AthenHill
   [Range(0,.1f)]public float recoilBack=.05f;
   [Range(0,15)]public float recoilPitch=6;
   [Min(.01f)]public float recoilReturn=.13f;
+  [Tooltip("Shown with the field rifle instead of the pistol (3 Oct 2026: one view model per weapon, sharing the overlay camera).")]
+  public bool rifle;
   public bool Visible {get;private set;}
+  static readonly System.Collections.Generic.List<FirstPersonViewModel> all=new System.Collections.Generic.List<FirstPersonViewModel>();
+  void OnEnable(){if(!all.Contains(this))all.Add(this);}
+  void OnDisable(){all.Remove(this);}
+  bool OverlayWanted(){foreach(var v in all)if(v&&v.overlayCamera==overlayCamera&&v.Visible)return true;return false;}
   public float AimBlend=>aim;
   float draw,aim,aimVelocity,recoil,bobPhase,lastShot=-99;
   Vector2 sway,lastLook;
@@ -59,14 +65,14 @@ namespace AthenHill
   void LateUpdate()
   {
    if(!viewCamera||!rig||!pistol)return;
-   // The view model is the pistol's; with the rifle drawn, first person shows no weapon yet (2 Oct 2026).
-   bool want=follow&&follow.FirstPerson&&combat&&combat.Armed&&!combat.RifleActive&&(!session||session.State==CityState.Play);
+   // One view model per weapon (pistol / field rifle); each shows only with its own weapon drawn.
+   bool want=follow&&follow.FirstPerson&&combat&&combat.Armed&&combat.RifleActive==rifle&&(!session||session.State==CityState.Play);
    float dt=Time.deltaTime;
    draw=Mathf.MoveTowards(draw,want?1:0,dt/drawSeconds);
    Visible=draw>0;
    if(visuals&&visuals.activeSelf!=Visible)visuals.SetActive(Visible);
    // The overlay camera costs a URP camera pass every frame, so it only runs while there is something to draw.
-   if(overlayCamera&&overlayCamera.enabled!=Visible)overlayCamera.enabled=Visible;
+   if(overlayCamera){bool o=OverlayWanted();if(overlayCamera.enabled!=o)overlayCamera.enabled=o;}
    if(!Visible){looked=false;return;}
    if(animationSource&&holdClip&&!animationSource.IsPlaying(holdClip.name))animationSource.Play(holdClip.name);
    if(combat.LastShotTime!=lastShot){lastShot=combat.LastShotTime;if(Time.time-lastShot<.1f)Kick();}

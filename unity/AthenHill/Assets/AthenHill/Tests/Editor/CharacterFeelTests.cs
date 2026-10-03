@@ -33,7 +33,10 @@ namespace AthenHill.Tests
    var scene=EditorSceneManager.OpenPreviewScene(Scene);
    try
    {
-    var actors=All<ActorAnimation>(scene).Where(a=>GuardModelCharacters.Contains(a.name)||a.transform.parent&&GuardModelCharacters.Contains(a.transform.parent.name)).ToArray();
+    // 3 Oct 2026 (WardNpcInstall): each of the six former guard-model characters now has its own model; the old guard
+    // visual stays in the scene inactive for rollback, so test the actor each NpcAgent actually drives.
+    var actors=All<NpcAgent>(scene).Where(n=>GuardModelCharacters.Contains(n.name)).Select(n=>n.actor).ToArray();
+    Assert.That(actors.All(a=>a&&a.enabled&&a.gameObject.activeInHierarchy),Is.True,"Every character drives an active actor.");
     Assert.That(actors.Length,Is.EqualTo(6));
     foreach(var a in actors)
     {

@@ -16,7 +16,8 @@ namespace AthenHill.Tests
    var scene=EditorSceneManager.OpenPreviewScene(Scene);
    try
    {
-    var vm=scene.GetRootGameObjects().SelectMany(g=>g.GetComponentsInChildren<FirstPersonViewModel>(true)).Single();
+    // 3 Oct 2026: a second view model exists for the field rifle; this test is about the pistol's grip hands
+    var vm=scene.GetRootGameObjects().SelectMany(g=>g.GetComponentsInChildren<FirstPersonViewModel>(true)).Single(v=>!v.rifle);
     var hands=vm.pistol.Find("FP hands v2");
     Assert.That(hands,Is.Not.Null,"PlayerFPHands_v2 is not attached to the view-model pistol");
     Assert.That(hands.gameObject.activeSelf,Is.True);

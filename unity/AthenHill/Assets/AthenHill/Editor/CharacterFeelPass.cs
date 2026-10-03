@@ -215,6 +215,20 @@ namespace AthenHill.Editor
             return rot;
         }
 
+        /// Overwrites positions[bone] with each bone's rest position in the model root's space, read from a fresh
+        /// instance of the model asset (glTF node transforms are the rest pose).
+        static void RestPositions(GameObject model,Dictionary<string,Vector3> positions)
+        {
+            var inst=(GameObject)Object.Instantiate(model);inst.hideFlags=HideFlags.HideAndDontSave;
+            try
+            {
+                inst.transform.SetPositionAndRotation(Vector3.zero,Quaternion.identity);inst.transform.localScale=Vector3.one;
+                foreach(var t in inst.GetComponentsInChildren<Transform>(true))
+                    if(positions.ContainsKey(t.name))positions[t.name]=inst.transform.InverseTransformPoint(t.position);
+            }
+            finally{Object.DestroyImmediate(inst);}
+        }
+
         static string Retarget(string sourcePath,Transform tRoot,string targetPath)
         {
             AssetDatabase.ImportAsset(sourcePath,ImportAssetOptions.ForceSynchronousImport);
@@ -230,6 +244,12 @@ namespace AthenHill.Editor
                 src.transform.SetPositionAndRotation(Vector3.zero,Quaternion.identity);
                 var sRoot=src.transform;
                 var sBind=BindRotations(sRoot,out var sBindPos);var tBind=BindRotations(tRoot,out var tBindPos);
+                // 2 Oct 2026 (MPFB player): bind positions from fresh, unposed model instances. The bind-pose route gives
+                // the Meshy rig's hips ~100x too low (its 0.01-scaled armature); Meshy->Meshy cancelled out, Meshy->MPFB does not.
+                RestPositions(model,sBindPos);
+                var tModel=PrefabUtility.GetCorrespondingObjectFromOriginalSource(tRoot.gameObject) as GameObject;
+                if(!tModel)tModel=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/AthenHill/Art/Imported/Meshy/colonist.glb");   // targets are plain Instantiate copies of the player prefab
+                if(tModel)RestPositions(tModel,tBindPos);
                 var sBones=sRoot.GetComponentsInChildren<Transform>(true).Where(t=>sBind.ContainsKey(t.name)).ToDictionary(t=>t.name);
                 var tBones=tRoot.GetComponentsInChildren<Transform>(true).Where(t=>tBind.ContainsKey(t.name)&&sBones.ContainsKey(t.name)).OrderBy(Depth).ToArray();
                 float hipScale=tBindPos["Hips"].y/Mathf.Max(.01f,sBindPos["Hips"].y);

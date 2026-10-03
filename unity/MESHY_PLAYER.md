@@ -24,6 +24,8 @@ player visual in the open scene. It preserves the controller, spawn and footstep
 The source standing export has one frame: idle and talk use that static pose.
 For future character exports, include animated idle, walk, run and optionally talk,
 with the same skeleton and in-place locomotion clips.
+See the [animation reference](../docs/animation-reference.md) for Carl's
+2 October 2026 Meshy animation list and the existing library ID/preview snapshot.
 
 ## Verification — 7 September 2026
 
@@ -45,3 +47,11 @@ route uses the existing `tools/walk_route.py`.
 The historical U5 release evidence predates this character. The later Ward Guard
 import rebuilt both Linux executables with MeshyPlayer and verified native
 movement and the city loop; see [the rebuild record](../docs/model-import.md).
+
+## Main character replacement — 2 October 2026
+
+The player is now Carl's `meshy/incoming-20261002/main_char_OK.glb` (595k-triangle source, decimated to a 59,999-triangle
+LOD0 with a 4k normal baked from the source, Meshy-rigged on the same 24 bone names, 1.8 m at the soles). `colonist.glb`
+is written by `meshy/main-char-20261002/prepare_player.py` instead of `tools/prepare_meshy.py`; the mpc colonist above is
+recoverable with that older script. Record: `meshy/main-char-20261002/README.md` and
+`art/next_level_20261002/character/REPORT.md`; installer `Editor/MainCharacterInstall.cs`.
