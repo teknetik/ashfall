@@ -113,12 +113,15 @@ class Part:
             self.mats.append(m)
         return self.mats.index(m)
 
-    def new_block(self, tint=None, off=None, scale=1.0, ao=None, erode=None):
+    def new_block(self, tint=None, off=None, scale=1.0, ao=None, erode=None, cyl=None):
+        """cyl = (point on axis, axis direction): faces of this block get cylindrical UVs (u round the circumference in
+        metres, v along the axis) instead of the box projection; caps (normal along the axis) keep the box projection.
+        Added 3 Oct 2026 (ward buildings round two) for painted tanks/cylinders; default None = unchanged behaviour."""
         if off is None:
             off = (S.LAYOUT.uniform(0, 8), S.LAYOUT.uniform(0, 8))
         if erode is None:
             erode = 0.006 if self.wear else 0.0
-        self.blocks.append(dict(off=off, tint=tint or (0.5, 0.5, 0.5), scale=scale, ao=ao, erode=erode))
+        self.blocks.append(dict(off=off, tint=tint or (0.5, 0.5, 0.5), scale=scale, ao=ao, erode=erode, cyl=cyl))
         return len(self.blocks) - 1
 
     # ---- primitives
@@ -300,7 +303,26 @@ class Part:
             s = info["scale"]
             tr, tg, tb = info["tint"]
             role = f[self.role]
-            for l in f.loops:
+            cyluv = None
+            if info.get("cyl") is not None:
+                ca, cd = Vector(info["cyl"][0]), Vector(info["cyl"][1]).normalized()
+                if abs(n.dot(cd)) < 0.7:
+                    rf = Vector((0, 1, 0)) if abs(cd.y) < 0.9 else Vector((1, 0, 0))
+                    e1 = cd.cross(rf).normalized()
+                    e2 = cd.cross(e1).normalized()
+                    angs, rads, alongs = [], [], []
+                    for l in f.loops:
+                        q = l.vert.co - ca
+                        al = q.dot(cd)
+                        rv = q - cd * al
+                        angs.append(math.atan2(rv.dot(e2), rv.dot(e1)))
+                        rads.append(rv.length)
+                        alongs.append(al)
+                    if max(angs) - min(angs) > math.pi:
+                        angs = [a_ + 2 * math.pi if a_ < 0 else a_ for a_ in angs]
+                    rm = sum(rads) / len(rads)
+                    cyluv = [(a_ * rm, al) for a_, al in zip(angs, alongs)]
+            for li, l in enumerate(f.loops):
                 v = l.vert
                 p = v.co
                 if ax == 0:
@@ -309,6 +331,8 @@ class Part:
                     u_, v_ = (p.x if n.z > 0 else -p.x), p.y
                 else:
                     u_, v_ = p.x, (p.z if n.y > 0 else -p.z)
+                if cyluv is not None:
+                    u_, v_ = cyluv[li]
                 l[uv].uv = (u_ * s + ou, v_ * s + ov)
                 vk = v.index
                 if vk not in vcache:

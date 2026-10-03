@@ -1,0 +1,1542 @@
+{
+ "_doc": "Ward buildings pass (3 Oct 2026). Read by Assets/AthenHill/Editor/WardBuildingsPass.cs. Unity world metres (X east, Y up, Z north); yaw in degrees about +Y; model local +Z = street face.",
+ "auditCameras": [
+  {
+   "name": "audit_nanofab",
+   "pos": [
+    33.0,
+    1.65,
+    -19.5
+   ],
+   "target": [
+    36.0,
+    3.2,
+    -30.0
+   ],
+   "fov": 60
+  },
+  {
+   "name": "audit_processing_hall",
+   "pos": [
+    31.5,
+    1.65,
+    23.0
+   ],
+   "target": [
+    37.0,
+    4.0,
+    33.0
+   ],
+   "fov": 60
+  },
+  {
+   "name": "audit_watchtower",
+   "pos": [
+    35.5,
+    1.65,
+    -31.5
+   ],
+   "target": [
+    43.0,
+    6.5,
+    -40.0
+   ],
+   "fov": 60
+  },
+  {
+   "name": "audit_node_housing",
+   "pos": [
+    3.5,
+    1.65,
+    33.5
+   ],
+   "target": [
+    9.0,
+    2.6,
+    42.0
+   ],
+   "fov": 60
+  },
+  {
+   "name": "audit_aquifer",
+   "pos": [
+    -29.0,
+    1.65,
+    -22.5
+   ],
+   "target": [
+    -35.0,
+    2.8,
+    -34.0
+   ],
+   "fov": 60
+  },
+  {
+   "name": "audit_dwelling",
+   "pos": [
+    23.5,
+    1.65,
+    -34.0
+   ],
+   "target": [
+    21.0,
+    1.8,
+    -41.5
+   ],
+   "fov": 60
+  },
+  {
+   "name": "audit_retro_west_n",
+   "pos": [
+    -10.0,
+    1.65,
+    12.0
+   ],
+   "target": [
+    -22.0,
+    6.0,
+    16.0
+   ],
+   "fov": 60
+  },
+  {
+   "name": "audit_retro_west_s",
+   "pos": [
+    -10.0,
+    1.65,
+    -12.0
+   ],
+   "target": [
+    -22.0,
+    6.0,
+    -16.0
+   ],
+   "fov": 60
+  },
+  {
+   "name": "audit_retro_east_n",
+   "pos": [
+    10.0,
+    1.65,
+    12.0
+   ],
+   "target": [
+    22.0,
+    6.0,
+    16.0
+   ],
+   "fov": 60
+  },
+  {
+   "name": "audit_retro_east_s",
+   "pos": [
+    10.0,
+    1.65,
+    -12.0
+   ],
+   "target": [
+    22.0,
+    6.0,
+    -16.0
+   ],
+   "fov": 60
+  },
+  {
+   "name": "audit_retro_lane_w",
+   "pos": [
+    -29.5,
+    1.65,
+    -2.0
+   ],
+   "target": [
+    -22.0,
+    5.0,
+    -8.0
+   ],
+   "fov": 60
+  },
+  {
+   "name": "audit_retro_lane_e",
+   "pos": [
+    29.5,
+    1.65,
+    2.0
+   ],
+   "target": [
+    22.0,
+    5.0,
+    8.0
+   ],
+   "fov": 60
+  }
+ ],
+ "materials": {
+  "WB_CompositeScorched": {
+   "set": "VH_SheetSteel",
+   "color": [
+    0.075,
+    0.072,
+    0.07
+   ],
+   "tile": 1.2,
+   "smooth": 0.55
+  },
+  "WB_CompositeFresh": {
+   "set": "VH_SheetSteel",
+   "color": [
+    0.33,
+    0.35,
+    0.36
+   ],
+   "tile": 1.2,
+   "smooth": 0.95
+  },
+  "WB_Hazard": {
+   "set": "VH_SheetSteel",
+   "tex": "Assets/AthenHill/Art/WardBuildings/Textures/WB_Hazard.jpg",
+   "color": [
+    0.95,
+    0.9,
+    0.85
+   ],
+   "tile": 0.9,
+   "smooth": 0.7
+  },
+  "WB_StencilPaint": {
+   "set": "VH_Paint",
+   "color": [
+    0.74,
+    0.7,
+    0.62
+   ],
+   "tile": 0.8,
+   "smooth": 0.6
+  },
+  "WB_PaintBone": {
+   "set": "VH_Paint",
+   "color": [
+    0.66,
+    0.62,
+    0.54
+   ],
+   "tile": 1.4,
+   "smooth": 0.9
+  },
+  "WB_LedCyan": {
+   "color": [
+    0.1,
+    0.2,
+    0.22
+   ],
+   "tile": 1,
+   "smooth": 0.8,
+   "emission": [
+    0.65,
+    2.47,
+    2.86
+   ]
+  },
+  "WB_ScreenCyan": {
+   "color": [
+    0.02,
+    0.05,
+    0.06
+   ],
+   "tile": 1,
+   "smooth": 0.8,
+   "emission": [
+    0.32,
+    1.28,
+    1.6
+   ]
+  },
+  "WB_BlackSteel": {
+   "set": "VH_SheetSteel",
+   "color": [
+    0.13,
+    0.122,
+    0.115
+   ],
+   "tile": 1.1,
+   "smooth": 0.6,
+   "bump": 1.2
+  },
+  "WB_PipeTeal": {
+   "set": "VH_Paint",
+   "color": [
+    0.2,
+    0.36,
+    0.34
+   ],
+   "tile": 1.2,
+   "smooth": 0.85
+  },
+  "WB_ContainerBlue": {
+   "set": "VH_Paint",
+   "color": [
+    0.2,
+    0.3,
+    0.4
+   ],
+   "tile": 1.6,
+   "smooth": 0.85
+  },
+  "WB_ContainerSand": {
+   "set": "VH_Paint",
+   "color": [
+    0.62,
+    0.52,
+    0.38
+   ],
+   "tile": 1.6,
+   "smooth": 0.85
+  },
+  "WB_SolarPanel": {
+   "set": "VH_SheetSteel",
+   "color": [
+    0.05,
+    0.07,
+    0.11
+   ],
+   "tile": 0.6,
+   "smooth": 1.0
+  },
+  "WB_CylBone": {
+   "set": "VH_SheetSteel",
+   "color": [
+    1.36,
+    1.36,
+    1.5
+   ],
+   "tile": 1.0,
+   "smooth": 0.85
+  },
+  "WB_CylRed": {
+   "set": "VH_SheetSteel",
+   "color": [
+    0.98,
+    0.42,
+    0.38
+   ],
+   "tile": 1.0,
+   "smooth": 0.85
+  },
+  "WB_TankBone": {
+   "set": "VH_SheetSteel",
+   "color": [
+    1.36,
+    1.34,
+    1.45
+   ],
+   "tile": 1.6,
+   "smooth": 0.8
+  },
+  "WB_TankTeal": {
+   "set": "VH_SheetSteel",
+   "color": [
+    0.55,
+    0.98,
+    1.15
+   ],
+   "tile": 1.6,
+   "smooth": 0.8
+  }
+ },
+ "buildings": [
+  {
+   "key": "nanofab",
+   "model": "Nanofab2",
+   "rootName": "Ward building: Nanofab 2",
+   "cameraRoot": "Ward buildings review cameras: Nanofab 2",
+   "lods": 3,
+   "lodDistances": [
+    24,
+    75,
+    650
+   ],
+   "instances": [
+    {
+     "name": "Nanofab 2 workshop",
+     "pos": [
+      36.0,
+      0.0,
+      -28.0
+     ],
+     "yaw": 0
+    }
+   ],
+   "retire": [
+    "Ward district retrofit/Nanofab workshop"
+   ],
+   "clockEmissive": [],
+   "cameras": [
+    {
+     "name": "cam_wb_nanofab_apron",
+     "pos": [
+      40.0,
+      1.65,
+      -8.0
+     ],
+     "target": [
+      36.0,
+      4.0,
+      -30.0
+     ],
+     "fov": 55
+    },
+    {
+     "name": "cam_wb_nanofab_front",
+     "pos": [
+      36.5,
+      1.65,
+      -14.0
+     ],
+     "target": [
+      35.5,
+      4.2,
+      -29.0
+     ],
+     "fov": 50
+    },
+    {
+     "name": "cam_wb_nanofab_bay",
+     "pos": [
+      35.0,
+      1.65,
+      -23.8
+     ],
+     "target": [
+      33.2,
+      2.0,
+      -30.0
+     ],
+     "fov": 60
+    },
+    {
+     "name": "cam_wb_nanofab_door",
+     "pos": [
+      40.2,
+      1.65,
+      -24.4
+     ],
+     "target": [
+      38.4,
+      2.0,
+      -28.0
+     ],
+     "fov": 60
+    },
+    {
+     "name": "cam_wb_nanofab_east",
+     "pos": [
+      44.8,
+      1.65,
+      -24.0
+     ],
+     "target": [
+      43.5,
+      3.0,
+      -33.5
+     ],
+     "fov": 60
+    },
+    {
+     "name": "cam_wb_nanofab_west",
+     "pos": [
+      22.0,
+      1.65,
+      -25.0
+     ],
+     "target": [
+      28.0,
+      2.6,
+      -32.5
+     ],
+     "fov": 55
+    },
+    {
+     "name": "cam_wb2_nanofab_gas",
+     "pos": [
+      44.9,
+      1.65,
+      -27.5
+     ],
+     "target": [
+      43.2,
+      2.2,
+      -33.5
+     ],
+     "fov": 55
+    }
+   ]
+  },
+  {
+   "key": "watchtower",
+   "model": "Watchtower",
+   "rootName": "Ward building: watchtowers",
+   "cameraRoot": "Ward buildings review cameras: watchtowers",
+   "lods": 3,
+   "lodDistances": [
+    22,
+    80,
+    900
+   ],
+   "instances": [
+    {
+     "name": "Watchtower NW (1)",
+     "pos": [
+      -55.45,
+      0.0,
+      39.15
+     ],
+     "yaw": 180,
+     "model": "Watchtower"
+    },
+    {
+     "name": "Watchtower SW (2)",
+     "pos": [
+      -55.45,
+      0.0,
+      -39.15
+     ],
+     "yaw": 0,
+     "model": "Watchtower2"
+    },
+    {
+     "name": "Watchtower NE (3)",
+     "pos": [
+      43.45,
+      0.0,
+      39.15
+     ],
+     "yaw": 180,
+     "model": "Watchtower3"
+    },
+    {
+     "name": "Watchtower SE (4)",
+     "pos": [
+      43.45,
+      0.0,
+      -39.15
+     ],
+     "yaw": 0,
+     "model": "Watchtower4"
+    }
+   ],
+   "retire": [
+    "Ward district retrofit/Watchtower 1",
+    "Ward district retrofit/Watchtower 2",
+    "Ward district retrofit/Watchtower 3",
+    "Ward district retrofit/Watchtower 4"
+   ],
+   "cameras": [
+    {
+     "name": "cam_wb_tower_nw",
+     "pos": [
+      -50.0,
+      1.65,
+      30.0
+     ],
+     "target": [
+      -55.5,
+      6.5,
+      41.5
+     ],
+     "fov": 55
+    },
+    {
+     "name": "cam_wb_tower_sw",
+     "pos": [
+      -49.5,
+      1.65,
+      -30.0
+     ],
+     "target": [
+      -55.5,
+      6.0,
+      -41.5
+     ],
+     "fov": 55
+    },
+    {
+     "name": "cam_wb_tower_ne",
+     "pos": [
+      30.0,
+      1.65,
+      22.0
+     ],
+     "target": [
+      43.5,
+      7.0,
+      41.5
+     ],
+     "fov": 55
+    },
+    {
+     "name": "cam_wb_tower_se",
+     "pos": [
+      45.2,
+      1.65,
+      -27.0
+     ],
+     "target": [
+      43.5,
+      6.0,
+      -41.0
+     ],
+     "fov": 55
+    },
+    {
+     "name": "cam_wb_tower_door",
+     "pos": [
+      -53.6,
+      1.65,
+      -34.5
+     ],
+     "target": [
+      -55.4,
+      2.0,
+      -39.2
+     ],
+     "fov": 60
+    },
+    {
+     "name": "cam_wb_tower_cabin",
+     "pos": [
+      -52.5,
+      1.65,
+      34.5
+     ],
+     "target": [
+      -55.45,
+      10.8,
+      41.0
+     ],
+     "fov": 50
+    },
+    {
+     "name": "cam_wb2_tower_sw_top",
+     "pos": [
+      -47.0,
+      1.65,
+      -29.5
+     ],
+     "target": [
+      -55.4,
+      10.4,
+      -40.5
+     ],
+     "fov": 50
+    },
+    {
+     "name": "cam_wb2_tower_ne_gable",
+     "pos": [
+      45.3,
+      1.65,
+      29.0
+     ],
+     "target": [
+      43.4,
+      9.5,
+      40.0
+     ],
+     "fov": 55
+    },
+    {
+     "name": "cam_wb2_tower_se_shores",
+     "pos": [
+      35.0,
+      1.65,
+      -39.0
+     ],
+     "target": [
+      42.0,
+      4.0,
+      -41.5
+     ],
+     "fov": 55
+    },
+    {
+     "name": "cam_wb2_tower_nw_patch",
+     "pos": [
+      -47.5,
+      1.65,
+      33.5
+     ],
+     "target": [
+      -53.3,
+      4.5,
+      41.2
+     ],
+     "fov": 55
+    }
+   ]
+  },
+  {
+   "key": "hall",
+   "model": "Processing11",
+   "rootName": "Ward building: Processing 11 ruin",
+   "cameraRoot": "Ward buildings review cameras: Processing 11",
+   "lods": 3,
+   "lodDistances": [
+    26,
+    80,
+    700
+   ],
+   "instances": [
+    {
+     "name": "Processing 11 ruin",
+     "pos": [
+      36.0,
+      0.0,
+      33.0
+     ],
+     "yaw": 0
+    }
+   ],
+   "retire": [
+    "Ward district retrofit/Processing hall ruin"
+   ],
+   "cameras": [
+    {
+     "name": "cam_wb_hall_apron",
+     "pos": [
+      40.0,
+      1.65,
+      10.0
+     ],
+     "target": [
+      36.0,
+      4.0,
+      30.0
+     ],
+     "fov": 55
+    },
+    {
+     "name": "cam_wb_hall_city",
+     "pos": [
+      36.5,
+      1.65,
+      16.0
+     ],
+     "target": [
+      36.0,
+      4.5,
+      33.0
+     ],
+     "fov": 50
+    },
+    {
+     "name": "cam_wb_hall_door",
+     "pos": [
+      37.6,
+      1.65,
+      23.0
+     ],
+     "target": [
+      37.6,
+      3.0,
+      28.0
+     ],
+     "fov": 60
+    },
+    {
+     "name": "cam_wb_hall_inside",
+     "pos": [
+      29.8,
+      1.65,
+      37.6
+     ],
+     "target": [
+      39.0,
+      4.2,
+      30.0
+     ],
+     "fov": 65
+    },
+    {
+     "name": "cam_wb_hall_east",
+     "pos": [
+      44.9,
+      1.65,
+      32.2
+     ],
+     "target": [
+      36.0,
+      3.6,
+      31.5
+     ],
+     "fov": 60
+    },
+    {
+     "name": "cam_wb_hall_wall",
+     "pos": [
+      35.5,
+      1.65,
+      24.5
+     ],
+     "target": [
+      35.6,
+      6.0,
+      27.6
+     ],
+     "fov": 60
+    },
+    {
+     "name": "cam_wb2_hall_salvage",
+     "pos": [
+      33.0,
+      1.65,
+      18.5
+     ],
+     "target": [
+      35.5,
+      3.6,
+      28.0
+     ],
+     "fov": 55
+    },
+    {
+     "name": "cam_wb2_hall_scaffold",
+     "pos": [
+      31.0,
+      1.65,
+      23.2
+     ],
+     "target": [
+      34.2,
+      4.2,
+      27.4
+     ],
+     "fov": 60
+    },
+    {
+     "name": "cam_wb2_hall_cordon",
+     "pos": [
+      42.5,
+      1.65,
+      22.5
+     ],
+     "target": [
+      39.5,
+      2.2,
+      27.5
+     ],
+     "fov": 55
+    },
+    {
+     "name": "cam_wb2_hall_shearlegs",
+     "pos": [
+      37.0,
+      1.65,
+      30.8
+     ],
+     "target": [
+      42.5,
+      3.5,
+      34.2
+     ],
+     "fov": 60
+    },
+    {
+     "name": "cam_wb2_hall_bench",
+     "pos": [
+      33.2,
+      1.65,
+      32.5
+     ],
+     "target": [
+      29.5,
+      1.2,
+      34.0
+     ],
+     "fov": 60
+    }
+   ]
+  },
+  {
+   "key": "aquifer",
+   "model": "Aquifer3",
+   "rootName": "Ward building: Aquifer 3",
+   "cameraRoot": "Ward buildings review cameras: Aquifer 3",
+   "lods": 3,
+   "lodDistances": [
+    24,
+    75,
+    650
+   ],
+   "instances": [
+    {
+     "name": "Aquifer 3 pump station",
+     "pos": [
+      -35.0,
+      0.0,
+      -30.5
+     ],
+     "yaw": 0
+    }
+   ],
+   "retire": [
+    "Ward district retrofit/Aquifer pump station"
+   ],
+   "cameras": [
+    {
+     "name": "cam_wb_aquifer_market",
+     "pos": [
+      -30.8,
+      1.65,
+      -19.6
+     ],
+     "target": [
+      -35.2,
+      3.4,
+      -32.5
+     ],
+     "fov": 55
+    },
+    {
+     "name": "cam_wb_aquifer_front",
+     "pos": [
+      -34.5,
+      1.65,
+      -20.5
+     ],
+     "target": [
+      -35.0,
+      3.6,
+      -32.5
+     ],
+     "fov": 50
+    },
+    {
+     "name": "cam_wb_aquifer_door",
+     "pos": [
+      -35.2,
+      1.65,
+      -26.3
+     ],
+     "target": [
+      -36.4,
+      2.6,
+      -30.5
+     ],
+     "fov": 60
+    },
+    {
+     "name": "cam_wb_aquifer_well",
+     "pos": [
+      -25.2,
+      1.65,
+      -26.7
+     ],
+     "target": [
+      -29.0,
+      2.2,
+      -32.0
+     ],
+     "fov": 60
+    },
+    {
+     "name": "cam_wb_aquifer_tanks",
+     "pos": [
+      -44.5,
+      1.65,
+      -42.6
+     ],
+     "target": [
+      -36.5,
+      3.5,
+      -38.5
+     ],
+     "fov": 60
+    },
+    {
+     "name": "cam_wb_aquifer_droid",
+     "pos": [
+      -46.0,
+      1.65,
+      -25.0
+     ],
+     "target": [
+      -36.0,
+      3.0,
+      -33.5
+     ],
+     "fov": 55
+    },
+    {
+     "name": "cam_wb2_aquifer_tanks_shade",
+     "pos": [
+      -30.5,
+      1.65,
+      -42.4
+     ],
+     "target": [
+      -38.0,
+      3.0,
+      -39.0
+     ],
+     "fov": 55
+    }
+   ]
+  },
+  {
+   "key": "tubenode",
+   "model": "TubeNode",
+   "rootName": "Ward building: Quantum Tube nodes",
+   "cameraRoot": "Ward buildings review cameras: Quantum Tube",
+   "lods": 3,
+   "lodDistances": [
+    16,
+    60,
+    500
+   ],
+   "instances": [
+    {
+     "name": "Node 07 west",
+     "pos": [
+      -9.0,
+      0.0,
+      40.8
+     ],
+     "yaw": 180
+    },
+    {
+     "name": "Node 07 east",
+     "pos": [
+      9.0,
+      0.0,
+      40.8
+     ],
+     "yaw": 180
+    }
+   ],
+   "retire": [
+    "Ward district retrofit/Quantum Tube conduit"
+   ],
+   "cameras": [
+    {
+     "name": "cam_wb_tube_gate",
+     "pos": [
+      0.0,
+      1.65,
+      28.0
+     ],
+     "target": [
+      6.0,
+      3.5,
+      42.0
+     ],
+     "fov": 60
+    },
+    {
+     "name": "cam_wb_tube_node_e",
+     "pos": [
+      11.5,
+      1.65,
+      34.5
+     ],
+     "target": [
+      9.0,
+      3.2,
+      41.5
+     ],
+     "fov": 55
+    },
+    {
+     "name": "cam_wb_tube_port",
+     "pos": [
+      9.6,
+      1.65,
+      38.3
+     ],
+     "target": [
+      9.0,
+      2.9,
+      40.8
+     ],
+     "fov": 60
+    },
+    {
+     "name": "cam_wb_tube_node_w",
+     "pos": [
+      -12.0,
+      1.65,
+      34.0
+     ],
+     "target": [
+      -9.0,
+      3.3,
+      41.5
+     ],
+     "fov": 55
+    },
+    {
+     "name": "cam_wb_tube_run_e",
+     "pos": [
+      22.0,
+      1.65,
+      37.5
+     ],
+     "target": [
+      30.0,
+      4.0,
+      42.2
+     ],
+     "fov": 60
+    },
+    {
+     "name": "cam_wb_tube_span_w",
+     "pos": [
+      -22.0,
+      1.65,
+      37.0
+     ],
+     "target": [
+      -25.5,
+      4.0,
+      43.0
+     ],
+     "fov": 60
+    }
+   ]
+  },
+  {
+   "key": "tubeseg",
+   "model": "TubeSeg",
+   "rootName": "Ward building: Quantum Tube conduit (pylon bays)",
+   "cameraRoot": "Ward buildings review cameras: Quantum Tube",
+   "lods": 3,
+   "lodDistances": [
+    12,
+    55,
+    450
+   ],
+   "instances": [
+    {
+     "name": "Conduit bay east 1",
+     "pos": [
+      11.05,
+      0.0,
+      42.2
+     ],
+     "yaw": 0
+    },
+    {
+     "name": "Conduit bay east 2",
+     "pos": [
+      18.3,
+      0.0,
+      42.2
+     ],
+     "yaw": 0
+    },
+    {
+     "name": "Conduit bay east 3",
+     "pos": [
+      25.55,
+      0.0,
+      42.2
+     ],
+     "yaw": 0
+    },
+    {
+     "name": "Conduit bay east 4",
+     "pos": [
+      32.8,
+      0.0,
+      42.2
+     ],
+     "yaw": 0
+    },
+    {
+     "name": "Conduit bay west 3",
+     "pos": [
+      -25.55,
+      0.0,
+      42.2
+     ],
+     "yaw": 180
+    },
+    {
+     "name": "Conduit bay west 5",
+     "pos": [
+      -40.05,
+      0.0,
+      42.2
+     ],
+     "yaw": 180
+    }
+   ],
+   "retire": [],
+   "cameras": [
+    {
+     "name": "cam_wb2_tube_hatch_w",
+     "pos": [
+      -46.0,
+      1.65,
+      35.0
+     ],
+     "target": [
+      -43.7,
+      4.3,
+      41.9
+     ],
+     "fov": 55
+    }
+   ]
+  },
+  {
+   "key": "tubespan",
+   "model": "TubeSpan",
+   "rootName": "Ward building: Quantum Tube conduit (wall-hung spans)",
+   "cameraRoot": "Ward buildings review cameras: Quantum Tube",
+   "lods": 3,
+   "lodDistances": [
+    12,
+    55,
+    450
+   ],
+   "instances": [
+    {
+     "name": "Conduit span west 1",
+     "pos": [
+      -11.05,
+      0.0,
+      42.2
+     ],
+     "yaw": 180
+    },
+    {
+     "name": "Conduit span west 2",
+     "pos": [
+      -18.3,
+      0.0,
+      42.2
+     ],
+     "yaw": 180
+    },
+    {
+     "name": "Conduit span west 4",
+     "pos": [
+      -32.8,
+      0.0,
+      42.2
+     ],
+     "yaw": 180
+    }
+   ],
+   "retire": [],
+   "cameras": []
+  },
+  {
+   "key": "homeb",
+   "model": "WallHomeB",
+   "rootName": "Ward building: wall homes (stacked)",
+   "cameraRoot": "Ward buildings review cameras: wall homes",
+   "lods": 3,
+   "lodDistances": [
+    14,
+    55,
+    450
+   ],
+   "instances": [
+    {
+     "name": "Wall home south 1 (stacked)",
+     "pos": [
+      19.0,
+      0.0,
+      -41.6
+     ],
+     "yaw": 0
+    },
+    {
+     "name": "Wall home west (stacked)",
+     "pos": [
+      -56.0,
+      0.0,
+      -24.0
+     ],
+     "yaw": 90
+    }
+   ],
+   "retire": [
+    "Ward district retrofit/Perimeter dwellings"
+   ],
+   "cameras": [
+    {
+     "name": "cam_wb_home_south",
+     "pos": [
+      23.0,
+      1.65,
+      -33.0
+     ],
+     "target": [
+      22.0,
+      2.0,
+      -41.0
+     ],
+     "fov": 55
+    },
+    {
+     "name": "cam_wb_home_stair",
+     "pos": [
+      15.5,
+      1.65,
+      -36.5
+     ],
+     "target": [
+      20.0,
+      2.5,
+      -40.5
+     ],
+     "fov": 60
+    },
+    {
+     "name": "cam_wb_home_north",
+     "pos": [
+      -21.0,
+      1.65,
+      34.5
+     ],
+     "target": [
+      -21.0,
+      2.2,
+      41.0
+     ],
+     "fov": 55
+    },
+    {
+     "name": "cam_wb_home_west",
+     "pos": [
+      -50.0,
+      1.65,
+      -21.0
+     ],
+     "target": [
+      -56.0,
+      2.5,
+      -24.5
+     ],
+     "fov": 55
+    },
+    {
+     "name": "cam_wb_home_porch",
+     "pos": [
+      -17.0,
+      1.65,
+      37.2
+     ],
+     "target": [
+      -18.6,
+      1.6,
+      39.6
+     ],
+     "fov": 60
+    }
+   ]
+  },
+  {
+   "key": "homea",
+   "model": "WallHomeA",
+   "rootName": "Ward building: wall homes (rust)",
+   "cameraRoot": "Ward buildings review cameras: wall homes",
+   "lods": 3,
+   "lodDistances": [
+    14,
+    55,
+    450
+   ],
+   "instances": [
+    {
+     "name": "Wall home south 2",
+     "pos": [
+      27.5,
+      0.0,
+      -41.4
+     ],
+     "yaw": 0
+    },
+    {
+     "name": "Wall home north 2",
+     "pos": [
+      -17.5,
+      0.0,
+      41.4
+     ],
+     "yaw": 180
+    }
+   ],
+   "retire": [],
+   "cameras": []
+  },
+  {
+   "key": "homec",
+   "model": "WallHomeC",
+   "rootName": "Ward building: wall homes (sand)",
+   "cameraRoot": "Ward buildings review cameras: wall homes",
+   "lods": 3,
+   "lodDistances": [
+    14,
+    55,
+    450
+   ],
+   "instances": [
+    {
+     "name": "Wall home north 1",
+     "pos": [
+      -24.0,
+      0.0,
+      41.2
+     ],
+     "yaw": 180
+    }
+   ],
+   "retire": [],
+   "cameras": []
+  },
+  {
+   "key": "watchtower2",
+   "model": "Watchtower2",
+   "buildOnly": true,
+   "lods": 3,
+   "lodDistances": [
+    22,
+    80,
+    900
+   ],
+   "_doc": "built for the watchtower key's instances (variant 2)"
+  },
+  {
+   "key": "watchtower3",
+   "model": "Watchtower3",
+   "buildOnly": true,
+   "lods": 3,
+   "lodDistances": [
+    22,
+    80,
+    900
+   ],
+   "_doc": "built for the watchtower key's instances (variant 3)"
+  },
+  {
+   "key": "watchtower4",
+   "model": "Watchtower4",
+   "buildOnly": true,
+   "lods": 3,
+   "lodDistances": [
+    22,
+    80,
+    900
+   ],
+   "_doc": "built for the watchtower key's instances (variant 4)"
+  },
+  {
+   "key": "gatebastion",
+   "model": "GateBastion",
+   "rootName": "Ward building: West Gate bastions",
+   "cameraRoot": "Ward buildings review cameras: West Gate bastions",
+   "lods": 3,
+   "lodDistances": [
+    20,
+    60,
+    500
+   ],
+   "instances": [
+    {
+     "name": "Gate bastion south (post 1)",
+     "model": "GateBastion",
+     "pos": [
+      44.0,
+      0.0,
+      -10.75
+     ],
+     "yaw": 270
+    },
+    {
+     "name": "Gate bastion north (post 2)",
+     "model": "GateBastionN",
+     "pos": [
+      44.0,
+      0.0,
+      22.5
+     ],
+     "yaw": 270
+    }
+   ],
+   "retire": [
+    "Ward district retrofit/Gate defences"
+   ],
+   "cameras": [
+    {
+     "name": "cam_wb2_gate_spawn",
+     "pos": [
+      41.2,
+      1.65,
+      -3.2
+     ],
+     "target": [
+      44.6,
+      1.2,
+      -9.6
+     ],
+     "fov": 55
+    },
+    {
+     "name": "cam_wb2_gate_gun",
+     "pos": [
+      42.1,
+      1.65,
+      -5.6
+     ],
+     "target": [
+      44.8,
+      1.4,
+      -9.0
+     ],
+     "fov": 60
+    },
+    {
+     "name": "cam_wb2_gate_north",
+     "pos": [
+      40.8,
+      1.65,
+      14.0
+     ],
+     "target": [
+      44.6,
+      1.2,
+      21.6
+     ],
+     "fov": 55
+    },
+    {
+     "name": "cam_wb2_gate_apron",
+     "pos": [
+      35.5,
+      1.65,
+      3.5
+     ],
+     "target": [
+      45.0,
+      1.6,
+      -7.5
+     ],
+     "fov": 55
+    }
+   ]
+  },
+  {
+   "key": "gatebastionn",
+   "model": "GateBastionN",
+   "buildOnly": true,
+   "lods": 3,
+   "lodDistances": [
+    20,
+    60,
+    500
+   ],
+   "_doc": "north bastion (mirrored gun position), used by the gatebastion key"
+  }
+ ]
+}

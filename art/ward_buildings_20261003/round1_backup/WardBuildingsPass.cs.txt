@@ -1,0 +1,572 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+
+namespace AthenHill.Editor
+{
+    /// <summary>
+    /// 3 October 2026: Ward buildings that still needed replacing (Carl: "There are buildings in ward that need replacing
+    /// too"). Audit and sources: art/ward_buildings_20261003 (AUDIT.md, PROGRESS.md, one README per building). Each
+    /// building is authored in Blender on the shared Ward masonry kit (art/ward_masonry_kit) by
+    /// art/ward_buildings_20261003/author_buildings.py → Art/WardBuildings/Models/&lt;Model&gt;_LOD{0,1,2}.glb + &lt;key&gt;.json
+    /// (colliders, wall-lamp mounts, extra lights, notes) and placed from art/ward_buildings_20261003/layout.json.
+    ///
+    /// Steps (batch: RunBatch --steps a,b:arg,... [--out dir]):
+    ///   auditcap                — editor captures of layout.auditCameras (≤ 6), never saves
+    ///   build:key               — import the glbs, map materials, save Prefabs/WardBuildings/&lt;Model&gt;.prefab
+    ///   install:key / reinstall:key — place the instances under their own scene root, retire the old visuals
+    ///                             (activation overrides on the 26 Sep retrofit prefab children; never deleted), add the
+    ///                             lamps to the Ward lighting clock, add review cameras; rollback copy on first install
+    ///   capture:key[:filter]    — editor captures of the key's review cameras (≤ 6, in memory when not installed)
+    ///   verify[:key]            — verify the saved scene (installed, prefab links, materials, retired inactive, chunks,
+    ///                             lights on the circuit, collider clearance against routes/NPC/landmark markers)
+    /// Old visuals stay in the scene inactive for rollback: re-activate the retired paths and deactivate the new root.
+    /// </summary>
+    public static class WardBuildingsPass
+    {
+        const string ScenePath = "Assets/AthenHill/Scenes/AthenHill.unity";
+        const string Root = "Assets/AthenHill/Art/WardBuildings/";
+        const string ModelDir = Root + "Models/";
+        const string MatDir = Root + "Materials/";
+        const string PrefabDir = "Assets/AthenHill/Prefabs/WardBuildings/";
+        const string LayoutPath = "../../art/ward_buildings_20261003/layout.json";
+        const string Evidence = "../evidence/ward-buildings/20261003/";
+        const string NightMats = "Assets/AthenHill/Art/NightFacade/";
+        const string PhGlassPath = "Assets/AthenHill/Art/WestGate/Materials/PH_industrial_wall_lamp_glass.mat";
+        static readonly string[] MatSearch =
+        {
+            MatDir, "Assets/AthenHill/Art/VanguardHall/Materials/", "Assets/AthenHill/Art/WardShops/Materials/",
+            "Assets/AthenHill/Art/WestGate/Materials/", "Assets/AthenHill/Art/TrainingRange/Materials/",
+            "Assets/AthenHill/Art/WestGateArches/Materials/", "Assets/AthenHill/Art/NightFacade/Materials/",
+        };
+        const float LodBias = 2f;
+
+        static JObject Layout() => JObject.Parse(File.ReadAllText(LayoutPath));
+        static JObject Building(string key) => (JObject)Layout()["buildings"].First(b => (string)b["key"] == key);
+        static Vector3 V3(JToken t) => new Vector3((float)t[0], (float)t[1], (float)t[2]);
+        static string PathOf(Transform t) => t.parent ? PathOf(t.parent) + "/" + t.name : t.name;
+        static string PrefabPath(JObject b) => PrefabDir + (string)b["model"] + ".prefab";
+
+        static Transform FindPath(UnityEngine.SceneManagement.Scene scene, string path)
+        {
+            var parts = path.Split('/');
+            var root = scene.GetRootGameObjects().FirstOrDefault(g => g.name == parts[0]);
+            if (!root) return null;
+            var t = root.transform;
+            for (int i = 1; i < parts.Length && t; i++) t = t.Cast<Transform>().FirstOrDefault(c => c.name == parts[i]);
+            return t;
+        }
+
+        static int Tris(Renderer r)
+        {
+            var mf = r ? r.GetComponent<MeshFilter>() : null;
+            if (!mf || !mf.sharedMesh) return 0;
+            int n = 0;
+            for (int s = 0; s < mf.sharedMesh.subMeshCount; s++) n += (int)mf.sharedMesh.GetIndexCount(s) / 3;
+            return n;
+        }
+
+        // ------------------------------------------------------------------ materials
+        static readonly Dictionary<string, Material> matCache = new Dictionary<string, Material>();
+
+        static Material FindMat(string name)
+        {
+            name = System.Text.RegularExpressions.Regex.Replace(name.Replace(" (Instance)", ""), @"\.\d+$", "");
+            if (matCache.TryGetValue(name, out var m) && m) return m;
+            foreach (var d in MatSearch)
+            {
+                m = AssetDatabase.LoadAssetAtPath<Material>(d + name + ".mat");
+                if (m) { matCache[name] = m; return m; }
+            }
+            return null;
+        }
+
+        static Texture2D HallTex(string set, string kind) =>
+            AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/AthenHill/Art/VanguardHall/Textures/" + set + "_" + kind + (kind == "Mask" ? ".png" : ".jpg"));
+
+        static void SetupLit(Material m, string set, Color color, float tileMetres, float smoothness = 1f, float bump = 1f)
+        {
+            m.SetTexture("_BaseMap", set != null ? HallTex(set, "BaseMap") : null);
+            m.SetColor("_BaseColor", color);
+            m.SetTextureScale("_BaseMap", Vector2.one / tileMetres);
+            if (set != null)
+            {
+                m.SetTexture("_BumpMap", HallTex(set, "Normal")); m.EnableKeyword("_NORMALMAP"); m.SetFloat("_BumpScale", bump);
+                m.SetTexture("_MetallicGlossMap", HallTex(set, "Mask")); m.EnableKeyword("_METALLICSPECGLOSSMAP");
+                m.SetTexture("_OcclusionMap", HallTex(set, "Mask")); m.EnableKeyword("_OCCLUSIONMAP"); m.SetFloat("_OcclusionStrength", 1);
+            }
+            m.SetFloat("_Smoothness", smoothness);
+            m.enableInstancing = true;
+            EditorUtility.SetDirty(m);
+        }
+
+        /// This pass's own materials (WB_*), created once from layout.materials: {name: {set, color[rgb(a)], tile, smooth,
+        /// bump, emission[rgb], doubleSided}}. Existing materials are re-tuned from the layout on every build.
+        static void BuildMaterials(JObject layout, List<string> log)
+        {
+            var lit = Shader.Find("Universal Render Pipeline/Lit");
+            Directory.CreateDirectory(MatDir);
+            if (!(layout["materials"] is JObject specs)) return;
+            foreach (var p in specs.Properties())
+            {
+                var path = MatDir + p.Name + ".mat";
+                var m = AssetDatabase.LoadAssetAtPath<Material>(path);
+                if (!m) { m = new Material(lit) { name = p.Name }; AssetDatabase.CreateAsset(m, path); log.Add("created " + path); }
+                var s = (JObject)p.Value;
+                var c = s["color"]; var col = new Color((float)c[0], (float)c[1], (float)c[2], c.Count() > 3 ? (float)c[3] : 1f);
+                SetupLit(m, (string)s["set"], col, (float?)s["tile"] ?? 1.2f, (float?)s["smooth"] ?? .9f, (float?)s["bump"] ?? 1f);
+                if (s["tex"] != null)
+                {
+                    var texPath = (string)s["tex"];
+                    AssetDatabase.ImportAsset(texPath);
+                    var tex = AssetDatabase.LoadAssetAtPath<Texture2D>(texPath);
+                    if (!tex) log.Add("missing texture " + texPath); else m.SetTexture("_BaseMap", tex);
+                }
+                if (s["emission"] is JArray e)
+                {
+                    m.SetColor("_EmissionColor", new Color((float)e[0], (float)e[1], (float)e[2]));
+                    m.EnableKeyword("_EMISSION");
+                    m.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;  // None loses _EMISSION on save
+                }
+                if ((bool?)s["doubleSided"] == true) { m.SetFloat("_Cull", 0); m.doubleSidedGI = true; }
+                EditorUtility.SetDirty(m);
+                matCache[p.Name] = m;
+            }
+            AssetDatabase.SaveAssets();
+        }
+
+        // ------------------------------------------------------------------ build
+        public static string BuildAssets(string key)
+        {
+            var layout = Layout();
+            var b = Building(key);
+            var model = (string)b["model"];
+            var log = new List<string>();
+            AssetDatabase.Refresh();
+            BuildMaterials(layout, log);
+            int nl = (int?)b["lods"] ?? 3;
+            for (int lod = 0; lod < nl; lod++) AssetDatabase.ImportAsset(ModelDir + model + "_LOD" + lod + ".glb", ImportAssetOptions.ForceUpdate);
+            var rec = JObject.Parse(File.ReadAllText(ModelDir + key + ".json"));
+            Directory.CreateDirectory(PrefabDir);
+            var missing = new HashSet<string>();
+            var root = new GameObject(model);
+            var report = new Dictionary<string, object>();
+            try
+            {
+                var levels = new List<LOD>();
+                for (int lod = 0; lod < nl; lod++)
+                {
+                    var glb = ModelDir + model + "_LOD" + lod + ".glb";
+                    var src = AssetDatabase.LoadAssetAtPath<GameObject>(glb);
+                    if (!src) throw new Exception("Model not imported: " + glb);
+                    var holder = new GameObject("LOD" + lod).transform; holder.SetParent(root.transform, false);
+                    var rs = new List<Renderer>();
+                    foreach (var mr in src.GetComponentsInChildren<MeshRenderer>(true))
+                    {
+                        var mf = mr.GetComponent<MeshFilter>();
+                        if (!mf || !mf.sharedMesh) continue;
+                        var go = new GameObject(mr.name); go.transform.SetParent(holder, false);
+                        go.transform.localPosition = src.transform.InverseTransformPoint(mr.transform.position);
+                        go.transform.localRotation = Quaternion.Inverse(src.transform.rotation) * mr.transform.rotation;
+                        go.AddComponent<MeshFilter>().sharedMesh = mf.sharedMesh;
+                        var r = go.AddComponent<MeshRenderer>();
+                        var slots = mr.sharedMaterials;
+                        for (int i = 0; i < slots.Length; i++)
+                        {
+                            var m = slots[i] ? FindMat(slots[i].name) : null;
+                            if (m) slots[i] = m; else missing.Add(mr.name + ":" + (slots[i] ? slots[i].name : "null"));
+                        }
+                        r.sharedMaterials = slots;
+                        // flat FX, glass, sand and small hardware never cast; masonry, roofs and big steel do
+                        var n = mr.name;
+                        bool noShadow = n.Contains("_Glass_") || n.Contains("_Sand_") || n.Contains("_Glow_") || n.Contains("_Hardware_") || n.Contains("_Clear_");
+                        r.shadowCastingMode = noShadow ? ShadowCastingMode.Off : ShadowCastingMode.On;
+                        r.receiveShadows = true;
+                        r.motionVectorGenerationMode = MotionVectorGenerationMode.Camera;
+                        r.receiveGI = ReceiveGI.LightProbes; r.lightProbeUsage = LightProbeUsage.BlendProbes;
+                        rs.Add(r);
+                    }
+                    if (rs.Count == 0) throw new Exception("no renderers in " + glb);
+                    report["LOD" + lod] = rs.Sum(Tris);
+                    levels.Add(new LOD(.5f / (lod + 1), rs.ToArray()));
+                }
+                var g = root.AddComponent<LODGroup>();
+                g.SetLODs(levels.ToArray()); g.fadeMode = LODFadeMode.None; g.RecalculateBounds();
+                var dist = b["lodDistances"]?.Select(x => (float)x).ToArray() ?? new[] { 22f, 70f, 600f };
+                float H(float d) => Mathf.Clamp(g.size * LodBias / (2f * d * Mathf.Tan(30f * Mathf.Deg2Rad)), .003f, .98f);
+                for (int i = 0; i < levels.Count; i++) levels[i] = new LOD(H(dist[Math.Min(i, dist.Length - 1)]), levels[i].renderers);
+                // keep the cuts strictly decreasing
+                for (int i = 1; i < levels.Count; i++) if (levels[i].screenRelativeTransitionHeight >= levels[i - 1].screenRelativeTransitionHeight)
+                        levels[i] = new LOD(levels[i - 1].screenRelativeTransitionHeight * .5f, levels[i].renderers);
+                g.SetLODs(levels.ToArray()); g.RecalculateBounds();
+                report["lodCuts"] = levels.Select(l => Math.Round(l.screenRelativeTransitionHeight, 4)).ToArray();
+                report["size"] = Math.Round(g.size, 2);
+
+                // colliders
+                var cols = new GameObject("Colliders").transform; cols.SetParent(root.transform, false);
+                foreach (var c in rec["colliders"] ?? new JArray())
+                {
+                    var go = new GameObject((string)c["name"]); go.transform.SetParent(cols, false);
+                    if (c["yaw"] != null) go.transform.localRotation = Quaternion.Euler(0, (float)c["yaw"], 0);
+                    var bc = go.AddComponent<BoxCollider>();
+                    bc.center = c["yaw"] != null ? Vector3.zero : V3(c["center"]); bc.size = V3(c["size"]);
+                    if (c["yaw"] != null) go.transform.localPosition = V3(c["center"]);
+                }
+                report["colliders"] = cols.childCount;
+
+                // wall lamps: the shop family's caged PH_WallLamp, NF bulb, down-and-out cookie spot (night facade tune)
+                var fit = new GameObject("Fittings").transform; fit.SetParent(root.transform, false);
+                var lights = new GameObject("Practical lights").transform; lights.SetParent(root.transform, false);
+                var bulbMat = AssetDatabase.LoadAssetAtPath<Material>(NightMats + "Materials/NF_WallLampBulb.mat");
+                var glassMat = AssetDatabase.LoadAssetAtPath<Material>(NightMats + "Materials/NF_WallLampGlass.mat");
+                var phGlass = AssetDatabase.LoadAssetAtPath<Material>(PhGlassPath);
+                var cookie = AssetDatabase.LoadAssetAtPath<Texture2D>(NightMats + "Textures/NF_WallLampCookie.png");
+                if (!bulbMat) missing.Add("NF_WallLampBulb"); if (!cookie) missing.Add("NF_WallLampCookie");
+                int lamps = 0;
+                foreach (var mnt in rec["mounts"] ?? new JArray())
+                {
+                    var ppath = (string)mnt["path"] ?? "Assets/AthenHill/Prefabs/WestGate/" + (string)mnt["prefab"] + ".prefab";
+                    var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(ppath);
+                    if (!prefab) { missing.Add("prefab " + ppath); continue; }
+                    var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+                    go.name = (string)mnt["name"];
+                    go.transform.SetParent(fit, false);
+                    go.transform.localPosition = V3(mnt["pos"]);
+                    go.transform.localRotation = Quaternion.Euler(0, (float)mnt["yaw"], 0);
+                    foreach (var c in go.GetComponentsInChildren<Collider>(true)) UnityEngine.Object.DestroyImmediate(c);
+                    if ((string)mnt["prefab"] != "PH_WallLamp") continue;
+                    foreach (var r in go.GetComponentsInChildren<Renderer>(true)) r.shadowCastingMode = ShadowCastingMode.Off;
+                    foreach (var r in go.GetComponentsInChildren<Renderer>(true))
+                    {
+                        var ms = r.sharedMaterials;
+                        for (int i = 0; i < ms.Length; i++) if (ms[i] == phGlass && glassMat) ms[i] = glassMat;
+                        r.sharedMaterials = ms;
+                    }
+                    var bulb = GameObject.CreatePrimitive(PrimitiveType.Sphere); bulb.name = "Bulb";
+                    UnityEngine.Object.DestroyImmediate(bulb.GetComponent<Collider>());
+                    bulb.transform.SetParent(go.transform, false); bulb.transform.localPosition = new Vector3(0, .215f, .015f); bulb.transform.localScale = Vector3.one * .07f;
+                    var br = bulb.GetComponent<MeshRenderer>(); br.sharedMaterial = bulbMat; br.shadowCastingMode = ShadowCastingMode.Off;
+                    var lg = new GameObject(go.name + " light"); lg.transform.SetParent(lights, false);
+                    var fwd = go.transform.localRotation * Vector3.forward;
+                    lg.transform.localPosition = go.transform.localPosition + Vector3.up * .115f + fwd * .35f;
+                    const float tilt = 10f;
+                    var dir = (Vector3.down * Mathf.Cos(tilt * Mathf.Deg2Rad) + fwd * Mathf.Sin(tilt * Mathf.Deg2Rad)).normalized;
+                    lg.transform.localRotation = Quaternion.LookRotation(dir, fwd);
+                    var l = lg.AddComponent<Light>(); l.type = LightType.Spot; l.color = new Color(1f, .78f, .52f);
+                    l.intensity = (float?)mnt["intensity"] ?? 5.46f; l.range = (float?)mnt["range"] ?? 7.5f;
+                    l.spotAngle = 140f; l.innerSpotAngle = 95f; l.cookie = cookie; l.shadows = LightShadows.None;
+                    lamps++;
+                }
+                // extra lights (status glows, interior spill) from the record
+                foreach (var xl in rec["lights"] ?? new JArray())
+                {
+                    var lg = new GameObject((string)xl["name"]);
+                    // "clock": false = an always-on interior light, kept off the Ward lighting clock (Unclocked lights)
+                    if ((bool?)xl["clock"] == false) { var u = root.transform.Find("Unclocked lights"); if (!u) { u = new GameObject("Unclocked lights").transform; u.SetParent(root.transform, false); } lg.transform.SetParent(u, false); }
+                    else lg.transform.SetParent(lights, false);
+                    var p = V3(xl["pos"]); lg.transform.localPosition = p;
+                    var l = lg.AddComponent<Light>();
+                    l.type = (string)xl["type"] == "spot" ? LightType.Spot : LightType.Point;
+                    if (xl["target"] != null) lg.transform.localRotation = Quaternion.LookRotation(V3(xl["target"]) - p, Vector3.up);
+                    var c = xl["color"]; l.color = new Color((float)c[0], (float)c[1], (float)c[2]);
+                    l.intensity = (float)xl["intensity"]; l.range = (float)xl["range"];
+                    if (l.type == LightType.Spot) { l.spotAngle = (float?)xl["angle"] ?? 120f; l.innerSpotAngle = (float?)xl["inner"] ?? 80f; }
+                    l.shadows = LightShadows.None;
+                    lamps++;
+                }
+                report["lights"] = lamps;
+
+                foreach (var t in root.GetComponentsInChildren<Transform>(true))
+                    if (!t.GetComponent<Light>())
+                        GameObjectUtility.SetStaticEditorFlags(t.gameObject, StaticEditorFlags.OccluderStatic | StaticEditorFlags.OccludeeStatic | StaticEditorFlags.BatchingStatic);
+                PrefabUtility.SaveAsPrefabAsset(root, PrefabPath(b));
+            }
+            finally { UnityEngine.Object.DestroyImmediate(root); }
+            AssetDatabase.SaveAssets();
+            report["unmapped"] = missing.OrderBy(x => x).ToArray();
+            report["log"] = log;
+            var json = JsonConvert.SerializeObject(report, Formatting.Indented);
+            Directory.CreateDirectory(Evidence + key);
+            File.WriteAllText(Evidence + key + "/build-assets.json", json);
+            return json;
+        }
+
+        // ------------------------------------------------------------------ install
+        static GameObject Place(UnityEngine.SceneManagement.Scene scene, JObject b, out List<Light> lamps)
+        {
+            var root = new GameObject((string)b["rootName"]);
+            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(root, scene);
+            lamps = new List<Light>();
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath(b));
+            if (!prefab) throw new Exception("Prefab missing (build first): " + PrefabPath(b));
+            foreach (var inst in b["instances"])
+            {
+                var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, scene);
+                go.transform.SetParent(root.transform, false);
+                go.transform.SetPositionAndRotation(V3(inst["pos"]), Quaternion.Euler(0, (float)inst["yaw"], 0));
+                go.name = (string)inst["name"];
+                var pl = go.transform.Find("Practical lights");
+                if (pl) lamps.AddRange(pl.GetComponentsInChildren<Light>(true));
+            }
+            return root;
+        }
+
+        static void Retire(Transform t, List<string> log)
+        {
+            if (!t.gameObject.activeSelf) { log.Add("already inactive: " + PathOf(t)); return; }
+            t.gameObject.SetActive(false);
+            if (PrefabUtility.IsPartOfPrefabInstance(t.gameObject)) PrefabUtility.RecordPrefabInstancePropertyModifications(t.gameObject);
+            log.Add("retired: " + PathOf(t));
+        }
+
+        public static string Install(string key, bool replace)
+        {
+            if (EditorApplication.isPlaying) throw new Exception("Exit Play mode first.");
+            var scene = EditorSceneManager.OpenScene(ScenePath);
+            var b = Building(key);
+            var rootName = (string)b["rootName"];
+            var existing = scene.GetRootGameObjects().FirstOrDefault(g => g.name == rootName);
+            if (existing && !replace) throw new Exception(rootName + " is already installed; edit it in place (or reinstall during authoring).");
+            var circuit = UnityEngine.Object.FindAnyObjectByType<CityLightCircuit>(FindObjectsInactive.Include);
+            if (existing)
+            {
+                var old = existing.GetComponentsInChildren<Light>(true);
+                if (circuit)
+                {
+                    circuit.practicalLights = circuit.practicalLights.Where(l => l && !old.Contains(l)).ToArray();
+                    circuit.nightOnlyLights = circuit.nightOnlyLights.Where(l => l && !old.Contains(l)).ToArray();
+                }
+                UnityEngine.Object.DestroyImmediate(existing);
+            }
+            Directory.CreateDirectory(Evidence + key + "/rollback");
+            var rb = Evidence + key + "/rollback/before-" + key + ".unity";
+            if (!File.Exists(rb)) File.Copy(ScenePath, rb, true);
+            var chunks = UnityEngine.Object.FindAnyObjectByType<StaticRenderChunks>();
+            string fpBefore = chunks ? chunks.sourceFingerprint : null;
+            var log = new List<string>();
+            foreach (var p in b["retire"] ?? new JArray())
+            {
+                var t = FindPath(scene, (string)p);
+                if (!t) throw new Exception("retire path not found: " + p);
+                Retire(t, log);
+            }
+            var root = Place(scene, b, out var lamps);
+            var nightOnly = (bool?)b["nightOnlyLights"] ?? true;
+            if (circuit)
+            {
+                circuit.practicalLights = circuit.practicalLights.Where(l => l).Concat(lamps).Distinct().ToArray();
+                if (nightOnly) circuit.nightOnlyLights = circuit.nightOnlyLights.Where(l => l).Concat(lamps).Distinct().ToArray();
+                // emissive LED/screen materials follow the clock like the shop LEDs
+                foreach (var mn in b["clockEmissive"] ?? new JArray())
+                {
+                    var m = FindMat((string)mn);
+                    if (m && !circuit.emissiveMaterials.Contains(m)) { circuit.emissiveMaterials = circuit.emissiveMaterials.Concat(new[] { m }).ToArray(); log.Add("clock emissive + " + m.name); }
+                }
+                EditorUtility.SetDirty(circuit);
+            }
+            AddCameras(scene, b);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            var record = new Dictionary<string, object>
+            {
+                ["root"] = rootName,
+                ["instances"] = root.transform.Cast<Transform>().Select(t => new { t.name, pos = new[] { t.position.x, t.position.y, t.position.z }, yaw = t.eulerAngles.y }).ToArray(),
+                ["lights"] = lamps.Select(l => PathOf(l.transform)).ToArray(),
+                ["lightCircuitFound"] = circuit != null,
+                ["log"] = log,
+                ["reviewCameras"] = b["cameras"]?.Count() ?? 0,
+            };
+            if (chunks) record["chunkFingerprintUnchanged"] = chunks.sourceFingerprint == fpBefore && chunks.sourceFingerprint == StaticRenderChunksEditor.Fingerprint(chunks);
+            var json = JsonConvert.SerializeObject(record, Formatting.Indented);
+            File.WriteAllText(Evidence + key + "/" + (replace ? "reinstall.json" : "install.json"), json);
+            return json;
+        }
+
+        // ------------------------------------------------------------------ review cameras
+        static void AddCameras(UnityEngine.SceneManagement.Scene scene, JObject b)
+        {
+            var camRoot = (string)b["cameraRoot"];
+            var root = scene.GetRootGameObjects().FirstOrDefault(g => g.name == camRoot);
+            if (!root) { root = new GameObject(camRoot); UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(root, scene); }
+            foreach (var c in b["cameras"] ?? new JArray())
+            {
+                var name = (string)c["name"];
+                var t = root.transform.Find(name);
+                if (!t) { t = new GameObject(name).transform; t.SetParent(root.transform, false); }
+                var pos = V3(c["pos"]);
+                t.SetPositionAndRotation(pos, Quaternion.LookRotation(V3(c["target"]) - pos, Vector3.up));
+                var cam = t.GetComponent<Camera>();
+                if (!cam) cam = t.gameObject.AddComponent<Camera>();
+                cam.enabled = false; cam.fieldOfView = (float)c["fov"]; cam.nearClipPlane = .05f;
+            }
+        }
+
+        static List<(string, Vector3, Vector3, float)> Views(JToken cams, string filter) =>
+            cams.Where(c => string.IsNullOrEmpty(filter) || filter.Split('+').Any(f => ((string)c["name"]).StartsWith(f)))
+                .Select(c => ((string)c["name"], V3(c["pos"]), V3(c["target"]), (float)c["fov"])).Take(6).ToList();
+
+        public static string AuditCapture(string outDir, string filter)
+        {
+            EditorSceneManager.OpenScene(ScenePath);
+            return string.Join(",", StreetDressingPass.Capture(outDir, Views(Layout()["auditCameras"], filter)));
+        }
+
+        /// Captures of a building's review cameras; when it is not installed it is placed (and its old visuals hidden)
+        /// in memory only. Never saves.
+        public static string CaptureViews(string key, string outDir, string filter)
+        {
+            var scene = EditorSceneManager.OpenScene(ScenePath);
+            var b = Building(key);
+            if (!scene.GetRootGameObjects().Any(g => g.name == (string)b["rootName"]))
+            {
+                foreach (var p in b["retire"] ?? new JArray()) { var t = FindPath(scene, (string)p); if (t) t.gameObject.SetActive(false); }
+                Place(scene, b, out _);
+            }
+            return string.Join(",", StreetDressingPass.Capture(outDir, Views(b["cameras"], filter)));
+        }
+
+        // ------------------------------------------------------------------ verify
+        public static string Verify(string only)
+        {
+            var scene = EditorSceneManager.OpenScene(ScenePath);
+            var layout = Layout();
+            var all = new Dictionary<string, object>();
+            var circuit = UnityEngine.Object.FindAnyObjectByType<CityLightCircuit>(FindObjectsInactive.Include);
+            // gameplay markers to keep clear: routes, NPC roots, interaction roots, landmarks, player spawn
+            var markers = new List<(string, Vector3)>();
+            foreach (var g in scene.GetRootGameObjects())
+            {
+                bool route = g.name.EndsWith(" route") || g.name == "Landmarks" || g.name == "Colonists";
+                if (route) foreach (Transform c in g.transform) markers.Add((g.name + "/" + c.name, c.position));
+                if (g.name == "Player" || g.name.EndsWith(" interaction") || g.name.StartsWith("npc_")) markers.Add((g.name, g.transform.position));
+            }
+            foreach (JObject b in layout["buildings"])
+            {
+                var key = (string)b["key"];
+                if (!string.IsNullOrEmpty(only) && only != key) continue;
+                var r = new Dictionary<string, object>();
+                var root = scene.GetRootGameObjects().FirstOrDefault(g => g.name == (string)b["rootName"]);
+                r["installed"] = root != null;
+                if (root)
+                {
+                    r["active"] = root.activeSelf;
+                    var groups = root.GetComponentsInChildren<LODGroup>(true);
+                    r["instances"] = groups.Length;
+                    r["prefabLinked"] = groups.Count(m => PrefabUtility.IsPartOfPrefabInstance(m.gameObject));
+                    r["nonUniformScale"] = groups.Where(m => (m.transform.lossyScale - Vector3.one).sqrMagnitude > 1e-6).Select(m => PathOf(m.transform)).ToArray();
+                    var rends = root.GetComponentsInChildren<Renderer>(true);
+                    r["renderers"] = rends.Length;
+                    r["missingMaterials"] = rends.Count(x => x.sharedMaterials.Any(m => !m));
+                    r["materials"] = rends.SelectMany(x => x.sharedMaterials).Where(m => m).Select(m => m.name + " (" + m.shader.name + ")").Distinct().OrderBy(x => x).ToArray();
+                    r["triangles"] = groups.Take(1).ToDictionary(gg => gg.name, gg => gg.GetLODs().Select(l => l.renderers.Where(x => x).Sum(Tris)).ToArray());
+                    var lamps = root.GetComponentsInChildren<Light>(true);
+                    r["lights"] = lamps.Length;
+                    r["lightsOnCircuit"] = circuit ? lamps.Count(l => circuit.practicalLights.Contains(l)) : -1;
+                    r["unclockedLights"] = lamps.Count(l => l.transform.parent && l.transform.parent.name == "Unclocked lights");
+                    var cols = root.GetComponentsInChildren<Collider>(true);
+                    r["colliders"] = cols.Length;
+                    // markers inside or within 0.45 m of a new collider (capsule r 0.35 + margin), compared in plan
+                    var hits = new List<object>();
+                    foreach (var (name, p) in markers)
+                        foreach (var c in cols)
+                        {
+                            var q = new Vector3(p.x, c.bounds.center.y, p.z);
+                            var d = Vector3.Distance(q, c.bounds.ClosestPoint(q));
+                            if (d < .45f && p.y < c.bounds.max.y + .5f) hits.Add(new { marker = name, collider = c.name, dist = Math.Round(d, 2) });
+                        }
+                    r["markerConflicts"] = hits;
+                    // walker/droid route segments (looped waypoints) sampled every 0.4 m against the new colliders
+                    var segHits = new List<object>();
+                    foreach (var g in scene.GetRootGameObjects().Where(g => g.name.EndsWith(" route")))
+                    {
+                        var wps = g.transform.Cast<Transform>().Select(t => t.position).ToList();
+                        for (int i = 0; i < wps.Count && wps.Count > 1; i++)
+                        {
+                            var a = wps[i]; var b2 = wps[(i + 1) % wps.Count];
+                            int n = Mathf.Max(1, Mathf.CeilToInt(Vector3.Distance(a, b2) / 0.4f));
+                            for (int k = 0; k <= n; k++)
+                            {
+                                var p = Vector3.Lerp(a, b2, k / (float)n);
+                                foreach (var c in cols)
+                                {
+                                    var q = new Vector3(p.x, c.bounds.center.y, p.z);
+                                    if (c.bounds.min.y > 1.9f) continue;   // overhead parts are clear of a walker
+                                    if (Vector3.Distance(q, c.bounds.ClosestPoint(q)) < .45f) { segHits.Add(new { route = g.name, seg = i, collider = c.name }); break; }
+                                }
+                            }
+                        }
+                    }
+                    r["routeSegmentConflicts"] = segHits.Distinct().Take(40).ToArray();
+                    // AABB overlaps with other active scene colliders (approximate: shrunk 5 cm), for placement review
+                    var mine = new HashSet<Collider>(cols);
+                    var ours = new HashSet<Collider>(scene.GetRootGameObjects().Where(g => g.name.StartsWith("Ward building: ")).SelectMany(g => g.GetComponentsInChildren<Collider>(true)));
+                    var others = scene.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<Collider>(false))
+                        .Where(c => c.enabled && !ours.Contains(c) && c.gameObject.name != "COL_Ground" && !(c is TerrainCollider) && c.bounds.size.x < 60 && c.bounds.size.z < 60).ToArray();
+                    var overl = new List<object>();
+                    foreach (var c in cols)
+                    {
+                        var b0 = c.bounds; b0.Expand(-0.1f);
+                        foreach (var o in others)
+                            if (b0.Intersects(o.bounds)) overl.Add(new { mine = c.name, other = PathOf(o.transform), otherCenter = new[] { Math.Round(o.bounds.center.x, 2), Math.Round(o.bounds.center.z, 2) } });
+                    }
+                    r["colliderOverlaps"] = overl;
+                }
+                var retired = new List<object>();
+                foreach (var p in b["retire"] ?? new JArray())
+                {
+                    var t = FindPath(scene, (string)p);
+                    retired.Add(new { path = (string)p, found = t != null, activeInHierarchy = t && t.gameObject.activeInHierarchy });
+                }
+                r["retired"] = retired;
+                var camRoot = scene.GetRootGameObjects().FirstOrDefault(g => g.name == (string)b["cameraRoot"]);
+                r["reviewCameras"] = camRoot ? camRoot.GetComponentsInChildren<Camera>(true).Select(c => c.name).ToArray() : new string[0];
+                all[key] = r;
+            }
+            var chunks = UnityEngine.Object.FindAnyObjectByType<StaticRenderChunks>();
+            if (chunks) { all["chunkFingerprintMatches"] = chunks.sourceFingerprint == StaticRenderChunksEditor.Fingerprint(chunks); all["chunkEditing"] = chunks.editingSources; }
+            var json = JsonConvert.SerializeObject(all, Formatting.Indented);
+            Directory.CreateDirectory(Evidence);
+            File.WriteAllText(Evidence + "verify-saved-scene" + (string.IsNullOrEmpty(only) ? "" : "-" + only) + ".json", json);
+            return json;
+        }
+
+        // ------------------------------------------------------------------ batch
+        /// -executeMethod AthenHill.Editor.WardBuildingsPass.RunBatch --steps auditcap,build:nanofab,install:nanofab,verify [--out dir]
+        public static void RunBatch()
+        {
+            var args = Environment.GetCommandLineArgs();
+            string Arg(string k, string d) { int i = Array.IndexOf(args, k); return i >= 0 && i + 1 < args.Length ? args[i + 1] : d; }
+            var steps = Arg("--steps", "verify").Split(',');
+            var outDir = Arg("--out", Evidence + "editor");
+            try
+            {
+                foreach (var st in steps)
+                {
+                    var p = st.Split(':');
+                    string a1 = p.Length > 1 ? p[1] : "", a2 = p.Length > 2 ? p[2] : "";
+                    string result = p[0] switch
+                    {
+                        "auditcap" => AuditCapture(outDir, a1),
+                        "build" => BuildAssets(a1),
+                        "install" => Install(a1, false),
+                        "reinstall" => Install(a1, true),
+                        "capture" => CaptureViews(a1, outDir, a2),
+                        "verify" => Verify(a1),
+                        _ => throw new Exception("unknown step " + st),
+                    };
+                    Debug.Log("WardBuildingsPass " + st + ": " + result);
+                }
+                EditorApplication.Exit(0);
+            }
+            catch (Exception e) { Debug.LogException(e); EditorApplication.Exit(1); }
+        }
+    }
+}
