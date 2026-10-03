@@ -1,0 +1,1165 @@
+{
+  "schemaVersion": 1,
+  "available": true,
+  "source": "unity",
+  "utc": "2026-10-03T03:37:25.8593830Z",
+  "frame": 10696,
+  "unscaledTime": 82.53186,
+  "build": {
+    "unity": "6000.6.0f1",
+    "version": "0.1.0",
+    "development": true
+  },
+  "session": {
+    "state": "Play",
+    "objective": "Reach the Hill Tree.",
+    "visitedHill": false,
+    "boughtFlask": false,
+    "soldScrap": false,
+    "linked": false,
+    "spoken": [],
+    "selectedDestination": "",
+    "credits": 25,
+    "purchases": 0,
+    "sales": 0
+  },
+  "items": [
+    {
+      "id": "water_flask",
+      "name": "Water Flask",
+      "description": "A dented field flask with a fresh seal and clean water.",
+      "buyPrice": 4,
+      "sellPrice": 2,
+      "startingQuantity": 0,
+      "maxStack": 0,
+      "excludeFromTrade": false,
+      "tags": [
+        "consumable"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "medkit",
+      "name": "Medkit",
+      "description": "A compact pack of sealed dressings and colony first-aid supplies.",
+      "buyPrice": 9,
+      "sellPrice": 4,
+      "startingQuantity": 0,
+      "maxStack": 0,
+      "excludeFromTrade": false,
+      "tags": [
+        "consumable"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "scrap_coil",
+      "name": "Scrap Coil",
+      "description": "A worn induction coil. Someone at the market can still use the copper.",
+      "buyPrice": 2,
+      "sellPrice": 1,
+      "startingQuantity": 1,
+      "maxStack": 0,
+      "excludeFromTrade": false,
+      "tags": [
+        "salvage",
+        "material:conductive"
+      ],
+      "quantity": 1
+    },
+    {
+      "id": "droid_servo_damaged",
+      "name": "Damaged Servo",
+      "description": "A salvaged worker-droid servo, still fit for a field repair.",
+      "buyPrice": 0,
+      "sellPrice": 3,
+      "startingQuantity": 0,
+      "maxStack": 10,
+      "excludeFromTrade": false,
+      "tags": [
+        "salvage",
+        "salvage:droid",
+        "component",
+        "component:servo",
+        "tier:1"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "scrap_alloy",
+      "name": "Scrap Alloy",
+      "description": "Cleaned structural alloy recovered from feral machines.",
+      "buyPrice": 0,
+      "sellPrice": 1,
+      "startingQuantity": 0,
+      "maxStack": 30,
+      "excludeFromTrade": false,
+      "tags": [
+        "salvage",
+        "material",
+        "material:metal",
+        "tier:1"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "nanite_residue",
+      "name": "Nanite Residue",
+      "description": "Recoverable tier-one nanites from a damaged industrial core.",
+      "buyPrice": 0,
+      "sellPrice": 1,
+      "startingQuantity": 0,
+      "maxStack": 60,
+      "excludeFromTrade": false,
+      "tags": [
+        "salvage",
+        "nanite",
+        "nanite:tier1"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "copper_filament",
+      "name": "Copper Filament",
+      "description": "Fine conductor salvaged from a machine winding.",
+      "buyPrice": 0,
+      "sellPrice": 1,
+      "startingQuantity": 0,
+      "maxStack": 30,
+      "excludeFromTrade": false,
+      "tags": [
+        "salvage",
+        "material",
+        "material:conductive",
+        "tier:1"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "micro_capacitor",
+      "name": "Micro Capacitor",
+      "description": "An intact low-voltage capacitor from a drone's charge bus. Charge cell cores need two.",
+      "buyPrice": 0,
+      "sellPrice": 3,
+      "startingQuantity": 0,
+      "maxStack": 10,
+      "excludeFromTrade": false,
+      "tags": [
+        "salvage",
+        "component",
+        "component:capacitor",
+        "tier:1"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "grip_stabilised_pistol",
+      "name": "Stabilised Pistol Grip",
+      "description": "A field-fabricated grip that steadies the scrap pistol.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 3,
+      "excludeFromTrade": true,
+      "tags": [
+        "weapon_mod",
+        "weapon_mod:grip",
+        "mark:1"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "optic_lens_cracked",
+      "name": "Cracked Optic Lens",
+      "description": "A scrap drone's targeting lens, cracked at the rim but still true at the centre.",
+      "buyPrice": 0,
+      "sellPrice": 4,
+      "startingQuantity": 0,
+      "maxStack": 10,
+      "excludeFromTrade": false,
+      "tags": [
+        "salvage",
+        "salvage:drone",
+        "component",
+        "component:optic",
+        "tier:1"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "actuator_intact",
+      "name": "Intact Actuator",
+      "description": "A heavy worker-droid joint actuator with its feedback loop unbroken. Rare in the Berms.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 10,
+      "excludeFromTrade": true,
+      "tags": [
+        "salvage",
+        "salvage:droid",
+        "component",
+        "component:actuator",
+        "tier:2"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "lattice_shard",
+      "name": "Quantum Lattice Shard",
+      "description": "A sliver of quantum-stable lattice from Tir's old fabrication cores. It hums against the palm.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 10,
+      "excludeFromTrade": true,
+      "tags": [
+        "salvage",
+        "lattice",
+        "tier:2"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "reaper_blade",
+      "name": "Reaper Blade",
+      "description": "A serrated scrap-steel claw blade from a Scrap Reaper, hydraulic knuckle still attached. Weaponsmiths will want the edge.",
+      "buyPrice": 0,
+      "sellPrice": 18,
+      "startingQuantity": 0,
+      "maxStack": 5,
+      "excludeFromTrade": true,
+      "tags": [
+        "component",
+        "component:blade",
+        "tier:3",
+        "nextlevel"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "sentinel_optic",
+      "name": "Sentinel Optic",
+      "description": "The brass-ringed targeting optic of a Post sentinel, amber lens intact. A rifle sight could be built around it.",
+      "buyPrice": 0,
+      "sellPrice": 20,
+      "startingQuantity": 0,
+      "maxStack": 5,
+      "excludeFromTrade": true,
+      "tags": [
+        "component",
+        "component:optic_targeting",
+        "tier:3",
+        "nextlevel"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "foreman_control_core",
+      "name": "Foreman Control Core",
+      "description": "The depot foreman's command core. Its stored shift schedules include full Mark II pistol schematics.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 1,
+      "excludeFromTrade": true,
+      "tags": [
+        "salvage",
+        "component",
+        "component:control",
+        "tier:2",
+        "unique"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "rifle_receiver",
+      "name": "Warden Rifle Receiver",
+      "description": "The bolted receiver of a Warden-pattern field rifle, stripped from a feral gunner droid's rack. Brann's workbench can build a rifle around it.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 1,
+      "excludeFromTrade": true,
+      "tags": [
+        "salvage",
+        "component",
+        "component:receiver",
+        "tier:2",
+        "unique"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "alloy_plate",
+      "name": "Refined Alloy Plate",
+      "description": "Scrap alloy pressed and nanite-bonded into a true, stress-relieved plate.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 20,
+      "excludeFromTrade": true,
+      "tags": [
+        "refined",
+        "refined:alloy"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "wound_coil",
+      "name": "Wound Copper Coil",
+      "description": "Salvaged conductor rewound on a field jig; the heart of any charge circuit.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 20,
+      "excludeFromTrade": true,
+      "tags": [
+        "refined",
+        "refined:coil"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "charge_cell_core",
+      "name": "Charge Cell Core",
+      "description": "Two capacitors and a wound coil sealed in nanite resin: a stable nano-charge store.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 10,
+      "excludeFromTrade": true,
+      "tags": [
+        "refined",
+        "refined:cell"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "barrel_bored_alloy",
+      "name": "Bored Alloy Barrel",
+      "description": "A refined-alloy barrel bored true on the fabricator. Hits harder and carries further.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 3,
+      "excludeFromTrade": true,
+      "tags": [
+        "weapon_mod",
+        "weapon_mod:barrel",
+        "mark:1"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "cell_salvaged_capacitor",
+      "name": "Salvaged Capacitor Cell",
+      "description": "A larger nano cell built around a charge core. More shots before the pistol runs dry.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 3,
+      "excludeFromTrade": true,
+      "tags": [
+        "weapon_mod",
+        "weapon_mod:cell",
+        "mark:1"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "grip_gyro_braced",
+      "name": "Gyro-Braced Grip",
+      "description": "A grip braced by a live actuator loop. It fights recoil and nudges your aim onto moving machines.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 3,
+      "excludeFromTrade": true,
+      "tags": [
+        "weapon_mod",
+        "weapon_mod:grip",
+        "mark:2"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "barrel_lattice_focused",
+      "name": "Lattice-Focused Barrel",
+      "description": "A lattice shard seats behind a salvaged optic, focusing each nano pulse. Heavy hits, slightly slower cycling.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 3,
+      "excludeFromTrade": true,
+      "tags": [
+        "weapon_mod",
+        "weapon_mod:barrel",
+        "mark:2"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "cell_overclocked",
+      "name": "Overclocked Charge Cell",
+      "description": "Twin charge cores tuned through a lattice shard: deep reserves, cheap shots, fast refill.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 3,
+      "excludeFromTrade": true,
+      "tags": [
+        "weapon_mod",
+        "weapon_mod:cell",
+        "mark:2"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "scrap_pistol",
+      "name": "Scrap Pistol",
+      "description": "A nanite-fed sidearm rebuilt from Ward scrap. Its fit follows the field primer.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 1,
+      "excludeFromTrade": true,
+      "tags": [
+        "weapon",
+        "weapon:secondary"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "field_rifle",
+      "name": "Field Rifle",
+      "description": "A practical long arm with a repairable receiver and room for field modifications.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 1,
+      "excludeFromTrade": true,
+      "tags": [
+        "weapon",
+        "weapon:primary"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "field_vest",
+      "name": "Field Vest",
+      "description": "A canvas plate carrier with a riveted steel plate cut from a machine panel, front and back, and a scrap shoulder pad. Issued to new arrivals.",
+      "buyPrice": 30,
+      "sellPrice": 10,
+      "startingQuantity": 0,
+      "maxStack": 1,
+      "excludeFromTrade": false,
+      "tags": [
+        "armour",
+        "armour:chest"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "warden_plate_carrier",
+      "name": "Warden Plate Carrier",
+      "description": "A Warden-issue plate carrier recovered from the ambushed caravan, with hard plates front and back under sand-tan canvas, magazine pouches and a grab handle. Wear it in the chest slot.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 1,
+      "excludeFromTrade": true,
+      "tags": [
+        "armour",
+        "armour:chest"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "field_boots",
+      "name": "Field Boots",
+      "description": "Worn work boots with welded steel toe caps and a riveted ankle plate strapped over the instep.",
+      "buyPrice": 20,
+      "sellPrice": 7,
+      "startingQuantity": 0,
+      "maxStack": 1,
+      "excludeFromTrade": false,
+      "tags": [
+        "armour",
+        "armour:feet"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "targeting_implant_mk1",
+      "name": "Neural Targeting Implant Mk I",
+      "description": "A basic targeting lattice that improves sighting and pistol control.",
+      "buyPrice": 40,
+      "sellPrice": 13,
+      "startingQuantity": 1,
+      "maxStack": 1,
+      "excludeFromTrade": false,
+      "tags": [
+        "implant",
+        "implant:head"
+      ],
+      "quantity": 1
+    },
+    {
+      "id": "targeting_implant_mk2",
+      "name": "Neural Targeting Implant Mk II",
+      "description": "A higher-grade targeting lattice with finer tracking and signal stability.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 1,
+      "excludeFromTrade": true,
+      "tags": [
+        "implant",
+        "implant:head"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "myofibre_implant",
+      "name": "Reinforced Myofibre Implant",
+      "description": "A serviceable muscle-assist mesh for carrying and close work.",
+      "buyPrice": 48,
+      "sellPrice": 16,
+      "startingQuantity": 0,
+      "maxStack": 1,
+      "excludeFromTrade": false,
+      "tags": [
+        "implant",
+        "implant:arms"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "field_backpack",
+      "name": "Field Backpack",
+      "description": "A braced canvas pack with modular external cargo straps.",
+      "buyPrice": 24,
+      "sellPrice": 8,
+      "startingQuantity": 0,
+      "maxStack": 1,
+      "excludeFromTrade": false,
+      "tags": [
+        "storage",
+        "storage:backpack",
+        "backpack"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "rifle_precision_barrel",
+      "name": "Precision Rifle Barrel",
+      "description": "A field-machined barrel that trades some weight for steadier, longer shots.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "maxStack": 3,
+      "excludeFromTrade": true,
+      "tags": [
+        "weapon_mod",
+        "weapon_mod:barrel",
+        "rifle"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "field_toolkit",
+      "name": "Field Toolkit",
+      "description": "Reusable gauges and hand tools for fitting and fabrication work.",
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 1,
+      "maxStack": 1,
+      "excludeFromTrade": true,
+      "tags": [
+        "tool",
+        "fabrication"
+      ],
+      "quantity": 1
+    },
+    {
+      "id": "aug_cognition",
+      "name": "Cognition Relay",
+      "description": "A ceramic relay that stabilises the implant signal path during complex work.",
+      "buyPrice": 18,
+      "sellPrice": 6,
+      "startingQuantity": 0,
+      "maxStack": 4,
+      "excludeFromTrade": false,
+      "tags": [
+        "augmentation"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "aug_sighting",
+      "name": "Sighting Co-processor",
+      "description": "A compact targeting co-processor for a cranial implant. Helps hold a steadier sight picture.",
+      "buyPrice": 22,
+      "sellPrice": 8,
+      "startingQuantity": 0,
+      "maxStack": 4,
+      "excludeFromTrade": false,
+      "tags": [
+        "augmentation"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "aug_reflex",
+      "name": "Reflex Buffer",
+      "description": "A low-latency buffer for neural and limb interfaces. Sharpens controlled movement.",
+      "buyPrice": 24,
+      "sellPrice": 8,
+      "startingQuantity": 0,
+      "maxStack": 4,
+      "excludeFromTrade": false,
+      "tags": [
+        "augmentation"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "aug_capacitor",
+      "name": "Reserve Nanocell",
+      "description": "A sealed reserve cell that gives the implant additional nano capacity.",
+      "buyPrice": 20,
+      "sellPrice": 7,
+      "startingQuantity": 0,
+      "maxStack": 4,
+      "excludeFromTrade": false,
+      "tags": [
+        "augmentation"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "aug_recovery",
+      "name": "Recovery Regulator",
+      "description": "A regulator that smooths recovery demand after exertion.",
+      "buyPrice": 16,
+      "sellPrice": 5,
+      "startingQuantity": 0,
+      "maxStack": 4,
+      "excludeFromTrade": false,
+      "tags": [
+        "augmentation"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "aug_loadbearing",
+      "name": "Load-bearing Coupler",
+      "description": "A reinforced coupler for limb implants. Shares load across the assisted muscle fibres.",
+      "buyPrice": 28,
+      "sellPrice": 10,
+      "startingQuantity": 0,
+      "maxStack": 4,
+      "excludeFromTrade": false,
+      "tags": [
+        "augmentation"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "armour_extra_plate",
+      "name": "Ablative Chest Plate",
+      "description": "A replaceable ceramic-faced plate. Fits an outer or inner chest plate pocket.",
+      "buyPrice": 14,
+      "sellPrice": 5,
+      "startingQuantity": 0,
+      "maxStack": 4,
+      "excludeFromTrade": false,
+      "tags": [
+        "armour_mod"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "armour_impact_liner",
+      "name": "Impact Liner",
+      "description": "A layered shock liner for modular armour. Reduces physical impact transfer.",
+      "buyPrice": 18,
+      "sellPrice": 6,
+      "startingQuantity": 0,
+      "maxStack": 4,
+      "excludeFromTrade": false,
+      "tags": [
+        "armour_mod"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "armour_thermal_liner",
+      "name": "Thermal Liner",
+      "description": "A reflective woven liner that reduces heat transfer through armour.",
+      "buyPrice": 16,
+      "sellPrice": 5,
+      "startingQuantity": 0,
+      "maxStack": 4,
+      "excludeFromTrade": false,
+      "tags": [
+        "armour_mod"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "armour_leg_motor",
+      "name": "Stride-assist Motor",
+      "description": "A compact motor pair for powered leg rails. Increases movement speed while fitted.",
+      "buyPrice": 20,
+      "sellPrice": 7,
+      "startingQuantity": 0,
+      "maxStack": 4,
+      "excludeFromTrade": false,
+      "tags": [
+        "armour_mod"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "armour_ankle_stabiliser",
+      "name": "Ankle Stabiliser",
+      "description": "A spring-damped ankle unit that eases sustained movement in field boots.",
+      "buyPrice": 15,
+      "sellPrice": 5,
+      "startingQuantity": 0,
+      "maxStack": 4,
+      "excludeFromTrade": false,
+      "tags": [
+        "armour_mod"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "armour_grip_damper",
+      "name": "Grip Damper",
+      "description": "A vibration-damped glove insert for steadier control of a held weapon.",
+      "buyPrice": 19,
+      "sellPrice": 6,
+      "startingQuantity": 0,
+      "maxStack": 4,
+      "excludeFromTrade": false,
+      "tags": [
+        "armour_mod"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "field_helmet",
+      "name": "Field Helmet",
+      "description": "An open-face cap beaten from a salvaged machine housing, with a riveted brow band, ear cups and a padded liner.",
+      "buyPrice": 32,
+      "sellPrice": 11,
+      "startingQuantity": 0,
+      "maxStack": 1,
+      "excludeFromTrade": false,
+      "tags": [
+        "armour"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "field_armguards",
+      "name": "Field Arm Guards",
+      "description": "Curved bracers cut from pipe and panel steel, buckled over the forearm and clear of the elbow for tool and weapon work.",
+      "buyPrice": 26,
+      "sellPrice": 9,
+      "startingQuantity": 0,
+      "maxStack": 1,
+      "excludeFromTrade": false,
+      "tags": [
+        "armour"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "field_gloves",
+      "name": "Field Gloves",
+      "description": "Fingerless leather work gloves with a wrist strap. Good grip on a weapon or a wrench.",
+      "buyPrice": 18,
+      "sellPrice": 6,
+      "startingQuantity": 0,
+      "maxStack": 1,
+      "excludeFromTrade": false,
+      "tags": [
+        "armour"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "field_leggings",
+      "name": "Field Leg Armour",
+      "description": "A riveted knee cap and a shin plate with a faded hazard stripe, strapped over the suit with buckled leather.",
+      "buyPrice": 38,
+      "sellPrice": 13,
+      "startingQuantity": 0,
+      "maxStack": 1,
+      "excludeFromTrade": false,
+      "tags": [
+        "armour"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "cardiac_implant",
+      "name": "Cardiac Regulator",
+      "description": "A serviceable regulator that supports prolonged exertion. Accepts three augmentations.",
+      "buyPrice": 42,
+      "sellPrice": 14,
+      "startingQuantity": 0,
+      "maxStack": 1,
+      "excludeFromTrade": false,
+      "tags": [
+        "implant"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "stride_implant",
+      "name": "Stride Interface",
+      "description": "A limb-control interface that smooths the effort of moving in field gear. Accepts three augmentations.",
+      "buyPrice": 44,
+      "sellPrice": 15,
+      "startingQuantity": 0,
+      "maxStack": 1,
+      "excludeFromTrade": false,
+      "tags": [
+        "implant"
+      ],
+      "quantity": 0
+    },
+    {
+      "id": "dermal_implant",
+      "name": "Dermal Support Mesh",
+      "description": "A subdermal support mesh for exposed work. Accepts three augmentations.",
+      "buyPrice": 36,
+      "sellPrice": 12,
+      "startingQuantity": 0,
+      "maxStack": 1,
+      "excludeFromTrade": false,
+      "tags": [
+        "implant"
+      ],
+      "quantity": 0
+    }
+  ],
+  "character": {
+    "available": true,
+    "equipped": {
+      "storage": "field_backpack",
+      "armour_chest": "field_vest",
+      "armour_feet": "field_boots",
+      "secondary": "scrap_pistol"
+    },
+    "modifications": [],
+    "stats": {
+      "strength": 10.0,
+      "agility": 10.0,
+      "endurance": 10.0,
+      "intellect": 10.0,
+      "perception": 10.0,
+      "resolve": 10.0,
+      "pistol": 30.0,
+      "rifle": 10.0,
+      "shotgun": 10.0,
+      "smg": 10.0,
+      "heavyWeapons": 10.0,
+      "energyWeapons": 10.0,
+      "blades": 10.0,
+      "blunt": 10.0,
+      "unarmed": 10.0,
+      "engineering": 30.0,
+      "electronics": 10.0,
+      "hacking": 10.0,
+      "nanotechnology": 10.0,
+      "robotics": 10.0,
+      "quantumTechnology": 10.0,
+      "weaponsmithing": 10.0,
+      "armourcraft": 10.0,
+      "chemistry": 10.0,
+      "fabrication": 10.0,
+      "medicine": 10.0,
+      "fieldcraft": 10.0,
+      "scavenging": 10.0,
+      "tracking": 10.0,
+      "stealth": 10.0,
+      "awareness": 10.0,
+      "lockpicking": 10.0,
+      "dodging": 10.0,
+      "armourHandling": 10.0,
+      "health": 100.0,
+      "stamina": 100.0,
+      "nano": 80.0,
+      "carryCapacity": 30.0,
+      "packSlots": 16.0,
+      "storageCapacity": 30.0,
+      "movementSpeed": 1.03,
+      "armour": 15.0,
+      "physicalResistance": 0.1,
+      "energyResistance": 0.0,
+      "thermalResistance": 0.0100000007,
+      "radiationResistance": 0.0100000007,
+      "toxinResistance": 0.0100000007,
+      "nanoResistance": 0.0200000014,
+      "criticalChance": 0.0100000007,
+      "healingEfficiency": 1.01,
+      "staminaRegeneration": 2.0,
+      "nanoRegeneration": 2.0,
+      "meleeDamage": 1.1,
+      "rangedDamage": 1.02,
+      "accuracy": 10.0,
+      "recoilControl": 0.0300000012,
+      "nanoStability": 0.0200000014,
+      "suppressionResistance": 0.0200000014
+    },
+    "carryWeight": 10.75,
+    "carryCapacity": 30.0,
+    "packWeight": 1.95,
+    "storageCapacity": 30.0,
+    "packSlotsUsed": 3,
+    "packSlotCapacity": 40
+  },
+  "preview": {
+    "available": true,
+    "active": false,
+    "showingWeapon": false,
+    "yaw": 0.0
+  },
+  "combat": {
+    "available": true,
+    "hasPistol": true,
+    "armed": false,
+    "aiming": false,
+    "nano": 100.0,
+    "health": 61.1993942,
+    "maxHealth": 100.0,
+    "Downs": 1,
+    "inBerms": true,
+    "weaponId": "weapon_scrap_pistol",
+    "baseRecoil": 38.0,
+    "recoil": 38.0,
+    "stats": {
+      "damage": 34.68,
+      "fireInterval": 0.28,
+      "range": 30.0,
+      "recoil": 36.86,
+      "nanoMax": 100.0,
+      "nanoPerShot": 9.0,
+      "nanoRegen": 30.0,
+      "aimAssist": 3.5,
+      "accuracy": 17.5,
+      "spread": 4.0,
+      "criticalChance": 1.00000012,
+      "criticalMultiplier": 0.0,
+      "projectileVelocity": 0.0,
+      "reloadTime": 0.0,
+      "heatGeneration": 0.0,
+      "cooling": 0.0,
+      "durability": 0.0,
+      "armourPenetration": 0.0
+    },
+    "baseStats": {
+      "damage": 34.0,
+      "fireInterval": 0.28,
+      "range": 30.0,
+      "recoil": 38.0,
+      "nanoMax": 100.0,
+      "nanoPerShot": 9.0,
+      "nanoRegen": 30.0,
+      "aimAssist": 3.5,
+      "accuracy": 0.0,
+      "spread": 4.0,
+      "criticalChance": 0.0,
+      "criticalMultiplier": 0.0,
+      "projectileVelocity": 0.0,
+      "reloadTime": 0.0,
+      "heatGeneration": 0.0,
+      "cooling": 0.0,
+      "durability": 0.0,
+      "armourPenetration": 0.0
+    },
+    "lastKickDegrees": 0.0
+  },
+  "crafting": {
+    "available": true,
+    "knownRecipes": [
+      "recipe_field_rifle",
+      "recipe_rifle_precision_barrel"
+    ],
+    "crafts": 0,
+    "gripSlot": null,
+    "slots": {},
+    "craftCounts": {},
+    "lootEvents": 0,
+    "lastLoot": "",
+    "tutorialStep": "Dormant",
+    "stationId": null,
+    "fabricatorOpen": false
+  },
+  "fieldOrders": {
+    "available": true,
+    "index": -1,
+    "total": 7,
+    "id": null,
+    "stage": "NotStarted",
+    "objective": null,
+    "freePlay": false
+  },
+  "tutorial": {
+    "available": true,
+    "step": "Targets",
+    "targetsDown": 0,
+    "targetsTotal": 3
+  },
+  "encounters": [
+    {
+      "key": "First contact · service road",
+      "displayName": "First contact · service road",
+      "spawned": false,
+      "total": 2,
+      "remaining": 0,
+      "cleared": false,
+      "respawnSeconds": 0.0
+    },
+    {
+      "key": "Machine depot nest",
+      "displayName": "Machine depot nest",
+      "spawned": false,
+      "total": 5,
+      "remaining": 0,
+      "cleared": false,
+      "respawnSeconds": 0.0
+    },
+    {
+      "key": "Depot Foreman · processing hall",
+      "displayName": "Depot Foreman",
+      "spawned": false,
+      "total": 3,
+      "remaining": 0,
+      "cleared": false,
+      "respawnSeconds": 300.0
+    },
+    {
+      "key": "Encounter · Gunner nest · relay knoll",
+      "displayName": "Gunner nest · relay knoll",
+      "spawned": true,
+      "total": 3,
+      "remaining": 3,
+      "cleared": false,
+      "respawnSeconds": 420.0
+    },
+    {
+      "key": "Encounter · Caravan scavengers",
+      "displayName": "Caravan scavengers",
+      "spawned": true,
+      "total": 4,
+      "remaining": 4,
+      "cleared": false,
+      "respawnSeconds": 420.0
+    }
+  ],
+  "enemies": [
+    {
+      "name": "Feral gunner droid",
+      "kind": "Walker",
+      "state": "Idle",
+      "health": 150.0,
+      "maxHealth": 150.0,
+      "position": [
+        -329.71,
+        4.30498552,
+        3.06903839
+      ]
+    },
+    {
+      "name": "Feral gunner droid",
+      "kind": "Walker",
+      "state": "Idle",
+      "health": 150.0,
+      "maxHealth": 150.0,
+      "position": [
+        -339.29,
+        1.96721458,
+        2.15
+      ]
+    },
+    {
+      "name": "Feral worker droid",
+      "kind": "Walker",
+      "state": "Idle",
+      "health": 130.0,
+      "maxHealth": 130.0,
+      "position": [
+        -316.46,
+        1.75026846,
+        7.95
+      ]
+    },
+    {
+      "name": "Feral worker droid",
+      "kind": "Walker",
+      "state": "Idle",
+      "health": 130.0,
+      "maxHealth": 130.0,
+      "position": [
+        -206.36,
+        -1.16000009,
+        66.05
+      ]
+    },
+    {
+      "name": "Feral worker droid",
+      "kind": "Walker",
+      "state": "Idle",
+      "health": 130.0,
+      "maxHealth": 130.0,
+      "position": [
+        -200.47,
+        -0.73366636,
+        82.03
+      ]
+    },
+    {
+      "name": "Feral worker droid",
+      "kind": "Walker",
+      "state": "Idle",
+      "health": 130.0,
+      "maxHealth": 130.0,
+      "position": [
+        -192.44,
+        -0.839586735,
+        77.51
+      ]
+    },
+    {
+      "name": "Feral scrap drone",
+      "kind": "Hover",
+      "state": "Idle",
+      "health": 75.0,
+      "maxHealth": 75.0,
+      "position": [
+        -216.79,
+        0.7011107,
+        77.16
+      ]
+    }
+  ],
+  "clock": {
+    "available": true,
+    "hour": 13.0,
+    "paused": true,
+    "speed": 1.0,
+    "defaultHour": 17.0,
+    "ReducedMotionSpeedLimited": false
+  },
+  "weather": {
+    "available": false,
+    "reason": "No weather system in build"
+  }
+}

@@ -1,0 +1,1135 @@
+{
+ "passed": false,
+ "checks": [
+  {
+   "check": "fixture: rifle and the basic armour set equipped",
+   "detail": {
+    "primary": "field_rifle",
+    "secondary": "scrap_pistol",
+    "armour_chest": "warden_plate_carrier",
+    "armour_head": "field_helmet",
+    "armour_arms": "field_armguards",
+    "armour_hands": "field_gloves",
+    "armour_legs": "field_leggings",
+    "armour_feet": "field_boots",
+    "storage": "field_backpack"
+   }
+  },
+  {
+   "check": "post_relay: field rifle drawn with 8",
+   "detail": "weapon_field_rifle"
+  },
+  {
+   "check": "post_relay: encounter activated by proximity (2 droids)",
+   "detail": [
+    [
+     "Post Sentinel",
+     "Idle",
+     [
+      -438.8,
+      4.2,
+      17.5
+     ]
+    ],
+    [
+     "Post Sentinel",
+     "Firing",
+     [
+      -420.5,
+      4.0,
+      26.2
+     ]
+    ]
+   ]
+  },
+  {
+   "check": "post_relay: the pack engages the player",
+   "detail": [
+    "Idle",
+    "Firing"
+   ]
+  },
+  {
+   "check": "post_relay: Post sentinels fire bolts",
+   "detail": 3
+  },
+  {
+   "check": "post_relay: all droids killed with the rifle",
+   "detail": {
+    "kills": 2,
+    "expected": 2,
+    "shots": 107,
+    "seconds": 63.3,
+    "downs": 0
+   }
+  },
+  {
+   "check": "post_relay: kills dropped salvage",
+   "detail": {
+    "lootEvents": 1,
+    "lastLoot": "Dropped: Cracked Optic Lens \u00d71, Micro Capacitor \u00d71, Copper Filament \u00d71, Nanite Residue \u00d72"
+   }
+  },
+  {
+   "check": "post_relay: a salvage cache collected with real E",
+   "detail": {
+    "prompt": "E \u00b7 Collect salvage (5)",
+    "got": {
+     "nanite_residue": 3,
+     "copper_filament": 2,
+     "micro_capacitor": 1,
+     "optic_lens_cracked": 1,
+     "lattice_shard": 1
+    },
+    "lastLoot": "Collected: Cracked Optic Lens \u00d71, Micro Capacitor \u00d71, Copper Filament \u00d72, Quantum Lattice Shard \u00d71, Nanite Residue \u00d73"
+   }
+  },
+  {
+   "check": "post_relay: loot crate 'Dead-letter strongbox' searched with real E",
+   "detail": {
+    "prompt": "E \u00b7 Force the dead-letter strongbox",
+    "got": {
+     "micro_capacitor": 2,
+     "lattice_shard": 2,
+     "reaper_blade": 1,
+     "sentinel_optic": 1,
+     "charge_cell_core": 1
+    },
+    "lastLoot": "Collected: Reaper Blade \u00d71, Sentinel Optic \u00d71, Quantum Lattice Shard \u00d72, Charge Cell Core \u00d71, Micro Capacitor \u00d72 \u00b7 pack full, left in the cache: Intact Actuator \u00d71, Medkit \u00d71, Micro Capacitor \u00d71"
+   }
+  },
+  {
+   "check": "reaper_den: field rifle drawn with 8",
+   "detail": "weapon_field_rifle"
+  },
+  {
+   "check": "reaper_den: encounter activated by proximity (3 droids)",
+   "detail": [
+    [
+     "Scrap Reaper",
+     "Chase",
+     [
+      -248.4,
+      0.2,
+      143.4
+     ]
+    ],
+    [
+     "Scrap Reaper",
+     "Chase",
+     [
+      -230.3,
+      0.1,
+      136.0
+     ]
+    ],
+    [
+     "Scrap Reaper",
+     "Chase",
+     [
+      -236.2,
+      0.1,
+      148.3
+     ]
+    ]
+   ]
+  },
+  {
+   "check": "reaper_den: the pack engages the player",
+   "detail": [
+    "Chase",
+    "Chase",
+    "Chase"
+   ]
+  },
+  {
+   "check": "reaper_den: melee droids wind up a strike",
+   "detail": [
+    "Scrap Reaper:Chase",
+    "Scrap Reaper:Windup"
+   ]
+  },
+  {
+   "check": "reaper_den: all droids killed with the rifle",
+   "detail": {
+    "kills": 3,
+    "expected": 3,
+    "shots": 48,
+    "seconds": 23.9,
+    "downs": 0
+   }
+  },
+  {
+   "check": "reaper_den: kills dropped salvage",
+   "detail": {
+    "lootEvents": 6,
+    "lastLoot": "Dropped: Reaper Blade \u00d71, Damaged Servo \u00d71, Scrap Alloy \u00d72, Nanite Residue \u00d72"
+   }
+  },
+  {
+   "check": "reaper_den: a salvage cache collected with real E",
+   "detail": {
+    "prompt": "E \u00b7 Collect salvage (3)",
+    "got": {
+     "nanite_residue": 2
+    },
+    "lastLoot": "Collected: Nanite Residue \u00d72 \u00b7 pack full, left in the cache: Damaged Servo \u00d71, Scrap Alloy \u00d73, Nanite Residue \u00d71"
+   }
+  },
+  {
+   "check": "reaper_den: loot crate 'Stripped cargo strongbox' searched with real E",
+   "detail": {
+    "prompt": "E \u00b7 Force the cargo strongbox",
+    "got": {},
+    "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Sentinel Optic \u00d71, Quantum Lattice Shard \u00d72, Intact Actuator \u00d72, Medkit \u00d71, Micro Capacitor \u00d72"
+   }
+  },
+  {
+   "check": "reaper_den: loot crate 'Reaper cache' searched with real E",
+   "detail": {
+    "prompt": "E \u00b7 Search the stripped crate",
+    "got": {},
+    "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Scrap Alloy \u00d75, Nanite Residue \u00d73, Micro Capacitor \u00d71, Quantum Lattice Shard \u00d71"
+   }
+  },
+  {
+   "check": "ironclad_camp: field rifle drawn with 8",
+   "detail": "weapon_field_rifle"
+  },
+  {
+   "check": "ironclad_camp: encounter activated by proximity (2 droids)",
+   "detail": [
+    [
+     "Scrap Reaper",
+     "Chase",
+     [
+      -492.1,
+      5.0,
+      -112.3
+     ]
+    ],
+    [
+     "Post Sentinel",
+     "Windup",
+     [
+      -503.8,
+      5.5,
+      -105.6
+     ]
+    ]
+   ]
+  },
+  {
+   "check": "ironclad_camp: the pack engages the player",
+   "detail": [
+    "Chase",
+    "Windup"
+   ]
+  },
+  {
+   "check": "ironclad_camp: melee droids wind up a strike",
+   "detail": [
+    "Post Sentinel:Chase",
+    "Post Sentinel:Firing",
+    "Post Sentinel:Recover",
+    "Post Sentinel:Windup",
+    "Scrap Reaper:Chase",
+    "Scrap Reaper:Windup"
+   ]
+  },
+  {
+   "check": "ironclad_camp: Post sentinels fire bolts",
+   "detail": 6
+  },
+  {
+   "check": "ironclad_camp: all droids killed with the rifle",
+   "detail": {
+    "kills": 2,
+    "expected": 2,
+    "shots": 71,
+    "seconds": 38.8,
+    "downs": 0
+   }
+  },
+  {
+   "check": "ironclad_camp: kills dropped salvage",
+   "detail": {
+    "lootEvents": 9,
+    "lastLoot": "Dropped: Damaged Servo \u00d71, Scrap Alloy \u00d74, Nanite Residue \u00d72, Copper Filament \u00d71, Intact Actuator \u00d71"
+   }
+  },
+  {
+   "check": "ironclad_camp: a salvage cache collected with real E",
+   "detail": {
+    "prompt": "E \u00b7 Collect salvage (5)",
+    "got": {},
+    "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Damaged Servo \u00d71, Scrap Alloy \u00d74, Nanite Residue \u00d72, Copper Filament \u00d71, Intact Actuator \u00d71"
+   }
+  },
+  {
+   "check": "ironclad_camp: loot crate 'Caravan strongbox' searched with real E",
+   "detail": {
+    "prompt": "E \u00b7 Force the caravan strongbox",
+    "got": {},
+    "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Sentinel Optic \u00d71, Quantum Lattice Shard \u00d73, Intact Actuator \u00d71, Charge Cell Core \u00d71, Medkit \u00d72, Micro Capacitor \u00d73"
+   }
+  },
+  {
+   "check": "ironclad_camp: loot crate 'Camp arms crate' searched with real E",
+   "detail": {
+    "prompt": "E \u00b7 Search the arms crate",
+    "got": {},
+    "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Scrap Alloy \u00d74, Nanite Residue \u00d73, Micro Capacitor \u00d71, Intact Actuator \u00d71, Quantum Lattice Shard \u00d71, Wound Copper Coil \u00d71"
+   }
+  },
+  {
+   "check": "southern_cache: field rifle drawn with 8",
+   "detail": "weapon_field_rifle"
+  },
+  {
+   "check": "southern_cache: encounter activated by proximity (3 droids)",
+   "detail": [
+    [
+     "Scrap Reaper",
+     "Chase",
+     [
+      -247.4,
+      -0.0,
+      -151.2
+     ]
+    ],
+    [
+     "Scrap Reaper",
+     "Chase",
+     [
+      -241.0,
+      -0.2,
+      -149.2
+     ]
+    ],
+    [
+     "Post Sentinel",
+     "Chase",
+     [
+      -257.2,
+      0.0,
+      -162.6
+     ]
+    ]
+   ]
+  },
+  {
+   "check": "southern_cache: the pack engages the player",
+   "detail": [
+    "Chase",
+    "Chase",
+    "Chase"
+   ]
+  },
+  {
+   "check": "southern_cache: melee droids wind up a strike",
+   "detail": [
+    "Post Sentinel:Chase",
+    "Post Sentinel:Firing",
+    "Post Sentinel:Windup",
+    "Scrap Reaper:Chase",
+    "Scrap Reaper:Recover",
+    "Scrap Reaper:Windup"
+   ]
+  },
+  {
+   "check": "southern_cache: Post sentinels fire bolts",
+   "detail": 1
+  },
+  {
+   "check": "southern_cache: all droids killed with the rifle",
+   "detail": {
+    "kills": 3,
+    "expected": 3,
+    "shots": 72,
+    "seconds": 44.5,
+    "downs": 0
+   }
+  },
+  {
+   "check": "southern_cache: kills dropped salvage",
+   "detail": {
+    "lootEvents": 15,
+    "lastLoot": "Dropped: Sentinel Optic \u00d71, Cracked Optic Lens \u00d71, Copper Filament \u00d71, Nanite Residue \u00d73"
+   }
+  },
+  {
+   "check": "southern_cache: a salvage cache collected with real E",
+   "detail": {
+    "prompt": "E \u00b7 Collect salvage (4)",
+    "got": {},
+    "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Reaper Blade \u00d71, Scrap Alloy \u00d74, Nanite Residue \u00d72, Copper Filament \u00d72"
+   }
+  },
+  {
+   "check": "southern_cache: loot crate 'Pump-house strongbox' searched with real E",
+   "detail": {
+    "prompt": "E \u00b7 Force the pump-house strongbox",
+    "got": {},
+    "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Quantum Lattice Shard \u00d72, Intact Actuator \u00d72, Medkit \u00d72, Micro Capacitor \u00d73"
+   }
+  },
+  {
+   "check": "southern_cache: loot crate 'Buried arms crate' searched with real E",
+   "detail": {
+    "prompt": "E \u00b7 Search the arms crate",
+    "got": {},
+    "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Scrap Alloy \u00d74, Nanite Residue \u00d73, Micro Capacitor \u00d71, Intact Actuator \u00d71, Medkit \u00d71"
+   }
+  },
+  {
+   "check": "southern_cache: loot crate 'Spare-parts crate' searched with real E",
+   "detail": {
+    "prompt": "E \u00b7 Search the parts crate",
+    "got": {},
+    "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Scrap Alloy \u00d76, Nanite Residue \u00d74, Micro Capacitor \u00d72, Intact Actuator \u00d71, Quantum Lattice Shard \u00d72, Wound Copper Coil \u00d71"
+   }
+  },
+  {
+   "check": "a strongbox yields a new part (guaranteed until collected)",
+   "detail": [
+    {
+     "crate": "Dead-letter strongbox",
+     "parts": [
+      "reaper_blade",
+      "sentinel_optic"
+     ],
+     "got": {
+      "micro_capacitor": 2,
+      "lattice_shard": 2,
+      "reaper_blade": 1,
+      "sentinel_optic": 1,
+      "charge_cell_core": 1
+     }
+    },
+    {
+     "crate": "Stripped cargo strongbox",
+     "parts": [
+      "sentinel_optic"
+     ],
+     "got": {}
+    },
+    {
+     "crate": "Caravan strongbox",
+     "parts": [
+      "sentinel_optic"
+     ],
+     "got": {}
+    },
+    {
+     "crate": "Pump-house strongbox",
+     "parts": [],
+     "got": {}
+    }
+   ]
+  },
+  {
+   "check": "no runtime exceptions in Player.log",
+   "detail": []
+  }
+ ],
+ "failures": [
+  {
+   "check": "post_relay: loot crate 'Courier cache' searched with real E",
+   "detail": {
+    "prompt": "Emptied \u00b7 more in 9:59",
+    "got": null,
+    "lastLoot": null
+   }
+  }
+ ],
+ "captures": [
+  {
+   "name": "post_relay-fight",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "af049cf760b877cb"
+  },
+  {
+   "name": "post_relay-cleared",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "5cfeaf582e2da4f5"
+  },
+  {
+   "name": "reaper_den-fight",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "073eb1f3151f1450"
+  },
+  {
+   "name": "reaper_den-cleared",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "842f963e633c7031"
+  },
+  {
+   "name": "ironclad_camp-fight",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "18df20344d132cbe"
+  },
+  {
+   "name": "ironclad_camp-cleared",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "bb5561e5141b552d"
+  },
+  {
+   "name": "southern_cache-fight",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "dadcaec138db510c"
+  },
+  {
+   "name": "southern_cache-cleared",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "1b5b00fdae0098fa"
+  }
+ ],
+ "sites": {
+  "post_relay": {
+   "spawned": [
+    [
+     "Post Sentinel",
+     "Idle",
+     [
+      -438.8,
+      4.2,
+      17.5
+     ]
+    ],
+    [
+     "Post Sentinel",
+     "Firing",
+     [
+      -420.5,
+      4.0,
+      26.2
+     ]
+    ]
+   ],
+   "statesSeen": [
+    "Post Sentinel:Firing",
+    "Post Sentinel:Idle"
+   ],
+   "bolts": 3,
+   "fight": {
+    "shots": 107,
+    "seconds": 63.3,
+    "deaths": [
+     {
+      "name": "Post Sentinel",
+      "position": [
+       -454.1946,
+       5.14311552,
+       36.2624054
+      ],
+      "t": 58.4
+     },
+     {
+      "name": "Post Sentinel",
+      "position": [
+       -418.8641,
+       3.77487874,
+       50.6683846
+      ],
+      "t": 63.3
+     }
+    ],
+    "states": [
+     "Alert",
+     "Chase",
+     "Dead",
+     "Firing",
+     "Idle",
+     "Recover",
+     "Stagger",
+     "Windup"
+    ],
+    "downs": 0
+   },
+   "collected": {
+    "at": [
+     -418.86,
+     50.67
+    ],
+    "walk": "walk_to (-418.0, 51.6) stuck at [-416.2765, 4.12421227, 44.99636]",
+    "prompt": "E \u00b7 Collect salvage (5)",
+    "got": {
+     "nanite_residue": 3,
+     "copper_filament": 2,
+     "micro_capacitor": 1,
+     "optic_lens_cracked": 1,
+     "lattice_shard": 1
+    },
+    "notice": "",
+    "toast": [
+     "+1  Cracked Optic Lens",
+     "+1  Micro Capacitor",
+     "+2  Copper Filament",
+     "+1  Quantum Lattice Shard",
+     "+3  Nanite Residue"
+    ],
+    "promptAfter": "",
+    "lastLoot": "Collected: Cracked Optic Lens \u00d71, Micro Capacitor \u00d71, Copper Filament \u00d72, Quantum Lattice Shard \u00d71, Nanite Residue \u00d73"
+   },
+   "crates": [
+    {
+     "crate": "Dead-letter strongbox",
+     "at": [
+      -432.59,
+      24.44
+     ],
+     "walk": [
+      "walk_to (-432.1, 25.5) stuck at [-430.470947, 4.522852, 28.808485]",
+      "walk_to (-433.7, 25.0) stuck at [-437.1026, 4.32339334, 27.3680649]"
+     ],
+     "prompt": "E \u00b7 Force the dead-letter strongbox",
+     "searching": "Forcing the strongbox\u2026 hold still",
+     "got": {
+      "micro_capacitor": 2,
+      "lattice_shard": 2,
+      "reaper_blade": 1,
+      "sentinel_optic": 1,
+      "charge_cell_core": 1
+     },
+     "promptAfter": "Emptied \u00b7 more in 10:00",
+     "lastLoot": "Collected: Reaper Blade \u00d71, Sentinel Optic \u00d71, Quantum Lattice Shard \u00d72, Charge Cell Core \u00d71, Micro Capacitor \u00d72 \u00b7 pack full, left in the cache: Intact Actuator \u00d71, Medkit \u00d71, Micro Capacitor \u00d71",
+     "ok": true,
+     "parts": [
+      "reaper_blade",
+      "sentinel_optic"
+     ]
+    },
+    {
+     "crate": "Courier cache",
+     "at": [
+      -430.25,
+      25.05
+     ],
+     "prompt": "Emptied \u00b7 more in 9:59",
+     "ok": false,
+     "note": "already searched this run (prompt matched a neighbour earlier)"
+    }
+   ]
+  },
+  "reaper_den": {
+   "spawned": [
+    [
+     "Scrap Reaper",
+     "Chase",
+     [
+      -248.4,
+      0.2,
+      143.4
+     ]
+    ],
+    [
+     "Scrap Reaper",
+     "Chase",
+     [
+      -230.3,
+      0.1,
+      136.0
+     ]
+    ],
+    [
+     "Scrap Reaper",
+     "Chase",
+     [
+      -236.2,
+      0.1,
+      148.3
+     ]
+    ]
+   ],
+   "statesSeen": [
+    "Scrap Reaper:Chase",
+    "Scrap Reaper:Windup"
+   ],
+   "bolts": 0,
+   "fight": {
+    "shots": 48,
+    "seconds": 23.9,
+    "deaths": [
+     {
+      "name": "Scrap Reaper",
+      "position": [
+       -217.169662,
+       0.212448776,
+       126.896484
+      ],
+      "t": 6.7
+     },
+     {
+      "name": "Scrap Reaper",
+      "position": [
+       -204.718582,
+       -0.5263008,
+       140.74762
+      ],
+      "t": 20.3
+     },
+     {
+      "name": "Scrap Reaper",
+      "position": [
+       -210.924316,
+       -0.3047959,
+       145.369156
+      ],
+      "t": 23.9
+     }
+    ],
+    "states": [
+     "Chase",
+     "Dead",
+     "Recover",
+     "Stagger",
+     "Windup"
+    ],
+    "downs": 0
+   },
+   "collected": {
+    "at": [
+     -217.17,
+     126.9
+    ],
+    "prompt": "E \u00b7 Collect salvage (3)",
+    "got": {
+     "nanite_residue": 2
+    },
+    "notice": "",
+    "toast": [
+     "+2  Nanite Residue",
+     "Pack full \u00b7 left in the cache: Damaged Servo \u00d71, Scrap Alloy \u00d73, Nanite Residue \u00d71"
+    ],
+    "promptAfter": "E \u00b7 Collect salvage (3)",
+    "lastLoot": "Collected: Nanite Residue \u00d72 \u00b7 pack full, left in the cache: Damaged Servo \u00d71, Scrap Alloy \u00d73, Nanite Residue \u00d71"
+   },
+   "crates": [
+    {
+     "crate": "Stripped cargo strongbox",
+     "at": [
+      -242.44,
+      138.27
+     ],
+     "walk": [
+      "walk_to (-241.3, 137.8) stuck at [-239.812668, 0.155331552, 137.21167]"
+     ],
+     "prompt": "E \u00b7 Force the cargo strongbox",
+     "searching": "Forcing the strongbox\u2026 hold still",
+     "got": {},
+     "promptAfter": "Emptied \u00b7 more in 9:56",
+     "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Sentinel Optic \u00d71, Quantum Lattice Shard \u00d72, Intact Actuator \u00d72, Medkit \u00d71, Micro Capacitor \u00d72",
+     "ok": true,
+     "parts": [
+      "sentinel_optic"
+     ]
+    },
+    {
+     "crate": "Reaper cache",
+     "at": [
+      -239.13,
+      145.23
+     ],
+     "prompt": "E \u00b7 Search the stripped crate",
+     "searching": "Searching the crate\u2026 hold still",
+     "got": {},
+     "promptAfter": "Emptied \u00b7 more in 9:56",
+     "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Scrap Alloy \u00d75, Nanite Residue \u00d73, Micro Capacitor \u00d71, Quantum Lattice Shard \u00d71",
+     "ok": true,
+     "parts": []
+    }
+   ]
+  },
+  "ironclad_camp": {
+   "spawned": [
+    [
+     "Scrap Reaper",
+     "Chase",
+     [
+      -492.1,
+      5.0,
+      -112.3
+     ]
+    ],
+    [
+     "Post Sentinel",
+     "Windup",
+     [
+      -503.8,
+      5.5,
+      -105.6
+     ]
+    ]
+   ],
+   "statesSeen": [
+    "Post Sentinel:Chase",
+    "Post Sentinel:Firing",
+    "Post Sentinel:Recover",
+    "Post Sentinel:Windup",
+    "Scrap Reaper:Chase",
+    "Scrap Reaper:Windup"
+   ],
+   "bolts": 6,
+   "fight": {
+    "shots": 71,
+    "seconds": 38.8,
+    "deaths": [
+     {
+      "name": "Scrap Reaper",
+      "position": [
+       -512.240234,
+       5.23671627,
+       -94.15821
+      ],
+      "t": 5.7
+     },
+     {
+      "name": "Post Sentinel",
+      "position": [
+       -503.272522,
+       5.578084,
+       -102.078636
+      ],
+      "t": 38.8
+     }
+    ],
+    "states": [
+     "Chase",
+     "Dead",
+     "Firing",
+     "Recover",
+     "Stagger",
+     "Windup"
+    ],
+    "downs": 0
+   },
+   "collected": {
+    "at": [
+     -512.24,
+     -94.16
+    ],
+    "prompt": "E \u00b7 Collect salvage (5)",
+    "got": {},
+    "notice": "Level 6 reached. Spend your new points in the character sheet.",
+    "toast": [
+     "Pack full \u00b7 left in the cache: Damaged Servo \u00d71, Scrap Alloy \u00d74, Nanite Residue \u00d72, Copper Filament \u00d71, Intact Actuator \u00d71"
+    ],
+    "promptAfter": "E \u00b7 Collect salvage (5)",
+    "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Damaged Servo \u00d71, Scrap Alloy \u00d74, Nanite Residue \u00d72, Copper Filament \u00d71, Intact Actuator \u00d71"
+   },
+   "crates": [
+    {
+     "crate": "Caravan strongbox",
+     "at": [
+      -488.59,
+      -104.3
+     ],
+     "prompt": "E \u00b7 Force the caravan strongbox",
+     "searching": "Forcing the strongbox\u2026 hold still",
+     "got": {},
+     "promptAfter": "Emptied \u00b7 more in 9:56",
+     "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Sentinel Optic \u00d71, Quantum Lattice Shard \u00d73, Intact Actuator \u00d71, Charge Cell Core \u00d71, Medkit \u00d72, Micro Capacitor \u00d73",
+     "ok": true,
+     "parts": [
+      "sentinel_optic"
+     ]
+    },
+    {
+     "crate": "Camp arms crate",
+     "at": [
+      -485.2,
+      -109.38
+     ],
+     "prompt": "E \u00b7 Search the arms crate",
+     "searching": "Searching the arms crate\u2026 hold still",
+     "got": {},
+     "promptAfter": "E \u00b7 Collect salvage (6)",
+     "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Scrap Alloy \u00d74, Nanite Residue \u00d73, Micro Capacitor \u00d71, Intact Actuator \u00d71, Quantum Lattice Shard \u00d71, Wound Copper Coil \u00d71",
+     "ok": true,
+     "parts": []
+    }
+   ]
+  },
+  "southern_cache": {
+   "spawned": [
+    [
+     "Scrap Reaper",
+     "Chase",
+     [
+      -247.4,
+      -0.0,
+      -151.2
+     ]
+    ],
+    [
+     "Scrap Reaper",
+     "Chase",
+     [
+      -241.0,
+      -0.2,
+      -149.2
+     ]
+    ],
+    [
+     "Post Sentinel",
+     "Chase",
+     [
+      -257.2,
+      0.0,
+      -162.6
+     ]
+    ]
+   ],
+   "statesSeen": [
+    "Post Sentinel:Chase",
+    "Post Sentinel:Firing",
+    "Post Sentinel:Windup",
+    "Scrap Reaper:Chase",
+    "Scrap Reaper:Recover",
+    "Scrap Reaper:Windup"
+   ],
+   "bolts": 1,
+   "fight": {
+    "shots": 72,
+    "seconds": 44.5,
+    "deaths": [
+     {
+      "name": "Scrap Reaper",
+      "position": [
+       -221.416489,
+       -0.496310562,
+       -120.449654
+      ],
+      "t": 14.1
+     },
+     {
+      "name": "Scrap Reaper",
+      "position": [
+       -220.227081,
+       -0.5023283,
+       -120.860764
+      ],
+      "t": 15.6
+     },
+     {
+      "name": "Post Sentinel",
+      "position": [
+       -211.968155,
+       -0.8449621,
+       -157.930634
+      ],
+      "t": 44.5
+     }
+    ],
+    "states": [
+     "Chase",
+     "Dead",
+     "Firing",
+     "Recover",
+     "Stagger",
+     "Windup"
+    ],
+    "downs": 0
+   },
+   "collected": {
+    "at": [
+     -221.42,
+     -120.45
+    ],
+    "prompt": "E \u00b7 Collect salvage (4)",
+    "got": {},
+    "notice": "",
+    "toast": [
+     "Pack full \u00b7 left in the cache: Reaper Blade \u00d71, Scrap Alloy \u00d74, Nanite Residue \u00d72, Copper Filament \u00d72"
+    ],
+    "promptAfter": "E \u00b7 Collect salvage (4)",
+    "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Reaper Blade \u00d71, Scrap Alloy \u00d74, Nanite Residue \u00d72, Copper Filament \u00d72"
+   },
+   "crates": [
+    {
+     "crate": "Pump-house strongbox",
+     "at": [
+      -253.81,
+      -148.66
+     ],
+     "prompt": "E \u00b7 Force the pump-house strongbox",
+     "searching": "Forcing the strongbox\u2026 hold still",
+     "got": {},
+     "promptAfter": "E \u00b7 Collect salvage (4)",
+     "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Quantum Lattice Shard \u00d72, Intact Actuator \u00d72, Medkit \u00d72, Micro Capacitor \u00d73",
+     "ok": true,
+     "parts": []
+    },
+    {
+     "crate": "Buried arms crate",
+     "at": [
+      -250.78,
+      -148.54
+     ],
+     "prompt": "E \u00b7 Search the arms crate",
+     "searching": "Searching the arms crate\u2026 hold still",
+     "got": {},
+     "promptAfter": "Emptied \u00b7 more in 9:56",
+     "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Scrap Alloy \u00d74, Nanite Residue \u00d73, Micro Capacitor \u00d71, Intact Actuator \u00d71, Medkit \u00d71",
+     "ok": true,
+     "parts": []
+    },
+    {
+     "crate": "Spare-parts crate",
+     "at": [
+      -248.94,
+      -152.07
+     ],
+     "prompt": "E \u00b7 Search the parts crate",
+     "searching": "Searching the parts crate\u2026 hold still",
+     "got": {},
+     "promptAfter": "Emptied \u00b7 more in 9:56",
+     "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Scrap Alloy \u00d76, Nanite Residue \u00d74, Micro Capacitor \u00d72, Intact Actuator \u00d71, Quantum Lattice Shard \u00d72, Wound Copper Coil \u00d71",
+     "ok": true,
+     "parts": []
+    }
+   ]
+  }
+ },
+ "player": {
+  "unit": "ashfall-nextlevel-qa-1a79a15f12.scope",
+  "run": "/home/teknetik/code/ao2/unity/evidence/next-level/20261002/nl2/enemies/run/run",
+  "saveDir": "/home/teknetik/code/ao2/unity/evidence/next-level/20261002/nl2/enemies/save",
+  "pid": 881187,
+  "stop": "quit",
+  "launcherExitCode": 0
+ },
+ "balance": {
+  "post_relay": {
+   "kills": 2,
+   "expected": 2,
+   "shots": 107,
+   "seconds": 63.3,
+   "downs": 0
+  },
+  "reaper_den": {
+   "kills": 3,
+   "expected": 3,
+   "shots": 48,
+   "seconds": 23.9,
+   "downs": 0
+  },
+  "ironclad_camp": {
+   "kills": 2,
+   "expected": 2,
+   "shots": 71,
+   "seconds": 38.8,
+   "downs": 0
+  },
+  "southern_cache": {
+   "kills": 3,
+   "expected": 3,
+   "shots": 72,
+   "seconds": 44.5,
+   "downs": 0
+  }
+ },
+ "strongboxes": [
+  {
+   "crate": "Dead-letter strongbox",
+   "at": [
+    -432.59,
+    24.44
+   ],
+   "walk": [
+    "walk_to (-432.1, 25.5) stuck at [-430.470947, 4.522852, 28.808485]",
+    "walk_to (-433.7, 25.0) stuck at [-437.1026, 4.32339334, 27.3680649]"
+   ],
+   "prompt": "E \u00b7 Force the dead-letter strongbox",
+   "searching": "Forcing the strongbox\u2026 hold still",
+   "got": {
+    "micro_capacitor": 2,
+    "lattice_shard": 2,
+    "reaper_blade": 1,
+    "sentinel_optic": 1,
+    "charge_cell_core": 1
+   },
+   "promptAfter": "Emptied \u00b7 more in 10:00",
+   "lastLoot": "Collected: Reaper Blade \u00d71, Sentinel Optic \u00d71, Quantum Lattice Shard \u00d72, Charge Cell Core \u00d71, Micro Capacitor \u00d72 \u00b7 pack full, left in the cache: Intact Actuator \u00d71, Medkit \u00d71, Micro Capacitor \u00d71",
+   "ok": true,
+   "parts": [
+    "reaper_blade",
+    "sentinel_optic"
+   ]
+  },
+  {
+   "crate": "Stripped cargo strongbox",
+   "at": [
+    -242.44,
+    138.27
+   ],
+   "walk": [
+    "walk_to (-241.3, 137.8) stuck at [-239.812668, 0.155331552, 137.21167]"
+   ],
+   "prompt": "E \u00b7 Force the cargo strongbox",
+   "searching": "Forcing the strongbox\u2026 hold still",
+   "got": {},
+   "promptAfter": "Emptied \u00b7 more in 9:56",
+   "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Sentinel Optic \u00d71, Quantum Lattice Shard \u00d72, Intact Actuator \u00d72, Medkit \u00d71, Micro Capacitor \u00d72",
+   "ok": true,
+   "parts": [
+    "sentinel_optic"
+   ]
+  },
+  {
+   "crate": "Caravan strongbox",
+   "at": [
+    -488.59,
+    -104.3
+   ],
+   "prompt": "E \u00b7 Force the caravan strongbox",
+   "searching": "Forcing the strongbox\u2026 hold still",
+   "got": {},
+   "promptAfter": "Emptied \u00b7 more in 9:56",
+   "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Sentinel Optic \u00d71, Quantum Lattice Shard \u00d73, Intact Actuator \u00d71, Charge Cell Core \u00d71, Medkit \u00d72, Micro Capacitor \u00d73",
+   "ok": true,
+   "parts": [
+    "sentinel_optic"
+   ]
+  },
+  {
+   "crate": "Pump-house strongbox",
+   "at": [
+    -253.81,
+    -148.66
+   ],
+   "prompt": "E \u00b7 Force the pump-house strongbox",
+   "searching": "Forcing the strongbox\u2026 hold still",
+   "got": {},
+   "promptAfter": "E \u00b7 Collect salvage (4)",
+   "lastLoot": "Collected nothing \u00b7 pack full, left in the cache: Quantum Lattice Shard \u00d72, Intact Actuator \u00d72, Medkit \u00d72, Micro Capacitor \u00d73",
+   "ok": true,
+   "parts": []
+  }
+ ]
+}

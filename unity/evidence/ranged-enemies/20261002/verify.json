@@ -1,0 +1,1662 @@
+{
+  "gunner": {
+    "prefab": "Assets/AthenHill/Prefabs/OuterBerms/Visuals/FeralGunnerVisual.prefab",
+    "guid": "6da107934c199b4a98c31a944db88ad2",
+    "model": "Assets/AthenHill/Art/OuterBerms/Ranged/Models/FeralGunner.glb",
+    "animationHostPath": "Visual",
+    "animation": {
+      "playAutomatically": false,
+      "clip": "idle",
+      "culling": "BasedOnRenderers",
+      "clips": [
+        "idle",
+        "walk",
+        "run",
+        "aim",
+        "strafe_left",
+        "strafe_right",
+        "fire",
+        "fire_raise",
+        "hit",
+        "death"
+      ]
+    },
+    "visualScale": [
+      1.001,
+      1.001,
+      1.001
+    ],
+    "facesPlusZ": true,
+    "standingHeight": 2.0,
+    "body": {
+      "path": "Visual/Armature/char1",
+      "triangles": 86644,
+      "vertices": 83799,
+      "bones": 24,
+      "rootBone": "Hips",
+      "localBounds": {
+        "center": [
+          -0.46,
+          -6.62,
+          6.93
+        ],
+        "size": [
+          249.57,
+          272.76,
+          222.24
+        ]
+      },
+      "boundsCoverAllClips": true,
+      "updateWhenOffscreen": false,
+      "shadows": "On",
+      "material": {
+        "name": "FR_FeralGunner",
+        "shader": "Universal Render Pipeline/Lit",
+        "keywords": [
+          "_EMISSION",
+          "_METALLICSPECGLOSSMAP",
+          "_NORMALMAP"
+        ],
+        "gi": "RealtimeEmissive",
+        "emissionColor": "RGBA(1.100, 0.450, 0.100, 1.000)",
+        "textures": [
+          {
+            "property": "_MainTex",
+            "name": "FeralGunner_BaseMap",
+            "width": 2048,
+            "height": 2048,
+            "format": "BC7",
+            "asset": "Assets/AthenHill/Art/OuterBerms/Ranged/Textures/FeralGunner_BaseMap.png"
+          },
+          {
+            "property": "_BumpMap",
+            "name": "FeralGunner_Normal",
+            "width": 2048,
+            "height": 2048,
+            "format": "BC7",
+            "asset": "Assets/AthenHill/Art/OuterBerms/Ranged/Textures/FeralGunner_Normal.png"
+          },
+          {
+            "property": "_EmissionMap",
+            "name": "FeralGunner_Emission",
+            "width": 1024,
+            "height": 1024,
+            "format": "BC7",
+            "asset": "Assets/AthenHill/Art/OuterBerms/Ranged/Textures/FeralGunner_Emission.png"
+          },
+          {
+            "property": "_BaseMap",
+            "name": "FeralGunner_BaseMap",
+            "width": 2048,
+            "height": 2048,
+            "format": "BC7",
+            "asset": "Assets/AthenHill/Art/OuterBerms/Ranged/Textures/FeralGunner_BaseMap.png"
+          },
+          {
+            "property": "_MetallicGlossMap",
+            "name": "FeralGunner_Mask",
+            "width": 2048,
+            "height": 2048,
+            "format": "BC7",
+            "asset": "Assets/AthenHill/Art/OuterBerms/Ranged/Textures/FeralGunner_Mask.png"
+          }
+        ]
+      }
+    },
+    "opticRenderer": "Visual/Armature/char1",
+    "opticNote": "the body material's emission map lights only the head optic; drive _EmissionColor on this renderer",
+    "gun": {
+      "path": "Visual/Armature/Hips/Spine02/Spine01/Spine/RightShoulder/RightArm/RightForeArm/ForearmGun",
+      "parent": "RightForeArm",
+      "triangles": 33446,
+      "localPosition": [
+        0.0,
+        26.0,
+        0.0
+      ],
+      "localRotation": [
+        -0.59,
+        0.38974,
+        0.38974,
+        0.59
+      ],
+      "localScale": [
+        100.0,
+        100.0,
+        100.0
+      ],
+      "material": {
+        "name": "FR_FeralGunnerGun",
+        "textures": [
+          {
+            "property": "_MainTex",
+            "name": "FeralGunnerGun_BaseMap",
+            "width": 2048,
+            "height": 2048,
+            "format": "BC7",
+            "asset": "Assets/AthenHill/Art/OuterBerms/Ranged/Textures/FeralGunnerGun_BaseMap.png"
+          },
+          {
+            "property": "_BumpMap",
+            "name": "FeralGunnerGun_Normal",
+            "width": 2048,
+            "height": 2048,
+            "format": "BC7",
+            "asset": "Assets/AthenHill/Art/OuterBerms/Ranged/Textures/FeralGunnerGun_Normal.png"
+          },
+          {
+            "property": "_BaseMap",
+            "name": "FeralGunnerGun_BaseMap",
+            "width": 2048,
+            "height": 2048,
+            "format": "BC7",
+            "asset": "Assets/AthenHill/Art/OuterBerms/Ranged/Textures/FeralGunnerGun_BaseMap.png"
+          },
+          {
+            "property": "_MetallicGlossMap",
+            "name": "FeralGunnerGun_Mask",
+            "width": 2048,
+            "height": 2048,
+            "format": "BC7",
+            "asset": "Assets/AthenHill/Art/OuterBerms/Ranged/Textures/FeralGunnerGun_Mask.png"
+          }
+        ]
+      }
+    },
+    "muzzle": {
+      "path": "Visual/Armature/Hips/Spine02/Spine01/Spine/RightShoulder/RightArm/RightForeArm/ForearmGun/Muzzle",
+      "parent": "ForearmGun",
+      "localPosition": [
+        0.0045,
+        0.1552,
+        0.545
+      ],
+      "localRotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "relativeToRightForeArm": {
+        "position": [
+          -14.0973,
+          80.5,
+          -6.5066
+        ],
+        "rotation": [
+          -0.59,
+          0.38974,
+          0.38974,
+          0.59
+        ]
+      },
+      "inGunSpaceZ": 0.545,
+      "gunMeshTipZ": 0.535,
+      "aimPose": {
+        "position": [
+          0.273,
+          1.653,
+          0.98
+        ],
+        "forward": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "aheadOfWrist": 0.504
+      },
+      "fireRecoilPeak": {
+        "forward": [
+          0.0,
+          0.305,
+          0.952
+        ],
+        "elevationDeg": 17.8
+      }
+    },
+    "toeBones": [
+      "Visual/Armature/Hips/LeftUpLeg/LeftLeg/LeftFoot/LeftToeBase",
+      "Visual/Armature/Hips/RightUpLeg/RightLeg/RightFoot/RightToeBase"
+    ],
+    "headBone": "Visual/Armature/Hips/Spine02/Spine01/Spine/neck/Head",
+    "clips": {
+      "idle": {
+        "length": 4.033,
+        "frameRate": 60.0,
+        "wrap": "Loop",
+        "legacy": true,
+        "curves": 99,
+        "unresolvedPaths": 0,
+        "heightAtFrame0": 2.0,
+        "soleAtFrame0": 0.0,
+        "soleRangeOverClip": [
+          0.0,
+          0.0124
+        ],
+        "bonesMovedOver1Degree": 24,
+        "muzzle": [
+          {
+            "time": 0.0,
+            "position": [
+              0.708,
+              1.088,
+              0.597
+            ],
+            "forward": [
+              0.292,
+              -0.271,
+              0.917
+            ],
+            "elevationDeg": -15.7
+          },
+          {
+            "time": 0.59,
+            "position": [
+              0.817,
+              1.015,
+              0.438
+            ],
+            "forward": [
+              0.419,
+              -0.36,
+              0.834
+            ],
+            "elevationDeg": -21.1
+          },
+          {
+            "time": 1.18,
+            "position": [
+              0.825,
+              0.997,
+              0.419
+            ],
+            "forward": [
+              0.422,
+              -0.372,
+              0.827
+            ],
+            "elevationDeg": -21.8
+          },
+          {
+            "time": 1.77,
+            "position": [
+              0.806,
+              1.024,
+              0.474
+            ],
+            "forward": [
+              0.394,
+              -0.365,
+              0.844
+            ],
+            "elevationDeg": -21.4
+          },
+          {
+            "time": 2.36,
+            "position": [
+              0.501,
+              0.986,
+              0.748
+            ],
+            "forward": [
+              0.052,
+              -0.367,
+              0.929
+            ],
+            "elevationDeg": -21.5
+          },
+          {
+            "time": 2.95,
+            "position": [
+              0.415,
+              0.96,
+              0.779
+            ],
+            "forward": [
+              -0.013,
+              -0.419,
+              0.908
+            ],
+            "elevationDeg": -24.8
+          },
+          {
+            "time": 3.54,
+            "position": [
+              0.457,
+              1.012,
+              0.777
+            ],
+            "forward": [
+              0.011,
+              -0.386,
+              0.923
+            ],
+            "elevationDeg": -22.7
+          }
+        ]
+      },
+      "walk": {
+        "length": 1.067,
+        "frameRate": 60.0,
+        "wrap": "Loop",
+        "legacy": true,
+        "curves": 99,
+        "unresolvedPaths": 0,
+        "heightAtFrame0": 2.0015,
+        "soleAtFrame0": 0.0111,
+        "soleRangeOverClip": [
+          -0.0049,
+          0.0266
+        ],
+        "bonesMovedOver1Degree": 24,
+        "muzzle": [
+          {
+            "time": 0.0,
+            "position": [
+              0.524,
+              0.516,
+              0.269
+            ],
+            "forward": [
+              0.096,
+              -0.913,
+              0.397
+            ],
+            "elevationDeg": -65.9
+          },
+          {
+            "time": 0.1,
+            "position": [
+              0.49,
+              0.605,
+              0.46
+            ],
+            "forward": [
+              0.031,
+              -0.835,
+              0.55
+            ],
+            "elevationDeg": -56.6
+          },
+          {
+            "time": 0.19,
+            "position": [
+              0.445,
+              0.721,
+              0.687
+            ],
+            "forward": [
+              -0.032,
+              -0.713,
+              0.701
+            ],
+            "elevationDeg": -45.4
+          },
+          {
+            "time": 0.29,
+            "position": [
+              0.476,
+              0.706,
+              0.712
+            ],
+            "forward": [
+              0.029,
+              -0.726,
+              0.688
+            ],
+            "elevationDeg": -46.5
+          },
+          {
+            "time": 0.39,
+            "position": [
+              0.535,
+              0.563,
+              0.497
+            ],
+            "forward": [
+              0.135,
+              -0.856,
+              0.499
+            ],
+            "elevationDeg": -58.9
+          },
+          {
+            "time": 0.48,
+            "position": [
+              0.59,
+              0.496,
+              0.179
+            ],
+            "forward": [
+              0.225,
+              -0.94,
+              0.255
+            ],
+            "elevationDeg": -70.1
+          },
+          {
+            "time": 0.58,
+            "position": [
+              0.576,
+              0.49,
+              -0.143
+            ],
+            "forward": [
+              0.236,
+              -0.972,
+              0.018
+            ],
+            "elevationDeg": -76.3
+          },
+          {
+            "time": 0.68,
+            "position": [
+              0.491,
+              0.482,
+              -0.359
+            ],
+            "forward": [
+              0.168,
+              -0.975,
+              -0.144
+            ],
+            "elevationDeg": -77.2
+          },
+          {
+            "time": 0.78,
+            "position": [
+              0.453,
+              0.466,
+              -0.459
+            ],
+            "forward": [
+              0.133,
+              -0.964,
+              -0.23
+            ],
+            "elevationDeg": -74.6
+          },
+          {
+            "time": 0.87,
+            "position": [
+              0.552,
+              0.421,
+              -0.218
+            ],
+            "forward": [
+              0.188,
+              -0.982,
+              -0.027
+            ],
+            "elevationDeg": -79.0
+          },
+          {
+            "time": 0.97,
+            "position": [
+              0.557,
+              0.486,
+              0.18
+            ],
+            "forward": [
+              0.14,
+              -0.935,
+              0.325
+            ],
+            "elevationDeg": -69.3
+          },
+          {
+            "time": 1.07,
+            "position": [
+              0.524,
+              0.516,
+              0.269
+            ],
+            "forward": [
+              0.096,
+              -0.913,
+              0.397
+            ],
+            "elevationDeg": -65.9
+          }
+        ]
+      },
+      "run": {
+        "length": 0.667,
+        "frameRate": 60.0,
+        "wrap": "Loop",
+        "legacy": true,
+        "curves": 99,
+        "unresolvedPaths": 0,
+        "heightAtFrame0": 1.8734,
+        "soleAtFrame0": 0.0216,
+        "soleRangeOverClip": [
+          -0.0248,
+          0.0975
+        ],
+        "bonesMovedOver1Degree": 24,
+        "muzzle": [
+          {
+            "time": 0.0,
+            "position": [
+              0.138,
+              1.168,
+              0.932
+            ],
+            "forward": [
+              -0.409,
+              0.032,
+              0.912
+            ],
+            "elevationDeg": 1.8
+          },
+          {
+            "time": 0.1,
+            "position": [
+              -0.083,
+              1.519,
+              0.796
+            ],
+            "forward": [
+              -0.674,
+              0.362,
+              0.644
+            ],
+            "elevationDeg": 21.2
+          },
+          {
+            "time": 0.19,
+            "position": [
+              -0.025,
+              1.0,
+              0.707
+            ],
+            "forward": [
+              -0.6,
+              -0.209,
+              0.772
+            ],
+            "elevationDeg": -12.1
+          },
+          {
+            "time": 0.29,
+            "position": [
+              0.487,
+              0.512,
+              0.056
+            ],
+            "forward": [
+              0.024,
+              -0.925,
+              0.38
+            ],
+            "elevationDeg": -67.6
+          },
+          {
+            "time": 0.38,
+            "position": [
+              0.525,
+              0.717,
+              -0.246
+            ],
+            "forward": [
+              0.163,
+              -0.978,
+              0.128
+            ],
+            "elevationDeg": -78.0
+          },
+          {
+            "time": 0.48,
+            "position": [
+              0.562,
+              0.728,
+              -0.138
+            ],
+            "forward": [
+              0.298,
+              -0.904,
+              0.307
+            ],
+            "elevationDeg": -64.7
+          },
+          {
+            "time": 0.57,
+            "position": [
+              0.383,
+              0.794,
+              0.69
+            ],
+            "forward": [
+              -0.111,
+              -0.437,
+              0.893
+            ],
+            "elevationDeg": -25.9
+          },
+          {
+            "time": 0.67,
+            "position": [
+              0.138,
+              1.168,
+              0.932
+            ],
+            "forward": [
+              -0.409,
+              0.032,
+              0.912
+            ],
+            "elevationDeg": 1.8
+          }
+        ]
+      },
+      "aim": {
+        "length": 4.033,
+        "frameRate": 60.0,
+        "wrap": "Loop",
+        "legacy": true,
+        "curves": 99,
+        "unresolvedPaths": 0,
+        "heightAtFrame0": 2.0,
+        "soleAtFrame0": 0.0,
+        "soleRangeOverClip": [
+          0.0,
+          0.0124
+        ],
+        "bonesMovedOver1Degree": 22,
+        "muzzle": [
+          {
+            "time": 0.0,
+            "position": [
+              0.273,
+              1.653,
+              0.98
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          },
+          {
+            "time": 0.59,
+            "position": [
+              0.286,
+              1.64,
+              0.949
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          },
+          {
+            "time": 1.18,
+            "position": [
+              0.295,
+              1.632,
+              0.953
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          },
+          {
+            "time": 1.77,
+            "position": [
+              0.287,
+              1.645,
+              0.953
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          },
+          {
+            "time": 2.36,
+            "position": [
+              0.237,
+              1.626,
+              1.091
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          },
+          {
+            "time": 2.95,
+            "position": [
+              0.193,
+              1.641,
+              1.132
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          },
+          {
+            "time": 3.54,
+            "position": [
+              0.222,
+              1.659,
+              1.098
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          }
+        ]
+      },
+      "strafe_left": {
+        "length": 1.2,
+        "frameRate": 60.0,
+        "wrap": "Loop",
+        "legacy": true,
+        "curves": 99,
+        "unresolvedPaths": 0,
+        "heightAtFrame0": 1.6808,
+        "soleAtFrame0": 0.0238,
+        "soleRangeOverClip": [
+          0.0,
+          0.0548
+        ],
+        "bonesMovedOver1Degree": 22,
+        "muzzle": [
+          {
+            "time": 0.0,
+            "position": [
+              0.293,
+              1.479,
+              1.268
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          },
+          {
+            "time": 0.2,
+            "position": [
+              0.325,
+              1.491,
+              1.284
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          },
+          {
+            "time": 0.4,
+            "position": [
+              0.248,
+              1.481,
+              1.317
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          },
+          {
+            "time": 0.6,
+            "position": [
+              0.189,
+              1.476,
+              1.314
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          },
+          {
+            "time": 0.8,
+            "position": [
+              0.191,
+              1.5,
+              1.282
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          },
+          {
+            "time": 1.0,
+            "position": [
+              0.252,
+              1.486,
+              1.268
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          },
+          {
+            "time": 1.2,
+            "position": [
+              0.293,
+              1.479,
+              1.268
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          }
+        ]
+      },
+      "strafe_right": {
+        "length": 1.3,
+        "frameRate": 60.0,
+        "wrap": "Loop",
+        "legacy": true,
+        "curves": 99,
+        "unresolvedPaths": 0,
+        "heightAtFrame0": 1.708,
+        "soleAtFrame0": 0.036,
+        "soleRangeOverClip": [
+          0.0,
+          0.0458
+        ],
+        "bonesMovedOver1Degree": 22,
+        "muzzle": [
+          {
+            "time": 0.0,
+            "position": [
+              0.324,
+              1.49,
+              1.218
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          },
+          {
+            "time": 0.2,
+            "position": [
+              0.254,
+              1.486,
+              1.24
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          },
+          {
+            "time": 0.4,
+            "position": [
+              0.27,
+              1.481,
+              1.278
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          },
+          {
+            "time": 0.6,
+            "position": [
+              0.3,
+              1.469,
+              1.328
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          },
+          {
+            "time": 0.8,
+            "position": [
+              0.298,
+              1.445,
+              1.353
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          },
+          {
+            "time": 1.0,
+            "position": [
+              0.302,
+              1.454,
+              1.323
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          },
+          {
+            "time": 1.2,
+            "position": [
+              0.327,
+              1.489,
+              1.223
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          }
+        ]
+      },
+      "fire": {
+        "length": 0.6,
+        "frameRate": 60.0,
+        "wrap": "Clamp",
+        "legacy": true,
+        "curves": 99,
+        "unresolvedPaths": 0,
+        "heightAtFrame0": 1.9863,
+        "soleAtFrame0": 0.0,
+        "soleRangeOverClip": [
+          0.0,
+          0.0024
+        ],
+        "bonesMovedOver1Degree": 20,
+        "muzzle": [
+          {
+            "time": 0.0,
+            "position": [
+              0.295,
+              1.628,
+              0.954
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          },
+          {
+            "time": 0.1,
+            "position": [
+              0.288,
+              1.919,
+              0.834
+            ],
+            "forward": [
+              0.0,
+              0.305,
+              0.952
+            ],
+            "elevationDeg": 17.8
+          },
+          {
+            "time": 0.2,
+            "position": [
+              0.292,
+              1.799,
+              0.901
+            ],
+            "forward": [
+              0.0,
+              0.176,
+              0.984
+            ],
+            "elevationDeg": 10.1
+          },
+          {
+            "time": 0.3,
+            "position": [
+              0.293,
+              1.723,
+              0.932
+            ],
+            "forward": [
+              0.0,
+              0.095,
+              0.996
+            ],
+            "elevationDeg": 5.4
+          },
+          {
+            "time": 0.4,
+            "position": [
+              0.29,
+              1.684,
+              0.943
+            ],
+            "forward": [
+              0.0,
+              0.051,
+              0.999
+            ],
+            "elevationDeg": 2.9
+          },
+          {
+            "time": 0.5,
+            "position": [
+              0.287,
+              1.665,
+              0.946
+            ],
+            "forward": [
+              0.0,
+              0.027,
+              1.0
+            ],
+            "elevationDeg": 1.6
+          },
+          {
+            "time": 0.6,
+            "position": [
+              0.286,
+              1.656,
+              0.95
+            ],
+            "forward": [
+              0.0,
+              0.015,
+              1.0
+            ],
+            "elevationDeg": 0.8
+          }
+        ]
+      },
+      "fire_raise": {
+        "length": 1.2,
+        "frameRate": 60.0,
+        "wrap": "Clamp",
+        "legacy": true,
+        "curves": 99,
+        "unresolvedPaths": 0,
+        "heightAtFrame0": 2.0,
+        "soleAtFrame0": 0.0,
+        "soleRangeOverClip": [
+          0.0,
+          0.0059
+        ],
+        "bonesMovedOver1Degree": 20,
+        "muzzle": [
+          {
+            "time": 0.0,
+            "position": [
+              0.708,
+              1.088,
+              0.597
+            ],
+            "forward": [
+              0.292,
+              -0.271,
+              0.917
+            ],
+            "elevationDeg": -15.7
+          },
+          {
+            "time": 0.2,
+            "position": [
+              0.276,
+              1.612,
+              0.913
+            ],
+            "forward": [
+              -0.109,
+              0.067,
+              0.992
+            ],
+            "elevationDeg": 3.8
+          },
+          {
+            "time": 0.4,
+            "position": [
+              0.279,
+              1.649,
+              0.948
+            ],
+            "forward": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "elevationDeg": 0.0
+          },
+          {
+            "time": 0.6,
+            "position": [
+              0.278,
+              1.93,
+              0.824
+            ],
+            "forward": [
+              0.0,
+              0.305,
+              0.952
+            ],
+            "elevationDeg": 17.8
+          },
+          {
+            "time": 0.8,
+            "position": [
+              0.289,
+              1.724,
+              0.921
+            ],
+            "forward": [
+              0.0,
+              0.095,
+              0.996
+            ],
+            "elevationDeg": 5.4
+          },
+          {
+            "time": 1.0,
+            "position": [
+              0.293,
+              1.658,
+              0.943
+            ],
+            "forward": [
+              0.0,
+              0.027,
+              1.0
+            ],
+            "elevationDeg": 1.6
+          },
+          {
+            "time": 1.2,
+            "position": [
+              0.295,
+              1.64,
+              0.952
+            ],
+            "forward": [
+              0.0,
+              0.008,
+              1.0
+            ],
+            "elevationDeg": 0.4
+          }
+        ]
+      },
+      "hit": {
+        "length": 1.0,
+        "frameRate": 60.0,
+        "wrap": "Clamp",
+        "legacy": true,
+        "curves": 99,
+        "unresolvedPaths": 0,
+        "heightAtFrame0": 1.9763,
+        "soleAtFrame0": 0.0029,
+        "soleRangeOverClip": [
+          0.0021,
+          0.0185
+        ],
+        "bonesMovedOver1Degree": 22,
+        "muzzle": [
+          {
+            "time": 0.0,
+            "position": [
+              0.027,
+              1.726,
+              0.941
+            ],
+            "forward": [
+              -0.344,
+              0.271,
+              0.899
+            ],
+            "elevationDeg": 15.7
+          },
+          {
+            "time": 0.1,
+            "position": [
+              0.087,
+              1.672,
+              0.975
+            ],
+            "forward": [
+              -0.305,
+              0.205,
+              0.93
+            ],
+            "elevationDeg": 11.8
+          },
+          {
+            "time": 0.2,
+            "position": [
+              0.159,
+              1.634,
+              1.006
+            ],
+            "forward": [
+              -0.263,
+              0.136,
+              0.955
+            ],
+            "elevationDeg": 7.8
+          },
+          {
+            "time": 0.3,
+            "position": [
+              0.287,
+              1.474,
+              1.033
+            ],
+            "forward": [
+              -0.15,
+              -0.05,
+              0.987
+            ],
+            "elevationDeg": -2.9
+          },
+          {
+            "time": 0.4,
+            "position": [
+              0.342,
+              1.513,
+              1.039
+            ],
+            "forward": [
+              -0.09,
+              -0.059,
+              0.994
+            ],
+            "elevationDeg": -3.4
+          },
+          {
+            "time": 0.5,
+            "position": [
+              0.311,
+              1.531,
+              1.0
+            ],
+            "forward": [
+              -0.112,
+              -0.047,
+              0.993
+            ],
+            "elevationDeg": -2.7
+          },
+          {
+            "time": 0.6,
+            "position": [
+              0.336,
+              1.507,
+              0.95
+            ],
+            "forward": [
+              -0.079,
+              -0.048,
+              0.996
+            ],
+            "elevationDeg": -2.8
+          },
+          {
+            "time": 0.7,
+            "position": [
+              0.433,
+              1.413,
+              0.915
+            ],
+            "forward": [
+              0.017,
+              -0.129,
+              0.992
+            ],
+            "elevationDeg": -7.4
+          },
+          {
+            "time": 0.8,
+            "position": [
+              0.23,
+              1.535,
+              0.945
+            ],
+            "forward": [
+              -0.192,
+              0.055,
+              0.98
+            ],
+            "elevationDeg": 3.2
+          },
+          {
+            "time": 0.9,
+            "position": [
+              0.053,
+              1.623,
+              0.953
+            ],
+            "forward": [
+              -0.332,
+              0.153,
+              0.931
+            ],
+            "elevationDeg": 8.8
+          },
+          {
+            "time": 1.0,
+            "position": [
+              0.027,
+              1.726,
+              0.941
+            ],
+            "forward": [
+              -0.344,
+              0.271,
+              0.899
+            ],
+            "elevationDeg": 15.7
+          }
+        ]
+      },
+      "death": {
+        "length": 3.533,
+        "frameRate": 60.0,
+        "wrap": "ClampForever",
+        "legacy": true,
+        "curves": 99,
+        "unresolvedPaths": 0,
+        "heightAtFrame0": 2.0151,
+        "soleAtFrame0": 0.0,
+        "soleRangeOverClip": [
+          -0.0005,
+          0.2323
+        ],
+        "bonesMovedOver1Degree": 24,
+        "muzzle": [
+          {
+            "time": 0.0,
+            "position": [
+              0.554,
+              0.564,
+              0.068
+            ],
+            "forward": [
+              0.171,
+              -0.966,
+              0.194
+            ],
+            "elevationDeg": -75.0
+          },
+          {
+            "time": 0.59,
+            "position": [
+              0.749,
+              1.082,
+              0.628
+            ],
+            "forward": [
+              0.227,
+              -0.509,
+              0.831
+            ],
+            "elevationDeg": -30.6
+          },
+          {
+            "time": 1.18,
+            "position": [
+              1.304,
+              1.547,
+              0.071
+            ],
+            "forward": [
+              0.906,
+              -0.057,
+              0.419
+            ],
+            "elevationDeg": -3.3
+          },
+          {
+            "time": 1.77,
+            "position": [
+              1.34,
+              1.253,
+              -0.094
+            ],
+            "forward": [
+              0.784,
+              -0.183,
+              0.594
+            ],
+            "elevationDeg": -10.5
+          },
+          {
+            "time": 2.36,
+            "position": [
+              1.433,
+              0.578,
+              -0.874
+            ],
+            "forward": [
+              0.756,
+              0.48,
+              0.446
+            ],
+            "elevationDeg": 28.7
+          },
+          {
+            "time": 2.94,
+            "position": [
+              1.554,
+              0.126,
+              -1.551
+            ],
+            "forward": [
+              0.945,
+              -0.032,
+              -0.327
+            ],
+            "elevationDeg": -1.8
+          },
+          {
+            "time": 3.53,
+            "position": [
+              1.54,
+              0.068,
+              -1.687
+            ],
+            "forward": [
+              0.885,
+              -0.036,
+              -0.464
+            ],
+            "elevationDeg": -2.1
+          }
+        ]
+      }
+    }
+  },
+  "lancer": {
+    "prefab": "Assets/AthenHill/Prefabs/OuterBerms/Visuals/FeralLancerVisual.prefab",
+    "guid": "c5c70ce095970fc14b184bf00dc02a6a",
+    "model": "Assets/AthenHill/Art/OuterBerms/Ranged/Models/FeralLancer.glb",
+    "span": {
+      "x": 1.8,
+      "y": 0.67,
+      "z": 2.15,
+      "boundsCenter": [
+        -0.006,
+        0.0,
+        0.231
+      ]
+    },
+    "body": {
+      "path": "Visual/Body",
+      "triangles": 64594,
+      "material": {
+        "name": "FR_FeralLancer",
+        "textures": [
+          {
+            "property": "_MainTex",
+            "name": "FeralLancer_BaseMap",
+            "width": 2048,
+            "height": 2048,
+            "format": "BC7",
+            "asset": "Assets/AthenHill/Art/OuterBerms/Ranged/Textures/FeralLancer_BaseMap.png"
+          },
+          {
+            "property": "_BumpMap",
+            "name": "FeralLancer_Normal",
+            "width": 2048,
+            "height": 2048,
+            "format": "BC7",
+            "asset": "Assets/AthenHill/Art/OuterBerms/Ranged/Textures/FeralLancer_Normal.png"
+          },
+          {
+            "property": "_BaseMap",
+            "name": "FeralLancer_BaseMap",
+            "width": 2048,
+            "height": 2048,
+            "format": "BC7",
+            "asset": "Assets/AthenHill/Art/OuterBerms/Ranged/Textures/FeralLancer_BaseMap.png"
+          },
+          {
+            "property": "_MetallicGlossMap",
+            "name": "FeralLancer_Mask",
+            "width": 2048,
+            "height": 2048,
+            "format": "BC7",
+            "asset": "Assets/AthenHill/Art/OuterBerms/Ranged/Textures/FeralLancer_Mask.png"
+          }
+        ]
+      }
+    },
+    "rotors": [
+      {
+        "path": "Visual/Rotor A",
+        "pivot": [
+          -0.6281,
+          0.1728,
+          0.5141
+        ],
+        "spinAxisLocal": "Y",
+        "triangles": 448,
+        "blurDisc": "Visual/Rotor A/Blur disc",
+        "bladeRadius": 0.224
+      },
+      {
+        "path": "Visual/Rotor B",
+        "pivot": [
+          0.6276,
+          0.1726,
+          0.5206
+        ],
+        "spinAxisLocal": "Y",
+        "triangles": 448,
+        "blurDisc": "Visual/Rotor B/Blur disc",
+        "bladeRadius": 0.2128
+      },
+      {
+        "path": "Visual/Rotor C",
+        "pivot": [
+          -0.5308,
+          0.1728,
+          -0.5166
+        ],
+        "spinAxisLocal": "Y",
+        "triangles": 448,
+        "blurDisc": "Visual/Rotor C/Blur disc",
+        "bladeRadius": 0.2707
+      },
+      {
+        "path": "Visual/Rotor D",
+        "pivot": [
+          0.5315,
+          0.1728,
+          -0.5181
+        ],
+        "spinAxisLocal": "Y",
+        "triangles": 448,
+        "blurDisc": "Visual/Rotor D/Blur disc",
+        "bladeRadius": 0.264
+      }
+    ],
+    "lensCap": {
+      "path": "Visual/Lens cap",
+      "position": [
+        0.0023,
+        0.1069,
+        0.9293
+      ],
+      "triangles": 308,
+      "material": {
+        "name": "FR_FeralLancerLens",
+        "emission": true,
+        "gi": "RealtimeEmissive",
+        "emissionColor": "RGBA(1.200, 0.320, 0.070, 1.000)"
+      }
+    },
+    "muzzle": {
+      "path": "Visual/Muzzle",
+      "localPosition": [
+        -0.0031,
+        -0.2397,
+        1.3163
+      ],
+      "localRotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "prefabPosition": [
+        -0.0031,
+        -0.2397,
+        1.3163
+      ],
+      "forward": [
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    "totalTriangles": 66694
+  },
+  "failures": []
+}

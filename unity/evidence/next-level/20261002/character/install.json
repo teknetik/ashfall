@@ -1,0 +1,165 @@
+{
+  "utc": "2026-10-03T08:14:36.1458670Z",
+  "log": [
+    {
+      "step": "before",
+      "visual": "MeshyPlayer",
+      "mesh": "char1",
+      "triangles": 67249,
+      "prefab": "Assets/AthenHill/Prefabs/MeshyPlayer.prefab",
+      "actor": {
+        "idle": "lib_idle_252",
+        "talk": "lib_idle_252",
+        "walk": "walk",
+        "run": "run",
+        "jump": "jump_takeoff",
+        "walkStrideSpeed": 1.6,
+        "runStrideSpeed": 4.117647
+      },
+      "nonBoneChildren": [
+        "colonist < MeshyPlayer",
+        "Berms held pistol < RightHand",
+        "Berms held rifle < RightHand",
+        "Player shadow proxy < MeshyPlayer"
+      ]
+    },
+    {
+      "step": "normalise",
+      "importHeight": 1.96115661,
+      "importSoles": -0.04079635,
+      "scale": 0.98927325,
+      "offsetY": 0.0374439433,
+      "height": 1.80000019,
+      "soles": -7.43883455E-10
+    },
+    {
+      "step": "proxy",
+      "kept": true
+    },
+    {
+      "step": "motion",
+      "clips": [
+        {
+          "family": "Player",
+          "name": "idle",
+          "path": "Assets/AthenHill/Art/CharacterMotion/Player/idle.anim",
+          "duration": 4.8,
+          "sampledFrames": 145,
+          "bones": 54,
+          "maximumBoneMotionDegrees": 2.312797,
+          "maximumPlantedFootDriftMetres": 3.552138E-07,
+          "rootMotion": false
+        },
+        {
+          "family": "Player",
+          "name": "talk",
+          "path": "Assets/AthenHill/Art/CharacterMotion/Player/talk.anim",
+          "duration": 6.4,
+          "sampledFrames": 193,
+          "bones": 54,
+          "maximumBoneMotionDegrees": 30.9996,
+          "maximumPlantedFootDriftMetres": 4.1194366E-07,
+          "rootMotion": false
+        },
+        {
+          "family": "Player",
+          "name": "jump_takeoff",
+          "path": "Assets/AthenHill/Art/CharacterMotion/Player/jump_takeoff.anim",
+          "duration": 0.12,
+          "sampledFrames": 5,
+          "bones": 54,
+          "maximumBoneMotionDegrees": 32.9340134,
+          "maximumPlantedFootDriftMetres": 3.405331E-07,
+          "rootMotion": false
+        },
+        {
+          "family": "Player",
+          "name": "jump_airborne",
+          "path": "Assets/AthenHill/Art/CharacterMotion/Player/jump_airborne.anim",
+          "duration": 0.22,
+          "sampledFrames": 8,
+          "bones": 54,
+          "maximumBoneMotionDegrees": 30.99998,
+          "maximumPlantedFootDriftMetres": 0.0,
+          "rootMotion": false
+        },
+        {
+          "family": "Player",
+          "name": "jump_fall",
+          "path": "Assets/AthenHill/Art/CharacterMotion/Player/jump_fall.anim",
+          "duration": 0.18,
+          "sampledFrames": 7,
+          "bones": 54,
+          "maximumBoneMotionDegrees": 28.9999485,
+          "maximumPlantedFootDriftMetres": 0.0,
+          "rootMotion": false
+        },
+        {
+          "family": "Player",
+          "name": "jump_landing",
+          "path": "Assets/AthenHill/Art/CharacterMotion/Player/jump_landing.anim",
+          "duration": 0.24,
+          "sampledFrames": 9,
+          "bones": 54,
+          "maximumBoneMotionDegrees": 27.0065575,
+          "maximumPlantedFootDriftMetres": 6.803323E-07,
+          "rootMotion": false
+        },
+        {
+          "family": "Player",
+          "name": "jump_landing_moving",
+          "path": "Assets/AthenHill/Art/CharacterMotion/Player/jump_landing_moving.anim",
+          "duration": 0.24,
+          "sampledFrames": 9,
+          "bones": 54,
+          "maximumBoneMotionDegrees": 104.094849,
+          "maximumPlantedFootDriftMetres": 0.0,
+          "rootMotion": false
+        }
+      ]
+    },
+    {
+      "step": "retarget",
+      "result": "Assets/AthenHill/Art/CharacterMotion/Player/lib_aim_95.anim 3.70s bones 24 hipScale 0.976\nAssets/AthenHill/Art/CharacterMotion/Player/lib_draw_222.anim 7.87s bones 24 hipScale 0.995\nAssets/AthenHill/Art/CharacterMotion/Player/lib_back_233.anim 1.30s bones 24 hipScale 0.976\nAssets/AthenHill/Art/CharacterMotion/Player/lib_fwd_234.anim 3.30s bones 24 hipScale 0.976\nAssets/AthenHill/Art/CharacterMotion/Player/lib_left_528.anim 1.23s bones 24 hipScale 0.976\nAssets/AthenHill/Art/CharacterMotion/Player/lib_aimturn_585.anim 1.83s bones 24 hipScale 0.976\nAssets/AthenHill/Art/CharacterMotion/Player/lib_idle_243.anim 10.00s bones 24 hipScale 0.995\nAssets/AthenHill/Art/CharacterMotion/Player/lib_idle_252.anim 6.03s bones 24 hipScale 0.976\nAssets/AthenHill/Art/CharacterMotion/Player/lib_turnl_576.anim 0.97s bones 24 hipScale 0.995\nAssets/AthenHill/Art/CharacterMotion/Player/lib_turnr_586.anim 1.13s bones 24 hipScale 0.995"
+    },
+    {
+      "step": "grip",
+      "palmAlong": 0.0624666028,
+      "palmPerp": 0.0149865495,
+      "gripAlong": 0.0514666028
+    },
+    {
+      "step": "pistol",
+      "holder": "Berms held pistol",
+      "parent": "RightHand"
+    },
+    {
+      "step": "weaponFeel",
+      "result": "audio mech 6 body 6 tail 6 empty 3 draw 2 holster 2; source Berms pistol audio vol 1 spatial 0 group UI\npistol_hold from lib_aim_95.anim at 3.59 s, lower spine yawed -9 deg, lean corrected -24 deg\naim pose pistol_hold mixed from Spine02\npistol mounted for aim: local (0.006, 0.068, -0.002) / (333, 164, 327), muzzle (0.001, 0.030, 0.214)\nview model: arms 1373 tris, pistol at Muzzle, overlay stacked on MainCamera\nFP hands v2: 110328 tris, materials FPHandsSkin,FPHandsGlove,FPHandsBracer,FPHandsSleeve,FPHandsNail,FPHandsGlow"
+    },
+    {
+      "step": "pistolRemount",
+      "result": "pistol remounted: grip 0.051 m along the hand; local (0.006, 0.068, -0.002) -> (0.006, 0.045, -0.002)"
+    },
+    {
+      "step": "pistolMods",
+      "held": 6
+    },
+    {
+      "step": "rifleArmour",
+      "result": "Assets/AthenHill/Art/CharacterMotion/Player/lib_rifleturn_573.anim 1.53s bones 24 hipScale 0.976\nAssets/AthenHill/Art/CharacterMotion/Player/lib_lower_334.anim 5.20s bones 24 hipScale 0.976\nrifle_hold from lib_rifleturn_573.anim at 1.46 s, lower spine yawed -8 deg, lean corrected -16 deg\nrifle_carry from lib_lower_334.anim at 2.60 s, lower spine yawed -13 deg, lean corrected -27 deg\nrifle Assets/AthenHill/Resources/WeaponPreviews/FieldRifle.glb: length axis 0 muzzle + (explicit MuzzleSign 1; barrel band 0.176 < receiver band 0.600; 12 % end sections muzzle 0.412 butt 0.337) scale 0.4728 tris 29785 holder local (0.007, 0.048, -0.006) / (307, 185, 311) muzzle point local (0.000, 0.033, 0.585)\ntutorial set: TS_Helmet.glb: field_helmet in armour_head, 7990 tris, 54 bones, bind max diff 0.00000; TS_FieldVest.glb: field_vest in armour_chest, 8080 tris, 54 bones, bind max diff 0.00000; TS_ArmGuards.glb: field_armguards in armour_arms, 7253 tris, 54 bones, bind max diff 0.00000; TS_Gloves.glb: field_gloves in armour_hands, 4240 tris, 54 bones, bind max diff 0.00000; TS_LegArmour.glb: field_leggings in armour_legs, 8376 tris, 54 bones, bind max diff 0.00000; TS_Boots.glb: field_boots in armour_feet, 7547 tris, 54 bones, bind max diff 0.00000; TS_WardenCarrier.glb: warden_plate_carrier in armour_chest, 5764 tris, 54 bones, bind max diff 0.00000; rigid carrier holder removed; hand grip: 15 right / 15 left finger joints; support grip on the rifle handguard 0.3 m ahead of the grip; left-arm IK on the colonist; pistol view model: MPFB arms 17812 tris, 15+15 finger joints, muzzle Muzzle, flash yes; pistol grip hands: FP hands v2: 110328 tris, materials FPHandsSkin,FPHandsGlove,FPHandsBracer,FPHandsSleeve,FPHandsNail,FPHandsGlow; rifle view model: MPFB arms 17812 tris, 15+15 finger joints, muzzle Rifle muzzle, flash yes | vest Assets/AthenHill/Art/Armour/WardenPlateCarrier.glb: scale 0.3049 size (0.42, 0.58, 0.35) tris 24192 at (42.96, 1.29, 0.00)\nbindings: relay_knoll -> Encounter · Gunner nest · relay knoll at (-330, 4, 8); caravan -> Encounter · Caravan scavengers; strongbox Caravan strongbox · Salvage node · Hauler cargo bed at (-208.3, -1.2, 75.8)\ncameras: cam_rifle_carry, cam_rifle_aim, cam_rifle_side, cam_vest_front, cam_vest_quarter\nlandmarks: rifle_stand, relay_knoll_approach, caravan_approach, caravan_strongbox\nscene saved\n"
+    },
+    {
+      "step": "idle",
+      "result": "player idle idle -> lib_idle_252"
+    },
+    {
+      "step": "footsteps",
+      "result": "sets stone 12/12/8, sand 12/12/10, gravel 11/10/12, concrete 12/12/5, metal 8/12/2, wood 12/12/0; berms grid 88x204 sand 16444 gravel 1508; source Stone footsteps vol 0.55 spatial 0 group SFX"
+    },
+    {
+      "step": "cameras",
+      "result": "cameras: cam_character_idle, cam_character_face, cam_character_back"
+    }
+  ]
+}

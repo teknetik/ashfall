@@ -1,0 +1,241 @@
+{
+ "checks": [
+  {
+   "check": "continued save: order 1 waits for the visit to Brann",
+   "passed": true,
+   "detail": {
+    "fieldOrder": 0,
+    "orderStage": "Report",
+    "objective": "Take the servo to Brann at Salvage, on the north avenue inside the walls. His workbench can make the Stabilised Pistol Grip."
+   }
+  },
+  {
+   "check": "field notes send the player to Brann at Salvage",
+   "passed": true,
+   "detail": "Take the servo to Brann at Salvage, on the north avenue inside the walls. His workbench can make the Stabilised Pistol Grip."
+  },
+  {
+   "check": "walked from the porch through the bay to the counter",
+   "passed": true,
+   "detail": {
+    "pos": [
+     -20.48158,
+     0.529999852,
+     17.6870327
+    ],
+    "counter": [
+     -20.650000000000002,
+     0.5,
+     17.45
+    ]
+   }
+  },
+  {
+   "check": "Brann offers the E prompt at the counter",
+   "passed": true,
+   "detail": "E \u00b7 Talk to Brann"
+  },
+  {
+   "check": "Brann opens with the report line",
+   "passed": true,
+   "detail": {
+    "prompt": "",
+    "npc": "Brann",
+    "node": "report_ready",
+    "choices": [
+     "Show me the bench.",
+     "Trade first.",
+     "Later."
+    ],
+    "station": null,
+    "shop": null,
+    "flags": []
+   }
+  },
+  {
+   "check": "talking to Brann moves the order to fabrication",
+   "passed": true,
+   "detail": "Fabricate the Stabilised Pistol Grip at Brann's workbench in Salvage, on the north avenue."
+  },
+  {
+   "check": "\"Show me the bench.\" explains the workbench",
+   "passed": true,
+   "detail": {
+    "prompt": "",
+    "npc": "Brann",
+    "node": "bench_how",
+    "choices": [
+     "Use the bench.",
+     "Show me what you trade.",
+     "Thanks, Brann."
+    ],
+    "station": null,
+    "shop": null,
+    "flags": []
+   }
+  },
+  {
+   "check": "\"Use the bench.\" opens the Salvage workbench",
+   "passed": true,
+   "detail": {
+    "prompt": "",
+    "npc": null,
+    "node": null,
+    "choices": null,
+    "station": "Salvage workbench",
+    "shop": null,
+    "flags": []
+   }
+  },
+  {
+   "check": "Enter fabricates the stabilised grip",
+   "passed": true,
+   "detail": {
+    "crafts": 1,
+    "grip": 1,
+    "notice": "Stabilised Pistol Grip fabricated. Fit it to a compatible weapon."
+   }
+  },
+  {
+   "check": "Enter fits it to the pistol",
+   "passed": true,
+   "detail": {
+    "grip": "grip_stabilised_pistol"
+   }
+  },
+  {
+   "check": "Esc closes the workbench",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "order 1 now asks for a test fire",
+   "passed": true,
+   "detail": "Fire your upgraded pistol in the Outer Berms."
+  },
+  {
+   "check": "the workbench offers its own E prompt",
+   "passed": true,
+   "detail": "E \u00b7 Use Brann's workbench"
+  },
+  {
+   "check": "E at the bench opens the fabricator",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "after fitting Brann sends the player to test it",
+   "passed": true,
+   "detail": {
+    "prompt": "",
+    "npc": "Brann",
+    "node": "steady_test",
+    "choices": [
+     "Show me what you trade.",
+     "Let me use the bench.",
+     "On my way."
+    ],
+    "station": null,
+    "shop": null,
+    "flags": []
+   }
+  },
+  {
+   "check": "his counter opens as Salvage",
+   "passed": true,
+   "detail": {
+    "prompt": "",
+    "npc": "Brann",
+    "node": null,
+    "choices": null,
+    "station": null,
+    "shop": "Salvage",
+    "flags": []
+   }
+  },
+  {
+   "check": "Salvage shows parts and salvage, not supplies",
+   "passed": true,
+   "detail": {
+    "supplies-heading": false,
+    "parts-heading": true,
+    "salvage-heading": true
+   }
+  },
+  {
+   "check": "parts heading names Brann",
+   "passed": true,
+   "detail": "BUY PARTS \u00b7 BRANN'S PRICES"
+  },
+  {
+   "check": "bought scrap alloy from Brann",
+   "passed": true,
+   "detail": {
+    "alloy": 1,
+    "credits": 36
+   }
+  },
+  {
+   "check": "sold copper filament to Brann",
+   "passed": true,
+   "detail": {
+    "filament": 2,
+    "credits": 37,
+    "notice": "Sold Copper Filament for 1 credit."
+   }
+  },
+  {
+   "check": "Brann's nametag does not show through the shop wall from the street",
+   "passed": true,
+   "detail": []
+  },
+  {
+   "check": "pistol drawn in the Berms",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "test fire completes Steady Hands; order 2 begins",
+   "passed": true,
+   "detail": {
+    "fieldOrder": 1,
+    "orderStage": "Gather",
+    "objective": "Build a bigger nano cell: wind a copper coil, seal two micro capacitors into a charge core, then fabricate and fit the Salvaged Capacitor Cell.\nSalvaged Capacitor Cell: Charge Cell Core 0/1 \u00b7 Scrap Alloy 1/2"
+   }
+  },
+  {
+   "check": "no exceptions in Player.log",
+   "passed": true,
+   "detail": []
+  },
+  {
+   "check": "the save records order 2 and the report visit",
+   "passed": true,
+   "detail": {
+    "index": 1,
+    "testFired": [
+     "order_steady_hands"
+    ],
+    "reported": [
+     "order_steady_hands"
+    ]
+   }
+  }
+ ],
+ "radio": [
+  "Stabilised grip tested. Your pistol holds steadier.",
+  "Warden Ossa"
+ ],
+ "errors": [],
+ "savedOrders": {
+  "index": 1,
+  "testFired": [
+   "order_steady_hands"
+  ],
+  "reported": [
+   "order_steady_hands"
+  ]
+ },
+ "savedFlags": [],
+ "passed": true
+}

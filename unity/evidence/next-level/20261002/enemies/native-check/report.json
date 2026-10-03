@@ -1,0 +1,18 @@
+{
+ "passed": false,
+ "checks": [],
+ "failures": [
+  {
+   "error": "FileExistsError(17, 'File exists')",
+   "trace": "Traceback (most recent call last):\n  File \"/home/teknetik/code/ao2/unity/tools/check_next_level_enemies.py\", line 273, in <module>\n    try: main()\n         ~~~~^^\n  File \"/home/teknetik/code/ao2/unity/tools/check_next_level_enemies.py\", line 256, in main\n    launch_player(save)\n    ~~~~~~~~~~~~~^^^^^^\n  File \"/home/teknetik/code/ao2/unity/tools/check_next_level_enemies.py\", line 38, in launch_player\n    _owned['proc'] = launch_capped_player(out, save.resolve(), qa.EXE.resolve(), unit)\n                     ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/teknetik/code/ao2/unity/tools/check_inventory_redesign.py\", line 85, in launch\n    run.mkdir()\n    ~~~~~~~~~^^\n  File \"/home/teknetik/.local/share/uv/python/cpython-3.13.15-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py\", line 722, in mkdir\n    os.mkdir(self, mode)\n    ~~~~~~~~^^^^^^^^^^^^\nFileExistsError: [Errno 17] File exists: '/home/teknetik/code/ao2/unity/evidence/next-level/20261002/enemies/native-check/run/run'\n"
+  }
+ ],
+ "captures": [],
+ "sites": {},
+ "player": {
+  "unit": "ashfall-nextlevel-qa-85bb16092e.scope",
+  "run": "/home/teknetik/code/ao2/unity/evidence/next-level/20261002/enemies/native-check/run/run",
+  "saveDir": "/home/teknetik/code/ao2/unity/evidence/next-level/20261002/enemies/native-check/save",
+  "stopError": "unsupported operand type(s) for /: 'NoneType' and 'str'"
+ }
+}

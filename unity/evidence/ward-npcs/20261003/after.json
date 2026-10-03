@@ -1,0 +1,248 @@
+[
+  {
+    "npcId": "npc_mira",
+    "path": "Colonists/npc_mira",
+    "position": [
+      8.0,
+      0.5,
+      15.8
+    ],
+    "rotation": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "displayName": "Mira",
+    "role": "Basic General",
+    "definition": "Assets/AthenHill/Data/npc_mira.asset",
+    "nodes": [
+      {
+        "id": "greeting",
+        "voice": "Assets/AthenHill/Audio/ElevenLabs/NpcVoices/npc_mira-greeting.wav",
+        "choices": [
+          "browse>:shop",
+          "leave>:close"
+        ]
+      }
+    ],
+    "countsForCityVisit": true,
+    "colliders": []
+  },
+  {
+    "npcId": "npc_torr",
+    "path": "Colonists/npc_torr",
+    "position": [
+      9.0,
+      0.25,
+      -12.0
+    ],
+    "rotation": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "displayName": "Torr",
+    "role": "Local fixer",
+    "definition": "Assets/AthenHill/Data/npc_torr.asset",
+    "nodes": [
+      {
+        "id": "greeting",
+        "voice": "Assets/AthenHill/Audio/ElevenLabs/NpcVoices/npc_torr-greeting.wav",
+        "choices": [
+          "terminals>slab:",
+          "leave>:close"
+        ]
+      },
+      {
+        "id": "slab",
+        "voice": "Assets/AthenHill/Audio/ElevenLabs/NpcVoices/npc_torr-slab.wav",
+        "choices": [
+          "back>greeting:",
+          "leave>:close"
+        ]
+      }
+    ],
+    "countsForCityVisit": true,
+    "colliders": []
+  },
+  {
+    "npcId": "npc_vex",
+    "path": "Colonists/npc_vex",
+    "position": [
+      41.7,
+      0.0,
+      -1.5
+    ],
+    "rotation": [
+      0.0,
+      40.107,
+      0.0
+    ],
+    "displayName": "Vex",
+    "role": "Free Column guard",
+    "definition": "Assets/AthenHill/Data/npc_vex.asset",
+    "nodes": [
+      {
+        "id": "greeting",
+        "voice": "Assets/AthenHill/Audio/ElevenLabs/NpcVoices/npc_vex-greeting.wav",
+        "choices": [
+          "gate>gate:",
+          "leave>:close"
+        ]
+      },
+      {
+        "id": "gate",
+        "voice": "Assets/AthenHill/Audio/ElevenLabs/NpcVoices/npc_vex-gate.wav",
+        "choices": [
+          "back>greeting:",
+          "leave>:close"
+        ]
+      }
+    ],
+    "countsForCityVisit": true,
+    "colliders": []
+  },
+  {
+    "npcId": "npc_linn",
+    "path": "Colonists/npc_linn",
+    "position": [
+      2.5,
+      1.5,
+      4.7
+    ],
+    "rotation": [
+      0.0,
+      114.5916,
+      0.0
+    ],
+    "displayName": "Linn",
+    "role": "Hill regular",
+    "definition": "Assets/AthenHill/Data/npc_linn.asset",
+    "nodes": [
+      {
+        "id": "greeting",
+        "voice": "Assets/AthenHill/Audio/ElevenLabs/NpcVoices/npc_linn-greeting.wav",
+        "choices": [
+          "tree>hill:",
+          "leave>:close"
+        ]
+      },
+      {
+        "id": "hill",
+        "voice": "Assets/AthenHill/Audio/ElevenLabs/NpcVoices/npc_linn-hill.wav",
+        "choices": [
+          "back>greeting:",
+          "leave>:close"
+        ]
+      }
+    ],
+    "countsForCityVisit": true,
+    "colliders": []
+  },
+  {
+    "npcId": "npc_ossa",
+    "path": "Outer Berms/Warden post/Warden Ossa",
+    "position": [
+      -69.4,
+      -1.5924,
+      -3.25
+    ],
+    "rotation": [
+      0.0,
+      35.0,
+      0.0
+    ],
+    "displayName": "Warden Ossa",
+    "role": "West Gate watch",
+    "definition": "Assets/AthenHill/Data/npc_ossa.asset",
+    "nodes": [
+      {
+        "id": "long_arm",
+        "voice": "Assets/AthenHill/Audio/ElevenLabs/NpcVoices/npc_ossa-long_arm.wav",
+        "choices": [
+          "range>range:",
+          "leave>:close"
+        ]
+      },
+      {
+        "id": "plate_carrier",
+        "voice": "Assets/AthenHill/Audio/ElevenLabs/NpcVoices/npc_ossa-plate_carrier.wav",
+        "choices": [
+          "range>range:",
+          "leave>:close"
+        ]
+      },
+      {
+        "id": "greeting",
+        "voice": "Assets/AthenHill/Audio/ElevenLabs/NpcVoices/npc_ossa-greeting.wav",
+        "choices": [
+          "locker>locker:",
+          "machines>machines:"
+        ]
+      },
+      {
+        "id": "locker",
+        "voice": "Assets/AthenHill/Audio/ElevenLabs/NpcVoices/npc_ossa-locker.wav",
+        "choices": [
+          "back>machines:",
+          "leave>:close"
+        ]
+      },
+      {
+        "id": "machines",
+        "voice": "Assets/AthenHill/Audio/ElevenLabs/NpcVoices/npc_ossa-machines.wav",
+        "choices": [
+          "range>range:",
+          "leave>:close"
+        ]
+      },
+      {
+        "id": "range",
+        "voice": "Assets/AthenHill/Audio/ElevenLabs/NpcVoices/npc_ossa-range.wav",
+        "choices": [
+          "back>locker:",
+          "leave>:close"
+        ]
+      }
+    ],
+    "countsForCityVisit": false,
+    "colliders": []
+  },
+  {
+    "npcId": "npc_rell",
+    "path": "Outer Berms/Warden post/West Gate checkpoint/Warden Rell",
+    "position": [
+      -61.6,
+      -0.4239,
+      -1.3
+    ],
+    "rotation": [
+      0.0,
+      290.0,
+      0.0
+    ],
+    "displayName": "Warden Rell",
+    "role": "Checkpoint sentry",
+    "definition": "Assets/AthenHill/Data/npc_rell.asset",
+    "nodes": [
+      {
+        "id": "greeting",
+        "voice": "Assets/AthenHill/Audio/ElevenLabs/NpcVoices/npc_rell-greeting.wav",
+        "choices": [
+          "safe>safe:",
+          "leave>:close"
+        ]
+      },
+      {
+        "id": "safe",
+        "voice": "Assets/AthenHill/Audio/ElevenLabs/NpcVoices/npc_rell-safe.wav",
+        "choices": [
+          "back>greeting:",
+          "leave>:close"
+        ]
+      }
+    ],
+    "countsForCityVisit": false,
+    "colliders": []
+  }
+]
