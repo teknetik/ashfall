@@ -41,7 +41,8 @@ namespace AthenHill.Editor
             if (UnityEngine.Object.FindAnyObjectByType<WeaponModVisuals>(FindObjectsInactive.Include)) throw new InvalidOperationException("Pistol mod visuals are already installed.");
             var session = UnityEngine.Object.FindAnyObjectByType<GameSession>();
             var combat = UnityEngine.Object.FindAnyObjectByType<PlayerCombat>(FindObjectsInactive.Include);
-            var vm = UnityEngine.Object.FindAnyObjectByType<FirstPersonViewModel>(FindObjectsInactive.Include);
+            // 3 Oct 2026: the scene has two view models (pistol, field rifle); FindAnyObjectByType could return the rifle's
+            var vm = combat && combat.viewModel ? combat.viewModel : UnityEngine.Object.FindObjectsByType<FirstPersonViewModel>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault(v => !v.rifle);
             var log = new List<object>();
             if (combat && combat.heldPistol) log.Add(Fit("held", combat.heldPistol.transform, combat.muzzlePoint, modsAsset, pistolMeshes, session, ShadowCastingMode.On));
             if (vm && vm.pistol) log.Add(Fit("first-person", vm.pistol, vm.muzzle, modsAsset, pistolMeshes, session, ShadowCastingMode.Off));

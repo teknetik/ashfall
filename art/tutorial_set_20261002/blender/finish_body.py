@@ -4,7 +4,10 @@
 - One skinned mesh object 'char1' on the renamed game_engine rig 'Armature'.
 - idle/walk/run retargeted from the colonist's Meshy clips (world-space bind-pose delta, hips height-scaled).
 - Export art/tutorial_set_20261002/out/colonist_mpfb.glb + renders.
-Usage: blender_mpfb.sh finish_body.py -- SUIT_TAG"""
+Usage: blender_mpfb.sh finish_body.py -- SUIT_TAG [drop=18] [face=old] [noanim]
+3 Oct 2026 (art/player_face_20261003): the skin is the Meshy retexture of this MPFB skin mesh (painted face, hair, beard,
+normal and roughness, original UVs) and the hair/beard/brow cards are replaced by alpha-clipped shell layers on the
+painted hair. `face=old` rebuilds the previous MakeHuman skin + cards look."""
 import sys; sys.path.insert(0, '/home/teknetik/code/ao2/art/tutorial_set_20261002/blender')
 import bpy, math, json
 from pathlib import Path
@@ -14,6 +17,8 @@ from fitlib import *
 args = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
 TAG = args[0] if args else 'v5'
 NOANIM = 'noanim' in args
+OLDFACE = 'face=old' in args
+PF = AO2 / 'art/player_face_20261003'
 bpy.ops.wm.open_mainfile(filepath=str(OUT / 'mpfb' / f'suit_{TAG}.blend'))
 rig = next(o for o in bpy.data.objects if o.type == 'ARMATURE')
 rig.name = 'Armature'
@@ -39,8 +44,9 @@ def make_mat(name, base, rough=0.6, metal=0.0, normal=None, rough_img=None, meta
     m = bpy.data.materials.new(name); m.use_nodes = True
     nt = m.node_tree; bs = nt.nodes['Principled BSDF']
     t = nt.nodes.new('ShaderNodeTexImage'); t.image = base; nt.links.new(t.outputs['Color'], bs.inputs['Base Color'])
-    if alpha:
-        nt.links.new(t.outputs['Alpha'], bs.inputs['Alpha'])
+    if alpha:   # Round between alpha and the BSDF: Blender's glTF exporter writes alphaMode MASK (cutoff 0.5), not BLEND
+        rnd = nt.nodes.new('ShaderNodeMath'); rnd.operation = 'ROUND'
+        nt.links.new(t.outputs['Alpha'], rnd.inputs[0]); nt.links.new(rnd.outputs[0], bs.inputs['Alpha'])
         m.blend_method = 'CLIP' if hasattr(m, 'blend_method') else None
         try: m.surface_render_method = 'DITHERED'
         except Exception: pass
@@ -74,15 +80,35 @@ set_mat(suit, make_mat('PlayerJumpsuit', img(TEX / 'suit_base.png'), normal=img(
 for name, o in parts.items():
     if name == 'Jumpsuit': continue
     low = name.lower(); im = first_image(o)
-    if low == 'human':
+    if low == 'human' and not OLDFACE:
+        set_mat(o, make_mat('PlayerSkin', img(PF / 'tex/skin_base.png'), normal=img(PF / 'tex/skin_normal.png', True),
+                            rough_img=img(PF / 'tex/skin_rough.png', True)))
+        rec.setdefault('materials', {})[name] = 'PlayerSkin ' + str(PF / 'tex/skin_base.png'); continue
+    elif low == 'human':
         set_mat(o, make_mat('PlayerSkin', im, rough=0.52))
     elif 'beard' in low:
         set_mat(o, make_mat('PlayerBeard', img(TEX / 'beard_rgba.png'), rough=0.7, alpha=True))
     elif 'high-poly' in low or 'eye' == low[-3:]:
-        set_mat(o, make_mat('PlayerEyes', img(EYES / 'brown_eye.png'), rough=0.15))
+        set_mat(o, make_mat('PlayerEyes', img(EYES / 'brown_eye.png') if OLDFACE else img(PF / 'tex/eye_brown.png'), rough=0.15))
     else:   # brows, lashes, hair
         set_mat(o, make_mat('Player' + name.split('.')[-1].capitalize(), im, rough=0.65, alpha=True))
     rec.setdefault('materials', {})[name] = o.data.materials[0].name + (' ' + im.filepath if im else '')
+
+# ---- painted hair (3 Oct 2026): the card hair, beard and brows go; shells on the painted hair give the volume
+if not OLDFACE:
+    for name in list(parts):
+        if any(k in name.lower() for k in ('short02', 'beard', 'eyebrow')):
+            bpy.data.objects.remove(parts.pop(name)); rec.setdefault('cards_removed', []).append(name)
+    sys.path.insert(0, str(PF / 'blender')); import shells
+    sh, rec['hair_shells'] = shells.build_shells(parts['Human'], rig); parts['HairShells'] = sh
+    print('SHELLS', rec['hair_shells'])
+# every part carries the 'Col' colour attribute (white, alpha 1) so the joined mesh exports one COLOR_0 that glTF
+# multiplies into base colour/alpha; only the shell layers have alpha < 1
+for name, o in parts.items():
+    ca = o.data.color_attributes.get('Col') or o.data.color_attributes.new('Col', 'FLOAT_COLOR', 'POINT')
+    if name != 'HairShells':
+        for d in ca.data: d.color = (1, 1, 1, 1)
+    o.data.color_attributes.active_color = ca
 
 # ---- eyes: drop the clear cornea shells (they map to the texture's corner disc and would render opaque over the iris)
 import bmesh
@@ -215,7 +241,9 @@ bpy.ops.wm.save_as_mainfile(filepath=str(OUT / 'mpfb' / f'final_{TAG}.blend'))
 bpy.ops.object.select_all(action='DESELECT'); rig.select_set(True); char.select_set(True); bpy.context.view_layer.objects.active = rig
 bpy.ops.export_scene.gltf(filepath=str(OUT / 'out' / 'colonist_mpfb.glb'), use_selection=True, export_format='GLB',
                           export_skins=True, export_animations=not NOANIM, export_animation_mode='NLA_TRACKS',
-                          export_morph=False, export_yup=True, export_image_format='AUTO')
+                          export_morph=False, export_yup=True, export_image_format='AUTO',
+                          export_vertex_color='NAME', export_vertex_color_name='Col', export_all_vertex_colors=False,
+                          export_tangents=True)
 rec['glb_bytes'] = (OUT / 'out' / 'colonist_mpfb.glb').stat().st_size
 (OUT / 'out' / 'colonist_mpfb.json').write_text(json.dumps(rec, indent=2))
 if rig.animation_data:

@@ -17,7 +17,7 @@ namespace AthenHill
   [Tooltip("Colonist only: scale by the aim-pose weight, so the hand goes onto the rifle while it is raised and stays free in the lowered carry.")]
   public PlayerWeaponPose scaleByAim;
   [Min(.01f)]public float blendSeconds=.12f;
-  [Tooltip("Keeps the elbow bending this way (in the upper bone's parent space); zero = keep the animated bend.")]public Vector3 poleHint=Vector3.zero;
+  [Tooltip("Elbow direction in the upper bone's parent space: the solved arm turns about the shoulder-hand line so the elbow points this way; zero = keep the animated bend plane.")]public Vector3 poleHint=Vector3.zero;
   float weight;Transform current;
   void LateUpdate()
   {
@@ -47,6 +47,17 @@ namespace AthenHill
    // shoulder: swing the chain so the hand points at the target
    c=hand.position;
    upper.rotation=Quaternion.FromToRotation(c-a,t-a)*upper.rotation;
+   // elbow direction (3 Oct 2026): with a pole hint the chain turns about the shoulder-hand line so the elbow points
+   // that way (first-person arms: elbows down and out, never across the view)
+   if(poleHint.sqrMagnitude>0&&upper.parent)
+   {
+    var sh=(t-a);if(sh.sqrMagnitude>1e-8f)
+    {
+     sh.Normalize();
+     var e=Vector3.ProjectOnPlane(lower.position-a,sh);var p=Vector3.ProjectOnPlane(upper.parent.TransformDirection(poleHint),sh);
+     if(e.sqrMagnitude>1e-8f&&p.sqrMagnitude>1e-8f)upper.rotation=Quaternion.AngleAxis(Vector3.SignedAngle(e,p,sh),sh)*upper.rotation;
+    }
+   }
    // hand: turn to the grip frame
    hand.rotation=Quaternion.Slerp(hand.rotation,target.rotation,w);
   }

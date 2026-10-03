@@ -19,6 +19,28 @@ namespace AthenHill.Tests
     // 3 Oct 2026: a second view model exists for the field rifle; this test is about the pistol's grip hands
     var vm=scene.GetRootGameObjects().SelectMany(g=>g.GetComponentsInChildren<FirstPersonViewModel>(true)).Single(v=>!v.rifle);
     var hands=vm.pistol.Find("FP hands v2");
+    // 3 Oct 2026 (player_face_20261003): the pistol view model shows the player's own MPFB arms (same skin as the body)
+    // with solved finger grips; the authored grip mesh stays attached but inactive for rollback.
+    if(hands&&!hands.gameObject.activeSelf)
+    {
+     var arms=vm.GetComponentsInChildren<SkinnedMeshRenderer>(true).Where(s=>!s.transform.IsChildOf(vm.pistol)&&!s.name.StartsWith("FP armour")).ToArray();
+     Assert.That(arms.Length,Is.GreaterThan(0),"player arms on the pistol view model");
+     foreach(var s in arms)
+     {
+      Assert.That(s.enabled,Is.True,s.name);
+      Assert.That(s.sharedMaterials.Any(m=>m&&m.name=="PlayerSkin"),Is.True,"arms use the body's PlayerSkin: "+s.name);
+      Assert.That(s.shadowCastingMode,Is.EqualTo(UnityEngine.Rendering.ShadowCastingMode.Off),s.name);
+     }
+     var grip=vm.GetComponentInChildren<PlayerHandGrip>(true);
+     Assert.That(grip,Is.Not.Null,"finger grip on the pistol arms");
+     Assert.That(grip.pistolRight.Length,Is.EqualTo(grip.rightFingers.Length),"solved shooting-hand grip");
+     Assert.That(grip.pistolLeft.Length,Is.EqualTo(grip.leftFingers.Length),"solved support-hand grip");
+     var iks=vm.GetComponentsInChildren<SupportHandIK>(true);
+     Assert.That(iks.Count(k=>k.pistolGrip&&k.pistolGrip.IsChildOf(vm.pistol)),Is.EqualTo(2),"both hands IK'd onto grip points on the view-model pistol");
+     var armsRig=vm.GetComponent<ViewModelArmsRig>();
+     Assert.That(armsRig&&armsRig.arms&&armsRig.arms!=vm.rig,Is.True,"weapon-driven: arms anchored to the camera, the pistol on its own mount");
+     return;
+    }
     Assert.That(hands,Is.Not.Null,"PlayerFPHands_v2 is not attached to the view-model pistol");
     Assert.That(hands.gameObject.activeSelf,Is.True);
     Assert.That(hands.localPosition.magnitude,Is.LessThan(1e-4f));Assert.That(Quaternion.Angle(hands.localRotation,Quaternion.identity),Is.LessThan(.01f));

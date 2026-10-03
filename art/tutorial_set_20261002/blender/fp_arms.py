@@ -20,6 +20,8 @@ bm = bmesh.new(); bm.from_mesh(fa.data); bm.faces.ensure_lookup_table()
 kill = [f for f in bm.faces if not all(v.index in keep for v in f.verts)]
 bmesh.ops.delete(bm, geom=kill, context='FACES'); bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context='VERTS')
 bm.to_mesh(fa.data); bm.free(); fa.data.update()
+# no vertex colours on the arms (3 Oct 2026: char1 carries a white 'Col' for the hair shells; glTF would multiply any COLOR_0)
+for ca in list(fa.data.color_attributes): fa.data.color_attributes.remove(ca)
 # drop material slots the arms no longer use (beard, hair, eyes ...)
 used = {p.material_index for p in fa.data.polygons}
 for i in sorted(range(len(fa.data.materials)), reverse=True):

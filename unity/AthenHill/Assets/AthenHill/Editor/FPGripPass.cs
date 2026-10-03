@@ -31,7 +31,9 @@ namespace AthenHill.Editor
         static FirstPersonViewModel OpenVm()
         {
             if(SceneManager()!=Scene)EditorSceneManager.OpenScene(Scene);
-            var vm=Object.FindAnyObjectByType<FirstPersonViewModel>(FindObjectsInactive.Include);
+            // 3 Oct 2026: two view models in the scene (pistol, field rifle): the pistol's is the one PlayerCombat drives
+            var combat=Object.FindAnyObjectByType<PlayerCombat>(FindObjectsInactive.Include);
+            var vm=combat&&combat.viewModel?combat.viewModel:Object.FindObjectsByType<FirstPersonViewModel>(FindObjectsInactive.Include,FindObjectsSortMode.None).FirstOrDefault(v=>!v.rifle);
             if(!vm)throw new InvalidOperationException("No FirstPersonViewModel in scene");
             return vm;
         }

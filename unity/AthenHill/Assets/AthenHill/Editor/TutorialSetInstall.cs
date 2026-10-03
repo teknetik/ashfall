@@ -127,6 +127,8 @@ namespace AthenHill.Editor
             if(fpArmsAsset)log.Add(ViewModels(combat,motor,body,fpArmsAsset));else log.Add("view models: TS_FPArms.glb not delivered");
             Undo.RecordObject(vis,"tutorial set");vis.combat=combat;vis.pieces=list.ToArray();
             PrefabUtility.RecordPrefabInstancePropertyModifications(vis);EditorUtility.SetDirty(vis);
+            // 3 Oct 2026 (player_face_20261003): both view models on the player's arms, solved finger grips, worn gloves/arm guards mirrored
+            if(fpArmsAsset)log.Add(PlayerFace20261003.FirstPersonHands(combat,motor,vis));
             return "tutorial set: "+string.Join("; ",log);
         }
             public static float SupportAlong=.30f,SupportBelow=.035f;   // handguard point: metres forward of the grip along the barrel, below its axis

@@ -253,7 +253,9 @@ namespace AthenHill.Editor
             var steps=motor.GetComponent<FootstepAudio>();Must(steps&&Under(steps.leftFoot)&&Under(steps.rightFoot),"footstep feet on the new rig");
             // the scene holds two FirstPersonViewModel components; check the one combat drives (grip hands can sit below the arms rig)
             var vm=combat.viewModel;Must(vm,"combat.viewModel");
-            Must(vm&&vm.pistol&&vm.pistol.GetComponentsInChildren<Transform>(true).Any(t=>t.name=="FP hands v2"),"first-person view model with the grip hands");
+            // the authored grip mesh (FP hands v2) or, since 3 Oct 2026 (PlayerFace20261003.PistolOnPlayerArms), the player's own arms
+            Must(vm&&vm.pistol&&(vm.pistol.GetComponentsInChildren<Transform>(true).Any(t=>t.name=="FP hands v2"&&t.gameObject.activeSelf)
+                ||vm.GetComponentsInChildren<SkinnedMeshRenderer>(true).Any(s=>s.enabled&&!s.transform.IsChildOf(vm.pistol))),"first-person view model with hands");
             var proxy=visual.GetComponentsInChildren<MeshRenderer>(true).FirstOrDefault(r=>r.name==ProxyName);Must(proxy&&proxy.shadowCastingMode==ShadowCastingMode.ShadowsOnly,"shadow proxy under the visual");
             foreach(var cam in new[]{"cam_character_idle","cam_character_face","cam_character_back","cam_rifle_carry","cam_rifle_side","cam_vest_front","cam_checkpoint_player"})
                 Must(Object.FindObjectsByType<Camera>(FindObjectsInactive.Include,FindObjectsSortMode.None).Any(c=>c.name==cam),"camera "+cam);
