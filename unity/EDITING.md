@@ -410,6 +410,11 @@ Edit that route and its AmbientWalker speed in the Inspector. The original
 four talking NPCs and three roaming travelers retain their models and routes.
 **ActorAnimation** supports this Animator as well as existing legacy Animation
 actors. ImportTraveler excludes the mechanic when refreshing the three travelers.
+Since 3 Oct 2026 the three walkers use **Prefabs/WardWalkers/WardWalker_Daro/Sel/Anso**
+(`WardWalkerInstall`, records in `meshy/ward-walkers-20261003`); each old **Traveler** child stays
+inactive under its walker. Change a walker's speed freely: its ActorAnimation plays the walk at
+speed / **walkStrideSpeed** (the clip's measured ground speed). Run `WardWalkerInstall --steps rollback`
+before the old ImportTraveler menu, which destroys whatever the walker's actor points at.
 
 For deliberate source reimport, **ImportDistrictAssets.Prepare** recreates
 individual materials and prefabs. Preserve full source maps and review each
@@ -890,14 +895,34 @@ Gameplay v2 content is serialized data; nothing is hard-coded in the scripts. Ed
   (grip, barrel, cell); `modifiers` (per mod: slot and effects — stat + `add` or `percent`); `recipes` (inputs by item
   or tag, `group` Component/MarkI/MarkII, `unlocks`: `acquireItem` or `orderStart`, `lockedHint`); `lootTables`
   (min/max quantity, chance, `pityAfter` bad-luck protection, `guaranteeUntilCollected` for the Foreman's core);
+  groups since 3 Oct 2026 also include `Armour` (RecipeGroup value 5, appended so stored numbers are unchanged);
   presentation labels for slots, tag ingredients, recipe groups and the fabricator stats table.
   Effective stat = clamp((base + Σadd) × (1 + Σpercent / 100)). PlayerCombat reads every weapon stat from this; its own
   damage/range/nano fields are only a fallback. After editing, run `AthenHill.Editor.CraftingDataExporter.Export`
   to refresh the dev-UI export and validate references.
-- **Data/Crafting/WardFieldOrders.asset** — Ossa's five orders (goal FitMod / CollectItem / CraftFromGroup, target,
+- **Data/Crafting/WardFieldOrders.asset** — Ossa's orders (goal FitMod / CollectItem / CraftFromGroup / CraftItem, target,
   test-fire flag, encounter to activate, guidance key, brief, radio start/complete lines, credit/item/schematic
   rewards) and the Field Notes templates (`{brief} {item} {weapon} {recipe} {inputs} {count}`). Orders only move
-  forward; rewards and completion lines fire once.
+  forward; rewards and completion lines fire once. Order list since 3 Oct 2026: Steady Hands, the four **Warden Kit**
+  orders (Helm, Bracers, Gloves, Leg Plates), Long Arm, Plate Carrier, Keep the Charge, Bore It True, The Depot Foreman,
+  Mark II. Saves record the current order's `id` (`FieldOrderState.id`, `#freeplay` after the last order) as well as its
+  index; Restore prefers the id, so inserting orders keeps saves on the right order (saves without an id keep their index).
+
+**Warden kit (3 October 2026).** Carl: "why after shooting the tutorial robots did I get a load of armour. that should be a
+crafting mission ... should take scavenging most of the outer berms to get it." The primer no longer grants armour
+(`BermsTutorial.kitItems` is empty in code and scene; the vest and boots are still the colonist's starting gear). The
+helmet, arm guards, gloves and leg armour are `excludeFromTrade` (Mira sold them) and are built at Brann's bench through
+four CraftItem orders straight after Steady Hands. Each order's start reveals its schematic (group Armour, `orderStart`
+unlock); the first also reveals Refined Alloy Plate (3 scrap alloy + 2 nanites), and only the helm reports to Brann first.
+Recipes: helmet 2 plate, 1 liner, 2 webbing, 2 rivets; arm guards 2 plate, 2 webbing, 2 rivets; gloves 2 webbing, 1 liner,
+1 rivet, 2 copper filament; leg armour 3 plate, 2 liner, 3 webbing, 3 rivets (in total 7 plate = 21 scrap alloy + 14
+nanites, 9 webbing, 4 liner, 8 rivets, 2 filament). New loot-only salvage (sell-only, no parts price): `strap_webbing`
+(the ten outer-site heaps `loot_berms_outer`, the caravan strongbox), `padded_liner` (truck and drone wrecks, outpost
+lockers), `rivet_stock` (worker, gunner and lancer droids, `loot_scrap_heap`); every entry has `pityAfter`. Dialogue:
+Ossa's `warden_kit` node; Brann's `kit_brief`, `kit_report`, `kit_gather`, `kit_bench` (not yet voiced). The data is
+re-applied idempotently by `art/armour_mission_20261003/apply_data.py` (run it after the `art/tutorial_set_20261002`,
+`art/rifle_armour_20261002` and `art/next_level_20261002/*/apply_data.py` scripts, then
+`CraftingDataExporter.Export`); design notes and drop maths in `art/armour_mission_20261003/README.md`.
 - **Prefabs/OuterBerms/SalvageCache.prefab** — the droid drop (glow colours, light intensity, prompt).
   **SalvageHeapNode.prefab** — search time, respawn time, cancel distance, prompts, marker light/motes.
   **FeralDepotForeman.prefab** — a prefab *variant* of FeralWorkerDroid: change its overrides (health, strike, wind-up,
@@ -1257,3 +1282,54 @@ values are in `originals.json`, recorded before the first change.
   left to Carl.
 - Review cameras `cam_nf_*` (**Night facade review cameras**). Evidence and remaining defects:
   `evidence/night-facade/20261001/README.md`.
+
+## Ward buildings (3 October 2026)
+
+`Assets/AthenHill/Editor/WardBuildingsPass.cs` replaces the 26 Sep district-retrofit buildings that still read as
+boxes (`art/ward_buildings_20261003/AUDIT.md`). Each building is authored in Blender on the Ward masonry kit by
+`art/ward_buildings_20261003/author_buildings.py -- <key>` (→ `Art/WardBuildings/Models/<Model>_LOD0-2.glb` and
+`<key>.json` with colliders, lamp/prop mounts and extra lights) and placed from `art/ward_buildings_20261003/layout.json`
+(instances, retired paths, review cameras, the pass's WB_* material settings). Batch steps:
+`RunBatch --steps build:<key>,install:<key>,verify[:<key>],capture:<key>[:cam+cam]` (`install` is one time per key;
+`reinstall:<key>` during authoring). Rebuilding a prefab updates the installed instances through the prefab link.
+Keys and scene roots: `nanofab` (Ward building: Nanofab 2), `watchtower` (… watchtowers, 4 instances), `hall`
+(… Processing 11 ruin), `aquifer` (… Aquifer 3), `tubenode` / `tubeseg` / `tubespan` (Quantum Tube nodes and the goods
+conduit along the north wall: pylon bays east of the gate, wall-hung spans over the west homes), `homea` / `homeb` /
+`homec` (converted container homes on the wall feet; B is stacked with a stair). The old retrofit groups
+(`Ward district retrofit/Nanofab workshop`, `Watchtower 1…4`, `Processing hall ruin`, `Aquifer pump station`,
+`Quantum Tube conduit`, `Perimeter dwellings`) stay in the scene inactive (activation overrides on the retrofit prefab
+instance) for rollback. Wall lamps are the shop family (PH_WallLamp, NF bulb, cookie spot) on the Ward lighting clock;
+interior/status glows under "Unclocked lights" are always on. Not render-chunk sources (the chunk fingerprint is
+unchanged). Verify also lists marker conflicts (routes, NPCs, landmarks, spawn) and AABB collider overlaps.
+
+Round two (`art/ward_buildings_20261003/README_round2.md`): the four watchtowers are now four models (`Watchtower`,
+`Watchtower2/3/4`; an instance in `layout.json` may name its own `model`; build-only keys `watchtower2…4`) with two
+cabin types (armoured cabin / open crenellated top) and per-tower damage and repairs; Processing 11 carries a salvage
+works (scaffold, tarp, floodlight on the clock, reclaimed stone, cordon and permit board, shear legs, skip, sorted steel,
+mason's bench); `gatebastion` (root **Ward building: West Gate bastions**, prefabs `GateBastion` / `GateBastionN`)
+replaces `Ward district retrofit/Gate defences` (inactive) with two gabion gun positions beside the spawn. New batch steps:
+`cameras:<key>` (re-place review cameras without reinstalling) and `viewbudget[:prefix]` (lights reaching each review
+camera and this pass's triangles at the selected LOD → `evidence/ward-buildings/20261003/round2/view-budget.json`). The
+masonry kit has opt-in cylindrical UVs (`Part.new_block(cyl=(point, axis))`); painted tanks and cylinders use the
+sheet-steel `WB_CylBone`, `WB_CylRed`, `WB_TankBone`, `WB_TankTeal` (VH_Paint's texture streaks on curved faces).
+`round2_layout.py` re-applies the layout edits.
+
+## MPFB2 player and the tutorial armour set (2–3 October 2026)
+
+The player colonist is an MPFB2 body built in Blender (`art/tutorial_set_20261002/blender/`, MPFB 2.0.17 as a Blender 5.2
+user extension, run headless with `blender_mpfb.sh`). Rebuild chain: `mpfb_build.py -- <tag> <beard>` (phenotype, skin,
+eyes, brows, hair, beard, game_engine rig renamed to the game's bone names + fingers, 1.80 m) → `jumpsuit_fit.py -- <body>
+<suit> <collarZ>` (the colonist's flight suit refitted, cut, shrink-fitted, skinned before the hidden body is removed) →
+`finish_body.py -- <suit> [drop=18]` (limb rest directions matched to the Meshy rig so every clip transfers 1:1, collarbones
+dropped 18° first, torso left on MPFB's straight rest; matching the torso too hunched the back, 3 Oct 2026; relaxed finger curl baked into
+the rest, glTF materials, one `char1` mesh, idle/walk/run retargeted) → `rebuild_armour.sh` (every piece re-fitted on the
+body named by `fitlib.BODY_TAG` and exported skinned at 40 % detail). Copy `out/colonist_mpfb.glb` over
+`Art/Imported/Meshy/colonist.glb` (same GUID) and `out/TS_*.glb` into `Art/Armour/TutorialSet/`, then run
+`MainCharacterInstall.InstallBatch` (it measures the palm for the weapon grips, and `RifleArmourInstall.Vest` calls
+`TutorialSetInstall.Attach`). For armour alone, `TutorialSetInstall.InstallBatch` is enough; `TutorialSetInstall.CaptureBatch`
+renders suit / armour / pistol / rifle review shots into `art/tutorial_set_20261002/unity/captures/`. Pieces bind to the
+player's own bones by name and are rejected if their bind poses differ from the body's (re-export on the current body).
+Item data is re-applied idempotently by `art/tutorial_set_20261002/apply_data.py`. The primer's kit grant
+(`BermsTutorial.kitItems`) is empty since 3 Oct 2026: the helmet, arm guards, gloves and leg armour are built through the
+Warden Kit orders (see *Scavenger's Arc*). Provenance: `meshy/tutorial-set-20261002/README.md`; the previous Meshy colonist is in its `previous/`.
+Cost bisection in a dev build: `unity/tools/lookbook.py ... --set "<name prefix>=0"` (NativeQa `setActive`).

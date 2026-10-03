@@ -48,6 +48,22 @@ references. `SettingsAudioPass.ApplyAndBuild` imports the tracks and builds both
 Linux players. The former Hill at Dusk source remains as an unused historical
 production asset. The old ElevenLabs pass can intentionally restore that soundscape.
 
+## Next-level pass, 2 October 2026 (music default and trade click)
+
+- **Oasis of Ruins** (`Assets/AthenHill/Audio/Music/Oasis of Ruins.mp3`, 4:00, 48 kHz stereo, −14.5 LUFS integrated,
+  supplied by the user in `meshy/incoming-20261002/`, SHA-256
+  `4be69277940897315696d22d6fff6c3467ac39879972c5d2ae6bd08b83385dfc`, same streaming Vorbis import as the 8 Sep tracks)
+  is the **first** entry of `CityAudio.musicPlaylist`, followed by Dust of the Giants and Dust of Alshain. `CityAudio`
+  starts `musicPlaylist[0]` on every scene load (new game and Continue alike; the track index is not saved) and
+  advances in playlist order with the three-second crossfade, so the new track always plays first.
+- **Trade click**: `CityAudio.tradeConfirm` now plays `Assets/AthenHill/Audio/UI/trade-click.wav` on
+  `CitySoundCue.Trade` (buy and sell). Carl found the ElevenLabs confirmation "like a bell or hitting an empty can";
+  the replacement is a 34 ms synthesized digital click (`art/next_level_20261002/combat/make_trade_click.py`, numpy,
+  deterministic: a 1.2 ms transient through a 2.6 kHz resonance plus a soft 1.9 kHz blip at −14 dB), peak −14 dBFS,
+  imported without normalization so it stays quiet. The old `ElevenLabs/trade-confirm.wav` stays in the project for
+  rollback (`CombatNextLevelPass.Trade()` re-points the scene field; the Unavailable, Lattice and confirmation cues are
+  unchanged).
+
 ## Historical generation and effect provenance
 
 [ElevenLabs Music API](https://elevenlabs.io/docs/api-reference/music/compose)
