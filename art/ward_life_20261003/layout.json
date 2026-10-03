@@ -1,0 +1,1457 @@
+{
+ "_doc": "Ward life pass layout (3 Oct 2026): plain Python. Writes layout.json for Unity (Editor/WardLifePass.cs).\n\nThree spots, each a scene root \"Ward life: <spot>\":\n  West Gate bastions  WL_GateBastionS/N at the round-two roots (same position/yaw), retiring\n                      \"Ward building: West Gate bastions\" (deactivated, kept for rollback).\n  Lattice court       the court behind Vanguard Hall where the old Lattice Jack stood becomes the Wardens' water ration\n                      point (WL_WaterPoint) with the queue's cans and carts from the street dressing kit, damp and\n                      trodden decals.\n  Node 07 goods dock  the empty paving east of the Meshy ring in front of Quantum Tube Node 07: inbound/outbound bays\n                      with goods canisters, a platform scale, the tally desk and dock board, painted bay marks.\n\nValidation (prints problems, exits 1 if any): every placed footprint (model colliders from the authored json, kit\nprops from the street dressing sizes) against the saved scene colliders of the survey\n(unity/evidence/ward-life/20261003/survey/survey.json), walker/mechanic routes (1 m), NPC/landmark/interaction markers,\nthe hall loop and Lattice/ring approach corridors from unity/tools, the Node 07 door lane and each other.\nRun: python3 layout.py\n",
+ "date": "2026-10-03",
+ "models": [
+  {
+   "key": "bastion_s",
+   "model": "WL_GateBastionS",
+   "lods": 3,
+   "lodDistances": [
+    22,
+    60,
+    400
+   ]
+  },
+  {
+   "key": "bastion_n",
+   "model": "WL_GateBastionN",
+   "lods": 3,
+   "lodDistances": [
+    22,
+    60,
+    400
+   ]
+  },
+  {
+   "key": "waterpoint",
+   "model": "WL_WaterPoint",
+   "lods": 2,
+   "lodDistances": [
+    26,
+    90
+   ]
+  },
+  {
+   "key": "canister_pallet",
+   "model": "WL_CanisterPallet",
+   "lods": 2,
+   "lodDistances": [
+    14,
+    55
+   ]
+  },
+  {
+   "key": "canister_stand",
+   "model": "WL_CanisterStand",
+   "lods": 2,
+   "lodDistances": [
+    14,
+    55
+   ]
+  },
+  {
+   "key": "pallet",
+   "model": "WL_Pallet",
+   "lods": 2,
+   "lodDistances": [
+    10,
+    45
+   ]
+  },
+  {
+   "key": "floor_scale",
+   "model": "WL_FloorScale",
+   "lods": 2,
+   "lodDistances": [
+    12,
+    50
+   ]
+  },
+  {
+   "key": "dock_board",
+   "model": "WL_DockBoard",
+   "lods": 2,
+   "lodDistances": [
+    16,
+    60
+   ]
+  },
+  {
+   "key": "tally_desk",
+   "model": "WL_TallyDesk",
+   "lods": 2,
+   "lodDistances": [
+    12,
+    50
+   ]
+  }
+ ],
+ "spots": [
+  {
+   "root": "Ward life: West Gate bastions",
+   "instances": [
+    {
+     "kind": "model",
+     "prefab": "Assets/AthenHill/Prefabs/WardLife/WL_GateBastionS.prefab",
+     "model": "WL_GateBastionS",
+     "name": "Gate bastion south (post 1)",
+     "pos": [
+      44.0,
+      0.0,
+      -10.75
+     ],
+     "yaw": 270
+    },
+    {
+     "kind": "model",
+     "prefab": "Assets/AthenHill/Prefabs/WardLife/WL_GateBastionN.prefab",
+     "model": "WL_GateBastionN",
+     "name": "Gate bastion north (post 2)",
+     "pos": [
+      44.0,
+      0.0,
+      22.5
+     ],
+     "yaw": 270
+    }
+   ],
+   "decals": [
+    {
+     "mat": "WG_DecalSandSpill",
+     "pos": [
+      44.55,
+      0.0,
+      -12.6
+     ],
+     "size": [
+      2.6,
+      1.6
+     ],
+     "yaw": 90,
+     "opacity": 0.9,
+     "uv": null,
+     "name": "WG_DecalSandSpill"
+    },
+    {
+     "mat": "WG_DecalSandSpill",
+     "pos": [
+      44.6,
+      0.0,
+      -9.6
+     ],
+     "size": [
+      2.0,
+      1.2
+     ],
+     "yaw": 90,
+     "opacity": 0.7,
+     "uv": null,
+     "name": "WG_DecalSandSpill"
+    },
+    {
+     "mat": "WG_DecalGrime",
+     "pos": [
+      43.6,
+      0.0,
+      -9.6
+     ],
+     "size": [
+      1.8,
+      1.6
+     ],
+     "yaw": 0,
+     "opacity": 0.6,
+     "uv": null,
+     "name": "WG_DecalGrime"
+    },
+    {
+     "mat": "WG_DecalSandSpill",
+     "pos": [
+      44.6,
+      0.0,
+      21.0
+     ],
+     "size": [
+      2.4,
+      1.4
+     ],
+     "yaw": 90,
+     "opacity": 0.8,
+     "uv": null,
+     "name": "WG_DecalSandSpill"
+    },
+    {
+     "mat": "WG_DecalSandSpill",
+     "pos": [
+      44.55,
+      0.0,
+      24.0
+     ],
+     "size": [
+      2.0,
+      1.4
+     ],
+     "yaw": 90,
+     "opacity": 0.75,
+     "uv": null,
+     "name": "WG_DecalSandSpill"
+    },
+    {
+     "mat": "WG_DecalGrime",
+     "pos": [
+      43.6,
+      0.0,
+      21.2
+     ],
+     "size": [
+      1.8,
+      1.6
+     ],
+     "yaw": 0,
+     "opacity": 0.6,
+     "uv": null,
+     "name": "WG_DecalGrime"
+    }
+   ],
+   "retire": [
+    "Ward building: West Gate bastions"
+   ]
+  },
+  {
+   "root": "Ward life: Lattice court water ration",
+   "instances": [
+    {
+     "kind": "model",
+     "prefab": "Assets/AthenHill/Prefabs/WardLife/WL_WaterPoint.prefab",
+     "model": "WL_WaterPoint",
+     "name": "Water ration point",
+     "pos": [
+      1.9,
+      0.0,
+      -34.5
+     ],
+     "yaw": 0
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_jerrycan_green.prefab",
+     "prop": "jerrycan_green",
+     "name": "Queue 1 \u00b7 jerrycan_green",
+     "pos": [
+      4.51,
+      0.0,
+      -27.75
+     ],
+     "yaw": 84,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_jerrycan_red.prefab",
+     "prop": "jerrycan_red",
+     "name": "Queue 2 \u00b7 jerrycan_red",
+     "pos": [
+      4.6,
+      0.0,
+      -27.33
+     ],
+     "yaw": 97,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_churn.prefab",
+     "prop": "churn",
+     "name": "Queue 3 \u00b7 churn",
+     "pos": [
+      4.51,
+      0.0,
+      -26.91
+     ],
+     "yaw": 0,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_jerrycan_green.prefab",
+     "prop": "jerrycan_green",
+     "name": "Queue 4 \u00b7 jerrycan_green",
+     "pos": [
+      4.6,
+      0.0,
+      -26.49
+     ],
+     "yaw": 79,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_jerrycan_green.prefab",
+     "prop": "jerrycan_green",
+     "name": "Queue 5 \u00b7 jerrycan_green",
+     "pos": [
+      4.51,
+      0.0,
+      -26.07
+     ],
+     "yaw": 101,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_bucket_wood.prefab",
+     "prop": "bucket_wood",
+     "name": "Queue 6 \u00b7 bucket_wood",
+     "pos": [
+      4.6,
+      0.0,
+      -25.65
+     ],
+     "yaw": 0,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_jerrycan_red.prefab",
+     "prop": "jerrycan_red",
+     "name": "Queue 7 \u00b7 jerrycan_red",
+     "pos": [
+      4.51,
+      0.0,
+      -25.23
+     ],
+     "yaw": 88,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_handcart.prefab",
+     "prop": "handcart",
+     "name": "Handcart for the household drums",
+     "pos": [
+      7.55,
+      0.0,
+      -27.35
+     ],
+     "yaw": 196,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_drum_blue.prefab",
+     "prop": "drum_blue",
+     "name": "Household water drum",
+     "pos": [
+      8.6,
+      0.0,
+      -28.35
+     ],
+     "yaw": 30,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_drum_blue.prefab",
+     "prop": "drum_blue",
+     "name": "Household water drum",
+     "pos": [
+      9.15,
+      0.0,
+      -27.75
+     ],
+     "yaw": 75,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_jerrycan_green.prefab",
+     "prop": "jerrycan_green",
+     "name": "Filled can by the trough",
+     "pos": [
+      3.75,
+      0.0,
+      -28.3
+     ],
+     "yaw": 12,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_bucket_wood.prefab",
+     "prop": "bucket_wood",
+     "name": "Bucket at the first tap",
+     "pos": [
+      0.85,
+      0.0,
+      -28.15
+     ],
+     "yaw": 40,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_tub_wood.prefab",
+     "prop": "tub_wood",
+     "name": "Washing tub at the trough end",
+     "pos": [
+      -0.25,
+      0.0,
+      -28.85
+     ],
+     "yaw": 0,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_stool_wood.prefab",
+     "prop": "stool_wood",
+     "name": "Warden's stool",
+     "pos": [
+      5.0,
+      0.0,
+      -29.72
+     ],
+     "yaw": 15,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_bench_painted.prefab",
+     "prop": "bench_painted",
+     "name": "Bench for the waiting elders",
+     "pos": [
+      -1.4,
+      0.0,
+      -27.0
+     ],
+     "yaw": 90,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_drum_blue.prefab",
+     "prop": "drum_blue",
+     "name": "Spare ration drum",
+     "pos": [
+      0.1,
+      0.0,
+      -40.95
+     ],
+     "yaw": 20,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_drum_steel_blue.prefab",
+     "prop": "drum_steel_blue",
+     "name": "Spare ration drum",
+     "pos": [
+      -0.6,
+      0.0,
+      -40.45
+     ],
+     "yaw": 60,
+     "note": ""
+    }
+   ],
+   "decals": [
+    {
+     "mat": "WL_DecalDamp",
+     "pos": [
+      1.9,
+      0.0,
+      -28.25
+     ],
+     "size": [
+      4.4,
+      1.7
+     ],
+     "yaw": 0,
+     "opacity": 0.95,
+     "uv": null,
+     "name": "Damp paving at the taps"
+    },
+    {
+     "mat": "WL_DecalDamp",
+     "pos": [
+      1.9,
+      0.0,
+      -39.9
+     ],
+     "size": [
+      1.4,
+      0.9
+     ],
+     "yaw": 0,
+     "opacity": 0.8,
+     "uv": null,
+     "name": "Damp round the tank valve"
+    },
+    {
+     "mat": "Sand grime scuffs and runoff",
+     "pos": [
+      5.0,
+      0.0,
+      -29.1
+     ],
+     "size": [
+      1.8,
+      1.4
+     ],
+     "yaw": 0,
+     "opacity": 0.6,
+     "uv": [
+      0.49,
+      0.49,
+      0.505,
+      0.505
+     ],
+     "name": "Grime round the tally desk"
+    },
+    {
+     "mat": "WG_DecalGrime",
+     "pos": [
+      8.3,
+      0.0,
+      -27.8
+     ],
+     "size": [
+      2.4,
+      1.8
+     ],
+     "yaw": 20,
+     "opacity": 0.55,
+     "uv": null,
+     "name": "Cart grime"
+    }
+   ],
+   "retire": []
+  },
+  {
+   "root": "Ward life: Node 07 goods dock",
+   "instances": [
+    {
+     "kind": "model",
+     "prefab": "Assets/AthenHill/Prefabs/WardLife/WL_FloorScale.prefab",
+     "model": "WL_FloorScale",
+     "name": "Platform scale",
+     "pos": [
+      9.0,
+      0.0,
+      35.0
+     ],
+     "yaw": 0
+    },
+    {
+     "kind": "model",
+     "prefab": "Assets/AthenHill/Prefabs/WardLife/WL_CanisterPallet.prefab",
+     "model": "WL_CanisterPallet",
+     "name": "Bay 1 \u00b7 canisters (inbound)",
+     "pos": [
+      6.45,
+      0.0,
+      36.65
+     ],
+     "yaw": 2
+    },
+    {
+     "kind": "model",
+     "prefab": "Assets/AthenHill/Prefabs/WardLife/WL_CanisterStand.prefab",
+     "model": "WL_CanisterStand",
+     "name": "Bay 1 \u00b7 canisters standing",
+     "pos": [
+      6.4,
+      0.0,
+      35.25
+     ],
+     "yaw": -4
+    },
+    {
+     "kind": "model",
+     "prefab": "Assets/AthenHill/Prefabs/WardLife/WL_CanisterPallet.prefab",
+     "model": "WL_CanisterPallet",
+     "name": "Bay 2 \u00b7 canisters (inbound)",
+     "pos": [
+      11.75,
+      0.0,
+      38.6
+     ],
+     "yaw": 91
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_crate_wood_deep.prefab",
+     "prop": "crate_wood_deep",
+     "name": "Bay 2 \u00b7 crate",
+     "pos": [
+      12.55,
+      0.0,
+      37.25
+     ],
+     "yaw": 88,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_crate_long.prefab",
+     "prop": "crate_long",
+     "name": "Bay 2 \u00b7 crate on crate",
+     "pos": [
+      12.55,
+      0.46,
+      37.25
+     ],
+     "yaw": 92,
+     "note": ""
+    },
+    {
+     "kind": "model",
+     "prefab": "Assets/AthenHill/Prefabs/WardLife/WL_Pallet.prefab",
+     "model": "WL_Pallet",
+     "name": "Bay 3 \u00b7 outbound pallet",
+     "pos": [
+      11.6,
+      0.0,
+      34.45
+     ],
+     "yaw": 0
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_carton.prefab",
+     "prop": "carton",
+     "name": "Bay 3 \u00b7 carton",
+     "pos": [
+      11.3,
+      0.144,
+      34.25
+     ],
+     "yaw": 3,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_carton.prefab",
+     "prop": "carton",
+     "name": "Bay 3 \u00b7 carton",
+     "pos": [
+      11.75,
+      0.144,
+      34.3
+     ],
+     "yaw": -4,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_carton.prefab",
+     "prop": "carton",
+     "name": "Bay 3 \u00b7 carton",
+     "pos": [
+      11.5,
+      0.144,
+      34.7
+     ],
+     "yaw": 92,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_carton.prefab",
+     "prop": "carton",
+     "name": "Bay 3 \u00b7 carton on carton",
+     "pos": [
+      11.45,
+      0.484,
+      34.3
+     ],
+     "yaw": 1,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_tote_blue.prefab",
+     "prop": "tote_blue",
+     "name": "Bay 3 \u00b7 tote",
+     "pos": [
+      12.65,
+      0.0,
+      34.05
+     ],
+     "yaw": 88,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_sack_tied_c.prefab",
+     "prop": "sack_tied_c",
+     "name": "Bay 3 \u00b7 grain sack",
+     "pos": [
+      12.75,
+      0.0,
+      35.25
+     ],
+     "yaw": 30,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_hand_truck.prefab",
+     "prop": "hand_truck",
+     "name": "Porter's hand truck",
+     "pos": [
+      13.55,
+      0.0,
+      33.4
+     ],
+     "yaw": 205,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_handcart.prefab",
+     "prop": "handcart",
+     "name": "Porters' handcart waiting",
+     "pos": [
+      9.7,
+      0.0,
+      32.1
+     ],
+     "yaw": 160,
+     "note": ""
+    },
+    {
+     "kind": "model",
+     "prefab": "Assets/AthenHill/Prefabs/WardLife/WL_TallyDesk.prefab",
+     "model": "WL_TallyDesk",
+     "name": "Tally desk",
+     "pos": [
+      12.3,
+      0.0,
+      31.95
+     ],
+     "yaw": 0
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_stool_folding.prefab",
+     "prop": "stool_folding",
+     "name": "Porters' stool",
+     "pos": [
+      13.75,
+      0.0,
+      31.2
+     ],
+     "yaw": -140,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_crate_wood.prefab",
+     "prop": "crate_wood",
+     "name": "Porters' crate seat",
+     "pos": [
+      13.9,
+      0.0,
+      32.25
+     ],
+     "yaw": 10,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_pot_enamel.prefab",
+     "prop": "pot_enamel",
+     "name": "Tea on the crate",
+     "pos": [
+      13.9,
+      0.35,
+      32.25
+     ],
+     "yaw": 30,
+     "note": ""
+    },
+    {
+     "kind": "model",
+     "prefab": "Assets/AthenHill/Prefabs/WardLife/WL_DockBoard.prefab",
+     "model": "WL_DockBoard",
+     "name": "Dock board",
+     "pos": [
+      14.15,
+      0.0,
+      36.2
+     ],
+     "yaw": -90
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_tarp_stack.prefab",
+     "prop": "tarp_stack",
+     "name": "Outbound stock under tarp",
+     "pos": [
+      -9.7,
+      0.0,
+      37.55
+     ],
+     "yaw": 4,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_hand_truck.prefab",
+     "prop": "hand_truck",
+     "name": "Hand truck",
+     "pos": [
+      -7.75,
+      0.0,
+      38.15
+     ],
+     "yaw": 200,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_carton.prefab",
+     "prop": "carton",
+     "name": "Carton",
+     "pos": [
+      -11.25,
+      0.0,
+      38.25
+     ],
+     "yaw": 7,
+     "note": ""
+    },
+    {
+     "kind": "kit",
+     "prefab": "Assets/AthenHill/Prefabs/StreetDressing/SD_carton.prefab",
+     "prop": "carton",
+     "name": "Carton on carton",
+     "pos": [
+      -11.3,
+      0.34,
+      38.3
+     ],
+     "yaw": -3,
+     "note": ""
+    }
+   ],
+   "decals": [
+    {
+     "mat": "WL_DecalMarks",
+     "pos": [
+      6.475,
+      0.0,
+      34.4
+     ],
+     "size": [
+      2.1499999999999995,
+      0.1
+     ],
+     "yaw": 0,
+     "opacity": 0.85,
+     "uv": [
+      0.48,
+      0.11,
+      0.51,
+      0.32
+     ],
+     "name": "WL_DecalMarks"
+    },
+    {
+     "mat": "WL_DecalMarks",
+     "pos": [
+      6.475,
+      0.0,
+      37.45
+     ],
+     "size": [
+      2.1499999999999995,
+      0.1
+     ],
+     "yaw": 0,
+     "opacity": 0.85,
+     "uv": [
+      0.48,
+      0.11,
+      0.51,
+      0.32
+     ],
+     "name": "WL_DecalMarks"
+    },
+    {
+     "mat": "WL_DecalMarks",
+     "pos": [
+      5.4,
+      0.0,
+      35.925
+     ],
+     "size": [
+      3.0500000000000043,
+      0.1
+     ],
+     "yaw": 90,
+     "opacity": 0.85,
+     "uv": [
+      0.48,
+      0.11,
+      0.51,
+      0.32
+     ],
+     "name": "WL_DecalMarks"
+    },
+    {
+     "mat": "WL_DecalMarks",
+     "pos": [
+      7.55,
+      0.0,
+      35.925
+     ],
+     "size": [
+      3.0500000000000043,
+      0.1
+     ],
+     "yaw": 90,
+     "opacity": 0.85,
+     "uv": [
+      0.48,
+      0.11,
+      0.51,
+      0.32
+     ],
+     "name": "WL_DecalMarks"
+    },
+    {
+     "mat": "WL_DecalMarks",
+     "pos": [
+      6.45,
+      0.0,
+      33.95
+     ],
+     "size": [
+      1.5,
+      0.375
+     ],
+     "yaw": 0,
+     "opacity": 0.9,
+     "uv": [
+      0.5,
+      0.25,
+      0.0,
+      0.75
+     ],
+     "name": "WL_DecalMarks"
+    },
+    {
+     "mat": "WL_DecalMarks",
+     "pos": [
+      11.875,
+      0.0,
+      36.4
+     ],
+     "size": [
+      2.8500000000000014,
+      0.1
+     ],
+     "yaw": 0,
+     "opacity": 0.85,
+     "uv": [
+      0.48,
+      0.11,
+      0.51,
+      0.32
+     ],
+     "name": "WL_DecalMarks"
+    },
+    {
+     "mat": "WL_DecalMarks",
+     "pos": [
+      11.875,
+      0.0,
+      39.6
+     ],
+     "size": [
+      2.8500000000000014,
+      0.1
+     ],
+     "yaw": 0,
+     "opacity": 0.85,
+     "uv": [
+      0.48,
+      0.11,
+      0.51,
+      0.32
+     ],
+     "name": "WL_DecalMarks"
+    },
+    {
+     "mat": "WL_DecalMarks",
+     "pos": [
+      10.45,
+      0.0,
+      38.0
+     ],
+     "size": [
+      3.200000000000003,
+      0.1
+     ],
+     "yaw": 90,
+     "opacity": 0.85,
+     "uv": [
+      0.48,
+      0.11,
+      0.51,
+      0.32
+     ],
+     "name": "WL_DecalMarks"
+    },
+    {
+     "mat": "WL_DecalMarks",
+     "pos": [
+      13.3,
+      0.0,
+      38.0
+     ],
+     "size": [
+      3.200000000000003,
+      0.1
+     ],
+     "yaw": 90,
+     "opacity": 0.85,
+     "uv": [
+      0.48,
+      0.11,
+      0.51,
+      0.32
+     ],
+     "name": "WL_DecalMarks"
+    },
+    {
+     "mat": "WL_DecalMarks",
+     "pos": [
+      11.85,
+      0.0,
+      35.95
+     ],
+     "size": [
+      1.5,
+      0.375
+     ],
+     "yaw": 0,
+     "opacity": 0.9,
+     "uv": [
+      0.5,
+      0.25,
+      0.5,
+      0.75
+     ],
+     "name": "WL_DecalMarks"
+    },
+    {
+     "mat": "WL_DecalMarks",
+     "pos": [
+      11.875,
+      0.0,
+      33.3
+     ],
+     "size": [
+      2.8500000000000014,
+      0.1
+     ],
+     "yaw": 0,
+     "opacity": 0.85,
+     "uv": [
+      0.48,
+      0.11,
+      0.51,
+      0.32
+     ],
+     "name": "WL_DecalMarks"
+    },
+    {
+     "mat": "WL_DecalMarks",
+     "pos": [
+      11.875,
+      0.0,
+      35.9
+     ],
+     "size": [
+      2.8500000000000014,
+      0.1
+     ],
+     "yaw": 0,
+     "opacity": 0.85,
+     "uv": [
+      0.48,
+      0.11,
+      0.51,
+      0.32
+     ],
+     "name": "WL_DecalMarks"
+    },
+    {
+     "mat": "WL_DecalMarks",
+     "pos": [
+      10.45,
+      0.0,
+      34.599999999999994
+     ],
+     "size": [
+      2.6000000000000014,
+      0.1
+     ],
+     "yaw": 90,
+     "opacity": 0.85,
+     "uv": [
+      0.48,
+      0.11,
+      0.51,
+      0.32
+     ],
+     "name": "WL_DecalMarks"
+    },
+    {
+     "mat": "WL_DecalMarks",
+     "pos": [
+      13.3,
+      0.0,
+      34.599999999999994
+     ],
+     "size": [
+      2.6000000000000014,
+      0.1
+     ],
+     "yaw": 90,
+     "opacity": 0.85,
+     "uv": [
+      0.48,
+      0.11,
+      0.51,
+      0.32
+     ],
+     "name": "WL_DecalMarks"
+    },
+    {
+     "mat": "WL_DecalMarks",
+     "pos": [
+      11.85,
+      0.0,
+      32.85
+     ],
+     "size": [
+      1.5,
+      0.375
+     ],
+     "yaw": 0,
+     "opacity": 0.9,
+     "uv": [
+      0.5,
+      0.25,
+      0.0,
+      0.5
+     ],
+     "name": "WL_DecalMarks"
+    },
+    {
+     "mat": "WL_DecalMarks",
+     "pos": [
+      9.0,
+      0.0,
+      33.95
+     ],
+     "size": [
+      1.3,
+      0.33
+     ],
+     "yaw": 0,
+     "opacity": 0.9,
+     "uv": [
+      0.5,
+      0.25,
+      0.5,
+      0.5
+     ],
+     "name": "WEIGH"
+    },
+    {
+     "mat": "WL_DecalMarks",
+     "pos": [
+      9.0,
+      0.0,
+      39.85
+     ],
+     "size": [
+      2.0,
+      0.5
+     ],
+     "yaw": 0,
+     "opacity": 0.85,
+     "uv": [
+      0.5,
+      0.25,
+      0.0,
+      0.25
+     ],
+     "name": "KEEP CLEAR"
+    },
+    {
+     "mat": "WL_DecalMarks",
+     "pos": [
+      -9.0,
+      0.0,
+      39.85
+     ],
+     "size": [
+      1.6,
+      0.4
+     ],
+     "yaw": 0,
+     "opacity": 0.8,
+     "uv": [
+      0.5,
+      0.25,
+      0.0,
+      0.0
+     ],
+     "name": "GOODS"
+    },
+    {
+     "mat": "WG_DecalTyreTracks",
+     "pos": [
+      9.0,
+      0.0,
+      37.9
+     ],
+     "size": [
+      1.4,
+      4.8
+     ],
+     "yaw": 0,
+     "opacity": 0.6,
+     "uv": null,
+     "name": "Trolley tracks from the node door"
+    },
+    {
+     "mat": "WG_DecalTyreTracks",
+     "pos": [
+      -9.0,
+      0.0,
+      38.6
+     ],
+     "size": [
+      1.3,
+      3.4
+     ],
+     "yaw": 0,
+     "opacity": 0.5,
+     "uv": null,
+     "name": "Trolley tracks, west node"
+    },
+    {
+     "mat": "WG_DecalGrime",
+     "pos": [
+      11.85,
+      0.0,
+      38.0
+     ],
+     "size": [
+      3.0,
+      3.2
+     ],
+     "yaw": 0,
+     "opacity": 0.45,
+     "uv": null,
+     "name": "Grime under bay 2"
+    },
+    {
+     "mat": "WG_DecalGrime",
+     "pos": [
+      6.45,
+      0.0,
+      35.9
+     ],
+     "size": [
+      2.4,
+      3.0
+     ],
+     "yaw": 0,
+     "opacity": 0.45,
+     "uv": null,
+     "name": "Grime under bay 1"
+    }
+   ],
+   "retire": []
+  }
+ ],
+ "cameraRoot": "Ward life review cameras",
+ "cameras": [
+  {
+   "name": "cam_wl_gate_south_wide",
+   "pos": [
+    39.4,
+    1.65,
+    -6.6
+   ],
+   "target": [
+    45.0,
+    1.0,
+    -11.5
+   ],
+   "fov": 55
+  },
+  {
+   "name": "cam_wl_gate_south_blast",
+   "pos": [
+    41.9,
+    1.65,
+    -11.2
+   ],
+   "target": [
+    44.95,
+    0.8,
+    -13.1
+   ],
+   "fov": 55
+  },
+  {
+   "name": "cam_wl_gate_north_wide",
+   "pos": [
+    39.8,
+    1.65,
+    17.2
+   ],
+   "target": [
+    45.0,
+    1.0,
+    22.6
+   ],
+   "fov": 55
+  },
+  {
+   "name": "cam_wl_gate_north_burst",
+   "pos": [
+    41.9,
+    1.65,
+    21.2
+   ],
+   "target": [
+    44.95,
+    0.6,
+    23.2
+   ],
+   "fov": 55
+  },
+  {
+   "name": "cam_wl_court_north",
+   "pos": [
+    1.2,
+    1.65,
+    -22.6
+   ],
+   "target": [
+    2.2,
+    1.0,
+    -32.0
+   ],
+   "fov": 55
+  },
+  {
+   "name": "cam_wl_court_taps",
+   "pos": [
+    4.3,
+    1.65,
+    -26.2
+   ],
+   "target": [
+    1.6,
+    0.75,
+    -29.0
+   ],
+   "fov": 55
+  },
+  {
+   "name": "cam_wl_court_desk",
+   "pos": [
+    7.4,
+    1.65,
+    -26.9
+   ],
+   "target": [
+    5.0,
+    1.0,
+    -29.4
+   ],
+   "fov": 55
+  },
+  {
+   "name": "cam_wl_court_tank",
+   "pos": [
+    -1.6,
+    1.65,
+    -35.6
+   ],
+   "target": [
+    1.9,
+    1.4,
+    -41.2
+   ],
+   "fov": 55
+  },
+  {
+   "name": "cam_wl_dock_plaza",
+   "pos": [
+    2.6,
+    1.65,
+    27.4
+   ],
+   "target": [
+    10.0,
+    0.8,
+    37.0
+   ],
+   "fov": 55
+  },
+  {
+   "name": "cam_wl_dock_bays",
+   "pos": [
+    14.6,
+    1.65,
+    30.6
+   ],
+   "target": [
+    9.5,
+    0.6,
+    37.5
+   ],
+   "fov": 55
+  },
+  {
+   "name": "cam_wl_dock_scale",
+   "pos": [
+    6.6,
+    1.65,
+    31.9
+   ],
+   "target": [
+    9.0,
+    0.5,
+    35.6
+   ],
+   "fov": 55
+  },
+  {
+   "name": "cam_wl_dock_west",
+   "pos": [
+    -4.6,
+    1.65,
+    32.6
+   ],
+   "target": [
+    -9.5,
+    0.7,
+    38.4
+   ],
+   "fov": 55
+  }
+ ]
+}
