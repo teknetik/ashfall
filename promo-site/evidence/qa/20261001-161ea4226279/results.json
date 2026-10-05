@@ -1,0 +1,43 @@
+{
+  "candidate": "20261001-71e52123197f",
+  "results": [
+    {
+      "name": "desktop/tablet/mobile pages and screenshots, labels, images",
+      "pass": true,
+      "detail": "18 page-size combinations; 170 gallery + 125 development art variants served/decoded"
+    },
+    {
+      "name": "menu/gallery keyboard and reduced motion",
+      "pass": true,
+      "detail": "Escape/arrow keyboard and reduced-motion static reveals"
+    },
+    {
+      "name": "anonymous post refused; CSRF and Origin rejected",
+      "pass": true,
+      "detail": "anonymous 403, foreign Origin 403, invalid token 403"
+    },
+    {
+      "name": "signup, post XSS text, edit, malformed input",
+      "pass": true,
+      "detail": "idea #1, comment, escaped, edited, invalid body 400"
+    },
+    {
+      "name": "second user cannot edit/delete first user post",
+      "pass": true,
+      "detail": "GET edit 403, POST edit 403, POST delete 403"
+    },
+    {
+      "name": "service restart persists account, session, edited post",
+      "pass": true,
+      "detail": "before uptime 461s, after 0s, same account/session/post"
+    },
+    {
+      "name": "owner delete, logout/login and persistent deletion",
+      "pass": true,
+      "detail": "owner delete retained across reload and logout/new login"
+    }
+  ],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+  ]
+}

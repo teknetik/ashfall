@@ -1,0 +1,186 @@
+#!/usr/bin/python3
+"""SOURCE ONLY: install root-owned as /usr/local/sbin/teknetik-deploy-certificate.
+No DNS credentials; fixed production lineage. --bootstrap stages initial TLS only.
+"""
+import argparse
+import fcntl
+import hashlib
+import os
+from pathlib import Path
+import re
+import shutil
+import socket
+import ssl
+import stat
+import subprocess
+import tempfile
+import time
+
+LINEAGE = Path('/etc/letsencrypt/live/teknetik.co')
+TLS = Path('/etc/kong-single-site/tls')
+SERVICE = 'kong-single-site.service'
+HOSTS = ('teknetik.co', 'www.teknetik.co', 'phone.teknetik.co', 'ashfall.teknetik.co')
+
+
+def run(*args):
+    return subprocess.run(args, check=True, capture_output=True, timeout=60,
+                          env={'PATH': '/usr/sbin:/usr/bin', 'LANG': 'C'}).stdout
+
+
+def trusted_path(path):
+    """Check resolved target AND original ancestors; only root may alter paths."""
+    for target in (path.absolute(), path.resolve(strict=True)):
+        for item in (target, *target.parents):
+            info = item.stat()
+            if info.st_uid != 0 or info.st_mode & 0o022:
+                raise RuntimeError('Non-root-controlled certificate path')
+
+
+def fingerprint(cert):
+    der = run('/usr/sbin/openssl', 'x509', '-in', str(cert), '-outform', 'DER')
+    return hashlib.sha256(der).hexdigest()
+
+
+def validate(release):
+    cert, key = release / 'fullchain.pem', release / 'privkey.pem'
+    run('/usr/sbin/openssl', 'x509', '-in', str(cert), '-checkend', '604800', '-noout')
+    sans = run('/usr/sbin/openssl', 'x509', '-in', str(cert), '-ext', 'subjectAltName', '-noout')
+    entries = sans.decode().split('\n', 1)[1].strip().split(', ')
+    if set(entries) != {'DNS:' + h for h in HOSTS}:
+        raise RuntimeError('Certificate SANs must be exactly apex, www, phone and ashfall')
+    public = run('/usr/sbin/openssl', 'x509', '-in', str(cert), '-pubkey', '-noout')
+    if public != run('/usr/sbin/openssl', 'pkey', '-in', str(key), '-pubout'):
+        raise RuntimeError('Certificate/private key mismatch')
+    blocks = re.findall(rb'-----BEGIN CERTIFICATE-----.*?-----END CERTIFICATE-----',
+                        cert.read_bytes(), re.S)
+    if len(blocks) < 2:
+        raise RuntimeError('Fullchain must contain leaf and intermediate')
+    with tempfile.TemporaryDirectory(dir=release) as directory:
+        leaf, chain = Path(directory) / 'leaf.pem', Path(directory) / 'chain.pem'
+        leaf.write_bytes(blocks[0] + b'\n')
+        chain.write_bytes(b'\n'.join(blocks[1:]) + b'\n')
+        for host in HOSTS:
+            run('/usr/sbin/openssl', 'verify', '-purpose', 'sslserver',
+                '-verify_hostname', host, '-untrusted', str(chain), str(leaf))
+    return fingerprint(cert)
+
+
+def served_fingerprint(host):
+    # Trust/SAN/expiry checked before promotion. Here prove exact leaf served for
+    # BOTH SNI names; never send private key or application data to this socket.
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    context.check_hostname = False
+    context.verify_mode = ssl.CERT_NONE
+    with socket.create_connection(('127.0.0.1', 8443), timeout=2) as raw:
+        with context.wrap_socket(raw, server_hostname=host) as connection:
+            certificate = connection.getpeercert(binary_form=True)
+            if not certificate:
+                raise RuntimeError('Peer did not present a certificate')
+            return hashlib.sha256(certificate).hexdigest()
+
+
+def prove_served(expected):
+    for _ in range(15):
+        try:
+            if all(served_fingerprint(host) == expected for host in HOSTS):
+                return
+        except (OSError, ssl.SSLError):
+            pass
+        time.sleep(1)
+    raise RuntimeError('Served certificate fingerprint did not converge on both SNIs')
+
+
+def switch(tls, target):
+    pending = tls / 'current.next'
+    if pending.is_symlink():
+        pending.unlink()
+    os.symlink(target, pending)
+    os.replace(pending, tls / 'current')
+
+
+def promote(tls, release, expected, bootstrap=False):
+    current = tls / 'current'
+    old = os.readlink(current) if current.is_symlink() else None
+    if current.exists() and old is None:
+        raise RuntimeError('TLS current must be a symlink')
+    if old is not None and (current.resolve().parent != tls / 'releases'):
+        raise RuntimeError('Existing TLS target outside release directory')
+    if bootstrap:
+        if old is not None:
+            raise RuntimeError('Bootstrap refuses to replace existing TLS')
+        switch(tls, str(release.relative_to(tls)))
+        return
+    if old is None:
+        raise RuntimeError('Initial deployment requires explicit --bootstrap')
+    previous = fingerprint(current / 'fullchain.pem')
+    if previous == expected:
+        try:
+            prove_served(expected)
+            return
+        except RuntimeError:
+            pass  # Reconcile failed/stopped/stale presentation even when unchanged.
+    switch(tls, str(release.relative_to(tls)))
+    try:
+        run('/usr/sbin/systemctl', 'restart', SERVICE)
+        prove_served(expected)
+    except Exception as error:
+        switch(tls, old)
+        try:
+            run('/usr/sbin/systemctl', 'restart', SERVICE)
+            prove_served(previous)
+        except Exception as rollback_error:
+            run('/usr/sbin/systemctl', 'stop', SERVICE)
+            raise RuntimeError('Deploy AND rollback failed; service stopped') from rollback_error
+        raise RuntimeError('Deploy failed; previous served certificate restored') from error
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--bootstrap', action='store_true')
+    args = parser.parse_args()
+    if os.geteuid() != 0:
+        raise RuntimeError('Must run as root')
+    os.umask(0o077)
+    # An unrelated Certbot lineage must not trigger deployment.
+    renewed = os.environ.get('RENEWED_LINEAGE')
+    if renewed and Path(renewed) != LINEAGE:
+        return
+    trusted_path(TLS)
+    trusted_path(LINEAGE)
+    with (TLS / '.deploy.lock').open('a') as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        releases = TLS / 'releases'
+        releases.mkdir(mode=0o750, exist_ok=True)
+        trusted_path(releases)
+        if releases.is_symlink():
+            raise RuntimeError('Releases must not be a symlink')
+        for name in ('fullchain.pem', 'privkey.pem'):
+            source = LINEAGE / name
+            trusted_path(source)
+            if not stat.S_ISREG(source.stat().st_mode) or source.stat().st_size > 1024 * 1024:
+                raise RuntimeError('Invalid certificate input file')
+        if (LINEAGE / 'privkey.pem').stat().st_mode & 0o077:
+            raise RuntimeError('Lineage private key must be root-only')
+        release = Path(tempfile.mkdtemp(prefix='release-', dir=releases))
+        for name in ('fullchain.pem', 'privkey.pem'):
+            (release / name).write_bytes((LINEAGE / name).read_bytes())
+        try:
+            expected = validate(release)
+            # Container runs as kong with supplemental GID 0, read-only TLS mount.
+            os.chmod(releases, 0o750)
+            os.chmod(release, 0o750)
+            os.chmod(release / 'fullchain.pem', 0o644)
+            os.chmod(release / 'privkey.pem', 0o640)
+            promote(TLS, release, expected, args.bootstrap)
+            print('TLS bootstrap staged' if args.bootstrap else 'TLS served fingerprint verified', expected)
+        finally:
+            if (TLS / 'current').resolve() != release:
+                shutil.rmtree(release)
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except Exception as exc:
+        # Do not print subprocess output, PEM data or private key material.
+        raise SystemExit('Certificate deployment failed: ' + type(exc).__name__ + ': ' + str(exc))

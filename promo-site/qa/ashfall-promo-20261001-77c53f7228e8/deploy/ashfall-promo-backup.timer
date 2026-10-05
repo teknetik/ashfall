@@ -1,0 +1,11 @@
+# /etc/systemd/system/ashfall-promo-backup.timer
+[Unit]
+Description=Daily Ashfall promo community database backup
+
+[Timer]
+OnCalendar=*-*-* 03:17:00
+RandomizedDelaySec=10m
+Persistent=true
+
+[Install]
+WantedBy=timers.target

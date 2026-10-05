@@ -1,0 +1,168 @@
+{
+  "note": "SR-01 CLI argv/secret exercise. Isolated EnvironmentFile with a harmless sentinel (spaces, ; $HOME backtick $(id) | & * ? {} quotes) read by the systemd user manager; sentinel value itself is not recorded here.",
+  "mechanism": "systemd-run --user --quiet --wait --pipe --collect --expand-environment=no --service-type=exec --property=EnvironmentFile=<isolated app.env> --property=WorkingDirectory=<release> UMask=0077 NoNewPrivileges=yes MemoryMax=512M MemorySwapMax=64M /usr/bin/node <release>/server/cli.mjs <cmd>",
+  "runs": {
+    "r71e52-symlink": {
+      "exitCodes": {
+        "migrate": "0",
+        "status": "0",
+        "backup": "0",
+        "verify": "0",
+        "grant-moderator": "1"
+      },
+      "stdoutBytes": {
+        "backup": 319,
+        "grant-moderator": 0,
+        "migrate": 29,
+        "status": 272,
+        "verify": 323
+      },
+      "preload": [
+        {
+          "cmd": "migrate",
+          "uid": 1000,
+          "envExactlyPreserved": true,
+          "sentinelInOwnCmdline": false
+        },
+        {
+          "cmd": "status",
+          "uid": 1000,
+          "envExactlyPreserved": true,
+          "sentinelInOwnCmdline": false
+        },
+        {
+          "cmd": "backup",
+          "uid": 1000,
+          "envExactlyPreserved": true,
+          "sentinelInOwnCmdline": false
+        },
+        {
+          "cmd": "verify",
+          "uid": 1000,
+          "envExactlyPreserved": true,
+          "sentinelInOwnCmdline": false
+        },
+        {
+          "cmd": "grant-moderator",
+          "uid": 1000,
+          "envExactlyPreserved": true,
+          "sentinelInOwnCmdline": false
+        }
+      ],
+      "externalProcSampling": {
+        "cliProcessesSampled": 10,
+        "sentinelHits": 0
+      },
+      "sentinelInStdoutStderrXtrace": [],
+      "backupsWritten": 1
+    },
+    "r161ea-symlink": {
+      "exitCodes": {
+        "migrate": "0",
+        "status": "0",
+        "backup": "0",
+        "verify": "0",
+        "grant-moderator": "0"
+      },
+      "stdoutBytes": {
+        "backup": 0,
+        "grant-moderator": 0,
+        "migrate": 0,
+        "status": 0,
+        "verify": 0
+      },
+      "preload": [
+        {
+          "cmd": "migrate",
+          "uid": 1000,
+          "envExactlyPreserved": true,
+          "sentinelInOwnCmdline": false
+        },
+        {
+          "cmd": "status",
+          "uid": 1000,
+          "envExactlyPreserved": true,
+          "sentinelInOwnCmdline": false
+        },
+        {
+          "cmd": "backup",
+          "uid": 1000,
+          "envExactlyPreserved": true,
+          "sentinelInOwnCmdline": false
+        },
+        {
+          "cmd": "verify",
+          "uid": 1000,
+          "envExactlyPreserved": true,
+          "sentinelInOwnCmdline": false
+        },
+        {
+          "cmd": "grant-moderator",
+          "uid": 1000,
+          "envExactlyPreserved": true,
+          "sentinelInOwnCmdline": false
+        }
+      ],
+      "externalProcSampling": {
+        "cliProcessesSampled": 10,
+        "sentinelHits": 0
+      },
+      "sentinelInStdoutStderrXtrace": [],
+      "backupsWritten": 0
+    },
+    "r161ea-direct": {
+      "exitCodes": {
+        "migrate": "0",
+        "status": "0",
+        "backup": "0",
+        "verify": "0",
+        "grant-moderator": "1"
+      },
+      "stdoutBytes": {
+        "backup": 319,
+        "grant-moderator": 0,
+        "migrate": 29,
+        "status": 272,
+        "verify": 323
+      },
+      "preload": [
+        {
+          "cmd": "migrate",
+          "uid": 1000,
+          "envExactlyPreserved": true,
+          "sentinelInOwnCmdline": false
+        },
+        {
+          "cmd": "status",
+          "uid": 1000,
+          "envExactlyPreserved": true,
+          "sentinelInOwnCmdline": false
+        },
+        {
+          "cmd": "backup",
+          "uid": 1000,
+          "envExactlyPreserved": true,
+          "sentinelInOwnCmdline": false
+        },
+        {
+          "cmd": "verify",
+          "uid": 1000,
+          "envExactlyPreserved": true,
+          "sentinelInOwnCmdline": false
+        },
+        {
+          "cmd": "grant-moderator",
+          "uid": 1000,
+          "envExactlyPreserved": true,
+          "sentinelInOwnCmdline": false
+        }
+      ],
+      "externalProcSampling": {
+        "cliProcessesSampled": 11,
+        "sentinelHits": 0
+      },
+      "sentinelInStdoutStderrXtrace": [],
+      "backupsWritten": 1
+    }
+  }
+}

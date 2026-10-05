@@ -1,0 +1,93 @@
+# Kong declarative config for teknetik.co (DB-less, installed at /etc/kong-single-site/single-site.yaml).
+# The website serves /admin; the private voice management API is not routed here.
+# Install with deploy/go-live.py, never by hand.
+_format_version: "3.0"
+_transform: true
+services:
+  - name: teknetik-website
+    protocol: http
+    host: 192.168.50.132
+    port: 3000
+    connect_timeout: 3000
+    read_timeout: 10000
+    write_timeout: 10000
+    retries: 0
+    routes:
+      - name: teknetik-apex
+        hosts: [teknetik.co]
+        paths: [/]
+        protocols: [https]
+        https_redirect_status_code: 301
+        strip_path: false
+        preserve_host: true
+      - name: teknetik-www-redirect
+        hosts: [www.teknetik.co]
+        paths: [/]
+        protocols: [https]
+        strip_path: false
+        plugins:
+          - name: pre-function
+            config:
+              access:
+                - |
+                  -- Host is literal; preserve the original escaped path and query.
+                  return kong.response.exit(308, nil, {
+                    ["Location"] = "https://teknetik.co" .. kong.request.get_path_with_query()
+                  })
+  - name: teknetik-phone
+    protocol: http
+    host: 127.0.0.1
+    port: 18744
+    connect_timeout: 2000
+    read_timeout: 90000
+    write_timeout: 10000
+    retries: 0
+    routes:
+      - name: teknetik-telnyx-webhook
+        hosts: [phone.teknetik.co]
+        paths: ["~/webhooks/telnyx$"]
+        methods: [POST]
+        protocols: [https]
+        strip_path: false
+        preserve_host: true
+        request_buffering: true
+        response_buffering: false
+        plugins:
+          - name: request-size-limiting
+            config:
+              allowed_payload_size: 65536
+              size_unit: bytes
+              require_content_length: false
+          - name: pre-function
+            config:
+              access:
+                - |
+                  -- Match the original request target, not only Kong's normalized path.
+                  local raw = ngx.var.request_uri or ""
+                  local path = raw:match("^[^?]*")
+                  if path ~= "/webhooks/telnyx" then return kong.response.exit(404) end
+                  if ngx.req.get_method() ~= "POST" then return kong.response.exit(405) end
+                  if tonumber(ngx.var.content_length or "0") > 65536 then return kong.response.exit(413) end
+      - name: teknetik-telnyx-media
+        hosts: [phone.teknetik.co]
+        paths: ["~/media/telnyx$"]
+        methods: [GET]
+        protocols: [https]
+        strip_path: false
+        preserve_host: true
+        request_buffering: false
+        response_buffering: false
+        plugins:
+          - name: pre-function
+            config:
+              access:
+                - |
+                  local raw = ngx.var.request_uri or ""
+                  local path = raw:match("^[^?]*")
+                  if path ~= "/media/telnyx" then return kong.response.exit(404) end
+                  if ngx.req.get_method() ~= "GET" then return kong.response.exit(405) end
+                  local upgrade = kong.request.get_header("upgrade") or ""
+                  local connection = kong.request.get_header("connection") or ""
+                  if upgrade:lower() ~= "websocket" or not connection:lower():find("upgrade", 1, true) then
+                    return kong.response.exit(426, nil, { ["Upgrade"] = "websocket" })
+                  end

@@ -1,0 +1,89 @@
+v26.8.2
+
+> ashfall-promo@1.0.0 check
+> npm run build && npm run lint && npm run typecheck && npm test && npm run test:e2e
+
+
+> ashfall-promo@1.0.0 build
+> node scripts/build.mjs
+
+[build] ok: 34 assets (205 image files), 8 chapters, 23 regions, 10 topics, 17 FAQ, development log 2026-10-01 (6 entries, 5 pairs)
+
+> ashfall-promo@1.0.0 lint
+> eslint .
+
+
+> ashfall-promo@1.0.0 typecheck
+> tsc -p tsconfig.json
+
+
+> ashfall-promo@1.0.0 test
+> node --test --test-concurrency=1 test/unit/*.test.mjs test/integration/*.test.mjs
+
+✔ public pages, health, security headers, host guard (137.879331ms)
+✔ development log: chart, timeline, labelled captures and concept pairs (1.489563ms)
+✔ signup -> post -> logout -> login; secure cookie flags (90.246748ms)
+✔ unauthenticated posting is denied; CSRF and origin enforced (34.945991ms)
+✔ stored XSS is escaped everywhere it renders (30.6687ms)
+✔ ownership: others cannot edit/delete; owner can; reply + likes (63.685941ms)
+✔ moderation requires server-granted role; remove/restore/lock/suspend (94.942201ms)
+✔ signup validation, reserved names, duplicate names, login throttle (310.385828ms)
+✔ account deletion erases data; persistence across restart (327.008784ms)
+✔ CLI runs when invoked through a release symlink, as the units and runbook do (54.179071ms)
+error: restore overwrites the live database; stop the service, then re-run with --yes
+✔ restore drill: backup -> new data -> stop -> restore -> data matches backup (261.340218ms)
+✔ editorial > src: lines are stripped entirely (6.306717ms)
+✔ boss-requested correction applied: no "playable factions" (2.023608ms)
+✔ content parse is complete: chapters, 23 atlas regions, 10 topics, FAQ (2.044021ms)
+✔ status rails classify build vs planned explicitly (1.568663ms)
+✔ markdown inline escapes before formatting (0.159504ms)
+✔ built output has no spoilers, editorial or internal files exposed (4.469501ms)
+✔ every manifest asset is published with all formats and its label (2.232177ms)
+✔ scrypt hash round-trip, unique salts, rejects wrong/malformed (105.636023ms)
+✔ password policy: length-based with common/username checks (0.319614ms)
+✔ username pattern (0.179035ms)
+✔ rate limiter fixed window (0.350403ms)
+✔ safeEqual (0.164495ms)
+✔ html template escapes interpolations; raw only when explicit (0.328163ms)
+✔ cleanText strips control and bidi characters (0.182505ms)
+✔ safeNext only allows known local paths (0.205278ms)
+✔ config refuses unsafe settings (0.62684ms)
+✔ migrations are idempotent and record versions; newer DB refused (2.116183ms)
+✔ store: ownership-preserving deletes and account erasure (2.703687ms)
+✔ backup retention keeps 7 daily + 4 weekly (0.59405ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1718.419343
+
+> ashfall-promo@1.0.0 test:e2e
+> node scripts/e2e.mjs
+
+[e2e] desktop 1440x900
+  ok   desktop: public pages render with real art, alt text, no overflow or console errors
+  ok   desktop: navigation menu opens as a modal, traps focus, closes on Escape
+  ok   desktop: gallery filters and keyboard lightbox
+  ok   desktop: Lattice capacity explainer reports usage and overload
+  ok   desktop: atlas regions open (map hotspot on desktop, region list on mobile)
+[e2e] mobile 390x844
+  ok   mobile: public pages render with real art, alt text, no overflow or console errors
+  ok   mobile: navigation menu opens as a modal, traps focus, closes on Escape
+  ok   mobile: gallery filters and keyboard lightbox
+  ok   mobile: Lattice capacity explainer reports usage and overload
+  ok   mobile: atlas regions open (map hotspot on desktop, region list on mobile)
+[e2e] motion preferences
+  ok   reduced motion: content shown statically; full motion: reveal + typing run
+  ok   no-JS: pages are complete and filters stay hidden
+[e2e] community flow
+  ok   desktop: signup -> post -> reload -> logout -> login -> like persists
+  ok   mobile: signup -> post -> reload -> logout -> login -> like persists
+[e2e] 14 passed, 0 failed; evidence evidence/e2e/20261001T223344Z
+
+real	0m32.354s
+user	0m9.235s
+sys	0m1.379s
+EXIT 0

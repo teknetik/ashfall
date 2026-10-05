@@ -1,0 +1,60 @@
+# /etc/systemd/system/ashfall-promo.service — Ashfall promo/community site (template; installed by the deployment card only).
+# Contract: ops/PREFLIGHT.md §4. Binds EXACTLY 127.0.0.1:3187 behind the host-networked Kong route.
+[Unit]
+Description=Ashfall promo and tester community site
+Documentation=file:///srv/ashfall-promo/current/RUNBOOK.md
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=ashfall-promo
+Group=ashfall-promo
+EnvironmentFile=/etc/ashfall-promo/app.env
+WorkingDirectory=/srv/ashfall-promo/current
+# Apply pending schema migrations (idempotent) before serving.
+ExecStartPre=/usr/bin/node /srv/ashfall-promo/current/server/cli.mjs migrate
+ExecStart=/usr/bin/node /srv/ashfall-promo/current/server/index.mjs
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=15
+KillSignal=SIGTERM
+
+# Persistent state: SQLite DB + WAL under /var/lib/ashfall-promo (owned 0700 by the service user).
+StateDirectory=ashfall-promo
+StateDirectoryMode=0700
+UMask=0077
+
+# Hardening. Do NOT add MemoryDenyWriteExecute=yes: V8's JIT needs W+X pages.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+ProtectProc=invisible
+ProcSubset=pid
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RemoveIPC=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+IPAddressDeny=any
+IPAddressAllow=localhost
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
+LimitNOFILE=4096
+MemoryMax=512M
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target

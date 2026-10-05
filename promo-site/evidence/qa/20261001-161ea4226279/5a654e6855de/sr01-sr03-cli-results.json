@@ -1,0 +1,58 @@
+{
+  "candidate": "20261001-5a654e6855de",
+  "layout": "release dir + current symlink (production layout)",
+  "exitCodes": {
+    "migrate": "0",
+    "status": "0",
+    "backup": "0",
+    "verify": "0",
+    "grant-moderator": "1"
+  },
+  "preload": [
+    {
+      "cmd": "migrate",
+      "uid": 1000,
+      "envExactlyPreserved": true,
+      "sentinelInOwnCmdline": false
+    },
+    {
+      "cmd": "status",
+      "uid": 1000,
+      "envExactlyPreserved": true,
+      "sentinelInOwnCmdline": false
+    },
+    {
+      "cmd": "backup",
+      "uid": 1000,
+      "envExactlyPreserved": true,
+      "sentinelInOwnCmdline": false
+    },
+    {
+      "cmd": "verify",
+      "uid": 1000,
+      "envExactlyPreserved": true,
+      "sentinelInOwnCmdline": false
+    },
+    {
+      "cmd": "grant-moderator",
+      "uid": 1000,
+      "envExactlyPreserved": true,
+      "sentinelInOwnCmdline": false
+    }
+  ],
+  "externalProcSampling": {
+    "cliProcessesSampled": 10,
+    "sentinelHits": 0
+  },
+  "sentinelInStdoutStderrXtrace": [],
+  "backupDirAfterBackupAndVerify": [
+    [
+      "community-20261001T223325Z.sqlite",
+      "0o600"
+    ],
+    [
+      "community-20261001T223325Z.sqlite.json",
+      "0o600"
+    ]
+  ]
+}

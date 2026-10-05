@@ -1,0 +1,32 @@
+# /etc/systemd/system/ashfall-promo-backup.service — consistent daily SQLite backup (SQLite backup API +
+# integrity_check), retention 7 daily + 4 weekly. Destination per ops/PREFLIGHT.md §4. Same-host only:
+# this is NOT disaster recovery; any off-host copy needs separately approved encrypted custody.
+[Unit]
+Description=Ashfall promo community database backup
+After=ashfall-promo.service
+RequiresMountsFor=/backup/hdd
+
+[Service]
+Type=oneshot
+User=ashfall-promo
+Group=ashfall-promo
+EnvironmentFile=/etc/ashfall-promo/app.env
+WorkingDirectory=/srv/ashfall-promo/current
+ExecStart=/usr/bin/node /srv/ashfall-promo/current/server/cli.mjs backup /backup/hdd/ashfall-promo --keep-daily 7 --keep-weekly 4
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+PrivateNetwork=true
+ReadWritePaths=/var/lib/ashfall-promo /backup/hdd/ashfall-promo
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictNamespaces=true
+RestrictSUIDSGID=true
+LockPersonality=true
+CapabilityBoundingSet=
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
