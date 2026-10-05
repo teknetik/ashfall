@@ -7,11 +7,14 @@ namespace AthenHill
  public static class IngredientAllocator
  {
   public static bool TryAllocate(CraftIngredient[] inputs,IEnumerable<ItemSpec> catalog,ShopModel shop,out List<KeyValuePair<string,int>> consumption)
+   =>TryAllocate(inputs,catalog,shop.Quantity,out consumption);
+  /// The same search over any pool (5 Oct 2026: the pack plus the home locker for Brann's bench).
+  public static bool TryAllocate(CraftIngredient[] inputs,IEnumerable<ItemSpec> catalog,Func<string,int> quantity,out List<KeyValuePair<string,int>> consumption)
   {
    consumption=new List<KeyValuePair<string,int>>();
    if(inputs==null||inputs.Any(x=>x==null||x.quantity<1||x.kind!="item"&&x.kind!="tag"))return false;
    var items=catalog.ToArray();
-   var remaining=items.ToDictionary(x=>x.id,x=>shop.Quantity(x.id));
+   var remaining=items.ToDictionary(x=>x.id,x=>quantity(x.id));
    var chosen=new Dictionary<string,int>();
    bool Search(int inputIndex,int unit)
    {

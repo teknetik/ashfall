@@ -1,0 +1,146 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a584a25f7a2f6c23a420ed9d0c79f73, type: 3}
+  m_Name: npc_tamsin
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.NpcDefinition
+  id: npc_tamsin
+  displayName: Tamsin
+  role: Field Supply
+  entries:
+  - node: first_visit
+    requires: "!flag:tamsin_met"
+  nodes:
+  - id: first_visit
+    title: Field Supply
+    text: Mind the step. Tamsin, Field Supply. Twenty years outfitting Karaveen caravans before my knees voted to stay in Ward. Packs on the wall, medkits and nano cells under the counter, and the magazine shelf by the window. Fabricators swear by it.
+    voice: {fileID: 0}
+    choices:
+    - id: shop
+      label: Show me the stock.
+      next: 
+      action: shop
+      requires: 
+      setFlag: tamsin_met
+    - id: magazines
+      label: What's on the magazine shelf?
+      next: magazines
+      action: 
+      requires: 
+      setFlag: tamsin_met
+    - id: close
+      label: Another time.
+      next: 
+      action: close
+      requires: 
+      setFlag: tamsin_met
+  - id: greeting
+    title: Field Supply
+    text: Back again. New issues on the shelf, fresh cells under the counter. What are we carrying today?
+    voice: {fileID: 0}
+    choices:
+    - id: shop
+      label: Let me see the stock.
+      next: 
+      action: shop
+      requires: 
+      setFlag: 
+    - id: packs
+      label: Which pack should I carry?
+      next: packs
+      action: 
+      requires: 
+      setFlag: 
+    - id: supplies
+      label: Medkits and nano cells?
+      next: supplies
+      action: 
+      requires: 
+      setFlag: 
+  - id: magazines
+    title: The magazine shelf
+    text: Digital issues from the fab co-op and the Karaveen freight houses. Download one to your slate and Brann's bench in Salvage can make what's inside. Rucksacks, frame packs, pouches, hip belts, even armour liners. Cheaper than buying, if you can scavenge the webbing.
+    voice: {fileID: 0}
+    choices:
+    - id: shop
+      label: Show me the shelf.
+      next: 
+      action: shop
+      requires: 
+      setFlag: 
+    - id: packs
+      label: And the packs?
+      next: packs
+      action: 
+      requires: 
+      setFlag: 
+    - id: close
+      label: Later.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: packs
+    title: Packs
+    text: Weight's the real limit, not room. A frame pack puts the load on your hips, so you carry more, not just stuff more in. The low tech ones you can patch yourself. The mid-tier rigs want fab alloy and servos. Every pack has sockets for pouches, and the frames take a belt or a lifter.
+    voice: {fileID: 0}
+    choices:
+    - id: shop
+      label: Show me the packs.
+      next: 
+      action: shop
+      requires: 
+      setFlag: 
+    - id: supplies
+      label: Medkits and nano cells?
+      next: supplies
+      action: 
+      requires: 
+      setFlag: 
+    - id: close
+      label: Thanks, Tamsin.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: supplies
+    title: Med and nano
+    text: Medkits patch you up mid-fight, press 2. The trauma kit closes worse. A nano cell refills your weapon and overclocks the regulator, so the charge keeps coming back while you fire, press 9. The surge pack runs hotter and longer.
+    voice: {fileID: 0}
+    choices:
+    - id: shop
+      label: I'll take some.
+      next: 
+      action: shop
+      requires: 
+      setFlag: 
+    - id: magazines
+      label: Tell me about the magazines.
+      next: magazines
+      action: 
+      requires: 
+      setFlag: 
+    - id: close
+      label: Good to know.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  shop:
+    title: Field Supply
+    subtitle: "Tamsin \xB7 Packs, med and nano, magazines"
+    supplies: 1
+    parts: 0
+    salvage: 0
+    stockTags:
+    - field_supply
+    excludeTags: []
+    magazines: 1

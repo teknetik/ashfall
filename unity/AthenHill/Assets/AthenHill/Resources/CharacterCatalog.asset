@@ -921,6 +921,10 @@ MonoBehaviour:
     tier: 0
     upgradeLevel: 0
     weight: 1.7
+    modificationSockets:
+    - id: pouch
+      label: Pouch
+      type: pack_pouch
     requirements: []
     operatingRequirements: []
     modifiers:
@@ -1106,6 +1110,143 @@ MonoBehaviour:
     comfortableEndurance: 0
     movementPenalty: 0
     staminaPenalty: 0
+  - itemId: canvas_rucksack
+    slots:
+    - storage
+    tier: 1
+    upgradeLevel: 0
+    weight: 1.9
+    modificationSockets:
+    - id: pouch
+      label: Pouch
+      type: pack_pouch
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: storageCapacity
+      flat: 32
+      percent: 0
+    - stat: packSlots
+      flat: 20
+      percent: 0
+    - stat: carryCapacity
+      flat: 2
+      percent: 0
+    installationFacility: 
+    upgradeToItemId: 
+    upgradeIngredients: []
+    upgradeCredits: 0
+    comfortableStrength: 0
+    comfortableEndurance: 0
+    movementPenalty: 0
+    staminaPenalty: 0
+  - itemId: frame_pack
+    slots:
+    - storage
+    tier: 1
+    upgradeLevel: 0
+    weight: 2.6
+    modificationSockets:
+    - id: pouch
+      label: Pouch
+      type: pack_pouch
+    - id: frame
+      label: Frame mount
+      type: pack_frame
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: storageCapacity
+      flat: 38
+      percent: 0
+    - stat: packSlots
+      flat: 22
+      percent: 0
+    - stat: carryCapacity
+      flat: 6
+      percent: 0
+    installationFacility: 
+    upgradeToItemId: 
+    upgradeIngredients: []
+    upgradeCredits: 0
+    comfortableStrength: 0
+    comfortableEndurance: 0
+    movementPenalty: 0
+    staminaPenalty: 0
+  - itemId: porter_carrier
+    slots:
+    - storage
+    tier: 2
+    upgradeLevel: 0
+    weight: 3.1
+    modificationSockets:
+    - id: pouch
+      label: Pouch
+      type: pack_pouch
+    - id: pouch_2
+      label: Second pouch
+      type: pack_pouch
+    - id: frame
+      label: Frame mount
+      type: pack_frame
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: storageCapacity
+      flat: 48
+      percent: 0
+    - stat: packSlots
+      flat: 26
+      percent: 0
+    - stat: carryCapacity
+      flat: 10
+      percent: 0
+    installationFacility: 
+    upgradeToItemId: 
+    upgradeIngredients: []
+    upgradeCredits: 0
+    comfortableStrength: 0
+    comfortableEndurance: 0
+    movementPenalty: 0
+    staminaPenalty: 0
+  - itemId: courier_cargo_rig
+    slots:
+    - storage
+    tier: 2
+    upgradeLevel: 0
+    weight: 3.4
+    modificationSockets:
+    - id: pouch
+      label: Pouch
+      type: pack_pouch
+    - id: pouch_2
+      label: Second pouch
+      type: pack_pouch
+    - id: frame
+      label: Frame mount
+      type: pack_frame
+    requirements:
+    - stat: engineering
+      minimum: 35
+    operatingRequirements: []
+    modifiers:
+    - stat: storageCapacity
+      flat: 58
+      percent: 0
+    - stat: packSlots
+      flat: 30
+      percent: 0
+    - stat: carryCapacity
+      flat: 14
+      percent: 0
+    installationFacility: 
+    upgradeToItemId: 
+    upgradeIngredients: []
+    upgradeCredits: 0
+    comfortableStrength: 0
+    comfortableEndurance: 0
+    movementPenalty: 0
+    staminaPenalty: 0
   modifications:
   - itemId: aug_cognition
     slots: []
@@ -1234,6 +1375,56 @@ MonoBehaviour:
     modifiers:
     - stat: recoilControl
       flat: 0.025
+      percent: 0
+  - itemId: pack_side_pouches
+    slots:
+    - storage
+    socketTypes:
+    - pack_pouch
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: packSlots
+      flat: 4
+      percent: 0
+    - stat: storageCapacity
+      flat: 3
+      percent: 0
+  - itemId: pack_hip_belt
+    slots:
+    - storage
+    socketTypes:
+    - pack_frame
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: carryCapacity
+      flat: 4
+      percent: 0
+  - itemId: pack_nanoweave_pouch
+    slots:
+    - storage
+    socketTypes:
+    - pack_pouch
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: packSlots
+      flat: 6
+      percent: 0
+    - stat: storageCapacity
+      flat: 6
+      percent: 0
+  - itemId: pack_servo_lifter
+    slots:
+    - storage
+    socketTypes:
+    - pack_frame
+    requirements: []
+    operatingRequirements: []
+    modifiers:
+    - stat: carryCapacity
+      flat: 9
       percent: 0
   basePackSlots: 24
   itemWeights: []

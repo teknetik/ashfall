@@ -68,7 +68,7 @@ async def main():
    for _ in range(6):
     xtest.fake_input(d,X.ButtonPress,5);xtest.fake_input(d,X.ButtonRelease,5);d.sync();await asyncio.sleep(.08)
    await cmd(action='goto',landmark='checkpoint_locker');await cmd(action='view',camera='cam_checkpoint_locker');assert 'ARMS LOCKER' in snap()['interaction']['prompt'];await capture('locker-before');await tap('e');assert snap()['combat']['hasPistol'];assert snap()['combat']['step']=='Draw';assert not snap()['combat']['lockerEnabled'];await capture('locker-collected');report['checks'].append('Locker issues pistol once; guidance advances and disappears')
-   await tap('7');assert snap()['combat']['Armed'];assert snap()['combat']['step']=='Targets'
+   await tap('2');assert snap()['combat']['Armed'];assert snap()['combat']['step']=='Targets'
    await cmd(action='goto',landmark='checkpoint_range_reset');await tap('e');assert snap()['combat']['step']=='Targets';report['checks'].append('Range reset station responds without bypassing tutorial')
    await cmd(action='goto',landmark='checkpoint_firingline');await cmd(action='view',camera='cam_checkpoint_range');await capture('range-overview')
    await cmd(action='view',camera='cam_checkpoint_target_close');await capture('target-close')

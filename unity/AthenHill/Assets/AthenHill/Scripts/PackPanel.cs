@@ -16,7 +16,7 @@ namespace AthenHill
   /// Grid rows are always completed with empty cells, and never fewer than this many cells are drawn.
   public const int MinimumCells=24;
   static readonly string[] rarityClasses={"rarity-common","rarity-uncommon","rarity-rare"};
-  static readonly Dictionary<RecipeGroup,string> groupChips=new Dictionary<RecipeGroup,string>{{RecipeGroup.Component,"Components"},{RecipeGroup.MarkI,"Mark I"},{RecipeGroup.MarkII,"Mark II"},{RecipeGroup.Weapon,"Weapons"},{RecipeGroup.WeaponMod,"Weapon mods"},{RecipeGroup.Armour,"Armour"}};
+  static readonly Dictionary<RecipeGroup,string> groupChips=new Dictionary<RecipeGroup,string>{{RecipeGroup.Component,"Components"},{RecipeGroup.MarkI,"Mark I"},{RecipeGroup.MarkII,"Mark II"},{RecipeGroup.Weapon,"Weapons"},{RecipeGroup.WeaponMod,"Weapon mods"},{RecipeGroup.Armour,"Armour"},{RecipeGroup.Gear,"Packs"},{RecipeGroup.ArmourMod,"Armour mods"}};
 
   readonly VisualElement root,grid,empty,overview,overviewIcon,details,detailsIcon,filters,facts,stats,previewCol,previewView,previewFallback,progressFill,searchBox;
   readonly ScrollView scroll;
@@ -82,7 +82,94 @@ namespace AthenHill
    previewView.RegisterCallback<PointerCaptureOutEvent>(_=>dragPointer=-1);
    previewView.RegisterCallback<ClickEvent>(e=>{if(e.clickCount==2&&preview)preview.Yaw=0;});
    characterPanel=new CharacterLoadoutPanel(root,session,crafting,()=>selectedItem,Refresh);
+   characterPanel.DroppedOnHotbar=(item,slot)=>session.AssignHotbar(slot,item);
    BuildCapacity();
+   BuildHotbarStrip();
+  }
+
+  // ------------------------------------------------------------------ hotbar strip (5 Oct 2026)
+  // The ten HUD hotbar slots under the pack grid: drop a carried medkit or nano recharge on 3–0 (or select it and press
+  // 3–9 / 0), drag a cell onto another to swap them or off the strip to clear it, right-click (or Delete) clears it.
+  // A carried weapon dropped on 1 or 2 is equipped there.
+  readonly List<Button> barCells=new List<Button>();
+  readonly string[] barSignatures=new string[HotbarModel.Slots+1];
+  int barPointer=-1,barFrom;Vector2 barOrigin;bool barDragging;Label barGhost;
+  void BuildHotbarStrip()
+  {
+   var col=root.Q("pack-col");if(col==null)return;
+   var strip=new VisualElement{name="pack-hotbar"};strip.AddToClassList("pack-hotbar");
+   var head=new VisualElement{pickingMode=PickingMode.Ignore};head.AddToClassList("pack-hotbar-head");
+   var title=new Label("HOTBAR"){pickingMode=PickingMode.Ignore};title.AddToClassList("pack-hotbar-title");head.Add(title);
+   var help=new Label("Drag medkits and nano recharges onto 3–0 · or select one and press its key"){name="pack-hotbar-help",pickingMode=PickingMode.Ignore};help.AddToClassList("pack-hotbar-help");head.Add(help);
+   strip.Add(head);
+   var row=new VisualElement{pickingMode=PickingMode.Ignore};row.AddToClassList("pack-hotbar-row");strip.Add(row);
+   col.Add(strip); // under the footer; the grid's scroll view gives up the height
+   for(int i=1;i<=HotbarModel.Slots;i++)
+   {
+    int slot=i;
+    var cell=new Button{name="packbar-slot"+i,userData=new HotbarDrop{slot=i},focusable=true};
+    cell.AddToClassList("hotbar-slot");cell.AddToClassList("packbar-slot");
+    cell.RegisterCallback<PointerDownEvent>(e=>BarDown(e,slot),TrickleDown.TrickleDown);
+    cell.RegisterCallback<KeyDownEvent>(e=>{if(e.keyCode==KeyCode.Delete||e.keyCode==KeyCode.Backspace){if(session.Quickbar!=null&&session.Quickbar.Clear(slot))session.Notify($"Hotbar {HotbarModel.Key(slot)} cleared.","Field Pack");e.StopPropagation();}});
+    row.Add(cell);barCells.Add(cell);
+   }
+   root.RegisterCallback<PointerMoveEvent>(BarMove,TrickleDown.TrickleDown);
+   root.RegisterCallback<PointerUpEvent>(BarUp,TrickleDown.TrickleDown);
+   // Number keys assign the selected pack item (not while typing in the search field).
+   col.RegisterCallback<KeyDownEvent>(e=>
+   {
+    if(session.State!=CityState.Inventory||ActiveTab!=Tab.Items||selectedItem==null||root.focusController?.focusedElement is TextField)return;
+    int slot=e.keyCode>=KeyCode.Alpha1&&e.keyCode<=KeyCode.Alpha9?e.keyCode-KeyCode.Alpha0:e.keyCode==KeyCode.Alpha0?HotbarModel.Slots:e.keyCode>=KeyCode.Keypad1&&e.keyCode<=KeyCode.Keypad9?e.keyCode-KeyCode.Keypad0:e.keyCode==KeyCode.Keypad0?HotbarModel.Slots:0;
+    if(slot==0)return;
+    if(HotbarModel.IsItemSlot(slot))session.AssignHotbar(slot,selectedItem);
+    else session.Notify("Hotbar 1 and 2 hold your primary weapon and sidearm. Drag a weapon onto them to equip it.","Field Pack");
+    e.StopPropagation();
+   },TrickleDown.TrickleDown);
+  }
+  void RefreshHotbarStrip()
+  {
+   if(barCells.Count==0)return;
+   for(int i=1;i<=HotbarModel.Slots;i++)
+   {
+    var b=barCells[i-1];
+    HotbarView.Describe(session,Combat,i,out var icon,out var label,out var tooltip,out var count,out var isEmpty);
+    string sig=icon+"|"+label+"|"+isEmpty;
+    if(barSignatures[i]!=sig){barSignatures[i]=sig;HotbarView.Fill(b,i,icon,label,isEmpty);}
+    b.tooltip=tooltip;
+    var badge=b.Q<Label>(className:"slot-count");
+    if(count>=0){if(badge==null){badge=new Label{pickingMode=PickingMode.Ignore};badge.AddToClassList("slot-count");b.Add(badge);}badge.text=count.ToString();badge.EnableInClassList("slot-count-empty",count<=0);}
+    else badge?.RemoveFromHierarchy();
+    b.EnableInClassList("slot-depleted",count==0);
+   }
+  }
+  void BarDown(PointerDownEvent e,int slot)
+  {
+   if(!HotbarModel.IsItemSlot(slot)||session.Quickbar?.Item(slot)==null)return;
+   if(e.button==1){session.Quickbar.Clear(slot);session.Notify($"Hotbar {HotbarModel.Key(slot)} cleared.","Field Pack");e.StopPropagation();return;}
+   if(e.button!=0)return;
+   barPointer=e.pointerId;barFrom=slot;barOrigin=e.position;barDragging=false;
+  }
+  void BarMove(PointerMoveEvent e)
+  {
+   if(barPointer!=e.pointerId)return;
+   if(!barDragging&&Vector2.Distance(barOrigin,e.position)<7)return;
+   if(!barDragging)
+   {
+    barDragging=true;
+    barGhost=new Label(session.Shop.Spec(session.Quickbar.Item(barFrom))?.name??""){pickingMode=PickingMode.Ignore};barGhost.AddToClassList("equipment-drag-ghost");root.Add(barGhost);
+   }
+   var p=root.WorldToLocal(e.position);barGhost.style.left=p.x+14;barGhost.style.top=p.y+14;
+  }
+  void BarUp(PointerUpEvent e)
+  {
+   if(barPointer!=e.pointerId)return;
+   int from=barFrom;bool dragged=barDragging;
+   barPointer=-1;barDragging=false;barGhost?.RemoveFromHierarchy();barGhost=null;
+   if(!dragged)return;
+   HotbarDrop to=null;for(var v=root.panel?.Pick(e.position);v!=null;v=v.parent)if(v.userData is HotbarDrop h){to=h;break;}
+   if(to==null){if(session.Quickbar.Clear(from))session.Notify($"Hotbar {HotbarModel.Key(from)} cleared.","Field Pack");}
+   else if(to.slot!=from&&HotbarModel.IsItemSlot(to.slot)){session.Quickbar.Swap(from,to.slot);session.Notify($"Hotbar {HotbarModel.Key(from)} and {HotbarModel.Key(to.slot)} swapped.","Field Pack");}
+   e.StopPropagation();
   }
   /// Slots, facts and stat rows come from the crafting data, which the crafting session loads after the HUD starts.
   void EnsureBuilt()
@@ -110,6 +197,7 @@ namespace AthenHill
   {
    open=false;hoverKey=null;live?.Pause();
    characterPanel.CancelDrag();
+   barPointer=-1;barDragging=false;barGhost?.RemoveFromHierarchy();barGhost=null;
    if(dragPointer>=0&&previewView.HasPointerCapture(dragPointer))previewView.ReleasePointer(dragPointer);
    dragPointer=-1;
    if(preview)preview.SetActive(false);
@@ -129,6 +217,7 @@ namespace AthenHill
    UpdateDetails();
    UpdateYou();
    characterPanel.Refresh();
+   RefreshHotbarStrip();
    RefreshPreview();
   }
   void BuildCapacity()
@@ -442,6 +531,15 @@ namespace AthenHill
   }
   static string RarityName(ItemRarity r)=>r==ItemRarity.Rare?"Rare":r==ItemRarity.Uncommon?"Uncommon":"Common";
 
+  /// Who trades an item, and for how much (Field Supply joined Basic General and Salvage on 5 Oct 2026).
+  public static string PriceLine(ItemSpec item)
+  {
+   if(item==null)return "";
+   if(item.excludeFromTrade)return item.rarity==ItemRarity.Rare?"Rare part · neither Mira nor Brann will trade it":"";
+   if(item.sellOnly)return $"Brann at Salvage and Mira at Basic General buy this for {item.sellPrice} cr";
+   string counter=item.HasTag("field_supply_only")?"Field Supply":item.HasTag("field_supply")?"Field Supply and Basic General":"Basic General";
+   return item.buyPrice>0?$"{counter} list price - Buy {item.buyPrice} cr / Sell {item.sellPrice} cr":item.sellPrice>0?$"{counter} buys this for {item.sellPrice} cr":"";
+  }
   // ------------------------------------------------------------------ adjacent item details (click / keyboard selection)
   void UpdateDetails()
   {
@@ -458,7 +556,7 @@ namespace AthenHill
     detailsQuantity.text=item!=null?$"{quantity} carried · {RarityName(item.rarity)}":$"{quantity} carried";
     foreach(var c in rarityClasses)detailsTitle.RemoveFromClassList(c);
     if(item!=null&&item.rarity!=ItemRarity.Common)detailsTitle.AddToClassList(rarityClasses[(int)item.rarity]);
-    detailsPrices.text=item!=null&&!item.excludeFromTrade?item.sellOnly?$"Brann at Salvage and Mira at Basic General buy this for {item.sellPrice} cr":$"Basic General list price - Buy {item.buyPrice} cr / Sell {item.sellPrice} cr":item!=null&&item.rarity==ItemRarity.Rare?"Rare part · neither Mira nor Brann will trade it":"";
+    detailsPrices.text=PriceLine(item);
     detailsDescription.text=item!=null&&!string.IsNullOrWhiteSpace(item.description)?item.description:"No description recorded.";
     if(item!=null){var equipment=characterPanel.DescribeItem(item.id);if(equipment.Length>0)detailsDescription.text+="\n\n"+equipment;}
     if(Model!=null&&item!=null){var uses=KnownUses(Model,item);if(uses.Length>0)detailsDescription.text+="\n\nKnown uses: "+uses+" ("+CraftingText.WorkbenchName+")";}

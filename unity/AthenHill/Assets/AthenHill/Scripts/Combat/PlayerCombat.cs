@@ -3,8 +3,9 @@ using UnityEngine;
 namespace AthenHill
 {
  /// The player's nanite-fed scrap pistol and field rifle, vitality and knock-down/respawn.
- /// Controls: 7 draws/holsters the sidearm, 8 the rifle (drawing one holsters the other); hold right mouse to aim over
- /// the shoulder, then left click fires; F fires from the hip. Automatic weapons (the rifle) fire while the button is held.
+ /// Controls (5 Oct 2026): hotbar 1 draws/holsters the primary weapon (rifle), 2 the sidearm (drawing one holsters the
+ /// other; GameSession's hotbar calls ToggleDraw); hold right mouse to aim over the shoulder; left mouse or F fires,
+ /// aiming or not. Automatic weapons (the rifle) fire while the button is held.
  /// Wardens keep weapons holstered inside the walls, so the pistol only draws in the Outer Berms (x below City Edge X).
  [RequireComponent(typeof(Health))]
  public class PlayerCombat:MonoBehaviour
@@ -66,6 +67,22 @@ namespace AthenHill
   public bool Armed {get;private set;}
   public bool Aiming {get;private set;}
   public float Nano {get;private set;}
+  /// Nano recharge overclock (Field Supply, 5 Oct 2026): until this time the charge refills even while firing, faster.
+  public float OverclockUntil {get;private set;}=-1;
+  public float OverclockBonus {get;private set;}
+  public bool Overclocked=>Time.time<OverclockUntil;
+  /// A nano recharge was used: refills the charge at once and overclocks the regulator for seconds (bonus 0.5 = +50 %
+  /// regeneration, with no pause after a shot). A longer or stronger overclock replaces a weaker one still running.
+  public void Recharge(float nano,float seconds,float bonus)
+  {
+   Nano=Mathf.Min(Stats.nanoMax,Nano+Mathf.Max(0,nano));
+   if(seconds>0)
+   {
+    if(!Overclocked||Time.time+seconds>OverclockUntil)OverclockUntil=Time.time+seconds;
+    OverclockBonus=Overclocked?Mathf.Max(OverclockBonus,bonus):bonus;
+    OverclockBonus=Mathf.Max(0,OverclockBonus);
+   }
+  }
   public bool InBerms=>transform.position.x<cityEdgeX;
   public int ShotsFired {get;private set;}
   public int Hits {get;private set;}
@@ -89,7 +106,7 @@ namespace AthenHill
   public CharacterModel Character {get;private set;}
   public CraftingModel Crafting {get;private set;}
   public string ActiveSlot {get;private set;}="secondary";
-  /// A primary weapon (the field rifle) is equipped and has a crafting definition, so 8 can draw it.
+  /// A primary weapon (the field rifle) is equipped and has a crafting definition, so hotbar 1 can draw it.
   public bool HasRifle=>Character!=null&&Crafting!=null&&Crafting.FindWeapon(Character.Equipped("primary"))!=null;
   public bool RifleActive=>ActiveSlot=="primary";
   /// The held model of the active slot (rifle or pistol), shown while drawn.
@@ -196,7 +213,7 @@ namespace AthenHill
    if(heldPistol)heldPistol.SetActive(false);
    if(heldRifle)heldRifle.SetActive(false);
   }
-  void OnDestroy(){if(Health){Health.Damaged-=OnDamaged;Health.Died-=OnDied;}if(Loadout!=null)Loadout.Changed-=ApplyLoadout;if(Character!=null)Character.Changed-=OnCharacterChanged;ReleaseCursor();}
+  void OnDestroy(){if(Health){Health.Damaged-=OnDamaged;Health.Died-=OnDied;}if(Loadout!=null)Loadout.Changed-=ApplyLoadout;if(Character!=null)Character.Changed-=OnCharacterChanged;}
   public void GivePistol()
   {
    if(Character!=null&&Character.Equipped("secondary")!="scrap_pistol"&&session&&session.Shop.Quantity("scrap_pistol")==0)
@@ -206,7 +223,7 @@ namespace AthenHill
    hasPistol=true;Nano=Stats.nanoMax;
   }
   public void ToggleDraw()=>ToggleDraw("secondary");
-  /// 7 draws or holsters the sidearm, 8 the rifle. Drawing the other slot's weapon switches to it (holstering this one).
+  /// Hotbar 2 draws or holsters the sidearm, 1 the rifle. Drawing the other slot's weapon switches to it (holstering this one).
   public void ToggleDraw(string slot)
   {
    if(session.State!=CityState.Play)return;
@@ -227,29 +244,26 @@ namespace AthenHill
     if(clip)audioSource.PlayOneShot(clip,.8f);
    }
    string name=RifleActive?"Field rifle":"Scrap pistol";
-   session.Notify(Armed?(RifleActive?"Field rifle drawn. Hold right mouse to aim; hold fire for bursts.":"Scrap pistol drawn. Hold right mouse to aim."):name+" holstered.");
+   session.Notify(Armed?(RifleActive?"Field rifle drawn. Left mouse fires (hold for bursts); hold right mouse to aim.":"Scrap pistol drawn. Left mouse fires; hold right mouse to aim."):name+" holstered.");
   }
   void Update()
   {
    if(tracer&&tracer.enabled&&Time.time>tracerOff){tracer.enabled=false;if(muzzleLight)muzzleLight.enabled=false;}
-   if(Time.time-LastShotTime>nanoRegenDelay)Nano=Mathf.Min(Stats.nanoMax,Nano+Stats.nanoRegen*Time.deltaTime);
+   if(Overclocked)Nano=Mathf.Min(Stats.nanoMax,Nano+Stats.nanoRegen*(1+OverclockBonus)*Time.deltaTime);
+   else if(Time.time-LastShotTime>nanoRegenDelay)Nano=Mathf.Min(Stats.nanoMax,Nano+Stats.nanoRegen*Time.deltaTime);
    bool play=session.State==CityState.Play;
-   if(play&&input.Pressed("Slot7"))ToggleDraw("secondary");
-   if(play&&input.Pressed("Slot8"))ToggleDraw("primary");
    if(Armed&&!InBerms){Armed=false;session.Notify(RifleActive?"Back inside the walls. Field rifle holstered.":"Back inside the walls. Scrap pistol holstered.","Ward");}
    bool showPistol=Armed&&!RifleActive,showRifle=Armed&&RifleActive;
    if(heldPistol&&heldPistol.activeSelf!=showPistol)heldPistol.SetActive(showPistol);
    if(heldRifle&&heldRifle.activeSelf!=showRifle)heldRifle.SetActive(showRifle);
    Aiming=play&&Armed&&input.Held("Aim");
    if(follow)follow.aimMode=Aiming;
-   if(Aiming)Cursor.lockState=CursorLockMode.Locked;else ReleaseCursor();
    motor.SpeedScale=(Aiming?aimMoveScale:1)*(Character!=null?Character.Stat("movementSpeed"):1);
    motor.FaceView=Aiming||Armed&&Time.time<faceUntil;
    if(view)motor.FaceYaw=view.transform.eulerAngles.y;
    if(!play||!Armed)return;
-   if(input.Pressed("Fire")||Aiming&&input.Pressed("Orbit")||Automatic&&(input.Held("Fire")||Aiming&&input.Held("Orbit")))Fire();
+   if(input.FirePressed||Automatic&&input.FireHeld)Fire();
   }
-  void ReleaseCursor(){if(Cursor.lockState==CursorLockMode.Locked)Cursor.lockState=CursorLockMode.None;}
   public void Fire()
   {
    if(!Armed||Time.time<nextFire||!Health.Alive)return;
@@ -380,7 +394,7 @@ namespace AthenHill
    var point=station&&station.respawnPoint?station.respawnPoint:respawnPoint;
    session.Notify(station?$"You go down in the dust. A Warden patrol drags you back to the {station.displayName.ToLowerInvariant()}.":"You go down in the dust. A Warden patrol drags you back to the post.","Outer Berms");
    if(point){motor.Teleport(point.position);motor.visual.rotation=point.rotation;}
-   Health.Restore();Nano=Stats.nanoMax;
+   Health.Restore();Nano=Stats.nanoMax;OverclockUntil=-1;
    Downed?.Invoke();
   }
  }

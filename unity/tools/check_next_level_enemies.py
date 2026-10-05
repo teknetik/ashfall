@@ -100,11 +100,11 @@ def near(names, centre, radius=70):
 
 
 def rifle_up():
-    """Draw the field rifle with 8 (switching from the pistol if needed)."""
+    """Draw the field rifle with 1 (switching from the pistol if needed; 5 Oct 2026: hotbar 1 = primary)."""
     for _ in range(3):
         c = qa.snap()['combat']
         if c['Armed'] and c.get('weaponId') == 'weapon_field_rifle': return True
-        qa.tap('8', settle=.6)
+        qa.tap('1', settle=.6)
     c = qa.snap()['combat']; return c['Armed'] and c.get('weaponId') == 'weapon_field_rifle'
 
 

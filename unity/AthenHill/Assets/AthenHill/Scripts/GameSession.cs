@@ -6,7 +6,9 @@ namespace AthenHill
 {
  /// One Buy parts purchase; listeners may append words to the notice (e.g. " Schematic discovered: …").
  public sealed class PartPurchase{public string itemId,note="";}
- public enum CityState { Boot,Play,Dialogue,Shop,Grid,Paused,Inventory,Notes,Credits,Error,Settings,MainMenu,Fabricator }
+ /// Journal (5 Oct 2026) replaces the old City notes screen in place; Stash (the home locker) and Rest (the home bunk)
+ /// are appended.
+ public enum CityState { Boot,Play,Dialogue,Shop,Grid,Paused,Inventory,Journal,Credits,Error,Settings,MainMenu,Fabricator,Stash,Rest }
  public class GameSession:MonoBehaviour,IQuestState
  {
   public CityCatalog catalog;
@@ -14,7 +16,9 @@ namespace AthenHill
   public CharacterCatalog characterCatalog;
   public CharacterModel Character {get;private set;}
   public GameSettings Settings {get;private set;}
-  void Awake(){Settings=GetComponent<GameSettings>();if(!Settings)Settings=gameObject.AddComponent<GameSettings>();reducedMotion=Settings.ReadReducedMotion(reducedMotion);RadioLine.timing=radioTiming??new RadioQueue.Timing();}
+  /// The mission journal (5 Oct 2026). It has no authored settings, so a scene without one gets one here.
+  public QuestJournal Journal {get;private set;}
+  void Awake(){Settings=GetComponent<GameSettings>();if(!Settings)Settings=gameObject.AddComponent<GameSettings>();Journal=GetComponent<QuestJournal>();if(!Journal)Journal=gameObject.AddComponent<QuestJournal>();reducedMotion=Settings.ReadReducedMotion(reducedMotion);RadioLine.timing=radioTiming??new RadioQueue.Timing();}
   void SettingsChanged(){muted=Settings.Sound.muted;if(ActiveNpc)ActiveNpc.SetVoiceLevel(Settings.Sound.effects);Changed?.Invoke();}
   public GameInput input;
   public PlayerMotor player;
@@ -113,13 +117,15 @@ namespace AthenHill
   // The explicit Escape and HUD pause controls remain available.
   void Update()
   {
-   if(UnityEngine.InputSystem.Keyboard.current?.tabKey.wasPressedThisFrame==true)ToggleInventory();
+   var keyboard=UnityEngine.InputSystem.Keyboard.current;
+   if(keyboard?.tabKey.wasPressedThisFrame==true)ToggleInventory();
+   else if(keyboard?.jKey.wasPressedThisFrame==true)ToggleJournal();
    if(input.Cancel){if(State==CityState.Play)SetState(CityState.Paused);else Close();}
    if(State==CityState.Play)
    {
     if(input.Pressed("Reset"))ResetPlayer();
     if(input.Pressed("Interact"))Interact();
-    for(int i=1;i<=6;i++)if(input.Pressed("Slot"+i))Hotbar(i);
+    for(int i=1;i<=HotbarModel.Slots;i++)if(input.Pressed("Slot"+HotbarModel.Key(i)))UseHotbar(i);
     var p=player.transform.position;
     if(!visitedHill&&hillPoint&&new Vector2(p.x-hillPoint.position.x,p.z-hillPoint.position.z).magnitude<hillRadius&&p.y>hillPoint.position.y+hillMinimumHeight){visitedHill=true;Changed?.Invoke();}
     bool inside=NearRing&&p.y>ringPoint.position.y-.2f;
@@ -151,6 +157,11 @@ namespace AthenHill
    SetFlag(choice.setFlag);
    if(choice.action=="shop")SetState(CityState.Shop);
    else if(choice.action=="close")Close();
+   else if(choice.action=="lease_home")
+   {
+    // Linn's housing roll: the lease is taken (credits paid) before the conversation moves on; a refusal stays here.
+    if(LeaseHome()){dialogueNode=choice.next;AddLog(ActiveNpc.definition.displayName,Dialogue.text);SpeakDialogue();Changed?.Invoke();}
+   }
    else if(choice.action=="fabricator"&&ActiveNpc.workbench)
    {
     // "Use the bench": straight from the conversation to the workbench the colonist keeps.
@@ -162,7 +173,11 @@ namespace AthenHill
   public bool Trade(string id,bool buy)
   {
    if(State!=CityState.Shop)return false;
-   bool ok=Shop.Trade(id,buy,out string message,Vendor);
+   var spec=Shop.Spec(id);string message="";
+   // A counter trades only its own stock (Field Supply: field gear; Basic General leaves that gear to Field Supply).
+   bool stocked=spec!=null&&(buy?MerchantStock.CanBuy(spec,ActiveShop)&&!MerchantStock.UsesPartsPrice(spec,ActiveShop):MerchantStock.CanSell(spec,ActiveShop));
+   bool ok=stocked&&Shop.Trade(id,buy,out message,Vendor);
+   if(!stocked)message=spec==null?"That item is not available.":MerchantStock.IsMagazine(spec)?$"{spec.name} is on the magazine shelf.":buy?$"{Vendor} does not stock {spec.name}.":$"{Vendor} does not buy {spec.name}.";
    if(ok&&buy&&id=="water_flask")boughtFlask=true;
    if(ok&&!buy&&id=="scrap_coil")soldScrap=true;
    Notify(message,Vendor);SoundRequested?.Invoke(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);
@@ -192,23 +207,192 @@ namespace AthenHill
    if(ok)Traded?.Invoke();
    return ok;
   }
+  /// A counter's digital magazine shelf (Field Supply): one atomic purchase that downloads the magazine to the field slate
+  /// and teaches every schematic it lists (CraftingModel.ReadMagazine). Nothing enters the pack; ownership is the set of
+  /// known recipes, so it is saved with the crafting state. Nothing changes if the credits fall short or it is owned.
+  public bool BuyMagazine(string id)
+  {
+   if(State!=CityState.Shop)return false;
+   var spec=Shop.Spec(id);var model=GetComponent<CraftingSession>()?.Model;string message;bool ok=false;
+   var taught=model!=null&&spec!=null?model.MagazineRecipes(id).ToList():new List<CraftRecipe>();
+   if(!ActiveShop.magazines)message=$"{Vendor} has no magazine shelf.";
+   else if(spec==null||!MerchantStock.IsMagazine(spec)||spec.buyPrice<=0||spec.excludeFromTrade)message="That magazine is not on the shelf.";
+   else if(model==null||taught.Count==0)message=$"{spec.name} has nothing your field slate can use yet.";
+   else if(model.OwnsMagazine(id))message=$"{spec.name} is already on your field slate.";
+   else if(Shop.Credits<spec.buyPrice)message=$"You need {spec.buyPrice-Shop.Credits} more credits for {spec.name}.";
+   else if(!Shop.TryApply(Array.Empty<KeyValuePair<string,int>>(),-spec.buyPrice,out _))message="This trade cannot be completed.";
+   else
+   {
+    var learned=model.ReadMagazine(id);ok=true;
+    message=$"Downloaded {spec.name} for {spec.buyPrice} credits. "+CraftingText.Discovered(learned.Count>0?learned:taught)+" Make them at Brann's workbench in Salvage.";
+   }
+   Notify(message,Vendor);SoundRequested?.Invoke(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);
+   if(ok){MagazineBought?.Invoke(id);Traded?.Invoke();}
+   return ok;
+  }
+  /// A magazine was downloaded (QA and autosave hooks).
+  public event Action<string> MagazineBought;
+  // ---- Consumables (5 Oct 2026): used from the hotbar slot the player put them on; also usable from code (QA, tests).
+  float consumableReady;
+  /// Uses one carried unit of a consumable: heals (× Healing efficiency) and/or refills and overclocks the weapon charge.
+  /// Refused, with nothing used, when it would do nothing (full health, no weapon), while cooling down or outside play.
+  public bool UseItem(string id)
+  {
+   if(State!=CityState.Play||Shop==null)return false;
+   var spec=catalog.Consumable(id);var item=Shop.Spec(id);
+   var combat=player?player.GetComponent<PlayerCombat>():null;
+   string message;bool ok=false;
+   if(spec==null||item==null)message="That item cannot be used.";
+   else if(Shop.Quantity(id)<1)message=$"No {item.name} carried."+(item.HasTag("field_supply")?" Field Supply stocks them.":"");
+   else if(Time.time<consumableReady)message="Still steadying from the last one.";
+   else
+   {
+    var health=combat?combat.Health:null;
+    float missing=health?health.max-health.Current:0;
+    bool heals=spec.restoreHealth>0&&health&&health.Alive&&missing>.5f;
+    bool charges=(spec.restoreNano>0||spec.overclockSeconds>0)&&combat&&combat.hasPistol;
+    if(!heals&&!charges)message=spec.restoreHealth>0?"You are not hurt.":combat&&!combat.hasPistol?"You have no nano weapon to charge.":$"{item.name} would do nothing now.";
+    else if(!Shop.TryApply(new[]{new KeyValuePair<string,int>(id,-1)},0,out _))message="That item cannot be used.";
+    else
+    {
+     ok=true;consumableReady=Time.time+catalog.consumableCooldown;var parts=new List<string>();
+     if(heals)
+     {
+      float before=health.Current;health.Heal(spec.restoreHealth*HealingScale);
+      parts.Add($"+{Mathf.RoundToInt(health.Current-before)} health");
+     }
+     if(charges)
+     {
+      float before=combat.Nano;combat.Recharge(spec.restoreNano,spec.overclockSeconds,spec.overclockRegen);
+      if(combat.Nano-before>=.5f)parts.Add($"+{Mathf.RoundToInt(combat.Nano-before)} nano");
+      if(spec.overclockSeconds>0)parts.Add($"regulator overclocked {spec.overclockSeconds:0} s");
+     }
+     message=$"Used {item.name}: {string.Join(", ",parts)}. {Shop.Quantity(id)} left.";
+    }
+   }
+   Notify(message,"Field Pack");
+   if(ok){ItemUsed?.Invoke(id);SoundRequested?.Invoke(CitySoundCue.Trade);}else SoundRequested?.Invoke(CitySoundCue.Unavailable);
+   return ok;
+  }
+  /// Medkit multiplier: the character's Healing efficiency (Medicine raises it); 1 without a character catalog row.
+  public float HealingScale=>Character!=null&&Character.Data.derivedStats.Any(d=>d!=null&&d.id=="healingEfficiency")?Mathf.Max(0,Character.Stat("healingEfficiency")):1;
+  /// A consumable was used (autosave hook; the pack changed).
+  public event Action<string> ItemUsed;
   /// A trade or salvage sale completed (autosave hook).
   public event Action Traded;
   /// A crafting part was bought (the crafting session reveals schematics that use it, as for a pickup, and appends
   /// them to the purchase notice).
   public event Action<PartPurchase> PartBought;
+  // ---- The home (5 Oct 2026): Linn's lease, the locker (stash) and the bunk (rest). See WardHome.
+  /// The home whose locker or bunk window is open (or the one Linn leases).
+  public WardHome ActiveHome {get;private set;}
+  /// The home locker's contents (saved with the game). Exists from the start so saves and QA can reach it.
+  public StashModel Stash=>stash??=new StashModel(Home?Home.lockerSlots:60);
+  StashModel stash;
+  WardHome home;bool homeSearched;
+  public WardHome Home{get{if(!home&&!homeSearched){homeSearched=true;home=FindAnyObjectByType<WardHome>();}return home;}}
+  /// The locker or bunk changed something the save must keep (autosave hook).
+  public event Action HomeChanged;
+  /// Raised by the locker window after a batch move (Store all salvage).
+  public void NotifyHomeChanged(){HomeChanged?.Invoke();Changed?.Invoke();}
+  /// Dialogue action "lease_home": pays the home's lease and records the flag. False (with the reason as a notice) when
+  /// already leased or the credits fall short.
+  public bool LeaseHome()
+  {
+   var h=Home;int price=h?h.leasePrice:40;string speaker=Vendor;
+   if(HasFlag(WardHome.LeasedFlag)){Notify("The container home is already yours.",speaker);return false;}
+   if(Shop.Credits<price){Notify($"The lease is {price} credits. You need {price-Shop.Credits} more.",speaker);SoundRequested?.Invoke(CitySoundCue.Unavailable);return false;}
+   if(!Shop.TryApply(Array.Empty<KeyValuePair<string,int>>(),-price,out _)){Notify("The lease cannot be paid right now.",speaker);return false;}
+   SetFlag(WardHome.LeasedFlag);
+   Notify($"Lease taken for {price} credits. The rust-red container home on the south wall, behind the Nanofab yard, is yours.","Ward");
+   SoundRequested?.Invoke(CitySoundCue.Trade);Traded?.Invoke();
+   return true;
+  }
+  public void OpenStash(WardHome at)
+  {
+   if(State!=CityState.Play||!at)return;
+   if(!at.Leased){Notify("The locker is chained. Linn on the hill holds the lease.","Ward");return;}
+   ActiveHome=at;SetState(CityState.Stash);
+  }
+  public void OpenRest(WardHome at)
+  {
+   if(State!=CityState.Play||!at)return;
+   if(!at.Leased)return;
+   ActiveHome=at;SetState(CityState.Rest);
+  }
+  /// Locker window: moves count units of an item from the pack into the locker (or back with take).
+  public bool MoveStash(string id,int count,bool store)
+  {
+   if(State!=CityState.Stash||Stash==null)return false;
+   var spec=Shop.Spec(id);string name=spec!=null?spec.name:id;
+   bool ok=store?Stash.Store(Shop,id,count,out var reason):Stash.Take(Shop,id,count,out reason);
+   string message=ok?(store?$"Stored {count} × {name} in the locker.":$"Took {count} × {name} from the locker."):reason switch
+   {
+    "locker_full"=>$"The locker is full ({Stash.SlotCapacity} stacks). Take something out first.",
+    "not_carried"=>$"You do not carry that many {name}.",
+    "not_stored"=>$"The locker does not hold that many {name}.",
+    "stack_full"=>$"Your pack cannot hold more {name} (limit {spec?.maxStack}).",
+    _=>reason!=null&&reason.Contains("capacity")?reason:"That cannot be moved."
+   };
+   Notify(message,"Home locker");SoundRequested?.Invoke(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);
+   if(ok){if(store)SetFlag(WardHome.StoredFlag);HomeChanged?.Invoke();Changed?.Invoke();}
+   return ok;
+  }
+  /// Bunk: rest until a time of day (hour &lt; 0 = just get up). Restores vitality and the weapon charge, saves the game,
+  /// and from now on Continue starts at the bunk.
+  public void Rest(float hour)
+  {
+   if(State!=CityState.Rest)return;
+   var at=ActiveHome;var clock=FindAnyObjectByType<CityTimeOfDay>();
+   if(hour>=0&&clock)clock.SetHour(hour);
+   var combat=player?player.GetComponent<PlayerCombat>():null;
+   if(combat){combat.Health.Restore();combat.Recharge(combat.Stats.nanoMax,0,0);}
+   bool slept=hour>=0;
+   SetFlag(WardHome.RestedFlag);
+   Close();
+   if(at&&at.wakePoint)WakeAt(at.wakePoint);
+   Notify(slept?$"You sleep until {(hour<12?"morning":"evening")}. Rested; your progress is saved, and Continue starts here.":"You rest a while. Rested; your progress is saved, and Continue starts here.","Home");
+   HomeChanged?.Invoke();
+  }
+  /// Puts the player on their feet at a point (the bunk's wake point), facing its forward.
+  public void WakeAt(Transform point)
+  {
+   if(!point||!player)return;
+   player.Teleport(point.position);if(player.visual)player.visual.rotation=Quaternion.Euler(0,point.eulerAngles.y,0);
+   if(follow){follow.yaw=point.eulerAngles.y;follow.pitch=8;}
+  }
   public void SelectDestination(int index)
   {
    if(State!=CityState.Grid||GridProgress<1||index<0||index>=catalog.destinations.Length)return;
    var node=catalog.destinations[index];selectedDestination=node.id;linked=true;Notify("Link established to "+node.name+".","Lattice Jack");SoundRequested?.Invoke(CitySoundCue.LatticeLink);
   }
-  public void Hotbar(int slot)
+  /// The ten-slot hotbar (5 Oct 2026). Assignments live in the HotbarModel and are saved with the game.
+  public HotbarModel Quickbar=>quickbar??=new HotbarModel(id=>catalog&&catalog.Consumable(id)!=null&&Shop?.Spec(id)!=null);
+  HotbarModel quickbar;
+  /// Hotbar key 1–9 or 0 (slot 10): 1 draws or holsters the primary weapon, 2 the sidearm; 3–0 use the item assigned
+  /// from the field pack.
+  public void UseHotbar(int slot)
   {
    if(State!=CityState.Play)return;
-   if(slot<3){string id=slot==1?"water_flask":"medkit";var i=catalog.items.First(x=>x.id==id);Notify($"{i.name} · {Shop.Quantity(id)} carried. {i.description}");}
-   else if(slot==3){if(NearLattice)Interact();else Notify("The Lattice Jack is in the north court, beyond the hill.");}
-   else if(slot==4){if(Nearest)Interact();else Notify("Move close to a colonist to talk.");}
-   else Open(slot==5?CityState.Inventory:CityState.Notes);
+   var weapon=HotbarModel.WeaponSlot(slot);
+   if(weapon!=null){var combat=player?player.GetComponent<PlayerCombat>():null;if(combat)combat.ToggleDraw(weapon);return;}
+   if(!HotbarModel.IsItemSlot(slot)||Quickbar==null)return;
+   var id=Quickbar.Item(slot);
+   if(id!=null){UseItem(id);return;}
+   Notify($"Hotbar {HotbarModel.Key(slot)} is empty. In your field pack (Tab), drag a medkit or nano recharge onto the hotbar strip, or select one and press {HotbarModel.Key(slot)}.","Field Pack");
+   SoundRequested?.Invoke(CitySoundCue.Unavailable);
+  }
+  /// Assigns a pack item to a hotbar slot (the field pack's strip); the refusal is a notice.
+  public bool AssignHotbar(int slot,string itemId)
+  {
+   if(Quickbar==null)return false;
+   var item=Shop?.Spec(itemId);
+   bool ok=Quickbar.Assign(slot,itemId,out var reason);
+   string name=item!=null?item.name:itemId;
+   if(ok)Notify($"{name} on hotbar {HotbarModel.Key(slot)}.","Field Pack");
+   else Notify(reason=="weapon_slot"?"Hotbar 1 and 2 hold your primary weapon and sidearm.":reason=="not_usable"?$"{name} cannot be used from the hotbar. Medkits and nano recharges can.":"That is not a hotbar slot.","Field Pack");
+   SoundRequested?.Invoke(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);
+   return ok;
   }
   public void StartGame(){if(State!=CityState.MainMenu)return;HasStarted=true;SetState(CityState.Play);}
   public CityVisitState CaptureCityVisit()=>new CityVisitState{visitedHill=visitedHill,boughtFlask=boughtFlask,soldScrap=soldScrap,linked=linked,spoken=Spoken.OrderBy(x=>x).ToArray(),selectedDestination=selectedDestination,flags=Flags.OrderBy(x=>x,StringComparer.Ordinal).ToArray()};
@@ -240,6 +424,12 @@ namespace AthenHill
    DevChanged("City visit and dialogue flags reset; inventory and tutorial unchanged.");return true;
   }
 #endif
+  /// J: the journal opens from play and closes back to it.
+  public void ToggleJournal()
+  {
+   if(State==CityState.Play)Open(CityState.Journal);
+   else if(State==CityState.Journal)Close();
+  }
   public void ToggleInventory()
   {
    if(State==CityState.Play)Open(CityState.Inventory);
@@ -263,7 +453,7 @@ namespace AthenHill
    if(State==CityState.MainMenu){if(state!=CityState.Settings)return;settingsReturn=CityState.MainMenu;Settings.BeginEdit();SetState(state);return;}
    if(State==CityState.Play||State==CityState.Paused){if(state==CityState.Settings){settingsReturn=CityState.Paused;Settings.BeginEdit();}SetState(state);}
   }
-  public void Close(){if(State==CityState.Settings){if(Settings.Previewing){Settings.RevertVideo();return;}Settings.EndEdit();SetState(settingsReturn);return;}if(State==CityState.MainMenu||State==CityState.Boot)return;if(State==CityState.Inventory&&DetailItemId!=null){CloseItemDetails();return;}DetailItemId=null;ActiveStationId=null;ActiveStation=null;if(ActiveNpc){ActiveNpc.StopSpeaking();ActiveNpc.talking=false;}ActiveNpc=null;GridProgress=0;SetState(CityState.Play);}
+  public void Close(){if(State==CityState.Settings){if(Settings.Previewing){Settings.RevertVideo();return;}Settings.EndEdit();SetState(settingsReturn);return;}if(State==CityState.MainMenu||State==CityState.Boot)return;if(State==CityState.Inventory&&DetailItemId!=null){CloseItemDetails();return;}DetailItemId=null;ActiveStationId=null;ActiveStation=null;ActiveHome=null;if(ActiveNpc){ActiveNpc.StopSpeaking();ActiveNpc.talking=false;}ActiveNpc=null;GridProgress=0;SetState(CityState.Play);}
   public void ResetPlayer(){if(!HasStarted)return;Close();player.ReturnToGate();follow.yaw=-90;follow.pitch=17;follow.FixedView=false;}
   public void ToggleMute(){Settings.Sound.muted=!Settings.Sound.muted;Settings.SaveSound();Settings.Flush();}
   public void ToggleReducedMotion(){reducedMotion=!reducedMotion;Settings.SaveReducedMotion(reducedMotion);Changed?.Invoke();}

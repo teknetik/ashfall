@@ -98,7 +98,7 @@ namespace AthenHill.Tests
    Assert.That(rig.pack.Grant("aug_cognition",1,0,out reason),reason);
    Assert.That(character.TryInstallModification("implant_head",2,"aug_cognition",out reason),reason);
    float mass=character.CarryWeight;var data=rig.save.Capture();
-   Assert.That(data.version,Is.EqualTo(3));string berms=data.bermsStep;
+   Assert.That(data.version,Is.GreaterThanOrEqualTo(3),"v3 and later keep nested modules");string berms=data.bermsStep;
    Assert.That(WardSaveFile.TryParse(WardSaveFile.Serialize(data),out var parsed,out reason),reason);
    character.Restore(null);Assert.That(rig.save.Apply(parsed),Is.Empty);
    Assert.That(character.InstalledModification("implant_head",2),Is.EqualTo("aug_cognition"));
@@ -108,7 +108,7 @@ namespace AthenHill.Tests
 
   [Test] public void PreviousSaveVersionsRemainReadableAndFutureCharacterVersionIsRejected()
   {
-   foreach(int version in new[]{1,2})
+   foreach(int version in new[]{1,2,3})
    {
     Assert.That(WardSaveFile.TryParse("{\"version\":"+version+",\"credits\":25,\"character\":{\"version\":1,\"level\":2}}",out var data,out var error),error);
     Assert.That(data.credits,Is.EqualTo(25));Assert.That(data.character.modifications,Is.Null);

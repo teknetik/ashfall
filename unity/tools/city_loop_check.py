@@ -55,7 +55,7 @@ async def main():
   assert s['session']['visitedHill'] and len(s['session']['spoken'])==4 and s['session']['boughtFlask'] and s['session']['soldScrap']
   await tap('Escape');await tap('Escape');s=await expect('Paused');before=s['player']['position'];await tap('w',.4);assert math.dist(before,(await snap())['player']['position'])<.01
   await tap('Escape');await expect('Play')
-  for keyname,state in [('5','Inventory'),('6','Notes')]:await tap(keyname);await expect(state);await tap('Escape')
+  for keyname,state in [('Tab','Inventory'),('j','Journal')]:await tap(keyname);await expect(state);await tap('Escape')
   await goto('ring_gate');s=await expect('Play');assert 'offline' not in (s['session'].get('notice') or ''),'3 Oct 2026: the Meshy ring is the Lattice Jack, no offline response'
   await tap('Escape');await expect('Paused');await click('mute');s=await expect('Paused');assert s['session']['muted'];await click('mute')
   await click('reduced-motion');s=await expect('Paused');assert s['session']['reducedMotion']

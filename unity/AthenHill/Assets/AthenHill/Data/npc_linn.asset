@@ -25,6 +25,12 @@ MonoBehaviour:
       label: Why does everyone meet here?
       next: hill
       action: 
+    - id: housing
+      label: Is there anywhere in Ward I could stay?
+      next: housing
+      action:
+      requires: primer, !flag:home_leased
+      setFlag: home_asked
     - id: leave
       label: I will stay for a moment.
       next: 
@@ -42,3 +48,31 @@ MonoBehaviour:
       label: On the hill. Got it.
       next: 
       action: close
+  - id: housing
+    title: The housing roll
+    text: There is a rust-red container against the south wall, behind the Nanofab yard. The family who fitted it out went with a Karaveen caravan last season. Bunk, a steel locker, shelves, a window that shuts. Forty credits takes the lease off the roll and the key is yours. Keep the locker for your salvage; the Berms will fill your pack faster than you think.
+    voice: {fileID: 0}
+    choices:
+    - id: lease
+      label: I'll take the lease (40 credits).
+      next: housing_leased
+      action: lease_home
+      requires:
+      setFlag:
+    - id: later
+      label: Not yet. I'll come back.
+      next:
+      action: close
+      requires:
+      setFlag:
+  - id: housing_leased
+    title: The housing roll
+    text: Then it is yours. The door knows you now. Rest on the bunk when the Berms wear you down, and come back up the hill when you need someone to talk to.
+    voice: {fileID: 0}
+    choices:
+    - id: leave
+      label: Thank you, Linn.
+      next:
+      action: close
+      requires:
+      setFlag:

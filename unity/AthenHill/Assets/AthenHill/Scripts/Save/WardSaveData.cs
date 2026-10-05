@@ -6,12 +6,15 @@ namespace AthenHill
  /// flags (1 Oct 2026): story flags set by dialogue choices; absent in older saves (none set).
  [Serializable] public class CityVisitState {public bool visitedHill,boughtFlask,soldScrap,linked;public string[] spoken;public string selectedDestination;public string[] flags;}
  /// Everything a Ward save restores. JsonUtility-friendly (arrays of plain records, no dictionaries).
+ /// Version 4 (5 Oct 2026) adds the hotbar assignments, the home locker and the tracked journal mission; v3 saves load
+ /// with the default hotbar (3 medkit, 4 nano cell), an empty locker and an automatically tracked mission. Earlier
+ /// builds refuse a v4 save, so the locker's contents are never dropped by an older reader.
  /// Version 3 preserves nested implant/armour components; earlier builds reject it rather than losing modules.
  /// Version 2 adds character progression and equipment. Version 1 starts with the catalog's character defaults.
- /// Player position is not saved: a loaded game resumes at West Gate.
+ /// Player position is not saved: a loaded game resumes at West Gate, or at the home bunk once the player has rested there.
  [Serializable] public class WardSaveData
  {
-  public const int CurrentVersion=3;
+  public const int CurrentVersion=4;
   public int version;
   public string savedUtc,build;
   public int credits,purchases,sales;
@@ -23,6 +26,9 @@ namespace AthenHill
   public FieldOrderState orders;
   public CityVisitState city;
   public CharacterState character;
+  public HotbarEntry[] hotbar;
+  public ItemStack[] stash;
+  public JournalState journal;
  }
  /// Reads and writes save files. Nothing here throws on bad input: unreadable files produce an error message.
  public static class WardSaveFile

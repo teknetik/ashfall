@@ -70,6 +70,18 @@ namespace AthenHill.Tests
    Assert.That(AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/AthenHill/UI/Art/preview-grid.png"),Is.Not.Null);
   }
 
+  [Test] public void PackShowsTheHotbarStripUnderTheGrid()
+  {
+   using var rig=new Rig();
+   rig.Grant("medkit",1);
+   var root=Hud();var panel=new PackPanel(root,rig.session,rig.crafting,null,Icons());panel.Opened();
+   var strip=root.Q("pack-hotbar");
+   Assert.That(strip,Is.Not.Null,"the HOTBAR strip is built");Assert.That(root.Q("pack-col").Contains(strip));
+   Assert.That(Enumerable.Range(1,10).All(i=>root.Q<Button>("packbar-slot"+i)!=null),"ten cells");
+   Assert.That(root.Q<Button>("packbar-slot3").ClassListContains("empty-slot"),Is.False,"the default medkit sits on 3");
+   Assert.That(root.Q<Button>("packbar-slot5").ClassListContains("empty-slot"),"5 starts empty");
+  }
+
   [Test] public void GridFiltersSearchesAndCompletesItsRows()
   {
    using var rig=new Rig();
@@ -115,7 +127,7 @@ namespace AthenHill.Tests
    Assert.That(Tiles(root),Is.EqualTo(new[]{"sch-recipe_alloy_plate","sch-recipe_grip_stabilised_pistol","sch-recipe_field_rifle","sch-recipe_rifle_precision_barrel"}));
    Assert.That(root.Q<Button>("sch-recipe_alloy_plate").ClassListContains("short"),"no parts carried");
    Assert.That(root.Q<Label>("inventory-overview-description").text,Does.StartWith("Parts: ").And.Contain("workbench at Salvage"));
-   Assert.That(root.Query<Button>(className:"pack-chip").ToList().Select(b=>b.text),Is.EqualTo(new[]{"ALL","COMPONENTS","MARK I","MARK II","WEAPONS","WEAPON MODS","ARMOUR"}));
+   Assert.That(root.Query<Button>(className:"pack-chip").ToList().Select(b=>b.text),Is.EqualTo(new[]{"ALL","COMPONENTS","MARK I","MARK II","WEAPONS","WEAPON MODS","ARMOUR","PACKS","ARMOUR MODS"}));
    panel.SetFilter("MarkI");
    Assert.That(Tiles(root),Is.EqualTo(new[]{"sch-recipe_grip_stabilised_pistol"}));
    panel.SetTab(PackPanel.Tab.Items);

@@ -35,6 +35,12 @@ namespace AthenHill
   public CharacterPreview characterPreview;
   // The field pack owns its grid, loadout and colonist view; the session owns only the modal state + inspected item id.
   PackPanel pack;
+  HotbarView hotbar;
+  JournalPanel journalPanel;
+  StashPanel stashPanel;
+  RestPanel restPanel;
+  QuestJournal journal;
+  int markCount=-1;
   Label footerLeft,footerRight;
   void Start()
   {
@@ -72,8 +78,13 @@ namespace AthenHill
    Bind("close",session.Close);Bind("resume",session.Close);Bind("reset",session.ResetPlayer);
    if(crafting)fabricator=new FabricatorPanel(root,session,crafting);
    merchant=new MerchantPanel(root,session,crafting);
+   journal=session.Journal;
+   journalPanel=new JournalPanel(root.Q("journal-panel"),session,journal);
+   stashPanel=new StashPanel(root.Q("stash-panel"),session,crafting);
+   restPanel=new RestPanel(root.Q("rest-panel"),session);
+   if(journal)journal.Changed+=Refresh;
    Bind("details-close",session.CloseItemDetails);
-   Bind("inventory-button",()=>session.Open(CityState.Inventory));Bind("notes-button",()=>session.Open(CityState.Notes));Bind("pause-button",()=>session.Open(CityState.Paused));Bind("credits-button",()=>session.Open(CityState.Credits));Bind("interaction",session.Interact);
+   Bind("inventory-button",()=>session.Open(CityState.Inventory));Bind("notes-button",()=>session.Open(CityState.Journal));Bind("pause-button",()=>session.Open(CityState.Paused));Bind("credits-button",()=>session.Open(CityState.Credits));Bind("interaction",session.Interact);
    Bind("hint-pause",()=>session.Open(CityState.Paused));
    Bind("quit",()=>Application.Quit());Show("quit",!Application.isEditor);
    Bind("settings-button",()=>session.Open(CityState.Settings));
@@ -87,9 +98,8 @@ namespace AthenHill
    Bind("reset-ui",()=>{windowLayout.Reset();session.Notify("UI positions reset.");});
    for(int i=0;i<GameSession.MaxChoices;i++){int index=i;Bind("choice"+i,()=>session.Choose(index));}
    for(int i=0;i<3;i++){int index=i;Bind("node"+i,()=>session.SelectDestination(index));}
-   for(int i=1;i<=6;i++){int slot=i;Bind("slot"+i,()=>{SelectSlot(slot);session.Hotbar(slot);});}
-   // Spare slots complete the 1–0 row; the six existing actions keep their bindings.
-   for(int i=7;i<=10;i++)root.Q<Button>("slot"+i).SetEnabled(false);
+   // The hotbar (5 Oct 2026): 1 primary weapon, 2 sidearm, 3–0 items assigned in the field pack.
+   hotbar=new HotbarView(root,session,()=>session.player?session.player.GetComponent<PlayerCombat>():null);
    foreach(var npc in session.npcs)
    {
     var tag=new VisualElement{pickingMode=PickingMode.Ignore,usageHints=UsageHints.DynamicTransform};tag.AddToClassList("nametag");
@@ -108,8 +118,6 @@ namespace AthenHill
    session.Changed+=Refresh;Refresh();
   }
 
-  /// Outer Berms field order for the Notes journal, when one is running.
-  string FieldOrderNotes(){var orders=session.GetComponent<FieldOrders>();return orders&&orders.Ready&&orders.Progress.Started&&!string.IsNullOrEmpty(orders.Objective)?"\n\n"+(orders.Heading??"OUTER BERMS")+"\n"+orders.Objective:"";}
   /// Start menu: New Game asks before replacing a save; without a save it simply starts.
   void StartNewGame()
   {
@@ -203,7 +211,7 @@ namespace AthenHill
    bool radioUp=radio.resolvedStyle.display==DisplayStyle.Flex&&radio.layout.height>0;
    notice.style.top=radioUp?radio.layout.yMax+8:new StyleLength(StyleKeyword.Null);
   }
-  void OnDestroy(){pack?.Closed();SetMenuCamera(false);settingsPanel?.Dispose();windowLayout?.Dispose();if(session){session.Changed-=Refresh;session.input.PointerOverUi=null;session.input.MenuPopupOpen=null;}}
+  void OnDestroy(){if(journal)journal.Changed-=Refresh;pack?.Closed();SetMenuCamera(false);settingsPanel?.Dispose();windowLayout?.Dispose();if(session){session.Changed-=Refresh;session.input.PointerOverUi=null;session.input.MenuPopupOpen=null;}}
   // The opaque arrival artwork needs no city draw/shadow passes behind it.
   // Keep the saved world loaded, and restore its camera before entering gameplay.
   void SetMenuCamera(bool enabled)
@@ -226,7 +234,22 @@ namespace AthenHill
   void Bind(string name,Action action){root.Q<Button>(name).clicked+=action;}
   void Show(string name,bool show){root.Q(name).style.display=show?DisplayStyle.Flex:DisplayStyle.None;}
   void Text(string name,string value){root.Q<Label>(name).text=value;}
-  void SelectSlot(int slot){for(int i=1;i<=6;i++)root.Q("slot"+i).EnableInClassList("selected",i==slot);}
+  /// Field Notes (upper right) shows the tracked mission (5 Oct 2026): its title, current instruction and a mark per
+  /// objective step.
+  void UpdateObjective()
+  {
+   var m=journal?journal.Tracked:null;
+   Text("objective-title",m!=null?m.title.ToUpperInvariant():"");
+   Text("objective",m!=null?(string.IsNullOrEmpty(m.objective)?m.steps.FirstOrDefault(x=>x.current)?.text??"":m.objective):"No mission tracked. Press J to open your journal.");
+   int total=m!=null?Mathf.Min(8,m.steps.Count):0,done=m!=null?Mathf.Min(total,m.StepsDone):0;
+   Text("progress",m!=null?$"{done} / {m.steps.Count} · J journal":"");
+   var marks=root.Q("progress-marks");
+   if(marks!=null)
+   {
+    if(markCount!=total){markCount=total;marks.Clear();for(int i=0;i<total;i++){var mark=new VisualElement{name="mark"+i,pickingMode=PickingMode.Ignore};mark.AddToClassList("progress-mark");marks.Add(mark);}}
+    for(int i=0;i<marks.childCount;i++)marks[i].EnableInClassList("complete",i<done);
+   }
+  }
   void UpdateWindowSize()
   {
    windowWidth=Screen.width;windowHeight=Screen.height;
@@ -249,14 +272,15 @@ namespace AthenHill
    Show("radio",radioUp);
    if(radioUp){Text("radio-text",session.RadioLine.Text);Text("radio-speaker",(session.RadioLine.Speaker??"Radio").ToUpperInvariant()+" · RADIO");}
    PlaceNotice();
-   root.Q("modal").EnableInClassList("wide-modal",session.State==CityState.Fabricator||session.State==CityState.Shop);
+   root.Q("modal").EnableInClassList("wide-modal",session.State==CityState.Fabricator||session.State==CityState.Shop||session.State==CityState.Journal||session.State==CityState.Stash);
    root.Q("modal").EnableInClassList("merchant-modal",session.State==CityState.Shop);
    root.Q("modal").EnableInClassList("pack-modal",session.State==CityState.Inventory);
-   Text("objective",session.visitedHill&&session.Spoken.Count<4?"Meet the colonists":session.Objective);Text("progress",$"{session.Spoken.Count} / 4 conversations");
-   for(int i=0;i<4;i++)root.Q("mark"+i).EnableInClassList("complete",i<session.Spoken.Count);
+   UpdateObjective();
    Text("credits",$"{session.Shop.Credits} cr");
+   hotbar.Refresh();
    if(logRevision!=session.LogRevision){logRevision=session.LogRevision;Text("log",string.Join("\n",session.Log));root.schedule.Execute(()=>{var scroll=root.Q<ScrollView>("log-scroll");scroll.scrollOffset=new Vector2(0,Mathf.Max(0,scroll.verticalScroller.highValue));});}
-   Show("dialogue-panel",session.State==CityState.Dialogue);Show("shop-panel",session.State==CityState.Shop);Show("fabricator-panel",session.State==CityState.Fabricator);Show("inventory-panel",session.State==CityState.Inventory);Show("grid-panel",session.State==CityState.Grid);Show("pause-panel",session.State==CityState.Paused);Show("text-panel",session.State==CityState.Notes||session.State==CityState.Credits);
+   Show("dialogue-panel",session.State==CityState.Dialogue);Show("shop-panel",session.State==CityState.Shop);Show("fabricator-panel",session.State==CityState.Fabricator);Show("inventory-panel",session.State==CityState.Inventory);Show("grid-panel",session.State==CityState.Grid);Show("pause-panel",session.State==CityState.Paused);Show("text-panel",session.State==CityState.Credits);
+   Show("journal-panel",session.State==CityState.Journal);Show("stash-panel",session.State==CityState.Stash);Show("rest-panel",session.State==CityState.Rest);
    if(session.State==CityState.Fabricator)fabricator?.Refresh();
    Show("modal-notice",session.State!=CityState.Settings&&!string.IsNullOrEmpty(session.notice));
    bool settingsOpen=session.State==CityState.Settings;
@@ -298,7 +322,18 @@ namespace AthenHill
     pack.Refresh();
     if(footerRight!=null)footerRight.text="Select to inspect · Drag to equip · Drag preview to turn · Tab / Esc close";
    }
-   if(session.State==CityState.Notes){Text("modal-title","City notes");Text("modal-subtitle","Field journal · Colony district");Text("panel-text",session.Objective+"\n\n"+$"Conversations {session.Spoken.Count}/4 · Flask {(session.boughtFlask?"acquired":"needed")} · Scrap {(session.soldScrap?"sold":"to sell")} · Link {(session.linked?"established":"pending")}"+"\n\n"+session.catalog.notes+FieldOrderNotes());}
+   if(session.State==CityState.Journal)
+   {
+    Text("modal-title","Journal");Text("modal-subtitle","Missions · Ward notes");journalPanel.Refresh();
+    if(footerRight!=null)footerRight.text="↑↓ · Mission     T · Track     J / Esc · Close";
+   }
+   if(session.State==CityState.Stash)
+   {
+    var home=session.ActiveHome;
+    Text("modal-title","Home locker");Text("modal-subtitle",(home?home.displayName:"Container home")+" · south wall");stashPanel.Refresh();
+    if(footerRight!=null)footerRight.text="Enter · Move one     Shift+Enter or double-click · Move all     Esc · Close";
+   }
+   if(session.State==CityState.Rest){Text("modal-title","Bunk");Text("modal-subtitle","Rest and save");}
    if(session.State==CityState.Credits){Text("modal-title","Credits and licences");Text("modal-subtitle","Athen Hill · An original colony city homage");Text("panel-text",session.catalog.credits?session.catalog.credits.text:"Credits unavailable.");}
    if(previous!=session.State)
    {
@@ -314,6 +349,9 @@ namespace AthenHill
      else
      {
       if(session.State==CityState.Shop)merchant.Opened();
+      else if(session.State==CityState.Journal)journalPanel.Opened();
+      else if(session.State==CityState.Stash)stashPanel.Opened();
+      else if(session.State==CityState.Rest)restPanel.Opened();
       else if(session.State==CityState.Fabricator&&fabricator!=null)fabricator.Opened();
       else
       {
@@ -333,8 +371,6 @@ namespace AthenHill
    if(hasSave&&session.State==CityState.MainMenu){var c=root.Q<Button>("continue-game");bool ready=saveGame&&saveGame.Ready;if(c.enabledSelf!=ready)c.SetEnabled(ready);}
    if(windowWidth!=Screen.width||windowHeight!=Screen.height)UpdateWindowSize();
    UpdateCompass();
-   var keyboard=Keyboard.current;
-   if(keyboard!=null&&session.State==CityState.Play)for(int i=1;i<=6;i++)if(keyboard[(Key)((int)Key.Digit1+i-1)].wasPressedThisFrame)SelectSlot(i);
    bool tunnel=session.State==CityState.Grid&&session.GridProgress<1&&!session.reducedMotion;
    Show("tunnel",tunnel);
    if(tunnel)for(int i=0;i<4;i++){var ring=root.Q("tunnel-ring"+i);float phase=Mathf.Repeat(session.GridProgress*tunnelSpeed+i*.25f,1);float size=20+phase*480;ring.style.width=Length.Percent(size);ring.style.height=Length.Percent(size);ring.style.left=Length.Percent(50-size/2);ring.style.top=Length.Percent(50-size/2);ring.style.opacity=1-phase;}

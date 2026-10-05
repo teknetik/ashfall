@@ -8,15 +8,19 @@ namespace AthenHill
  /// Catalog-backed stock selection shared by the counter and its tests. No invented stock or discounts.
  public static class MerchantStock
  {
+  /// Digital magazines live on the magazine shelf (GameSession.BuyMagazine), never in the buy or sell lists.
+  public static bool IsMagazine(ItemSpec item)=>item!=null&&item.HasTag("magazine");
   public static bool UsesPartsPrice(ItemSpec item,ShopProfile profile)=>profile.parts&&ShopModel.SellsAsPart(item);
-  public static bool CanBuy(ItemSpec item,ShopProfile profile)=>item!=null&&!item.excludeFromTrade&&
-   (UsesPartsPrice(item,profile)||profile.supplies&&!item.sellOnly&&item.buyPrice>0);
-  public static bool CanSell(ItemSpec item,ShopProfile profile)=>item!=null&&!item.excludeFromTrade&&item.sellPrice>0&&
-   (profile.supplies||profile.salvage&&ShopModel.BuysAsSalvage(item));
+  public static bool CanBuy(ItemSpec item,ShopProfile profile)=>item!=null&&!item.excludeFromTrade&&!IsMagazine(item)&&
+   (UsesPartsPrice(item,profile)||profile.supplies&&profile.Stocks(item)&&!item.sellOnly&&item.buyPrice>0);
+  public static bool CanSell(ItemSpec item,ShopProfile profile)=>item!=null&&!item.excludeFromTrade&&!IsMagazine(item)&&item.sellPrice>0&&
+   (profile.supplies&&profile.Stocks(item)||profile.salvage&&ShopModel.BuysAsSalvage(item));
+  /// The magazines a counter's shelf offers, in catalog order.
+  public static IEnumerable<ItemSpec> Magazines(CityCatalog catalog,ShopProfile profile)=>profile!=null&&profile.magazines?catalog.items.Where(i=>IsMagazine(i)&&i.buyPrice>0&&!i.excludeFromTrade):Enumerable.Empty<ItemSpec>();
   public static int Price(ItemSpec item,ShopProfile profile,bool selling)=>selling?item.sellPrice:UsesPartsPrice(item,profile)?item.partsPrice:item.buyPrice;
   public static string Category(ItemSpec item)
   {
-   if(item.HasTag("augmentation")||item.HasTag("armour_mod")||item.HasTag("mod")||item.HasTag("weapon_mod"))return "Mods";
+   if(item.HasTag("augmentation")||item.HasTag("armour_mod")||item.HasTag("mod")||item.HasTag("weapon_mod")||item.HasTag("pack_mod"))return "Mods";
    if(item.HasTag("implant"))return "Implants";
    if(item.HasTag("armour")||item.HasTag("equipment")||item.HasTag("weapon")||item.HasTag("backpack"))return "Equipment";
    if(item.HasTag("consumable"))return "Supplies";
@@ -35,20 +39,23 @@ namespace AthenHill
   readonly VisualElement root,list,detail,art,facts,effects,filters;
   readonly ScrollView scroll;
   readonly Label balance,count,name,rarity,description,empty,price,balanceAfter,reason,capacity;
-  readonly Button buyTab,sellTab,trade,sellAll;
+  readonly Button buyTab,sellTab,shelfTab,trade,sellAll;
   readonly TextField search;
   readonly Dictionary<string,Button> rows=new Dictionary<string,Button>();
   readonly Dictionary<string,Button> chips=new Dictionary<string,Button>();
   string selected,category="All",query="",signature,profileKey;
-  bool selling;
+  bool selling,shelf;
   public string SelectedItemId=>selected;
   public bool Selling=>selling;
+  /// The digital magazine shelf is showing (counters with ShopProfile.magazines; Field Supply).
+  public bool Shelf=>shelf;
   public MerchantPanel(VisualElement hud,GameSession session,CraftingSession crafting)
   {
    this.session=session;this.crafting=crafting;root=hud.Q("shop-panel");root.Clear();root.AddToClassList("merchant");
    var toolbar=Element(root,"merchant-toolbar","merchant-toolbar");
    buyTab=Button(toolbar,"merchant-tab-buy","BUY",()=>SetMode(false),"merchant-tab");
    sellTab=Button(toolbar,"merchant-tab-sell","SELL",()=>SetMode(true),"merchant-tab");
+   shelfTab=Button(toolbar,"merchant-tab-magazines","MAGAZINES",ShowShelf,"merchant-tab");shelfTab.tooltip="Digital magazines: schematics for Brann's workbench";
    balance=Label(toolbar,"merchant-balance","","merchant-balance");
    var columns=Element(root,"merchant-columns","merchant-columns");
    var browser=Element(columns,"merchant-browser","merchant-browser");
@@ -73,19 +80,23 @@ namespace AthenHill
    reason=Label(checkout,"merchant-reason","","merchant-reason");capacity=Label(root,"merchant-capacity","","merchant-capacity");
   }
   public void Opened(){Refresh();root.schedule.Execute(()=>{if(selected!=null&&rows.TryGetValue(selected,out var row))row.Focus();else search.Focus();});}
-  public void SetMode(bool sell){selling=sell;signature=null;Refresh();}
+  public void SetMode(bool sell){selling=sell;shelf=false;signature=null;Refresh();}
+  public void ShowShelf(){if(!session.ActiveShop.magazines)return;shelf=true;selling=false;category="All";signature=null;Refresh();}
   public void Select(string id){if(!rows.ContainsKey(id))return;selected=id;UpdateDetail();foreach(var p in rows){p.Value.EnableInClassList("selected",p.Key==id);p.Value.tabIndex=p.Key==id?0:-1;}}
   public void Refresh()
   {
    if(session.Shop==null||session.catalog==null)return;
    var shop=session.ActiveShop;string key=session.Vendor+"|"+shop.title;
-   if(profileKey!=key){profileKey=key;selling=false;category="All";query="";search.SetValueWithoutNotify("");signature=null;}
-   buyTab.EnableInClassList("active",!selling);sellTab.EnableInClassList("active",selling);balance.text=$"{session.Shop.Credits:N0} cr";
-   var available=MerchantStock.Items(session.catalog,session.Shop,shop,selling,query,category).ToList();
-   var all=MerchantStock.Items(session.catalog,session.Shop,shop,selling).ToList();
+   if(profileKey!=key){profileKey=key;selling=false;shelf=false;category="All";query="";search.SetValueWithoutNotify("");signature=null;}
+   if(!shop.magazines)shelf=false;
+   shelfTab.style.display=shop.magazines?DisplayStyle.Flex:DisplayStyle.None;
+   buyTab.EnableInClassList("active",!selling&&!shelf);sellTab.EnableInClassList("active",selling&&!shelf);shelfTab.EnableInClassList("active",shelf);balance.text=$"{session.Shop.Credits:N0} cr";
+   filters.style.display=shelf?DisplayStyle.None:DisplayStyle.Flex;
+   var available=(shelf?MagazineStock(query):MerchantStock.Items(session.catalog,session.Shop,shop,selling,query,category)).ToList();
+   var all=(shelf?MagazineStock(""):MerchantStock.Items(session.catalog,session.Shop,shop,selling)).ToList();
    foreach(var pair in chips){pair.Value.EnableInClassList("active",pair.Key==category);pair.Value.SetEnabled(pair.Key=="All"||all.Any(i=>MerchantStock.Category(i)==pair.Key));}
    if(!available.Any(i=>i.id==selected))selected=available.FirstOrDefault()?.id;
-   string next=profileKey+"|"+selling+"|"+category+"|"+query+"|"+string.Join(";",available.Select(i=>i.id+":"+session.Shop.Quantity(i.id)));
+   string next=profileKey+"|"+selling+"|"+shelf+"|"+category+"|"+query+"|"+string.Join(";",available.Select(i=>i.id+":"+(shelf?(Owns(i.id)?1:0):session.Shop.Quantity(i.id))));
    if(next!=signature)
    {
     signature=next;string focused=(root.focusController?.focusedElement as VisualElement)?.name;rows.Clear();list.Clear();
@@ -94,22 +105,57 @@ namespace AthenHill
      string id=item.id;var row=new Button(()=>Select(id)){name="merchant-item-"+id,tooltip=item.name};row.AddToClassList("merchant-row");
      var icon=Element(row,null,"merchant-row-icon");icon.AddToClassList(string.IsNullOrEmpty(item.icon)?"pack-icon":item.icon);icon.pickingMode=PickingMode.Ignore;
      var copy=Element(row,null,"merchant-row-copy");copy.pickingMode=PickingMode.Ignore;Label(copy,null,item.name,"merchant-row-name");
-     Label(copy,null,$"{MerchantStock.Category(item)} · {item.rarity} · {session.Shop.Quantity(id)} carried","merchant-row-meta");
-     Label(row,null,$"{MerchantStock.Price(item,shop,selling):N0} cr","merchant-row-price");
+     if(shelf){int n=Taught(id).Count;Label(copy,null,$"Digital magazine · {n} schematic{(n==1?"":"s")} · {(Owns(id)?"On your slate":"New")}","merchant-row-meta");row.EnableInClassList("merchant-row-owned",Owns(id));}
+     else Label(copy,null,$"{MerchantStock.Category(item)} · {item.rarity} · {session.Shop.Quantity(id)} carried","merchant-row-meta");
+     Label(row,null,shelf&&Owns(id)?"Owned":$"{(shelf?item.buyPrice:MerchantStock.Price(item,shop,selling)):N0} cr","merchant-row-price");
      row.RegisterCallback<FocusInEvent>(_=>Select(id));list.Add(row);rows[id]=row;
     }
     if(focused!=null&&focused.StartsWith("merchant-item-",StringComparison.Ordinal))root.schedule.Execute(()=>{if(rows.TryGetValue(focused.Substring(14),out var row))row.Focus();else if(selected!=null)rows[selected].Focus();else search.Focus();});
    }
    foreach(var pair in rows){pair.Value.EnableInClassList("selected",pair.Key==selected);pair.Value.tabIndex=pair.Key==selected?0:-1;}
    empty.style.display=available.Count==0?DisplayStyle.Flex:DisplayStyle.None;
-   empty.text=selling?"No matching items to sell. Try another category or clear the search.":"No matching stock. Try another category or clear the search.";
-   count.text=$"{available.Count} of {all.Count} {(selling?"carried items":"items available")}";
+   empty.text=shelf?"No matching magazines. Clear the search.":selling?"No matching items to sell. Try another category or clear the search.":"No matching stock. Try another category or clear the search.";
+   count.text=shelf?$"{available.Count} of {all.Count} magazines · {all.Count(i=>Owns(i.id))} on your slate":$"{available.Count} of {all.Count} {(selling?"carried items":"items available")}";
    var c=session.Character;capacity.text=c==null?$"Pack · {session.Shop.PackWeightKg:0.0} kg":$"PACK  {c.PackSlotsUsed} / {c.PackSlotCapacity} slots     CARRIED  {c.CarriedWeightKg:0.0} / {c.CarryCapacityKg:0.0} kg     Includes equipped gear";
    UpdateDetail();
+  }
+  // ---- Digital magazine shelf (Field Supply, 5 Oct 2026)
+  CraftingModel Model=>crafting?crafting.Model:null;
+  IEnumerable<ItemSpec> MagazineStock(string search)=>MerchantStock.Magazines(session.catalog,session.ActiveShop).Where(i=>string.IsNullOrWhiteSpace(search)||
+   i.name.IndexOf(search.Trim(),StringComparison.OrdinalIgnoreCase)>=0||i.description?.IndexOf(search.Trim(),StringComparison.OrdinalIgnoreCase)>=0||
+   Taught(i.id).Any(r=>r.name.IndexOf(search.Trim(),StringComparison.OrdinalIgnoreCase)>=0));
+  List<CraftRecipe> Taught(string id)=>Model?.MagazineRecipes(id).ToList()??new List<CraftRecipe>();
+  bool Owns(string id)=>Model!=null&&Model.OwnsMagazine(id);
+  void UpdateMagazineDetail(ItemSpec item)
+  {
+   var taught=Taught(item.id);bool owned=Owns(item.id);
+   name.text=item.name;rarity.text=$"{item.rarity.ToString().ToUpperInvariant()}  /  DIGITAL MAGAZINE";
+   foreach(var cls in art.GetClasses().ToList())if(cls!="merchant-art")art.RemoveFromClassList(cls);art.AddToClassList(string.IsNullOrEmpty(item.icon)?"magazine-icon":item.icon);
+   description.text=item.description;facts.Clear();effects.Clear();
+   Fact("Format","Field slate download");Fact("Schematics",taught.Count.ToString());Fact("Status",owned?"On your slate":"Not downloaded");Fact("Made at","Brann's workbench, Salvage");
+   Heading("TEACHES");
+   foreach(var recipe in taught)
+   {
+    bool known=Model.Knows(recipe.id);
+    Effect($"{recipe.name}  ·  {Model.Data.GroupName(recipe.group)}{(known?"  ·  known":"")}");
+    var gear=session.Character?.Equipment(recipe.outputItemId);var mod=session.Character?.Modification(recipe.outputItemId);
+    var lines=(gear?.modifiers??mod?.modifiers??Array.Empty<CharacterModifier>()).Select(Modifier).ToList();
+    if(gear?.modificationSockets?.Length>0)lines.Add($"{gear.modificationSockets.Length} upgrade socket{(gear.modificationSockets.Length==1?"":"s")}");
+    if(lines.Count>0)SubEffect(string.Join("   ",lines));
+    var parts=string.Join(", ",(recipe.inputs??Array.Empty<CraftIngredient>()).Select(i=>$"{CraftingText.InputName(Model,i)} ×{i.quantity}"));
+    if(parts.Length>0)SubEffect("Parts: "+parts);
+   }
+   price.text=$"DOWNLOAD   {item.buyPrice:N0} cr";balanceAfter.text=owned?"Already on your field slate":$"Balance after download  {(long)session.Shop.Credits-item.buyPrice:N0} cr";
+   bool valid=!owned&&taught.Count>0&&session.Shop.Credits>=item.buyPrice;
+   trade.text=owned?"On your slate":$"Download · {item.buyPrice:N0} cr";trade.SetEnabled(valid);
+   reason.text=owned?"Every schematic in this issue is already on your slate.":session.Shop.Credits<item.buyPrice?$"You need {item.buyPrice-session.Shop.Credits:N0} more credits.":"Downloads to your field slate; nothing is carried. The schematics appear at Brann's workbench.";
+   reason.EnableInClassList("rejected",!valid&&!owned);
+   sellAll.style.display=DisplayStyle.None;
   }
   void UpdateDetail()
   {
    var item=session.Shop.Spec(selected);detail.style.display=item==null?DisplayStyle.None:DisplayStyle.Flex;if(item==null)return;
+   if(shelf){UpdateMagazineDetail(item);return;}
    var profile=session.ActiveShop;int cost=MerchantStock.Price(item,profile,selling),quantity=session.Shop.Quantity(item.id);
    name.text=item.name;rarity.text=$"{item.rarity.ToString().ToUpperInvariant()}  /  {MerchantStock.Category(item).ToUpperInvariant()}";
    foreach(var cls in art.GetClasses().ToList())if(cls!="merchant-art")art.RemoveFromClassList(cls);art.AddToClassList(string.IsNullOrEmpty(item.icon)?"pack-icon":item.icon);
@@ -150,12 +196,14 @@ namespace AthenHill
   string Modifier(CharacterModifier m)=>session.Character.Data.Label(m.stat)+"  "+(m.flat!=0?$"{m.flat:+0.##;-0.##;0}":"")+(m.percent!=0?$" {m.percent*100:+0.#;-0.#;0}%":"");
   void Heading(string text)=>Label(effects,null,text,"merchant-stats-heading");
   void Effect(string text)=>Label(effects,null,text,"merchant-effect");
+  void SubEffect(string text)=>Label(effects,null,text,"merchant-effect").AddToClassList("merchant-effect-sub");
   void Fact(string label,string value){var row=Element(facts,null,"merchant-fact");Label(row,null,label,"merchant-fact-label");Label(row,null,value,"merchant-fact-value");}
   static string FriendlyReason(string reason)=>reason switch{"insufficient_credits"=>"Not enough credits for this item.","stack_full"=>"This item stack is full.","insufficient_items"=>"You no longer carry this item.","overflow"=>"This trade exceeds the inventory limit.",_=>reason??"This trade cannot be completed."};
   void Trade()
   {
    if(selected==null)return;var item=session.Shop.Spec(selected);if(item==null)return;
-   if(selling){if(ShopModel.BuysAsSalvage(item))session.SellSalvage(selected,1);else session.Trade(selected,false);}
+   if(shelf)session.BuyMagazine(selected);
+   else if(selling){if(ShopModel.BuysAsSalvage(item))session.SellSalvage(selected,1);else session.Trade(selected,false);}
    else if(MerchantStock.UsesPartsPrice(item,session.ActiveShop))session.BuyPart(selected);else session.Trade(selected,true);
    Refresh();if(!trade.enabledSelf&&selected!=null&&rows.TryGetValue(selected,out var row))row.Focus();
   }

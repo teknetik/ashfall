@@ -34,7 +34,8 @@ namespace AthenHill.Editor
     ///             CraftingSession.fabricator, FieldOrders guidance "fabricator"/"dealer"), retires the field tool cart's
     ///             station (the cart stays as dressing), updates Ossa's primer completion line and adds landmarks.
     ///  verify     saved-scene checks and walk-path clearance -> evidence/salvage-shop/20261001/verify.json.
-    ///  bake       (graphics) bakes the interior reflection probe.  capture:HOUR:cam+cam (graphics, at most 6 cameras).
+    ///  bake       (graphics) bakes the interior reflection probe from the room's ReflectionProbeStatic renderers and clamps
+    ///             the EXR (ImageMagick).  capture:HOUR:cam+cam (graphics, at most 6 cameras).
     /// Batch: -executeMethod AthenHill.Editor.SalvageShopPass.RunBatch --steps materials,models,data,install,verify -nographics.
     /// </summary>
     public static class SalvageShopPass
@@ -159,7 +160,9 @@ namespace AthenHill.Editor
                             r.renderingLayerMask |= InteriorLayer;
                             r.receiveShadows = true;
                             if (r is MeshRenderer mr) { mr.motionVectorGenerationMode = MotionVectorGenerationMode.Camera; mr.receiveGI = ReceiveGI.LightProbes; }
-                            GameObjectUtility.SetStaticEditorFlags(r.gameObject, StaticEditorFlags.OccludeeStatic | StaticEditorFlags.BatchingStatic);
+                            // ReflectionProbeStatic: a baked probe renders only these, so without it the room's probe saw
+                            // through its walls to the sky and desert (fixed 5 Oct 2026, as in the Field Supply pass)
+                            GameObjectUtility.SetStaticEditorFlags(r.gameObject, StaticEditorFlags.OccludeeStatic | StaticEditorFlags.BatchingStatic | StaticEditorFlags.ReflectionProbeStatic);
                         }
                         rs.Add(r);
                     }
@@ -557,7 +560,9 @@ namespace AthenHill.Editor
             targets.Add(new FieldOrders.Target { key = "fabricator", label = "SALVAGE WORKBENCH", point = stationGo.transform });
             targets.Add(new FieldOrders.Target { key = "dealer", label = "BRANN · SALVAGE", point = npcRoot });
             orders.guidanceTargets = targets.ToArray();
-            tutorial.lineComplete = "Clean work. Take that salvage to Brann at Salvage, on the north avenue inside the walls. His bench can turn a worker servo into a steadier grip for that pistol. The depot always fills up again.";
+            // a later pass (BermsExpanseInstall) extends this line: a re-run keeps one that already sends the player to Brann
+            if (string.IsNullOrEmpty(tutorial.lineComplete) || !tutorial.lineComplete.Contains("Brann at Salvage"))
+                tutorial.lineComplete = "Clean work. Take that salvage to Brann at Salvage, on the north avenue inside the walls. His bench can turn a worker servo into a steadier grip for that pistol. The depot always fills up again.";
 
             // landmarks (QA teleports) and review cameras
             var landmarks = scene.GetRootGameObjects().FirstOrDefault(g => g.name == "Landmarks");
@@ -577,7 +582,7 @@ namespace AthenHill.Editor
 
             foreach (var t in root.GetComponentsInChildren<Transform>(true))
                 if (!t.GetComponent<Light>() && !t.GetComponent<Camera>() && !t.GetComponentInParent<NpcAgent>() && !t.GetComponent<WorldInteractable>())
-                    GameObjectUtility.SetStaticEditorFlags(t.gameObject, StaticEditorFlags.OccludeeStatic | StaticEditorFlags.BatchingStatic);
+                    GameObjectUtility.SetStaticEditorFlags(t.gameObject, StaticEditorFlags.OccludeeStatic | StaticEditorFlags.BatchingStatic | StaticEditorFlags.ReflectionProbeStatic);
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             log.Add($"props {placed}, lamps {lights.Count}+spill, interior renderers {il.renderers.Count}, npcs {session.npcs.Length}");
@@ -681,7 +686,12 @@ namespace AthenHill.Editor
             Directory.CreateDirectory(ArtDir);
             var path = ArtDir + "SalvageInteriorReflection.exr";
             if (!Lightmapping.BakeReflectionProbe(probe, path)) throw new Exception("interior reflection bake failed");
-            AssetDatabase.ImportAsset(path);
+            // street pixels seen through the bay can bake at the half-float maximum (65504) and, convolved into every mip,
+            // turn smooth surfaces chrome (Field Supply, 5 Oct 2026). Clamp them (ImageMagick, editor-only tooling).
+            var clamp = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("magick", $"\"{Path.GetFullPath(path)}\" -fx \"min(u,6)\" \"{Path.GetFullPath(path)}\"") { UseShellExecute = false });
+            clamp.WaitForExit();
+            if (clamp.ExitCode != 0) throw new Exception("probe clamp failed (ImageMagick 'magick' on PATH?)");
+            AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
             probe.customBakedTexture = AssetDatabase.LoadAssetAtPath<Cubemap>(path); probe.mode = ReflectionProbeMode.Custom;
             EditorUtility.SetDirty(probe);
             EditorSceneManager.MarkSceneDirty(scene); EditorSceneManager.SaveScene(scene);

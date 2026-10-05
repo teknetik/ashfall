@@ -51,6 +51,9 @@ namespace AthenHill.Editor
         public class Spec
         {
             public string key, title, npcId, idle, talk, materialFrom; public float height; public Mount mount;
+            /// Meshy record folder holding key/rigged_fixed.glb and key/anim_only (null = meshy/ward-npcs-20261003/). Field Supply's
+            /// Tamsin (5 Oct 2026) comes from meshy/field-supply-20261005/ through the same import and prefab steps.
+            public string record;
             public string Instance => "WardNpc " + title;
             public string Prefab => PrefabRoot + "/WardNpc_" + title + ".prefab";
             public string Folder => ArtRoot + "/" + title;
@@ -100,11 +103,13 @@ namespace AthenHill.Editor
         static IEnumerable<string> ClipNames(Spec s) => new[] { s.idle, s.talk };
 
         // ------------------------------------------------------------------ import
-        public static object Import()
+        public static object Import() => Import(Specs);
+        public static object Import(IEnumerable<Spec> specs)
         {
             var report = new List<object>();
-            foreach (var s in Specs)
+            foreach (var s in specs)
             {
+                string record = s.record ?? Record;
                 Directory.CreateDirectory(s.Folder + "/Source"); Directory.CreateDirectory(s.Folder + "/Clips");
                 var copied = new List<string>();
                 void Copy(string from, string to)
@@ -113,9 +118,9 @@ namespace AthenHill.Editor
                     if (File.Exists(to) && File.ReadAllBytes(to).SequenceEqual(File.ReadAllBytes(from))) return;
                     File.Copy(from, to, true); copied.Add(to);
                 }
-                Copy(Record + s.key + "/rigged_fixed.glb", s.Model);   // built by meshy/ward-npcs-20261003/prepare_unity.sh: smooth normals, normal map re-baked against them, MikkTSpace tangents
-                if (s.materialFrom != null) Copy(Record + s.key + "/" + s.materialFrom, s.Folder + "/" + s.title + "_Material.glb");
-                foreach (var c in ClipNames(s)) Copy(Record + s.key + "/anim_only/" + c + ".glb", s.Folder + "/Source/" + c + ".glb");
+                Copy(record + s.key + "/rigged_fixed.glb", s.Model);   // built by meshy/ward-npcs-20261003/prepare_unity.sh: smooth normals, normal map re-baked against them, MikkTSpace tangents
+                if (s.materialFrom != null) Copy(record + s.key + "/" + s.materialFrom, s.Folder + "/" + s.title + "_Material.glb");
+                foreach (var c in ClipNames(s)) Copy(record + s.key + "/anim_only/" + c + ".glb", s.Folder + "/Source/" + c + ".glb");
                 AssetDatabase.Refresh();
                 foreach (var path in new[] { s.Model }.Concat(ClipNames(s).Select(c => s.Folder + "/Source/" + c + ".glb")))
                 {
@@ -315,13 +320,14 @@ namespace AthenHill.Editor
         }
 
         // ------------------------------------------------------------------ prefab
-        public static object BuildPrefabs()
+        public static object BuildPrefabs() => BuildPrefabs(Specs);
+        public static object BuildPrefabs(IEnumerable<Spec> specs)
         {
             if (EditorApplication.isPlaying) throw new Exception("Exit Play first.");
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);   // the city scene is not touched here
             Directory.CreateDirectory(PrefabRoot);
             var all = new Dictionary<string, object>();
-            foreach (var s in Specs)
+            foreach (var s in specs)
             {
                 var log = new List<string>();
                 var model = AssetDatabase.LoadAssetAtPath<GameObject>(s.Model) ?? throw new Exception("Run the import step first: " + s.Model);

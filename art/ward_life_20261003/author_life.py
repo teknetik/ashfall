@@ -32,6 +32,9 @@ ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(ROOT / "art/ward_buildings_20261003"))
 import author_buildings as AB
+# 4 Oct 2026: the bastion decks carry Carl's Meshy sentinel turret (art/turret_bench_20261004), so the round-two pintle
+# gun and shield are no longer modelled into the bastions. Set True to rebuild the 3 Oct bastions exactly.
+AB.GATE_GUN = False
 import ward_masonry as WM
 from ward_masonry import Part, Frame, stone_tint, drng, export, tri_count
 import stones

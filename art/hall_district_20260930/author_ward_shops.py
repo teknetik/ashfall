@@ -900,8 +900,13 @@ def finery(lod):
 
 
 def field_supply(lod):
+    """Since 5 Oct 2026 a walk-in shop: the loading shutter is rolled up and the ground floor is Tamsin's outfitter's shop
+    (art/field_supply_20261005/field_supply_interior.py; the exterior's random layout is unchanged)."""
+    sys.path.insert(0, str(HERE.parent / "field_supply_20261005"))
+    import field_supply_interior as walkin
     s = Shop("FieldSupply", lod, (0.96, 0.92, 0.86), 909, upper=[], gable={"eave": 5.08, "ridge": 8.1, "vent": True, "teal": False})
-    s.shutter("front", -2.1, 0.9)
+    walkin.prepare(s)
+    s.shutter("front", -2.1, 0.9, open=True)
     s.portal("front", 2.2, 0.9, 3.15, kind="single", door_mat="WS_PaintTeal", arch=False)
     s.window("right", 2.2, 3.1, 1.89, 3.15, kind="bars")
     s.window("left", -4.6, -3.7, 1.89, 3.15, kind="bars")
@@ -927,6 +932,7 @@ def field_supply(lod):
     s.conduit([(1.35, 1.55, 0.14), (1.35, 3.05, 0.14)])
     s.fitting("rear", 1.8, BASE, "PH_AirconRusted", "Rear air conditioner", off=0.35)
     s.fitting("right", 5.5, 1.5, "PH_PowerBox", "Side power box")
+    walkin.add(s)
     return s
 
 

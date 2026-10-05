@@ -8,8 +8,9 @@ namespace AthenHill
 {
  /// Ward save game: one versioned JSON file (credits, pack, fitted mods, schematics, craft counts, the primer step and
  /// pistol, field-order progress and report visits, loot bad-luck counters and generator state, city-visit checklist and
- /// story flags). Autosaves after fabrication, fitting/removal, salvage pickups, completed orders, trades, conversations
- /// and story flags, and on quit.
+ /// story flags; since 5 Oct 2026 the hotbar, the home locker and the tracked mission). Autosaves after fabrication,
+ /// fitting/removal, salvage pickups, completed orders, trades, conversations, story flags, hotbar changes, locker moves
+ /// and rest, and on quit.
  /// Continue restores every state machine consistently; an unreadable or newer save falls back to a new game with a
  /// notice and is kept aside, never deleted.
  [RequireComponent(typeof(GameSession))]
@@ -63,22 +64,32 @@ namespace AthenHill
   {
    if(subscribed||!Ready)return;subscribed=true;
    crafting.Model.Changed+=MarkDirty;crafting.Collected+=OnCollected;Session.Traded+=MarkDirty;
-   Session.FlagSet+=OnFlag;Session.Talked+=OnTalked;
+   Session.FlagSet+=OnFlag;Session.Talked+=OnTalked;Session.ItemUsed+=OnItemUsed;
    if(Session.Character!=null)Session.Character.Changed+=MarkDirty;
    if(orders)orders.Completed+=OnOrderCompleted;
+   if(Session.Quickbar!=null)Session.Quickbar.Changed+=MarkDirty;
+   Session.HomeChanged+=MarkDirty;
+   if(Session.Journal)Session.Journal.Changed+=OnJournal;
   }
+  string savedTracked;
+  // the journal changes often (objectives); only a different tracked mission needs a save
+  void OnJournal(){var j=Session.Journal;var t=j?j.TrackedId+(j.TrackedChosen?"!":""):null;if(t!=savedTracked){savedTracked=t;MarkDirty();}}
   void OnDestroy()
   {
    if(!subscribed)return;
    if(crafting){if(crafting.Model!=null)crafting.Model.Changed-=MarkDirty;crafting.Collected-=OnCollected;}
-   if(Session){Session.Traded-=MarkDirty;Session.FlagSet-=OnFlag;Session.Talked-=OnTalked;}
+   if(Session){Session.Traded-=MarkDirty;Session.FlagSet-=OnFlag;Session.Talked-=OnTalked;Session.ItemUsed-=OnItemUsed;}
    if(Session&&Session.Character!=null)Session.Character.Changed-=MarkDirty;
    if(orders)orders.Completed-=OnOrderCompleted;
+   if(Session&&Session.Quickbar!=null)Session.Quickbar.Changed-=MarkDirty;
+   if(Session){Session.HomeChanged-=MarkDirty;if(Session.Journal)Session.Journal.Changed-=OnJournal;}
   }
   void MarkDirty(){if(!applying)dirty=true;}
   void OnCollected(LootPickup _)=>MarkDirty();
   void OnOrderCompleted(FieldOrder _)=>MarkDirty();
   void OnFlag(string _)=>MarkDirty();
+  /// A medkit or nano recharge was used (Field Supply, 5 Oct 2026): the pack changed.
+  void OnItemUsed(string _)=>MarkDirty();
   // A conversation can record a field-order report visit (Brann for the first order).
   void OnTalked(NpcAgent _)=>MarkDirty();
   // Coalesce every change in a frame into one write.
@@ -95,7 +106,8 @@ namespace AthenHill
     items=shop.Carried.OrderBy(x=>x.Key,StringComparer.Ordinal).Select(x=>new ItemStack(x.Key,x.Value)).ToArray(),
     crafting=crafting.Model.Capture(),loot=crafting.Loot.Capture(),
     bermsStep=tutorial?tutorial.Step.ToString():BermsStep.Approach.ToString(),hasPistol=combat&&combat.hasPistol,
-    orders=orders?orders.Capture():null,city=Session.CaptureCityVisit(),character=Session.Character?.Capture()
+    orders=orders?orders.Capture():null,city=Session.CaptureCityVisit(),character=Session.Character?.Capture(),
+    hotbar=Session.Quickbar?.Capture(),stash=Session.Stash?.Capture(),journal=Session.Journal?Session.Journal.Capture():null
    };
   }
   public bool SaveNow(string reason)
@@ -130,6 +142,10 @@ namespace AthenHill
      if(Session.Shop.Remove("field_rifle",Session.Shop.Quantity("field_rifle"),out _))skipped.Add("a test-issue field rifle (Ossa's Long Arm order builds yours)");
     }
     Session.RestoreCityVisit(data.city);
+    // 5 Oct 2026 (v4): hotbar (null in older saves = the defaults), home locker, tracked mission
+    Session.Quickbar?.Restore(data.hotbar);
+    if(Session.Stash!=null)skipped.AddRange(Session.Stash.Restore(data.stash,known.Contains));
+    if(Session.Journal){Session.Journal.Restore(data.journal);savedTracked=Session.Journal.TrackedId+(Session.Journal.TrackedChosen?"!":"");}
    }
    finally{applying=false;dirty=false;}
    return skipped;
@@ -148,8 +164,11 @@ namespace AthenHill
    }
    var skipped=Apply(data);
    Session.StartGame();
+   // once the player has rested in their home, Continue wakes them at the bunk
+   var home=Session.Home;bool atHome=home&&home.wakePoint&&Session.HasFlag(WardHome.LeasedFlag)&&Session.HasFlag(WardHome.RestedFlag);
+   if(atHome)Session.WakeAt(home.wakePoint);
    var o=orders&&orders.Progress!=null?orders.Progress.Current:null;
-   Session.Notify("Welcome back to Ward. Progress restored"+(o!=null?$" · field order: {o.title}":"")+"."+(skipped.Count>0?" Some saved entries no longer exist and were skipped: "+string.Join(", ",skipped.Distinct())+".":""),"Ward");
+   Session.Notify((atHome?"You wake in your container home.":"Welcome back to Ward.")+" Progress restored"+(o!=null?$" · field order: {o.title}":"")+"."+(skipped.Count>0?" Some saved entries no longer exist and were skipped: "+string.Join(", ",skipped.Distinct())+".":""),"Ward");
    return true;
   }
   /// Start-menu New Game (after the menu's overwrite confirmation). The previous save is kept as a .previous copy.

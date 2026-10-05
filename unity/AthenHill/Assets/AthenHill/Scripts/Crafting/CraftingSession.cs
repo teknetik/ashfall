@@ -36,6 +36,8 @@ namespace AthenHill
    if(!data){Debug.LogError("Ward crafting data is missing.");yield break;}
    Loot=new LootBook(freshSeedPerNewGame?unchecked((ulong)DateTime.UtcNow.Ticks):unchecked((ulong)lootSeed));
    Model=new CraftingModel(data,Session.catalog.items,Session.Shop,()=>combat&&combat.hasPistol,character:Session.Character);
+   // 5 Oct 2026: the leased home's locker feeds the bench (WardHome.lockerFeedsBench); the pack is always used first
+   Model.Reserve=Session.Stash;Model.ReserveOpen=()=>Session.Home&&Session.Home.lockerFeedsBench&&Session.HasFlag(WardHome.LeasedFlag);
    if(combat){combat.BindLoadout(Model.Loadout);combat.BindCraftingModel(Model);if(combat.Health)combat.Health.Damaged+=OnDamaged;}
    Session.PartBought+=OnPartBought;
    Session.Changed+=OnSessionChanged;

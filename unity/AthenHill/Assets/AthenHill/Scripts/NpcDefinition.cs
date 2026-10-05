@@ -16,6 +16,20 @@ namespace AthenHill
   [Tooltip("Tradeable catalog items with a buy price, including supplies and equipment.")]public bool supplies=true;
   [Tooltip("Common and uncommon crafting parts at their parts price.")]public bool parts=true;
   [Tooltip("Raw salvage bought at its sell price.")]public bool salvage=true;
+  [Tooltip("When set, the supplies list (buying and selling) holds only items carrying one of these tags (Field Supply: field_supply). Empty = every supply item.")]
+  public string[] stockTags=new string[0];
+  [Tooltip("Items carrying any of these tags are never traded at this counter (Basic General leaves field_supply_only to Field Supply).")]
+  public string[] excludeTags=new string[0];
+  [Tooltip("Digital magazine shelf: magazines (items tagged magazine) download their schematics to the field slate.")]
+  public bool magazines;
+  public bool Stocks(ItemSpec item)
+  {
+   if(item==null)return false;
+   if(excludeTags!=null)foreach(var tag in excludeTags)if(!string.IsNullOrEmpty(tag)&&item.HasTag(tag))return false;
+   if(stockTags==null||stockTags.Length==0)return true;
+   foreach(var tag in stockTags)if(!string.IsNullOrEmpty(tag)&&item.HasTag(tag))return true;
+   return false;
+  }
  }
  [CreateAssetMenu(menuName="Athen Hill/NPC definition")]
  public class NpcDefinition : ScriptableObject

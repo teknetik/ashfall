@@ -18,11 +18,15 @@ namespace AthenHill
   public float aimShoulder=.55f,aimFieldOfView=48;
   [Min(.1f)] public float aimBlendSpeed=10;
   public bool FirstPerson=>boom<=.01f&&!FixedView;
+  /// Set by a CameraConfineZone while the player is inside it: first person, zoom held.
+  public bool Confined{get=>confined;set=>confined=value;}
+  bool confined,wasConfined;float confinedBoom;
   public float Distance=>distance;
   public bool PlayerHidden {get;private set;}
   float distance,aimBlend,baseFieldOfView;
-  bool wasAiming;int settleFrames;
   Camera lens;
+  GameSettings settingsCache;bool settingsSearched;
+  GameSettings settings{get{if(!settingsCache&&!settingsSearched){settingsSearched=true;settingsCache=FindAnyObjectByType<GameSettings>();}return settingsCache;}}
   bool lensTouched;
   float recoilRecovery,recoilTime;
   public void ApplyShotKick(float degrees,float recoverFraction,float recoverSeconds)
@@ -48,13 +52,18 @@ namespace AthenHill
   {
    if(FixedView||!target){HidePlayer(false);return;}
    aimBlend=Mathf.MoveTowards(aimBlend,aimMode?1:0,aimBlendSpeed*Time.unscaledDeltaTime);
-   // Entering aim locks the cursor; the recentring shows up as one large raw delta, so skip the first frames.
-   if(aimMode&&!wasAiming)settleFrames=2;
-   wasAiming=aimMode;
-   if(aimMode){var raw=input.RawLook;if(settleFrames>0)settleFrames--;else{yaw+=raw.x*sensitivity;pitch=Mathf.Clamp(pitch-raw.y*sensitivity,-70,70);}}
-   else if(input.Orbit){var delta=input.Look;yaw+=delta.x*sensitivity;pitch=Mathf.Clamp(pitch-delta.y*sensitivity,-80,80);}
+   // Mouse look is always on in play (GameInput locks the cursor and drops the lock's recentring jump).
+   var delta=input.Look;
+   if(delta!=Vector2.zero)
+   {
+    float scale=sensitivity*(settings?settings.Controls.Sensitivity:1);float limit=aimMode?70:80;
+    yaw+=delta.x*scale;pitch=Mathf.Clamp(pitch-delta.y*scale*(settings&&settings.Controls.invertY?-1:1),-limit,limit);
+   }
    if(recoilRecovery>0){float step=Mathf.Min(recoilRecovery,Time.deltaTime*recoilRecovery/Mathf.Max(.0001f,recoilTime));pitch=Mathf.Clamp(pitch+step,aimMode?-70:-80,aimMode?70:80);recoilRecovery-=step;recoilTime=Mathf.Max(0,recoilTime-Time.deltaTime);}
-   float scroll=input.Zoom;
+   // A tight interior (CameraConfineZone: the container home) holds the view in first person and gives the player's
+   // own zoom back at the door.
+   if(confined!=wasConfined){wasConfined=confined;if(confined){confinedBoom=boom;boom=0;}else boom=confinedBoom;}
+   float scroll=confined?0:input.Zoom;
    if(scroll!=0){boom=Mathf.Clamp(boom-scroll*zoomStep,0,maxBoom);if(boom<.05f)boom=0;}
    var targetPosition=targetMotor&&targetMotor.transform==target?targetMotor.RenderPosition:target.position;
    float activeBoom=boom>0?Mathf.Lerp(boom,Mathf.Min(boom,aimBoom),aimBlend):0;

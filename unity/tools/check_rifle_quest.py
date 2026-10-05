@@ -6,7 +6,7 @@ Phase A, new game: the Outer Berms primer with real input (locker, draw, plates,
 depot nest), checking the first contact spawns beside the gate again and the HUD marker names it. Captures the drawn
 pistol at the carry (the 45-degree complaint).
 Phase B, Continue on a fixture save at Ossa's "Long Arm" order with the receiver and parts carried: Brann's report line,
-fabricating the Field Rifle at his bench, equipping it (inventory drag), drawing it with 8 at the range (held-fire burst,
+fabricating the Field Rifle at his bench, equipping it (inventory drag), drawing it with 1 at the range (5 Oct 2026: hotbar 1 = primary, 2 = sidearm) (held-fire burst,
 aim, switch to the pistol and back), then the "Plate Carrier" order: the caravan scavengers, the strongbox, equipping the
 carrier and seeing it on the colonist. Fails on any runtime exception in Player.log.
 
@@ -215,7 +215,7 @@ def phase_a():
         qa.goto('checkpoint_approach'); qa.view('follow'); qa.yaw(270); time.sleep(.3); qa.hold('w', 1.3); time.sleep(.4)
         qa.goto('checkpoint_locker'); time.sleep(.4); qa.tap('e', settle=.4)
         ok(qa.snap()['combat']['hasPistol'], 'A: pistol taken from the locker with real E')
-        qa.tap('7', settle=.6); ok(qa.snap()['combat']['Armed'], 'A: pistol drawn with 7')
+        qa.tap('2', settle=.6); ok(qa.snap()['combat']['Armed'], 'A: pistol drawn with 2')
         # the carry: drawn, not aiming, standing (the 45-degree complaint)
         qa.goto('rifle_stand'); qa.view('follow'); qa.cmd('cameraBoom', boom=2.4); qa.yaw(110); qa.pitch(8); time.sleep(1.2); cap('a-pistol-carry-side')
         qa.yaw(160); time.sleep(.8); cap('a-pistol-carry-34'); qa.view('cam_rifle_side'); time.sleep(.6); cap('a-pistol-carry-cam_rifle_side'); qa.view('follow')
@@ -313,10 +313,10 @@ def phase_b():
         r['equipRifle'] = equip('field_rifle', 'primary', 'character-tab-primary')
         ok(r['equipRifle']['equipped'] == 'field_rifle' and (r['equipRifle']['left'] or 0) == r['equipRifle']['before'] - 1, 'B: the rifle is equipped in the primary slot by drag', r['equipRifle'])
         qa.goto('rifle_stand'); qa.view('follow'); time.sleep(.5); qa.yaw(270)
-        qa.tap('8', settle=.8); s = qa.snap(); w = weapon()
-        ok(s['combat']['Armed'] and w == 'weapon_field_rifle' and s['combat'].get('rifleShown') and not s['combat'].get('pistolShown'), 'B: 8 draws the field rifle (rifle model shown, pistol hidden)', {'armed': s['combat']['Armed'], 'weapon': w, 'rifleShown': s['combat'].get('rifleShown'), 'notice': s['session']['notice']})
+        qa.tap('1', settle=.8); s = qa.snap(); w = weapon()
+        ok(s['combat']['Armed'] and w == 'weapon_field_rifle' and s['combat'].get('rifleShown') and not s['combat'].get('pistolShown'), 'B: 1 draws the field rifle (rifle model shown, pistol hidden)', {'armed': s['combat']['Armed'], 'weapon': w, 'rifleShown': s['combat'].get('rifleShown'), 'notice': s['session']['notice']})
         ok('rifle' in (s['session']['notice'] or '').lower(), 'B: draw notice names the rifle', s['session']['notice'])
-        lay = qa.ui(); slot8 = qa.el(lay, 'slot8'); ok(slot8 and slot8.get('enabled', True) and not any('empty-slot' == c for c in slot8['classes']), 'B: hotbar slot 8 shows the rifle', slot8 and {'classes': slot8['classes'], 'tooltip': slot8.get('tooltip')})
+        lay = qa.ui(); slot8 = qa.el(lay, 'slot1'); ok(slot8 and slot8.get('enabled', True) and not any('empty-slot' == c for c in slot8['classes']), 'B: hotbar slot 1 shows the rifle', slot8 and {'classes': slot8['classes'], 'tooltip': slot8.get('tooltip')})
         time.sleep(1.0)
         for cam, name in [('cam_rifle_carry', 'b-rifle-carry-quarter'), ('cam_rifle_side', 'b-rifle-carry-side')]: qa.view(cam); time.sleep(.6); cap(name)
         qa.view('follow'); qa.cmd('cameraBoom', boom=2.4); qa.yaw(110); qa.pitch(6); time.sleep(.8); cap('b-rifle-carry-follow')
@@ -327,21 +327,21 @@ def phase_b():
         ok(shots >= 3, 'B: holding F fires a burst from the rifle', {'shots': shots})
         # aim: raised two-hand hold
         qa.yaw(90); time.sleep(.4); qa.button(3, True); time.sleep(.9); cap('b-rifle-aim-follow'); qa.view('cam_rifle_aim'); time.sleep(.5); cap('b-rifle-aim-cam'); qa.view('cam_rifle_side'); time.sleep(.4); cap('b-rifle-aim-side'); qa.button(3, False); qa.view('follow'); time.sleep(.5)
-        # switch: 7 holsters the rifle and draws the pistol; 8 switches back
-        qa.tap('7', settle=.7); s = qa.snap(); w = weapon(); ok(s['combat']['Armed'] and w == 'weapon_scrap_pistol', 'B: 7 switches to the pistol while armed', {'armed': s['combat']['Armed'], 'weapon': w})
-        qa.tap('8', settle=.7); s = qa.snap(); w = weapon(); ok(s['combat']['Armed'] and w == 'weapon_field_rifle', 'B: 8 switches back to the rifle', {'weapon': w})
-        qa.tap('8', settle=.6); ok(not qa.snap()['combat']['Armed'], 'B: 8 again holsters the rifle')
+        # switch: 2 holsters the rifle and draws the pistol; 1 switches back
+        qa.tap('2', settle=.7); s = qa.snap(); w = weapon(); ok(s['combat']['Armed'] and w == 'weapon_scrap_pistol', 'B: 2 switches to the pistol while armed', {'armed': s['combat']['Armed'], 'weapon': w})
+        qa.tap('1', settle=.7); s = qa.snap(); w = weapon(); ok(s['combat']['Armed'] and w == 'weapon_field_rifle', 'B: 1 switches back to the rifle', {'weapon': w})
+        qa.tap('1', settle=.6); ok(not qa.snap()['combat']['Armed'], 'B: 1 again holsters the rifle')
         # first person: no rifle view model, no pistol view model either
-        qa.tap('8', settle=.6); qa.cmd('cameraBoom', boom=0.0); time.sleep(.8); s = qa.snap(); ok(not s['combat'].get('viewModelVisible', False), 'B: the pistol view model stays hidden with the rifle drawn in first person', s['combat'].get('viewModelVisible')); cap('b-rifle-first-person')
+        qa.tap('1', settle=.6); qa.cmd('cameraBoom', boom=0.0); time.sleep(.8); s = qa.snap(); ok(not s['combat'].get('viewModelVisible', False), 'B: the pistol view model stays hidden with the rifle drawn in first person', s['combat'].get('viewModelVisible')); cap('b-rifle-first-person')
         # 3 Oct 2026: the field rifle has its own first-person view model (arms + rifle); hip view above, aim view here
         ok(s['combat'].get('rifleViewModelVisible', False), 'B: the rifle view model shows with the rifle drawn in first person', s['combat'].get('rifleViewModelVisible'))
         qa.button(3, True); time.sleep(1.0); s = qa.snap(); cap('b-rifle-first-person-aim')
         ok(s['combat'].get('rifleViewModelVisible', False), 'B: the rifle view model stays up while aiming in first person', s['combat'].get('rifleViewModelVisible'))
         qa.button(3, False); time.sleep(.4)
-        qa.cmd('cameraBoom', boom=2.4); qa.tap('8', settle=.5)
+        qa.cmd('cameraBoom', boom=2.4); qa.tap('1', settle=.5)
         # plate carrier: the caravan scavengers and the strongbox
         qa.goto('caravan_approach'); qa.view('follow'); time.sleep(.6); qa.face(-205, 74); time.sleep(.4)
-        qa.tap('8', settle=.6)
+        qa.tap('1', settle=.6)
         d3 = []
         r['caravanFight'] = qa.fight(until=lambda s: not any(e['alive'] and math.hypot(e['position'][0] + 205, e['position'][2] - 74) < 45 for e in s['combat']['enemies']), seconds=240, deaths=d3, center=(-205, 74), leash=30, regroup='caravan_approach', engage=14.0)
         ok(len(d3) >= 3, 'B: caravan scavengers cleared with the rifle', {'kills': len(d3), 'shots': r['caravanFight'].get('shots')})

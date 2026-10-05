@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 namespace AthenHill
 {
- /// Combat layer on the city HUD document: live vitality/nano meters, the pistol hotbar slot (7),
+ /// Combat layer on the city HUD document: live vitality/nano meters (the weapon hotbar slots 1–2 are HotbarView's),
  /// crosshair and hit marker, hurt edge flash, droid health bars and the Outer Berms field-notes line.
  /// Styles live in CityHUD.uss under "Outer Berms combat".
  [RequireComponent(typeof(UIDocument))]
@@ -14,16 +14,14 @@ namespace AthenHill
   public PlayerCombat combat;
   public BermsTutorial tutorial;
   CraftingSession crafting;
-  FieldOrders orders;
   public Camera worldCamera;
   [Min(1)]public float enemyBarDistance=32;
   [Tooltip("Seconds a salvage pickup toast stays on screen.")]
   [Min(.5f)]public float toastSeconds=4.5f;
   [Tooltip("Guidance markers show while their target is on screen and within this many metres.")]
   [Min(5)]public float guidanceRange=60;
-  VisualElement root,hud,vitalBar,nanoBar,crosshair,hitMarker,flash,objectiveRow,aimHint;
-  Label vitalValue,nanoValue,objective,guidance,objectiveHeading;
-  Button slot7;
+  VisualElement root,hud,vitalBar,nanoBar,crosshair,hitMarker,flash,aimHint;
+  Label vitalValue,nanoValue,guidance;
   readonly Dictionary<FeralDroid,VisualElement> bars=new Dictionary<FeralDroid,VisualElement>();
   float hitUntil,flashAlpha,toastUntil;
   /// Damage direction indicators (ranged droids): pooled, each tracks its attacker's position and fades.
@@ -47,7 +45,6 @@ namespace AthenHill
   {
    root=GetComponent<UIDocument>().rootVisualElement;hud=root.Q("hud");
    crafting=session?session.GetComponent<CraftingSession>():null;
-   orders=session?session.GetComponent<FieldOrders>():null;
    vitalBar=root.Q(className:"vital-bar");nanoBar=root.Q(className:"nano-bar");
    var values=root.Query<Label>(className:"vital-value").ToList();
    if(values.Count>1){vitalValue=values[0];nanoValue=values[1];}
@@ -58,16 +55,12 @@ namespace AthenHill
    hitMarker=Element("hit-marker",hud);
    foreach(var part in new[]{"a","b"})Element("hit-marker-stroke "+part,hitMarker);
    flash=Element("damage-flash",root);flash.SendToBack();
-   var objectiveBox=root.Q("objective-box");
-   objectiveRow=Element("berms-objective",objectiveBox);
-   objectiveHeading=new Label("OUTER BERMS"){pickingMode=PickingMode.Ignore};objectiveHeading.AddToClassList("small");objectiveHeading.AddToClassList("berms-heading");objectiveRow.Add(objectiveHeading);
-   objective=new Label{pickingMode=PickingMode.Ignore};objective.AddToClassList("berms-objective-text");objectiveRow.Add(objective);
    var hints=root.Q("key-hints");
    if(hints!=null)
    {
     aimHint=Element("hint panel aim-hint",hints);aimHint.SendToBack();
     aimHint.Add(new Label("RMB"){pickingMode=PickingMode.Ignore});aimHint[0].AddToClassList("hint-key");
-    aimHint.Add(new Label("Aim · LMB/F Fire"){pickingMode=PickingMode.Ignore});
+    aimHint.Add(new Label("Aim · LMB Fire"){pickingMode=PickingMode.Ignore});
    }
    guidance=new Label{pickingMode=PickingMode.Ignore};guidance.AddToClassList("checkpoint-guidance");hud.Add(guidance);
    // Salvage pickup toast (rarity-coloured lines) and the scrap-heap search progress.
@@ -80,8 +73,6 @@ namespace AthenHill
    searchLabel=new Label{pickingMode=PickingMode.Ignore};searchLabel.AddToClassList("search-progress-label");search.Add(searchLabel);
    searchFill=Element("search-progress-fill",Element("search-progress-track",search));Show(search,false);
    if(crafting)crafting.Collected+=ShowPickup;
-   slot7=root.Q<Button>("slot7");slot8=root.Q<Button>("slot8");
-   if(slot7!=null)slot7.clicked+=()=>combat.ToggleDraw();
    combat.TargetHit+=(target,killed)=>{hitUntil=Time.unscaledTime+(killed?.28f:.14f);hitMarker.EnableInClassList("kill",killed);if(killed&&target){var d=target.GetComponent<FeralDroid>();lastKilledName=d?d.displayName:null;}};
    combat.ExperienceAwarded+=ShowExperience;
    combat.Hurt+=amount=>flashAlpha=Mathf.Clamp01(flashAlpha+amount/30f);
@@ -89,10 +80,10 @@ namespace AthenHill
    combat.HurtFrom+=ShowDamageDirection;
    compassTrack=root.Q("compass-track");
    var compass=root.Q("compass");
-   if(compass!=null){poiLabel=new Label{pickingMode=PickingMode.Ignore};poiLabel.AddToClassList("compass-poi-label");compass.Add(poiLabel);Show(poiLabel,false);}
-   combat.StatsChanged+=UpdatePistolTooltip;UpdatePistolTooltip();
+   if(compass!=null){poiLabel=new Label{name="compass-poi-label",pickingMode=PickingMode.Ignore};poiLabel.AddToClassList("compass-poi-label");compass.Add(poiLabel);Show(poiLabel,false);}
+   // The tracked mission's marker (5 Oct 2026): everywhere, pinned to the compass edge with a chevron when off it.
+   if(compassTrack!=null){trackedMarker=Element("compass-tracked diamond",compassTrack);trackedMarker.name="compass-tracked";trackedMarker.usageHints=UsageHints.DynamicTransform;Show(trackedMarker,false);}
    combat.StatsChanged+=()=>nextTierCheck=0;
-   Refresh(true);
   }
   static VisualElement Element(string classes,VisualElement parent)
   {
@@ -100,70 +91,25 @@ namespace AthenHill
    foreach(var c in classes.Split(' '))e.AddToClassList(c);
    parent?.Add(e);return e;
   }
-  bool pistolShown,rifleShown;
-  Button slot8;
-  void Refresh(bool force)
-  {
-   // Slot 8: the field rifle, once one is equipped in the primary slot (2 Oct 2026).
-   if(slot8!=null&&(force||rifleShown!=combat.HasRifle))
-   {
-    rifleShown=combat.HasRifle;
-    slot8.SetEnabled(rifleShown);slot8.EnableInClassList("empty-slot",!rifleShown);
-    var rifleMarker=slot8.Q(className:"empty-slot-marker");
-    if(rifleShown&&rifleMarker!=null)
-    {
-     rifleMarker.RemoveFromHierarchy();
-     slot8.Add(Element("item-art rifle-slot-icon",null));
-     var label=new Label("Rifle"){pickingMode=PickingMode.Ignore};label.AddToClassList("slot-label");slot8.Add(label);
-     slot8.tooltip="Draw or holster the field rifle · 8";
-    }
-   }
-   if(slot7!=null&&(force||pistolShown!=combat.hasPistol))
-   {
-    pistolShown=combat.hasPistol;
-    slot7.SetEnabled(pistolShown);slot7.EnableInClassList("empty-slot",!pistolShown);
-    var marker=slot7.Q(className:"empty-slot-marker");
-    if(pistolShown&&marker!=null)
-    {
-     marker.RemoveFromHierarchy();
-     slot7.Add(Element("item-art pistol-icon",null));
-     var label=new Label("Pistol"){pickingMode=PickingMode.Ignore};label.AddToClassList("slot-label");slot7.Add(label);
-     slot7.tooltip="Draw or holster the scrap pistol · 7";
-    }
-   }
-  }
   void LateUpdate()
   {
    if(root==null||root.panel==null)return;
-   Refresh(false);
-   // CityHud disables the reserve slots at start; keep slot 7 in step with the pistol.
-   if(slot7!=null&&slot7.enabledSelf!=pistolShown)slot7.SetEnabled(pistolShown);
-   if(slot7!=null&&pistolShown&&slot7.tooltip!=pistolTooltip)slot7.tooltip=pistolTooltip;
-   if(slot8!=null&&slot8.enabledSelf!=rifleShown)slot8.SetEnabled(rifleShown);
    var h=combat.Health;
    if(vitalBar!=null)vitalBar.style.width=Length.Percent(h.Fraction*100);
    if(vitalValue!=null)vitalValue.text=$"{Mathf.CeilToInt(h.Current)} / {Mathf.RoundToInt(h.max)}";
    if(nanoBar!=null)nanoBar.style.width=Length.Percent(combat.Nano/Mathf.Max(1,combat.Stats.nanoMax)*100);
+   if(nanoBar!=null)nanoBar.EnableInClassList("overclocked",combat.Overclocked);
    if(nanoValue!=null)nanoValue.text=$"{Mathf.FloorToInt(combat.Nano)} / {Mathf.RoundToInt(combat.Stats.nanoMax)}";
    bool play=session.State==CityState.Play;
    Show(crosshair,play&&combat.Armed);crosshair.EnableInClassList("aiming",combat.Aiming);
    Show(hitMarker,play&&Time.unscaledTime<hitUntil);
    if(aimHint!=null)Show(aimHint,play&&combat.Armed);
-   slot7?.EnableInClassList("selected",combat.Armed);
    flashAlpha=Mathf.MoveTowards(flashAlpha,0,Time.unscaledDeltaTime*(session.reducedMotion?3:1.6f));
    flash.style.opacity=flashAlpha*(session.reducedMotion?.5f:.85f);
    if(toast!=null&&toast.style.display==DisplayStyle.Flex&&Time.unscaledTime>toastUntil)Show(toast,false);
    var heap=SalvageNode.Searching;
    Show(search,play&&heap);
    if(play&&heap){searchLabel.text=string.IsNullOrEmpty(heap.progressLabel)?$"Searching the {heap.displayName.ToLowerInvariant()}…":heap.progressLabel;searchFill.style.width=Length.Percent(heap.Progress*100);}
-   bool showObjective=tutorial&&tutorial.ShowObjective;
-   Show(objectiveRow,showObjective);
-   bool ordersActive=OrdersActive;
-   if(showObjective)
-   {
-    objective.text=ordersActive&&!string.IsNullOrEmpty(orders.Objective)?orders.Objective:tutorial.Objective;
-    objectiveHeading.text=ordersActive&&!string.IsNullOrEmpty(orders.Heading)?orders.Heading:"OUTER BERMS";
-   }
    UpdateGuidance(play);
    UpdateBars(play);
    UpdateDamageDirections();
@@ -194,10 +140,34 @@ namespace AthenHill
     marker.style.translate=new Translate(new Length(width*.5f+delta*(width/190f)-5),new Length(0),0);
     if(Mathf.Abs(delta)<best){best=Mathf.Abs(delta);centred=p;}
    }
+   // tracked mission marker
+   var tracked=session&&session.Journal?session.Journal.Tracked:null;
+   var target=play&&tracked!=null?tracked.target:null;
+   bool trackedCentred=false;string trackedText=null;
+   if(trackedMarker!=null)
+   {
+    bool show=target&&!float.IsNaN(width);
+    Show(trackedMarker,show);
+    if(show)
+    {
+     var to=target.position-combat.transform.position;to.y=0;float dist=to.magnitude;
+     float delta=dist<.5f?0:Mathf.DeltaAngle(heading,Mathf.Atan2(to.x,to.z)*Mathf.Rad2Deg);
+     // the compass shows ±95°; beyond that the marker waits at the edge, pointing the way to turn
+     const float edge=88;bool off=Mathf.Abs(delta)>edge;
+     float shown=Mathf.Clamp(delta,-edge,edge);
+     trackedMarker.style.translate=new Translate(new Length(width*.5f+shown*(width/190f)-7),new Length(0),0);
+     trackedMarker.EnableInClassList("edge-left",off&&delta<0);trackedMarker.EnableInClassList("edge-right",off&&delta>0);
+     trackedCentred=Mathf.Abs(delta)<10||dist<6;
+     trackedText=$"{(string.IsNullOrEmpty(tracked.targetLabel)?tracked.title.ToUpperInvariant():tracked.targetLabel)} · {Mathf.RoundToInt(dist)} m";
+    }
+   }
    if(poiLabel==null)return;
-   Show(poiLabel,centred);
-   if(centred)poiLabel.text=$"{centred.displayName.ToUpperInvariant()} · {Mathf.RoundToInt(Vector3.Distance(centred.transform.position,combat.transform.position))} m"+(centred.Cleared?" · cleared":"");
+   Show(poiLabel,trackedCentred||centred);
+   poiLabel.EnableInClassList("tracked",trackedCentred);
+   if(trackedCentred)poiLabel.text=trackedText;
+   else if(centred)poiLabel.text=$"{centred.displayName.ToUpperInvariant()} · {Mathf.RoundToInt(Vector3.Distance(centred.transform.position,combat.transform.position))} m"+(centred.Cleared?" · cleared":"");
   }
+  VisualElement trackedMarker;
   void ShowDamageDirection(float amount,Vector3 from)
   {
    if(damageDirs.Count==0||(from-combat.transform.position).sqrMagnitude<1)return;
@@ -220,15 +190,7 @@ namespace AthenHill
     d.el.style.rotate=new Rotate(angle);d.el.style.opacity=d.alpha;
    }
   }
-  string pistolTooltip="";
-  /// Rebuilt only when the loadout changes, never per frame.
-  void UpdatePistolTooltip()
-  {
-   var model=crafting?crafting.Model:null;
-   var mods=model!=null?string.Join(", ",model.Loadout.FittedMods.Select(x=>CraftingText.ItemName(model,x.Value))):"";
-   pistolTooltip=$"Draw or holster the scrap pistol · 7 · Damage {combat.Stats.damage:0.#} · Recoil {combat.Stats.recoil:0.#}"+(mods.Length>0?" · "+mods:"");
-  }
-  void OnDestroy(){if(combat){combat.StatsChanged-=UpdatePistolTooltip;combat.HurtFrom-=ShowDamageDirection;combat.ExperienceAwarded-=ShowExperience;}if(crafting)crafting.Collected-=ShowPickup;}
+  void OnDestroy(){if(combat){combat.HurtFrom-=ShowDamageDirection;combat.ExperienceAwarded-=ShowExperience;}if(crafting)crafting.Collected-=ShowPickup;}
   /// Experience toast on a kill ("+12 XP"), with the level-up line and a Ward notice when the character levels.
   void ShowExperience(int amount,ThreatTier tier,bool levelled)
   {
@@ -264,15 +226,14 @@ namespace AthenHill
    foreach(var r in pickup.discovered)ToastLine("Schematic discovered · "+r.name,"loot-toast-schematic");
    toastUntil=Time.unscaledTime+toastSeconds;Show(toast,true);
   }
-  bool OrdersActive=>orders&&orders.Ready&&orders.Progress.Started;
+  /// The in-world label over the tracked mission's target (5 Oct 2026: follows the journal's tracked mission).
   void UpdateGuidance(bool play)
   {
-   Transform target;string label;
-   if(OrdersActive){target=orders.GuidanceTarget;label=orders.GuidanceLabel;}
-   else{target=tutorial?tutorial.GuidanceTarget:null;label=tutorial?tutorial.GuidanceLabel:"WARDEN OSSA";}
-   bool visible=play&&target&&tutorial&&tutorial.ShowObjective;
+   var tracked=session&&session.Journal?session.Journal.Tracked:null;
+   var target=tracked?.target;string label=tracked?.targetLabel??tracked?.title?.ToUpperInvariant();
+   bool visible=play&&target;
    // A tracked droid (the Depot Foreman) carries its own name and health bar once engaged; the marker steps aside.
-   var droid=OrdersActive?orders.GuidanceDroid:null;
+   var droid=tracked?.droid;
    if(visible&&droid&&bars.TryGetValue(droid,out var droidBar)&&droidBar.style.display==DisplayStyle.Flex)visible=false;
    if(visible)
    {

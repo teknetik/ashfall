@@ -128,7 +128,7 @@ async def main():
    # Ctrl-drag from a live action must move the bar without opening its menu.
    await drag('quickbar',(-70,-120),handle='slot5',ctrl=True);assert snap()['session']['state']=='Play';await reset()
    await drag('nametag-npc_vex',(80,80),local=(60,12));await reset()
-   for shortcut,state in [('5','Inventory'),('6','Notes'),('Escape','Paused')]:
+   for shortcut,state in [('Tab','Inventory'),('j','Journal'),('Escape','Paused')]:
     await tap(shortcut);assert snap()['session']['state']==state
     await drag('modal',(-210,-60),local=(160,38));await capture('dragged-'+state.lower());await tap('Escape');await reset()
    # Restoring defaults is reversible, and dropped windows stay fully on screen.

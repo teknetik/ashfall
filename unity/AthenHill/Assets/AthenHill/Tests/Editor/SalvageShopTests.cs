@@ -148,7 +148,7 @@ namespace AthenHill.Tests
     Assert.That(orders.guidanceTargets.Single(t=>t.key=="fabricator").point,Is.EqualTo(station.transform));
     Assert.That(Vector3.Distance(station.transform.position,brann.transform.position),Is.GreaterThan(session.interactionRange+station.GetComponent<WorldInteractable>().range));
     Assert.That(All<BermsTutorial>().Single().lineComplete,Does.Contain("Brann"));
-    var room=All<InteriorLighting>().Single();
+    var room=All<InteriorLighting>().Single(x=>x.name=="Salvage shop interior");   // Field Supply has its own (5 Oct 2026)
     Assert.That(room.lamps.Length,Is.GreaterThan(0));
     foreach(var l in room.lamps)Assert.That((uint)l.renderingLayerMask,Is.EqualTo(room.interiorLayer),l.name+" lights the interior layer only");
     Assert.That(room.renderers.Count,Is.GreaterThan(5));

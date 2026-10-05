@@ -262,7 +262,8 @@ namespace AthenHill
     int have=model.Available(input);bool ok=have>=input.quantity;
     var row=new VisualElement{pickingMode=PickingMode.Ignore};row.AddToClassList("fab-input");row.EnableInClassList("short",!ok);
     var name=new Label(CraftingText.InputName(model,input)){pickingMode=PickingMode.Ignore};name.AddToClassList("fab-input-name");
-    var count=new Label($"{have} / {input.quantity}"){pickingMode=PickingMode.Ignore};count.AddToClassList("fab-input-count");count.AddToClassList(ok?"have-ok":"have-short");
+    int stored=model.FromReserve(input);
+    var count=new Label(stored>0?$"{have} / {input.quantity}  ({stored} in your locker)":$"{have} / {input.quantity}"){pickingMode=PickingMode.Ignore};count.AddToClassList("fab-input-count");count.AddToClassList(ok?"have-ok":"have-short");
     row.Add(name);row.Add(count);inputs.Add(row);
    }
    bool canCraft=model.CanCraft(recipe.id,session.ActiveStationId,out var craftReason);

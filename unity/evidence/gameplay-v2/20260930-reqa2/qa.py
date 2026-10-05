@@ -89,6 +89,18 @@ def launch(run, save_dir=None, video=None, background=True, extra=()):
     return pid()
 
 
+def game_window_rect():
+    """The player window's Hyprland rectangle (logical x, y, w, h) and monitor id, or (None, None)."""
+    try:
+        out = subprocess.run(['hyprctl', 'clients', '-j'], capture_output=True, text=True, timeout=5).stdout
+        for c in json.loads(out):
+            if c.get('pid') == pid() or 'Athen Hill' in c.get('title', ''):
+                return c['at'] + c['size'], c.get('monitor')
+    except Exception:  # noqa: BLE001 - not on Hyprland
+        pass
+    return None, None
+
+
 def wait_menu(timeout=120):
     t = time.monotonic() + timeout
     while time.monotonic() < t:
@@ -139,6 +151,19 @@ def read(name):
         except json.JSONDecodeError:
             time.sleep(.02)
     return json.loads((RUN / name).read_text())
+
+
+# 5 Oct 2026 (Ward home pass): the camera follows the mouse in play (cursor locked, always-on mouse look). Hyprland
+# warps its own cursor into the game window whenever the window is activated (focus() does that) and then gives XWayland a
+# pointer lock; any XTEST pointer move while the game's cursor is locked arrives as one large mouse delta (a ~300° turn,
+# pitch to the clamp), so a walk or an aim set through the bridge is thrown off. The harness therefore never moves the
+# XTEST pointer while the game reports a locked cursor (pointer_locked); clicks and drags in windows (cursor free) are
+# unaffected. A real relative mouse is checked by unity/tools/check_mouse_look_native.py.
+def pointer_locked():
+    try:
+        return (read('snapshot.json').get('cursor') or {}).get('lockState') == 'Locked'
+    except Exception:  # noqa: BLE001 - before the first snapshot, or an older build without the field
+        return False
 
 
 def cmd(action, timeout=10, settle=.12, **kw):
@@ -294,7 +319,7 @@ def focus(center=True):
         w.set_input_focus(X.RevertToParent, X.CurrentTime)
     except Exception:
         pass
-    if center:
+    if center and not pointer_locked():
         g = w.get_geometry()
         o = root.translate_coords(w, 0, 0)
         px, py = (g.width // 2, g.height // 2) if PARK is None else PARK
@@ -367,7 +392,7 @@ def click_at(px, py, b=1):
 
 def release_all():
     try:
-        for k in ['w', 'a', 's', 'd', 'e', 'f', 'r', 'Shift_L', 'space', 'Return', 'Escape', 'Tab', 'Up', 'Down', 'Left', 'Right', '5', '6', '7']:
+        for k in ['w', 'a', 's', 'd', 'e', 'f', 'r', 'Shift_L', 'space', 'Return', 'Escape', 'Tab', 'Up', 'Down', 'Left', 'Right', '1', '2', '3', '4', '5', '6', '7', 'Alt_L']:
             key(k, False)
         for b in (1, 2, 3):
             button(b, False)
@@ -488,7 +513,7 @@ def fight(until=None, seconds=120, engage=7.0, profile_name=None, deaths=None, c
                 samples.append(dict(t=round(time.monotonic() - t0, 2), player=s['player']['position'], hp=c['health'], nano=c['Nano'],
                                     enemies=[(e['displayName'], e['state'], e['health'], e['position']) for e in c['enemies'] if e['alive']]))
             if not c['Armed']:
-                tap('7', settle=.2)
+                tap(SIDEARM_KEY, settle=.2)
                 continue
             live = [e for e in c['enemies'] if e['alive']]
             if not live:
@@ -562,14 +587,19 @@ def collect_at(x, z, tries=3):
     return r
 
 
+# 5 Oct 2026 (Ward home pass): the hotbar moved the weapons to 1 (primary) and 2 (sidearm); 7 and 8 are item slots now.
+SIDEARM_KEY = '2'
+PRIMARY_KEY = '1'
+
+
 def primer(report):
-    """Outer Berms primer with real input: approach, locker (E), draw (7), plates (RMB+LMB), first contact and depot (F)."""
+    """Outer Berms primer with real input: approach, locker (E), draw (2), plates (RMB+LMB), first contact and depot (F)."""
     goto('checkpoint_approach'); view('follow'); yaw(270); time.sleep(.3)
     hold('w', 1.3); time.sleep(.4)
     report['approach'] = snap()['combat']['step']
     goto('checkpoint_locker'); time.sleep(.4); tap('e', settle=.4)
     report['locker'] = snap()['combat']['hasPistol']
-    tap('7', settle=.4); report['draw'] = snap()['combat']['Armed']
+    tap(SIDEARM_KEY, settle=.4); report['draw'] = snap()['combat']['Armed']
     goto('checkpoint_firingline'); view('follow'); time.sleep(.3)
     for i, (x, z) in enumerate([(-78, 11), (-80.5, 15.5), (-77.5, 20)]):
         for off in [-2.5, -3.5, -1.5, -4.5]:
@@ -612,7 +642,7 @@ def fight_foreman(seconds=120, profile_name=None):
                 goto('depot_yard'); continue
             aim_at(f['position'], lift=1.0)
             if not c['Armed']:
-                tap('7', settle=.1); continue
+                tap(SIDEARM_KEY, settle=.1); continue
             if f['state'] == 'Windup' and d < 4.0:
                 hold('s', .5); continue
             if d > 9:
@@ -819,7 +849,7 @@ def fight_foreman(seconds=240, profile_name=None, escorts_first=False, back_off=
             if d > 30:
                 goto('depot_yard'); continue
             if not c['Armed']:
-                tap('7', settle=.1); continue
+                tap(SIDEARM_KEY, settle=.1); continue
             if f is not None and f['alive'] and f['state'] == 'Windup' and fd < back_off:
                 face_away = f['position']
                 aim_at(face_away, lift=1.0)

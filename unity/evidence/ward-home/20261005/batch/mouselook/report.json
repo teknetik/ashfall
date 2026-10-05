@@ -1,0 +1,226 @@
+{
+ "checks": [
+  {
+   "check": "in play the cursor is locked and hidden",
+   "passed": true,
+   "detail": {
+    "lockState": "Locked",
+    "visible": false,
+    "looking": true,
+    "freed": false
+   }
+  },
+  {
+   "check": "idle: the camera holds still with nothing moving (XTEST pointer at the centre)",
+   "passed": true,
+   "detail": {
+    "yaw": 0.0,
+    "pitch": 0.0
+   }
+  },
+  {
+   "check": "a real relative mouse turns the camera",
+   "passed": false,
+   "detail": {
+    "before": 90.0,
+    "after": 90.0,
+    "turned": 0.0
+   }
+  },
+  {
+   "check": "the camera stops when the real mouse stops",
+   "passed": true,
+   "detail": {
+    "yaw drift": 0.0,
+    "pitch drift": 0.0
+   }
+  },
+  {
+   "check": "vertical mouse motion pitches the camera",
+   "passed": false,
+   "detail": {
+    "before": 15.0,
+    "after": 15.0
+   }
+  },
+  {
+   "check": "and stops when the mouse stops",
+   "passed": true,
+   "detail": {
+    "yaw drift": 0.0,
+    "pitch drift": 0.0
+   }
+  },
+  {
+   "check": "with the field pack open the mouse moves the pointer, not the camera",
+   "passed": true,
+   "detail": {
+    "cursor": {
+     "lockState": "None",
+     "visible": true,
+     "looking": false,
+     "freed": false
+    },
+    "yaw": 0.0
+   }
+  },
+  {
+   "check": "closing the pack: cursor locked again and the camera still (no jump, no drift)",
+   "passed": true,
+   "detail": {
+    "yaw drift": 0.0,
+    "pitch drift": 0.0,
+    "cursor": {
+     "lockState": "Locked",
+     "visible": false,
+     "looking": true,
+     "freed": false
+    }
+   }
+  },
+  {
+   "check": "the mouse turns the camera again after the pack closes",
+   "passed": false,
+   "detail": {
+    "turned": 0.0
+   }
+  },
+  {
+   "check": "holding Left Alt frees the pointer and the camera holds still",
+   "passed": true,
+   "detail": {
+    "cursor": {
+     "lockState": "None",
+     "visible": true,
+     "looking": false,
+     "freed": true
+    },
+    "yaw": 0.0
+   }
+  },
+  {
+   "check": "releasing Left Alt: no drift",
+   "passed": true,
+   "detail": {
+    "yaw drift": 0.0,
+    "pitch drift": 0.0
+   }
+  },
+  {
+   "check": "2 draws the scrap pistol in the Berms",
+   "passed": true,
+   "detail": {
+    "armed": true
+   }
+  },
+  {
+   "check": "the real left mouse button fires (no aim needed)",
+   "passed": true,
+   "detail": {
+    "before": 0,
+    "after": 1
+   }
+  },
+  {
+   "check": "no exceptions in Player.log",
+   "passed": true,
+   "detail": []
+  }
+ ],
+ "samples": {
+  "idle": [
+   [
+    90.0,
+    15.0
+   ],
+   [
+    90.0,
+    15.0
+   ],
+   [
+    90.0,
+    15.0
+   ],
+   [
+    90.0,
+    15.0
+   ],
+   [
+    90.0,
+    15.0
+   ]
+  ],
+  "after_turn": [
+   [
+    90.0,
+    15.0
+   ],
+   [
+    90.0,
+    15.0
+   ],
+   [
+    90.0,
+    15.0
+   ],
+   [
+    90.0,
+    15.0
+   ],
+   [
+    90.0,
+    15.0
+   ]
+  ],
+  "after_pitch": [
+   [
+    90.0,
+    15.0
+   ],
+   [
+    90.0,
+    15.0
+   ],
+   [
+    90.0,
+    15.0
+   ],
+   [
+    90.0,
+    15.0
+   ],
+   [
+    90.0,
+    15.0
+   ]
+  ],
+  "after_pack": [
+   [
+    388.47998,
+    80.0
+   ],
+   [
+    388.47998,
+    80.0
+   ],
+   [
+    388.47998,
+    80.0
+   ],
+   [
+    388.47998,
+    80.0
+   ],
+   [
+    388.47998,
+    80.0
+   ]
+  ]
+ },
+ "xtestOffCentre": {
+  "after0.5s": -42.02002099999993,
+  "after1.5s": -42.02002099999993
+ },
+ "errors": [],
+ "passed": false
+}

@@ -21,6 +21,12 @@ namespace AthenHill
   public IReadOnlyCollection<string> KnownRecipes=>known;
   public IReadOnlyDictionary<string,int> CraftCounts=>crafted;
   public int Crafts {get;private set;}
+  /// Parts kept outside the pack that schematics may also use (5 Oct 2026: the leased home's locker feeds Brann's bench).
+  /// The pack's own units are always used first; null or a closed reserve means the pack alone.
+  public StashModel Reserve {get;set;}
+  public Func<bool> ReserveOpen {get;set;}
+  bool ReserveActive=>Reserve!=null&&(ReserveOpen?.Invoke()??true);
+  int Pool(string id)=>pack.Quantity(id)+(ReserveActive?Reserve.Quantity(id):0);
   public float BaseRecoil=>Loadout.Base.recoil;
   public float RecoilStat=>Loadout.Stats.recoil;
   /// Raised after a committed craft, fit, removal, unlock or restore.
@@ -56,6 +62,12 @@ namespace AthenHill
   public List<CraftRecipe> Acquire(string itemId)=>UnlockWhere("acquireItem",itemId);
   /// A field order became current: reveals schematics tied to it.
   public List<CraftRecipe> OrderStarted(string orderId)=>UnlockWhere("orderStart",orderId);
+  /// The schematics a digital magazine teaches (recipes whose unlocks list {type: magazine, id}).
+  public IEnumerable<CraftRecipe> MagazineRecipes(string magazineId)=>data.recipes.Where(r=>r.unlocks!=null&&r.unlocks.Any(x=>x.type=="magazine"&&x.id==magazineId));
+  /// A magazine is owned once every schematic it teaches is known (ownership is saved through the known recipes).
+  public bool OwnsMagazine(string magazineId){var taught=MagazineRecipes(magazineId).ToList();return taught.Count>0&&taught.All(r=>known.Contains(r.id));}
+  /// A magazine was downloaded: teaches its schematics. Returns the newly known recipes.
+  public List<CraftRecipe> ReadMagazine(string magazineId)=>UnlockWhere("magazine",magazineId);
   List<CraftRecipe> UnlockWhere(string type,string id)
   {
    var unlocked=new List<CraftRecipe>();
@@ -92,7 +104,7 @@ namespace AthenHill
    // Reserve reusable tools in the same allocation search so a tagged ingredient can select another item.
    var tools=(recipe.requiredTools??Array.Empty<string>()).Distinct().ToArray();
    var requirements=recipe.inputs.Concat(tools.Select(id=>new CraftIngredient{kind="item",id=id,quantity=1})).ToArray();
-   if(!IngredientAllocator.TryAllocate(requirements,items,pack,out used)){reason="missing_ingredients";return false;}
+   if(!IngredientAllocator.TryAllocate(requirements,items,Pool,out used)){reason="missing_ingredients";return false;}
    used=used.Select(x=>new KeyValuePair<string,int>(x.Key,x.Value-(tools.Contains(x.Key)?1:0))).Where(x=>x.Value>0).ToList();
    if(output.maxStack>0&&(long)pack.Quantity(output.id)+recipe.outputQuantity>output.maxStack){reason="output_stack_full";return false;}
    reason="ok";return true;
@@ -127,9 +139,13 @@ namespace AthenHill
    if(!ValidateCraft(recipeId,stationId,out var used,out reason))return false;
    var recipe=Recipe(recipeId);
    if(Crafts==int.MaxValue||CraftCount(recipeId)==int.MaxValue){reason="overflow";return false;}
-   var delta=used.Select(x=>new KeyValuePair<string,int>(x.Key,-x.Value)).ToList();
+   // the pack's units first; whatever it lacks comes out of the reserve (the home locker) after the pack commits
+   var fromReserve=used.Select(x=>new KeyValuePair<string,int>(x.Key,Math.Max(0,x.Value-pack.Quantity(x.Key)))).Where(x=>x.Value>0).ToList();
+   var delta=used.Select(x=>new KeyValuePair<string,int>(x.Key,-Math.Min(x.Value,pack.Quantity(x.Key)))).Where(x=>x.Value!=0).ToList();
    delta.Add(new KeyValuePair<string,int>(recipe.outputItemId,recipe.outputQuantity));
+   if(fromReserve.Count>0&&(!ReserveActive||fromReserve.Any(x=>Reserve.Quantity(x.Key)<x.Value))){reason="missing_ingredients";return false;}
    if(!pack.TryApply(delta,0,out reason))return false;
+   foreach(var x in fromReserve)Reserve.Consume(x.Key,x.Value);
    Crafts++;crafted[recipeId]=CraftCount(recipeId)+1;
    Changed?.Invoke();return true;
   }
@@ -178,8 +194,16 @@ namespace AthenHill
   public int Available(CraftIngredient input)
   {
    if(input==null)return 0;
-   if(input.kind=="item")return pack.Quantity(input.id);
-   long total=0;foreach(var item in items)if(item.HasTag(input.id))total+=pack.Quantity(item.id);
+   if(input.kind=="item")return Pool(input.id);
+   long total=0;foreach(var item in items)if(item.HasTag(input.id))total+=Pool(item.id);
+   return (int)Math.Min(int.MaxValue,total);
+  }
+  /// How much of Available comes from the reserve (the home locker), for display.
+  public int FromReserve(CraftIngredient input)
+  {
+   if(input==null||!ReserveActive)return 0;
+   if(input.kind=="item")return Reserve.Quantity(input.id);
+   long total=0;foreach(var item in items)if(item.HasTag(input.id))total+=Reserve.Quantity(item.id);
    return (int)Math.Min(int.MaxValue,total);
   }
   bool Meets(CharacterRequirement[] requirements)=>requirements==null||requirements.Length==0||(character!=null&&character.Meets(requirements,out _));

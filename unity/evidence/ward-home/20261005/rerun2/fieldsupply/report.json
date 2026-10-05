@@ -1,0 +1,290 @@
+{
+ "checks": [
+  {
+   "check": "no talk prompt from the street",
+   "passed": true,
+   "detail": ""
+  },
+  {
+   "check": "walked from the porch through the bay to the counter",
+   "passed": true,
+   "detail": {
+    "pos": [
+     20.5754414,
+     0.53,
+     -8.66624451
+    ],
+    "counter": [
+     20.8,
+     0.5,
+     -8.55
+    ]
+   }
+  },
+  {
+   "check": "Tamsin offers the E prompt at the counter",
+   "passed": true,
+   "detail": "E \u00b7 Talk to Tamsin"
+  },
+  {
+   "check": "Tamsin opens with her first-visit line",
+   "passed": true,
+   "detail": {
+    "prompt": "",
+    "npc": "Tamsin",
+    "node": "first_visit",
+    "choices": [
+     "Show me the stock.",
+     "What's on the magazine shelf?",
+     "Another time."
+    ],
+    "station": null,
+    "shop": null,
+    "flags": [
+     "brann_met"
+    ]
+   }
+  },
+  {
+   "check": "\"What's on the magazine shelf?\" explains the digital magazines",
+   "passed": true,
+   "detail": {
+    "prompt": "",
+    "npc": "Tamsin",
+    "node": "magazines",
+    "choices": [
+     "Show me the shelf.",
+     "And the packs?",
+     "Later."
+    ],
+    "station": null,
+    "shop": null,
+    "flags": [
+     "brann_met",
+     "tamsin_met"
+    ]
+   }
+  },
+  {
+   "check": "\"Show me the shelf.\" opens the Field Supply counter",
+   "passed": true,
+   "detail": {
+    "prompt": "",
+    "npc": "Tamsin",
+    "node": null,
+    "choices": null,
+    "station": null,
+    "shop": "Field Supply",
+    "flags": [
+     "brann_met",
+     "tamsin_met"
+    ]
+   }
+  },
+  {
+   "check": "the first visit is remembered (story flag)",
+   "passed": true,
+   "detail": [
+    "brann_met",
+    "tamsin_met"
+   ]
+  },
+  {
+   "check": "Field Supply sells packs, med kits and nano recharges (no flask, no parts, no magazines in the list)",
+   "passed": true,
+   "detail": [
+    "merchant-item-canvas_rucksack",
+    "merchant-item-courier_cargo_rig",
+    "merchant-item-field_backpack",
+    "merchant-item-frame_pack",
+    "merchant-item-medkit",
+    "merchant-item-nano_cell",
+    "merchant-item-nano_surge_pack",
+    "merchant-item-porter_carrier",
+    "merchant-item-trauma_kit"
+   ]
+  },
+  {
+   "check": "bought two nano recharge cells (6 cr each)",
+   "passed": true,
+   "detail": {
+    "cells": 2,
+    "credits": 188
+   }
+  },
+  {
+   "check": "bought a medkit",
+   "passed": true,
+   "detail": {
+    "medkit": 1,
+    "credits": 179
+   }
+  },
+  {
+   "check": "bought a stitched canvas rucksack",
+   "passed": true,
+   "detail": {
+    "rucksack": 1,
+    "credits": 143
+   }
+  },
+  {
+   "check": "the MAGAZINES tab lists the four digital magazines",
+   "passed": true,
+   "detail": [
+    "merchant-item-mag_packcraft_12",
+    "merchant-item-mag_karaveen_freight_3",
+    "merchant-item-mag_nanoweave_monthly",
+    "merchant-item-mag_ward_armourer"
+   ]
+  },
+  {
+   "check": "downloading Packcraft Quarterly (18 cr) teaches its three schematics",
+   "passed": true,
+   "detail": {
+    "credits": 125,
+    "known": [
+     "recipe_field_rifle",
+     "recipe_rifle_precision_barrel",
+     "recipe_alloy_plate",
+     "recipe_field_helmet",
+     "recipe_canvas_rucksack",
+     "recipe_pack_side_pouches",
+     "recipe_pack_hip_belt"
+    ],
+    "notice": "Downloaded Packcraft Quarterly \u00b7 Issue 12 for 18 credits. Schematics discovered: Stitched Canvas Rucksack, Side Pouch Pair, Padded Hip Belt. Make them at Brann's workbench in Salvage."
+   }
+  },
+  {
+   "check": "the magazine is downloaded, not carried",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "the owned magazine cannot be downloaded twice",
+   "passed": true,
+   "detail": {
+    "text": "On your slate",
+    "enabled": false
+   }
+  },
+  {
+   "check": "Tamsin buys the rucksack back (12 cr)",
+   "passed": true,
+   "detail": {
+    "credits": 137
+   }
+  },
+  {
+   "check": "Esc closes the counter",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "hotbar 3 at full health uses nothing",
+   "passed": true,
+   "detail": {
+    "notice": "You are not hurt."
+   }
+  },
+  {
+   "check": "hotbar 3 uses the medkit on a wound",
+   "passed": true,
+   "detail": {
+    "before": 102.0,
+    "wounded": 60.0,
+    "healed": 100.4,
+    "notice": "Used Medkit: +40 health. 0 left."
+   }
+  },
+  {
+   "check": "hotbar 4 uses a nano recharge and overclocks the regulator",
+   "passed": true,
+   "detail": {
+    "cells": 1,
+    "nano": 100.0,
+    "overclocked": true,
+    "notice": "Used Nano Recharge Cell: regulator overclocked 15 s. 1 left."
+   }
+  },
+  {
+   "check": "hotbar slot 4 shows the nano recharge",
+   "passed": true,
+   "detail": {
+    "classes": [
+     "unity-button",
+     "unity-text-element",
+     "hotbar-slot"
+    ],
+    "tooltip": null
+   }
+  },
+  {
+   "check": "E at Brann's bench opens the fabricator",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "the bench lists the magazine schematics (known and locked)",
+   "passed": true,
+   "detail": [
+    "fab-recipe-list",
+    "fab-recipe-recipe_alloy_plate",
+    "fab-recipe-recipe_armour_extra_plate",
+    "fab-recipe-recipe_armour_impact_liner",
+    "fab-recipe-recipe_armour_thermal_liner",
+    "fab-recipe-recipe_barrel_bored_alloy",
+    "fab-recipe-recipe_barrel_lattice_focused",
+    "fab-recipe-recipe_canvas_rucksack",
+    "fab-recipe-recipe_cell_overclocked",
+    "fab-recipe-recipe_cell_salvaged_capacitor",
+    "fab-recipe-recipe_charge_cell_core",
+    "fab-recipe-recipe_courier_cargo_rig",
+    "fab-recipe-recipe_field_armguards",
+    "fab-recipe-recipe_field_gloves",
+    "fab-recipe-recipe_field_helmet",
+    "fab-recipe-recipe_field_leggings",
+    "fab-recipe-recipe_field_rifle",
+    "fab-recipe-recipe_frame_pack",
+    "fab-recipe-recipe_grip_gyro_braced",
+    "fab-recipe-recipe_grip_stabilised_pistol",
+    "fab-recipe-recipe_pack_hip_belt",
+    "fab-recipe-recipe_pack_nanoweave_pouch",
+    "fab-recipe-recipe_pack_servo_lifter",
+    "fab-recipe-recipe_pack_side_pouches",
+    "fab-recipe-recipe_porter_carrier",
+    "fab-recipe-recipe_rifle_precision_barrel",
+    "fab-recipe-recipe_wound_coil"
+   ]
+  },
+  {
+   "check": "no exceptions in Player.log",
+   "passed": true,
+   "detail": []
+  },
+  {
+   "check": "the save keeps the downloaded schematics",
+   "passed": true,
+   "detail": [
+    "recipe_alloy_plate",
+    "recipe_canvas_rucksack",
+    "recipe_field_helmet",
+    "recipe_field_rifle",
+    "recipe_pack_hip_belt",
+    "recipe_pack_side_pouches",
+    "recipe_rifle_precision_barrel"
+   ]
+  }
+ ],
+ "errors": [],
+ "savedKnown": [
+  "recipe_alloy_plate",
+  "recipe_canvas_rucksack",
+  "recipe_field_helmet",
+  "recipe_field_rifle",
+  "recipe_pack_hip_belt",
+  "recipe_pack_side_pouches",
+  "recipe_rifle_precision_barrel"
+ ],
+ "passed": true
+}

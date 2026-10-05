@@ -29,6 +29,8 @@ namespace AthenHill
   Label ghost;
   CharacterModel Character=>session.Character;
   CraftingModel Craft=>crafting?crafting.Model:null;
+  /// A carried item was dropped on a cell of the field pack's HOTBAR strip (item, hotbar slot 1–10).
+  public Action<string,int> DroppedOnHotbar;
 
   public CharacterLoadoutPanel(VisualElement root,GameSession session,CraftingSession crafting,Func<string> selectedItem,Action changed)
   {
@@ -433,10 +435,18 @@ namespace AthenHill
   void DropAt(Vector2 position)
   {
    if(!dragging){CancelDrag();return;}
-   var target=root.panel?.Pick(position);Target destination=null;bool pack=false;
-   for(var v=target;v!=null;v=v.parent){if(v.userData is Target t)destination=t;if(v.name=="pack-col")pack=true;}
+   var target=root.panel?.Pick(position);Target destination=null;HotbarDrop bar=null;bool pack=false;
+   for(var v=target;v!=null;v=v.parent){if(v.userData is Target t)destination=t;if(v.userData is HotbarDrop h)bar=h;if(v.name=="pack-col")pack=true;}
    string item=dragItem,slot=dragSlot,socket=dragSocket,weapon=dragWeapon;CancelDrag();
-   if(destination!=null)Place(item,slot,socket,weapon,destination.slot,destination.socket,destination.weapon);
+   if(bar!=null)
+   {
+    // Hotbar 1/2 hold the weapons: a carried weapon dropped there is equipped; 3–0 take usable items.
+    var weaponSlot=HotbarModel.WeaponSlot(bar.slot);
+    if(slot!=null||socket!=null)Result(false,"Only carried items go on the hotbar. Return it to your pack first.",null);
+    else if(weaponSlot!=null)Place(item,null,null,null,weaponSlot,null,null);
+    else DroppedOnHotbar?.Invoke(item,bar.slot);
+   }
+   else if(destination!=null)Place(item,slot,socket,weapon,destination.slot,destination.socket,destination.weapon);
    else if(pack&&(slot!=null||socket!=null))
    {
     string reason;bool ok=socket!=null?Craft.TryRemove(weapon,socket,out reason):Character.TryUnequip(slot,out reason);Result(ok,reason,"Returned to pack.");

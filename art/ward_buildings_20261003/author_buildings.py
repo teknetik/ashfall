@@ -2275,17 +2275,25 @@ def wall_home(lod, variant="A"):
     """Converted container home against the curtain wall. Variants: A single (rust), C single (sand), B stacked two
     high with an external steel stair. Root = container centre at ground, +Z = street side. The container stands on
     dressed stone blocks; a stone step, a low planter wall, a canvas awning on poles, rooftop solar, water drum, AC,
-    laundry line. Replaces the 26 Sep `Perimeter dwellings` containers."""
-    s = Ruin(f"WallHome{variant}", lod, (1.03, 0.97, 0.88), {"A": 501, "B": 502, "C": 503}[variant])
+    laundry line. Replaces the 26 Sep `Perimeter dwellings` containers.
+    Variant P (5 Oct 2026, art/ward_home_20261005/home_interior.py): the player's home, A's exterior with a real door
+    opening, a hinged leaf object and a fitted interior; every P difference is guarded so A/B/C are unchanged."""
+    if variant == "P":
+        sys.path.insert(0, str(ROOT / "art/ward_home_20261005"))
+        import home_interior as HI
+    s = Ruin(f"WallHome{variant}", lod, (1.03, 0.97, 0.88), {"A": 501, "B": 502, "C": 503, "P": 501}[variant])
     s.top_y = 3.0
     m, hd = s.metal, s.hard
-    mat = {"A": "WS_ContainerRust", "B": "WB_ContainerBlue", "C": "WB_ContainerSand"}[variant]
+    mat = {"A": "WS_ContainerRust", "B": "WB_ContainerBlue", "C": "WB_ContainerSand", "P": "WS_ContainerRust"}[variant]
     Y0 = 0.32
     # dressed stone pad blocks under the corners and middle (the container sits on them)
     for xx in (-2.75, 0.0, 2.75):
         for zz in (-0.95, 0.95):
             s.block((xx, Y0 / 2, zz), (0.55, Y0, 0.5), (0.0, 0.0, 0.0), mat="VH_AshlarRough")
-    container_box(s, 0.0, Y0, 0.0, mat, door_end=True, front_door=True, window=True, lod=lod, tag="lower")
+    if variant == "P":
+        HI.shell(s, mat, lod)
+    else:
+        container_box(s, 0.0, Y0, 0.0, mat, door_end=True, front_door=True, window=True, lod=lod, tag="lower")
     top = Y0 + 2.59
     if variant == "B":
         container_box(s, 0.35, top, 0.0, "WS_ContainerRust", door_end=False, front_door=True, window=True, lod=lod, tag="upper")
@@ -2327,9 +2335,9 @@ def wall_home(lod, variant="A"):
         s.block((xx, 0.24, 1.75), (ww - 0.02, 0.48, 0.32), (0.0, s.L.uniform(-0.03, 0.03), 0.0), mat="VH_AshlarRough")
     s.sand.box((-3.0, 0.3, 1.25), (-0.3, 0.42, 1.6), "VH_Sand")
     # canvas awning on two poles over the door and window (the stacked home's landing shelters its door instead)
-    cloth = {"A": "WS_ClothMadder", "B": "WS_ClothIndigo", "C": "WS_ClothOchre"}[variant]
+    cloth = {"A": "WS_ClothMadder", "B": "WS_ClothIndigo", "C": "WS_ClothOchre", "P": "WS_ClothMadder"}[variant]
     bm = s.canvas.bm
-    aw_y0, aw_y1 = Y0 + 2.45, Y0 + 2.05
+    aw_y0, aw_y1 = Y0 + 2.45, Y0 + (2.2 if variant == "P" else 2.05)    # P: the street edge clears the opening door leaf
     if variant != "B":
         bm = s.canvas.bm
         mi = s.canvas.mi(cloth)
@@ -2382,7 +2390,8 @@ def wall_home(lod, variant="A"):
         vs = [bm.verts.new(a), bm.verts.new(b), bm.verts.new(b + Vector((0, -h_, 0.03))), bm.verts.new(a + Vector((0, -h_ - 0.05, 0.02)))]
         f = bm.faces.new(vs)
         f.material_index = mi2
-    s.rec["colliders"].append({"name": "COL_Container", "center": [0.0, 1.45, 0.0], "size": [6.2, 2.9, 2.6]})
+    if variant != "P":     # the player's home is walkable: wall, floor, roof and furniture colliders come from home_interior
+        s.rec["colliders"].append({"name": "COL_Container", "center": [0.0, 1.45, 0.0], "size": [6.2, 2.9, 2.6]})
     if variant == "B":
         s.rec["colliders"].append({"name": "COL_ContainerUpper", "center": [0.35, top + 1.3, 0.0], "size": [6.2, 2.6, 2.6]})
     s.rec["colliders"].append({"name": "COL_Planter", "center": [-1.65, 0.25, 1.75], "size": [2.8, 0.5, 0.4]})
@@ -2394,6 +2403,8 @@ def wall_home(lod, variant="A"):
     s.glow.sphere((1.4, Y0 + 2.2, 1.34), 0.05, "NF_WallLampBulb", 8)
     for c, r_, st in (((-2.9, Y0 + 1.2, 1.24), 0.6, 0.8),):
         s.scars.impact(c, r_, st)
+    if variant == "P":
+        HI.build(s)
     return s
 
 
@@ -2402,7 +2413,7 @@ def wall_home_lod2(variant="A"):
     coll = bpy.data.collections.new(f"WallHome{variant}_LOD2")
     bpy.context.scene.collection.children.link(coll)
     mt = Part(f"WallHome{variant}_Metal_LOD2", False)
-    mat = {"A": "WS_ContainerRust", "B": "WB_ContainerBlue", "C": "WB_ContainerSand"}[variant]
+    mat = {"A": "WS_ContainerRust", "B": "WB_ContainerBlue", "C": "WB_ContainerSand", "P": "WS_ContainerRust"}[variant]
     mt.box((-3.03, 0.32, -1.22), (3.03, 2.91, 1.22), mat)
     if variant == "B":
         mt.box((-2.68, 2.91, -1.22), (3.38, 5.5, 1.22), "WS_ContainerRust")
@@ -2477,6 +2488,9 @@ def hesco_cell(r, x0, x1, z0, z1, h, lod, sag=0.065):
         m.cyl((px, 0.0, pz), (px, h + 0.02, pz), 0.016, "VH_Steel", 6)
 
 
+GATE_GUN = True          # the round-two pintle gun and shield on the bastion deck (see gate_bastion)
+
+
 def gate_bastion(lod, side=1):
     """Warden gun position flanking the West Gate inside the rampart (round two). Replaces the 26 Sep retrofit's
     `Gate defences` (a flat HESCO run with a scrap turret on a pole and three jersey barriers). An L of gabion cells
@@ -2512,47 +2526,49 @@ def gate_bastion(lod, side=1):
                 x += 0.6
             z += 0.36
     r.metal.box((px0 + 0.1, 0.34, ZW + 1.3), (px1 - 0.1, 0.37, ZW + 2.85), "WS_Deck")          # steel deck plate
-    # pintle gun aimed along the wall at the gate passage (+X side, slightly out from the wall)
-    gx, gz = S_ * 1.25, ZW + 2.05
-    aim = Vector((S_ * 0.97, -0.05, 0.22)).normalized()
-    m.cyl((gx, 0.37, gz), (gx, 1.5, gz), 0.055, "WB_BlackSteel", 10)                             # pintle post
-    m.cyl((gx, 0.37, gz), (gx, 0.42, gz), 0.2, "WB_BlackSteel", 12)
-    piv = Vector((gx, 1.57, gz))
-    side_v = aim.cross(Vector((0, 1, 0))).normalized()
-    up_v = side_v.cross(aim).normalized()
-    def Q(a, s_, u_):
-        return tuple(piv + aim * a + side_v * s_ + up_v * u_)
-    def obox(part, a0, a1, s0, s1, u0, u1, mat):
-        c = [Q(a0, s0, u0), Q(a1, s0, u0), Q(a1, s1, u0), Q(a0, s1, u0), Q(a0, s0, u1), Q(a1, s0, u1), Q(a1, s1, u1), Q(a0, s1, u1)]
-        part.hexa(c, mat)
-    obox(m, -0.15, 0.15, -0.12, 0.12, -0.1, 0.0, "WB_BlackSteel")                                # cradle
-    obox(m, -0.42, 0.32, -0.08, 0.08, 0.0, 0.17, "WG_OlivePaint")                                # receiver
-    obox(m, -0.62, -0.42, -0.05, 0.05, 0.02, 0.14, "WB_BlackSteel")                              # back plate
-    for sg in (-1, 1):                                                                         # spade grips
-        m.cyl(Q(-0.62, sg * 0.05, 0.08), Q(-0.78, sg * 0.12, 0.06), 0.018, "VH_Rubber", 6)
-    cyl_uv(m, Q(0.32, 0.0, 0.085), Q(1.0, 0.0, 0.085), 0.048, "WB_BlackSteel", 12)               # perforated jacket
-    if lod == 0:
-        for k in range(6):
-            for a_ in range(4):
-                ang = a_ * math.pi / 2 + 0.4
-                hd.cyl(Q(0.4 + k * 0.1, math.cos(ang) * 0.045, 0.085 + math.sin(ang) * 0.045),
-                       Q(0.4 + k * 0.1, math.cos(ang) * 0.05, 0.085 + math.sin(ang) * 0.05), 0.014, "VH_Dark", 6)
-    m.cyl(Q(1.0, 0.0, 0.085), Q(1.45, 0.0, 0.085), 0.026, "WB_BlackSteel", 10)                  # barrel
-    obox(m, 1.45, 1.6, -0.04, 0.04, 0.05, 0.12, "WB_BlackSteel")                                 # muzzle brake
-    obox(m, -0.2, 0.15, 0.08, 0.3, -0.12, 0.08, "WS_PaintOlive")                                 # ammunition can
-    m.tube([Q(0.0, 0.1, 0.05), Q(0.05, 0.12, 0.13), Q(0.08, 0.06, 0.15)], 0.02, "VH_Brass", 6)  # belt
-    # shield: centre plate with a view slot, two raked wings, riveted, on two arms from the cradle
-    for (s0, s1, u0, u1) in ((-0.45, 0.45, -0.35, 0.05), (-0.45, 0.45, 0.13, 0.55), (-0.45, -0.07, 0.05, 0.13), (0.07, 0.45, 0.05, 0.13)):
-        obox(m, 0.36, 0.39, s0, s1, u0, u1, "WG_OlivePaint")
-    for sg in (-1, 1):
-        c = [Q(0.36, sg * 0.45, -0.35), Q(0.39, sg * 0.45, -0.35), Q(0.2, sg * 0.75, -0.3), Q(0.17, sg * 0.75, -0.3),
-             Q(0.36, sg * 0.45, 0.55), Q(0.39, sg * 0.45, 0.55), Q(0.2, sg * 0.75, 0.45), Q(0.17, sg * 0.75, 0.45)]
-        m.hexa(c, "WG_OlivePaint")
-        m.cyl(Q(0.0, sg * 0.1, -0.05), Q(0.36, sg * 0.3, -0.05), 0.016, "WB_BlackSteel", 6)
-    if lod == 0:
-        for s_ in (-0.38, -0.13, 0.13, 0.38):
-            for u_ in (-0.28, 0.48):
-                hd.sphere(Q(0.395, s_, u_), 0.012, "VH_Steel", 5, hemi_axis=tuple(aim))
+    # pintle gun aimed along the wall at the gate passage (+X side, slightly out from the wall). GATE_GUN = False leaves
+    # it out (4 Oct 2026: Carl's Meshy sentinel turret is mounted on the deck instead, art/turret_bench_20261004)
+    if GATE_GUN:
+        gx, gz = S_ * 1.25, ZW + 2.05
+        aim = Vector((S_ * 0.97, -0.05, 0.22)).normalized()
+        m.cyl((gx, 0.37, gz), (gx, 1.5, gz), 0.055, "WB_BlackSteel", 10)                             # pintle post
+        m.cyl((gx, 0.37, gz), (gx, 0.42, gz), 0.2, "WB_BlackSteel", 12)
+        piv = Vector((gx, 1.57, gz))
+        side_v = aim.cross(Vector((0, 1, 0))).normalized()
+        up_v = side_v.cross(aim).normalized()
+        def Q(a, s_, u_):
+            return tuple(piv + aim * a + side_v * s_ + up_v * u_)
+        def obox(part, a0, a1, s0, s1, u0, u1, mat):
+            c = [Q(a0, s0, u0), Q(a1, s0, u0), Q(a1, s1, u0), Q(a0, s1, u0), Q(a0, s0, u1), Q(a1, s0, u1), Q(a1, s1, u1), Q(a0, s1, u1)]
+            part.hexa(c, mat)
+        obox(m, -0.15, 0.15, -0.12, 0.12, -0.1, 0.0, "WB_BlackSteel")                                # cradle
+        obox(m, -0.42, 0.32, -0.08, 0.08, 0.0, 0.17, "WG_OlivePaint")                                # receiver
+        obox(m, -0.62, -0.42, -0.05, 0.05, 0.02, 0.14, "WB_BlackSteel")                              # back plate
+        for sg in (-1, 1):                                                                         # spade grips
+            m.cyl(Q(-0.62, sg * 0.05, 0.08), Q(-0.78, sg * 0.12, 0.06), 0.018, "VH_Rubber", 6)
+        cyl_uv(m, Q(0.32, 0.0, 0.085), Q(1.0, 0.0, 0.085), 0.048, "WB_BlackSteel", 12)               # perforated jacket
+        if lod == 0:
+            for k in range(6):
+                for a_ in range(4):
+                    ang = a_ * math.pi / 2 + 0.4
+                    hd.cyl(Q(0.4 + k * 0.1, math.cos(ang) * 0.045, 0.085 + math.sin(ang) * 0.045),
+                           Q(0.4 + k * 0.1, math.cos(ang) * 0.05, 0.085 + math.sin(ang) * 0.05), 0.014, "VH_Dark", 6)
+        m.cyl(Q(1.0, 0.0, 0.085), Q(1.45, 0.0, 0.085), 0.026, "WB_BlackSteel", 10)                  # barrel
+        obox(m, 1.45, 1.6, -0.04, 0.04, 0.05, 0.12, "WB_BlackSteel")                                 # muzzle brake
+        obox(m, -0.2, 0.15, 0.08, 0.3, -0.12, 0.08, "WS_PaintOlive")                                 # ammunition can
+        m.tube([Q(0.0, 0.1, 0.05), Q(0.05, 0.12, 0.13), Q(0.08, 0.06, 0.15)], 0.02, "VH_Brass", 6)  # belt
+        # shield: centre plate with a view slot, two raked wings, riveted, on two arms from the cradle
+        for (s0, s1, u0, u1) in ((-0.45, 0.45, -0.35, 0.05), (-0.45, 0.45, 0.13, 0.55), (-0.45, -0.07, 0.05, 0.13), (0.07, 0.45, 0.05, 0.13)):
+            obox(m, 0.36, 0.39, s0, s1, u0, u1, "WG_OlivePaint")
+        for sg in (-1, 1):
+            c = [Q(0.36, sg * 0.45, -0.35), Q(0.39, sg * 0.45, -0.35), Q(0.2, sg * 0.75, -0.3), Q(0.17, sg * 0.75, -0.3),
+                 Q(0.36, sg * 0.45, 0.55), Q(0.39, sg * 0.45, 0.55), Q(0.2, sg * 0.75, 0.45), Q(0.17, sg * 0.75, 0.45)]
+            m.hexa(c, "WG_OlivePaint")
+            m.cyl(Q(0.0, sg * 0.1, -0.05), Q(0.36, sg * 0.3, -0.05), 0.016, "WB_BlackSteel", 6)
+        if lod == 0:
+            for s_ in (-0.38, -0.13, 0.13, 0.38):
+                for u_ in (-0.28, 0.48):
+                    hd.sphere(Q(0.395, s_, u_), 0.012, "VH_Steel", 5, hemi_axis=tuple(aim))
     # painted post plate on the return's street face, and stencil on the shield
     zf = ZW + 3.24 + 0.05
     r.metal.box((S_ * 2.5 - 0.42, 0.62, zf - 0.02), (S_ * 2.5 + 0.42, 1.08, zf + 0.005), "WB_BlackSteel")
@@ -2575,6 +2591,11 @@ def gate_bastion(lod, side=1):
         {"name": "Jersey barrier near", "prefab": "PH_JerseyBarrierB", "pos": [S_ * -0.35, 0.0, ZW + 3.35], "yaw": -5},
         {"name": "Post lamp", "prefab": "PH_WallLamp", "pos": [S_ * 0.9, 2.65, ZW + 0.065], "yaw": 0, "light": True},
     ]
+    if not GATE_GUN:
+        # Carl's Meshy sentinel turret on the deck, turned 50 deg off the wall so it covers the inner mouth of the gate and
+        # its muzzle clears the return (~13 cm, art/turret_bench_20261004/clearance.py)
+        r.rec["mounts"].append({"name": "Sentinel turret", "path": "Assets/AthenHill/Prefabs/TurretBench/TB_SentinelTurret.prefab",
+                                "pos": [S_ * 1.1, 0.37, ZW + 2.27], "yaw": S_ * 50})
     # colliders: back row (with the sandbag course), return, platform, barriers
     r.rec["colliders"] += [
         {"name": "COL_BackRow", "center": [0.0, 0.95, ZW + 0.57], "size": [6.0, 1.9, 1.14]},
@@ -2609,6 +2630,7 @@ BUILDINGS = {"nanofab": (nanofab, nanofab_lod2), "watchtower": (lambda lod: watc
              "homea": (lambda lod: wall_home(lod, "A"), lambda: wall_home_lod2("A")),
              "homeb": (lambda lod: wall_home(lod, "B"), lambda: wall_home_lod2("B")),
              "homec": (lambda lod: wall_home(lod, "C"), lambda: wall_home_lod2("C")),
+             "homep": (lambda lod: wall_home(lod, "P"), lambda: wall_home_lod2("P")),     # player home (art/ward_home_20261005)
              "gatebastion": (lambda lod: gate_bastion(lod, 1), lambda: gate_bastion_lod2(1)),
              "gatebastionn": (lambda lod: gate_bastion(lod, -1), lambda: gate_bastion_lod2(-1))}
 

@@ -18,6 +18,8 @@ Label { margin: 0; padding: 0; }
 .meter { width: 119px; height: 12px; background-color: #101a1b; border-width: 1px; border-color: #0c1415; margin-right: 14px; }
 .vital-bar { flex-grow: 1; background-color: #c65c4f; border-top-width: 1px; border-top-color: #db7d6b; }
 .nano-bar { flex-grow: 1; background-color: #49cbd0; border-top-width: 1px; border-top-color: #86e6df; }
+/* Nano recharge overclock (Field Supply, 5 Oct 2026): brighter fill with a pale top edge while the regulator runs hot. */
+.nano-bar.overclocked { background-color: #8ef0ec; border-top-color: #eafffd; }
 .vital-value { font-size: 16px; }
 .district-title { font-size: 20px; }
 .district-subtitle { font-size: 16px; }
@@ -78,6 +80,9 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 #hotbar { flex-direction: row; padding: 18px 12px 8px; flex-grow: 1; -unity-slice-scale: 0.5px; }
 #hotbar .hotbar-slot { flex-grow: 1; flex-basis: 0; min-width: 0; min-height: 0; height: 64px; margin: 0 1px; padding: 2px 4px 0; align-items: center; justify-content: flex-end; -unity-slice-scale: 0.5px; }
 .hotbar-slot.selected { background-image: url("Art/button-focus.png"); }
+/* Carried count on the consumable slots (2 medkits, 9 nano recharges; Field Supply 5 Oct 2026). */
+.slot-count { position: absolute; top: 3px; right: 6px; font-size: 14px; color: #eee9dc; -unity-font-style: bold; text-shadow: 1px 1px 0 rgba(0,0,0,0.85); }
+.slot-count-empty { color: #8c8a80; }
 .item-art { width: 44px; height: 44px; -unity-background-scale-mode: scale-to-fit; }
 .flask-icon { background-image: url("Art/flask.png"); }
 .medkit-icon { background-image: url("Art/medkit.png"); }
@@ -541,6 +546,22 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .rivets-icon { background-image: url("Art/rivets.png"); }
 .reaper-blade-icon { background-image: url("Art/reaper-blade.png"); }
 .sentinel-optic-icon { background-image: url("Art/sentinel-optic.png"); }
+/* Field Supply (5 Oct 2026): packs, pack upgrades, med and nano, digital magazines (art/field_supply_20261005/icons). */
+.rucksack-icon { background-image: url("Art/rucksack.png"); }
+.frame-pack-icon { background-image: url("Art/frame-pack.png"); }
+.load-carrier-icon { background-image: url("Art/load-carrier.png"); }
+.cargo-rig-icon { background-image: url("Art/cargo-rig.png"); }
+.side-pouches-icon { background-image: url("Art/side-pouches.png"); }
+.hip-belt-icon { background-image: url("Art/hip-belt.png"); }
+.nanoweave-pouch-icon { background-image: url("Art/nanoweave-pouch.png"); }
+.servo-lifter-icon { background-image: url("Art/servo-lifter.png"); }
+.trauma-kit-icon { background-image: url("Art/trauma-kit.png"); }
+.nano-cell-icon { background-image: url("Art/nano-cell.png"); }
+.nano-surge-icon { background-image: url("Art/nano-surge.png"); }
+.magazine-packcraft-icon { background-image: url("Art/magazine-packcraft.png"); }
+.magazine-freight-icon { background-image: url("Art/magazine-freight.png"); }
+.magazine-nanoweave-icon { background-image: url("Art/magazine-nanoweave.png"); }
+.magazine-armourer-icon { background-image: url("Art/magazine-armourer.png"); }
 .small-window .enemy-bar-name, .small-window .berms-objective-text { font-size: 20px; }
 
 .checkpoint-guidance { position: absolute; width: 170px; padding: 5px; color: rgb(173, 233, 232); background-color: rgba(20, 29, 29, 0.88); border-bottom-width: 2px; border-bottom-color: rgb(77, 170, 174); font-size: 13px; -unity-text-align: middle-center; }
@@ -651,3 +672,79 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .small-window .fab-stat-now { width: 92px; }
 .small-window .fab-stat-preview { width: 104px; }
 .small-window .fab-stat-delta { width: 84px; }
+
+/* Hotbar items and the field pack's HOTBAR strip (5 Oct 2026): 1–2 weapons, 3–0 assigned items; a slot whose item
+   has run out keeps its assignment with a dimmed illustration. */
+.hotbar-slot.slot-depleted .item-art { opacity: 0.38; }
+.pack-hotbar { flex-shrink: 0; margin-top: 6px; padding: 6px 8px 8px; background-color: #0c2227; border-width: 1px; border-color: #2c5a5f; }
+.pack-hotbar-head { flex-direction: row; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.pack-hotbar-title { font-size: 14px; color: #a48a62; letter-spacing: 2px; flex-shrink: 0; margin-right: 8px; }
+.pack-hotbar-help { font-size: 12px; color: #93a097; white-space: normal; flex-shrink: 1; -unity-text-align: middle-right; }
+.pack-hotbar-row { flex-direction: row; }
+.packbar-slot { flex-grow: 1; flex-basis: 0; min-width: 0; min-height: 0; height: 52px; margin: 0 1px; padding: 2px 2px 0; align-items: center; justify-content: flex-end; -unity-slice-scale: 0.5px; }
+.packbar-slot .item-art { width: 30px; height: 30px; }
+.packbar-slot .keycap { width: 13px; height: 15px; font-size: 11px; top: 2px; left: 2px; }
+.packbar-slot .slot-label { height: 14px; font-size: 11px; }
+.packbar-slot .slot-count { font-size: 11px; top: 2px; right: 3px; }
+.packbar-slot .empty-slot-marker { font-size: 14px; }
+.packbar-slot.weapon-slot .slot-label { color: #bca581; }
+.small-window .pack-hotbar-title { font-size: 16px; }
+.small-window .pack-hotbar-help { font-size: 14px; }
+
+/* Tracked mission (5 Oct 2026): Field Notes title line, the cyan compass marker (pinned to an edge when behind) and
+   its label under the compass. */
+.objective-title { font-size: 14px; color: #a48a62; letter-spacing: 1px; white-space: normal; margin-bottom: 2px; }
+.compass-tracked { position: absolute; top: 0; width: 14px; height: 14px; -unity-background-image-tint-color: #8be6df; }
+.compass-tracked.edge-left { border-left-width: 2px; border-left-color: #8be6df; opacity: 0.8; }
+.compass-tracked.edge-right { border-right-width: 2px; border-right-color: #8be6df; opacity: 0.8; }
+.compass-poi-label.tracked { color: #8be6df; }
+
+/* Journal (J): missions list, detail, track; Ward notes tab. */
+.journal-panel { flex-direction: column; }
+.journal-tabs { flex-direction: row; flex-shrink: 0; margin-bottom: 10px; border-bottom-width: 1px; border-bottom-color: #65706a; padding-bottom: 10px; }
+.journal-tab { width: 170px; margin-right: 10px; min-height: 46px; font-size: 19px; }
+.journal-tab.active-tab { color: #8be6df; border-bottom-width: 2px; border-bottom-color: #58d5d7; }
+.journal-columns { flex-direction: row; align-items: flex-start; }
+.journal-list { width: 420px; flex-shrink: 0; margin-right: 20px; }
+.journal-heading { color: #a48a62; letter-spacing: 2px; margin: 12px 0 6px; font-size: 14px; }
+.journal-mission { flex-direction: row; align-items: center; min-height: 58px; padding: 6px 12px; margin: 0 0 6px; }
+.journal-mission-marker { width: 14px; height: 14px; margin-right: 12px; flex-shrink: 0; opacity: 0.3; }
+.journal-mission.tracked .journal-mission-marker { opacity: 1; }
+.journal-mission-copy { flex-grow: 1; flex-shrink: 1; }
+.journal-mission-title { font-size: 19px; white-space: normal; -unity-text-align: middle-left; }
+.journal-mission-area { font-size: 14px; color: #bcbcad; white-space: normal; -unity-text-align: middle-left; }
+.journal-mission.tracked .journal-mission-area { color: #8be6df; }
+.journal-mission.complete { opacity: 0.68; }
+.journal-mission.selected { background-image: url("Art/button-focus.png"); }
+.journal-detail { flex-grow: 1; flex-shrink: 1; min-height: 430px; padding: 4px 6px 12px 22px; border-left-width: 1px; border-left-color: #2c5a5f; }
+.journal-title { font-size: 30px; white-space: normal; }
+.journal-meta-row { flex-direction: row; align-items: center; justify-content: space-between; margin: 2px 0 4px; }
+.journal-meta { font-size: 16px; color: #bcbcad; flex-shrink: 1; white-space: normal; }
+.journal-status { flex-shrink: 0; margin-left: 12px; padding: 3px 10px; border-width: 1px; border-color: #65706a; font-size: 13px; letter-spacing: 2px; color: #eee9dc; }
+.journal-status.tracked { border-color: #58d5d7; color: #8be6df; }
+.journal-status.complete { border-color: #a48a62; color: #bca581; }
+.journal-summary, .journal-now, .journal-reward { font-size: 18px; white-space: normal; }
+.journal-now { color: #8be6df; }
+.journal-step { flex-direction: row; align-items: center; margin: 3px 0; }
+.journal-step-mark { width: 12px; height: 12px; margin-right: 10px; flex-shrink: 0; opacity: 0.25; }
+.journal-step.done .journal-step-mark { opacity: 0.9; -unity-background-image-tint-color: #a48a62; }
+.journal-step.current .journal-step-mark { opacity: 1; }
+.journal-step-text { font-size: 18px; white-space: normal; color: #bcbcad; }
+.journal-step.done .journal-step-text { color: #8c958b; }
+.journal-step.current .journal-step-text { color: #eee9dc; }
+.journal-track { margin-top: 16px; align-self: flex-start; min-width: 280px; }
+.journal-empty { font-size: 18px; color: #bcbcad; }
+.journal-notes { padding: 4px 6px; }
+.small-window .journal-mission-area, .small-window .journal-meta, .small-window .journal-heading { font-size: 18px; }
+
+/* Home locker (stash) and bunk (rest). */
+.stash-columns { flex-direction: row; }
+.stash-col { flex-grow: 1; flex-basis: 0; min-height: 360px; margin-right: 14px; padding: 8px 10px; background-color: #0c2227; border-width: 1px; border-color: #2c5a5f; }
+.stash-heading { margin-bottom: 8px; font-size: 15px; color: #a48a62; letter-spacing: 1px; white-space: normal; }
+.stash-grid { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
+.stash-empty { margin: 12px 4px; font-size: 16px; color: #8c958b; }
+.stash-selection { margin: 10px 2px 6px; font-size: 17px; white-space: normal; }
+.stash-actions { flex-direction: row; flex-wrap: wrap; }
+.stash-action { min-width: 150px; margin-right: 10px; }
+.rest-actions { flex-direction: column; margin-top: 14px; }
+.rest-choice { margin-bottom: 8px; }

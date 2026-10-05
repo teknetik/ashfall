@@ -50,26 +50,36 @@ See [terrain evidence](evidence/terrain/20260908/acceptance.md) and the
 | --- | --- |
 | WASD / arrows | Camera-relative movement |
 | Left Shift | Run |
-| Hold left mouse and drag | Look / orbit camera |
-| Mouse wheel up / down | Zoom in to first person / back out |
+| Mouse | Look (always on in play since 5 Oct 2026; the cursor is locked and hidden until a window opens) |
+| Hold Left Alt | Free the cursor in play (HUD buttons, moving HUD panels); the camera holds still |
+| Mouse wheel up / down | Zoom in to first person / back out (held in first person inside the container home) |
 | Space | Jump |
-| E | Talk / use nearby terminal, field fabricator, salvage cache or scrap heap |
-| 7 | Draw / holster the scrap pistol (Outer Berms only) |
-| 8 | Draw / holster the field rifle once one is equipped in the primary slot (Outer Berms only; hold fire for bursts) |
-| Hold right mouse · left click / F | Aim · fire (left click while aiming; F fires from the hip) |
+| E | Talk / use nearby terminal, workbench, salvage cache, scrap heap, the home door, locker or bunk |
+| 1 | Draw / holster the primary weapon (field rifle) once equipped (Outer Berms only; hold fire for bursts) |
+| 2 | Draw / holster the sidearm (scrap pistol) (Outer Berms only) |
+| 3–9, 0 | Use the item on that hotbar slot (medkit on 3 and nano recharge cell on 4 by default) |
+| Left mouse · F | Fire a drawn weapon (aiming or not) |
+| Hold right mouse | Aim over the shoulder |
+| Tab | Field pack |
+| J | Journal (missions, tracking, Ward notes); T tracks the selected mission |
 | Escape | Close panel / pause |
 | R | Return to West Gate |
-| 1 / 2 | Flask / medkit information |
-| 3 / 4 | Lattice / talk shortcut |
-| 5 or Tab / 6 | Field pack / notes |
-| In the pack | Arrows choose · Enter or Shift+click inspects · type in Search · drag items onto equipment or weapon sockets · drag the colonist to turn |
+| In the pack | Arrows choose · Enter or Shift+click inspects · type in Search · drag items onto equipment or weapon sockets · drag the colonist to turn · drag a medkit or nano recharge onto the HOTBAR strip (or select it and press 3–9 / 0); drag a strip cell away or right-click it to clear it |
 | Tab / Enter | Focus / activate UI controls |
-| Drag UI frame, header or bronze grip | Move that panel; position is saved |
+| Drag UI frame, header or bronze grip | Move that panel; position is saved (hold Left Alt in play for a pointer) |
 | Ctrl + drag over a UI control | Move its panel without activating the control |
 | Pause → Reset UI positions | Restore the default interface layout |
 
 The [native controls checks](evidence/controls/20260908/acceptance.md) cover first-person
-zoom, left-drag look, jumping and HUD/modal input handling.
+zoom, the old left-drag look (replaced by always-on mouse look on 5 October 2026), jumping and HUD/modal input handling.
+Settings → Controls sets look sensitivity and inverted look.
+
+**The container home (5 October 2026).** Once the Outer Berms primer is done, Linn on the hill offers the housing roll:
+40 credits leases the rust-red container home on the south wall, behind the Nanofab yard. Its door opens for the tenant;
+the locker holds 60 stacks of anything carried (Store all salvage keeps medkits, gear and tools in the pack; Brann's
+bench draws parts from it once your pack runs short), and the
+bunk rests until morning or evening, restores vitality and charge, saves, and makes Continue start there. The journal
+mission *A Roof in Ward* walks through it. See [art/ward_home_20261005](../art/ward_home_20261005/PROGRESS.md).
 
 Visit the hill, meet Mira/Torr/Vex/Linn, buy a flask and sell your starting scrap at
 Basic General, then establish a Lattice link. Ring Gate is deliberately offline.

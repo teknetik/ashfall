@@ -102,6 +102,11 @@ namespace AthenHill.Tests
    Assert.That(model.OrderStarted("order_kit_arms").Select(r=>r.id),Is.EqualTo(new[]{"recipe_field_armguards"}));
    Assert.That(model.OrderStarted("order_kit_hands").Select(r=>r.id),Is.EqualTo(new[]{"recipe_field_gloves"}));
    Assert.That(model.OrderStarted("order_kit_legs").Select(r=>r.id),Is.EqualTo(new[]{"recipe_field_leggings"}));
+   // 5 Oct 2026: Field Supply's digital magazines teach the pack and armour-upgrade schematics
+   Assert.That(model.ReadMagazine("mag_packcraft_12").Select(r=>r.id),Is.EquivalentTo(new[]{"recipe_canvas_rucksack","recipe_pack_side_pouches","recipe_pack_hip_belt"}));
+   Assert.That(model.ReadMagazine("mag_karaveen_freight_3").Select(r=>r.id),Is.EquivalentTo(new[]{"recipe_frame_pack","recipe_porter_carrier"}));
+   Assert.That(model.ReadMagazine("mag_nanoweave_monthly").Select(r=>r.id),Is.EquivalentTo(new[]{"recipe_pack_nanoweave_pouch","recipe_pack_servo_lifter","recipe_courier_cargo_rig"}));
+   Assert.That(model.ReadMagazine("mag_ward_armourer").Select(r=>r.id),Is.EquivalentTo(new[]{"recipe_armour_impact_liner","recipe_armour_thermal_liner","recipe_armour_extra_plate"}));
    Assert.That(model.KnownRecipes.Count,Is.EqualTo(Data().recipes.Length));
    // Locked schematics explain themselves in words.
    var fresh=new CraftingModel(Data(),City().items,pack,()=>true);

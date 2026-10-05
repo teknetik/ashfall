@@ -37,6 +37,7 @@ MonoBehaviour:
     startingQuantity: 0
     tags:
     - consumable
+    - field_supply
     maxStack: 0
     excludeFromTrade: 0
     rarity: 0
@@ -621,6 +622,7 @@ MonoBehaviour:
     - storage
     - storage:backpack
     - backpack
+    - field_supply
     maxStack: 1
     excludeFromTrade: 0
     rarity: 0
@@ -946,6 +948,297 @@ MonoBehaviour:
     icon: alloy-icon
     partsPrice: 0
     weightKg: 0.25
+  - id: canvas_rucksack
+    name: Stitched Canvas Rucksack
+    description: "Heavy Karaveen canvas over a sewn-in frame sheet, with two side pockets and a pouch loop. Low tech and easy to patch: a real step up from the issue backpack."
+    buyPrice: 36
+    sellPrice: 12
+    startingQuantity: 0
+    tags:
+    - storage
+    - storage:backpack
+    - backpack
+    - field_supply
+    - field_supply_only
+    maxStack: 1
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: rucksack-icon
+    partsPrice: 0
+    weightKg: 1.9
+  - id: frame_pack
+    name: Karaveen Frame Pack
+    description: A welded tube frame and padded hip belt put the load on your hips, the way caravan porters have carried it for generations. You carry more, not just pack more.
+    buyPrice: 64
+    sellPrice: 21
+    startingQuantity: 0
+    tags:
+    - storage
+    - storage:backpack
+    - backpack
+    - field_supply
+    - field_supply_only
+    maxStack: 1
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: frame-pack-icon
+    partsPrice: 0
+    weightKg: 2.6
+  - id: porter_carrier
+    name: Porter's Load Carrier
+    description: "Mid-tier: a fab-alloy frame with load-lifter straps, a quick-release harness and pouch rails. Made in Ward for the Tube-node porters."
+    buyPrice: 110
+    sellPrice: 36
+    startingQuantity: 0
+    tags:
+    - storage
+    - storage:backpack
+    - backpack
+    - field_supply
+    - field_supply_only
+    maxStack: 1
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: load-carrier-icon
+    partsPrice: 0
+    weightKg: 3.1
+  - id: courier_cargo_rig
+    name: Courier Cargo Rig
+    description: "Mid-tier: a nanoweave shell over a compact servo spine that takes part of the load off your back. The best pack Field Supply sells."
+    buyPrice: 160
+    sellPrice: 53
+    startingQuantity: 0
+    tags:
+    - storage
+    - storage:backpack
+    - backpack
+    - field_supply
+    - field_supply_only
+    maxStack: 1
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: cargo-rig-icon
+    partsPrice: 0
+    weightKg: 3.4
+  - id: pack_side_pouches
+    name: Side Pouch Pair
+    description: Two stitched webbing pouches that clip into a pack's pouch socket. More room for small parts.
+    buyPrice: 0
+    sellPrice: 4
+    startingQuantity: 0
+    tags:
+    - pack_mod
+    - field_supply
+    - field_supply_only
+    maxStack: 4
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: side-pouches-icon
+    partsPrice: 0
+    weightKg: 0.35
+  - id: pack_hip_belt
+    name: Padded Hip Belt
+    description: A quilted belt that bolts to a pack frame and moves the weight onto your hips.
+    buyPrice: 0
+    sellPrice: 5
+    startingQuantity: 0
+    tags:
+    - pack_mod
+    - field_supply
+    - field_supply_only
+    maxStack: 4
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: hip-belt-icon
+    partsPrice: 0
+    weightKg: 0.4
+  - id: pack_nanoweave_pouch
+    name: Nanoweave Expansion Pouch
+    description: A nanite-bonded pouch that folds flat when empty and swells to take a full load.
+    buyPrice: 0
+    sellPrice: 9
+    startingQuantity: 0
+    tags:
+    - pack_mod
+    - field_supply
+    - field_supply_only
+    maxStack: 4
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: nanoweave-pouch-icon
+    partsPrice: 0
+    weightKg: 0.3
+  - id: pack_servo_lifter
+    name: Servo Load Lifter
+    description: A pair of salvaged droid servos on the frame's shoulder straps, taking part of the pack's weight as you move.
+    buyPrice: 0
+    sellPrice: 12
+    startingQuantity: 0
+    tags:
+    - pack_mod
+    - field_supply
+    - field_supply_only
+    maxStack: 4
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: servo-lifter-icon
+    partsPrice: 0
+    weightKg: 0.9
+  - id: trauma_kit
+    name: Trauma Kit
+    description: Haemostatic foam, a nanite suture gun and a pressure dressing. Closes what a medkit can't. Use with 2.
+    buyPrice: 20
+    sellPrice: 7
+    startingQuantity: 0
+    tags:
+    - consumable
+    - field_supply
+    - field_supply_only
+    maxStack: 10
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: trauma-kit-icon
+    partsPrice: 0
+    weightKg: 1.2
+  - id: nano_cell
+    name: Nano Recharge Cell
+    description: A sealed tier-one nanite cartridge. Refills your weapon's charge and overclocks the regulator for 15 seconds, so the charge keeps refilling while you fire. Use with 9.
+    buyPrice: 6
+    sellPrice: 2
+    startingQuantity: 0
+    tags:
+    - consumable
+    - nano
+    - field_supply
+    - field_supply_only
+    maxStack: 20
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: nano-cell-icon
+    partsPrice: 0
+    weightKg: 0.25
+  - id: nano_surge_pack
+    name: Nano Surge Pack
+    description: Twin cartridges and a hot-running regulator shunt. Refills the charge and doubles its refill rate for 40 seconds, firing or not. Use with 9.
+    buyPrice: 14
+    sellPrice: 5
+    startingQuantity: 0
+    tags:
+    - consumable
+    - nano
+    - field_supply
+    - field_supply_only
+    maxStack: 10
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: nano-surge-icon
+    partsPrice: 0
+    weightKg: 0.45
+  - id: mag_packcraft_12
+    name: "Packcraft Quarterly \xB7 Issue 12"
+    description: "The fab co-op's quarterly for people who sew their own gear. This issue: a canvas rucksack from caravan webbing, clip-in side pouches and a padded hip belt."
+    buyPrice: 18
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - magazine
+    - field_supply
+    - field_supply_only
+    maxStack: 1
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: magazine-packcraft-icon
+    partsPrice: 0
+    weightKg: 0
+  - id: mag_karaveen_freight_3
+    name: "Karaveen Freight Notes \xB7 Vol. 3"
+    description: Patterns traded between caravan outfitters for generations, finally in print. The frame pack and the porter's load carrier, with load charts.
+    buyPrice: 26
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - magazine
+    - field_supply
+    - field_supply_only
+    maxStack: 1
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: magazine-freight-icon
+    partsPrice: 0
+    weightKg: 0
+  - id: mag_nanoweave_monthly
+    name: "Nanoweave Monthly \xB7 Load Tech"
+    description: Ward's fab engineers on smart fabrics and assisted carry. Expansion pouches, a servo load lifter and the full courier cargo rig.
+    buyPrice: 40
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - magazine
+    - field_supply
+    - field_supply_only
+    maxStack: 1
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: magazine-nanoweave-icon
+    partsPrice: 0
+    weightKg: 0
+  - id: mag_ward_armourer
+    name: "Ward Armourer's Digest \xB7 Liners & Plates"
+    description: "A Warden armourer's notes on the upgrades that keep plate carriers alive: impact and thermal liners and a replaceable ablative chest plate."
+    buyPrice: 22
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - magazine
+    - field_supply
+    - field_supply_only
+    maxStack: 1
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: magazine-armourer-icon
+    partsPrice: 0
+    weightKg: 0
+  consumables:
+  - itemId: medkit
+    restoreHealth: 40
+    restoreNano: 0
+    overclockSeconds: 0
+    overclockRegen: 0
+    hotbarLabel: Medkit
+  - itemId: trauma_kit
+    restoreHealth: 90
+    restoreNano: 0
+    overclockSeconds: 0
+    overclockRegen: 0
+    hotbarLabel: Trauma
+  - itemId: nano_cell
+    restoreHealth: 0
+    restoreNano: 100
+    overclockSeconds: 15
+    overclockRegen: 0.5
+    hotbarLabel: Nano
+  - itemId: nano_surge_pack
+    restoreHealth: 0
+    restoreNano: 100
+    overclockSeconds: 40
+    overclockRegen: 1
+    hotbarLabel: Surge
+  consumableCooldown: 1
   destinations:
   - id: crosswind_reach
     name: Crosswind Reach
@@ -957,5 +1250,5 @@ MonoBehaviour:
     name: Beacon Dunes
     description: Signal beacons marking the outer desert routes.
   transitionSeconds: 1.25
-  notes: Meet the colonists, trade at Basic General, and establish a Lattice link. WASD or arrows move; Shift runs; left-drag turns the camera. The mouse wheel zooms into first person. E interacts. Esc closes a panel or pauses. R returns to West Gate.
+  notes: Meet the colonists, trade at Basic General, and establish a Lattice link. WASD or arrows move; Shift runs; the mouse turns the camera (hold Left Alt for a pointer). The mouse wheel zooms into first person. E interacts. Tab opens the field pack and J the journal. Esc closes a panel or pauses. R returns to West Gate.
   credits: {fileID: 4900000, guid: 69c040e870194793589fcbea1363ea74, type: 3}

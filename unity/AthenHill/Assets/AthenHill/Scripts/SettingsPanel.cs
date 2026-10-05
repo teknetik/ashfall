@@ -14,18 +14,18 @@ namespace AthenHill
     public sealed class SettingsPanel : IDisposable
     {
         readonly GameSettings settings;
-        readonly VisualElement panel, soundPage, videoPage, confirmation, actions;
-        readonly Button soundTab, videoTab, apply, discard, resetVideo, keep;
+        readonly VisualElement panel, soundPage, videoPage, controlsPage, confirmation, actions;
+        readonly Button soundTab, videoTab, controlsTab, apply, discard, resetVideo, keep;
         readonly Label status, countdown, track, resolutionHelp;
         readonly ScrollView scroll;
         readonly Dictionary<string, SliderInt> sliders = new Dictionary<string, SliderInt>();
         readonly Dictionary<string, Label> percentages = new Dictionary<string, Label>();
         readonly Dictionary<string, DropdownField> choices = new Dictionary<string, DropdownField>();
-        readonly Toggle mute, vsync, post, motion;
+        readonly Toggle mute, vsync, post, motion, invertY;
         readonly GameSession session;
         readonly IVisualElementScheduledItem ticker;
         List<Vector2Int> resolutions;
-        bool video, updating, wasPreviewing;
+        bool video, controls, updating, wasPreviewing;
         CityAudio Audio => UnityEngine.Object.FindAnyObjectByType<CityAudio>();
 
         public SettingsPanel(VisualElement panel, GameSettings settings, GameSession session)
@@ -34,10 +34,12 @@ namespace AthenHill
             var tabs = new VisualElement { name = "settings-tabs" }; tabs.AddToClassList("settings-tabs"); panel.Add(tabs);
             soundTab = Button(tabs, "sound-tab", "Sound", () => SelectTab(false));
             videoTab = Button(tabs, "video-tab", "Video", () => SelectTab(true));
+            controlsTab = Button(tabs, "controls-tab", "Controls", () => SelectTab(false, true));
             scroll = new ScrollView { name = "settings-scroll", horizontalScrollerVisibility = ScrollerVisibility.Hidden };
             panel.Add(scroll);
             soundPage = new VisualElement { name = "sound-page" }; scroll.Add(soundPage);
             videoPage = new VisualElement { name = "video-page" }; scroll.Add(videoPage);
+            controlsPage = new VisualElement { name = "controls-page" }; scroll.Add(controlsPage);
             Heading(soundPage, "Volume");
             Slider(soundPage, "master-volume", "Master", 0, 100, value => { settings.Sound.master = value / 100f; settings.SaveSound(); });
             mute = Toggle(soundPage, "mute-all", "Mute all audio", value => { settings.Sound.muted = value; settings.SaveSound(); });
@@ -55,6 +57,15 @@ namespace AthenHill
             Button(audioActions, "next-track", "Next track", () => Audio?.NextMusic());
             Button(audioActions, "test-effect", "Test effects", () => Audio?.PreviewEffect());
             Button(audioActions, "reset-sound", "Reset sound", settings.ResetSound);
+
+            Heading(controlsPage, "Mouse");
+            Slider(controlsPage, "mouse-sensitivity", "Look sensitivity", ControlOptions.MinSensitivity, ControlOptions.MaxSensitivity, value => { settings.Controls.sensitivity = value; settings.SaveControls(); });
+            invertY = Toggle(controlsPage, "invert-mouse-y", "Invert look up/down", value => { settings.Controls.invertY = value; settings.SaveControls(); });
+            Note(controlsPage, "The mouse turns the camera whenever no window is open. Hold Left Alt to free the pointer for the HUD; any open window frees it too.");
+            Heading(controlsPage, "Keys");
+            Note(controlsPage, "WASD move · Shift run · Space jump · E interact · Tab field pack · J journal · 1 primary weapon · 2 sidearm · 3–0 hotbar items · Right mouse aim · Left mouse or F fire · Wheel zoom · R return to West Gate · Esc pause");
+            var controlActions = new VisualElement(); controlActions.AddToClassList("settings-actions"); controlsPage.Add(controlActions);
+            Button(controlActions, "reset-controls", "Reset controls", settings.ResetControls);
 
             Heading(videoPage, "Display");
             Choice(videoPage, "resolution", "Resolution", new List<string>(), index =>
@@ -113,10 +124,10 @@ namespace AthenHill
             field.AddToClassList("settings-field"); parent.Add(field); choices.Add(name, field);
             field.RegisterValueChangedCallback(_ => { if (!updating && field.index >= 0) change(field.index); });
         }
-        void SelectTab(bool showVideo)
+        void SelectTab(bool showVideo, bool showControls = false)
         {
             if (settings.Previewing) return;
-            video = showVideo; scroll.scrollOffset = Vector2.zero; Refresh();
+            video = showVideo && !showControls; controls = showControls; scroll.scrollOffset = Vector2.zero; Refresh();
         }
         static void Show(VisualElement element, bool value) => element.style.display = value ? DisplayStyle.Flex : DisplayStyle.None;
         void Value(string name, float value) { int n = Mathf.RoundToInt(value); sliders[name].SetValueWithoutNotify(n); percentages[name].text = n + "%"; }
@@ -124,11 +135,12 @@ namespace AthenHill
         public void Refresh()
         {
             updating = true;
-            Show(soundPage, !video); Show(videoPage, video);
-            soundTab.EnableInClassList("active-tab", !video); videoTab.EnableInClassList("active-tab", video);
+            Show(soundPage, !video && !controls); Show(videoPage, video); Show(controlsPage, controls);
+            soundTab.EnableInClassList("active-tab", !video && !controls); videoTab.EnableInClassList("active-tab", video); controlsTab.EnableInClassList("active-tab", controls);
             var s = settings.Sound; var v = settings.Draft;
             Value("master-volume", s.master * 100); Value("music-volume", s.music * 100); Value("ambience-volume", s.ambience * 100); Value("effects-volume", s.effects * 100);
             mute.SetValueWithoutNotify(s.muted); motion.SetValueWithoutNotify(session.reducedMotion);
+            Value("mouse-sensitivity", settings.Controls.sensitivity); invertY.SetValueWithoutNotify(settings.Controls.invertY);
             resolutions = settings.Resolutions(); choices["resolution"].choices = resolutions.Select(r => r.x + " × " + r.y).ToList();
             ChoiceValue("resolution", resolutions.IndexOf(new Vector2Int(v.width, v.height)));
             ChoiceValue("window-mode", v.windowMode); ChoiceValue("graphics-preset", v.preset);
@@ -139,10 +151,10 @@ namespace AthenHill
             choices["frame-limit"].SetEnabled(!v.vSync);
             resolutionHelp.text = Application.isEditor ? "Display changes take effect in the Linux player." : v.windowMode == 1 ? "Fullscreen fills the desktop; the chosen resolution controls the game image." : "Resolution sets the size of the game window.";
             bool preview = settings.Previewing;
-            scroll.SetEnabled(!preview); soundTab.SetEnabled(!preview); videoTab.SetEnabled(!preview);
+            scroll.SetEnabled(!preview); soundTab.SetEnabled(!preview); videoTab.SetEnabled(!preview); controlsTab.SetEnabled(!preview);
             Show(actions, video && !preview); Show(confirmation, preview); Show(status, !preview);
             apply.SetEnabled(settings.HasChanges); discard.SetEnabled(settings.HasChanges);
-            status.text = video ? settings.HasChanges ? "Unapplied changes · Apply to try them for 15 seconds." : settings.VideoMessage == "" ? "Video settings are up to date." : settings.VideoMessage : s.muted ? "All audio is muted. Uncheck Mute all audio to listen." : "Volume changes are heard immediately and saved automatically.";
+            status.text = controls ? "Mouse changes take effect at once and are saved automatically." : video ? settings.HasChanges ? "Unapplied changes · Apply to try them for 15 seconds." : settings.VideoMessage == "" ? "Video settings are up to date." : settings.VideoMessage : s.muted ? "All audio is muted. Uncheck Mute all audio to listen." : "Volume changes are heard immediately and saved automatically.";
             if (preview && !wasPreviewing) panel.schedule.Execute(() => keep.Focus());
             if (!preview && wasPreviewing) panel.schedule.Execute(() => videoTab.Focus());
             wasPreviewing = preview; updating = false; Tick();

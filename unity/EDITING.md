@@ -1005,7 +1005,11 @@ re-wires the session):
   the room. Interior props use their LOD1 beyond about 6 m and cast no sun shadows. In development builds
   `ATHEN_INTERIOR_OFF=lamps|room|probe|sh|portal|all` switches parts off for a cost A/B within one build.
 - `Interior reflection`: a box-projected probe over the room (importance 2), baked by `bake` after the room's lighting
-  is applied (`Art/SalvageShop/SalvageInteriorReflection.exr`). Re-bake after changing the room.
+  is applied (`Art/SalvageShop/SalvageInteriorReflection.exr`). A baked probe renders only **Reflection Probe Static**
+  objects: `models` flags the `_Interior` renderers and `install` the props, bench and decals (not Brann, the lamps or
+  the cameras). `bake` then clamps the EXR to 6 with ImageMagick (`magick X.exr -fx "min(u,6)" X.exr`), because street
+  pixels seen through the bay can bake at the half-float maximum and turn smooth surfaces chrome. Re-bake after
+  changing the room; check the result with `magick X.exr -format "%[fx:mean] %[fx:maxima]" info:` (about 0.1 / 6).
 - `Decals` (training-range oil), review cameras `cam_ss_bay`, `cam_ss_counter`, `cam_ss_bench`, `cam_ss_racks`,
   `cam_ss_brann`, `cam_ss_inside_out`, and Landmarks `salvage_shop`, `salvage_counter`, `salvage_bench`.
 
@@ -1030,6 +1034,115 @@ unchanged. Validation: `SalvageShopPass` `verify` checks every NpcDefinition's c
 pass and re-run it. Rollback: `evidence/salvage-shop/20261001/rollback/` (pre-pass scene, Salvage models, record and
 prefab); re-enabling the cart's two components restores the old station. Real-input check:
 `tools/check_salvage_shop_native.py`. Evidence: `evidence/salvage-shop/20261001/README.md`.
+
+**Probe fix (5 October 2026).** The pass had not flagged anything Reflection Probe Static, so the 1 October bake held the
+sky and desert outside the shop (mean 0.34, max 3.7), not the room, and smooth props and Brann picked up a blue sky sheen.
+After re-running `models,install,verify` (`-nographics`, verify ok) and `bake`, the probe shows the walls, joists, racks
+and bench, with sky only through the bay and the door (mean 0.12, max 6 after the clamp, which cut one channel of one
+texel). In editor captures at 13:00 (`cam_ss_counter`, `cam_ss_brann`, `cam_ss_racks`) only probe-sampling surfaces
+change (props, counter, racks, bench, joists, Brann): each frame is 1.5–2 levels darker per channel and the cool sheen
+is gone; the walls barely change. Evidence: `evidence/salvage-shop/20261005/probe/` (`before/` and `after/` captures and
+EXRs, `compare-*.png`, `diffs.png` (difference x6), `probe-before-after.png`, logs, `verify.json`). The re-run `install`
+had reset Ossa's *Line Complete* to its 1 October text, dropping the Berms-expanse sentences that `BermsExpanseInstall`
+adds; the scene line was restored, and `install` now keeps a line that already sends the player to Brann. Remaining: the
+probe's floor face is its brightest (mean 0.25) and shows a sunlit, leaf-dappled patch that the 13:00 captures do not
+(`bake` applies the 13:00 ambient, not the 13:00 sun, likewise in Field Supply). Not yet checked in a native build.
+
+## Walk-in Field Supply, Tamsin, packs, magazines, med and nano (5 October 2026)
+
+Carl: "Open another shop - field supply. have a choice of low tech to mid tier packs for storage upgrades. a digital
+magazine shelf that are basically recipes for crafting upgrades and packs. also sell med kits and nano recharges."
+Design notes and the working log: `art/field_supply_20261005/PROGRESS.md`.
+
+**Data (edit in the Inspector or re-run `python3 art/field_supply_20261005/apply_data.py`, idempotent).**
+- *Counter stock.* `NpcDefinition` → *Shop* has **Stock Tags** (when set, the supplies list, buying and selling, holds
+  only items with one of the tags), **Exclude Tags** (never traded here) and **Magazines** (adds the MAGAZINES tab).
+  Tamsin (`Data/npc_tamsin.asset`): stock tag `field_supply`, magazines on, no parts or salvage lists. Mira: exclude tag
+  `field_supply_only`, so the new packs, trauma kits, nano recharges and magazines are Tamsin's; the medkit and Field
+  Backpack (`field_supply` only) are sold at both counters. `GameSession.Trade` refuses anything outside the counter's
+  stock.
+- *Packs* are storage-slot equipment in `Resources/CharacterCatalog.asset` (storageCapacity, packSlots and
+  carryCapacity modifiers; **Modification Sockets** of type `pack_pouch` / `pack_frame`). *Pack upgrades* are
+  modifications for those socket types (fitted in the loadout's Pack slot like armour components). Carry capacity
+  (10 kg + 2 × Strength) is what limits a starting character, which is why the frame packs add carry.
+- *Med kits and nano recharges*: `CityCatalog` → **Consumables** (item id, restore health, restore nano, overclock
+  seconds and regen bonus) and **Consumable Cooldown**. Hotbar 2 uses the smallest medkit that covers the wound
+  (× the Healing efficiency stat), hotbar 9 the lightest nano recharge (`GameSession.UseItem`; refused, nothing used, at
+  full health or without a nano weapon). While overclocked the nano bar brightens and the charge refills while firing
+  (`PlayerCombat.Recharge`).
+- *Magazines* are catalog items tagged `magazine` (buy price = download price, never carried). A recipe joins a
+  magazine with an unlock `{type: magazine, id: <item id>}` in `Data/Crafting/WardCrafting.asset`;
+  `GameSession.BuyMagazine` charges once and teaches every such recipe (ownership = the recipes are known, so it saves
+  with the crafting state). Groups: **Gear** (packs and pack upgrades) and **ArmourMod** (armour upgrades). To add an
+  issue: add the item (tags `magazine, field_supply, field_supply_only`, an icon), point recipes' unlocks at it, give
+  them a locked hint naming the shelf, and add its cover to the atlas (below) if it should appear on the shelf.
+
+**The building.** `art/field_supply_20261005/field_supply_interior.py`, called by
+`art/hall_district_20260930/author_ward_shops.py` `field_supply()` (`prepare` before the porch, `add` last, so the
+exterior's random layout is unchanged; the shutter is `open=True`). Room 6.76 × 6.06 m to a loft deck at 4.45 m;
+counter, cabinet, pack wall, magazine shelf, pack stand and pendant shades are geometry; the record
+(`Art/WardShops/Models/field_supply.json` → `interior`) carries bounds, keeper point, pack hooks, lamps and the walk-in
+colliders. The shelf's screens are their own part (`*_InteriorScreens_*`, material `FS_Screens`) mapped exactly onto
+`covers/magazine_atlas.png` (four 512 × 768 covers across a 2048² atlas, the FIELD READS band under them); covers are
+generated art with mastheads set in Noto Sans by `covers/make_atlas.sh`. Re-run:
+`blender.sh art/hall_district_20260930/author_ward_shops.py -- field_supply` (writes only Field Supply; the previous
+closed shop is in `art/field_supply_20261005/previous/`), optional `review_interior.py` renders.
+
+**Unity** (`Editor/FieldSupplyShopPass.cs`, `RunBatch --steps …`): `materials`, `models` (prefab patch, interior
+renderers on light layer 7 and Reflection Probe Static), `packs` (`Prefabs/FieldSupply/FS_pack_*`, three LODs, origin at
+the hang point; source `meshy/field-supply-20261005/props`, prep `art/field_supply_20261005/packs/prepare_packs.py`),
+`tamsin` (`WardNpcInstall.Import/BuildPrefabs` with the Field Supply record folder → `Prefabs/WardNpcs/WardNpc_Tamsin`),
+`install` (scene root **Field Supply interior**, re-runnable: lamps, glows, night bay spill on the Ward lighting clock,
+Tamsin, packs on the hooks, props, InteriorLighting, interior reflection probe, landmarks `field_supply*`, cameras
+`cam_fs_*`), `verify` (walk paths, talk ranges, materials, dialogue) and the graphics steps `bake` (bakes and clamps the
+interior probe) and `capture:HOUR:cam+cam`. Move props, packs or Tamsin in the Scene view; keep the bay → counter,
+shelf and pack-wall paths clear (`verify` sweeps them). Native check: `unity/tools/check_field_supply_native.py`.
+
+Reflection probes: a baked probe renders only **Reflection Probe Static** objects. Without the flag the Field Supply
+probe saw through its walls to the street, and a few street pixels at the half-float maximum turned every smooth
+surface in the room to chrome; `models`/`install` now flag the room, and `bake` clamps the result. The Salvage room's
+probe had the same gap; it was fixed and re-baked the same way on 5 October (see *Probe fix* under Walk-in Salvage).
+
+**Rollback.** Copy `art/field_supply_20261005/previous/` (models and record) back to `Art/WardShops/Models/`, run
+`models`, then `uninstall` (removes the root and takes Tamsin out of `GameSession.npcs`). Data: `git` the four assets.
+
+## Controls, hotbar, journal and the container home (5 October 2026)
+
+Programme log: [art/ward_home_20261005/PROGRESS.md](../art/ward_home_20261005/PROGRESS.md). Not yet accepted by Carl.
+
+**Controls.** `Data/Controls.inputactions` (re-runnable patch `art/ward_home_20261005/apply_input.py`): left mouse is
+bound to *Fire* (with F), *Slot0* is the 0 key and *FreeCursor* is Left Alt; the old *Orbit* (hold-to-look) action is
+gone. `GameInput` owns the cursor: locked and hidden while gameplay input is enabled, free in any modal state or while
+Free Cursor is held. Look sensitivity and inverted look are player settings (Settings → Controls, `GameSettings.Controls`,
+PlayerPrefs key `…Controls`); `FollowCamera.sensitivity` stays the base rate.
+
+**Hotbar.** `HotbarModel` (slots 1–10, 10 = key 0): 1 draws the primary weapon and 2 the sidearm
+(`PlayerCombat.ToggleDraw`); 3–0 hold items. What may sit on 3–0 is every `CityCatalog.consumables` entry; give a new
+consumable a short `hotbarLabel` there (else the first word of its name is used). The defaults (3 medkit, 4 nano cell)
+are `HotbarModel.Defaults`. The HUD bar is drawn by `HotbarView`; the field pack's HOTBAR strip by `PackPanel`
+(drag targets carry `HotbarDrop`). Saved as `hotbar` (save v4).
+
+**Journal.** `QuestJournal` (added to the GameSession object at Awake when the scene has none) builds the missions from
+live state: *Arrival in Ward* (GameSession's city visit), *Warden's Primer* (`BermsTutorial`), one per started field
+order (title, giver, brief and reward from `WardFieldOrders.asset`; steps from the order's goal and report-to colonist),
+*A Roof in Ward* (WardHome flags). Mission texts for the city visit, primer and home are in `QuestJournal.cs`; field
+orders need no code. Tracking: automatic (orders → primer once begun → home → city visit) until the player picks one
+(Track / T), which then stays tracked until it completes; saved as `journal.tracked` / `journal.chosen`. The compass marker
+and the in-world label (`CombatHud`) and Field Notes (`CityHud.UpdateObjective`) follow `QuestJournal.Tracked`.
+
+**The home.** Scene root **Ward home** (installed by `Editor/WardHomePass.cs` from `art/ward_home_20261005`; the
+WallHomeA instance it replaces stays in the scene inactive). Tune on the `WardHome` component: `leasePrice` (Linn's line
+in `Data/npc_linn.asset`, node `housing`, names "Forty credits" — change both), `lockerSlots`, `lockerFeedsBench` (Brann's
+bench draws parts from the locker once the pack runs short; the pack is always used first). The lease is Linn's
+dialogue action `lease_home` (choice `housing`, requires `primer, !flag:home_leased`, sets `home_asked`); the flags
+`home_leased`, `home_stored`, `home_rested` are ordinary saved story flags. `HomeDoor` opens for the tenant within
+`openDistance`; `CameraConfineZone` holds first person inside. The locker's contents are `GameSession.Stash`
+(`StashModel`, saved as `stash`). Rest (`RestPanel`) sets the clock to 06:30 or 18:30, restores vitality and charge, saves,
+and Continue then wakes the player at `WardHome.wakePoint`.
+
+Data patches: `art/ward_home_20261005/apply_data.py` (idempotent: Ward notes text, consumable hotbar labels, Ossa's two
+lines naming 2 instead of 7 with their old voice takes unset, the Long Arm line naming 1, the primer's serialized radio
+lines, Linn's housing roll). Previous assets in `art/ward_home_20261005/previous/`.
 
 ## Courtyard tree beds (30 September 2026)
 
@@ -1377,3 +1490,12 @@ gloves/arm guards mirrored by `ViewModelArmourMirror`. `--steps hands` re-solves
 face|fp|tp` renders review frames to `art/player_face_20261003/unity/captures/`. Rollback: `--steps rollback` (previous GLBs,
 authored FP hands v2, procedural curl).
 Cost bisection in a dev build: `unity/tools/lookbook.py ... --set "<name prefix>=0"` (NativeQa `setActive`).
+
+### Player shoulder and clothing polish (5 October 2026)
+
+`art/character_polish_20261005/README.md` records the player gait/collar/material pass. `colonist.glb` retains its GUID,
+rest rig and bind matrices; its baked walk/run now keep the relaxed shoulder attachment and corrected ground level.
+The suit has a lower collar, matte fabric response and a small fitted utility belt (decorative). Existing prefab/scene
+references inherit the asset update. Use `CharacterPolish20261005.RunBatch -nographics` for the integration audit;
+`--capture -force-glcore` renders the six pose views. The authoring and rollback files are in the dated art directory.
+A full `MainCharacterInstall` rebuild is unnecessary for this pass and can overwrite later player setup.

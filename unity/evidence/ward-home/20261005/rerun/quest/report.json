@@ -1,0 +1,319 @@
+{
+ "passed": false,
+ "checks": [
+  "A: pistol taken from the locker with real E",
+  "A: pistol drawn with 2",
+  {
+   "check": "A: the pistol view model shows in first person",
+   "detail": true
+  },
+  {
+   "check": "B: continued at Long Arm, waiting for the report to Brann",
+   "detail": {
+    "fieldOrder": 5,
+    "orderStage": "Report",
+    "objective": "Take the receiver to Brann at Salvage, on the north avenue inside the walls. His workbench can build the Field Rifle around it."
+   }
+  },
+  {
+   "check": "B: no test-issue rifle in the pack",
+   "detail": 0
+  },
+  {
+   "check": "B: Brann offers the E prompt at the counter",
+   "detail": "E \u00b7 Talk to Brann"
+  },
+  {
+   "check": "B: Brann opens with the rifle receiver line",
+   "detail": {
+    "npc": "Brann",
+    "node": "long_report"
+   }
+  },
+  {
+   "check": "B: talking to Brann moves Long Arm to fabrication",
+   "detail": "Fabricate the Field Rifle at Brann's workbench in Salvage, on the north avenue."
+  },
+  {
+   "check": "B: E at the workbench opens the fabricator",
+   "detail": "Fabricator"
+  },
+  {
+   "check": "B: Fabricate starts the rifle on the bench timer",
+   "detail": {
+    "recipeId": "recipe_field_rifle",
+    "seconds": 20.0,
+    "progress": 0.0453349128,
+    "remaining": 19.0933
+   }
+  },
+  {
+   "check": "B: the Field Rifle is fabricated at the bench",
+   "detail": {
+    "crafts": 2,
+    "rifle": 1,
+    "reason": "Missing parts: 1 \u00d7 Warden Rifle Receiver."
+   }
+  },
+  {
+   "check": "B: Long Arm complete, Plate Carrier is the current order",
+   "detail": {
+    "fieldOrder": 6,
+    "orderStage": "Hunt",
+    "objective": "A Warden plate carrier went down with the caravan ambushed north of the trail, past the northgate drones. Clear the scavengers and take it from the caravan strongbox, then wear it in your chest slot."
+   }
+  },
+  {
+   "check": "B: the rifle is equipped in the primary slot by drag",
+   "detail": {
+    "tab": "character-tab-primary",
+    "result": "Equipment updated.",
+    "before": 1,
+    "left": 0,
+    "slot": "primary",
+    "equipped": "field_rifle"
+   }
+  },
+  {
+   "check": "B: 1 draws the field rifle (rifle model shown, pistol hidden)",
+   "detail": {
+    "armed": true,
+    "weapon": "weapon_field_rifle",
+    "rifleShown": true,
+    "notice": "Field rifle drawn. Left mouse fires (hold for bursts); hold right mouse to aim."
+   }
+  },
+  {
+   "check": "B: draw notice names the rifle",
+   "detail": "Field rifle drawn. Left mouse fires (hold for bursts); hold right mouse to aim."
+  },
+  {
+   "check": "B: hotbar slot 1 shows the rifle",
+   "detail": {
+    "classes": [
+     "unity-button",
+     "unity-text-element",
+     "selected",
+     "hotbar-slot",
+     "weapon-slot"
+    ],
+    "tooltip": null
+   }
+  },
+  {
+   "check": "B: holding F fires a burst from the rifle",
+   "detail": {
+    "shots": 5
+   }
+  },
+  {
+   "check": "B: 2 switches to the pistol while armed",
+   "detail": {
+    "armed": true,
+    "weapon": "weapon_scrap_pistol"
+   }
+  },
+  {
+   "check": "B: 1 switches back to the rifle",
+   "detail": {
+    "weapon": "weapon_field_rifle"
+   }
+  },
+  "B: 1 again holsters the rifle",
+  {
+   "check": "B: the pistol view model stays hidden with the rifle drawn in first person",
+   "detail": false
+  },
+  {
+   "check": "B: the rifle view model shows with the rifle drawn in first person",
+   "detail": true
+  },
+  {
+   "check": "B: the rifle view model stays up while aiming in first person",
+   "detail": true
+  }
+ ],
+ "failures": [
+  {
+   "check": "A: three plates down, primer at FirstContact",
+   "detail": {
+    "targets": 0,
+    "step": "Targets"
+   }
+  },
+  {
+   "check": "A: first contact is two scrap drones within 40 m of the gate",
+   "detail": {
+    "enemies": [],
+    "gateDistances": []
+   }
+  },
+  {
+   "phase": "A",
+   "error": "ValueError('min() iterable argument is empty')",
+   "trace": "Traceback (most recent call last):\n  File \"/home/teknetik/code/ao2/unity/tools/check_rifle_quest.py\", line 381, in <module>\n    try: phase_a()\n         ~~~~~~~^^\n  File \"/home/teknetik/code/ao2/unity/tools/check_rifle_quest.py\", line 240, in phase_a\n    p = qa.pos(); e = min(live, key=lambda e: math.hypot(e['position'][0] - p[0], e['position'][2] - p[2])); qa.face(e['position'][0], e['position'][2]); time.sleep(.5)\n                      ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: min() iterable argument is empty\n"
+  },
+  {
+   "phase": "B",
+   "error": "TimeoutError(\"fight did not finish; brief={'state': 'Play', 'notice': '', 'prompt': '', 'credits': 80, 'items': {'water_flask': 1, 'medkit': 1, 'droid_servo_damaged': 1, 'scrap_alloy': 6, 'nanite_residue': 4, 'copper_filament': 3, 'field_toolkit': 1}, 'pos': [-178.49, -0.68, 80.41], 'step': 'Complete', 'armed': True, 'hp': 30.9999962, 'nano': 22.1, 'order': 6, 'stage': 'Hunt', 'slots': {'grip': 'grip_stabilised_pistol'}, 'focused': None, 'enemies': [('Feral worker droid', 'Idle', 130, [-82.2, 0.4, -42.4]), ('Feral worker droid', 'Idle', 130, [-75.4, 0.2, -38.8]), ('Feral scrap drone', 'Idle', 75, [-85.1, 1.8, -36.6]), ('Feral worker droid', 'Idle', 130, [-89.9, 0.6, -26.8]), ('Feral scrap drone', 'Idle', 75, [-71.0, 1.3, -32.7]), ('Feral worker droid', 'Chase', 130, [-183.0, -1.1, 72.9]), ('Feral worker droid', 'Chase', 130, [-179.8, -0.9, 78.1]), ('Feral worker droid', 'Windup', 130, [-178.8, -0.8, 78.5]), ('Feral scrap drone', 'Chase', 75, [-182.0, 0.4, 74.5]), ('Feral scrap drone', 'Idle', 75, [-126.7, 0.5, 71.2]), ('Feral scrap drone', 'Idle', 75, [-140.7, 0.6, 57.4])]}\")",
+   "trace": "p='caravan_approach', engage=14.0)\n                        ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/teknetik/code/ao2/unity/evidence/gameplay-v2/20260930-reqa2/qa.py\", line 577, in fight\n    break\nTimeoutError: fight did not finish; brief={'state': 'Play', 'notice': '', 'prompt': '', 'credits': 80, 'items': {'water_flask': 1, 'medkit': 1, 'droid_servo_damaged': 1, 'scrap_alloy': 6, 'nanite_residue': 4, 'copper_filament': 3, 'field_toolkit': 1}, 'pos': [-178.49, -0.68, 80.41], 'step': 'Complete', 'armed': True, 'hp': 30.9999962, 'nano': 22.1, 'order': 6, 'stage': 'Hunt', 'slots': {'grip': 'grip_stabilised_pistol'}, 'focused': None, 'enemies': [('Feral worker droid', 'Idle', 130, [-82.2, 0.4, -42.4]), ('Feral worker droid', 'Idle', 130, [-75.4, 0.2, -38.8]), ('Feral scrap drone', 'Idle', 75, [-85.1, 1.8, -36.6]), ('Feral worker droid', 'Idle', 130, [-89.9, 0.6, -26.8]), ('Feral scrap drone', 'Idle', 75, [-71.0, 1.3, -32.7]), ('Feral worker droid', 'Chase', 130, [-183.0, -1.1, 72.9]), ('Feral worker droid', 'Chase', 130, [-179.8, -0.9, 78.1]), ('Feral worker droid', 'Windup', 130, [-178.8, -0.8, 78.5]), ('Feral scrap drone', 'Chase', 75, [-182.0, 0.4, 74.5]), ('Feral scrap drone', 'Idle', 75, [-126.7, 0.5, 71.2]), ('Feral scrap drone', 'Idle', 75, [-140.7, 0.6, 57.4])]}\n"
+  }
+ ],
+ "captures": [
+  {
+   "name": "a-pistol-carry-side",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "28aa5e775e91bcfd"
+  },
+  {
+   "name": "a-pistol-carry-34",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "b5a8110a028f9b58"
+  },
+  {
+   "name": "a-pistol-carry-cam_rifle_side",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "48a67dfeb05fb5d6"
+  },
+  {
+   "name": "a-pistol-first-person",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "76789a4c5a745a6a"
+  },
+  {
+   "name": "a-pistol-first-person-aim",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "55d2d633b6324ad6"
+  },
+  {
+   "name": "b-brann-receiver",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "a8898f992b54a60d"
+  },
+  {
+   "name": "b-bench-rifle",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "6977c8634d537795"
+  },
+  {
+   "name": "b-bench-rifle-progress",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "b3c188d2ebcf163a"
+  },
+  {
+   "name": "b-rifle-carry-quarter",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "67567c8e200ede39"
+  },
+  {
+   "name": "b-rifle-carry-side",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "18ebdd1525d13f76"
+  },
+  {
+   "name": "b-rifle-carry-follow",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "4d6fa279f2d80954"
+  },
+  {
+   "name": "b-rifle-aim-follow",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "2f9b83bc3d2a8daf"
+  },
+  {
+   "name": "b-rifle-aim-cam",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "74291babe599ca87"
+  },
+  {
+   "name": "b-rifle-aim-side",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "89bf22afd0fe7741"
+  },
+  {
+   "name": "b-rifle-first-person",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "d730fee114a112a5"
+  },
+  {
+   "name": "b-rifle-first-person-aim",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "6ffd4dc1be8e1b57"
+  }
+ ],
+ "phases": {},
+ "players": {
+  "a": {
+   "unit": "ashfall-rifle-qa-a-81ae207c25.scope",
+   "run": "/home/teknetik/code/ao2/unity/evidence/ward-home/20261005/rerun/quest/run-a/run",
+   "saveDir": "/home/teknetik/code/ao2/unity/evidence/ward-home/20261005/rerun/quest/save-a",
+   "pid": 4144491,
+   "stop": "quit",
+   "scopeStop": {
+    "exitCode": 5,
+    "message": "Failed to stop ashfall-rifle-qa-a-81ae207c25.scope: Unit ashfall-rifle-qa-a-81ae207c25.scope not loaded."
+   },
+   "launcherExitCode": 0
+  },
+  "b": {
+   "unit": "ashfall-rifle-qa-b-d5f68f6736.scope",
+   "run": "/home/teknetik/code/ao2/unity/evidence/ward-home/20261005/rerun/quest/run-b/run",
+   "saveDir": "/home/teknetik/code/ao2/unity/evidence/ward-home/20261005/rerun/quest/save",
+   "pid": 4147027,
+   "stop": "quit",
+   "scopeStop": {
+    "exitCode": 5,
+    "message": "Failed to stop ashfall-rifle-qa-b-d5f68f6736.scope: Unit ashfall-rifle-qa-b-d5f68f6736.scope not loaded."
+   },
+   "launcherExitCode": 0
+  }
+ }
+}

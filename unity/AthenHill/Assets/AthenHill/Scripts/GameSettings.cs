@@ -14,6 +14,16 @@ namespace AthenHill
         public bool muted;
     }
 
+    /// Mouse look (5 Oct 2026, always on in play): sensitivity in percent of the camera's base rate, and inverted pitch.
+    [Serializable]
+    public sealed class ControlOptions
+    {
+        public int sensitivity = 100;
+        public bool invertY;
+        public const int MinSensitivity = 25, MaxSensitivity = 300;
+        public float Sensitivity => Mathf.Clamp(sensitivity, MinSensitivity, MaxSensitivity) / 100f;
+    }
+
     [Serializable]
     public sealed class VideoOptions
     {
@@ -43,6 +53,7 @@ namespace AthenHill
     public sealed class GameSettings : MonoBehaviour
     {
         public SoundOptions Sound { get; private set; }
+        public ControlOptions Controls { get; private set; } = new ControlOptions();
         public VideoOptions Video { get; private set; }
         public VideoOptions Draft { get; private set; }
         public bool Previewing { get; private set; }
@@ -69,6 +80,8 @@ namespace AthenHill
             Sound = Read("Sound", new SoundOptions());
             Sound.master = Volume(Sound.master); Sound.music = Volume(Sound.music);
             Sound.ambience = Volume(Sound.ambience); Sound.effects = Volume(Sound.effects);
+            Controls = Read("Controls", new ControlOptions());
+            Controls.sensitivity = Mathf.Clamp(Controls.sensitivity, ControlOptions.MinSensitivity, ControlOptions.MaxSensitivity);
             var defaults = new VideoOptions { width = Screen.width, height = Screen.height, windowMode = Screen.fullScreen ? 1 : 0 };
             Video = Read("Video", defaults);
             Sanitize(Video);
@@ -113,6 +126,13 @@ namespace AthenHill
             PlayerPrefs.SetString(prefix + "Sound", JsonUtility.ToJson(Sound));
             Changed?.Invoke();
         }
+        public void SaveControls()
+        {
+            Controls.sensitivity = Mathf.Clamp(Controls.sensitivity, ControlOptions.MinSensitivity, ControlOptions.MaxSensitivity);
+            PlayerPrefs.SetString(prefix + "Controls", JsonUtility.ToJson(Controls));
+            Changed?.Invoke();
+        }
+        public void ResetControls() { Controls = new ControlOptions(); SaveControls(); }
         public void ApplySound() => AudioListener.volume = Sound.muted ? 0 : Sound.master;
         public void Flush() => PlayerPrefs.Save();
         public void ResetSound() { Sound = new SoundOptions(); SaveSound(); }

@@ -3,11 +3,13 @@ using UnityEngine;
 namespace AthenHill
 {
  [Serializable] public class CraftIngredient {public string kind,id;public int quantity;}
- /// type: acquireItem (the item first enters the pack) or orderStart (a field order becomes current).
+ /// type: acquireItem (the item first enters the pack), orderStart (a field order becomes current) or magazine (the
+ /// digital magazine with that item ID is bought at a counter's magazine shelf, e.g. Field Supply).
  [Serializable] public class CraftUnlock {public string type,id;}
  /// Fabricator window grouping; new weapon families can have their own sections. New values are appended so the
- /// serialized numbers stay valid (Armour = 5, 3 Oct 2026: the Warden kit pieces).
- public enum RecipeGroup { Component, MarkI, MarkII, Weapon, WeaponMod, Armour }
+ /// serialized numbers stay valid (Armour = 5, 3 Oct 2026: the Warden kit pieces; Gear = 6 packs and pack upgrades and
+ /// ArmourMod = 7 armour upgrades, 5 Oct 2026: Field Supply's magazines).
+ public enum RecipeGroup { Component, MarkI, MarkII, Weapon, WeaponMod, Armour, Gear, ArmourMod }
  [Serializable] public class CraftRecipe
  {
   public string id,name,stationId,requiresWeaponId,outputItemId;
