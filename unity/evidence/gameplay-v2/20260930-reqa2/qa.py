@@ -67,8 +67,12 @@ def launch(run, save_dir=None, video=None, background=True, extra=()):
         folder.mkdir(parents=True, exist_ok=True)
         prefs = folder / 'prefs'
         if not prefs.exists():
+            sound = ''
+            if os.environ.get('ATHEN_QA_MUTE') == '1':  # private-display runs while Carl uses the PC (qa_display.sh)
+                sound = '<pref name="AthenHill.Settings.v1.QA.Sound" type="string">' + base64.b64encode(json.dumps(
+                    dict(master=1.0, music=.5, ambience=1.0, effects=1.0, muted=True)).encode()).decode() + '</pref>'
             prefs.write_text('<?xml version="1.0" encoding="utf-8"?><unity_prefs version_major="1" version_minor="1">'
-                             '<pref name="AthenHill.Settings.v1.QA.Video" type="string">' + enc + '</pref></unity_prefs>')
+                             '<pref name="AthenHill.Settings.v1.QA.Video" type="string">' + enc + '</pref>' + sound + '</unity_prefs>')
     args = [str(EXE), '-force-glcore', '-screen-width', '1920', '-screen-height', '1080', '-screen-fullscreen', '0',
             '-logFile', str(RUN / 'Player.log'), '--athen-qa', str(RUN)]
     if background:
@@ -298,7 +302,10 @@ def window():
     if _win is not None:
         return _win
     root = d.screen().root
-    for wid in root.get_full_property(d.intern_atom('_NET_CLIENT_LIST'), X.AnyPropertyType).value:
+    clients = root.get_full_property(d.intern_atom('_NET_CLIENT_LIST'), X.AnyPropertyType)
+    # No window manager on the private QA display (unity/tools/qa_display.sh): look at the mapped top-level windows.
+    wids = clients.value if clients else [c.id for c in root.query_tree().children if c.get_attributes().map_state == X.IsViewable]
+    for wid in wids:
         w = d.create_resource_object('window', wid)
         p = w.get_full_property(d.intern_atom('_NET_WM_PID'), X.AnyPropertyType)
         if p is not None and int(p.value[0]) == pid():

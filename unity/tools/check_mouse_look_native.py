@@ -15,6 +15,10 @@ mouse; it is destroyed at the end), then measures:
   6. in the Outer Berms, with the pistol drawn (2), the real left button fires;
   7. (reported, not judged) an XTEST pointer parked off-centre: how the camera behaves (the QA artefact).
 
+On the private QA display (unity/tools/qa_display.sh: DISPLAY=:5, no window manager, nothing of Carl's seat) a uinput
+device would move Carl's own cursor, so the check uses relative XTEST motion and the XTEST button inside :5 instead
+(XtestMouse). That covers the game's handling of relative motion in its own X server, not libinput or the compositor.
+
   uv run --offline --with python-xlib --with pillow python unity/tools/check_mouse_look_native.py OUT
 """
 import fcntl, json, os, struct, sys, time
@@ -29,7 +33,18 @@ _focus = qa.focus
 qa.focus = lambda center=True: _focus(center=False)
 
 
+def private_display():
+    """True on a display with no window manager (the private QA display)."""
+    from Xlib import X
+    d = qa._display()
+    return d.screen().root.get_full_property(d.intern_atom('_NET_CLIENT_LIST'), X.AnyPropertyType) is None
+
+
+PRIVATE = private_display()
+
+
 def cursor_into_window():
+    if PRIVATE: return None
     rect, _ = qa.game_window_rect()
     if rect:
         import subprocess
@@ -90,6 +105,22 @@ class Mouse:
         finally: os.close(self.fd)
 
 
+class XtestMouse:
+    """Relative XTEST motion and buttons in the private display's own X server, with Mouse's interface."""
+    def move(self, dx, dy, steps=20, pause=.012):
+        from Xlib import X
+        from Xlib.ext import xtest
+        d = qa._display()
+        for _ in range(steps):
+            xtest.fake_input(d, X.MotionNotify, detail=1, x=dx, y=dy); d.sync(); time.sleep(pause)
+
+    def click(self, button=BTN_LEFT):
+        qa.button(1 if button == BTN_LEFT else 3, True); time.sleep(.08); qa.button(1 if button == BTN_LEFT else 3, False)
+
+    def close(self):
+        pass
+
+
 def cam():
     c = qa.snap()['camera']; return c['yaw'], c['pitch']
 
@@ -119,7 +150,7 @@ try:
     dy0, dp0, s = drift(); report['samples']['idle'] = s
     ok(dy0 < .3 and dp0 < .3, 'idle: the camera holds still with nothing moving (XTEST pointer at the centre)', {'yaw': dy0, 'pitch': dp0})
 
-    mouse = Mouse()
+    mouse = XtestMouse() if PRIVATE else Mouse(); report['mouse'] = type(mouse).__name__
     y0, p0 = cam(); mouse.move(6, 0, steps=30); time.sleep(.25); y1, p1 = cam()
     turned = dyaw(y0, y1)
     ok(abs(turned) > 3, 'a real relative mouse turns the camera', {'before': y0, 'after': y1, 'turned': turned})

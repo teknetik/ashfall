@@ -73,11 +73,15 @@ def launch(out, exe, overrides=None):
     video['antiAliasing'] = 32  # High preset default since 30 Sep: TAA (the saved courtyard settings predate it)
     video.update(overrides or {})
     encoded = base64.b64encode(json.dumps(video).encode()).decode()
+    prefs = '<pref name="AthenHill.Settings.v1.QA.Video" type="string">' + encoded + '</pref>'
+    if os.environ.get('ATHEN_QA_MUTE') == '1':  # private-display runs while Carl uses the PC (qa_display.sh)
+        sound = dict(master=1.0, music=.5, ambience=1.0, effects=1.0, muted=True)
+        prefs += '<pref name="AthenHill.Settings.v1.QA.Sound" type="string">' + base64.b64encode(json.dumps(sound).encode()).decode() + '</pref>'
     for vendor, product in [('unknown', 'unknown'), ('Free Column', 'Athen Hill')]:
         folder = out / 'config/unity3d' / vendor / product
         folder.mkdir(parents=True)
         (folder / 'prefs').write_text('<?xml version="1.0" encoding="utf-8"?><unity_prefs version_major="1" version_minor="1">'
-                                      '<pref name="AthenHill.Settings.v1.QA.Video" type="string">' + encoded + '</pref></unity_prefs>')
+                                      + prefs + '</unity_prefs>')
     args = [str(exe), '-force-glcore', '-screen-width', '1920', '-screen-height', '1080', '-screen-fullscreen', '0',
             '-logFile', str(out / 'Player.log'), '--athen-qa', str(out)]
     env = dict(os.environ, XDG_CONFIG_HOME=str(out / 'config'))
