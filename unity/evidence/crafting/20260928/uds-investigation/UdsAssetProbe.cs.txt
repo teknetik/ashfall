@@ -1,0 +1,44 @@
+using System;
+using System.Linq;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+
+namespace AthenHill.Editor
+{
+    // Read-only inspection unless the explicit ReimportBooth entry point is selected.
+    public static class UdsAssetProbe
+    {
+        const string Booth = "Assets/AthenHill/Art/Checkpoint/WardenBooth.glb";
+        const string Market = "Assets/AthenHill/Art/KaraveenMarket/KaraveenMarket.glb";
+
+        public static void Inspect()
+        {
+            foreach (var path in new[] { Booth, Market })
+            {
+                var assets = AssetDatabase.LoadAllAssetsAtPath(path);
+                var root = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                Debug.Log($"UDS_PROBE {path} root={root != null} assets={assets.Length} meshes={assets.OfType<Mesh>().Count()} materials={assets.OfType<Material>().Count()} textures={assets.OfType<Texture>().Count()}");
+            }
+            var scene = EditorSceneManager.OpenPreviewScene("Assets/AthenHill/Scenes/AthenHill.unity");
+            try
+            {
+                foreach (var root in scene.GetRootGameObjects())
+                    foreach (var t in root.GetComponentsInChildren<Transform>(true))
+                        if (t.name == "Karaveen caravan market")
+                        {
+                            var filters = t.GetComponentsInChildren<MeshFilter>(true);
+                            var renderers = t.GetComponentsInChildren<MeshRenderer>(true);
+                            Debug.Log($"UDS_PROBE market scene filters={filters.Length} missingMeshes={filters.Count(f => f.sharedMesh == null)} renderers={renderers.Length} missingMaterials={renderers.Sum(r => r.sharedMaterials.Count(m => m == null))}");
+                        }
+            }
+            finally { EditorSceneManager.ClosePreviewScene(scene); }
+        }
+
+        public static void ReimportBooth()
+        {
+            AssetDatabase.ImportAsset(Booth, ImportAssetOptions.ForceUpdate | ImportAssetOptions.ForceSynchronousImport);
+            Inspect();
+        }
+    }
+}

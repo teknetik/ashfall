@@ -34,7 +34,9 @@ namespace AthenHill
    {
     if(!s.prefab||!s.point)continue;
     var d=Instantiate(s.prefab,s.point.position,s.point.rotation,transform);
-    d.name=s.prefab.name;d.Bind(player,session,s.point.position);d.Killed+=OnKilled;live.Add(d);
+    d.name=s.prefab.name;d.Bind(player,session,s.point.position);
+    var loot=d.GetComponent<LootSource>();if(loot&&session)loot.Bind(session.GetComponent<CraftingSession>());
+    d.Killed+=OnKilled;live.Add(d);
    }
   }
   void OnKilled(FeralDroid d){if(Remaining==0){clearedAt=Time.time;WasCleared?.Invoke(this);}}

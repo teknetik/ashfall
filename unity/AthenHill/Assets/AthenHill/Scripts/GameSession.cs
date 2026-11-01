@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 namespace AthenHill
 {
- public enum CityState { Boot,Play,Dialogue,Shop,Grid,Paused,Inventory,Notes,Credits,Error,Settings,MainMenu }
+ public enum CityState { Boot,Play,Dialogue,Shop,Grid,Paused,Inventory,Notes,Credits,Error,Settings,MainMenu,Fabricator }
  public class GameSession:MonoBehaviour
  {
   public CityCatalog catalog;
@@ -23,6 +23,7 @@ namespace AthenHill
   public CityState State {get;private set;}=CityState.Boot;
   public bool HasStarted {get;private set;}
   public string DetailItemId {get;private set;}
+  public string ActiveStationId {get;private set;}
   CityState settingsReturn=CityState.Paused;
   public ShopModel Shop {get;private set;}
   public NpcAgent ActiveNpc {get;private set;}
@@ -122,12 +123,18 @@ namespace AthenHill
    DetailItemId=id;Changed?.Invoke();
   }
   public void CloseItemDetails(){if(DetailItemId==null)return;DetailItemId=null;Changed?.Invoke();}
+  public void OpenFabricator(string stationId)
+  {
+   if(State!=CityState.Play||stationId!="station_field_fabricator")return;
+   ActiveStationId=stationId;SetState(CityState.Fabricator);
+  }
   public void Open(CityState state)
   {
+   if(state==CityState.Fabricator)return; // Only the nearby station can open this modal.
    if(State==CityState.MainMenu){if(state!=CityState.Settings)return;settingsReturn=CityState.MainMenu;Settings.BeginEdit();SetState(state);return;}
    if(State==CityState.Play||State==CityState.Paused){if(state==CityState.Settings){settingsReturn=CityState.Paused;Settings.BeginEdit();}SetState(state);}
   }
-  public void Close(){if(State==CityState.Settings){if(Settings.Previewing){Settings.RevertVideo();return;}Settings.EndEdit();SetState(settingsReturn);return;}if(State==CityState.MainMenu||State==CityState.Boot)return;if(State==CityState.Inventory&&DetailItemId!=null){CloseItemDetails();return;}DetailItemId=null;if(ActiveNpc)ActiveNpc.talking=false;ActiveNpc=null;GridProgress=0;SetState(CityState.Play);}
+  public void Close(){if(State==CityState.Settings){if(Settings.Previewing){Settings.RevertVideo();return;}Settings.EndEdit();SetState(settingsReturn);return;}if(State==CityState.MainMenu||State==CityState.Boot)return;if(State==CityState.Inventory&&DetailItemId!=null){CloseItemDetails();return;}DetailItemId=null;ActiveStationId=null;if(ActiveNpc)ActiveNpc.talking=false;ActiveNpc=null;GridProgress=0;SetState(CityState.Play);}
   public void ResetPlayer(){if(!HasStarted)return;Close();player.ReturnToGate();follow.yaw=-90;follow.pitch=17;follow.FixedView=false;}
   public void ToggleMute(){Settings.Sound.muted=!Settings.Sound.muted;Settings.SaveSound();Settings.Flush();}
   public void ToggleReducedMotion(){reducedMotion=!reducedMotion;Settings.SaveReducedMotion(reducedMotion);Changed?.Invoke();}

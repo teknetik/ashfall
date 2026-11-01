@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-28 13:06:57Z" end-time="2026-09-28 13:07:45Z" duration="48.2541893">
+  <test-suite type="TestSuite" id="1000" name="Athen Hill" fullname="Athen Hill" runstate="Runnable" testcasecount="77" result="Failed" site="Child" start-time="2026-09-28 13:06:57Z" end-time="2026-09-28 13:07:45Z" duration="48.254189" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1096" name="AthenHill.EditModeTests.dll" fullname="/home/teknetik/code/ao2-crafting/unity/AthenHill/Library/ScriptAssemblies/AthenHill.EditModeTests.dll" runstate="Runnable" testcasecount="77" result="Failed" site="Child" start-time="2026-09-28 13:06:57Z" end-time="2026-09-28 13:07:45Z" duration="48.243646" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1772883" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1097" name="AthenHill" fullname="AthenHill" runstate="Runnable" testcasecount="77" result="Failed" site="Child" start-time="2026-09-28 13:06:57Z" end-time="2026-09-28 13:07:45Z" duration="48.242714" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1098" name="Tests" fullname="AthenHill.Tests" runstate="Runnable" testcasecount="77" result="Failed" site="Child" start-time="2026-09-28 13:06:57Z" end-time="2026-09-28 13:07:45Z" duration="48.242048" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1026" name="CheckpointAssetTests" fullname="AthenHill.Tests.CheckpointAssetTests" classname="AthenHill.Tests.CheckpointAssetTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-09-28 13:06:57Z" end-time="2026-09-28 13:07:45Z" duration="48.239621" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1027" name="SavedCheckpointHasIndependentGuardDialogueAndConnectedLocker" fullname="AthenHill.Tests.CheckpointAssetTests.SavedCheckpointHasIndependentGuardDialogueAndConnectedLocker" methodname="SavedCheckpointHasIndependentGuardDialogueAndConnectedLocker" classname="AthenHill.Tests.CheckpointAssetTests" runstate="Runnable" seed="237528203" result="Failed" start-time="2026-09-28 13:06:57Z" end-time="2026-09-28 13:07:45Z" duration="47.579378" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[Unhandled log message: '[Error] UDSFilesystem failed to acquire a read handle for hash uds:/1e/1e80c621078ed4b660caaad45bcd9d32'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                <stack-trace><![CDATA[UnityEditor.SceneManagement.EditorSceneManager:OpenPreviewScene (string)
+AthenHill.Tests.CheckpointAssetTests:SavedCheckpointHasIndependentGuardDialogueAndConnectedLocker () (at Assets/AthenHill/Tests/Editor/CheckpointAssetTests.cs:12)
+System.Reflection.MethodBase:Invoke (object,object[])
+NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
+NUnit.Framework.Internal.MethodWrapper:Invoke (object,object[])
+NUnit.Framework.Internal.Commands.TestMethodCommand:RunNonAsyncTestMethod (NUnit.Framework.Internal.ITestExecutionContext)
+NUnit.Framework.Internal.Commands.TestMethodCommand:RunTestMethod (NUnit.Framework.Internal.ITestExecutionContext)
+NUnit.Framework.Internal.Commands.TestMethodCommand:Execute (NUnit.Framework.Internal.ITestExecutionContext)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[UDS acquire returned invalid read handle, content may have been deleted from disk
+UDSFilesystem failed to acquire a read handle for hash uds:/1e/1e80c621078ed4b660caaad45bcd9d32
+Closing file :  : VirtualArtifacts/Primary/4fc244ec69769395ab5ec45ebcc36fb7
+Could not open file VirtualArtifacts/Primary/4fc244ec69769395ab5ec45ebcc36fb7 for read
+Assertion failed on expression: 'res'
+Error loading the file 'VirtualArtifacts/Primary/4fc244ec69769395ab5ec45ebcc36fb7'. File is either empty or corrupted, please verify the file contents.
+Problem detected while opening the Scene file: 'Assets/AthenHill/Scenes/AthenHill.unity'.
+Check the following logs for more details.
+Prefab instance problem. Missing Prefab Asset: 'Warden watch booth (Missing Prefab with guid: 4fc244ec69769395ab5ec45ebcc36fb7)'
+]]></output>
+            </test-case>
+            <test-case id="1028" name="WestGateLandmarksResolveToTheIntendedInteraction" fullname="AthenHill.Tests.CheckpointAssetTests.WestGateLandmarksResolveToTheIntendedInteraction" methodname="WestGateLandmarksResolveToTheIntendedInteraction" classname="AthenHill.Tests.CheckpointAssetTests" runstate="Runnable" seed="1336112054" result="Failed" start-time="2026-09-28 13:07:45Z" end-time="2026-09-28 13:07:45Z" duration="0.636391" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[Unhandled log message: '[Error] Problem detected while opening the Scene file: 'Assets/AthenHill/Scenes/AthenHill.unity'.
+Check the following logs for more details.'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                <stack-trace><![CDATA[UnityEditor.SceneManagement.EditorSceneManager:OpenPreviewScene (string)
+AthenHill.Tests.CheckpointAssetTests:WestGateLandmarksResolveToTheIntendedInteraction () (at Assets/AthenHill/Tests/Editor/CheckpointAssetTests.cs:43)
+System.Reflection.MethodBase:Invoke (object,object[])
+NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
+NUnit.Framework.Internal.MethodWrapper:Invoke (object,object[])
+NUnit.Framework.Internal.Commands.TestMethodCommand:RunNonAsyncTestMethod (NUnit.Framework.Internal.ITestExecutionContext)
+NUnit.Framework.Internal.Commands.TestMethodCommand:RunTestMethod (NUnit.Framework.Internal.ITestExecutionContext)
+NUnit.Framework.Internal.Commands.TestMethodCommand:Execute (NUnit.Framework.Internal.ITestExecutionContext)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[Problem detected while opening the Scene file: 'Assets/AthenHill/Scenes/AthenHill.unity'.
+Check the following logs for more details.
+Prefab instance problem. Missing Prefab Asset: 'Warden watch booth (Missing Prefab with guid: 4fc244ec69769395ab5ec45ebcc36fb7)'
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /home/teknetik/.config/unity3d/Free Column/Athen Hill/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
