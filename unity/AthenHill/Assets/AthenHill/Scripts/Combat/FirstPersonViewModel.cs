@@ -85,7 +85,7 @@ namespace AthenHill
    recoil=Mathf.MoveTowards(recoil,0,dt/recoilReturn);
    float r=recoil*recoil*(3-2*recoil);
    var offset=Vector3.Lerp(hipOffset,aimOffset,aim)+bobOffset+new Vector3(sway.x*swayAmount,sway.y*swayAmount,0)+Vector3.back*recoilBack*r;
-   var euler=Vector3.Lerp(hipEuler,aimEuler,aim)+new Vector3(-recoilPitch*r+sway.y*swayRotation,sway.x*swayRotation,sway.x*swayRotation*.5f);
+   var euler=Vector3.Lerp(hipEuler,aimEuler,aim)+new Vector3(-recoilPitch*combat.RecoilScale*r+sway.y*swayRotation,sway.x*swayRotation,sway.x*swayRotation*.5f);
    float d=draw*draw*(3-2*draw);
    offset=Vector3.Lerp(holsterOffset,offset,d);euler=Vector3.Lerp(holsterEuler,euler,d);
    var cam=viewCamera.transform;

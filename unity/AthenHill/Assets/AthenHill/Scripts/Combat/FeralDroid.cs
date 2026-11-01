@@ -101,12 +101,14 @@ namespace AthenHill
   public void ResetToHome(bool revive)
   {
    if(!Health.Alive&&!revive)return;
+   bool wasDead=!Health.Alive;
    CancelInvoke(nameof(Sink));gameObject.SetActive(true);
    if(body){body.isKinematic=true;body.useGravity=false;}
    transform.SetPositionAndRotation(Home,homeRotation);
    foreach(var c in GetComponentsInChildren<Collider>())c.enabled=true;
    if(smoke)smoke.Stop();
    Health.Restore();SetState(DroidState.Idle);Play(idle,1);SnapToGround(1);
+   if(revive&&wasDead){var loot=GetComponent<LootSource>();if(loot)loot.Revived();}
    flash=0;rotorSpin=rotorSpeed;
    if(motorLoop&&motorLoop.clip){motorLoop.volume=1;if(!motorLoop.isPlaying)motorLoop.Play();}
   }

@@ -15,6 +15,7 @@ namespace AthenHill
   VisualElement root;
   HudWindowLayout windowLayout;
   SettingsPanel settingsPanel;
+  CraftingSession crafting;
   readonly Dictionary<NpcAgent,VisualElement> tags=new Dictionary<NpcAgent,VisualElement>();
   readonly List<VisualElement> compassTicks=new List<VisualElement>();
   readonly List<Label> compassLabels=new List<Label>();
@@ -38,6 +39,7 @@ namespace AthenHill
    gameplayCullingMask=worldCamera.cullingMask;gameplayClearFlags=worldCamera.clearFlags;
    windowLayout=new HudWindowLayout(root);
    settingsPanel=new SettingsPanel(root.Q("settings-panel"),session.Settings,session);
+   crafting=session.GetComponent<CraftingSession>();
    foreach(string name in new[]{"identity","compass","objective-box","chat","notice","modal"})windowLayout.Add(root.Q(name),name);
    foreach(string name in new[]{"quickbar","top-actions","interaction","key-hints"})windowLayout.Add(root.Q(name),name,true);
    root.RegisterCallback<GeometryChangedEvent>(_=>UpdateWindowSize());
@@ -67,6 +69,9 @@ namespace AthenHill
    root.RegisterCallback<KeyDownEvent>(InventoryKeyNav,TrickleDown.TrickleDown);
 
    Bind("close",session.Close);Bind("resume",session.Close);Bind("reset",session.ResetPlayer);
+   Bind("fabricator-craft",()=>{if(crafting!=null&&crafting.Craft(out _))root.Q<Button>("fabricator-fit").Focus();});
+   Bind("fabricator-fit",()=>crafting?.Fit(out _));
+   Bind("fabricator-remove",()=>crafting?.Remove(out _));
    Bind("details-close",session.CloseItemDetails);
    Bind("inventory-button",()=>session.Open(CityState.Inventory));Bind("notes-button",()=>session.Open(CityState.Notes));Bind("pause-button",()=>session.Open(CityState.Paused));Bind("credits-button",()=>session.Open(CityState.Credits));Bind("interaction",session.Interact);
    Bind("hint-pause",()=>session.Open(CityState.Paused));
@@ -236,7 +241,20 @@ namespace AthenHill
    for(int i=0;i<4;i++)root.Q("mark"+i).EnableInClassList("complete",i<session.Spoken.Count);
    Text("credits",$"{session.Shop.Credits} cr");
    if(logRevision!=session.LogRevision){logRevision=session.LogRevision;Text("log",string.Join("\n",session.Log));root.schedule.Execute(()=>{var scroll=root.Q<ScrollView>("log-scroll");scroll.scrollOffset=new Vector2(0,Mathf.Max(0,scroll.verticalScroller.highValue));});}
-   Show("dialogue-panel",session.State==CityState.Dialogue);Show("shop-panel",session.State==CityState.Shop);Show("inventory-panel",session.State==CityState.Inventory);Show("grid-panel",session.State==CityState.Grid);Show("pause-panel",session.State==CityState.Paused);Show("text-panel",session.State==CityState.Notes||session.State==CityState.Credits);
+   Show("dialogue-panel",session.State==CityState.Dialogue);Show("shop-panel",session.State==CityState.Shop);Show("fabricator-panel",session.State==CityState.Fabricator);Show("inventory-panel",session.State==CityState.Inventory);Show("grid-panel",session.State==CityState.Grid);Show("pause-panel",session.State==CityState.Paused);Show("text-panel",session.State==CityState.Notes||session.State==CityState.Credits);
+   if(session.State==CityState.Fabricator&&crafting?.Model!=null)
+   {
+    var model=crafting.Model;
+    bool known=model.KnownRecipes.Contains("recipe_grip_stabilised_pistol");
+
+    Text("fabricator-recipe",known?"Stabilised Pistol Grip · known schematic":"No known schematics · Unknown schematics: 1");
+    Text("fabricator-ingredients",known?$"Any servo {session.Shop.Quantity("droid_servo_damaged")}/1  ·  Scrap Alloy {session.Shop.Quantity("scrap_alloy")}/2  ·  Any tier-one nanites {session.Shop.Quantity("nanite_residue")}/5\nOutput: Stabilised Pistol Grip ×1":"Salvage a worker-droid servo at the depot to learn this schematic.");
+    Text("fabricator-stat",$"Scrap Pistol · Recoil {model.BaseRecoil:0} → 31 · Current {model.RecoilStat:0}");
+    bool canCraft=model.CanCraft("recipe_grip_stabilised_pistol",session.ActiveStationId,out var craftReason);
+    var craftButton=root.Q<Button>("fabricator-craft");craftButton.SetEnabled(canCraft);craftButton.tooltip=canCraft?"Consume parts to craft one grip":craftReason;
+    var fitButton=root.Q<Button>("fabricator-fit");fitButton.SetEnabled(session.Shop.Quantity("grip_stabilised_pistol")>0&&model.GripSlot==null);fitButton.tooltip="Fit one carried grip to the pistol";
+    root.Q<Button>("fabricator-remove").SetEnabled(model.GripSlot!=null);
+   }
    Show("modal-notice",session.State!=CityState.Settings&&!string.IsNullOrEmpty(session.notice));
    bool settingsOpen=session.State==CityState.Settings;
    Show("settings-panel",settingsOpen);Show("modal-scroll",!settingsOpen);root.Q("modal").EnableInClassList("settings-modal",settingsOpen);
@@ -244,6 +262,7 @@ namespace AthenHill
    if(footerLeft!=null)footerLeft.text="FREE COLUMN  /  ATHEN HILL";
    if(footerRight!=null)footerRight.text="Tab · Select     Enter · Confirm";
    Text("modal-title",session.State.ToString());Text("modal-subtitle","");
+   if(session.State==CityState.Fabricator){Text("modal-title","Field fabricator");Text("modal-subtitle","Warden outpost · Salvage and fit");}
    if(session.State==CityState.Dialogue){Text("modal-title",session.ActiveNpc.definition.displayName);Text("modal-subtitle",session.Dialogue.title);Text("dialogue-text",session.Dialogue.text);for(int i=0;i<2;i++)root.Q<Button>("choice"+i).text=session.Dialogue.choices[i].label;}
    if(session.State==CityState.Shop)
    {
@@ -285,8 +304,9 @@ namespace AthenHill
      int quantity=session.Shop.Quantity(session.DetailItemId);
      detailsTitle.text=item!=null?item.name:"Item details";
      detailsQuantity.text=$"{quantity} carried";
-     detailsPrices.text=item!=null?$"Basic General list price - Buy {item.buyPrice} cr / Sell {item.sellPrice} cr":"";
+     detailsPrices.text=item!=null&&!item.excludeFromTrade?$"Basic General list price - Buy {item.buyPrice} cr / Sell {item.sellPrice} cr":"";
      detailsDescription.text=item!=null&& !string.IsNullOrWhiteSpace(item.description)?item.description:"No description recorded.";
+     if(crafting?.Model!=null&&item!=null&&crafting.Model.KnownRecipes.Contains("recipe_grip_stabilised_pistol")&&item.id!="grip_stabilised_pistol"&&new[]{"droid_servo_damaged","scrap_alloy","nanite_residue"}.Contains(item.id))detailsDescription.text+="\n\nKnown uses: Stabilised Pistol Grip (Field fabricator)";
      SetItemIcon(detailsIcon,session.DetailItemId);
      if(lastDetailId!=session.DetailItemId){lastDetailId=session.DetailItemId;root.schedule.Execute(()=>detailsClose?.Focus());}
      if(footerRight!=null)footerRight.text="Esc · Close details     Tab · Close pack";
@@ -315,7 +335,7 @@ namespace AthenHill
      }
      else
      {
-      root.schedule.Execute(()=>root.Q<Button>(session.State==CityState.MainMenu?"start-game":session.State==CityState.Dialogue?"choice0":"close").Focus());
+      root.schedule.Execute(()=>root.Q<Button>(session.State==CityState.MainMenu?"start-game":session.State==CityState.Dialogue?"choice0":session.State==CityState.Fabricator?"fabricator-craft":"close").Focus());
      }
     }
     else root.focusController?.focusedElement?.Blur();

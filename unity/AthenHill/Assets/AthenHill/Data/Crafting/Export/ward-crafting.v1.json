@@ -1,0 +1,323 @@
+{
+  "schema": "ward-crafting/1",
+  "generated": {
+    "utc": "2026-09-28T10:59:52.9415600Z",
+    "unity": "6000.6.0f1",
+    "sources": [
+      "Assets/AthenHill/Data/CityCatalog.asset",
+      "Assets/AthenHill/Data/Crafting/WardCrafting.asset"
+    ]
+  },
+  "items": [
+    {
+      "id": "water_flask",
+      "name": "Water Flask",
+      "description": "A dented field flask with a fresh seal and clean water.",
+      "tags": [
+        "consumable"
+      ],
+      "maxStack": 0,
+      "excludeFromTrade": false,
+      "buyPrice": 4,
+      "sellPrice": 2,
+      "startingQuantity": 0,
+      "catalogIndex": 0
+    },
+    {
+      "id": "medkit",
+      "name": "Medkit",
+      "description": "A compact pack of sealed dressings and colony first-aid supplies.",
+      "tags": [
+        "consumable"
+      ],
+      "maxStack": 0,
+      "excludeFromTrade": false,
+      "buyPrice": 9,
+      "sellPrice": 4,
+      "startingQuantity": 0,
+      "catalogIndex": 1
+    },
+    {
+      "id": "scrap_coil",
+      "name": "Scrap Coil",
+      "description": "A worn induction coil. Someone at the market can still use the copper.",
+      "tags": [
+        "salvage",
+        "material:conductive"
+      ],
+      "maxStack": 0,
+      "excludeFromTrade": false,
+      "buyPrice": 2,
+      "sellPrice": 1,
+      "startingQuantity": 1,
+      "catalogIndex": 2
+    },
+    {
+      "id": "droid_servo_damaged",
+      "name": "Damaged Servo",
+      "description": "A salvaged worker-droid servo, still fit for a field repair.",
+      "tags": [
+        "salvage",
+        "salvage:droid",
+        "component",
+        "component:servo",
+        "tier:1"
+      ],
+      "maxStack": 10,
+      "excludeFromTrade": true,
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "catalogIndex": 3
+    },
+    {
+      "id": "scrap_alloy",
+      "name": "Scrap Alloy",
+      "description": "Cleaned structural alloy recovered from feral machines.",
+      "tags": [
+        "salvage",
+        "material",
+        "material:metal",
+        "tier:1"
+      ],
+      "maxStack": 30,
+      "excludeFromTrade": true,
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "catalogIndex": 4
+    },
+    {
+      "id": "nanite_residue",
+      "name": "Nanite Residue",
+      "description": "Recoverable tier-one nanites from a damaged industrial core.",
+      "tags": [
+        "salvage",
+        "nanite",
+        "nanite:tier1"
+      ],
+      "maxStack": 60,
+      "excludeFromTrade": true,
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "catalogIndex": 5
+    },
+    {
+      "id": "copper_filament",
+      "name": "Copper Filament",
+      "description": "Fine conductor salvaged from a machine winding.",
+      "tags": [
+        "salvage",
+        "material",
+        "material:conductive",
+        "tier:1"
+      ],
+      "maxStack": 30,
+      "excludeFromTrade": true,
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "catalogIndex": 6
+    },
+    {
+      "id": "micro_capacitor",
+      "name": "Micro Capacitor",
+      "description": "An intact low-voltage component; no schematic is known yet.",
+      "tags": [
+        "salvage",
+        "component",
+        "component:capacitor",
+        "tier:1"
+      ],
+      "maxStack": 10,
+      "excludeFromTrade": true,
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "catalogIndex": 7
+    },
+    {
+      "id": "grip_stabilised_pistol",
+      "name": "Stabilised Pistol Grip",
+      "description": "A field-fabricated grip that steadies the scrap pistol.",
+      "tags": [
+        "weapon_mod",
+        "weapon_mod:grip"
+      ],
+      "maxStack": 3,
+      "excludeFromTrade": true,
+      "buyPrice": 0,
+      "sellPrice": 0,
+      "startingQuantity": 0,
+      "catalogIndex": 8
+    }
+  ],
+  "weapons": [
+    {
+      "id": "weapon_scrap_pistol",
+      "name": "Scrap Pistol",
+      "baseStats": {
+        "recoil": 38.0
+      },
+      "slots": [
+        "grip"
+      ],
+      "stateSource": "PlayerCombat.hasPistol"
+    }
+  ],
+  "modifiers": [
+    {
+      "id": "mod_grip_stabilised",
+      "itemId": "grip_stabilised_pistol",
+      "slot": "grip",
+      "weaponIds": [
+        "weapon_scrap_pistol"
+      ],
+      "effects": [
+        {
+          "stat": "recoil",
+          "op": "add",
+          "value": -7.0
+        }
+      ]
+    }
+  ],
+  "stations": [
+    {
+      "id": "station_field_fabricator",
+      "name": "Warden Field Fabricator"
+    }
+  ],
+  "recipes": [
+    {
+      "id": "recipe_grip_stabilised_pistol",
+      "name": "Stabilised Pistol Grip",
+      "stationId": "station_field_fabricator",
+      "requiresWeaponId": "weapon_scrap_pistol",
+      "outputItemId": "grip_stabilised_pistol",
+      "inputs": [
+        {
+          "kind": "tag",
+          "id": "component:servo",
+          "quantity": 1
+        },
+        {
+          "kind": "item",
+          "id": "scrap_alloy",
+          "quantity": 2
+        },
+        {
+          "kind": "tag",
+          "id": "nanite:tier1",
+          "quantity": 5
+        }
+      ],
+      "outputQuantity": 1,
+      "knownByDefault": false,
+      "unlocks": [
+        {
+          "type": "acquireItem",
+          "id": "droid_servo_damaged"
+        },
+        {
+          "type": "tutorialStep",
+          "id": "Fabricate"
+        }
+      ]
+    }
+  ],
+  "lootTables": [
+    {
+      "id": "loot_feral_scrap_drone",
+      "entries": [
+        {
+          "itemId": "scrap_alloy",
+          "quantity": 1,
+          "chance": 1.0
+        },
+        {
+          "itemId": "nanite_residue",
+          "quantity": 2,
+          "chance": 1.0
+        },
+        {
+          "itemId": "copper_filament",
+          "quantity": 1,
+          "chance": 0.6
+        },
+        {
+          "itemId": "micro_capacitor",
+          "quantity": 1,
+          "chance": 0.25
+        }
+      ]
+    },
+    {
+      "id": "loot_feral_worker_droid",
+      "entries": [
+        {
+          "itemId": "droid_servo_damaged",
+          "quantity": 1,
+          "chance": 1.0
+        },
+        {
+          "itemId": "scrap_alloy",
+          "quantity": 1,
+          "chance": 1.0
+        },
+        {
+          "itemId": "nanite_residue",
+          "quantity": 1,
+          "chance": 1.0
+        },
+        {
+          "itemId": "copper_filament",
+          "quantity": 1,
+          "chance": 0.65
+        }
+      ]
+    }
+  ],
+  "enemies": [
+    {
+      "id": "feral_scrap_drone",
+      "prefab": "Assets/AthenHill/Prefabs/OuterBerms/FeralScrapDrone.prefab",
+      "lootTableId": "loot_feral_scrap_drone"
+    },
+    {
+      "id": "feral_worker_droid",
+      "prefab": "Assets/AthenHill/Prefabs/OuterBerms/FeralWorkerDroid.prefab",
+      "lootTableId": "loot_feral_worker_droid"
+    }
+  ],
+  "encounters": [
+    {
+      "id": "first_contact",
+      "spawns": [
+        "feral_scrap_drone"
+      ],
+      "tutorial": true
+    },
+    {
+      "id": "machine_depot",
+      "spawns": [
+        "feral_worker_droid",
+        "feral_worker_droid",
+        "feral_scrap_drone"
+      ],
+      "tutorial": true
+    }
+  ],
+  "rules": {
+    "allocation": "dfs-declared-order;candidates:sellPrice,catalogIndex",
+    "statFormula": "clamp(round1((base+sumAdd)*(1+sumPercent/100)),0,100)",
+    "recoilDegreesPerPoint": 0.05,
+    "lootSeed": 1729,
+    "legacyShopRows": [
+      "water_flask",
+      "medkit",
+      "scrap_coil"
+    ]
+  }
+}
