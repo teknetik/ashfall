@@ -1,0 +1,293 @@
+{
+ "name": "interface",
+ "exe": "/home/teknetik/code/ao2/unity/AthenHill/Builds/batch-showcase-qa/AthenHill.x86_64",
+ "exeMtime": "Thu Nov 19 14:08:38 2026",
+ "started": "2026-11-19 17:18:05",
+ "checks": [
+  {
+   "check": "Controls tab shows Camera shake, Hit markers, Conversation camera, Interface",
+   "passed": true,
+   "detail": {
+    "camera-shake": true,
+    "hit-markers": true,
+    "conversation-camera": true,
+    "interface-mode": true,
+    "camera-shake-value": true
+   }
+  },
+  {
+   "check": "Camera shake defaults to 100 %",
+   "passed": true,
+   "detail": "100%"
+  },
+  {
+   "check": "Interface defaults to Full",
+   "passed": true,
+   "detail": "Full"
+  },
+  {
+   "check": "defaults: conversation camera on, Full",
+   "passed": true,
+   "detail": {
+    "dialogueLayout": "none",
+    "shadeDimmed": true,
+    "modalHeld": false,
+    "interfaceMode": "full",
+    "conversationCamera": true,
+    "conversationCameraSetting": true,
+    "barkCaptions": true,
+    "hidden": [],
+    "opacity": {
+     "identity": 1.0,
+     "fieldNotes": 1.0,
+     "log": 1.0,
+     "keyHints": 1.0,
+     "hotbar": 1.0,
+     "compass": 1.0
+    },
+    "quietSeconds": 6.0,
+    "topCentre": {
+     "radio": false,
+     "notice": false,
+     "depth": 0
+    }
+   }
+  },
+  {
+   "check": "Return on Conversation camera turns it off",
+   "passed": true,
+   "detail": {
+    "dialogueLayout": "none",
+    "shadeDimmed": true,
+    "modalHeld": false,
+    "interfaceMode": "full",
+    "conversationCamera": false,
+    "conversationCameraSetting": false,
+    "barkCaptions": true,
+    "hidden": [],
+    "opacity": {
+     "identity": 1.0,
+     "fieldNotes": 1.0,
+     "log": 1.0,
+     "keyHints": 1.0,
+     "hotbar": 1.0,
+     "compass": 1.0
+    },
+    "quietSeconds": 6.0,
+    "topCentre": {
+     "radio": false,
+     "notice": false,
+     "depth": 0
+    }
+   }
+  },
+  {
+   "check": "Interface set to Adaptive with real keys",
+   "passed": true,
+   "detail": "adaptive"
+  },
+  {
+   "check": "Sound tab shows Bark captions",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "Return on Bark captions turns them off",
+   "passed": true,
+   "detail": {
+    "dialogueLayout": "none",
+    "shadeDimmed": true,
+    "modalHeld": false,
+    "interfaceMode": "adaptive",
+    "conversationCamera": false,
+    "conversationCameraSetting": false,
+    "barkCaptions": false,
+    "hidden": [],
+    "opacity": {
+     "identity": 1.0,
+     "fieldNotes": 1.0,
+     "log": 1.0,
+     "keyHints": 1.0,
+     "hotbar": 1.0,
+     "compass": 1.0
+    },
+    "quietSeconds": 6.0,
+    "topCentre": {
+     "radio": false,
+     "notice": false,
+     "depth": 0
+    }
+   }
+  },
+  {
+   "check": "settings kept after a restart",
+   "passed": true,
+   "detail": {
+    "dialogueLayout": "none",
+    "shadeDimmed": false,
+    "modalHeld": false,
+    "interfaceMode": "adaptive",
+    "conversationCamera": false,
+    "conversationCameraSetting": false,
+    "barkCaptions": false,
+    "hidden": [],
+    "opacity": {
+     "identity": 1.0,
+     "fieldNotes": 1.0,
+     "log": 1.0,
+     "keyHints": 1.0,
+     "hotbar": 1.0,
+     "compass": 1.0
+    },
+    "quietSeconds": 6.0,
+    "topCentre": {
+     "radio": false,
+     "notice": true,
+     "depth": 1
+    }
+   }
+  },
+  {
+   "check": "Reset controls restores camera on and Full",
+   "passed": true,
+   "detail": {
+    "dialogueLayout": "none",
+    "shadeDimmed": true,
+    "modalHeld": false,
+    "interfaceMode": "full",
+    "conversationCamera": true,
+    "conversationCameraSetting": true,
+    "barkCaptions": false,
+    "hidden": [],
+    "opacity": {
+     "identity": 1.0,
+     "fieldNotes": 1.0,
+     "log": 1.0,
+     "keyHints": 1.0,
+     "hotbar": 1.0,
+     "compass": 1.0
+    },
+    "quietSeconds": 6.0,
+    "topCentre": {
+     "radio": false,
+     "notice": false,
+     "depth": 0
+    }
+   }
+  },
+  {
+   "check": "captions back on",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "Adaptive: quiet panels fade after ~6.6 s (hotbar stays)",
+   "passed": true,
+   "detail": [
+    "identity",
+    "fieldNotes",
+    "log",
+    "keyHints"
+   ]
+  },
+  {
+   "check": "Adaptive: Left Alt brings everything back within 0.35 s",
+   "passed": true,
+   "detail": []
+  },
+  {
+   "check": "Adaptive: hidden again after release",
+   "passed": true,
+   "detail": [
+    "identity",
+    "fieldNotes",
+    "log",
+    "keyHints"
+   ]
+  },
+  {
+   "check": "Adaptive: key hints return while a prompt is offered",
+   "passed": true,
+   "detail": {
+    "prompt": "E \u00b7 Talk to Mira",
+    "hidden": [
+     "identity",
+     "fieldNotes",
+     "log"
+    ]
+   }
+  },
+  {
+   "check": "Adaptive: all panels visible behind an open window",
+   "passed": true,
+   "detail": []
+  },
+  {
+   "check": "Reduced Motion: opacity jumps 0 <-> 1",
+   "passed": true,
+   "detail": {
+    "intermediate": [],
+    "samples": 90
+   }
+  },
+  {
+   "check": "photo mode: Interface row shows the HUD",
+   "passed": true,
+   "detail": {
+    "installed": true,
+    "active": true,
+    "capturing": false,
+    "panelShown": true,
+    "status": "",
+    "selected": "Hud",
+    "fieldOfView": 50.0,
+    "roll": 0.0,
+    "depthOfField": false,
+    "focusDistance": 4.19999933,
+    "aperture": 4.0,
+    "exposure": 0.0,
+    "hour": 13.0,
+    "playerVisible": true,
+    "hudVisible": true,
+    "lastCapture": null,
+    "lastSupersampled": null,
+    "lastError": null
+   }
+  },
+  {
+   "check": "photo mode closed cleanly from Adaptive",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "Full mode: every panel shown",
+   "passed": true,
+   "detail": []
+  },
+  {
+   "check": "top centre never stacks more than radio + notice",
+   "passed": true,
+   "detail": 0
+  },
+  {
+   "check": "no runtime exceptions in Player.log",
+   "passed": true,
+   "detail": []
+  }
+ ],
+ "captures": [
+  "/home/teknetik/code/ao2/unity/evidence/showcase/20261119/qa/final2/interface/run/settings-controls.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase/20261119/qa/final2/interface/run/settings-sound.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase/20261119/qa/final2/interface/run/adaptive-quiet.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase/20261119/qa/final2/interface/run/photo-mode-hud-shown.png"
+ ],
+ "notes": [
+  {
+   "note": "NOT TESTED: Ctrl-drag of a moved window against the lower third (step 5); needs a hand on the mouse",
+   "detail": null
+  }
+ ],
+ "passed": true,
+ "summary": "22/22 passed",
+ "finished": "2026-11-19 17:19:49"
+}

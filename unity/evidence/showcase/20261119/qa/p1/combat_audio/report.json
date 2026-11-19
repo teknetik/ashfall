@@ -1,0 +1,86 @@
+{
+ "name": "combat_audio",
+ "exe": "/home/teknetik/code/ao2/unity/AthenHill/Builds/batch-qa1/AthenHill.x86_64",
+ "exeMtime": "Thu Nov 19 14:08:38 2026",
+ "started": "2026-11-19 15:10:11",
+ "checks": [
+  {
+   "check": "pistol drawn (2)",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "pistol shot plays the legacy pistol arrays (no set)",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "rifle drawn (1)",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "rifle single shot uses the weapon_field_rifle set",
+   "passed": true,
+   "detail": "weapon_field_rifle"
+  },
+  {
+   "check": "rifle burst (hold F 2.4 s) fires a burst on the rifle set",
+   "passed": true,
+   "detail": {
+    "shots": 12,
+    "set": "weapon_field_rifle"
+   }
+  },
+  {
+   "check": "script completed without error",
+   "passed": false,
+   "detail": "RuntimeError(\"bridge rejected dev.item.grant: {'code': 'overflow', 'message': 'Not enough carrying capacity.'}\")"
+  },
+  {
+   "check": "no runtime exceptions in Player.log",
+   "passed": true,
+   "detail": []
+  }
+ ],
+ "captures": [
+  "/home/teknetik/code/ao2/unity/evidence/showcase/20261119/qa/p1/combat_audio/run/error-state.png"
+ ],
+ "notes": [
+  {
+   "note": "audio source groups at start",
+   "detail": {
+    "SFX": 9,
+    "Music": 2,
+    "UI": 10,
+    "Ambience": 6
+   }
+  },
+  {
+   "note": "sources playing right after a pistol shot",
+   "detail": [
+    "Berms pistol audio",
+    "City soundtrack",
+    "Cradle hum",
+    "Desert wind",
+    "Lattice hum",
+    "Market murmur",
+    "Pistol tail",
+    "Ring hum",
+    "Rotor hum",
+    "Rotor hum",
+    "Rotor hum",
+    "Weather wind bed"
+   ]
+  },
+  {
+   "note": "nano after a long burst",
+   "detail": 3.17479229
+  }
+ ],
+ "sites": {},
+ "error": "Traceback (most recent call last):\n  File \"/home/teknetik/code/ao2/unity/tools/showcase_qa.py\", line 116, in run\n    body()\n    ~~~~^^\n  File \"/home/teknetik/code/ao2/unity/tools/check_showcase_combat_audio.py\", line 111, in body\n    r = site('nextlevel_post_relay', 'sentinel', 'sentinel-', seconds=50)\n  File \"/home/teknetik/code/ao2/unity/tools/check_showcase_combat_audio.py\", line 38, in site\n    qa.cmd('dev.item.grant', itemId='medkit', quantity=3)\n    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/teknetik/code/ao2/unity/evidence/gameplay-v2/20260930-reqa2/qa.py\", line 184, in cmd\n    raise RuntimeError('bridge rejected %s: %s' % (action, ack.get('error')))\nRuntimeError: bridge rejected dev.item.grant: {'code': 'overflow', 'message': 'Not enough carrying capacity.'}\n",
+ "passed": false,
+ "summary": "6/7 passed",
+ "finished": "2026-11-19 15:10:36"
+}

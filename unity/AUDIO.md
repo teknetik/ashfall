@@ -95,6 +95,7 @@ not use the API at runtime.
 | Brann | Ward / Salvage shop | Callum | American | `N2lVS1w4EtoT3dr4eOWO` | 15 |
 | Warden Ossa | Outer Berms / West Gate post | Victoria | British | `N8SmJJ4vvs5Mz9VaT6u5` | 6 |
 | Warden Rell | Outer Berms / Checkpoint | Roger | American | `CwhRBWXzGAHq8TQ4Fs17` | 2 |
+| Tamsin (19 Nov 2026) | Ward / Field Supply | Evelyn | British | `XEoBW4iDmiawQP72xnAF` | 5 |
 
 The source MP3s, exact requests, response IDs and checksums are in
 `staging/elevenlabs-audio/npc-voices/`. The 44.1 kHz mono WAVs and Unity `.meta`
@@ -135,3 +136,52 @@ wrapping, footsteps, market/device ambience, trade and travel cues, pause, mute
 and restoration. It restores audio resources and exits its player afterwards.
 Evidence is saved to `evidence/audio/20260908/`; the native `report.json` records
 pass/fail, source state and captured RMS/peak levels.
+
+## NPC life: barks and the missing voices (19 November 2026)
+
+Recorded by `art/showcase_20261119/npc_life/generate_voices.py` (same model `eleven_multilingual_v2`, voice settings,
+request records and loudness mastering as `generate_npc_voices.py`; source of truth `barks.json` in that folder; full
+take list with request ids and costs in `voice_manifest.json` there). Bound by the Editor installer
+`NpcLifeInstall20261119` by asset path, never by hand-written references.
+
+- **Dialogue takes:** Tamsin's five Field Supply nodes (new voice above); Warden Ossa's `locker`, `range` and `long_arm`
+  nodes re-recorded in her existing voice with the current controls (the earlier takes named the pre-hotbar keys; they are
+  kept in `staging/elevenlabs-audio/npc-voices/previous_20261119/`). Paths stay `NpcVoices/<npc>-<node>.wav`.
+- **Barks:** 80 short lines outside dialogue, one `BarkSet` per speaker in `Assets/AthenHill/Data/Barks/`, clips in
+  `Assets/AthenHill/Audio/ElevenLabs/NpcBarks/<speaker>-<line>.wav` (sources in `staging/elevenlabs-audio/npc-barks-20261119/`).
+  The eight talking NPCs use the voices in the table above. Ambient walkers:
+
+| Walker | Route | Voice | Accent | ElevenLabs voice ID | Barks |
+| --- | --- | --- | --- | --- | ---: |
+| Daro (Karaveen porter) | `npc_walker_01`, east avenue lane | Paul | British (subtle Northern) | `49TtX0KZLnuzDrAizTkN` | 4 |
+| Sel (nanofab technician) | `npc_walker_02`, Quantum Tube goods node | Alice | British | `Xb7hH8MSUJpSbSDYk0k2` | 4 |
+| Anso (hydroponics grower) | `npc_walker_03`, hall district | Will | American | `bIHbv24MWmeRgasZH58o` | 4 |
+
+Bark playback: `BarkDirector` (on the GameSession object) plays one bark at a time through each speaker's own
+positional `Bark voice` AudioSource on the Effects mixer group (Effects volume, Master mute), only during play; pause
+freezes it and dialogue or any window stops it. Barks are captioned (Settings › Sound › Bark captions; PlayerPrefs
+`AthenHill.Settings.v1.BarkCaptions`). Imports: mono Vorbis 0.85, compressed in memory (barks) or decompressed on load
+(dialogue takes, as before).
+
+
+## Combat audio: field rifle and droid identity (19 November 2026)
+
+Not yet installed or heard; details, listening plan and rollback in
+[art/showcase_20261119/combat_audio/README.md](../art/showcase_20261119/combat_audio/README.md).
+`unity/tools/generate_combat_audio_20261119.py` (cached ElevenLabs `eleven_text_to_sound_v2` takes, numpy mastering,
+`--generate` buys only missing takes; 511 credits) writes `Combat/Rifle/` and `Combat/Droids/`; sources and requests in
+`staging/elevenlabs-audio/combat-20261119/`. Installer: `CombatAudioPass20261119.RunBatch --steps audio,weapon,droids,bolts,verify`.
+
+| Set | Clips | Playback |
+| --- | --- | --- |
+| Field rifle (`PlayerCombat.weaponSounds`, `weapon_field_rifle`) | mech ×6 (≤0.15 s), body ×8 (≤0.30 s, +4 dB below 140 Hz), tail ×6 (≤0.75 s, HPF 180 Hz), empty/draw/holster ×2 | Layered like the pistol for a 0.18 s fire interval; tail ×0.75 inside a held burst; the pistol keeps its arrays |
+| Scrap Reaper | alert, blade tell, chop ×2, death, heavy steps ×2 | Voice 3–70 m |
+| Post Sentinel | alarm, targeting-beep tell, sentry shot ×2, death; procedural 4 s roll loop | Voice 3–90 m; roll loop 12–120 m, volume/pitch from ground speed |
+| Feral Gunner | static alert, capacitor tell, rivet shot ×2, death | Voice 2.5–75 m |
+| Feral Lancer | chirp alert, arc charge tell, launch ×2, death | Voice 2.5–80 m |
+| Depot Foreman | klaxon, pneumatic tell, fist strike, layered ground slam, death, Reaper steps | Voice 4–90 m |
+| Bolts | fly-by ×3, impact ×2, heavy lancer impact | 1.5–50 m |
+
+All on the SFX group (the droid and bolt prefabs were on UI), custom desert rolloff silent at Max Distance, doppler
+off. `VoiceLimiter.Droids` keeps alerts, tells, attacks and deaths and drops footsteps, clangs and impacts beyond 10
+droid one-shots at once. Empty `FeralDroid.*Variants` arrays fall back to the shared clips (worker, scrap drone).

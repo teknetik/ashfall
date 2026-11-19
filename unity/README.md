@@ -10,7 +10,7 @@ saved field order) and **New Game**, which asks before replacing the save (Escap
 Progress autosaves after fabricating, fitting or removing a mod, collecting salvage,
 completing a field order, trading, and on quit, to `ward-save.json` in
 `Application.persistentDataPath` (Linux: `~/.config/unity3d/Free Column/Athen Hill/`).
-A continued game resumes at West Gate with credits, pack, character training,
+A continued game resumes at the East Gate with credits, pack, character training,
 equipment, fitted mods, schematics, the Berms primer step, field orders and loot
 luck restored; world drops and heap timers reset.
 An unreadable or newer save is moved aside and a new game starts with a notice.
@@ -62,8 +62,12 @@ See [terrain evidence](evidence/terrain/20260908/acceptance.md) and the
 | Hold right mouse | Aim over the shoulder |
 | Tab | Field pack |
 | J | Journal (missions, tracking, Ward notes); T tracks the selected mission |
+| M | World map (Ward and the Outer Berms, north up; Berms sites appear once you have been near them). M or Escape closes it |
+| On the map | Drag or arrows / WASD pan (Shift faster) · wheel or + / − zoom (double-click zooms in) · C centre on you · T centre on the tracked target · F whole sheet · Tab reaches the place list (Enter centres on a place) |
 | Escape | Close panel / pause |
-| R | Return to West Gate |
+| R | Return to East Gate |
+| P | Photo mode (plain play only: not in a dialogue or window). Freezes the game; P or Escape closes it and restores the view, time of day and interface |
+| In photo mode | WASD fly · Space / E rise · C / Q fall · Shift fast · Ctrl slow · mouse look · wheel zoom · ↑↓ choose a setting · ←→ adjust (Shift ×5) · Enter toggle / activate · F12 or left click capture (to ~/Pictures/Ashfall, 1x and 2x) · R reset view · H hide panel · hold Left Alt for the pointer |
 | In the pack | Arrows choose · Enter or Shift+click inspects · type in Search · drag items onto equipment or weapon sockets · drag the colonist to turn · drag a medkit or nano recharge onto the HOTBAR strip (or select it and press 3–9 / 0); drag a strip cell away or right-click it to clear it |
 | Tab / Enter | Focus / activate UI controls |
 | Drag UI frame, header or bronze grip | Move that panel; position is saved (hold Left Alt in play for a pointer) |

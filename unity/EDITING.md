@@ -1369,7 +1369,8 @@ lights were visible and lamps beyond about 26–36 m from the camera were not dr
 lamps and the market lanterns from the birch views). The shade sails, installed later, add 7 festoon lights to the
 clock (practical lights 136 → 143, night-only 82 → 89), all competing for the same 32. Judge a fixture from a camera near it; a lamp missing in a wide view may be culled, not broken. Measured
 by the birch canopy pass's `capture` probe (`lightcull-*.json`; `evidence/birch-canopy/20261001/README.md`). The fix
-is district-wide: Vulkan for the Linux player (a graphics-API change) or a light-budget pass. Both are Carl's decision.
+is district-wide: Vulkan for the Linux player (a graphics-API change) or a light-budget pass. Carl left the choice to the
+agent on 19 Nov 2026: a light-budget pass on OpenGL, not Vulkan (reasons in AGENTS.md, Rendering baseline). Not yet done.
 
 ## Night facade tune (1 October 2026)
 
@@ -1499,3 +1500,43 @@ The suit has a lower collar, matte fabric response and a small fitted utility be
 references inherit the asset update. Use `CharacterPolish20261005.RunBatch -nographics` for the integration audit;
 `--capture -force-glcore` renders the six pose views. The authoring and rollback files are in the dated art directory.
 A full `MainCharacterInstall` rebuild is unnecessary for this pass and can overwrite later player setup.
+
+## Showcase programme: combat feel, weather, barks, conversation camera, map, HUD, night (19 November 2026)
+
+Programme record: `art/showcase_20261119/README.md`; native test record: `unity/evidence/showcase/20261119/qa/README.md`.
+Each package README lists its files, Inspector values, install steps, native test plan and rollback. All scene and
+prefab wiring came from one Editor installer per package (`Assets/AthenHill/Editor/<Name>.RunBatch --steps ...`, each
+with a `verify` step). The installers are idempotent, but re-running one resets the values it owns, so tune in the
+Inspector afterwards, not before.
+
+| What | Where to edit | Record and installer |
+| --- | --- | --- |
+| Hit markers, camera shake, low-vitality edge, weak points | `CombatHud` (marker and tick settings), `CameraImpulse` (main camera), `DroidWeakPoint` on each droid prefab, `CombatFx.maxFxLights`; pure rules in `Scripts/Combat/CombatFeel.cs` | `art/showcase_20261119/combat_feel`, `CombatFeelPass20261119` |
+| Rifle and droid sounds | `PlayerCombat.weaponSounds`, the `*Variants` arrays on `FeralDroid`; clips in `Audio/ElevenLabs/Combat/` | `combat_audio`, `CombatAudioPass20261119`, `unity/tools/generate_combat_audio_20261119.py` |
+| Wind and dust fronts | scene root **Ward weather** › Weather Director (schedule, front look, timings) | `weather`, `WeatherInstall20261119` |
+| Barks and captions | one `BarkSet` per speaker in `Data/Barks/`, `BarkDirector` on the GameSession object; text source `art/showcase_20261119/npc_life/barks.json` | `npc_life`, `NpcLifeInstall20261119` (keeps Inspector-edited text unless `--force`) |
+| Conversation camera, photo mode | `ConversationCamera` and `PhotoMode` beside `FollowCamera`; the installer step `shot` rewrites the default shot | `showcase_camera`, `ShowcaseCameraInstall20261119` |
+| Lower-third dialogue, Adaptive HUD | `CityHud.adaptive` (quiet 6 s, fades), `UI/CityHUD.uxml/.uss`; rules in `unity/DESIGN.md` | `interface` (no installer) |
+| World map | places and discovery in `Scripts/Map/`, style in `Resources/WorldMap/WorldMap.uss`; `Resources/WorldMap/WorldMapSurvey.asset` holds the survey picture and anchors, rewritten by the installer's `anchors` and `survey` steps (survey needs graphics; without the asset the map is a schematic) | `world_map`, `WorldMapInstall20261119` |
+| Night readability | night frames of `WardDustbowl`, `NightActorLighting` on the lighting clock; values in `night-tune.json` | `art/night_readability_20261119`, `NightReadabilityPass20261119` (`--steps rollback` restores `originals.json`) |
+
+Scripts compile-check without Unity: `python3 unity/tools/compile_check.py` (about 5 s; needs one earlier Unity run).
+Native checks: `unity/tools/check_showcase_<package>.py`, run through
+`~/.local/state/ward-programme/showcase-20261119/native_check.sh` (private display :5, Unity lock, memory cap).
+
+## Gate names: the +X spawn arches are the East Gate (19 November 2026)
+
+"West Gate" is the -X portal by the market into the Outer Berms (Ossa's post). The two Meshy District gate arches at
+the +X spawn are the **East Gate** in everything the player reads: four iron plates reading "— EAST GATE —" cover
+the "— WEST GATE —" plaques baked into the Meshy atlas (both faces of both arches; scene root **Gate name plaques**,
+mesh/material/textures in `Art/GateNames/`), and the menu tooltips, pause button, controls lists, catalog notes,
+Continue summary and the map label (`city:barred_gates`, id kept) say East Gate. Internal names (scene objects,
+the `west_gate` landmark, `cam_wga_*`, `WestGateArchesPass`, `Art/WestGate*`) still say West Gate.
+
+| What | Where to edit | Record and installer |
+| --- | --- | --- |
+| Plaque lettering, plate colour and wear | `art/gate_names_20261119/make_plaques.py` (`GATE_NAME`), then re-run the installer | `art/gate_names_20261119/README.md`, `GateNamesPass20261119` (`--steps install,verify`; `rollback` removes the plates and restores the notes line) |
+| Plate placement (2.5 cm proud of the arch faces) | `Plaques` table in `GateNamesPass20261119.cs` (measured by `measure_plaques.py` from the render chunks); do not move them in the Inspector, the installer resets them | same |
+| Player-facing text | `UI/StartupMenu.uxml`, `UI/CityHUD.uxml`, `SettingsPanel.cs`, `WardSaveGame.cs`, `WorldMapData.cs`, catalog notes (`NewNote` in the pass) | the README's string table lists every string |
+
+Review cameras: `cam_gn_spawn`, `cam_gn_spawn_b`, `cam_gn_avenue`, `cam_gn_rampart_n`, `cam_gn_rampart_s`, `cam_gn_under_b`.

@@ -1,0 +1,682 @@
+{
+ "passed": true,
+ "checks": [
+  "A: pistol taken from the locker with real E",
+  "A: pistol drawn with 2",
+  {
+   "check": "A: the pistol view model shows in first person",
+   "detail": true
+  },
+  {
+   "check": "A: three plates down, primer at FirstContact",
+   "detail": {
+    "targets": 3,
+    "step": "FirstContact"
+   }
+  },
+  {
+   "check": "A: first contact is two scrap drones within 40 m of the gate",
+   "detail": {
+    "enemies": [
+     [
+      "Feral scrap drone",
+      "Idle",
+      [
+       -83.1,
+       0.6,
+       -14.1
+      ]
+     ],
+     [
+      "Feral scrap drone",
+      "Idle",
+      [
+       -87.9,
+       0.3,
+       -6.4
+      ]
+     ]
+    ],
+    "gateDistances": [
+     30.1,
+     31.8
+    ]
+   }
+  },
+  {
+   "check": "A: the HUD guidance marker names the scrap drone",
+   "detail": [
+    "SCRAP DRONE \u00b7 7 m",
+    "SCRAP DRONE \u00b7 8 m"
+   ]
+  },
+  {
+   "check": "A: the service-road pair put down with real F; depot nest armed",
+   "detail": {
+    "shots": 8,
+    "seconds": 3.1,
+    "deaths": [
+     {
+      "name": "Feral scrap drone",
+      "position": [
+       -76.73692,
+       0.296497,
+       -6.358867
+      ],
+      "t": 2.7
+     },
+     {
+      "name": "Feral scrap drone",
+      "position": [
+       -75.23603,
+       0.202216983,
+       -5.181843
+      ],
+      "t": 3.1
+     }
+    ]
+   }
+  },
+  {
+   "check": "A: the HUD marker now points at the machine depot",
+   "detail": [
+    "MACHINE DEPOT \u00b7 24 m",
+    "MACHINE DEPOT \u00b7 25 m"
+   ]
+  },
+  {
+   "check": "A: depot nest cleared, primer complete",
+   "detail": {
+    "shots": 19,
+    "seconds": 11.2,
+    "kills": 5
+   }
+  },
+  {
+   "check": "A: no runtime exceptions in Player.log",
+   "detail": []
+  },
+  {
+   "check": "B: continued at Long Arm, waiting for the report to Brann",
+   "detail": {
+    "fieldOrder": 5,
+    "orderStage": "Report",
+    "objective": "Take the receiver to Brann at Salvage, on the north avenue inside the walls. His workbench can build the Field Rifle around it."
+   }
+  },
+  {
+   "check": "B: no test-issue rifle in the pack",
+   "detail": 0
+  },
+  {
+   "check": "B: Brann offers the E prompt at the counter",
+   "detail": "E \u00b7 Talk to Brann"
+  },
+  {
+   "check": "B: Brann opens with the rifle receiver line",
+   "detail": {
+    "npc": "Brann",
+    "node": "long_report"
+   }
+  },
+  {
+   "check": "B: talking to Brann moves Long Arm to fabrication",
+   "detail": "Fabricate the Field Rifle at Brann's workbench in Salvage, on the north avenue."
+  },
+  {
+   "check": "B: E at the workbench opens the fabricator",
+   "detail": "Fabricator"
+  },
+  {
+   "check": "B: Fabricate starts the rifle on the bench timer",
+   "detail": {
+    "recipeId": "recipe_field_rifle",
+    "seconds": 20.0,
+    "progress": 0.04849901,
+    "remaining": 19.03002
+   }
+  },
+  {
+   "check": "B: the Field Rifle is fabricated at the bench",
+   "detail": {
+    "crafts": 2,
+    "rifle": 1,
+    "reason": "Missing parts: 1 \u00d7 Warden Rifle Receiver."
+   }
+  },
+  {
+   "check": "B: Long Arm complete, Plate Carrier is the current order",
+   "detail": {
+    "fieldOrder": 6,
+    "orderStage": "Hunt",
+    "objective": "A Warden plate carrier went down with the caravan ambushed north of the trail, past the northgate drones. Clear the scavengers and take it from the caravan strongbox, then wear it in your chest slot."
+   }
+  },
+  {
+   "check": "B: the rifle is equipped in the primary slot by drag",
+   "detail": {
+    "tab": "character-tab-primary",
+    "result": "Equipment updated.",
+    "before": 1,
+    "left": 0,
+    "slot": "primary",
+    "equipped": "field_rifle"
+   }
+  },
+  {
+   "check": "B: 1 draws the field rifle (rifle model shown, pistol hidden)",
+   "detail": {
+    "armed": true,
+    "weapon": "weapon_field_rifle",
+    "rifleShown": true,
+    "notice": "Field rifle drawn. Left mouse fires (hold for bursts); hold right mouse to aim."
+   }
+  },
+  {
+   "check": "B: draw notice names the rifle",
+   "detail": "Field rifle drawn. Left mouse fires (hold for bursts); hold right mouse to aim."
+  },
+  {
+   "check": "B: hotbar slot 1 shows the rifle",
+   "detail": {
+    "classes": [
+     "unity-button",
+     "unity-text-element",
+     "selected",
+     "hotbar-slot",
+     "weapon-slot"
+    ],
+    "tooltip": null
+   }
+  },
+  {
+   "check": "B: holding F fires a burst from the rifle",
+   "detail": {
+    "shots": 5
+   }
+  },
+  {
+   "check": "B: 2 switches to the pistol while armed",
+   "detail": {
+    "armed": true,
+    "weapon": "weapon_scrap_pistol"
+   }
+  },
+  {
+   "check": "B: 1 switches back to the rifle",
+   "detail": {
+    "weapon": "weapon_field_rifle"
+   }
+  },
+  "B: 1 again holsters the rifle",
+  {
+   "check": "B: the pistol view model stays hidden with the rifle drawn in first person",
+   "detail": false
+  },
+  {
+   "check": "B: the rifle view model shows with the rifle drawn in first person",
+   "detail": true
+  },
+  {
+   "check": "B: the rifle view model stays up while aiming in first person",
+   "detail": true
+  },
+  {
+   "check": "B: caravan scavengers cleared with the rifle",
+   "detail": {
+    "kills": 4,
+    "shots": 20
+   }
+  },
+  {
+   "check": "B: the caravan strongbox offers its search prompt",
+   "detail": "E \u00b7 Search the hauler cargo"
+  },
+  {
+   "check": "B: the Warden plate carrier comes out of the strongbox",
+   "detail": {
+    "got": {
+     "scrap_alloy": 2,
+     "copper_filament": 2,
+     "strap_webbing": 2,
+     "warden_plate_carrier": 1
+    }
+   }
+  },
+  {
+   "check": "B: Plate Carrier complete, the Depot Foreman order is next",
+   "detail": {
+    "fieldOrder": 7,
+    "orderStage": "Gather"
+   }
+  },
+  {
+   "check": "B: the plate carrier is equipped in the chest slot by drag",
+   "detail": {
+    "tab": "character-tab-armour",
+    "result": "Equipment updated.",
+    "before": 1,
+    "left": 0,
+    "slot": "armour_chest",
+    "equipped": "warden_plate_carrier"
+   }
+  },
+  {
+   "check": "B: the plate carrier model is shown on the colonist",
+   "detail": [
+    "warden_plate_carrier"
+   ]
+  },
+  {
+   "check": "B: the save records the rifle and the plate carrier equipped",
+   "detail": {
+    "armour_chest": "warden_plate_carrier",
+    "primary": "field_rifle",
+    "secondary": "scrap_pistol",
+    "storage": "field_backpack"
+   }
+  },
+  {
+   "check": "B: no runtime exceptions in Player.log",
+   "detail": []
+  }
+ ],
+ "failures": [],
+ "captures": [
+  {
+   "name": "a-pistol-carry-side",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "a39b984b099471c1"
+  },
+  {
+   "name": "a-pistol-carry-34",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "a1ef5ffc71df8192"
+  },
+  {
+   "name": "a-pistol-carry-cam_rifle_side",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "bc67ba843ff922f8"
+  },
+  {
+   "name": "a-pistol-first-person",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "6ae2f2fc9a70f0a4"
+  },
+  {
+   "name": "a-pistol-first-person-aim",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "9953d3cf1f11ba59"
+  },
+  {
+   "name": "a-first-contact-marker",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "8a0ee683b825290a"
+  },
+  {
+   "name": "b-brann-receiver",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "302226bf612f67be"
+  },
+  {
+   "name": "b-bench-rifle",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "330511ee1eb40519"
+  },
+  {
+   "name": "b-bench-rifle-progress",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "69dbc8a9746817f9"
+  },
+  {
+   "name": "b-rifle-carry-quarter",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "41b5e9003690e863"
+  },
+  {
+   "name": "b-rifle-carry-side",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "f9280d4f1fa95aa6"
+  },
+  {
+   "name": "b-rifle-carry-follow",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "a359874e2cabf6d4"
+  },
+  {
+   "name": "b-rifle-aim-follow",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "ed2a130e9de29f56"
+  },
+  {
+   "name": "b-rifle-aim-cam",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "675d206638a51293"
+  },
+  {
+   "name": "b-rifle-aim-side",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "5db05ff371dd47ba"
+  },
+  {
+   "name": "b-rifle-first-person",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "8a9ec0d62a79034a"
+  },
+  {
+   "name": "b-rifle-first-person-aim",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "4d3828dac933b752"
+  },
+  {
+   "name": "b-strongbox-search",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "a8c5d226d1ee0669"
+  },
+  {
+   "name": "b-vest-front",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "e5e102570e4e2361"
+  },
+  {
+   "name": "b-vest-quarter",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "08e898441fcdb58a"
+  },
+  {
+   "name": "b-vest-follow",
+   "size": [
+    1920,
+    1080
+   ],
+   "sha256": "e8d8d7256dc12b5e"
+  }
+ ],
+ "phases": {
+  "a": {
+   "firstContactSpawn": [
+    [
+     "Feral scrap drone",
+     "Idle",
+     [
+      -83.1,
+      0.6,
+      -14.1
+     ]
+    ],
+    [
+     "Feral scrap drone",
+     "Idle",
+     [
+      -87.9,
+      0.3,
+      -6.4
+     ]
+    ]
+   ],
+   "firstContact": {
+    "shots": 8,
+    "seconds": 3.1,
+    "deaths": [
+     {
+      "name": "Feral scrap drone",
+      "position": [
+       -76.73692,
+       0.296497,
+       -6.358867
+      ],
+      "t": 2.7
+     },
+     {
+      "name": "Feral scrap drone",
+      "position": [
+       -75.23603,
+       0.202216983,
+       -5.181843
+      ],
+      "t": 3.1
+     }
+    ]
+   },
+   "cameraAfterFirstContact": {
+    "pitch": -19.8156738,
+    "yaw": 14.3797836,
+    "boom": 2.4
+   },
+   "depotMarker": [
+    {
+     "pitch": 6.0,
+     "yaw": 215.3,
+     "player": [
+      -75.9,
+      -1.4,
+      -7.0
+     ],
+     "target": [
+      -90.1,
+      0.7,
+      -26.9
+     ],
+     "live": 5,
+     "guidance": [
+      [
+       "MACHINE DEPOT \u00b7 25 m",
+       true
+      ]
+     ]
+    }
+   ],
+   "depot": {
+    "shots": 19,
+    "seconds": 11.2,
+    "deaths": [
+     {
+      "name": "Feral scrap drone",
+      "position": [
+       -83.6402054,
+       1.66439009,
+       -32.01302
+      ],
+      "t": 2.0
+     },
+     {
+      "name": "Feral scrap drone",
+      "position": [
+       -82.59882,
+       1.4590745,
+       -29.87397
+      ],
+      "t": 3.9
+     },
+     {
+      "name": "Feral worker droid",
+      "position": [
+       -83.5363541,
+       -0.161206752,
+       -28.43307
+      ],
+      "t": 6.6
+     },
+     {
+      "name": "Feral worker droid",
+      "position": [
+       -81.11599,
+       -0.212002277,
+       -26.6886864
+      ],
+      "t": 8.5
+     },
+     {
+      "name": "Feral worker droid",
+      "position": [
+       -79.9995,
+       -0.454740226,
+       -24.0703659
+      ],
+      "t": 11.2
+     }
+    ]
+   },
+   "errors": []
+  },
+  "b": {
+   "start": {
+    "fieldOrder": 5,
+    "orderStage": "Report",
+    "objective": "Take the receiver to Brann at Salvage, on the north avenue inside the walls. His workbench can build the Field Rifle around it."
+   },
+   "craftJob": {
+    "recipeId": "recipe_field_rifle",
+    "seconds": 20.0,
+    "progress": 0.04849901,
+    "remaining": 19.03002
+   },
+   "equipRifle": {
+    "tab": "character-tab-primary",
+    "result": "Equipment updated.",
+    "before": 1,
+    "left": 0,
+    "slot": "primary",
+    "equipped": "field_rifle"
+   },
+   "caravanFight": {
+    "shots": 20,
+    "seconds": 11.1,
+    "deaths": [
+     {
+      "name": "Feral worker droid",
+      "position": [
+       -184.382614,
+       -1.07381833,
+       73.2694244
+      ],
+      "t": 1.5
+     },
+     {
+      "name": "Feral worker droid",
+      "position": [
+       -187.951141,
+       -0.9528504,
+       74.9073944
+      ],
+      "t": 3.4
+     },
+     {
+      "name": "Feral worker droid",
+      "position": [
+       -177.573654,
+       -1.01433265,
+       72.60489
+      ],
+      "t": 9.4
+     },
+     {
+      "name": "Feral scrap drone",
+      "position": [
+       -176.638519,
+       0.553883553,
+       72.34561
+      ],
+      "t": 11.1
+     }
+    ]
+   },
+   "strongboxPrompt": "E \u00b7 Search the hauler cargo",
+   "equipVest": {
+    "tab": "character-tab-armour",
+    "result": "Equipment updated.",
+    "before": 1,
+    "left": 0,
+    "slot": "armour_chest",
+    "equipped": "warden_plate_carrier"
+   },
+   "errors": []
+  }
+ },
+ "players": {
+  "a": {
+   "unit": "ashfall-rifle-qa-a-2bfecec8d7.scope",
+   "run": "/home/teknetik/code/ao2/unity/evidence/showcase/20261119/qa/regression-playtest/rifle/run-a/run",
+   "saveDir": "/home/teknetik/code/ao2/unity/evidence/showcase/20261119/qa/regression-playtest/rifle/save-a",
+   "pid": 2271363,
+   "stop": "quit",
+   "scopeStop": {
+    "exitCode": 0,
+    "message": ""
+   },
+   "launcherExitCode": 0
+  },
+  "b": {
+   "unit": "ashfall-rifle-qa-b-9bb4231606.scope",
+   "run": "/home/teknetik/code/ao2/unity/evidence/showcase/20261119/qa/regression-playtest/rifle/run-b/run",
+   "saveDir": "/home/teknetik/code/ao2/unity/evidence/showcase/20261119/qa/regression-playtest/rifle/save",
+   "pid": 2272572,
+   "stop": "quit",
+   "scopeStop": {
+    "exitCode": 5,
+    "message": "Failed to stop ashfall-rifle-qa-b-9bb4231606.scope: Unit ashfall-rifle-qa-b-9bb4231606.scope not loaded."
+   },
+   "launcherExitCode": 0
+  }
+ }
+}

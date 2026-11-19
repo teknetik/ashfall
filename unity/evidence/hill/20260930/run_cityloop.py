@@ -3,8 +3,8 @@ import asyncio, os, runpy, sys, json
 from pathlib import Path
 TOOLS = Path('/home/teknetik/code/ao2/unity/tools'); sys.path.insert(0, str(TOOLS))
 from lookbook import launch, start_play, Run, ROOT
-out = Path(sys.argv[1]).resolve(); out.mkdir(parents=True, exist_ok=False)
-player = launch(out, ROOT / 'unity/AthenHill/Builds/LinuxDevelopment/AthenHill.x86_64')
+out = Path(sys.argv[1] if len(sys.argv) > 1 else os.environ['ATHEN_OUT']).resolve(); out.mkdir(parents=True, exist_ok=False)
+player = launch(out, Path(os.environ.get('ATHEN_EXE', ROOT / 'unity/AthenHill/Builds/LinuxDevelopment/AthenHill.x86_64')))
 (out / 'pid').write_text(str(player.pid))
 run = Run(out)
 asyncio.run(start_play(run, player))

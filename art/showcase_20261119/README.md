@@ -9,8 +9,8 @@ The native test record is `unity/evidence/showcase/20261119/qa/README.md`.
 
 ## Build to play
 
-`unity/AthenHill/Builds/LinuxDevelopment/AthenHill.x86_64` (18:50, same files as `Builds/batch-gates`: the 17:32 showcase
-build, kept as `Builds/batch-showcase-qa`, plus the East Gate rename).
+`unity/AthenHill/Builds/LinuxDevelopment/AthenHill.x86_64` (19:15, same files as `Builds/batch-playtest1119`, built from
+commit 982db591: the 17:32 showcase build, kept as `Builds/batch-showcase-qa`, plus the East Gate rename).
 `unity/AthenHill/BUILDS-START-HERE.txt` opens with how to try each feature. New keys: **P** photo mode, **M** world map.
 
 ## Gap list and outcome

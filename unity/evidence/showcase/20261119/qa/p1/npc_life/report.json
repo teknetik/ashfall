@@ -1,0 +1,301 @@
+{
+ "name": "npc_life",
+ "exe": "/home/teknetik/code/ao2/unity/AthenHill/Builds/batch-qa1/AthenHill.x86_64",
+ "exeMtime": "Thu Nov 19 14:08:38 2026",
+ "started": "2026-11-19 14:47:23",
+ "checks": [
+  {
+   "check": "bark director present with 11 speakers",
+   "passed": true,
+   "detail": {
+    "speakers": 11,
+    "captions": true,
+    "captionBound": true
+   }
+  },
+  {
+   "check": "Vex barks on the walk-up (greeting or once-only acknowledgement)",
+   "passed": true,
+   "detail": {
+    "speaker": "Vex",
+    "speakerId": "npc_vex",
+    "line": "ack_primer",
+    "text": "Made it back through the Berms. Plenty don't, first time.",
+    "trigger": "Acknowledge",
+    "voiced": true,
+    "time": 10.0955076
+   }
+  },
+  {
+   "check": "Vex bark is voiced (take bound)",
+   "passed": true,
+   "detail": "ack_primer"
+  },
+  {
+   "check": "caption shown low centre while Vex speaks",
+   "passed": true,
+   "detail": {
+    "caption": "Made it back through the Berms. Plenty don't, first time.",
+    "bounds": [
+     580.0,
+     779.0,
+     760.0,
+     49.0
+    ]
+   }
+  },
+  {
+   "check": "after the acknowledgement Vex greets normally",
+   "passed": true,
+   "detail": {
+    "speaker": "Vex",
+    "speakerId": "npc_vex",
+    "line": "greet_carts",
+    "text": "Through you go. Mind the carts.",
+    "trigger": "Greeting",
+    "voiced": true,
+    "time": 25.5080643
+   }
+  },
+  {
+   "check": "no second greeting from Vex inside the 150 s cooldown",
+   "passed": false,
+   "detail": {
+    "count": [
+     2,
+     3
+    ],
+    "last": {
+     "speaker": "Daro",
+     "speakerId": "walker_daro",
+     "line": "pass_caravan",
+     "text": "Caravan's in at noon, if you're buying.",
+     "trigger": "Passing",
+     "voiced": true,
+     "time": 35.7732849
+    }
+   }
+  },
+  {
+   "check": "23:00 greeting from Vex is the night line",
+   "passed": true,
+   "detail": {
+    "speaker": "Vex",
+    "speakerId": "npc_vex",
+    "line": "greet_night",
+    "text": "Late to be coming through. Stay where I can see you.",
+    "trigger": "Greeting",
+    "voiced": true,
+    "time": 56.06421
+   }
+  },
+  {
+   "check": "08:00 greeting from Vex is the morning line",
+   "passed": true,
+   "detail": {
+    "speaker": "Vex",
+    "speakerId": "npc_vex",
+    "line": "greet_morning",
+    "text": "Gate's open. Caravans have the morning.",
+    "trigger": "Greeting",
+    "voiced": true,
+    "time": 70.43034
+   }
+  },
+  {
+   "check": "bark for the Esc test",
+   "passed": false,
+   "detail": null
+  },
+  {
+   "check": "captions off: a voiced bark plays with no caption",
+   "passed": true,
+   "detail": {
+    "speaker": "Vex",
+    "speakerId": "npc_vex",
+    "line": "greet_carts",
+    "text": "Through you go. Mind the carts.",
+    "trigger": "Greeting",
+    "voiced": true,
+    "time": 104.364426
+   }
+  },
+  {
+   "check": "a walker speaks a Passing line as he passes",
+   "passed": true,
+   "detail": {
+    "speaker": "Daro",
+    "speakerId": "walker_daro",
+    "line": "pass_caravan",
+    "text": "Caravan's in at noon, if you're buying.",
+    "trigger": "Passing",
+    "voiced": true,
+    "time": 135.215286
+   }
+  },
+  {
+   "check": "walker glances at the player (ActorLookAt focused)",
+   "passed": true,
+   "detail": [
+    {
+     "name": "WardWalker Daro",
+     "Focused": true,
+     "clip": "porter_walk_566"
+    },
+    {
+     "name": "WardWalker Anso",
+     "Focused": false,
+     "clip": "grower_walk_115"
+    },
+    {
+     "name": "WardWalker Sel",
+     "Focused": false,
+     "clip": "nanotech_walk_566"
+    }
+   ]
+  },
+  {
+   "check": "script completed without error",
+   "passed": false,
+   "detail": "TimeoutError('walk_to (16.0, 16.0) stuck at [16.0, 0.0299998522, 13.7627182]')"
+  },
+  {
+   "check": "no runtime exceptions in Player.log",
+   "passed": true,
+   "detail": []
+  }
+ ],
+ "captures": [
+  "/home/teknetik/code/ao2/unity/evidence/showcase/20261119/qa/p1/npc_life/run/bark-vex-caption.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase/20261119/qa/p1/npc_life/run/bark-vex-night.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase/20261119/qa/p1/npc_life/run/bark-vex-morning.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase/20261119/qa/p1/npc_life/run/bark-walker-passing.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase/20261119/qa/p1/npc_life/run/error-state.png"
+ ],
+ "notes": [
+  {
+   "note": "Vex look-at / clip while barking",
+   "detail": [
+    {
+     "name": "WardNpc Vex",
+     "Focused": false,
+     "clip": "vex_talk_314"
+    }
+   ]
+  },
+  {
+   "note": "walker look-at state while passing",
+   "detail": [
+    {
+     "name": "WardWalker Daro",
+     "Focused": true,
+     "clip": "porter_walk_566"
+    },
+    {
+     "name": "WardWalker Anso",
+     "Focused": false,
+     "clip": "grower_walk_115"
+    },
+    {
+     "name": "WardWalker Sel",
+     "Focused": false,
+     "clip": "nanotech_walk_566"
+    }
+   ]
+  }
+ ],
+ "roster": [
+  {
+   "id": "npc_ossa",
+   "name": "Warden Ossa",
+   "walker": false,
+   "lines": 7,
+   "voiced": 7,
+   "inside": false
+  },
+  {
+   "id": "npc_torr",
+   "name": "Torr",
+   "walker": false,
+   "lines": 9,
+   "voiced": 9,
+   "inside": false
+  },
+  {
+   "id": "npc_brann",
+   "name": "Brann",
+   "walker": false,
+   "lines": 8,
+   "voiced": 8,
+   "inside": false
+  },
+  {
+   "id": "npc_linn",
+   "name": "Linn",
+   "walker": false,
+   "lines": 9,
+   "voiced": 9,
+   "inside": false
+  },
+  {
+   "id": "npc_mira",
+   "name": "Mira",
+   "walker": false,
+   "lines": 11,
+   "voiced": 11,
+   "inside": false
+  },
+  {
+   "id": "npc_tamsin",
+   "name": "Tamsin",
+   "walker": false,
+   "lines": 8,
+   "voiced": 8,
+   "inside": false
+  },
+  {
+   "id": "npc_vex",
+   "name": "Vex",
+   "walker": false,
+   "lines": 9,
+   "voiced": 9,
+   "inside": true
+  },
+  {
+   "id": "npc_rell",
+   "name": "Warden Rell",
+   "walker": false,
+   "lines": 7,
+   "voiced": 7,
+   "inside": false
+  },
+  {
+   "id": "walker_daro",
+   "name": "Daro",
+   "walker": true,
+   "lines": 4,
+   "voiced": 4,
+   "inside": false
+  },
+  {
+   "id": "walker_sel",
+   "name": "Sel",
+   "walker": true,
+   "lines": 4,
+   "voiced": 4,
+   "inside": false
+  },
+  {
+   "id": "walker_anso",
+   "name": "Anso",
+   "walker": true,
+   "lines": 4,
+   "voiced": 4,
+   "inside": false
+  }
+ ],
+ "error": "Traceback (most recent call last):\n  File \"/home/teknetik/code/ao2/unity/tools/showcase_qa.py\", line 116, in run\n    body()\n    ~~~~^^\n  File \"/home/teknetik/code/ao2/unity/tools/check_showcase_npc_life.py\", line 150, in body\n    qa.walk_to(16.0, 16.0, tol=1.0, timeout=20)\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/teknetik/code/ao2/unity/evidence/gameplay-v2/20260930-reqa2/qa.py\", line 448, in walk_to\n    raise TimeoutError('walk_to (%.1f, %.1f) stuck at %s' % (x, z, pos()))\nTimeoutError: walk_to (16.0, 16.0) stuck at [16.0, 0.0299998522, 13.7627182]\n",
+ "passed": false,
+ "summary": "11/14 passed",
+ "finished": "2026-11-19 14:50:12"
+}

@@ -1,0 +1,15 @@
+{
+  "passed": false,
+  "checks": [
+    "Real W movement through west gate",
+    "Named Ossa dialogue; no city-objective count pollution",
+    "Second armed Warden dialogue",
+    "Field briefing board responds to real E input",
+    "Real wheel zoom reaches first person at checkpoint",
+    "Locker issues pistol once; guidance advances and disappears",
+    "Range reset station responds without bypassing tutorial",
+    "Real pistol input knocks down all three replacement plates and advances tutorial",
+    "Returning inside Ward holsters pistol"
+  ],
+  "error": "AssertionError('Traceback (most recent call last):\\n  File \"/home/teknetik/code/ao2/unity/tools/city_loop_check.py\", line 69, in <module>\\n    asyncio.run(main())\\n    ~~~~~~~~~~~^^^^^^^^\\n  File \"/home/teknetik/.local/share/uv/python/cpython-3.14.7-linux-x86_64-gnu/lib/python3.14/asyncio/runners.py\", line 205, in run\\n    return runner.run(main)\\n           ~~~~~~~~~~^^^^^^\\n  File \"/home/teknetik/.local/share/uv/python/cpython-3.14.7-linux-x86_64-gnu/lib/python3.14/asyncio/runners.py\", line 128, in run\\n    return self._loop.run_until_complete(task)\\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^\\n  File \"/home/teknetik/.local/share/uv/python/cpython-3.14.7-linux-x86_64-gnu/lib/python3.14/asyncio/base_events.py\", line 720, in run_until_complete\\n    return future.result()\\n           ~~~~~~~~~~~~~^^\\n  File \"/home/teknetik/code/ao2/unity/tools/city_loop_check.py\", line 60, in main\\n    await tap(\\'Escape\\');await expect(\\'Paused\\');await click(\\'mute\\');s=await expect(\\'Paused\\');assert s[\\'session\\'][\\'muted\\'];await click(\\'mute\\')\\n                                                                                                   ~~~~~~~~~~~~^^^^^^^^^\\nAssertionError\\n')"
+}
