@@ -103,11 +103,11 @@ ITEMS = [
          desc="A pair of salvaged droid servos on the frame's shoulder straps, taking part of the pack's weight as you move."),
     # med and nano
     dict(id="trauma_kit", name="Trauma Kit", buy=20, sell=7, tags=["consumable", "field_supply", "field_supply_only"], stack=10, rarity=1, icon="trauma-kit-icon", kg=1.2,
-         desc="Haemostatic foam, a nanite suture gun and a pressure dressing. Closes what a medkit can't. Use with 2."),
+         desc="Haemostatic foam, a nanite suture gun and a pressure dressing. Closes what a medkit can't. Use it from your hotbar."),
     dict(id="nano_cell", name="Nano Recharge Cell", buy=6, sell=2, tags=["consumable", "nano", "field_supply", "field_supply_only"], stack=20, rarity=0, icon="nano-cell-icon", kg=0.25,
-         desc="A sealed tier-one nanite cartridge. Refills your weapon's charge and overclocks the regulator for 15 seconds, so the charge keeps refilling while you fire. Use with 9."),
+         desc="A sealed tier-one nanite cartridge. Refills your weapon's charge and overclocks the regulator for 15 seconds, so the charge keeps refilling while you fire. Use it from your hotbar."),
     dict(id="nano_surge_pack", name="Nano Surge Pack", buy=14, sell=5, tags=["consumable", "nano", "field_supply", "field_supply_only"], stack=10, rarity=1, icon="nano-surge-icon", kg=0.45,
-         desc="Twin cartridges and a hot-running regulator shunt. Refills the charge and doubles its refill rate for 40 seconds, firing or not. Use with 9."),
+         desc="Twin cartridges and a hot-running regulator shunt. Refills the charge and doubles its refill rate for 40 seconds, firing or not. Use it from your hotbar."),
     # digital magazines (never carried: GameSession.BuyMagazine)
     dict(id="mag_packcraft_12", name=f"Packcraft Quarterly {MID} Issue 12", buy=18, sell=0, tags=["magazine", "field_supply", "field_supply_only"], stack=1, rarity=0, icon="magazine-packcraft-icon", kg=0,
          desc="The fab co-op's quarterly for people who sew their own gear. This issue: a canvas rucksack from caravan webbing, clip-in side pouches and a padded hip belt."),
@@ -438,7 +438,7 @@ TAMSIN = dict(
              text="Weight's the real limit, not room. A frame pack puts the load on your hips, so you carry more, not just stuff more in. The low tech ones you can patch yourself. The mid-tier rigs want fab alloy and servos. Every pack has sockets for pouches, and the frames take a belt or a lifter.",
              choices=[choice("shop", "Show me the packs.", "shop"), choice("supplies", "Medkits and nano cells?", next="supplies"), choice("close", "Thanks, Tamsin.", "close")]),
         dict(id="supplies", title="Med and nano",
-             text="Medkits patch you up mid-fight, press 2. The trauma kit closes worse. A nano cell refills your weapon and overclocks the regulator, so the charge keeps coming back while you fire, press 9. The surge pack runs hotter and longer.",
+             text="Medkits patch you up mid-fight; keep a few on your hotbar. The trauma kit closes worse wounds. A nano cell refills your weapon and overclocks the regulator, so the charge keeps coming back while you fire. The surge pack runs hotter and longer.",
              choices=[choice("shop", "I'll take some.", "shop"), choice("magazines", "Tell me about the magazines.", next="magazines"), choice("close", "Good to know.", "close")]),
     ],
     shop=dict(title="Field Supply", subtitle=f"Tamsin {MID} Packs, med and nano, magazines", supplies=1, parts=0, salvage=0,

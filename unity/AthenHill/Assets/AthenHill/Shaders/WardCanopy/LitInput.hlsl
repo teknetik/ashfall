@@ -309,6 +309,13 @@ inline void InitializeStandardLitSurfaceData(float2 uv, out SurfaceData outSurfa
 // Wind uses the existing reduced-motion-aware city clock in every geometry pass.
 float _AthenAtmosphereTime;
 float _AthenAtmospherePreviousTime;
+float _AthenWindBoost;   // weather (Scripts/Weather/WeatherDirector): 0 when unset = the authored wind
+float _AthenWindGust;    // weather: amplitude of a gust wave rolling downwind, 0 when unset = none
+float WardWeatherWind(float3 p, float windTime)
+{
+    float wave = saturate(sin(windTime * .31 - (p.x * .82 + p.z * .57) * .06) * .5 + .5);
+    return max(0.0, 1.0 + _AthenWindBoost + _AthenWindGust * wave);
+}
 float3 WardTreeWind(float3 positionOS, float windTime)
 {
     float3 p = TransformObjectToWorld(positionOS);
@@ -316,7 +323,7 @@ float3 WardTreeWind(float3 positionOS, float windTime)
     float phase = windTime * .73 + p.x * .12 + p.z * .09;
     float broad = sin(phase) * .7 + sin(phase * .47 + 1.8) * .3;
     float flutter = sin(windTime * 2.4 + p.x * 1.7 + p.z * 1.3) * _WardLeafFlutter;
-    p.xz += float2(.82, .57) * (broad * _WardWindStrength * bend + flutter * bend);
+    p.xz += float2(.82, .57) * (broad * _WardWindStrength * bend + flutter * bend) * WardWeatherWind(p, windTime);
     return TransformWorldToObject(p);
 }
 

@@ -26,11 +26,18 @@ namespace AthenHill
   void OnEnable(){if(aimTarget)Targets.Add(this);}
   void OnDisable(){Targets.Remove(this);}
   void Update(){if(Alive&&regenPerSecond>0&&Current<max&&Time.time-LastDamageTime>regenDelay)Current=Mathf.Min(max,Current+regenPerSecond*Time.deltaTime);}
-  public bool Damage(float amount,Vector3 point)
+  /// What the last hit actually removed after armour and any weak-point multiplier (the HUD and QA read it).
+  public float LastDamageDealt {get;private set;}
+  public bool Damage(float amount,Vector3 point)=>Damage(amount,point,1);
+  /// afterMitigation scales what is left once AdjustIncomingDamage (armour) has taken its share: a weak-point hit
+  /// (DroidWeakPoint) rewards precision without letting a weak weapon ignore armour.
+  public bool Damage(float amount,Vector3 point,float afterMitigation)
   {
    if(!Alive||amount<=0)return false;
    if(AdjustIncomingDamage!=null)amount=Mathf.Max(0,AdjustIncomingDamage(amount));
    if(amount<=0)return true;
+   amount=WeakPointMath.AfterArmour(amount,afterMitigation);
+   LastDamageDealt=Mathf.Min(amount,Current);
    Current=Mathf.Max(0,Current-amount);LastDamageTime=Time.time;
    Damaged?.Invoke(amount,point);
    if(Current<=0)Died?.Invoke();

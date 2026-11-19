@@ -2314,6 +2314,7 @@ GameObject:
   - component: {fileID: 7555130061682466602}
   - component: {fileID: 6227533995606281909}
   - component: {fileID: 778649040702917794}
+  - component: {fileID: 4531979841820205987}
   m_Layer: 0
   m_Name: FeralLancerDrone
   m_TagString: Untagged
@@ -2407,6 +2408,9 @@ MonoBehaviour:
   separation: 2.4
   armour: 0
   armourMinFraction: 0.25
+  criticalStaggerImmunity: 0.8
+  criticalPoiseScale: 1.5
+  weatherSightFloor: 0.5
   wheel: {fileID: 0}
   wheelRadius: 0.21
   leanPerTurnRate: 0.05
@@ -2477,6 +2481,25 @@ MonoBehaviour:
   downwash: {fileID: 4315459201980508016}
   downwashRate: 26
   motorLoop: {fileID: 1539031594497332156}
+  alertVariants:
+  - {fileID: 8300000, guid: 329d5034a3ddb214bad34202c7a8ceee, type: 3}
+  windupVariants:
+  - {fileID: 8300000, guid: 0d32d18f3692bb6e78d4b6cbaac0f92c, type: 3}
+  strikeVariants: []
+  slamVariants: []
+  fireVariants:
+  - {fileID: 8300000, guid: 34a9d438d15409c918af85d9cfc3d671, type: 3}
+  - {fileID: 8300000, guid: 6f69d966bbf688cdfaf65b54b272fcdc, type: 3}
+  hitVariants: []
+  deathVariants:
+  - {fileID: 8300000, guid: 93bef4494ca79717abf6bd24042b06d8, type: 3}
+  stepVariants: []
+  limitVoices: 1
+  rollLoop: {fileID: 0}
+  rollFullSpeed: 5
+  rollIdleVolume: 0.4
+  rollVolume: 0.85
+  rollPitch: {x: 0.75, y: 1.2}
 --- !u!135 &5106284839155345012
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2547,7 +2570,7 @@ AudioSource:
   m_GameObject: {fileID: 1892233742964211660}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 3583287910516004314, guid: 22230a9bdb65e6ba89462ba3f9cc67bb, type: 2}
+  OutputAudioMixerGroup: {fileID: -2705682700631874584, guid: 22230a9bdb65e6ba89462ba3f9cc67bb, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
@@ -2557,12 +2580,12 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 96
   DopplerLevel: 0
   MinDistance: 2.5
-  MaxDistance: 40
+  MaxDistance: 80
   Pan2D: 0
-  rolloffMode: 1
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -2576,17 +2599,116 @@ AudioSource:
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.03125
+      value: 1
+      inSlope: 0
+      outSlope: -32.001953
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.0392562
+      value: 0.7960044
+      inSlope: -20.280846
+      outSlope: -20.280846
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.06327479
+      value: 0.49375245
+      inSlope: -7.809236
+      outSlope: -7.809236
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.10330579
+      value: 0.3021665
+      inSlope: -2.9346566
+      outSlope: -2.9346566
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.15934919
+      value: 0.19531669
+      inSlope: -1.240654
+      outSlope: -1.240654
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.23140498
+      value: 0.13337125
+      inSlope: -0.5980485
+      outSlope: -0.5980485
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.31947315
+      value: 0.09462783
+      inSlope: -0.32615024
+      outSlope: -0.32615024
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.4235537
+      value: 0.06817431
+      inSlope: -0.20066606
+      outSlope: -0.20066606
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.54364675
+      value: 0.048246186
+      inSlope: -0.13971235
+      outSlope: -0.13971235
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.67975205
+      value: 0.03153318
+      inSlope: -0.110116
+      outSlope: -0.110116
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.8318699
+      value: 0.015940735
+      inSlope: -0.09715033
+      outSlope: -0.09715033
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: -0.09375
+      outSlope: -0.09375
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -2650,6 +2772,24 @@ MonoBehaviour:
   level: 2
   experience: 30
   armour: 2
+--- !u!114 &4531979841820205987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1892233742964211660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6414e76fd28e33ecad8b5dec2255eb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.DroidWeakPoint
+  anchor: {fileID: 7157358193733702274}
+  offset: {x: 0, y: 0, z: 0}
+  radius: 0.13
+  damageMultiplier: 1.5
+  depthTolerance: 0.35
+  label: optic
 --- !u!1 &2492695953205168621
 GameObject:
   m_ObjectHideFlags: 0

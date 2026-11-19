@@ -57,7 +57,7 @@ async def main():
   await tap('Escape');await expect('Play')
   for keyname,state in [('Tab','Inventory'),('j','Journal')]:await tap(keyname);await expect(state);await tap('Escape')
   await goto('ring_gate');s=await expect('Play');assert 'offline' not in (s['session'].get('notice') or ''),'3 Oct 2026: the Meshy ring is the Lattice Jack, no offline response'
-  await tap('Escape');await expect('Paused');await click('mute');s=await expect('Paused');assert s['session']['muted'];await click('mute')
+  await tap('Escape');m0=(await expect('Paused'))['session']['muted'];await click('mute');s=await expect('Paused');assert s['session']['muted']!=m0;await click('mute')  # 19 Nov 2026: QA-display runs start muted (ATHEN_QA_MUTE), so assert the toggle
   await click('reduced-motion');s=await expect('Paused');assert s['session']['reducedMotion']
   await click('reduced-motion');s=await expect('Paused');assert not s['session']['reducedMotion']
   await click('credits-button');await expect('Credits');await tap('Escape')

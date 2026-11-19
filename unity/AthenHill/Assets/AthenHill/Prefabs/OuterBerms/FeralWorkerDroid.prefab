@@ -2314,6 +2314,7 @@ GameObject:
   - component: {fileID: 6869890817585149342}
   - component: {fileID: 4253903304444168391}
   - component: {fileID: 8815473696080526357}
+  - component: {fileID: 4521961403938111207}
   m_Layer: 0
   m_Name: FeralWorkerDroid
   m_TagString: Untagged
@@ -2404,6 +2405,9 @@ MonoBehaviour:
   separation: 1.6
   armour: 0
   armourMinFraction: 0.25
+  criticalStaggerImmunity: 0.8
+  criticalPoiseScale: 1.5
+  weatherSightFloor: 0.5
   wheel: {fileID: 0}
   wheelRadius: 0.21
   leanPerTurnRate: 0.05
@@ -2474,6 +2478,20 @@ MonoBehaviour:
   downwash: {fileID: 0}
   downwashRate: 26
   motorLoop: {fileID: 0}
+  alertVariants: []
+  windupVariants: []
+  strikeVariants: []
+  slamVariants: []
+  fireVariants: []
+  hitVariants: []
+  deathVariants: []
+  stepVariants: []
+  limitVoices: 1
+  rollLoop: {fileID: 0}
+  rollFullSpeed: 5
+  rollIdleVolume: 0.4
+  rollVolume: 0.85
+  rollPitch: {x: 0.75, y: 1.2}
 --- !u!136 &6868766805296137244
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2533,7 +2551,7 @@ AudioSource:
   m_GameObject: {fileID: 289512320220182114}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 3583287910516004314, guid: 22230a9bdb65e6ba89462ba3f9cc67bb, type: 2}
+  OutputAudioMixerGroup: {fileID: -2705682700631874584, guid: 22230a9bdb65e6ba89462ba3f9cc67bb, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
@@ -2649,6 +2667,24 @@ MonoBehaviour:
   level: 1
   experience: 12
   armour: 0
+--- !u!114 &4521961403938111207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 289512320220182114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6414e76fd28e33ecad8b5dec2255eb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.DroidWeakPoint
+  anchor: {fileID: 8345191814893405345}
+  offset: {x: 0, y: 0, z: 0}
+  radius: 0.15
+  damageMultiplier: 1.5
+  depthTolerance: 0.35
+  label: optic
 --- !u!1 &2876753145653721020
 GameObject:
   m_ObjectHideFlags: 0

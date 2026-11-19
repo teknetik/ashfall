@@ -56,6 +56,28 @@ namespace AthenHill
   [Tooltip("Flat damage taken off every hit after the player's armour penetration; the remainder never drops below Armour Min Fraction of the hit. 0 = none (the depot droids).")]
   [Min(0)]public float armour;
   [Range(0,1)]public float armourMinFraction=.25f;
+  [Header("Weak point (DroidWeakPoint)")]
+  [Tooltip("After a stagger, a weak-point hit may stagger again this soon (ordinary hits wait Stagger Immunity, whichever is shorter applies).")]
+  [Min(0)]public float criticalStaggerImmunity=.8f;
+  [Tooltip("A weak-point hit counts this many times its damage toward Stagger Threshold (elites).")]
+  [Min(1)]public float criticalPoiseScale=1.5f;
+  /// Staggers caused by weak-point hits (QA).
+  public int CriticalStaggers {get;private set;}
+  bool criticalPending;float lastStaggerAt=-99;
+  /// PlayerCombat marks the next Damage call as a weak-point hit and clears the mark afterwards (armour can absorb a
+  /// hit completely, in which case OnDamaged never runs).
+  public void MarkCriticalHit()=>criticalPending=true;
+  public void ClearCriticalMark()=>criticalPending=false;
+  /// Whether a hit may stagger now: ordinary hits wait the full immunity, weak-point hits the shorter one.
+  public static bool StaggerReady(float now,float lastStagger,float immunity,float criticalImmunity,bool critical)
+   =>now>=lastStagger+(critical?Mathf.Min(immunity,criticalImmunity):immunity);
+  [Header("Weather (19 Nov 2026)")]
+  [Tooltip("In a dust front the aggro radius shrinks with WeatherConditions.Visibility, never below this fraction. A droid already fighting the player, or carrying damage, is unaffected.")]
+  [Range(0,1)]public float weatherSightFloor=.5f;
+  /// Sight multiplier for the weather: the visibility, never below the floor; 1 in clear air or without weather.
+  public static float WeatherSightScale(float visibility,float floor)=>Mathf.Clamp(Mathf.Max(Mathf.Clamp01(floor),visibility),0,1);
+  /// Aggro radius used for spotting the player now. A droid that has been shot (still damaged) keeps its full range.
+  public float SightRadius=>Health&&Health.Current<Health.max?aggroRadius:aggroRadius*WeatherSightScale(WeatherConditions.Visibility,weatherSightFloor);
   [Header("Wheel (Wheeled kind)")]
   [Tooltip("Spins about its local X with the ground speed (forward = +Z of the droid).")]
   public Transform wheel;
@@ -122,6 +144,44 @@ namespace AthenHill
   public ParticleSystem downwash;
   [Min(0)]public float downwashRate=26;
   public AudioSource motorLoop;
+  [Header("Sound identity (19 Nov 2026; empty = the shared clip above)")]
+  [Tooltip("Variants played instead of the single clip of the same role, never the same one twice running. Leave empty to keep the shared set.")]
+  public AudioClip[] alertVariants=new AudioClip[0],windupVariants=new AudioClip[0],strikeVariants=new AudioClip[0],slamVariants=new AudioClip[0];
+  public AudioClip[] fireVariants=new AudioClip[0],hitVariants=new AudioClip[0],deathVariants=new AudioClip[0],stepVariants=new AudioClip[0];
+  [Tooltip("Share the global droid voice budget (VoiceLimiter.Droids): footsteps and hit clangs drop out first in a pack fight; alerts, tells, attacks and deaths always play.")]
+  public bool limitVoices=true;
+  [Tooltip("Rolling loop (wheeled droids): volume and pitch follow the ground speed; it idles quietly when standing and is silent beyond the source's Max Distance.")]
+  public AudioSource rollLoop;
+  [Min(.1f)]public float rollFullSpeed=5;
+  [Range(0,1)]public float rollIdleVolume=.4f,rollVolume=.85f;
+  public Vector2 rollPitch=new Vector2(.75f,1.2f);
+  int lastAlertV=-1,lastWindupV=-1,lastStrikeV=-1,lastSlamV=-1,lastFireV=-1,lastHitV=-1,lastDeathV=-1,lastStepV=-1;
+  float rollLevel;
+  /// Rolling-loop volume now (QA).
+  public float RollLevel=>rollLevel;
+  /// QA (19 Nov 2026 native check): voice lines played and refused by the budget, and the last clip played.
+  public int VoicesPlayed {get;private set;}
+  public int VoicesDropped {get;private set;}
+  public string LastVoiceClip {get;private set;}
+  public bool RollPlaying=>rollLoop&&rollLoop.isPlaying;
+  void Say(AudioClip clip,float volume,bool essential)
+  {
+   if(!voice||!clip)return;
+   if(limitVoices&&!VoiceLimiter.Droids.TryAcquire(Time.time,clip.GetHashCode(),clip.length,essential)){VoicesDropped++;return;}
+   voice.PlayOneShot(clip,volume);VoicesPlayed++;LastVoiceClip=clip.name;
+  }
+  void RollAudio(float dt)
+  {
+   if(!rollLoop||!rollLoop.clip)return;
+   bool dead=State==DroidState.Dead;
+   float range=rollLoop.maxDistance+5;
+   bool inRange=Player&&(Player.transform.position-transform.position).sqrMagnitude<range*range;
+   var mix=CombatAudio.RollMix(dead?0:Flat(velocity).magnitude,rollFullSpeed,rollIdleVolume,rollPitch);
+   rollLevel=Mathf.MoveTowards(rollLevel,dead||!inRange?0:mix.x*rollVolume,dt*(dead?.8f:2.5f));
+   rollLoop.volume=rollLevel;rollLoop.pitch=mix.y;
+   if(rollLevel>.001f){if(!rollLoop.isPlaying){rollLoop.time=UnityEngine.Random.Range(0,rollLoop.clip.length*.9f);rollLoop.Play();}}
+   else if(rollLoop.isPlaying)rollLoop.Stop();
+  }
   public PlayerCombat Player {get;private set;}
   public GameSession Session {get;private set;}
   public Vector3 Home {get;private set;}
@@ -156,7 +216,7 @@ namespace AthenHill
   float pauseFor,nextShot,strafeSign=1,strafeClock,joinAt=-1,flankSide=1;int shotsThisBurst;
   Vector3 lastPlayerPos,playerVelocity;
   bool HasStrafe=>strafeLeft&&strafeRight;
-  float timer,staggerReady,wanderWait,bob;
+  float timer,wanderWait,bob;
   Vector3 wanderTarget,velocity;
   bool struck;
   MaterialPropertyBlock glowBlock;
@@ -272,7 +332,7 @@ namespace AthenHill
    {
     case DroidState.Idle:
      Wander(dt);
-     if(PlayerAvailable&&PlayerDistance<aggroRadius&&CanSee())Alert();
+     if(PlayerAvailable&&PlayerDistance<SightRadius&&CanSee())Alert();
      break;
     case DroidState.Alert:
      Steer(transform.position,0,dt,Player.transform.position);   // only the separation push moves it
@@ -285,7 +345,7 @@ namespace AthenHill
      {
       Strikes++;Slamming=IsSlam(Strikes,slamEvery);windupNow=Slamming?slamWindupSeconds:windupSeconds;
       SetState(DroidState.Windup);struck=false;Play(attack,AttackRate());
-      if(voice&&windupClip)voice.PlayOneShot(windupClip,windupVolume);
+      Say(CombatAudio.Choose(windupVariants,windupClip,ref lastWindupV),windupVolume,true);
       break;
      }
      Steer(FlankTarget(),chaseSpeed,dt);Play(run?run:walk,Mathf.Max(.6f,velocity.magnitude/runStrideSpeed));
@@ -311,7 +371,7 @@ namespace AthenHill
     case DroidState.Returning:
      Steer(Home,wanderSpeed*1.6f,dt);Play(walk,Mathf.Max(.6f,velocity.magnitude/walkStrideSpeed));
      if(Flat(transform.position-Home).magnitude<1){SetState(DroidState.Idle);velocity=Vector3.zero;}
-     if(PlayerAvailable&&PlayerDistance<aggroRadius*.6f&&CanSee())Alert();
+     if(PlayerAvailable&&PlayerDistance<SightRadius*.6f&&CanSee())Alert();
      break;
    }
    if(eyeLight)
@@ -326,7 +386,7 @@ namespace AthenHill
   void Alert()
   {
    SetState(DroidState.Alert);Play(idle,1.6f);
-   if(voice&&alertClip)voice.PlayOneShot(alertClip);
+   Say(CombatAudio.Choose(alertVariants,alertClip,ref lastAlertV),1,true);
    Alerted?.Invoke(this);
   }
   /// The pack calls this droid in: it turns on the player after the delay (if it is still idle or heading home).
@@ -386,7 +446,7 @@ namespace AthenHill
    {
     windupNow=windupSeconds;SetState(DroidState.Windup);
     if(aim)Play(aim,1);
-    if(voice&&windupClip)voice.PlayOneShot(windupClip,windupVolume);
+    Say(CombatAudio.Choose(windupVariants,windupClip,ref lastWindupV),windupVolume,true);
    }
   }
   void RangedWindup(float dt)
@@ -435,7 +495,7 @@ namespace AthenHill
    dir=Quaternion.AngleAxis(spread.x,Vector3.up)*Quaternion.AngleAxis(spread.y,Vector3.Cross(dir,Vector3.up).normalized)*dir;
    DroidBolt.Fire(boltPrefab,this,from,dir,boltSpeed,boltDamage);BoltsFired++;
    flash=Mathf.Max(flash,.45f);
-   if(voice&&fireClip)voice.PlayOneShot(fireClip,fireVolume*UnityEngine.Random.Range(.85f,1f));
+   Say(CombatAudio.Choose(fireVariants,fireClip,ref lastFireV),fireVolume*UnityEngine.Random.Range(.85f,1f),true);
    if(sparks&&(!Session||!Session.reducedMotion)){sparks.transform.position=from;sparks.Emit(4);}
   }
   // A slam may play the attack slower (a heavier swing that still lands on the blow); ordinary strikes keep the old floor.
@@ -448,7 +508,7 @@ namespace AthenHill
   void Strike()
   {
    if(Slamming){Slam();return;}
-   if(voice&&strikeClip)voice.PlayOneShot(strikeClip);
+   Say(CombatAudio.Choose(strikeVariants,strikeClip,ref lastStrikeV),1,true);
    if(!PlayerAvailable)return;
    var to=Flat(Player.transform.position-transform.position);
    if(to.magnitude<=attackRange+.6f&&Vector3.Angle(Flat(transform.forward),to)<75)Player.Health.Damage(strikeDamage,transform.position);
@@ -457,7 +517,7 @@ namespace AthenHill
   /// Heavy slam: ground burst, then damage to the player anywhere within the radius.
   void Slam()
   {
-   var clip=slamClip?slamClip:strikeClip;if(voice&&clip)voice.PlayOneShot(clip,1);
+   Say(CombatAudio.Choose(slamVariants,slamClip?slamClip:CombatAudio.Choose(strikeVariants,strikeClip,ref lastStrikeV),ref lastSlamV),1,true);
    bool reduced=Session&&Session.reducedMotion;
    if(sparks){sparks.transform.position=transform.position+Vector3.up*.3f;sparks.Emit(reduced?12:36);}
    if(footDust)
@@ -618,6 +678,7 @@ namespace AthenHill
    bool visible=Visible;
    // The optic light only matters where it can be seen, or in a fight.
    if(eyeLight){bool lit=visible||Hostile;if(eyeLight.enabled!=lit)eyeLight.enabled=lit;}
+   RollAudio(dt);   // before the far-idle exit: an idle Sentinel is heard (its motor) before it is seen
    if(FarIdle&&!visible)return;
    if(kind==DroidKind.Walker)Footsteps(reduced);else if(kind==DroidKind.Hover)Rotors(dt,reduced);else WheelSpin(dt);
   }
@@ -688,11 +749,8 @@ namespace AthenHill
     var e=new ParticleSystem.EmitParams{position=new Vector3(at.x,transform.position.y+.04f,at.z),applyShapeToPosition=true};
     footDust.Emit(e,reduced?2:6);
    }
-   if(voice&&footstepClips.Length>0)
-   {
-    var c=footstepClips[UnityEngine.Random.Range(0,footstepClips.Length)];
-    if(c)voice.PlayOneShot(c,footstepVolume*UnityEngine.Random.Range(.75f,1f));
-   }
+   var shared=footstepClips.Length>0?footstepClips[UnityEngine.Random.Range(0,footstepClips.Length)]:null;
+   Say(CombatAudio.Choose(stepVariants,shared,ref lastStepV),footstepVolume*UnityEngine.Random.Range(.75f,1f),false);
   }
   void Rotors(float dt,bool reduced)
   {
@@ -720,17 +778,19 @@ namespace AthenHill
 
   void OnDamaged(float amount,Vector3 point)
   {
+   bool critical=criticalPending;criticalPending=false;
    if(amount<=0)return;
-   flash=1;
-   if(sparks){sparks.transform.position=point;sparks.Emit(10);}
-   if(voice&&hitClip)voice.PlayOneShot(hitClip,.8f);
+   flash=critical?1.6f:1;
+   if(sparks){sparks.transform.position=point;sparks.Emit(critical?18:10);}
+   Say(CombatAudio.Choose(hitVariants,hitClip,ref lastHitV),.8f,false);
    if(!Health.Alive)return;
    if(State==DroidState.Idle||State==DroidState.Returning||State==DroidState.Alert){bool wasCalm=State!=DroidState.Alert;SetState(DroidState.Chase);if(wasCalm)Alerted?.Invoke(this);}
-   poise+=amount;
+   poise+=amount*(critical?criticalPoiseScale:1);
    // A slam in progress cannot be interrupted; elites need enough damage between staggers.
-   if(Time.time>=staggerReady&&(State!=DroidState.Windup||Ranged)&&State!=DroidState.Firing&&Staggers(poise,staggerThreshold))
+   if(StaggerReady(Time.time,lastStaggerAt,staggerImmunity,criticalStaggerImmunity,critical)&&(State!=DroidState.Windup||Ranged)&&State!=DroidState.Firing&&Staggers(poise,staggerThreshold))
    {
-    poise=0;staggerReady=Time.time+staggerImmunity;SetState(DroidState.Stagger);Play(hit,1.4f);
+    if(critical)CriticalStaggers++;
+    poise=0;lastStaggerAt=Time.time;SetState(DroidState.Stagger);Play(hit,1.4f);
     if(Player)transform.position+=Flat(transform.position-Player.transform.position).normalized*.25f;
    }
   }
@@ -739,7 +799,7 @@ namespace AthenHill
    SetState(DroidState.Dead);velocity=Vector3.zero;deadAt=Time.time;joinAt=-1;
    if(aimLaser)aimLaser.enabled=false;
    deathPoint=transform.position;wreckGrounded=false;settleClock=0;WreckSettled=kind==DroidKind.Walker||!body;
-   if(voice&&deathClip)voice.PlayOneShot(deathClip);
+   Say(CombatAudio.Choose(deathVariants,deathClip,ref lastDeathV),1,true);
    if(eyeLight)eyeLight.intensity=0;
    if(sparks)sparks.Emit(30);
    if(smoke)smoke.Play();

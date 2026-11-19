@@ -6,6 +6,8 @@ from settings_test_input import focus,key,click,window
 from Xlib import X
 from Xlib.ext import xtest
 ROOT=Path(__file__).resolve().parents[1]
+# 19 Nov 2026: private-display runs mute the player (qa_display.sh), as lookbook.py and qa.py already do
+QA_MUTE_PREF = ('<pref name="AthenHill.Settings.v1.QA.Sound" type="string">' + __import__('base64').b64encode(__import__('json').dumps(dict(master=1.0, music=.5, ambience=1.0, effects=1.0, muted=True)).encode()).decode() + '</pref>') if __import__('os').environ.get('ATHEN_QA_MUTE') == '1' else ''
 OUT=Path(os.environ.get('ATHEN_CHECKPOINT_EVIDENCE',ROOT/'evidence/checkpoint/20260926/native'));OUT.mkdir(parents=True,exist_ok=True)
 async def main():
  recording=None
@@ -14,12 +16,19 @@ async def main():
  for vendor,product in [('unknown','unknown'),('Free Column','Athen Hill')]:
   prefs=OUT/'config/unity3d'/vendor/product;prefs.mkdir(parents=True,exist_ok=True)
   encoded=base64.b64encode(json.dumps(video).encode()).decode()
-  (prefs/'prefs').write_text('<unity_prefs version_major="1" version_minor="1"><pref name="AthenHill.Settings.v1.QA.Video" type="string">'+encoded+'</pref></unity_prefs>')
- p=subprocess.Popen([str(ROOT/'AthenHill/Builds/LinuxDevelopment/AthenHill.x86_64'),'-force-glcore','-screen-fullscreen','0','-screen-width','1920','-screen-height','1080','-logFile',str(OUT/'Player.log'),'--athen-qa',str(OUT),'--athen-qa-background'],env=env,stdout=subprocess.DEVNULL,stderr=subprocess.STDOUT)
+  (prefs/'prefs').write_text('<unity_prefs version_major="1" version_minor="1"><pref name="AthenHill.Settings.v1.QA.Video" type="string">'+encoded+'</pref>'+QA_MUTE_PREF+'</unity_prefs>')
+ p=subprocess.Popen([os.environ.get('ATHEN_EXE',str(ROOT/'AthenHill/Builds/LinuxDevelopment/AthenHill.x86_64')),'-force-glcore','-screen-fullscreen','0','-screen-width','1920','-screen-height','1080','-logFile',str(OUT/'Player.log'),'--athen-qa',str(OUT),'--athen-qa-background'],env=env,stdout=subprocess.DEVNULL,stderr=subprocess.STDOUT)
  (OUT/'pid').write_text(str(p.pid))
  os.environ.update(ATHEN_NATIVE_DIR=str(OUT),ATHEN_NATIVE_PID=str(p.pid))
+ def locked():
+  try:return json.loads((OUT/'snapshot.json').read_text()).get('cursor',{}).get('lockState')=='Locked'
+  except Exception:return False
+ # 19 Nov 2026: since 5 Oct the cursor is locked in play (always-on mouse look); an XTEST pointer move while it is locked arrives
+ # as one large mouse delta (yaw +300, pitch to the clamp) and threw the gate walk off. Move the pointer only while it is free.
  def focused():
-  d=focus();w=window(d);w.set_input_focus(X.RevertToParent,X.CurrentTime);g=w.get_geometry();xy=d.screen().root.translate_coords(w,0,0);xtest.fake_input(d,X.MotionNotify,x=xy.x+g.width//2,y=xy.y+g.height//2);d.sync();return d
+  d=focus();w=window(d);w.set_input_focus(X.RevertToParent,X.CurrentTime);g=w.get_geometry();xy=d.screen().root.translate_coords(w,0,0)
+  if not locked():xtest.fake_input(d,X.MotionNotify,x=xy.x+g.width//2,y=xy.y+g.height//2)
+  d.sync();return d
  def snap():return json.loads((OUT/'snapshot.json').read_text())
  async def tap(name,seconds=.12):
   d=focused();key(d,name,True);await asyncio.sleep(seconds);key(d,name,False);await asyncio.sleep(.35)

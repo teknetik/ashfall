@@ -136,6 +136,7 @@ Shader "Athen Hill/Berms Ground V2"
         CBUFFER_END
         float4 _AthenTerrainTime;
         float4 _AthenTerrainHazeScale;
+        float _AthenWeatherHaze; // weather (Scripts/Weather): extra haze density, 0 when unset = authored haze
 
         float Hash11(float p) { p = frac(p * 0.1031); p *= p + 33.33; p *= p + p; return frac(p); }
         float2 Hash12(float n)
@@ -469,7 +470,7 @@ Shader "Athen Hill/Berms Ground V2"
                     float dh = h1 - h0;
                     opticalDepth *= abs(dh) > 1e-3 ? (exp(-h0) - exp(-h1)) / dh : exp(-h0);
                 }
-                float haze = 1.0 - exp(-opticalDepth);
+                float haze = 1.0 - exp(-opticalDepth * (1.0 + max(_AthenWeatherHaze, 0.0)));
                 haze = saturate(haze + exp(-max(0.0, P.y) * 0.06) * 0.11 * lerp(saturate((dist - 20.0) / 40.0), 1.0, g.edge));
                 float clockActive = saturate(_AthenTerrainTime.x);
                 float3 hazeColor = _Haze.rgb * lerp(float3(1, 1, 1), _AthenTerrainHazeScale.rgb, clockActive);

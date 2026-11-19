@@ -17,6 +17,7 @@ Shader "Athen Hill/Wind Grass"
         float4 _Root,_Tip,_Dry; float _WindStrength;
         CBUFFER_END
         float _AthenAtmosphereTime;
+        float _AthenWindBoost; // weather (Scripts/Weather): 0 when unset = the authored sway
         struct Attributes { float4 position:POSITION; float2 uv:TEXCOORD0; float4 color:COLOR; };
         struct Varyings { float4 position:SV_POSITION; float2 uv:TEXCOORD0; float3 world:TEXCOORD1; float4 color:COLOR; float fog:TEXCOORD2; half3 vertexLighting:TEXCOORD3; };
         Varyings Vert(Attributes i)
@@ -24,7 +25,7 @@ Shader "Athen Hill/Wind Grass"
             Varyings o; float3 p=TransformObjectToWorld(i.position.xyz);
             float phase=_AthenAtmosphereTime*1.5+p.x*.8+p.z*.6;
             float wind=sin(phase)+.35*sin(phase*2.3);
-            p.xz+=float2(.8,.35)*wind*_WindStrength*i.uv.y*i.uv.y;
+            p.xz+=float2(.8,.35)*wind*_WindStrength*i.uv.y*i.uv.y*max(0.,1.+_AthenWindBoost);
             o.world=p;o.position=TransformWorldToHClip(p);o.uv=i.uv;o.color=i.color;
             o.fog=ComputeFogFactor(o.position.z);
             o.vertexLighting=VertexLighting(p,half3(0,1,0));return o;

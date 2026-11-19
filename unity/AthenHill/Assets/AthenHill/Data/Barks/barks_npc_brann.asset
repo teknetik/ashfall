@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce3127b2b0bed0c4789d9872eddff4de, type: 3}
+  m_Name: barks_npc_brann
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.BarkSet
+  speakerId: npc_brann
+  displayName: Brann
+  lines:
+  - id: greet_heavy
+    trigger: 0
+    text: Door's open. Bring me something heavy.
+    voice: {fileID: 8300000, guid: 8f8bbd281cf7c6a43948c02096c546fc, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: greet_bench
+    trigger: 0
+    text: Back again? Bench is free.
+    voice: {fileID: 8300000, guid: 52ac453bac8f9b70582febfb6cd4bc79, type: 3}
+    requires: primer
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: idle_drone
+    trigger: 1
+    text: Half of this was a drone last week.
+    voice: {fileID: 8300000, guid: 501272097b6dc99bb85f2dfdc8d78b23, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: idle_hoist
+    trigger: 1
+    text: Hoist sticks. Always the hoist.
+    voice: {fileID: 8300000, guid: 7dd5e3b99690844c686ca7c885e9fdd7, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: weapon
+    trigger: 2
+    text: Easy. Holster that in my shop.
+    voice: {fileID: 8300000, guid: 7174e3a6964c365fc9fe685a78a9f771, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: ack_primer
+    trigger: 3
+    text: Survived Ossa's primer, huh? Now you're useful.
+    voice: {fileID: 8300000, guid: 022f44318fdb6b10d8dd556110df5b78, type: 3}
+    requires: primer
+    hours: {x: 0, y: 24}
+    once: 1
+    weight: 1
+  - id: ack_home
+    trigger: 3
+    text: Got a locker now? Fill it with scrap. Sell me the rest.
+    voice: {fileID: 8300000, guid: 2221785cd1548c0579c2496b5dbffaee, type: 3}
+    requires: flag:home_leased
+    hours: {x: 0, y: 24}
+    once: 1
+    weight: 1
+  - id: order_done
+    trigger: 4
+    text: Another order closed. Ossa will run you ragged.
+    voice: {fileID: 8300000, guid: 1d4a6641574e1e0999843fac1822f5b4, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1

@@ -21,7 +21,7 @@ namespace AthenHill
         readonly Dictionary<string, SliderInt> sliders = new Dictionary<string, SliderInt>();
         readonly Dictionary<string, Label> percentages = new Dictionary<string, Label>();
         readonly Dictionary<string, DropdownField> choices = new Dictionary<string, DropdownField>();
-        readonly Toggle mute, vsync, post, motion, invertY;
+        readonly Toggle mute, vsync, post, motion, invertY, hitMarkers, captions, conversationCamera;
         readonly GameSession session;
         readonly IVisualElementScheduledItem ticker;
         List<Vector2Int> resolutions;
@@ -50,6 +50,9 @@ namespace AthenHill
             Heading(soundPage, "Accessibility");
             motion = Toggle(soundPage, "settings-reduced-motion", "Reduced motion", value => { if (session.reducedMotion != value) session.ToggleReducedMotion(); });
             motion.SetValueWithoutNotify(session.reducedMotion);
+            // BarkDirector saves its own switch (PlayerPrefs, same prefix family); the panel only shows and sets it.
+            captions = Toggle(soundPage, "bark-captions", "Bark captions", value => { BarkDirector.CaptionsEnabled = value; Refresh(); });
+            Note(soundPage, "Bark captions subtitle what colonists say as you pass. Conversations always show their text.");
             Heading(soundPage, "City soundtrack");
             track = Note(soundPage, ""); track.name = "current-track";
             Note(soundPage, "Dust of the Giants  /  Dust of Alshain");
@@ -62,10 +65,18 @@ namespace AthenHill
             Slider(controlsPage, "mouse-sensitivity", "Look sensitivity", ControlOptions.MinSensitivity, ControlOptions.MaxSensitivity, value => { settings.Controls.sensitivity = value; settings.SaveControls(); });
             invertY = Toggle(controlsPage, "invert-mouse-y", "Invert look up/down", value => { settings.Controls.invertY = value; settings.SaveControls(); });
             Note(controlsPage, "The mouse turns the camera whenever no window is open. Hold Left Alt to free the pointer for the HUD; any open window frees it too.");
+            Heading(controlsPage, "Combat feedback");
+            Slider(controlsPage, "camera-shake", "Camera shake", 0, 100, value => { settings.Controls.cameraShake = value; settings.SaveControls(); });
+            hitMarkers = Toggle(controlsPage, "hit-markers", "Hit markers and ticks", value => { settings.Controls.hitMarkers = value; settings.SaveControls(); });
+            Note(controlsPage, "Camera shake follows shots, hits taken and nearby wrecks. Reduced motion (Sound tab) turns it off.");
+            Heading(controlsPage, "Camera and interface");
+            conversationCamera = Toggle(controlsPage, "conversation-camera", "Conversation camera", value => { settings.Interface.conversationCamera = value; settings.SaveInterface(); });
+            Choice(controlsPage, "interface-mode", "Interface", new List<string> { "Full", "Adaptive" }, index => { settings.Interface.mode = index; settings.SaveInterface(); });
+            Note(controlsPage, "The conversation camera frames whoever you talk to over your shoulder and moves the conversation to the bottom of the screen. Adaptive fades the colonist panel, Field Notes, event log and key hints after a few quiet seconds; each returns when it changes, in combat, while a window is open and while Left Alt is held.");
             Heading(controlsPage, "Keys");
-            Note(controlsPage, "WASD move · Shift run · Space jump · E interact · Tab field pack · J journal · 1 primary weapon · 2 sidearm · 3–0 hotbar items · Right mouse aim · Left mouse or F fire · Wheel zoom · R return to West Gate · Esc pause");
+            Note(controlsPage, "WASD move · Shift run · Space jump · E interact · Tab field pack · J journal · 1 primary weapon · 2 sidearm · 3–0 hotbar items · Right mouse aim · Left mouse or F fire · Wheel zoom · R return to East Gate · Esc pause");
             var controlActions = new VisualElement(); controlActions.AddToClassList("settings-actions"); controlsPage.Add(controlActions);
-            Button(controlActions, "reset-controls", "Reset controls", settings.ResetControls);
+            Button(controlActions, "reset-controls", "Reset controls", () => { settings.ResetControls(); settings.ResetInterface(); });
 
             Heading(videoPage, "Display");
             Choice(videoPage, "resolution", "Resolution", new List<string>(), index =>
@@ -141,6 +152,9 @@ namespace AthenHill
             Value("master-volume", s.master * 100); Value("music-volume", s.music * 100); Value("ambience-volume", s.ambience * 100); Value("effects-volume", s.effects * 100);
             mute.SetValueWithoutNotify(s.muted); motion.SetValueWithoutNotify(session.reducedMotion);
             Value("mouse-sensitivity", settings.Controls.sensitivity); invertY.SetValueWithoutNotify(settings.Controls.invertY);
+            Value("camera-shake", settings.Controls.cameraShake); hitMarkers.SetValueWithoutNotify(settings.Controls.hitMarkers);
+            captions.SetValueWithoutNotify(BarkDirector.CaptionsEnabled);
+            conversationCamera.SetValueWithoutNotify(settings.Interface.conversationCamera); ChoiceValue("interface-mode", (int)settings.Interface.Mode);
             resolutions = settings.Resolutions(); choices["resolution"].choices = resolutions.Select(r => r.x + " × " + r.y).ToList();
             ChoiceValue("resolution", resolutions.IndexOf(new Vector2Int(v.width, v.height)));
             ChoiceValue("window-mode", v.windowMode); ChoiceValue("graphics-preset", v.preset);
@@ -154,7 +168,7 @@ namespace AthenHill
             scroll.SetEnabled(!preview); soundTab.SetEnabled(!preview); videoTab.SetEnabled(!preview); controlsTab.SetEnabled(!preview);
             Show(actions, video && !preview); Show(confirmation, preview); Show(status, !preview);
             apply.SetEnabled(settings.HasChanges); discard.SetEnabled(settings.HasChanges);
-            status.text = controls ? "Mouse changes take effect at once and are saved automatically." : video ? settings.HasChanges ? "Unapplied changes · Apply to try them for 15 seconds." : settings.VideoMessage == "" ? "Video settings are up to date." : settings.VideoMessage : s.muted ? "All audio is muted. Uncheck Mute all audio to listen." : "Volume changes are heard immediately and saved automatically.";
+            status.text = controls ? "Control changes take effect at once and are saved automatically." : video ? settings.HasChanges ? "Unapplied changes · Apply to try them for 15 seconds." : settings.VideoMessage == "" ? "Video settings are up to date." : settings.VideoMessage : s.muted ? "All audio is muted. Uncheck Mute all audio to listen." : "Volume changes are heard immediately and saved automatically.";
             if (preview && !wasPreviewing) panel.schedule.Execute(() => keep.Focus());
             if (!preview && wasPreviewing) panel.schedule.Execute(() => videoTab.Focus());
             wasPreviewing = preview; updating = false; Tick();

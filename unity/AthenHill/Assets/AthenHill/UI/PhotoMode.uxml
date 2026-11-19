@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+ <!-- Photo mode (19 Nov 2026, showcase camera). Hosted inside the city HUD document by PhotoMode.cs, which fills
+      photo-rows from PhotoControls (one row per setting, in PhotoRow order). Shares the HUD's bronze frame (.panel) and
+      button art; the selected row carries the cyan focus perimeter. Keyboard only by default; hold Left Alt for the
+      pointer. -->
+ <Style src="PhotoMode.uss" />
+ <ui:VisualElement name="photo-panel" class="panel">
+  <ui:VisualElement class="photo-header" picking-mode="Ignore">
+   <ui:Label text="PHOTO MODE" class="photo-title" picking-mode="Ignore" />
+   <ui:Label text="GAME PAUSED" class="photo-paused" picking-mode="Ignore" />
+  </ui:VisualElement>
+  <ui:VisualElement name="photo-rows" />
+  <ui:Label name="photo-status" class="photo-status" picking-mode="Ignore" />
+  <ui:Label name="photo-hints" class="photo-hints" picking-mode="Ignore" text="WASD move · Space/E rise · C/Q fall · Shift fast · Ctrl slow · Mouse look · Wheel zoom&#10;↑↓ choose · ←→ adjust (Shift ×5) · Enter toggle · R reset view · H hide panel · Hold Alt for the cursor" />
+ </ui:VisualElement>
+</ui:UXML>

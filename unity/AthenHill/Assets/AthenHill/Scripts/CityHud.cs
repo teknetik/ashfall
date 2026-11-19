@@ -37,11 +37,26 @@ namespace AthenHill
   PackPanel pack;
   HotbarView hotbar;
   JournalPanel journalPanel;
+  WorldMapPanel worldMap;
   StashPanel stashPanel;
   RestPanel restPanel;
   QuestJournal journal;
   int markCount=-1;
   Label footerLeft,footerRight;
+  // ---- Interface package (19 Nov 2026): lower-third dialogue while the conversation camera frames, adaptive HUD.
+  [Tooltip("Adaptive interface: quiet seconds before a corner panel fades, and the fade lengths. Full mode ignores it.")]
+  public AdaptiveHudModel adaptive=new AdaptiveHudModel();
+  [Tooltip("Seconds after the last hit taken that the HUD counts as in combat (Adaptive keeps every panel up).")]
+  [Min(0)]public float hurtHoldSeconds=6;
+  public DialogueLayout Layout {get;private set;}
+  public InterfaceMode Mode=>session&&session.Settings?session.Settings.Interface.Mode:InterfaceMode.Full;
+  VisualElement shade,modal;
+  readonly VisualElement[][] panelElements=new VisualElement[AdaptiveHudModel.Panels.Length][];
+  Label[] noteLabels;readonly string[] noteTexts=new string[4];
+  ConversationCamera conversation;PlayerCombat playerCombat;
+  float dialogueSince=-1,lastHurt=float.NegativeInfinity;
+  int lastHp=int.MinValue,lastNano=int.MinValue,adaptiveLogRevision=-1;
+  bool panelsApplied;
   void Start()
   {
    root=GetComponent<UIDocument>().rootVisualElement;
@@ -54,6 +69,15 @@ namespace AthenHill
    root.RegisterCallback<GeometryChangedEvent>(_=>UpdateWindowSize());
    UpdateWindowSize();
    root.Q("objective-box").RegisterCallback<GeometryChangedEvent>(e=>root.Q("top-actions").style.top=e.newRect.yMax+7);
+   shade=root.Q("shade");modal=root.Q("modal");
+   panelElements[(int)HudPanel.Identity]=new[]{root.Q("identity")};
+   panelElements[(int)HudPanel.FieldNotes]=new[]{root.Q("objective-box"),root.Q("top-actions")};
+   panelElements[(int)HudPanel.Log]=new[]{root.Q("chat")};
+   panelElements[(int)HudPanel.KeyHints]=new[]{root.Q("key-hints")};
+   panelElements[(int)HudPanel.Hotbar]=new[]{root.Q("quickbar")};
+   panelElements[(int)HudPanel.Compass]=new[]{root.Q("compass")};
+   noteLabels=new[]{root.Q<Label>("objective-title"),root.Q<Label>("objective"),root.Q<Label>("progress"),root.Q<Label>("credits")};
+   adaptive.WakeAll(Time.unscaledTime);
    session.input.PointerOverUi=PointerOverControls;
    session.input.MenuPopupOpen=()=>PopupOpen()||Time.frameCount-lastPopupFrame<=1;
 
@@ -80,6 +104,7 @@ namespace AthenHill
    merchant=new MerchantPanel(root,session,crafting);
    journal=session.Journal;
    journalPanel=new JournalPanel(root.Q("journal-panel"),session,journal);
+   worldMap=new WorldMapPanel(root,session);
    stashPanel=new StashPanel(root.Q("stash-panel"),session,crafting);
    restPanel=new RestPanel(root.Q("rest-panel"),session);
    if(journal)journal.Changed+=Refresh;
@@ -295,9 +320,10 @@ namespace AthenHill
     Text("modal-title",station&&!string.IsNullOrEmpty(station.title)?station.title:"Field fabricator");Text("modal-subtitle",station?station.subtitle:"Fabricate parts and fit pistol mods");
     if(footerRight!=null)footerRight.text="↑↓ · Schematic     → · Actions     Tab · Next     Enter · Confirm";
    }
+   UpdateDialogueLayout();
    if(session.State==CityState.Dialogue)
    {
-    Text("modal-title",session.ActiveNpc.definition.displayName);Text("modal-subtitle",session.Dialogue.title);Text("dialogue-text",session.Dialogue.text);
+    DialogueHeading();Text("dialogue-text",session.Dialogue.text);
     var choices=session.Choices;
     for(int i=0;i<GameSession.MaxChoices;i++){var b=root.Q<Button>("choice"+i);if(b==null)continue;bool on=i<choices.Length;b.style.display=on?DisplayStyle.Flex:DisplayStyle.None;if(on)b.text=choices[i].label;}
    }
@@ -327,6 +353,7 @@ namespace AthenHill
     Text("modal-title","Journal");Text("modal-subtitle","Missions · Ward notes");journalPanel.Refresh();
     if(footerRight!=null)footerRight.text="↑↓ · Mission     T · Track     J / Esc · Close";
    }
+   worldMap?.Refresh(); // the world map (M) swaps the modal's scroll view for its sheet, and back
    if(session.State==CityState.Stash)
    {
     var home=session.ActiveHome;
@@ -350,6 +377,7 @@ namespace AthenHill
      {
       if(session.State==CityState.Shop)merchant.Opened();
       else if(session.State==CityState.Journal)journalPanel.Opened();
+      else if(session.State==CityState.Map&&worldMap!=null)worldMap.Opened();
       else if(session.State==CityState.Stash)stashPanel.Opened();
       else if(session.State==CityState.Rest)restPanel.Opened();
       else if(session.State==CityState.Fabricator&&fabricator!=null)fabricator.Opened();
@@ -375,6 +403,7 @@ namespace AthenHill
    Show("tunnel",tunnel);
    if(tunnel)for(int i=0;i<4;i++){var ring=root.Q("tunnel-ring"+i);float phase=Mathf.Repeat(session.GridProgress*tunnelSpeed+i*.25f,1);float size=20+phase*480;ring.style.width=Length.Percent(size);ring.style.height=Length.Percent(size);ring.style.left=Length.Percent(50-size/2);ring.style.top=Length.Percent(50-size/2);ring.style.opacity=1-phase;}
    string prompt=session.Prompt;Show("interaction",!string.IsNullOrEmpty(prompt));root.Q<Button>("interaction").text=prompt;
+   UpdateDialogueLayout();UpdatePanels(!string.IsNullOrEmpty(prompt));
    // Declutter: the colonist named by the interaction prompt needs no nametag (it would sit over shop signs).
    var prompted=!string.IsNullOrEmpty(prompt)?session.Nearest:null;
    foreach(var pair in tags)
@@ -384,6 +413,98 @@ namespace AthenHill
     pair.Value.style.display=visible?DisplayStyle.Flex:DisplayStyle.None;
     if(visible){var point=RuntimePanelUtils.CameraTransformWorldToPanel(root.panel,world,worldCamera);pair.Value.style.left=point.x-28;pair.Value.style.top=point.y-30;}
    }
+  }
+  ConversationCamera Conversation()
+  {
+   if(!conversation&&session.follow)conversation=session.follow.conversation?session.follow.conversation:session.follow.GetComponent<ConversationCamera>();
+   return conversation;
+  }
+  /// Lower third only while the conversation camera frames the NPC (DialogueLayoutRule); otherwise the centred window
+  /// over the shade, exactly as before. The class swaps the modal's styling; the saved drag offset waits meanwhile.
+  void UpdateDialogueLayout()
+  {
+   if(shade==null)return;
+   bool open=session.State==CityState.Dialogue&&session.ActiveNpc;
+   if(!open)dialogueSince=-1;else if(dialogueSince<0)dialogueSince=Time.unscaledTime;
+   var cam=Conversation();var follow=session.follow;
+   bool cameraOn=ConversationCamera.Enabled&&cam&&cam.isActiveAndEnabled&&cam.framingEnabled&&!PhotoMode.Active;
+   var next=DialogueLayoutRule.Choose(open,cameraOn,follow&&follow.FixedView,follow&&follow.FirstPerson,cam&&cam.Engaged,cam&&cam.Framing,open?Time.unscaledTime-dialogueSince:0);
+   if(next==Layout)return;
+   Layout=next;bool lower=next==DialogueLayout.LowerThird;
+   shade.EnableInClassList("dialogue-lower-third",lower);
+   windowLayout.Hold(modal,lower);
+   if(open)DialogueHeading();
+  }
+  /// Centred: the colonist's name over the topic, as before. Lower third: a name plate (name in capitals, role · topic).
+  void DialogueHeading()
+  {
+   var npc=session.ActiveNpc;var node=session.Dialogue;if(!npc||npc.definition==null||node==null)return;
+   var d=npc.definition;
+   if(Layout!=DialogueLayout.LowerThird){Text("modal-title",d.displayName);Text("modal-subtitle",node.title);return;}
+   Text("modal-title",(d.displayName??"").ToUpperInvariant());
+   Text("modal-subtitle",DialogueLayoutRule.NamePlateSubtitle(d.role,node.title));
+  }
+  PlayerCombat Combat(){if(!playerCombat&&session.player)playerCombat=session.player.GetComponent<PlayerCombat>();return playerCombat;}
+  /// Feeds the adaptive model what changed this frame and applies the panels' opacity. In Full mode only the
+  /// lower-third dialogue moves anything (the log, key hints and hotbar give way to it).
+  void UpdatePanels(bool prompt)
+  {
+   float now=Time.unscaledTime;
+   var combat=Combat();
+   if(combat&&combat.Health)
+   {
+    int hp=Mathf.CeilToInt(combat.Health.Current),nano=Mathf.FloorToInt(combat.Nano);
+    if(hp!=lastHp||nano!=lastNano)
+    {
+     if(lastHp!=int.MinValue){if(hp<lastHp)lastHurt=now;adaptive.Wake(HudPanel.Identity,now);}
+     lastHp=hp;lastNano=nano;
+    }
+   }
+   if(noteLabels!=null)for(int i=0;i<noteLabels.Length;i++)
+   {
+    var text=noteLabels[i]?.text;
+    if(!string.Equals(text,noteTexts[i],StringComparison.Ordinal)){noteTexts[i]=text;adaptive.Wake(HudPanel.FieldNotes,now);}
+   }
+   if(adaptiveLogRevision!=session.LogRevision){adaptiveLogRevision=session.LogRevision;adaptive.Wake(HudPanel.Log,now);}
+   var frame=new HudFrame
+   {
+    mode=Mode,lowerThird=Layout==DialogueLayout.LowerThird,windowOpen=session.State!=CityState.Play,
+    combat=combat&&combat.Armed||now-lastHurt<hurtHoldSeconds,altHeld=session.input&&session.input.CursorFreed,
+    prompt=prompt,reducedMotion=session.reducedMotion
+   };
+   if(!adaptive.Step(frame,now,Time.unscaledDeltaTime)&&panelsApplied)return;
+   panelsApplied=true;
+   foreach(var p in AdaptiveHudModel.Panels)
+   {
+    float a=adaptive.Alpha(p);
+    foreach(var e in panelElements[(int)p])
+    {
+     if(e==null)continue;
+     // Full opacity clears the inline values so the panel is exactly the authored one.
+     if(a>=1){e.style.opacity=StyleKeyword.Null;e.style.visibility=StyleKeyword.Null;}
+     else{e.style.opacity=a;e.style.visibility=a<AdaptiveHudModel.HiddenBelow?Visibility.Hidden:Visibility.Visible;}
+    }
+   }
+  }
+  /// Dev-bridge state (snapshot.json → hud): dialogue layout, interface mode, panel opacity and which are hidden.
+  public static object Qa(){var hud=FindAnyObjectByType<CityHud>();return hud?hud.QaState():null;}
+  object QaState()
+  {
+   bool radioUp=radio!=null&&radio.resolvedStyle.display==DisplayStyle.Flex,noticeUp=notice!=null&&notice.resolvedStyle.display==DisplayStyle.Flex;
+   return new
+   {
+    dialogueLayout=DialogueLayoutRule.Id(Layout),
+    shadeDimmed=shade!=null&&shade.resolvedStyle.display==DisplayStyle.Flex&&Layout!=DialogueLayout.LowerThird,
+    modalHeld=modal!=null&&windowLayout!=null&&windowLayout.Held(modal),
+    interfaceMode=Mode==InterfaceMode.Adaptive?"adaptive":"full",
+    conversationCamera=ConversationCamera.Enabled,
+    conversationCameraSetting=session&&session.Settings?session.Settings.Interface.conversationCamera:ConversationCamera.Enabled,
+    barkCaptions=BarkDirector.CaptionsEnabled,
+    hidden=AdaptiveHudModel.Panels.Where(p=>adaptive.Hidden(p)).Select(AdaptiveHudModel.Id).ToArray(),
+    opacity=AdaptiveHudModel.Panels.ToDictionary(AdaptiveHudModel.Id,p=>adaptive.Alpha(p)),
+    quietSeconds=adaptive.quietSeconds,
+    topCentre=new{radio=radioUp,notice=noticeUp,depth=(radioUp?1:0)+(noticeUp?1:0)}
+   };
   }
   static readonly RaycastHit[] sightHits=new RaycastHit[8];
   /// A nametag only shows when nothing solid stands between the camera and it (Brann works inside the Salvage shop;

@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce3127b2b0bed0c4789d9872eddff4de, type: 3}
+  m_Name: barks_npc_torr
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.BarkSet
+  speakerId: npc_torr
+  displayName: Torr
+  lines:
+  - id: greet_part
+    trigger: 0
+    text: Hey. Got a spare part for me? No? Worth asking.
+    voice: {fileID: 8300000, guid: b8e8eb92b916af44ebd657309cde7cad, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: greet_again
+    trigger: 0
+    text: You again. Good. Something's always broken.
+    voice: {fileID: 8300000, guid: c23e46454e3e63ad6bc7f2c327b70ba5, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: idle_boards
+    trigger: 1
+    text: Three terminals, two spare boards. Somebody's waiting.
+    voice: {fileID: 8300000, guid: ccae0d70415a1b091a635083dcd394dd, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: idle_slab
+    trigger: 1
+    text: If the slab says nothing, ask a person.
+    voice: {fileID: 8300000, guid: a1ff361e1c9a95cfd8fdbecf23f04a7f, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: idle_night
+    trigger: 1
+    text: Screens act up after dark. Always have.
+    voice: {fileID: 8300000, guid: 22a2f4d5a9dbbc04c9b3a6159a3c955c, type: 3}
+    requires: 
+    hours: {x: 20, y: 5}
+    once: 0
+    weight: 1
+  - id: weapon
+    trigger: 2
+    text: Whoa. Wardens see that in here, you'll lose it.
+    voice: {fileID: 8300000, guid: f0e32b948df00c940b5213648a2e0ccc, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: ack_primer
+    trigger: 3
+    text: Back from the Berms? Bring me anything with a circuit board.
+    voice: {fileID: 8300000, guid: 3290893429648eccfa306e6d8f93637d, type: 3}
+    requires: primer
+    hours: {x: 0, y: 24}
+    once: 1
+    weight: 1
+  - id: ack_home
+    trigger: 3
+    text: Got yourself a roof, I hear. Keep that locker shut.
+    voice: {fileID: 8300000, guid: 10bcdadda786cbc68a80752aaf12ed0f, type: 3}
+    requires: flag:home_leased
+    hours: {x: 0, y: 24}
+    once: 1
+    weight: 1
+  - id: order_done
+    trigger: 4
+    text: Another one of Ossa's orders done? Not bad.
+    voice: {fileID: 8300000, guid: 3f5a1c90ba217e83d85b25a9a64e85d4, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1

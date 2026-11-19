@@ -7,6 +7,9 @@ namespace AthenHill
  /// Combat layer on the city HUD document: live vitality/nano meters (the weapon hotbar slots 1–2 are HotbarView's),
  /// crosshair and hit marker, hurt edge flash, droid health bars and the Outer Berms field-notes line.
  /// Styles live in CityHUD.uss under "Outer Berms combat".
+ /// 19 Nov 2026 (combat feel): the hit marker has hit / critical / kill variants (HitMarkerState) with short audio
+ /// ticks, and a low-vitality vignette pulses at the screen edge below Low Vitality Threshold. Both follow
+ /// Settings › Controls › Hit markers and Reduced Motion.
  [RequireComponent(typeof(UIDocument))]
  public class CombatHud:MonoBehaviour
  {
@@ -20,10 +23,26 @@ namespace AthenHill
   [Min(.5f)]public float toastSeconds=4.5f;
   [Tooltip("Guidance markers show while their target is on screen and within this many metres.")]
   [Min(5)]public float guidanceRange=60;
+  [Header("Hit feedback (19 Nov 2026)")]
+  [Tooltip("2D source for the hit ticks (the SFX mixer group is copied from the player's weapon source when empty).")]
+  public AudioSource feedbackAudio;
+  public AudioClip hitTick,criticalTick,killTick;
+  [Range(0,1)]public float hitTickVolume=.45f,criticalTickVolume=.6f,killTickVolume=.75f;
+  [Tooltip("Ticks closer together than this are dropped (the rifle's bursts would otherwise buzz).")]
+  [Min(0)]public float tickSpacing=.05f;
+  [Header("Low vitality")]
+  [Range(0,1)]public float lowVitalityThreshold=.35f;
+  [Min(.1f)]public float heartbeatPerSecond=1.1f;
+  public HitMarkerKind MarkerShown=>markers.Visible(Time.unscaledTime)?markers.Kind:HitMarkerKind.None;
+  public HitMarkerState Markers=>markers;
+  public float LowVitality {get;private set;}
+  public int TicksPlayed {get;private set;}
+  readonly HitMarkerState markers=new HitMarkerState();
+  VisualElement lowVitality;GameSettings settings;float lastTick=-99;
   VisualElement root,hud,vitalBar,nanoBar,crosshair,hitMarker,flash,aimHint;
   Label vitalValue,nanoValue,guidance;
   readonly Dictionary<FeralDroid,VisualElement> bars=new Dictionary<FeralDroid,VisualElement>();
-  float hitUntil,flashAlpha,toastUntil;
+  float flashAlpha,toastUntil;
   /// Damage direction indicators (ranged droids): pooled, each tracks its attacker's position and fades.
   class DamageDir{public VisualElement el;public Vector3 from;public float alpha;}
   readonly List<DamageDir> damageDirs=new List<DamageDir>();
@@ -52,9 +71,12 @@ namespace AthenHill
    crosshair=Element("crosshair",hud);
    foreach(var part in new[]{"up","down","left","right"})Element("crosshair-tick "+part,crosshair);
    Element("crosshair-dot",crosshair);
-   hitMarker=Element("hit-marker",hud);
-   foreach(var part in new[]{"a","b"})Element("hit-marker-stroke "+part,hitMarker);
+   hitMarker=Element("hit-marker",hud);hitMarker.usageHints=UsageHints.DynamicTransform;
+   foreach(var part in new[]{"ne","se","sw","nw"})Element("hit-marker-bar",Element("hit-marker-arm "+part,hitMarker));
    flash=Element("damage-flash",root);flash.SendToBack();
+   // three nested edge bands stand in for a radial gradient (UI Toolkit has none)
+   lowVitality=Element("low-vitality",root);Element("low-vitality-inner",Element("low-vitality-mid",lowVitality));lowVitality.SendToBack();
+   settings=session&&session.Settings?session.Settings:FindAnyObjectByType<GameSettings>();
    var hints=root.Q("key-hints");
    if(hints!=null)
    {
@@ -73,7 +95,7 @@ namespace AthenHill
    searchLabel=new Label{pickingMode=PickingMode.Ignore};searchLabel.AddToClassList("search-progress-label");search.Add(searchLabel);
    searchFill=Element("search-progress-fill",Element("search-progress-track",search));Show(search,false);
    if(crafting)crafting.Collected+=ShowPickup;
-   combat.TargetHit+=(target,killed)=>{hitUntil=Time.unscaledTime+(killed?.28f:.14f);hitMarker.EnableInClassList("kill",killed);if(killed&&target){var d=target.GetComponent<FeralDroid>();lastKilledName=d?d.displayName:null;}};
+   combat.HitLanded+=OnHitLanded;
    combat.ExperienceAwarded+=ShowExperience;
    combat.Hurt+=amount=>flashAlpha=Mathf.Clamp01(flashAlpha+amount/30f);
    for(int i=0;i<4;i++){var pivot=Element("damage-dir",hud);Element("damage-dir-arc",pivot);damageDirs.Add(new DamageDir{el=pivot});}
@@ -102,7 +124,7 @@ namespace AthenHill
    if(nanoValue!=null)nanoValue.text=$"{Mathf.FloorToInt(combat.Nano)} / {Mathf.RoundToInt(combat.Stats.nanoMax)}";
    bool play=session.State==CityState.Play;
    Show(crosshair,play&&combat.Armed);crosshair.EnableInClassList("aiming",combat.Aiming);
-   Show(hitMarker,play&&Time.unscaledTime<hitUntil);
+   UpdateHitFeedback(play);
    if(aimHint!=null)Show(aimHint,play&&combat.Armed);
    flashAlpha=Mathf.MoveTowards(flashAlpha,0,Time.unscaledDeltaTime*(session.reducedMotion?3:1.6f));
    flash.style.opacity=flashAlpha*(session.reducedMotion?.5f:.85f);
@@ -190,7 +212,39 @@ namespace AthenHill
     d.el.style.rotate=new Rotate(angle);d.el.style.opacity=d.alpha;
    }
   }
-  void OnDestroy(){if(combat){combat.HurtFrom-=ShowDamageDirection;combat.ExperienceAwarded-=ShowExperience;}if(crafting)crafting.Collected-=ShowPickup;}
+  void OnDestroy(){if(combat){combat.HurtFrom-=ShowDamageDirection;combat.ExperienceAwarded-=ShowExperience;combat.HitLanded-=OnHitLanded;}if(crafting)crafting.Collected-=ShowPickup;}
+  bool MarkersOn=>!settings||settings.Controls.hitMarkers;
+  void OnHitLanded(CombatHit hit)
+  {
+   if(hit.killed&&hit.target){var d=hit.target.GetComponent<FeralDroid>();lastKilledName=d?d.displayName:null;}
+   if(!MarkersOn)return;
+   var kind=markers.Register(hit.critical,hit.killed,Time.unscaledTime);
+   foreach(var k in new[]{"critical","kill"})hitMarker.RemoveFromClassList(k);
+   if(kind==HitMarkerKind.Critical)hitMarker.AddToClassList("critical");else if(kind==HitMarkerKind.Kill)hitMarker.AddToClassList("kill");
+   PlayTick(HitMarkerState.KindFor(hit.critical,hit.killed));
+  }
+  void PlayTick(HitMarkerKind kind)
+  {
+   if(!feedbackAudio)return;
+   var clip=kind==HitMarkerKind.Kill?killTick:kind==HitMarkerKind.Critical?criticalTick:hitTick;
+   if(!clip)return;
+   // a kill always sounds; ordinary ticks thin out under automatic fire
+   if(kind!=HitMarkerKind.Kill&&Time.unscaledTime-lastTick<tickSpacing)return;
+   if(!feedbackAudio.outputAudioMixerGroup&&combat.audioSource)feedbackAudio.outputAudioMixerGroup=combat.audioSource.outputAudioMixerGroup;
+   lastTick=Time.unscaledTime;TicksPlayed++;
+   feedbackAudio.PlayOneShot(clip,kind==HitMarkerKind.Kill?killTickVolume:kind==HitMarkerKind.Critical?criticalTickVolume:hitTickVolume);
+  }
+  void UpdateHitFeedback(bool play)
+  {
+   float now=Time.unscaledTime;bool reduced=session.reducedMotion;
+   bool shown=play&&MarkersOn&&markers.Visible(now);
+   Show(hitMarker,shown);
+   if(shown){hitMarker.style.opacity=markers.Opacity(now);float sc=markers.Scale(now,reduced);hitMarker.style.scale=new Scale(new Vector3(sc,sc,1));}
+   var h=combat.Health;
+   LowVitality=play&&h.Alive?VitalityWarning.Pulse(VitalityWarning.Intensity(h.Fraction,lowVitalityThreshold),now,heartbeatPerSecond,reduced):0;
+   lowVitality.style.opacity=LowVitality;
+   Show(lowVitality,LowVitality>.001f);
+  }
   /// Experience toast on a kill ("+12 XP"), with the level-up line and a Ward notice when the character levels.
   void ShowExperience(int amount,ThreatTier tier,bool levelled)
   {

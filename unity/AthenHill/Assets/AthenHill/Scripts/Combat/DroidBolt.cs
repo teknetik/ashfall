@@ -17,11 +17,20 @@ namespace AthenHill
   public TrailRenderer trail;
   [Tooltip("Burst played where the bolt ends (child; detached while it plays).")]
   public ParticleSystem impact;
+  [Tooltip("Additive glow billboards that ride with the bolt (halo and hot core, 19 Nov 2026). No lights: the OpenGL player draws at most 32 per camera.")]
+  public ParticleSystem[] glow=new ParticleSystem[0];
+  [Tooltip("A short additive flash where the bolt ends (child; detached while it plays, like Impact).")]
+  public ParticleSystem impactFlash;
   public AudioSource impactAudio;
   public AudioClip[] impactClips=new AudioClip[0];
   [Tooltip("Played as the bolt passes close to the player's head (near miss).")]
   public AudioClip[] flybyClips=new AudioClip[0];
   [Min(0)]public float flybyDistance=2.4f;
+  [Tooltip("Fly-by and impact levels (19 Nov 2026; the old fixed values were 0.7 and 1).")]
+  [Range(0,1)]public float flybyVolume=.7f,impactVolume=1;
+  int lastFlyby=-1,lastImpact=-1;
+  /// QA (19 Nov 2026 native check): fly-by and impact sounds played, across all bolts.
+  public static int Flybys,Impacts;
   public FeralDroid Owner {get;private set;}
   public bool Flying {get;private set;}
   public DroidBolt Prefab {get;private set;}
@@ -55,6 +64,8 @@ namespace AthenHill
    if(core)core.gameObject.SetActive(true);
    if(trail){trail.Clear();trail.emitting=true;}
    if(impact){impact.transform.SetParent(transform,false);impact.transform.localPosition=Vector3.zero;}
+   if(impactFlash){impactFlash.transform.SetParent(transform,false);impactFlash.transform.localPosition=Vector3.zero;}
+   if(glow!=null)foreach(var g in glow)if(g){g.Clear(true);g.Play(true);}
   }
   void Update()
   {
@@ -71,8 +82,9 @@ namespace AthenHill
     if(d<=hitRadius+.38f){HitPlayer(hitPoint);return;}
     if(!flybyDone&&flybyClips.Length>0&&d<flybyDistance)
     {
-     flybyDone=true;var c=flybyClips[Random.Range(0,flybyClips.Length)];
-     if(c&&impactAudio)impactAudio.PlayOneShot(c,.7f);
+     flybyDone=true;var c=CombatAudio.Pick(flybyClips,ref lastFlyby);
+     // the near miss is the player's cue to move: it always plays (only an identical clip on the same frame is dropped)
+     if(c&&impactAudio&&VoiceLimiter.Droids.TryAcquire(Time.time,c.GetHashCode(),c.length,true)){impactAudio.PlayOneShot(c,flybyVolume);Flybys++;}
     }
    }
    int n=Physics.SphereCastNonAlloc(from,.05f,dir,hits,len,worldMask,QueryTriggerInteraction.Ignore);
@@ -103,13 +115,23 @@ namespace AthenHill
    }
    if(core)core.gameObject.SetActive(false);
    if(trail)trail.emitting=false;
+   if(glow!=null)foreach(var g in glow)if(g)g.Clear(true);
    bool reduced=session&&session.reducedMotion;
+   if(impactFlash)
+   {
+    impactFlash.transform.SetParent(null,true);impactFlash.transform.position=at+normal*.05f;
+    impactFlash.Emit(1);
+   }
    if(impact)
    {
     impact.transform.SetParent(null,true);impact.transform.position=at;impact.transform.rotation=Quaternion.LookRotation(normal);
     impact.Emit(reduced?6:18);
    }
-   if(impactAudio&&impactClips.Length>0){impactAudio.transform.position=at;var c=impactClips[Random.Range(0,impactClips.Length)];if(c)impactAudio.PlayOneShot(c);}
+   if(impactAudio&&impactClips.Length>0)
+   {
+    impactAudio.transform.position=at;var c=CombatAudio.Pick(impactClips,ref lastImpact);
+    if(c&&VoiceLimiter.Droids.TryAcquire(Time.time,c.GetHashCode(),c.length,false)){impactAudio.PlayOneShot(c,impactVolume);Impacts++;}
+   }
    // long enough for the impact sound and sparks to finish before the bolt goes back to its pool
    Invoke(nameof(Recycle),Mathf.Max(.9f,trail?trail.time:0));
   }
@@ -117,6 +139,7 @@ namespace AthenHill
   {
    CancelInvoke();Flying=false;
    if(impact&&impact.transform.parent!=transform){impact.transform.SetParent(transform,true);}
+   if(impactFlash&&impactFlash.transform.parent!=transform){impactFlash.transform.SetParent(transform,true);}
    gameObject.SetActive(false);
    if(Prefab&&pools.TryGetValue(Prefab,out var pool))pool.Push(this);
   }

@@ -61,7 +61,17 @@ namespace AthenHill
                 return Result.Fail("not_in_game", "Start a playable session before using developer controls.");
             bool adjustable = session.State == CityState.Play || session.State == CityState.Paused || session.State == CityState.Inventory || session.State == CityState.Shop;
             if (action == "dev.state") return Result.Ok();
-            if (action == "dev.weather.set" || action == "dev.weather.reset") return Result.Fail("unavailable", "No weather system exists in this build.");
+            if (action == "dev.weather.set" || action == "dev.weather.reset")
+            {
+                var weather = WeatherDirector.Active;
+                if (!weather || !weather.isActiveAndEnabled) return Result.Fail("unavailable", "No weather system exists in this build.");
+                if (action == "dev.weather.reset") { weather.ResetToCalm(command["instant"]?.Type == JTokenType.Boolean && (bool)command["instant"]); return Result.Ok(); }
+                var name = command["state"]?.Type == JTokenType.String ? (string)command["state"] : null;
+                var instantToken = command["instant"];
+                if (instantToken != null && instantToken.Type != JTokenType.Boolean) return Result.Fail("invalid_argument", "Instant must be a JSON boolean.");
+                if (!weather.DevSet(name, instantToken != null && (bool)instantToken, out var error)) return Result.Fail("invalid_argument", error);
+                return Result.Ok();
+            }
             if (action == "dev.item.grant" || action == "dev.item.remove" || action == "dev.credits.grant" || action == "dev.credits.remove")
             {
                 if (!adjustable) return Result.Fail("invalid_state", "This adjustment needs Play, Paused, Inventory or Shop.");
@@ -166,12 +176,12 @@ namespace AthenHill
                     stats = character.Data.attributes.Select(x => x.id).Concat(character.Data.skills.Select(x => x.id)).Concat(character.Data.derivedStats.Select(x => x.id)).Distinct().ToDictionary(x => x, x => character.Stat(x)),
                     carryWeight = character.CarryWeight, carryCapacity = character.CarryCapacity, packWeight = character.PackWeight, storageCapacity = character.StorageCapacity, packSlotsUsed = character.PackSlotsUsed, packSlotCapacity = character.PackSlotCapacity } : (object)new { available = false },
                 preview = preview ? new { available = true, active = preview.Active, showingWeapon = preview.ShowingWeapon, yaw = preview.Yaw } : (object)new { available = false, active = false, showingWeapon = false, yaw = 0f },
-                combat = combat ? new { available = true, combat.hasPistol, armed = combat.Armed, aiming = combat.Aiming, nano = combat.Nano, health = combat.Health ? combat.Health.Current : 0, maxHealth = combat.Health ? combat.Health.max : 0, combat.Downs, inBerms = combat.InBerms, weaponId = craft?.Loadout.WeaponId, baseRecoil = craft?.BaseRecoil, recoil = craft?.RecoilStat, stats = StatsObject(combat.Stats), baseStats = StatsObject(combat.BaseStats), lastKickDegrees = combat.LastKickDegrees } : (object)new { available = false },
+                combat = combat ? new { available = true, combat.hasPistol, armed = combat.Armed, aiming = combat.Aiming, nano = combat.Nano, health = combat.Health ? combat.Health.Current : 0, maxHealth = combat.Health ? combat.Health.max : 0, combat.Downs, inBerms = combat.InBerms, weaponId = craft?.Loadout.WeaponId, baseRecoil = craft?.BaseRecoil, recoil = craft?.RecoilStat, stats = StatsObject(combat.Stats), baseStats = StatsObject(combat.BaseStats), lastKickDegrees = combat.LastKickDegrees, feel = CombatFeelQa.State(combat) } : (object)new { available = false },
                 crafting = craft != null ? new { available = true, knownRecipes = craft.KnownRecipes.OrderBy(x => x).ToArray(), crafts = craft.Crafts, gripSlot = craft.Loadout.Fitted("grip"), slots = craft.Loadout.FittedMods.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value), craftCounts = craft.CraftCounts.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value), lootEvents = crafting.LootEvents, lastLoot = crafting.LastLoot, tutorialStep = orders ? orders.LegacyGripStep : null, stationId = session.ActiveStationId, fabricatorOpen = session.State == CityState.Fabricator, craftJob = craft.Job != null ? new { recipeId = craft.Job.recipeId, seconds = craft.Job.seconds, progress = craft.Job.Progress(Time.time), remaining = craft.Job.Remaining(Time.time) } : null } : (object)new { available = false, reason = "Crafting session not initialized" },
                 fieldOrders = orders && orders.Ready ? new { available = true, index = orders.Progress.Index, total = orders.data.orders.Length, id = orders.Progress.Current?.id, stage = orders.Stage.ToString(), objective = orders.Objective, freePlay = orders.Progress.FreePlay } : (object)new { available = false },
                 tutorial = tutorial ? new { available = true, step = tutorial.Step.ToString(), targetsDown = tutorial.TargetsDown, targetsTotal = tutorial.targets?.Length ?? 0 } : (object)new { available = false },
                 encounters, enemies = (encounters == null ? new FeralDroid[0] : authored.SelectMany(e => e.Droids).Where(d => d).Distinct().ToArray()).Select(d => new { name = d.displayName, kind = d.kind.ToString(), state = d.State.ToString(), health = d.Health ? d.Health.Current : 0, maxHealth = d.Health ? d.Health.max : 0, position = new[] { d.transform.position.x, d.transform.position.y, d.transform.position.z } }).ToArray(),
-                clock = clockState, weather = new { available = false, reason = "No weather system in build" }
+                clock = clockState, weather = WeatherDirector.Active ? WeatherDirector.Active.DevState() : new { available = false, reason = "No weather system in build" }
             };
         }
     }

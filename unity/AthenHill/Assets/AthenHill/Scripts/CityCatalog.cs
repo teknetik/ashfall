@@ -45,7 +45,7 @@ namespace AthenHill
   public float consumableCooldown=1f;
   public TravelNode[] destinations;
   [Min(.01f)]public float transitionSeconds=1.25f;
-  [TextArea(3,12)]public string notes="Meet the colonists, trade at Basic General, and establish a Lattice link. WASD or arrows move; Shift runs; right-drag turns the camera. E interacts. Esc closes a panel or pauses. R returns to West Gate.";
+  [TextArea(3,12)]public string notes="Meet the colonists, trade at Basic General, and establish a Lattice link. WASD or arrows move; Shift runs; right-drag turns the camera. E interacts. Esc closes a panel or pauses. R returns to East Gate.";
   public TextAsset credits;
   public ConsumableSpec Consumable(string itemId){if(consumables!=null&&itemId!=null)foreach(var c in consumables)if(c!=null&&c.itemId==itemId)return c;return null;}
  }

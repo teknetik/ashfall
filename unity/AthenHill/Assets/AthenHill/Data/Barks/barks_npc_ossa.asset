@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce3127b2b0bed0c4789d9872eddff4de, type: 3}
+  m_Name: barks_npc_ossa
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.BarkSet
+  speakerId: npc_ossa
+  displayName: Warden Ossa
+  lines:
+  - id: greet_locker
+    trigger: 0
+    text: The arms locker's under the canopy. Start there.
+    voice: {fileID: 8300000, guid: e2a7372051bb34dbebfbaf4075372117, type: 3}
+    requires: '!primer'
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: greet_quiet
+    trigger: 0
+    text: Colonist. The Berms are quiet. Don't trust it.
+    voice: {fileID: 8300000, guid: 155d928e250421841a500c995855aab7, type: 3}
+    requires: primer
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: idle_ridge
+    trigger: 1
+    text: Eyes on the ridge. Always the ridge.
+    voice: {fileID: 8300000, guid: e4903161467958b3cbe9b5809b769b96, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: idle_night
+    trigger: 1
+    text: Machines don't sleep. Neither does the watch.
+    voice: {fileID: 8300000, guid: cf48f8ddfcf55470b8bb53e9533da17b, type: 3}
+    requires: 
+    hours: {x: 20, y: 5}
+    once: 0
+    weight: 1
+  - id: weapon
+    trigger: 2
+    text: Weapon away inside the walls, colonist.
+    voice: {fileID: 8300000, guid: 46597b3127bc2cddcbc09b10bcd2b0e4, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: ack_primer
+    trigger: 3
+    text: Primer done. You'll do.
+    voice: {fileID: 8300000, guid: 90217cccb369e3b40939c9d57a960d6f, type: 3}
+    requires: primer
+    hours: {x: 0, y: 24}
+    once: 1
+    weight: 1
+  - id: order_done
+    trigger: 4
+    text: Order logged. Good work out there.
+    voice: {fileID: 8300000, guid: 9ba4e67e78fd740fd831f342c9c39168, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1

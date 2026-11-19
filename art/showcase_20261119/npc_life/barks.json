@@ -1,0 +1,706 @@
+{
+  "schemaVersion": 1,
+  "note": "Source of truth for NPC barks and the dialogue takes voiced by the npc_life pass (19 Nov 2026). Read by generate_voices.py (ElevenLabs) and by the Unity installer NpcLifeInstall20261119 (BarkSet assets, clip bindings). Triggers: Greeting, Idle, Weapon, Acknowledge, OrderDone, Passing. barker = NpcBarker field overrides applied when the installer adds the component (or with --force). hours = [from, to) on CityTimeOfDay (wraps past midnight); omitted = any hour. requires = QuestConditions expression. once = spoken at most once per save (recorded as a story flag). catalog = CityCatalog item descriptions corrected for the configurable hotbar (applied by the installer's text step only while the old text is still there).",
+  "model_id": "eleven_multilingual_v2",
+  "voice_settings": {
+    "stability": 0.55,
+    "similarity_boost": 0.78,
+    "style": 0.12,
+    "use_speaker_boost": true
+  },
+  "speakers": [
+    {
+      "id": "npc_mira",
+      "name": "Mira",
+      "kind": "npc",
+      "voice": {
+        "name": "Clara",
+        "accent": "British",
+        "id": "aj0fZfXTBc7E3By4X8L2",
+        "assigned": "2 Oct 2026 (AUDIO.md)"
+      },
+      "lines": [
+        {
+          "id": "greet_morning",
+          "trigger": "Greeting",
+          "hours": [
+            5,
+            11
+          ],
+          "text": "Morning! Flasks are fresh sealed today."
+        },
+        {
+          "id": "greet_day",
+          "trigger": "Greeting",
+          "hours": [
+            11,
+            18
+          ],
+          "text": "Afternoon. Counter's open if you need anything."
+        },
+        {
+          "id": "greet_evening",
+          "trigger": "Greeting",
+          "hours": [
+            18,
+            2
+          ],
+          "text": "Evening, love. Still open, just about."
+        },
+        {
+          "id": "greet_any",
+          "trigger": "Greeting",
+          "text": "There you are. Need a top-up?"
+        },
+        {
+          "id": "idle_seals",
+          "trigger": "Idle",
+          "text": "Now, where did I put the spare seals?"
+        },
+        {
+          "id": "idle_greens",
+          "trigger": "Idle",
+          "hours": [
+            6,
+            20
+          ],
+          "text": "Hydroponics still owes me two crates of greens."
+        },
+        {
+          "id": "idle_quiet",
+          "trigger": "Idle",
+          "hours": [
+            20,
+            5
+          ],
+          "text": "Quiet tonight. I like it quiet."
+        },
+        {
+          "id": "weapon",
+          "trigger": "Weapon",
+          "text": "Not near my counter, please. Holster it."
+        },
+        {
+          "id": "ack_primer",
+          "trigger": "Acknowledge",
+          "requires": "primer",
+          "once": true,
+          "text": "Heard you came back from the Berms in one piece. Good."
+        },
+        {
+          "id": "ack_home",
+          "trigger": "Acknowledge",
+          "requires": "flag:home_leased",
+          "once": true,
+          "text": "Linn says you've taken the container on the south wall. Welcome home."
+        },
+        {
+          "id": "order_done",
+          "trigger": "OrderDone",
+          "text": "Word is Ossa's pleased with you. That's rare."
+        }
+      ]
+    },
+    {
+      "id": "npc_torr",
+      "name": "Torr",
+      "kind": "npc",
+      "voice": {
+        "name": "Chris",
+        "accent": "American",
+        "id": "iP95p4xoKVk53GoZ742B",
+        "assigned": "2 Oct 2026 (AUDIO.md)"
+      },
+      "lines": [
+        {
+          "id": "greet_part",
+          "trigger": "Greeting",
+          "text": "Hey. Got a spare part for me? No? Worth asking."
+        },
+        {
+          "id": "greet_again",
+          "trigger": "Greeting",
+          "text": "You again. Good. Something's always broken."
+        },
+        {
+          "id": "idle_boards",
+          "trigger": "Idle",
+          "text": "Three terminals, two spare boards. Somebody's waiting."
+        },
+        {
+          "id": "idle_slab",
+          "trigger": "Idle",
+          "text": "If the slab says nothing, ask a person."
+        },
+        {
+          "id": "idle_night",
+          "trigger": "Idle",
+          "hours": [
+            20,
+            5
+          ],
+          "text": "Screens act up after dark. Always have."
+        },
+        {
+          "id": "weapon",
+          "trigger": "Weapon",
+          "text": "Whoa. Wardens see that in here, you'll lose it."
+        },
+        {
+          "id": "ack_primer",
+          "trigger": "Acknowledge",
+          "requires": "primer",
+          "once": true,
+          "text": "Back from the Berms? Bring me anything with a circuit board."
+        },
+        {
+          "id": "ack_home",
+          "trigger": "Acknowledge",
+          "requires": "flag:home_leased",
+          "once": true,
+          "text": "Got yourself a roof, I hear. Keep that locker shut."
+        },
+        {
+          "id": "order_done",
+          "trigger": "OrderDone",
+          "text": "Another one of Ossa's orders done? Not bad."
+        }
+      ]
+    },
+    {
+      "id": "npc_vex",
+      "name": "Vex",
+      "kind": "npc",
+      "voice": {
+        "name": "Charlie",
+        "accent": "Australian",
+        "id": "IKne3meq5aSn9XLyUdCD",
+        "assigned": "2 Oct 2026 (AUDIO.md)"
+      },
+      "lines": [
+        {
+          "id": "greet_carts",
+          "trigger": "Greeting",
+          "text": "Through you go. Mind the carts."
+        },
+        {
+          "id": "greet_morning",
+          "trigger": "Greeting",
+          "hours": [
+            5,
+            11
+          ],
+          "text": "Gate's open. Caravans have the morning."
+        },
+        {
+          "id": "greet_night",
+          "trigger": "Greeting",
+          "hours": [
+            21,
+            5
+          ],
+          "text": "Late to be coming through. Stay where I can see you."
+        },
+        {
+          "id": "idle_stone",
+          "trigger": "Idle",
+          "text": "Three generations of patches on this stone."
+        },
+        {
+          "id": "idle_everyone",
+          "trigger": "Idle",
+          "text": "Everyone gets through. Everyone helps hold the gate."
+        },
+        {
+          "id": "weapon",
+          "trigger": "Weapon",
+          "text": "Weapons away inside the gate. Wardens' rule, and the Column agrees."
+        },
+        {
+          "id": "ack_primer",
+          "trigger": "Acknowledge",
+          "requires": "primer",
+          "once": true,
+          "text": "Made it back through the Berms. Plenty don't, first time."
+        },
+        {
+          "id": "ack_home",
+          "trigger": "Acknowledge",
+          "requires": "flag:home_leased",
+          "once": true,
+          "text": "Heard you've got a key now. Near enough one of us."
+        },
+        {
+          "id": "order_done",
+          "trigger": "OrderDone",
+          "text": "Saw you come in on Warden business. Good on you."
+        }
+      ]
+    },
+    {
+      "id": "npc_linn",
+      "name": "Linn",
+      "kind": "npc",
+      "voice": {
+        "name": "Amelia",
+        "accent": "British",
+        "id": "ZF6FPAbjXT4488VcRRnw",
+        "assigned": "2 Oct 2026 (AUDIO.md)"
+      },
+      "lines": [
+        {
+          "id": "greet_shade",
+          "trigger": "Greeting",
+          "text": "Sit a while. The shade's free."
+        },
+        {
+          "id": "greet_evening",
+          "trigger": "Greeting",
+          "hours": [
+            17,
+            21
+          ],
+          "text": "Evening. Best light on the hill, this."
+        },
+        {
+          "id": "idle_market",
+          "trigger": "Idle",
+          "text": "You can hear the whole market from up here."
+        },
+        {
+          "id": "idle_tree",
+          "trigger": "Idle",
+          "text": "This tree was old when I was young."
+        },
+        {
+          "id": "idle_pumps",
+          "trigger": "Idle",
+          "hours": [
+            21,
+            5
+          ],
+          "text": "Listen. You can hear the aquifer pumps at night."
+        },
+        {
+          "id": "weapon",
+          "trigger": "Weapon",
+          "text": "Not on the hill, please. Put it away."
+        },
+        {
+          "id": "ack_primer",
+          "trigger": "Acknowledge",
+          "requires": "primer",
+          "once": true,
+          "text": "You came back from the Berms. I'm glad."
+        },
+        {
+          "id": "ack_home",
+          "trigger": "Acknowledge",
+          "requires": "flag:home_leased",
+          "once": true,
+          "text": "How's the container? Keep the window shut against the dust."
+        },
+        {
+          "id": "order_done",
+          "trigger": "OrderDone",
+          "text": "The Wardens talk about you now. Don't let it go to your head."
+        }
+      ]
+    },
+    {
+      "id": "npc_brann",
+      "name": "Brann",
+      "kind": "npc",
+      "voice": {
+        "name": "Callum",
+        "accent": "American",
+        "id": "N2lVS1w4EtoT3dr4eOWO",
+        "assigned": "2 Oct 2026 (AUDIO.md)"
+      },
+      "lines": [
+        {
+          "id": "greet_heavy",
+          "trigger": "Greeting",
+          "text": "Door's open. Bring me something heavy."
+        },
+        {
+          "id": "greet_bench",
+          "trigger": "Greeting",
+          "requires": "primer",
+          "text": "Back again? Bench is free."
+        },
+        {
+          "id": "idle_drone",
+          "trigger": "Idle",
+          "text": "Half of this was a drone last week."
+        },
+        {
+          "id": "idle_hoist",
+          "trigger": "Idle",
+          "text": "Hoist sticks. Always the hoist."
+        },
+        {
+          "id": "weapon",
+          "trigger": "Weapon",
+          "text": "Easy. Holster that in my shop."
+        },
+        {
+          "id": "ack_primer",
+          "trigger": "Acknowledge",
+          "requires": "primer",
+          "once": true,
+          "text": "Survived Ossa's primer, huh? Now you're useful."
+        },
+        {
+          "id": "ack_home",
+          "trigger": "Acknowledge",
+          "requires": "flag:home_leased",
+          "once": true,
+          "text": "Got a locker now? Fill it with scrap. Sell me the rest."
+        },
+        {
+          "id": "order_done",
+          "trigger": "OrderDone",
+          "text": "Another order closed. Ossa will run you ragged."
+        }
+      ]
+    },
+    {
+      "id": "npc_tamsin",
+      "name": "Tamsin",
+      "kind": "npc",
+      "voice": {
+        "name": "Evelyn",
+        "accent": "British",
+        "id": "XEoBW4iDmiawQP72xnAF",
+        "assigned": "19 Nov 2026 (npc_life: middle-aged, resourceful and ironic; a retired Karaveen outfitter)"
+      },
+      "lines": [
+        {
+          "id": "greet_step",
+          "trigger": "Greeting",
+          "text": "Mind the step. Always mind the step."
+        },
+        {
+          "id": "greet_pack",
+          "trigger": "Greeting",
+          "text": "Back again. Pack holding up?"
+        },
+        {
+          "id": "idle_straps",
+          "trigger": "Idle",
+          "text": "Twenty years of caravan straps. My shoulders remember every one."
+        },
+        {
+          "id": "idle_issue",
+          "trigger": "Idle",
+          "text": "New issue on the shelf. The fab co-op's been busy."
+        },
+        {
+          "id": "weapon",
+          "trigger": "Weapon",
+          "text": "Not in here, dear. Holster it."
+        },
+        {
+          "id": "ack_primer",
+          "trigger": "Acknowledge",
+          "requires": "primer",
+          "once": true,
+          "text": "First run in the Berms done? Your pack will want upgrading."
+        },
+        {
+          "id": "ack_home",
+          "trigger": "Acknowledge",
+          "requires": "flag:home_leased",
+          "once": true,
+          "text": "A home of your own. Don't fill the locker with junk."
+        },
+        {
+          "id": "order_done",
+          "trigger": "OrderDone",
+          "text": "Ossa's work again? I'll restock the medkits."
+        }
+      ]
+    },
+    {
+      "id": "npc_ossa",
+      "name": "Warden Ossa",
+      "kind": "npc",
+      "barker": {
+        "weaponRadius": 25
+      },
+      "voice": {
+        "name": "Victoria",
+        "accent": "British",
+        "id": "N8SmJJ4vvs5Mz9VaT6u5",
+        "assigned": "2 Oct 2026 (AUDIO.md)"
+      },
+      "lines": [
+        {
+          "id": "greet_locker",
+          "trigger": "Greeting",
+          "requires": "!primer",
+          "text": "The arms locker's under the canopy. Start there."
+        },
+        {
+          "id": "greet_quiet",
+          "trigger": "Greeting",
+          "requires": "primer",
+          "text": "Colonist. The Berms are quiet. Don't trust it."
+        },
+        {
+          "id": "idle_ridge",
+          "trigger": "Idle",
+          "text": "Eyes on the ridge. Always the ridge."
+        },
+        {
+          "id": "idle_night",
+          "trigger": "Idle",
+          "hours": [
+            20,
+            5
+          ],
+          "text": "Machines don't sleep. Neither does the watch."
+        },
+        {
+          "id": "weapon",
+          "trigger": "Weapon",
+          "text": "Weapon away inside the walls, colonist."
+        },
+        {
+          "id": "ack_primer",
+          "trigger": "Acknowledge",
+          "requires": "primer",
+          "once": true,
+          "text": "Primer done. You'll do."
+        },
+        {
+          "id": "order_done",
+          "trigger": "OrderDone",
+          "text": "Order logged. Good work out there."
+        }
+      ]
+    },
+    {
+      "id": "npc_rell",
+      "name": "Warden Rell",
+      "kind": "npc",
+      "barker": {
+        "weaponRadius": 25
+      },
+      "voice": {
+        "name": "Roger",
+        "accent": "American",
+        "id": "CwhRBWXzGAHq8TQ4Fs17",
+        "assigned": "2 Oct 2026 (AUDIO.md)"
+      },
+      "lines": [
+        {
+          "id": "greet_lane",
+          "trigger": "Greeting",
+          "text": "Return lane's clear. Keep it that way."
+        },
+        {
+          "id": "greet_back",
+          "trigger": "Greeting",
+          "requires": "primer",
+          "text": "Welcome back. Anything following you?"
+        },
+        {
+          "id": "idle_dust",
+          "trigger": "Idle",
+          "text": "Dust on the wind. Could be weather. Could be drones."
+        },
+        {
+          "id": "idle_gap",
+          "trigger": "Idle",
+          "text": "Keep the gap clear. It's somebody's way home."
+        },
+        {
+          "id": "weapon",
+          "trigger": "Weapon",
+          "text": "Holster it at the wall. Ward rules."
+        },
+        {
+          "id": "ack_primer",
+          "trigger": "Acknowledge",
+          "requires": "primer",
+          "once": true,
+          "text": "You made it through. Plates, drone, depot. Not bad."
+        },
+        {
+          "id": "order_done",
+          "trigger": "OrderDone",
+          "text": "Heard it on the radio. Nice work."
+        }
+      ]
+    },
+    {
+      "id": "walker_daro",
+      "name": "Daro",
+      "kind": "walker",
+      "walker": "npc_walker_01",
+      "voice": {
+        "name": "Paul",
+        "accent": "British (subtle Northern)",
+        "id": "49TtX0KZLnuzDrAizTkN",
+        "assigned": "19 Nov 2026 (npc_life: Karaveen caravan porter)"
+      },
+      "lines": [
+        {
+          "id": "pass_load",
+          "trigger": "Passing",
+          "text": "Coming through. Heavy load."
+        },
+        {
+          "id": "pass_caravan",
+          "trigger": "Passing",
+          "text": "Caravan's in at noon, if you're buying."
+        },
+        {
+          "id": "pass_road",
+          "trigger": "Passing",
+          "text": "The Tubes took the trade. Never took the road."
+        },
+        {
+          "id": "weapon",
+          "trigger": "Weapon",
+          "text": "Easy, friend. I'm only carrying rope."
+        }
+      ]
+    },
+    {
+      "id": "walker_sel",
+      "name": "Sel",
+      "kind": "walker",
+      "walker": "npc_walker_02",
+      "voice": {
+        "name": "Alice",
+        "accent": "British",
+        "id": "Xb7hH8MSUJpSbSDYk0k2",
+        "assigned": "19 Nov 2026 (npc_life: nanofabrication technician)"
+      },
+      "lines": [
+        {
+          "id": "pass_vents",
+          "trigger": "Passing",
+          "text": "Fab's running warm today. Keep clear of the vents."
+        },
+        {
+          "id": "pass_wand",
+          "trigger": "Passing",
+          "text": "Mind the wand. It's calibrated."
+        },
+        {
+          "id": "pass_node",
+          "trigger": "Passing",
+          "text": "Goods node's humming. Shipment due."
+        },
+        {
+          "id": "weapon",
+          "trigger": "Weapon",
+          "text": "Put that away before a Warden sees it."
+        }
+      ]
+    },
+    {
+      "id": "walker_anso",
+      "name": "Anso",
+      "kind": "walker",
+      "walker": "npc_walker_03",
+      "voice": {
+        "name": "Will",
+        "accent": "American",
+        "id": "bIHbv24MWmeRgasZH58o",
+        "assigned": "19 Nov 2026 (npc_life: hydroponics grower)"
+      },
+      "lines": [
+        {
+          "id": "pass_greens",
+          "trigger": "Passing",
+          "text": "Fresh greens at the market. Tell them Anso sent you."
+        },
+        {
+          "id": "pass_satchel",
+          "trigger": "Passing",
+          "text": "Mind the satchel. Lettuce bruises."
+        },
+        {
+          "id": "pass_beans",
+          "trigger": "Passing",
+          "hours": [
+            10,
+            17
+          ],
+          "text": "Hot one. The beans love it."
+        },
+        {
+          "id": "weapon",
+          "trigger": "Weapon",
+          "text": "Whoa. Not near the greenhouses."
+        }
+      ]
+    }
+  ],
+  "dialogue": [
+    {
+      "npc": "npc_tamsin",
+      "node": "first_visit",
+      "text": "Mind the step. Tamsin, Field Supply. Twenty years outfitting Karaveen caravans before my knees voted to stay in Ward. Packs on the wall, medkits and nano cells under the counter, and the magazine shelf by the window. Fabricators swear by it."
+    },
+    {
+      "npc": "npc_tamsin",
+      "node": "greeting",
+      "text": "Back again. New issues on the shelf, fresh cells under the counter. What are we carrying today?"
+    },
+    {
+      "npc": "npc_tamsin",
+      "node": "magazines",
+      "text": "Digital issues from the fab co-op and the Karaveen freight houses. Download one to your slate and Brann's bench in Salvage can make what's inside. Rucksacks, frame packs, pouches, hip belts, even armour liners. Cheaper than buying, if you can scavenge the webbing."
+    },
+    {
+      "npc": "npc_tamsin",
+      "node": "packs",
+      "text": "Weight's the real limit, not room. A frame pack puts the load on your hips, so you carry more, not just stuff more in. The low tech ones you can patch yourself. The mid-tier rigs want fab alloy and servos. Every pack has sockets for pouches, and the frames take a belt or a lifter."
+    },
+    {
+      "npc": "npc_tamsin",
+      "node": "supplies",
+      "oldText": "Medkits patch you up mid-fight, press 2. The trauma kit closes worse. A nano cell refills your weapon and overclocks the regulator, so the charge keeps coming back while you fire, press 9. The surge pack runs hotter and longer.",
+      "text": "Medkits patch you up mid-fight; keep a few on your hotbar. The trauma kit closes worse wounds. A nano cell refills your weapon and overclocks the regulator, so the charge keeps coming back while you fire. The surge pack runs hotter and longer."
+    },
+    {
+      "npc": "npc_ossa",
+      "node": "locker",
+      "text": "The green steel cabinet under the shade canopy, next to the crates, with ARMS stencilled on the door and a cyan beacon on top. Walk up to it and press E. Press 2 to draw the pistol outside the walls; it runs on nano charge. The range is across the lane, past the barriers."
+    },
+    {
+      "npc": "npc_ossa",
+      "node": "range",
+      "text": "Draw with 2. Left mouse fires, and so does F; hold right mouse to steady your aim. Knock down all three plates. Watch for the loose drone on the service road afterward. If you get hurt, break contact. Vitality recovers and nano refills when you stop firing."
+    },
+    {
+      "npc": "npc_ossa",
+      "node": "long_arm",
+      "oldText": "The relay knoll is west along the trail, past the waystation; two gunner droids nest on it with a worker. Their lasers walk before they fire, so move off the line and shoot the optic. The receiver is on the gunner's rack. Brann builds the rest. Train Rifle in your pack, equip it in your loadout, and 8 draws it out here.",
+      "text": "The relay knoll is west along the trail, past the waystation; two gunner droids nest on it with a worker. Their lasers walk before they fire, so move off the line and shoot the optic. The receiver is on the gunner's rack. Brann builds the rest. Train Rifle in your pack, equip it in your loadout, and draw it from your hotbar out here."
+    }
+  ],
+  "catalog": [
+    {
+      "item": "trauma_kit",
+      "oldText": "Haemostatic foam, a nanite suture gun and a pressure dressing. Closes what a medkit can't. Use with 2.",
+      "text": "Haemostatic foam, a nanite suture gun and a pressure dressing. Closes what a medkit can't. Use it from your hotbar."
+    },
+    {
+      "item": "nano_cell",
+      "oldText": "A sealed tier-one nanite cartridge. Refills your weapon's charge and overclocks the regulator for 15 seconds, so the charge keeps refilling while you fire. Use with 9.",
+      "text": "A sealed tier-one nanite cartridge. Refills your weapon's charge and overclocks the regulator for 15 seconds, so the charge keeps refilling while you fire. Use it from your hotbar."
+    },
+    {
+      "item": "nano_surge_pack",
+      "oldText": "Twin cartridges and a hot-running regulator shunt. Refills the charge and doubles its refill rate for 40 seconds, firing or not. Use with 9.",
+      "text": "Twin cartridges and a hot-running regulator shunt. Refills the charge and doubles its refill rate for 40 seconds, firing or not. Use it from your hotbar."
+    }
+  ]
+}

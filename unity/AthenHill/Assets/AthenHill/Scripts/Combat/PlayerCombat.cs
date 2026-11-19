@@ -55,6 +55,8 @@ namespace AthenHill
   [Range(0,2)]public float closeMechScale=1.2f,closeTailScale=.7f;
   [Tooltip("Optional wide 2D source for the tail so its pitch is not tied to the transient.")]
   public AudioSource tailSource;
+  [Tooltip("Per-weapon layered sets (19 Nov 2026). The active weapon's set replaces the arrays above; a weapon with no set (the scrap pistol) keeps them.")]
+  public WeaponSoundSet[] weaponSounds=new WeaponSoundSet[0];
   public LineRenderer tracer;
   [Tooltip("First-person arms and pistol; when visible, shots start at its muzzle (it plays its own flash and recoil).")]
   public FirstPersonViewModel viewModel;
@@ -119,6 +121,12 @@ namespace AthenHill
   public event Action ShotFired;
   /// Hit marker: (target, killed).
   public event Action<Health,bool> TargetHit;
+  /// Every landed shot with its detail (19 Nov 2026 combat feel: marker variant, critical flash, QA).
+  public event Action<CombatHit> HitLanded;
+  /// Landed shots that were critical (a weapon critical roll or a weak-point hit), and the weak-point hits alone.
+  public int CriticalHits {get;private set;}
+  public int WeakPointHits {get;private set;}
+  public CombatHit LastHit {get;private set;}
   public event Action<float> Hurt;
   /// Damage with where it came from (the attacker's position), for the HUD's direction indicator.
   public event Action<float,Vector3> HurtFrom;
@@ -239,7 +247,8 @@ namespace AthenHill
    else Armed=!Armed;
    if(audioSource)
    {
-    var clips=Armed?drawClips:holsterClips;
+    var set=ActiveSoundSet;var own=set!=null?(Armed?set.draw:set.holster):null;
+    var clips=own!=null&&own.Length>0?own:Armed?drawClips:holsterClips;
     var clip=clips!=null&&clips.Length>0?Pick(clips,ref lastFoley):Armed?drawClip:null;
     if(clip)audioSource.PlayOneShot(clip,.8f);
    }
@@ -270,7 +279,8 @@ namespace AthenHill
    var stats=Stats;
    if(Nano<stats.nanoPerShot)
    {
-    var empty=emptyClips!=null&&emptyClips.Length>0?Pick(emptyClips,ref lastEmpty):emptyClip;
+    var set=ActiveSoundSet;
+    var empty=set!=null&&set.empty!=null&&set.empty.Length>0?Pick(set.empty,ref lastEmpty):emptyClips!=null&&emptyClips.Length>0?Pick(emptyClips,ref lastEmpty):emptyClip;
     if(audioSource&&empty)audioSource.PlayOneShot(empty,.7f);
     if(Time.time>emptyNotice){emptyNotice=Time.time+3;session.Notify("Nano charge depleted. Hold fire to let it refill.");}
     nextFire=Time.time+stats.fireInterval;return;
@@ -289,11 +299,17 @@ namespace AthenHill
    Vector3 end=origin+direction*range;Health target=null;
    if(Physics.Raycast(origin,direction,out var hit,range,shotMask,QueryTriggerInteraction.Ignore))
    {end=hit.point;target=hit.collider.GetComponentInParent<Health>();if(target==Health)target=null;}
+   bool direct=target&&target.Alive;
    if(!target||!target.Alive)
    {
     var assisted=AimAssist(origin,direction,hit.collider?hit.distance:range,range,stats.aimAssist);
     if(assisted){target=assisted;end=assisted.AimPoint;}
    }
+   // Weak point: the shot's own ray must pass through the zone. An aim-assisted shot only counts when the ray really
+   // crossed the optic (it can stand proud of the body collider); assist alone never makes a critical.
+   var weak=target&&target.Alive?target.GetComponent<DroidWeakPoint>():null;
+   float weakAt=-1;
+   bool weakHit=weak&&weak.isActiveAndEnabled&&weak.Test(origin,direction,direct?hit.distance:Vector3.Distance(origin,end),out weakAt);
    // The shot uses the pre-kick view. LateUpdate applies recovery before writing the next view.
    LastKickDegrees=stats.recoil*recoilDegreesPerPoint;
    if(follow)follow.ApplyShotKick(LastKickDegrees,recoilRecoverFraction,recoilRecoverSeconds);
@@ -318,9 +334,17 @@ namespace AthenHill
     var threat=target.GetComponent<DroidThreat>();
     if(threat)hitDamage=WeaponBallistics.ArmourReduced(hitDamage,threat.armour,stats.armourPenetration);
     LastHitDamage=hitDamage;LastHitDistance=distance;
-    target.Damage(hitDamage,end);
+    var droid=target.GetComponent<FeralDroid>();
+    var point=weakHit?origin+direction*weakAt:end;
+    if(weakHit){WeakPointHits++;weak.NoteHit();if(droid)droid.MarkCriticalHit();}
+    float before=target.Current;
+    target.Damage(hitDamage,point,weakHit?weak.damageMultiplier:1);
+    if(droid)droid.ClearCriticalMark();
     bool killed=!target.Alive;
+    if(critical||weakHit)CriticalHits++;
+    LastHit=new CombatHit{target=target,point=point,dealt=Mathf.Max(0,before-target.Current),critical=critical||weakHit,weakPoint=weakHit,killed=killed,zone=weakHit?weak.label:null};
     TargetHit?.Invoke(target,killed);
+    HitLanded?.Invoke(LastHit);
     if(killed)AwardKill(target);
    }
   }
@@ -344,16 +368,19 @@ namespace AthenHill
    ExperienceAwarded?.Invoke(amount,tier,levelled);
   }
   int lastMech=-1,lastBody=-1,lastTail=-1,lastEmpty=-1,lastFoley=-1;
-  static AudioClip Pick(AudioClip[] clips,ref int last)
-  {
-   int i=UnityEngine.Random.Range(0,clips.Length);
-   if(clips.Length>1&&i==last)i=(i+1+UnityEngine.Random.Range(0,clips.Length-1))%clips.Length;
-   last=i;return clips[i];
-  }
-  public bool LayeredShot=>audioSource&&shotBody!=null&&shotBody.Length>0;
+  static AudioClip Pick(AudioClip[] clips,ref int last)=>CombatAudio.Pick(clips,ref last);
+  /// The bound weapon's own sound set, or null when it has none (the legacy arrays play).
+  public WeaponSoundSet ActiveSoundSet=>CombatAudio.SelectSet(weaponSounds,Loadout!=null?Loadout.WeaponId:null);
+  public bool LayeredShot=>audioSource&&(ActiveSoundSet!=null||shotBody!=null&&shotBody.Length>0);
+  /// Shots of the active set (QA: which set the last shot used; null id = the legacy pistol arrays).
+  public string LastShotSoundSet {get;private set;}
+  float lastSetShot=-99;
   void PlayShot()
   {
    if(!audioSource)return;
+   var set=ActiveSoundSet;
+   LastShotSoundSet=set!=null?set.weaponId:null;
+   if(set!=null){PlaySetShot(set);return;}
    if(!LayeredShot){if(shotClip){audioSource.pitch=UnityEngine.Random.Range(.95f,1.05f);audioSource.PlayOneShot(shotClip);}return;}
    bool close=Aiming||follow&&follow.FirstPerson;
    audioSource.pitch=UnityEngine.Random.Range(.97f,1.03f);
@@ -364,6 +391,23 @@ namespace AthenHill
     var tail=tailSource?tailSource:audioSource;
     if(tailSource)tailSource.pitch=UnityEngine.Random.Range(.96f,1.04f);
     tail.PlayOneShot(Pick(shotTail,ref lastTail),tailGain*(close?closeTailScale:1));
+   }
+  }
+  int setMech=-1,setBody=-1,setTail=-1;
+  /// Same layering as the pistol path, with the set's own gains and a quieter tail inside a held burst.
+  void PlaySetShot(WeaponSoundSet set)
+  {
+   bool close=Aiming||follow&&follow.FirstPerson;
+   bool inBurst=Time.time-lastSetShot<Stats.fireInterval*1.5f;lastSetShot=Time.time;
+   audioSource.pitch=UnityEngine.Random.Range(set.pitch.x,Mathf.Max(set.pitch.x,set.pitch.y));
+   var mech=Pick(set.mech,ref setMech);if(mech)audioSource.PlayOneShot(mech,set.mechGain*(close?closeMechScale:1));
+   var body=Pick(set.body,ref setBody);if(body)audioSource.PlayOneShot(body,set.bodyGain);
+   var tailClip=Pick(set.tail,ref setTail);
+   if(tailClip)
+   {
+    var tail=tailSource?tailSource:audioSource;
+    if(tailSource)tailSource.pitch=UnityEngine.Random.Range(.96f,1.04f);
+    tail.PlayOneShot(tailClip,set.tailGain*(close?closeTailScale:1)*(inBurst?set.burstTailScale:1));
    }
   }
   Health AimAssist(Vector3 origin,Vector3 forward,float maxDistance,float range,float degrees)
@@ -397,5 +441,12 @@ namespace AthenHill
    Health.Restore();Nano=Stats.nanoMax;OverclockUntil=-1;
    Downed?.Invoke();
   }
+ }
+ /// One landed player shot: where it struck (the weak point's entry for a weak-point hit), what it removed after armour,
+ /// and whether it was critical (weapon roll or weak point), a weak-point hit and a kill.
+ public struct CombatHit
+ {
+  public Health target;public Vector3 point;public float dealt;
+  public bool critical,weakPoint,killed;public string zone;
  }
 }

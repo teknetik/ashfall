@@ -7,8 +7,8 @@ namespace AthenHill
  /// One Buy parts purchase; listeners may append words to the notice (e.g. " Schematic discovered: …").
  public sealed class PartPurchase{public string itemId,note="";}
  /// Journal (5 Oct 2026) replaces the old City notes screen in place; Stash (the home locker) and Rest (the home bunk)
- /// are appended.
- public enum CityState { Boot,Play,Dialogue,Shop,Grid,Paused,Inventory,Journal,Credits,Error,Settings,MainMenu,Fabricator,Stash,Rest }
+ /// are appended. Map (the world map window, 19 Nov 2026) is appended too.
+ public enum CityState { Boot,Play,Dialogue,Shop,Grid,Paused,Inventory,Journal,Credits,Error,Settings,MainMenu,Fabricator,Stash,Rest,Map }
  public class GameSession:MonoBehaviour,IQuestState
  {
   public CityCatalog catalog;
@@ -18,7 +18,9 @@ namespace AthenHill
   public GameSettings Settings {get;private set;}
   /// The mission journal (5 Oct 2026). It has no authored settings, so a scene without one gets one here.
   public QuestJournal Journal {get;private set;}
-  void Awake(){Settings=GetComponent<GameSettings>();if(!Settings)Settings=gameObject.AddComponent<GameSettings>();Journal=GetComponent<QuestJournal>();if(!Journal)Journal=gameObject.AddComponent<QuestJournal>();reducedMotion=Settings.ReadReducedMotion(reducedMotion);RadioLine.timing=radioTiming??new RadioQueue.Timing();}
+  /// The world map's state (19 Nov 2026); added here like the journal when the scene has none.
+  public WorldMap Map {get;private set;}
+  void Awake(){Settings=GetComponent<GameSettings>();if(!Settings)Settings=gameObject.AddComponent<GameSettings>();Journal=GetComponent<QuestJournal>();if(!Journal)Journal=gameObject.AddComponent<QuestJournal>();Map=GetComponent<WorldMap>();if(!Map)Map=gameObject.AddComponent<WorldMap>();reducedMotion=Settings.ReadReducedMotion(reducedMotion);RadioLine.timing=radioTiming??new RadioQueue.Timing();}
   void SettingsChanged(){muted=Settings.Sound.muted;if(ActiveNpc)ActiveNpc.SetVoiceLevel(Settings.Sound.effects);Changed?.Invoke();}
   public GameInput input;
   public PlayerMotor player;
@@ -117,9 +119,12 @@ namespace AthenHill
   // The explicit Escape and HUD pause controls remain available.
   void Update()
   {
+   // Photo mode (19 Nov 2026) owns the keyboard and freezes play: no pack, journal, pause or notice timers meanwhile.
+   if(PhotoMode.Active)return;
    var keyboard=UnityEngine.InputSystem.Keyboard.current;
    if(keyboard?.tabKey.wasPressedThisFrame==true)ToggleInventory();
    else if(keyboard?.jKey.wasPressedThisFrame==true)ToggleJournal();
+   else if(input.MapPressed)ToggleMap();
    if(input.Cancel){if(State==CityState.Play)SetState(CityState.Paused);else Close();}
    if(State==CityState.Play)
    {
@@ -429,6 +434,12 @@ namespace AthenHill
   {
    if(State==CityState.Play)Open(CityState.Journal);
    else if(State==CityState.Journal)Close();
+  }
+  /// M: the world map opens from play and closes back to it (19 Nov 2026).
+  public void ToggleMap()
+  {
+   if(State==CityState.Play)Open(CityState.Map);
+   else if(State==CityState.Map)Close();
   }
   public void ToggleInventory()
   {

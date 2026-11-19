@@ -17,6 +17,11 @@ namespace AthenHill
   [Min(.3f)] public float aimBoom=2.1f;
   public float aimShoulder=.55f,aimFieldOfView=48;
   [Min(.1f)] public float aimBlendSpeed=10;
+  [Header("Showcase camera (19 Nov 2026; found on this object when empty)")]
+  [Tooltip("Over-the-shoulder framing during dialogue. It only overlays the pose written here; yaw, pitch and zoom are never changed.")]
+  public ConversationCamera conversation;
+  [Tooltip("While photo mode is open it owns this transform and lens, and this component writes nothing.")]
+  public PhotoMode photo;
   public bool FirstPerson=>boom<=.01f&&!FixedView;
   /// Set by a CameraConfineZone while the player is inside it: first person, zoom held.
   public bool Confined{get=>confined;set=>confined=value;}
@@ -47,10 +52,13 @@ namespace AthenHill
    playerRenderers=target?target.GetComponentsInChildren<Renderer>(true):new Renderer[0];
    shadowModes=new ShadowCastingMode[playerRenderers.Length];
    for(int i=0;i<playerRenderers.Length;i++)shadowModes[i]=playerRenderers[i].shadowCastingMode;
+   if(!conversation)conversation=GetComponent<ConversationCamera>();
+   if(!photo)photo=GetComponent<PhotoMode>();
   }
   void LateUpdate()
   {
-   if(FixedView||!target){HidePlayer(false);return;}
+   if(photo&&photo.IsOpen)return;
+   if(FixedView||!target){HidePlayer(false);if(conversation)conversation.Suspend();return;}
    aimBlend=Mathf.MoveTowards(aimBlend,aimMode?1:0,aimBlendSpeed*Time.unscaledDeltaTime);
    // Mouse look is always on in play (GameInput locks the cursor and drops the lock's recentring jump).
    var delta=input.Look;
@@ -76,19 +84,25 @@ namespace AthenHill
     if(Physics.SphereCast(focus,sweepRadius,side,out var sideHit,shoulder,worldMask,QueryTriggerInteraction.Ignore))shoulder=Mathf.Max(0,sideHit.distance-.05f);
     focus+=side*shoulder;
    }
-   if(lens)
-   {
-    // Only touch the lens while aiming; otherwise follow whatever field of view is set elsewhere.
-    if(aimBlend>0){lens.fieldOfView=Mathf.Lerp(baseFieldOfView,aimFieldOfView,aimBlend);lensTouched=true;}
-    else{if(lensTouched){lens.fieldOfView=baseFieldOfView;lensTouched=false;}baseFieldOfView=lens.fieldOfView;}
-   }
    Vector3 behind=rotation*Vector3.back;
    float wanted=activeBoom;
    if(activeBoom>0&&Physics.SphereCast(focus,sweepRadius,behind,out var hit,activeBoom,worldMask,QueryTriggerInteraction.Ignore))wanted=Mathf.Min(activeBoom,Mathf.Max(.12f,hit.distance-.04f));
    distance=wanted<distance?wanted:Mathf.Lerp(distance,wanted,1-Mathf.Exp(-recoverySpeed*Time.deltaTime));
-   transform.SetPositionAndRotation(focus+behind*distance,rotation);
-   HidePlayer(distance<.65f);
+   // The conversation camera overlays the finished gameplay pose; at weight 0 it is left exactly as computed.
+   var position=focus+behind*distance;var pose=rotation;
+   float lensFov=lens?Mathf.Lerp(baseFieldOfView,aimFieldOfView,aimBlend):0,talk=0;
+   if(conversation&&conversation.isActiveAndEnabled)talk=conversation.Compose(targetPosition,FirstPerson,ref position,ref pose,ref lensFov);
+   if(lens)
+   {
+    // Only touch the lens while aiming or framing a conversation; otherwise follow whatever field of view is set elsewhere.
+    if(aimBlend>0||talk>0){lens.fieldOfView=lensFov;lensTouched=true;}
+    else{if(lensTouched){lens.fieldOfView=baseFieldOfView;lensTouched=false;}baseFieldOfView=lens.fieldOfView;}
+   }
+   transform.SetPositionAndRotation(position,pose);
+   HidePlayer(talk>0&&conversation.Framing?conversation.HidesPlayer:distance<.65f);
   }
+  /// Photo mode shows the whole colonist from any angle; the next gameplay frame puts the first-person hiding back.
+  public void ShowPlayerForPhoto(){HidePlayer(false);}
   void HidePlayer(bool hide)
   {
    if(PlayerHidden==hide)return;

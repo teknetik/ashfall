@@ -20,6 +20,11 @@ namespace AthenHill
   /// Set by PlayerCombat: aiming slows movement and turns the colonist to the camera heading.
   public float SpeedScale {get;set;}=1;
   public bool FaceView {get;set;}
+  /// Showcase camera (19 Nov 2026): while a conversation holds a value here, the colonist turns to this yaw (eased over
+  /// about 0.3 s, or at once when TalkYawSnap is set for Reduced Motion) and keeps facing it; null releases it.
+  public float? TalkYaw {get;set;}
+  public bool TalkYawSnap {get;set;}
+  [Min(.1f)] public float talkTurnRate=10;
   public float FaceYaw {get;set;}
   CharacterController body;
   float vertical;
@@ -62,7 +67,8 @@ namespace AthenHill
     if(drop>0&&drop<=groundSnap){body.Move(Vector3.down*(drop+.02f));Grounded=body.isGrounded;}
    }
    Speed=Vector3.ProjectOnPlane(transform.position-previous,Vector3.up).magnitude/dt;
-   if(FaceView)visual.rotation=Quaternion.Slerp(visual.rotation,Quaternion.Euler(0,FaceYaw,0),1-Mathf.Exp(-turnSpeed*1.6f*dt));
+   if(TalkYaw.HasValue){var talk=Quaternion.Euler(0,TalkYaw.Value,0);visual.rotation=TalkYawSnap?talk:Quaternion.Slerp(visual.rotation,talk,1-Mathf.Exp(-talkTurnRate*dt));}
+   else if(FaceView)visual.rotation=Quaternion.Slerp(visual.rotation,Quaternion.Euler(0,FaceYaw,0),1-Mathf.Exp(-turnSpeed*1.6f*dt));
    else if(direction.sqrMagnitude>.001f)visual.rotation=Quaternion.Slerp(visual.rotation,Quaternion.LookRotation(direction),1-Mathf.Exp(-turnSpeed*dt));
    if(actor)actor.SetGroundMotion(Speed,input.Run&&SpeedScale>=1,Talking,Grounded,vertical,JumpStarted,dt);
    renderPose.Record(transform.position,visual?visual.rotation:transform.rotation);

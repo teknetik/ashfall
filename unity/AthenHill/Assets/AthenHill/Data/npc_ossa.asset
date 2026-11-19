@@ -48,7 +48,7 @@ MonoBehaviour:
       setFlag: 
   - id: long_arm
     title: Long arm
-    text: The relay knoll is west along the trail, past the waystation; two gunner droids nest on it with a worker. Their lasers walk before they fire, so move off the line and shoot the optic. The receiver is on the gunner's rack. Brann builds the rest. Train Rifle in your pack, equip it in your loadout, and 8 draws it out here.
+    text: The relay knoll is west along the trail, past the waystation; two gunner droids nest on it with a worker. Their lasers walk before they fire, so move off the line and shoot the optic. The receiver is on the gunner's rack. Brann builds the rest. Train Rifle in your pack, equip it in your loadout, and draw it from your hotbar out here.
     voice: {fileID: 8300000, guid: 07a3e883bfc34e6192ff3e10810be64a, type: 3}
     choices:
     - id: range
@@ -89,23 +89,31 @@ MonoBehaviour:
       label: Where is the locker?
       next: locker
       action: 
+      requires: 
+      setFlag: 
     - id: machines
       label: What are those machines?
       next: machines
       action: 
+      requires: 
+      setFlag: 
   - id: locker
     title: Arms issue
     text: The green steel cabinet under the shade canopy, next to the crates, with ARMS stencilled on the door and a cyan beacon on top. Walk up to it and press E. Press 2 to draw the pistol outside the walls; it runs on nano charge. The range is across the lane, past the barriers.
-    voice: {fileID: 0}
+    voice: {fileID: 8300000, guid: 09c46f3a39264a9b84f50cdfa577b3d7, type: 3}
     choices:
     - id: back
       label: Tell me about the machines.
       next: machines
       action: 
+      requires: 
+      setFlag: 
     - id: leave
       label: I'll check the locker.
       next: 
       action: close
+      requires: 
+      setFlag: 
   - id: machines
     title: Industrial machines
     text: The walkers are cargo-handling droids; the hovering ones are inspection and salvage drones. Feral industrial code makes them treat people as obstacles or raw material. The aquifer service droid inside Ward is maintained and loyal. Keep your aim on the hostile machines beyond the range.
@@ -115,20 +123,37 @@ MonoBehaviour:
       label: How do I use the range?
       next: range
       action: 
+      requires: 
+      setFlag: 
     - id: leave
       label: Understood.
       next: 
       action: close
+      requires: 
+      setFlag: 
   - id: range
     title: Safe range practice
     text: Draw with 2. Left mouse fires, and so does F; hold right mouse to steady your aim. Knock down all three plates. Watch for the loose drone on the service road afterward. If you get hurt, break contact. Vitality recovers and nano refills when you stop firing.
-    voice: {fileID: 0}
+    voice: {fileID: 8300000, guid: 45342f2c12824efd9a835c1df7a000f5, type: 3}
     choices:
     - id: back
       label: Where was the locker?
       next: locker
       action: 
+      requires: 
+      setFlag: 
     - id: leave
       label: I'm ready.
       next: 
       action: close
+      requires: 
+      setFlag: 
+  shop:
+    title: Basic General
+    subtitle: "Mira \xB7 Supplies, parts and salvage"
+    supplies: 1
+    parts: 1
+    salvage: 1
+    stockTags: []
+    excludeTags: []
+    magazines: 0

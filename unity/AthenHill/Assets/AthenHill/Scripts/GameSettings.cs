@@ -22,6 +22,23 @@ namespace AthenHill
         public bool invertY;
         public const int MinSensitivity = 25, MaxSensitivity = 300;
         public float Sensitivity => Mathf.Clamp(sensitivity, MinSensitivity, MaxSensitivity) / 100f;
+        /// Combat feedback (19 Nov 2026). Older saved controls lack these fields and JsonUtility keeps the defaults.
+        /// Camera shake in percent (Reduced Motion turns it off whatever this says); hit markers cover the crosshair
+        /// marker and its ticks.
+        public int cameraShake = 100;
+        public bool hitMarkers = true;
+        public float CameraShake => Mathf.Clamp(cameraShake, 0, 100) / 100f;
+    }
+
+    /// Interface (19 Nov 2026): the conversation camera switch and the HUD mode. Saved like the controls; a missing key
+    /// keeps these defaults, which are the behaviour before the options existed.
+    [Serializable]
+    public sealed class InterfaceOptions
+    {
+        public bool conversationCamera = true;
+        /// <see cref="InterfaceMode"/>: 0 Full, 1 Adaptive.
+        public int mode;
+        public InterfaceMode Mode => mode == (int)InterfaceMode.Adaptive ? InterfaceMode.Adaptive : InterfaceMode.Full;
     }
 
     [Serializable]
@@ -54,6 +71,7 @@ namespace AthenHill
     {
         public SoundOptions Sound { get; private set; }
         public ControlOptions Controls { get; private set; } = new ControlOptions();
+        public InterfaceOptions Interface { get; private set; } = new InterfaceOptions();
         public VideoOptions Video { get; private set; }
         public VideoOptions Draft { get; private set; }
         public bool Previewing { get; private set; }
@@ -82,6 +100,10 @@ namespace AthenHill
             Sound.ambience = Volume(Sound.ambience); Sound.effects = Volume(Sound.effects);
             Controls = Read("Controls", new ControlOptions());
             Controls.sensitivity = Mathf.Clamp(Controls.sensitivity, ControlOptions.MinSensitivity, ControlOptions.MaxSensitivity);
+            Controls.cameraShake = Mathf.Clamp(Controls.cameraShake, 0, 100);
+            Interface = Read("Interface", new InterfaceOptions());
+            Interface.mode = (int)Interface.Mode;
+            ApplyInterface();
             var defaults = new VideoOptions { width = Screen.width, height = Screen.height, windowMode = Screen.fullScreen ? 1 : 0 };
             Video = Read("Video", defaults);
             Sanitize(Video);
@@ -129,10 +151,21 @@ namespace AthenHill
         public void SaveControls()
         {
             Controls.sensitivity = Mathf.Clamp(Controls.sensitivity, ControlOptions.MinSensitivity, ControlOptions.MaxSensitivity);
+            Controls.cameraShake = Mathf.Clamp(Controls.cameraShake, 0, 100);
             PlayerPrefs.SetString(prefix + "Controls", JsonUtility.ToJson(Controls));
             Changed?.Invoke();
         }
         public void ResetControls() { Controls = new ControlOptions(); SaveControls(); }
+        public void SaveInterface()
+        {
+            Interface.mode = (int)Interface.Mode;
+            ApplyInterface();
+            PlayerPrefs.SetString(prefix + "Interface", JsonUtility.ToJson(Interface));
+            Changed?.Invoke();
+        }
+        public void ResetInterface() { Interface = new InterfaceOptions(); SaveInterface(); }
+        /// The conversation camera reads a static switch (it also has its own serialized one); this keeps it in step.
+        void ApplyInterface() => ConversationCamera.Enabled = Interface.conversationCamera;
         public void ApplySound() => AudioListener.volume = Sound.muted ? 0 : Sound.master;
         public void Flush() => PlayerPrefs.Save();
         public void ResetSound() { Sound = new SoundOptions(); SaveSound(); }

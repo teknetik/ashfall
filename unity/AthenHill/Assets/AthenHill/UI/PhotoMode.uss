@@ -1,0 +1,23 @@
+/* Photo mode panel (19 Nov 2026). Follows unity/DESIGN.md: bronze frame from CityHUD.uss (.panel, Button), charcoal
+   enamel rows, ivory lettering, cyan only for the selected row and live state. Reference size 1920 x 1080. */
+.photo-mode { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
+#photo-panel { position: absolute; right: 24px; top: 84px; width: 452px; padding: 22px 24px 18px; }
+.photo-header { flex-direction: row; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; padding-bottom: 8px; border-bottom-width: 1px; border-bottom-color: #a48a62; }
+.photo-title { font-size: 30px; color: #eee9dc; }
+.photo-paused { font-size: 14px; color: #58d5d7; letter-spacing: 1px; margin-bottom: 5px; }
+.photo-row { flex-direction: row; align-items: center; min-height: 40px; padding: 2px 10px; margin: 1px 0; border-width: 1px; border-color: rgba(0,0,0,0); background-color: rgba(16,30,30,0.62); }
+.photo-row--selected { border-color: #58d5d7; background-color: #16373e; }
+.photo-row--dim { opacity: 0.55; }
+.photo-row-label { width: 138px; flex-shrink: 0; font-size: 18px; color: #eee9dc; }
+.photo-row-value { width: 82px; flex-shrink: 0; -unity-text-align: middle-right; font-size: 18px; color: #daca9e; }
+.photo-row-slider { flex-grow: 1; margin: 0 10px; min-width: 0; }
+.photo-row-slider .unity-base-slider__tracker { background-color: #101a1b; border-color: #5c6c64; border-width: 1px; height: 4px; margin-top: -2px; }
+.photo-row-slider .unity-base-slider__dragger { background-color: #a48a62; border-color: #eee9dc; border-width: 1px; border-radius: 1px; width: 10px; height: 18px; margin-top: -9px; }
+.photo-row--selected .unity-base-slider__dragger { background-color: #58d5d7; }
+.photo-row-toggle { flex-grow: 1; min-height: 32px; margin: 2px 0 2px 10px; padding: 4px 12px; font-size: 18px; -unity-text-align: middle-right; }
+.photo-row-action { flex-grow: 1; min-height: 36px; margin: 2px 0; padding: 6px 12px; font-size: 18px; }
+.photo-status { white-space: normal; font-size: 16px; color: #a5d8c2; margin-top: 10px; min-height: 22px; }
+.photo-hints { white-space: normal; font-size: 14px; color: #bcbcad; margin-top: 8px; }
+.small-window #photo-panel { width: 520px; top: 64px; }
+.small-window .photo-row-label, .small-window .photo-row-value, .small-window .photo-row-toggle, .small-window .photo-row-action { font-size: 20px; }
+.small-window .photo-hints, .small-window .photo-status, .small-window .photo-paused { font-size: 20px; }

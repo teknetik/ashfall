@@ -15,7 +15,8 @@ namespace AthenHill.Editor
         static readonly Dictionary<string, int> Expected = new Dictionary<string, int>
         {
             {"npc_mira", 1}, {"npc_torr", 2}, {"npc_vex", 2}, {"npc_linn", 2},
-            {"npc_brann", 19}, {"npc_ossa", 7}, {"npc_rell", 2}
+            {"npc_brann", 19}, {"npc_ossa", 7}, {"npc_rell", 2},
+            {"npc_tamsin", 5}   // 19 Nov 2026: Evelyn (art/showcase_20261119/npc_life)
         };
 
         public static void VerifyAndBuild()
@@ -44,13 +45,27 @@ namespace AthenHill.Editor
                         seconds = node.voice.length, path });
                 }
             }
+            // Ambient barks (19 Nov 2026): every line of every bark set speaks its own take at NpcBarks/<speaker>-<line>.wav.
+            int barks = 0;
+            foreach (var guid in AssetDatabase.FindAssets("t:BarkSet", new[] { "Assets/AthenHill/Data/Barks" }))
+            {
+                var set = AssetDatabase.LoadAssetAtPath<BarkSet>(AssetDatabase.GUIDToAssetPath(guid));
+                foreach (var line in set.lines)
+                {
+                    var expectedPath = "Assets/AthenHill/Audio/ElevenLabs/NpcBarks/" + set.speakerId + "-" + line.id + ".wav";
+                    if (!line.voice || AssetDatabase.GetAssetPath(line.voice) != expectedPath)
+                        throw new Exception(set.speakerId + "/" + line.id + ": bark take missing or not " + expectedPath);
+                    lines.Add(new { npc = set.speakerId, node = "bark:" + line.id, clip = line.voice.name, seconds = line.voice.length, path = expectedPath });
+                    barks++;
+                }
+            }
             var root = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
             var evidence = Path.Combine(root, "evidence/npc-voices/20261002");
             Directory.CreateDirectory(evidence);
             File.WriteAllText(Path.Combine(evidence, "editor-audit.json"),
                 JsonConvert.SerializeObject(new { success = true, actorCount = actors.Count,
                     lineCount = lines.Count, lines }, Formatting.Indented));
-            Debug.Log("NPC voice audit: " + actors.Count + " actors, " + lines.Count + " imported clips");
+            Debug.Log("NPC voice audit: " + actors.Count + " actors, " + lines.Count + " imported clips (" + barks + " barks)");
             LinuxBuild.Development();
         }
     }

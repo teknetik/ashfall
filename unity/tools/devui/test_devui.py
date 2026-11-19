@@ -41,8 +41,8 @@ class ServerTests(unittest.TestCase):
         code, response = self.call('GET', '/api/npcs')
         self.assertEqual(200, code)
         self.assertEqual('npc-database', response['source'])
-        self.assertEqual(7, len(response['npcs']))
-        self.assertEqual(30, sum(n['lineCount'] for n in response['npcs']))
+        self.assertEqual(8, len(response['npcs']))  # + Tamsin (19 Nov 2026)
+        self.assertEqual(36, sum(n['lineCount'] for n in response['npcs']))  # + Tamsin's 5; Ossa 6 -> 7 voiced nodes
         vex = next(n for n in response['npcs'] if n['id'] == 'npc_vex')
         self.assertEqual(('Ward / West Gate', 'Australian', 'IKne3meq5aSn9XLyUdCD'),
                          (vex['area'], vex['accent'], vex['voiceId']))

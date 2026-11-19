@@ -70,6 +70,7 @@ namespace AthenHill
    if(Session.Quickbar!=null)Session.Quickbar.Changed+=MarkDirty;
    Session.HomeChanged+=MarkDirty;
    if(Session.Journal)Session.Journal.Changed+=OnJournal;
+   if(Session.Map)Session.Map.Changed+=MarkDirty;
   }
   string savedTracked;
   // the journal changes often (objectives); only a different tracked mission needs a save
@@ -82,7 +83,7 @@ namespace AthenHill
    if(Session&&Session.Character!=null)Session.Character.Changed-=MarkDirty;
    if(orders)orders.Completed-=OnOrderCompleted;
    if(Session&&Session.Quickbar!=null)Session.Quickbar.Changed-=MarkDirty;
-   if(Session){Session.HomeChanged-=MarkDirty;if(Session.Journal)Session.Journal.Changed-=OnJournal;}
+   if(Session){Session.HomeChanged-=MarkDirty;if(Session.Journal)Session.Journal.Changed-=OnJournal;if(Session.Map)Session.Map.Changed-=MarkDirty;}
   }
   void MarkDirty(){if(!applying)dirty=true;}
   void OnCollected(LootPickup _)=>MarkDirty();
@@ -107,7 +108,8 @@ namespace AthenHill
     crafting=crafting.Model.Capture(),loot=crafting.Loot.Capture(),
     bermsStep=tutorial?tutorial.Step.ToString():BermsStep.Approach.ToString(),hasPistol=combat&&combat.hasPistol,
     orders=orders?orders.Capture():null,city=Session.CaptureCityVisit(),character=Session.Character?.Capture(),
-    hotbar=Session.Quickbar?.Capture(),stash=Session.Stash?.Capture(),journal=Session.Journal?Session.Journal.Capture():null
+    hotbar=Session.Quickbar?.Capture(),stash=Session.Stash?.Capture(),journal=Session.Journal?Session.Journal.Capture():null,
+    map=Session.Map?Session.Map.Capture():null
    };
   }
   public bool SaveNow(string reason)
@@ -146,6 +148,8 @@ namespace AthenHill
     Session.Quickbar?.Restore(data.hotbar);
     if(Session.Stash!=null)skipped.AddRange(Session.Stash.Restore(data.stash,known.Contains));
     if(Session.Journal){Session.Journal.Restore(data.journal);savedTracked=Session.Journal.TrackedId+(Session.Journal.TrackedChosen?"!":"");}
+    // 19 Nov 2026: the world map (after the flags and the primer, which imply discoveries in older saves)
+    if(Session.Map)Session.Map.Restore(data.map);
    }
    finally{applying=false;dirty=false;}
    return skipped;
@@ -202,7 +206,7 @@ namespace AthenHill
    int index=data.orders?.index??-1;
    if(set!=null&&index>=0&&index<set.orders.Length)progress=$"Field order {index+1}/{set.orders.Length} · {set.orders[index].title}";
    else if(set!=null&&index>=set.orders.Length)progress="Free hunting in the Outer Berms";
-   else progress=Enum.TryParse(data.bermsStep,out BermsStep s)&&s>BermsStep.Approach?"Outer Berms primer":"Arrived at West Gate";
+   else progress=Enum.TryParse(data.bermsStep,out BermsStep s)&&s>BermsStep.Approach?"Outer Berms primer":"Arrived at East Gate";
    string when=DateTime.TryParse(data.savedUtc,null,System.Globalization.DateTimeStyles.RoundtripKind,out var t)?" · saved "+t.ToLocalTime().ToString("d MMM HH:mm"):"";
    return progress+$" · {data.credits} cr"+when;
   }

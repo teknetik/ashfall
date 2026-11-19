@@ -11,7 +11,7 @@ namespace AthenHill
  /// builds refuse a v4 save, so the locker's contents are never dropped by an older reader.
  /// Version 3 preserves nested implant/armour components; earlier builds reject it rather than losing modules.
  /// Version 2 adds character progression and equipment. Version 1 starts with the catalog's character defaults.
- /// Player position is not saved: a loaded game resumes at West Gate, or at the home bunk once the player has rested there.
+ /// Player position is not saved: a loaded game resumes at the East Gate (the +X spawn arches), or at the home bunk once the player has rested there.
  [Serializable] public class WardSaveData
  {
   public const int CurrentVersion=4;
@@ -29,6 +29,10 @@ namespace AthenHill
   public HotbarEntry[] hotbar;
   public ItemStack[] stash;
   public JournalState journal;
+  /// World map (19 Nov 2026, additive, still version 4): discovered places and the last knock-down. Missing in saves
+  /// written before it, which load with only what their progress implies (found waystations; the depot once the primer
+  /// is done). An older v4 build ignores the field.
+  public MapState map;
  }
  /// Reads and writes save files. Nothing here throws on bad input: unreadable files produce an error message.
  public static class WardSaveFile

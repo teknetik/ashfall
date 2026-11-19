@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'unity/evidence/gameplay-v2/20260930-reqa2'))
 import qa  # noqa: E402
 
-out = Path(sys.argv[1]).resolve(); out.mkdir(parents=True, exist_ok=True)
+out = Path(sys.argv[1] if len(sys.argv) > 1 else __import__('os').environ['ATHEN_OUT']).resolve(); out.mkdir(parents=True, exist_ok=True)
 save = out / 'save'; save.mkdir(exist_ok=True)
 (save / 'ward-save.json').write_text(json.dumps({
     'version': 3, 'savedUtc': '2026-10-05T01:00:00Z', 'build': 'qa', 'credits': 200, 'purchases': 0, 'sales': 0,

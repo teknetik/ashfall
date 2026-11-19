@@ -24,6 +24,10 @@ namespace AthenHill
         public bool ReducedMotionSpeedLimited => session && session.reducedMotion && Speed > 1;
         public DayNightFrame CurrentFrame => current;
         public event Action TimeChanged;
+        /// Weather (Scripts/Weather) scales and blends the evaluated frame; the profile stays the base and is never replaced.
+        public Func<DayNightFrame, DayNightFrame> FrameModifier { get; set; }
+        /// Re-applies the current hour, so a modifier change shows while the clock is paused.
+        public void Refresh() { if (initialized) Apply(); }
         double hour;
         DayNightFrame current;
         Material previousSky, runtimeSky;
@@ -98,6 +102,7 @@ namespace AthenHill
         void Apply()
         {
             current = profile.Evaluate(Hour);
+            if (FrameModifier != null) current = FrameModifier(current);
             keyLight.transform.rotation = Quaternion.Euler(current.keyEuler); keyLight.color = current.keyColor;
             keyLight.intensity = current.keyIntensity; keyLight.enabled = current.keyIntensity > .0001f;
             if (skyFill) { skyFill.color = current.fillColor; skyFill.intensity = current.fillIntensity; }

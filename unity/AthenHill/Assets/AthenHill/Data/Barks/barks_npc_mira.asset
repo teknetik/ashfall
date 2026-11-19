@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce3127b2b0bed0c4789d9872eddff4de, type: 3}
+  m_Name: barks_npc_mira
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.BarkSet
+  speakerId: npc_mira
+  displayName: Mira
+  lines:
+  - id: greet_morning
+    trigger: 0
+    text: Morning! Flasks are fresh sealed today.
+    voice: {fileID: 8300000, guid: 5fd4f3279c868e65f829a48fe7f1c77e, type: 3}
+    requires: 
+    hours: {x: 5, y: 11}
+    once: 0
+    weight: 1
+  - id: greet_day
+    trigger: 0
+    text: Afternoon. Counter's open if you need anything.
+    voice: {fileID: 8300000, guid: a302a4625d7e19c01a3b237e41596e66, type: 3}
+    requires: 
+    hours: {x: 11, y: 18}
+    once: 0
+    weight: 1
+  - id: greet_evening
+    trigger: 0
+    text: Evening, love. Still open, just about.
+    voice: {fileID: 8300000, guid: 2022ad113a0c6f297a4c920e383a532b, type: 3}
+    requires: 
+    hours: {x: 18, y: 2}
+    once: 0
+    weight: 1
+  - id: greet_any
+    trigger: 0
+    text: There you are. Need a top-up?
+    voice: {fileID: 8300000, guid: 5ee20c2d41291662bb5c565cc7f8e25f, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: idle_seals
+    trigger: 1
+    text: Now, where did I put the spare seals?
+    voice: {fileID: 8300000, guid: 9570249090c3e0c11ad50c0ba1ea2a51, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: idle_greens
+    trigger: 1
+    text: Hydroponics still owes me two crates of greens.
+    voice: {fileID: 8300000, guid: 186b4af6c953f1a7ab80b66d62a7be1d, type: 3}
+    requires: 
+    hours: {x: 6, y: 20}
+    once: 0
+    weight: 1
+  - id: idle_quiet
+    trigger: 1
+    text: Quiet tonight. I like it quiet.
+    voice: {fileID: 8300000, guid: 42ec1bb9b1bb18819a84726910a279c1, type: 3}
+    requires: 
+    hours: {x: 20, y: 5}
+    once: 0
+    weight: 1
+  - id: weapon
+    trigger: 2
+    text: Not near my counter, please. Holster it.
+    voice: {fileID: 8300000, guid: c1d9707c94ba422a4b8177ea29683d73, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: ack_primer
+    trigger: 3
+    text: Heard you came back from the Berms in one piece. Good.
+    voice: {fileID: 8300000, guid: b824e091a532f4d879c018be24931b9b, type: 3}
+    requires: primer
+    hours: {x: 0, y: 24}
+    once: 1
+    weight: 1
+  - id: ack_home
+    trigger: 3
+    text: Linn says you've taken the container on the south wall. Welcome home.
+    voice: {fileID: 8300000, guid: c368a36274f8fa8e2b60d9e8fa237fbe, type: 3}
+    requires: flag:home_leased
+    hours: {x: 0, y: 24}
+    once: 1
+    weight: 1
+  - id: order_done
+    trigger: 4
+    text: Word is Ossa's pleased with you. That's rare.
+    voice: {fileID: 8300000, guid: 83b13cc0dd080416180fbd3de964903d, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1

@@ -24,6 +24,8 @@ import traceback
 import uuid
 
 ROOT = Path(__file__).resolve().parents[2]
+# 19 Nov 2026: private-display runs mute the player (qa_display.sh), as lookbook.py and qa.py already do
+QA_MUTE_PREF = ('<pref name="AthenHill.Settings.v1.QA.Sound" type="string">' + __import__('base64').b64encode(__import__('json').dumps(dict(master=1.0, music=.5, ambience=1.0, effects=1.0, muted=True)).encode()).decode() + '</pref>') if __import__('os').environ.get('ATHEN_QA_MUTE') == '1' else ''
 sys.path.insert(0, str(ROOT / 'unity/evidence/gameplay-v2/20260930-reqa2'))
 import qa  # noqa: E402
 
@@ -91,7 +93,7 @@ def launch(out, save, exe, unit):
     for vendor, product in [('unknown', 'unknown'), ('Free Column', 'Athen Hill')]:
         folder = run / 'config/unity3d' / vendor / product
         folder.mkdir(parents=True)
-        (folder / 'prefs').write_text('<?xml version="1.0" encoding="utf-8"?><unity_prefs version_major="1" version_minor="1"><pref name="AthenHill.Settings.v1.QA.Video" type="string">' + encoded + '</pref></unity_prefs>')
+        (folder / 'prefs').write_text('<?xml version="1.0" encoding="utf-8"?><unity_prefs version_major="1" version_minor="1"><pref name="AthenHill.Settings.v1.QA.Video" type="string">' + encoded + '</pref>' + QA_MUTE_PREF + '</unity_prefs>')
     args = [str(exe), '-force-glcore', '-screen-width', '1920', '-screen-height', '1080', '-screen-fullscreen', '0', '-logFile', str(run / 'Player.log'), '--athen-qa', str(run), '--athen-qa-background', '--athen-save-dir', str(save)]
     # $1 is a local output filename; no shell interpolation of user strings.
     command = ['systemd-run', '--user', '--scope', '--expand-environment=no', '--unit=' + unit, '-q', '-p', 'MemoryMax=12G', '-p', 'MemoryHigh=10G', '-p', 'MemorySwapMax=512M', 'bash', '-c', 'printf "%s\\n" "$$" > "$1"; shift; exec "$@"', 'ashfall-inventory-qa', str(run / 'pid')] + args

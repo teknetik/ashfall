@@ -297,6 +297,13 @@ inline void InitializeStandardLitSurfaceData(float2 uv, out SurfaceData outSurfa
 // Wind uses the existing reduced-motion-aware city clock in every geometry pass.
 float _AthenAtmosphereTime;
 float _AthenAtmospherePreviousTime;
+float _AthenWindBoost;   // weather (Scripts/Weather/WeatherDirector): 0 when unset = the authored wind
+float _AthenWindGust;    // weather: amplitude of a gust wave rolling downwind, 0 when unset = none
+float WardWeatherWind(float3 p, float windTime)
+{
+    float wave = saturate(sin(windTime * .31 - (p.x * .82 + p.z * .57) * .06) * .5 + .5);
+    return max(0.0, 1.0 + _AthenWindBoost + _AthenWindGust * wave);
+}
 float3 WardTreeWind(float3 positionOS, float windTime)
 {
     // Ground cover: bend grows with height above the object origin (the soil), gusts roll across the beds.
@@ -307,7 +314,7 @@ float3 WardTreeWind(float3 positionOS, float windTime)
     float broad = sin(phase) * .65 + sin(phase * .53 + 1.7) * .35;
     float gust = saturate(sin(windTime * .23 + p.x * .07 + p.z * .05) * .5 + .5);
     float flutter = sin(windTime * 4.1 + p.x * 3.7 + p.z * 2.9) * _WardLeafFlutter;
-    p.xz += float2(.82, .57) * (broad * (.55 + .45 * gust) * _WardWindStrength + flutter) * bend;
+    p.xz += float2(.82, .57) * (broad * (.55 + .45 * gust) * _WardWindStrength + flutter) * bend * WardWeatherWind(p, windTime);
     return TransformWorldToObject(p);
 }
 

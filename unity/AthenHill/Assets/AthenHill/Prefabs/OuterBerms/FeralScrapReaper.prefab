@@ -41,7 +41,7 @@ AudioSource:
   m_GameObject: {fileID: 601601444529856915}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 3583287910516004314, guid: 22230a9bdb65e6ba89462ba3f9cc67bb, type: 2}
+  OutputAudioMixerGroup: {fileID: -2705682700631874584, guid: 22230a9bdb65e6ba89462ba3f9cc67bb, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
@@ -51,12 +51,12 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 96
   DopplerLevel: 0
-  MinDistance: 2.5
-  MaxDistance: 40
+  MinDistance: 3
+  MaxDistance: 70
   Pan2D: 0
-  rolloffMode: 1
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -70,17 +70,116 @@ AudioSource:
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.042857144
+      value: 1
+      inSlope: 0
+      outSlope: -23.337006
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.050767414
+      value: 0.8440756
+      inSlope: -16.632854
+      outSlope: -16.632854
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.07449823
+      value: 0.5750395
+      inSlope: -7.7284126
+      outSlope: -7.7284126
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.11404959
+      value: 0.37521893
+      inSlope: -3.3046265
+      outSlope: -3.3046265
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.1694215
+      value: 0.25173151
+      inSlope: -1.5076126
+      outSlope: -1.5076126
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.24061395
+      value: 0.17563458
+      inSlope: -0.7608795
+      outSlope: -0.7608795
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.3276269
+      value: 0.12621056
+      inSlope: -0.42734993
+      outSlope: -0.42734993
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.43046042
+      value: 0.09161991
+      inSlope: -0.26818657
+      outSlope: -0.26818657
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.5491146
+      value: 0.065125145
+      inSlope: -0.18920073
+      outSlope: -0.18920073
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.68358916
+      value: 0.042667408
+      inSlope: -0.15030678
+      outSlope: -0.15030678
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.83388436
+      value: 0.021593314
+      inSlope: -0.13310856
+      outSlope: -0.13310856
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: -0.12857144
+      outSlope: -0.12857144
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -7128,6 +7227,7 @@ GameObject:
   - component: {fileID: 7569308117736623073}
   - component: {fileID: 8674613142235293048}
   - component: {fileID: 8020230472301799444}
+  - component: {fileID: 1657479729052088273}
   m_Layer: 0
   m_Name: FeralScrapReaper
   m_TagString: Untagged
@@ -7219,6 +7319,9 @@ MonoBehaviour:
   separation: 1.8
   armour: 14
   armourMinFraction: 0.25
+  criticalStaggerImmunity: 0.8
+  criticalPoiseScale: 1.5
+  weatherSightFloor: 0.5
   wheel: {fileID: 0}
   wheelRadius: 0.21
   leanPerTurnRate: 0.05
@@ -7289,6 +7392,27 @@ MonoBehaviour:
   downwash: {fileID: 0}
   downwashRate: 26
   motorLoop: {fileID: 0}
+  alertVariants:
+  - {fileID: 8300000, guid: a84bd83d9af624ce39407aa01f3a7603, type: 3}
+  windupVariants:
+  - {fileID: 8300000, guid: 4066540f55c987911af5255a57881985, type: 3}
+  strikeVariants:
+  - {fileID: 8300000, guid: a20727889c4432950a6c9b13bd1a9ba0, type: 3}
+  - {fileID: 8300000, guid: 6837151196877125d8e326da385e21a6, type: 3}
+  slamVariants: []
+  fireVariants: []
+  hitVariants: []
+  deathVariants:
+  - {fileID: 8300000, guid: 39860fe83c160317aa67783408d22fe4, type: 3}
+  stepVariants:
+  - {fileID: 8300000, guid: d306b434eef2781b29929c9c64388861, type: 3}
+  - {fileID: 8300000, guid: 2234ade0845eaa686bbcda606daed645, type: 3}
+  limitVoices: 1
+  rollLoop: {fileID: 0}
+  rollFullSpeed: 5
+  rollIdleVolume: 0.4
+  rollVolume: 0.85
+  rollPitch: {x: 0.75, y: 1.2}
 --- !u!136 &8917774538841691659
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -7367,6 +7491,24 @@ MonoBehaviour:
   level: 3
   experience: 60
   armour: 0
+--- !u!114 &1657479729052088273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7372304434575511800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6414e76fd28e33ecad8b5dec2255eb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.DroidWeakPoint
+  anchor: {fileID: 2326331673155894032}
+  offset: {x: 0, y: 0, z: 0}
+  radius: 0.15
+  damageMultiplier: 1.25
+  depthTolerance: 0.35
+  label: optic
 --- !u!1 &7837611532525445866
 GameObject:
   m_ObjectHideFlags: 0

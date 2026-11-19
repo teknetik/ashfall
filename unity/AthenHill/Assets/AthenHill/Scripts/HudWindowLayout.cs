@@ -14,6 +14,8 @@ namespace AthenHill
   readonly string prefix;
   WindowDrag active;
   public bool IsDragging=>active!=null;
+  /// Elements with this class handle their own pointer drags (the world map sheet pans); they never move their window.
+  public const string NoDragClass="no-window-drag";
 
   public HudWindowLayout(VisualElement root)
   {
@@ -46,6 +48,13 @@ namespace AthenHill
    PlayerPrefs.Save();
   }
   public void CancelDrag(){active?.Finish(false);}
+  /// Holds a window at its authored place (no saved offset, no dragging) without forgetting the player's placement,
+  /// e.g. the lower-third dialogue, whose authored place is the point of it. Releasing restores the saved placement.
+  public void Hold(VisualElement window,bool hold)
+  {
+   foreach(var w in windows)if(w.Window==window){if(hold&&active==w)CancelDrag();w.Hold(hold);}
+  }
+  public bool Held(VisualElement window){foreach(var w in windows)if(w.Window==window)return w.IsHeld;return false;}
   void RootResized(GeometryChangedEvent evt){foreach(var window in windows)window.Reposition();}
   public void Dispose()
   {
@@ -65,7 +74,16 @@ namespace AthenHill
    Placement placement;
    Vector2 offset,startOffset,startPointer;
    int pointerId=-1;
-   bool moved;
+   bool moved,held;
+   public bool IsHeld=>held;
+   public void Hold(bool hold)
+   {
+    if(held==hold)return;
+    held=hold;
+    if(held){SetOffset(Vector2.zero);return;}
+    // The window's geometry changes with whatever released it; place it once the new layout exists.
+    Window.schedule.Execute(Reposition);
+   }
    const float Edge=8;
 
    public WindowDrag(HudWindowLayout owner,VisualElement window,string key,bool worldAnchored)
@@ -102,12 +120,12 @@ namespace AthenHill
    }
    void Down(PointerDownEvent evt)
    {
-    if(evt.button!=0||!target.enabledInHierarchy||owner.active!=null)return;
+    if(evt.button!=0||!target.enabledInHierarchy||owner.active!=null||held)return;
     bool handle=false,control=target is Button;
     for(var element=evt.target as VisualElement;element!=null&&element!=target;element=element.parent)
     {
      handle|=element.ClassListContains("window-drag-grip");
-     control|=element is Button||element is ScrollView||element is Scroller||element is Slider||element.ClassListContains("unity-base-field");
+     control|=element is Button||element is ScrollView||element is Scroller||element is Slider||element.ClassListContains("unity-base-field")||element.ClassListContains(NoDragClass);
     }
     // Ordinary button/scroll input remains untouched. Ctrl-drag is the explicit
     // alternative when a narrow control leaves little exposed frame to grab.
@@ -151,7 +169,7 @@ namespace AthenHill
    }
    public void Reposition()
    {
-    if(placement==null||owner.active==this||Window.resolvedStyle.display==DisplayStyle.None)return;
+    if(held||placement==null||owner.active==this||Window.resolvedStyle.display==DisplayStyle.None)return;
     var bounds=Window.worldBound;
     if(!Finite(bounds.width)||!Finite(bounds.height)||bounds.width<=0||bounds.height<=0)return;
     if(worldAnchored){SetOffset(new Vector2(placement.x,placement.y));return;}

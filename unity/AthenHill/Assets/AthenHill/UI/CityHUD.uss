@@ -517,6 +517,24 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .hit-marker-stroke.a { rotate: 45deg; }
 .hit-marker-stroke.b { rotate: -45deg; }
 .hit-marker.kill .hit-marker-stroke { background-color: #c65c4f; width: 4px; }
+/* Hit marker variants (19 Nov 2026, combat feel): four short diagonal bars around an open centre, each a zero-size
+   pivot rotated about the crosshair. Hit: warm white. Critical (weak point or critical roll): brass, longer. Kill:
+   vitality red, longest and heaviest. Dark edges keep every variant readable against sand and sky. */
+.hit-marker-arm { position: absolute; left: 15px; top: 15px; width: 0; height: 0; }
+.hit-marker-arm.ne { rotate: 45deg; }
+.hit-marker-arm.se { rotate: 135deg; }
+.hit-marker-arm.sw { rotate: 225deg; }
+.hit-marker-arm.nw { rotate: 315deg; }
+.hit-marker-bar { position: absolute; left: -1.5px; top: -16px; width: 3px; height: 8px; background-color: #eee9dc; border-width: 1px; border-color: rgba(12,20,19,0.6); }
+.hit-marker.critical .hit-marker-bar { background-color: #e2b45e; top: -19px; height: 10px; }
+.hit-marker.kill .hit-marker-bar { background-color: #c65c4f; left: -2px; width: 4px; top: -21px; height: 12px; border-color: rgba(238,233,220,0.55); }
+.small-window .hit-marker-bar { top: -19px; height: 10px; }
+.small-window .hit-marker.kill .hit-marker-bar { top: -25px; height: 14px; }
+/* Low vitality (19 Nov 2026): three nested edge bands deepen toward the frame; CombatHud drives the opacity
+   (a slow heartbeat, held steady under Reduced Motion). Sits behind the HUD panels. */
+.low-vitality { position: absolute; left: 0; top: 0; right: 0; bottom: 0; opacity: 0; border-width: 34px; border-color: rgba(120,24,20,0.5); }
+.low-vitality-mid { position: absolute; left: 0; top: 0; right: 0; bottom: 0; border-width: 44px; border-color: rgba(120,24,20,0.24); }
+.low-vitality-inner { position: absolute; left: 0; top: 0; right: 0; bottom: 0; border-width: 60px; border-color: rgba(120,24,20,0.1); }
 .damage-flash { position: absolute; left: 0; top: 0; right: 0; bottom: 0; opacity: 0; border-width: 46px; border-color: rgba(150,38,30,0.55); }
 /* Direction of incoming damage (2 Oct 2026, ranged droids): a zero-size pivot at screen centre, rotated toward the
    attacker; its bar sits on a ring around the crosshair. */
@@ -748,3 +766,35 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .stash-action { min-width: 150px; margin-right: 10px; }
 .rest-actions { flex-direction: column; margin-top: 14px; }
 .rest-choice { margin-bottom: 8px; }
+/* NPC barks (19 Nov 2026, BarkDirector): subtitles low centre above the interaction prompt, apart from the radio panel
+   under the compass and the notice banner; speaker in small bronze capitals over the line on a dark enamel strip. */
+#bark-caption { display: none; position: absolute; left: 50%; margin-left: -380px; width: 760px; bottom: 252px; align-items: center; }
+.bark-speaker { font-size: 14px; color: #a48a62; letter-spacing: 2px; background-color: rgba(12,20,19,0.82); padding: 4px 14px 0; -unity-text-align: middle-center; }
+.bark-text { font-size: 21px; color: #eee9dc; white-space: normal; background-color: rgba(12,20,19,0.82); padding: 4px 18px 7px; -unity-text-align: middle-center; text-shadow: 1px 1px 0 rgba(0,0,0,0.6); }
+.compact #bark-caption { width: 640px; margin-left: -320px; }
+.small-window .bark-speaker { font-size: 20px; }
+.small-window .bark-text { font-size: 22px; }
+/* Dialogue lower third (19 Nov 2026, interface package; CityHud applies the class to #shade). Used only while the
+   conversation camera frames the NPC: no screen shade, so the shot stays visible; the modal's own opaque enamel is the
+   local backing over sand or a dark interior. Name plate (name in capitals, role · topic in bronze) over the line on the
+   left, the responses on the right; the window keeps its authored place (saved drag offsets wait). Without the class
+   the centred window is unchanged. */
+#shade.dialogue-lower-third { background-color: rgba(0,0,0,0); justify-content: flex-end; padding-bottom: 24px; }
+#shade.dialogue-lower-third #modal { width: 1240px; max-width: 94%; max-height: 42%; padding: 20px 30px 18px; }
+#shade.dialogue-lower-third .modal-heading { padding-bottom: 8px; }
+#shade.dialogue-lower-third .modal-emblem { width: 20px; height: 20px; margin-right: 11px; }
+#shade.dialogue-lower-third #modal-title { font-size: 26px; letter-spacing: 1px; }
+#shade.dialogue-lower-third #close { min-height: 38px; padding: 8px 18px; font-size: 16px; }
+#shade.dialogue-lower-third #modal-subtitle { font-size: 16px; color: #bca581; letter-spacing: 1px; margin-top: 6px; margin-bottom: 8px; }
+#shade.dialogue-lower-third #modal-scroll { max-height: 250px; }
+#shade.dialogue-lower-third #dialogue-panel { flex-direction: row; align-items: flex-start; }
+#shade.dialogue-lower-third #dialogue-line { flex-grow: 1; flex-shrink: 1; flex-basis: 0; min-width: 0; padding-right: 26px; }
+#shade.dialogue-lower-third #dialogue-text { min-height: 0; padding: 2px 2px 4px; margin-top: 0; margin-bottom: 0; }
+#shade.dialogue-lower-third #dialogue-responses { width: 470px; flex-shrink: 0; padding-left: 24px; border-left-width: 1px; border-left-color: #535f58; }
+#shade.dialogue-lower-third .response-heading { margin: 0 0 2px; }
+#shade.dialogue-lower-third #dialogue-panel Button { min-height: 48px; padding: 12px 20px; margin-top: 6px; }
+#shade.dialogue-lower-third .modal-footer { display: none; }
+#shade.dialogue-lower-third #modal-notice { margin-top: 8px; }
+.compact #shade.dialogue-lower-third #modal { width: 1100px; }
+.compact #shade.dialogue-lower-third #dialogue-responses { width: 400px; }
+.small-window #shade.dialogue-lower-third #modal-subtitle, .small-window #shade.dialogue-lower-third #close { font-size: 20px; }

@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce3127b2b0bed0c4789d9872eddff4de, type: 3}
+  m_Name: barks_npc_linn
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.BarkSet
+  speakerId: npc_linn
+  displayName: Linn
+  lines:
+  - id: greet_shade
+    trigger: 0
+    text: Sit a while. The shade's free.
+    voice: {fileID: 8300000, guid: 261987fdc04ded7a48f0dbfe39eaa42e, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: greet_evening
+    trigger: 0
+    text: Evening. Best light on the hill, this.
+    voice: {fileID: 8300000, guid: a77a5a481088e9c879c5fc236a67f467, type: 3}
+    requires: 
+    hours: {x: 17, y: 21}
+    once: 0
+    weight: 1
+  - id: idle_market
+    trigger: 1
+    text: You can hear the whole market from up here.
+    voice: {fileID: 8300000, guid: 930c2a9f5b51d88af8eeb4fa343f2c81, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: idle_tree
+    trigger: 1
+    text: This tree was old when I was young.
+    voice: {fileID: 8300000, guid: 4cf922d43bc79cc068c0f10ee37267eb, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: idle_pumps
+    trigger: 1
+    text: Listen. You can hear the aquifer pumps at night.
+    voice: {fileID: 8300000, guid: a6b5e87f398de6737a375a7cbb8d2f8c, type: 3}
+    requires: 
+    hours: {x: 21, y: 5}
+    once: 0
+    weight: 1
+  - id: weapon
+    trigger: 2
+    text: Not on the hill, please. Put it away.
+    voice: {fileID: 8300000, guid: a0929aacae60c6ea0a0c558c4ea0855a, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: ack_primer
+    trigger: 3
+    text: You came back from the Berms. I'm glad.
+    voice: {fileID: 8300000, guid: f2ddb0993e41498afa25e7c4088e0834, type: 3}
+    requires: primer
+    hours: {x: 0, y: 24}
+    once: 1
+    weight: 1
+  - id: ack_home
+    trigger: 3
+    text: How's the container? Keep the window shut against the dust.
+    voice: {fileID: 8300000, guid: 08161ef899cba4463854226f262526d1, type: 3}
+    requires: flag:home_leased
+    hours: {x: 0, y: 24}
+    once: 1
+    weight: 1
+  - id: order_done
+    trigger: 4
+    text: The Wardens talk about you now. Don't let it go to your head.
+    voice: {fileID: 8300000, guid: b8353f7e2278890ab84dbf8bd7b5bb7b, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1

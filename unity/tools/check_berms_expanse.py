@@ -18,6 +18,8 @@ from Xlib import X
 from Xlib.ext import xtest
 
 ROOT = Path(__file__).resolve().parents[1]
+# 19 Nov 2026: private-display runs mute the player (qa_display.sh), as lookbook.py and qa.py already do
+QA_MUTE_PREF = ('<pref name="AthenHill.Settings.v1.QA.Sound" type="string">' + __import__('base64').b64encode(__import__('json').dumps(dict(master=1.0, music=.5, ambience=1.0, effects=1.0, muted=True)).encode()).decode() + '</pref>') if __import__('os').environ.get('ATHEN_QA_MUTE') == '1' else ''
 OUT = Path(os.environ.get('ATHEN_EXPANSE_EVIDENCE', ROOT / 'evidence/berms-expanse/20261002/native-check')); OUT.mkdir(parents=True, exist_ok=True)
 EXE = os.environ.get('ATHEN_EXE', str(ROOT / 'AthenHill/Builds/LinuxDevelopment/AthenHill.x86_64'))
 
@@ -29,14 +31,18 @@ async def main():
     for vendor, product in [('unknown', 'unknown'), ('Free Column', 'Athen Hill')]:
         prefs = OUT / 'config/unity3d' / vendor / product; prefs.mkdir(parents=True, exist_ok=True)
         enc = base64.b64encode(json.dumps(video).encode()).decode()
-        (prefs / 'prefs').write_text('<unity_prefs version_major="1" version_minor="1"><pref name="AthenHill.Settings.v1.QA.Video" type="string">' + enc + '</pref></unity_prefs>')
+        (prefs / 'prefs').write_text('<unity_prefs version_major="1" version_minor="1"><pref name="AthenHill.Settings.v1.QA.Video" type="string">' + enc + '</pref>' + QA_MUTE_PREF + '</unity_prefs>')
     p = subprocess.Popen([EXE, '-force-glcore', '-screen-fullscreen', '0', '-screen-width', '1920', '-screen-height', '1080', '-logFile', str(OUT / 'Player.log'),
                           '--athen-qa', str(OUT), '--athen-qa-background'], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
     os.environ.update(ATHEN_NATIVE_DIR=str(OUT), ATHEN_NATIVE_PID=str(p.pid))
 
     def focused():
         d = focus(); w = window(d); w.set_input_focus(X.RevertToParent, X.CurrentTime); g = w.get_geometry(); xy = d.screen().root.translate_coords(w, 0, 0)
-        xtest.fake_input(d, X.MotionNotify, x=xy.x + g.width // 2, y=xy.y + g.height // 2); d.sync(); return d
+        # 19 Nov 2026: no XTEST pointer move while the game's cursor is locked (always-on mouse look since 5 Oct; it arrives as one big delta)
+        try: locked = json.loads((OUT / 'snapshot.json').read_text()).get('cursor', {}).get('lockState') == 'Locked'
+        except Exception: locked = False
+        if not locked: xtest.fake_input(d, X.MotionNotify, x=xy.x + g.width // 2, y=xy.y + g.height // 2)
+        d.sync(); return d
 
     def snap(): return json.loads((OUT / 'snapshot.json').read_text())
 
@@ -102,7 +108,7 @@ async def main():
             await cmd(action='goto', landmark='checkpoint_locker'); await asyncio.sleep(.5)
             assert 'ARMS LOCKER' in snap()['interaction']['prompt'], snap()['interaction']
             await tap('e'); assert snap()['combat']['hasPistol']
-            await tap('7'); assert snap()['combat']['Armed']
+            await tap('2'); assert snap()['combat']['Armed']  # 5 Oct 2026 hotbar: 2 = sidearm (was 7)
             report['checks'].append('Pistol taken and drawn with real E / 7')
             # 2. waystation
             await cmd(action='goto', landmark='berms_waystation'); await asyncio.sleep(1)

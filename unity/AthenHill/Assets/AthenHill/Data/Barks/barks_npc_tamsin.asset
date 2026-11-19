@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce3127b2b0bed0c4789d9872eddff4de, type: 3}
+  m_Name: barks_npc_tamsin
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.BarkSet
+  speakerId: npc_tamsin
+  displayName: Tamsin
+  lines:
+  - id: greet_step
+    trigger: 0
+    text: Mind the step. Always mind the step.
+    voice: {fileID: 8300000, guid: 224a923cd9ab4fb69b36c8c99b889232, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: greet_pack
+    trigger: 0
+    text: Back again. Pack holding up?
+    voice: {fileID: 8300000, guid: f2f5815c9ab38a9e183511d73ba7fc4c, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: idle_straps
+    trigger: 1
+    text: Twenty years of caravan straps. My shoulders remember every one.
+    voice: {fileID: 8300000, guid: 9bb03d724a0224e419b00899ffd1cc83, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: idle_issue
+    trigger: 1
+    text: New issue on the shelf. The fab co-op's been busy.
+    voice: {fileID: 8300000, guid: a403fada03751436a87692c96f85a23f, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: weapon
+    trigger: 2
+    text: Not in here, dear. Holster it.
+    voice: {fileID: 8300000, guid: 7bd75f476d8a6e48d802327de361a620, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: ack_primer
+    trigger: 3
+    text: First run in the Berms done? Your pack will want upgrading.
+    voice: {fileID: 8300000, guid: 0cb9fce55c8cadaf5807daff199cb27e, type: 3}
+    requires: primer
+    hours: {x: 0, y: 24}
+    once: 1
+    weight: 1
+  - id: ack_home
+    trigger: 3
+    text: A home of your own. Don't fill the locker with junk.
+    voice: {fileID: 8300000, guid: c76e14ea53148b66e85a850c950fc1ff, type: 3}
+    requires: flag:home_leased
+    hours: {x: 0, y: 24}
+    once: 1
+    weight: 1
+  - id: order_done
+    trigger: 4
+    text: Ossa's work again? I'll restock the medkits.
+    voice: {fileID: 8300000, guid: c975df787c005e8d98642a147a889d91, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
