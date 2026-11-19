@@ -11,12 +11,18 @@ def focus_window():
     can translate panel coords to root coords.
     """
     d=display.Display(); root=d.screen().root
-    for wid in root.get_full_property(d.intern_atom('_NET_CLIENT_LIST'),X.AnyPropertyType).value:
+    clients=root.get_full_property(d.intern_atom('_NET_CLIENT_LIST'),X.AnyPropertyType)
+    # No window manager (the private QA display, qa_display.sh): walk the top-level windows and set X focus directly.
+    windows=clients.value if clients else [c.id for c in root.query_tree().children if c.get_attributes().map_state==X.IsViewable]
+    for wid in windows:
         w=d.create_resource_object('window',wid)
         qa_pid=os.environ.get('ATHEN_NATIVE_PID');pid=w.get_full_property(d.intern_atom('_NET_WM_PID'),X.AnyPropertyType)
         matches=bool(pid is not None and int(pid.value[0])==int(qa_pid)) if qa_pid else 'AthenHill' in (w.get_wm_name() or '')
         if matches:
-            root.send_event(protocol.event.ClientMessage(window=w,client_type=d.intern_atom('_NET_ACTIVE_WINDOW'),data=(32,[2,X.CurrentTime,0,0,0])),event_mask=X.SubstructureRedirectMask|X.SubstructureNotifyMask)
+            if clients:
+                root.send_event(protocol.event.ClientMessage(window=w,client_type=d.intern_atom('_NET_ACTIVE_WINDOW'),data=(32,[2,X.CurrentTime,0,0,0])),event_mask=X.SubstructureRedirectMask|X.SubstructureNotifyMask)
+            else:
+                w.raise_window();w.set_input_focus(X.RevertToParent,X.CurrentTime)
             d.sync();time.sleep(.25)
             return d,w
     raise RuntimeError('AthenHill Editor window not found')
