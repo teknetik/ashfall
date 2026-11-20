@@ -180,7 +180,8 @@ namespace AthenHill
                 if (!Available(s)) continue;
                 float d = Vector3.Distance(s.transform.position, p);
                 bool entered = s.approach.Enter(d, s.Walker ? s.passRadius : s.greetRadius, s.rearmMargin);
-                if (s.Walker || active) { if (entered && !active) Approach(s, now, p); continue; }
+                // A walker standing at a work stop (residents pass, 20 Nov 2026) may also make idle remarks.
+                if (s.Walker && !s.AtWork || active) { if (entered && !active) Approach(s, now, p); continue; }
                 if (entered) { Approach(s, now, p); continue; }
                 if (d <= s.idleRadius)
                 {

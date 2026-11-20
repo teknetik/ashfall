@@ -3,15 +3,82 @@ namespace AthenHill
 {
  public class AmbientWalker:MonoBehaviour
  {
+  /// A pause at one of the route's waypoints (residents pass, 20 Nov 2026): the walker stands there for a while, turned to
+  /// a facing, playing its idle clip (or its talk clip) as a working motion, then walks on. Walkers without stops are
+  /// unchanged: their update is the original constant-speed loop.
+  [System.Serializable]
+  public class WorkStop
+  {
+   [Tooltip("Index into Waypoints where the walker stops.")]
+   public int waypoint;
+   [Min(0)]public float seconds=20;
+   [Tooltip("World yaw (degrees) the walker turns to while stopped.")]
+   public float facingYaw;
+   [Tooltip("Play the actor's Talk clip instead of its Idle clip while stopped (a second working motion).")]
+   public bool talkClip;
+   [Tooltip("What the stop is, for QA and the Inspector (\"tally desk\", \"produce stall\").")]
+   public string label;
+  }
   public Transform[] waypoints;
   [Min(0)]public float speed=1;
   [Range(0,1)]public float phase;
   [Min(0)]public float turnLookAhead=.18f;
   [Min(.01f)]public float turnSharpness=12;
   public ActorAnimation actor;
-  float distance,total;float[] lengths;
-  void Start(){lengths=new float[waypoints.Length];for(int i=0;i<lengths.Length;i++){lengths[i]=Vector3.Distance(waypoints[i].position,waypoints[(i+1)%lengths.Length].position);total+=lengths[i];}distance=phase*total;Place(true);}
-  void Update(){if(total<=0)return;distance=(distance+speed*Time.deltaTime)%total;Place(false);actor.SetMotion(speed,false,false);}
+  [Tooltip("Optional work stops. Empty = walk the loop without stopping (every walker before 20 Nov 2026).")]
+  public WorkStop[] stops=new WorkStop[0];
+  [Tooltip("Metres before and after a stop over which the walker eases between Slow Factor and full speed (walk playback follows, so feet do not slide).")]
+  [Min(0)]public float easeDistance=.9f;
+  [Range(.1f,1)]public float slowFactor=.45f;
+  /// Standing at a work stop (BarkDirector lets a working walker make idle remarks).
+  public bool AtWork{get;private set;}
+  public WorkStop CurrentStop{get;private set;}
+  public float StopSecondsLeft{get;private set;}
+  float distance,total;float[] lengths;float[] cumulative;int lastWaypoint=-1;
+  void Start(){lengths=new float[waypoints.Length];cumulative=new float[waypoints.Length];for(int i=0;i<lengths.Length;i++){cumulative[i]=total;lengths[i]=Vector3.Distance(waypoints[i].position,waypoints[(i+1)%lengths.Length].position);total+=lengths[i];}distance=phase*total;Place(true);}
+  bool HasStops=>stops!=null&&stops.Length>0;
+  void Update()
+  {
+   if(total<=0)return;
+   if(!HasStops){distance=(distance+speed*Time.deltaTime)%total;Place(false);actor.SetMotion(speed,false,false);return;}
+   UpdateWithStops(Time.deltaTime);
+  }
+  void UpdateWithStops(float dt)
+  {
+   if(AtWork)
+   {
+    StopSecondsLeft-=dt;
+    transform.position=Point(distance);
+    var face=Quaternion.Euler(0,CurrentStop.facingYaw,0);
+    transform.rotation=Quaternion.Slerp(transform.rotation,face,1-Mathf.Exp(-turnSharpness*.5f*dt));
+    if(actor)actor.SetMotion(0,false,CurrentStop.talkClip);
+    if(StopSecondsLeft>0)return;
+    AtWork=false;CurrentStop=null;
+   }
+   // ease into and out of stops: the walk clip's playback follows the speed, so the planted foot stays put
+   float ahead=float.MaxValue,behind=float.MaxValue;WorkStop next=null;
+   if(lastWaypoint>=0&&Mathf.Repeat(distance-cumulative[lastWaypoint],total)>.001f)lastWaypoint=-1;
+   foreach(var s in stops)
+   {
+    if(s==null||s.waypoint<0||s.waypoint>=cumulative.Length)continue;
+    float a=Mathf.Repeat(cumulative[s.waypoint]-distance,total),b=Mathf.Repeat(distance-cumulative[s.waypoint],total);
+    // a stop at the same place as the one just finished (a zero-length segment) follows it in waypoint order
+    bool due=a>0||a<.0001f&&s.waypoint>lastWaypoint;
+    if(due&&a<ahead){ahead=a;next=s;}
+    if(b<behind)behind=b;
+   }
+   float ease=easeDistance>0?Mathf.Clamp01(Mathf.Min(ahead,behind)/easeDistance):1;
+   float v=speed*Mathf.Lerp(slowFactor,1,ease*ease*(3-2*ease));
+   float step=v*dt;
+   if(next!=null&&ahead<=step)
+   {
+    distance=cumulative[next.waypoint];AtWork=true;CurrentStop=next;StopSecondsLeft=next.seconds;lastWaypoint=next.waypoint;
+    transform.position=Point(distance);
+    if(actor)actor.SetMotion(0,false,next.talkClip);
+    return;
+   }
+   distance=(distance+step)%total;Place(false);if(actor)actor.SetMotion(v,false,false);
+  }
   Vector3 Point(float at){float d=total>0?Mathf.Repeat(at,total):0;for(int i=0;i<lengths.Length;i++){if(d<=lengths[i])return Vector3.Lerp(waypoints[i].position,waypoints[(i+1)%waypoints.Length].position,d/Mathf.Max(.001f,lengths[i]));d-=lengths[i];}return transform.position;}
   void Place(bool immediate)
   {
@@ -22,6 +89,11 @@ namespace AthenHill
    var rotation=Quaternion.LookRotation(heading);
    transform.rotation=immediate?rotation:Quaternion.Slerp(transform.rotation,rotation,1-Mathf.Exp(-turnSharpness*Time.deltaTime));
   }
-  void OnDrawGizmosSelected(){if(waypoints==null)return;Gizmos.color=Color.cyan;for(int i=0;i<waypoints.Length;i++)if(waypoints[i]&&waypoints[(i+1)%waypoints.Length])Gizmos.DrawLine(waypoints[i].position,waypoints[(i+1)%waypoints.Length].position);}
+  void OnDrawGizmosSelected()
+  {
+   if(waypoints==null)return;Gizmos.color=Color.cyan;for(int i=0;i<waypoints.Length;i++)if(waypoints[i]&&waypoints[(i+1)%waypoints.Length])Gizmos.DrawLine(waypoints[i].position,waypoints[(i+1)%waypoints.Length].position);
+   if(stops==null)return;Gizmos.color=new Color(1,.6f,.1f);
+   foreach(var s in stops)if(s!=null&&s.waypoint>=0&&s.waypoint<waypoints.Length&&waypoints[s.waypoint]){var p=waypoints[s.waypoint].position;Gizmos.DrawWireSphere(p,.25f);Gizmos.DrawLine(p+Vector3.up*.1f,p+Vector3.up*.1f+Quaternion.Euler(0,s.facingYaw,0)*Vector3.forward*.6f);}
+  }
  }
 }

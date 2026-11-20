@@ -1,0 +1,182 @@
+{
+ "about": "CharacterArmsPass20261120 config. profiles.<name>.all applies to every state, then .idle/.walk/.run/.talk/.air; a character's overrides follow the same shape. Fields are ArmPoseProfile's (Scripts/ArmPose/ArmPoseCorrector.cs). Characters are matched by regex on the actor key: 'player', the NpcAgent / AmbientWalker object name, or the ActorAnimation object name. Unlisted actors get defaultProfile.",
+ "defaultProfile": "meshy",
+ "profiles": {
+  "meshy": {
+   "all": {
+    "shoulderLiftMax": 3.0,
+    "abductionMin": 5,
+    "elbowFlexMin": 8,
+    "elbowFlexMax": 145,
+    "twistOnForearm": 0.5
+   },
+   "idle": {
+    "abductionTarget": 7,
+    "abductionPull": 0.85,
+    "forwardMax": 30,
+    "forwardKeep": 0.3,
+    "elbowOutTarget": 10,
+    "elbowOutPull": 0.7,
+    "elbowFlexMin": 10,
+    "palmTarget": 10,
+    "palmPull": 0.7,
+    "wristKeep": 0.4,
+    "wristMaxBend": 18,
+    "handReachMax": 0.3
+   },
+   "walk": {
+    "abductionTarget": 8,
+    "abductionPull": 0.75,
+    "forwardMax": 45,
+    "forwardKeep": 0.4,
+    "elbowOutTarget": 12,
+    "elbowOutPull": 0.6,
+    "elbowFlexMin": 12,
+    "palmTarget": 10,
+    "palmPull": 0.6,
+    "wristKeep": 0.5,
+    "wristMaxBend": 20
+   },
+   "run": {
+    "abductionTarget": 12,
+    "abductionPull": 0.6,
+    "forwardMax": 60,
+    "forwardKeep": 0.4,
+    "elbowOutTarget": 15,
+    "elbowOutPull": 0.5,
+    "elbowFlexMin": 30,
+    "palmTarget": 10,
+    "palmPull": 0.5,
+    "wristKeep": 0.5,
+    "wristMaxBend": 22
+   },
+   "talk": {
+    "abductionTarget": 10,
+    "abductionPull": 0.75,
+    "forwardMax": 25,
+    "forwardKeep": 0.25,
+    "elbowOutTarget": 15,
+    "elbowOutPull": 0.65,
+    "elbowFlexMin": 15,
+    "palmTarget": 0,
+    "palmPull": 0.35,
+    "wristKeep": 0.6,
+    "wristMaxBend": 30,
+    "handReachMax": 0.36
+   },
+   "air": {
+    "abductionTarget": 20,
+    "abductionPull": 0.4,
+    "forwardMax": 70,
+    "forwardKeep": 0.5,
+    "elbowOutTarget": 25,
+    "elbowOutPull": 0.4,
+    "elbowFlexMin": 15,
+    "palmTarget": 10,
+    "palmPull": 0.4,
+    "wristKeep": 0.6,
+    "wristMaxBend": 25
+   }
+  },
+  "player": {
+   "all": {
+    "shoulderLiftMax": 2.0,
+    "abductionMin": 5,
+    "elbowFlexMin": 8,
+    "elbowFlexMax": 145,
+    "twistOnForearm": 0.5,
+    "fingerCurl": 16,
+    "thumbCurl": 8,
+    "spreadPull": 0.6
+   },
+   "idle": {
+    "abductionTarget": 5.5,
+    "abductionPull": 0.85,
+    "forwardMax": 25,
+    "forwardKeep": 0.3,
+    "elbowOutTarget": 8,
+    "elbowOutPull": 0.75,
+    "elbowFlexMin": 12,
+    "palmTarget": 8,
+    "palmPull": 0.8,
+    "wristKeep": 0.35,
+    "wristMaxBend": 15
+   },
+   "walk": {
+    "abductionTarget": 8,
+    "abductionPull": 0.8,
+    "forwardMax": 40,
+    "forwardKeep": 0.4,
+    "elbowOutTarget": 10,
+    "elbowOutPull": 0.7,
+    "elbowFlexMin": 15,
+    "palmTarget": 8,
+    "palmPull": 0.7,
+    "wristKeep": 0.4,
+    "wristMaxBend": 18
+   },
+   "run": {
+    "abductionTarget": 12,
+    "abductionPull": 0.65,
+    "forwardMax": 60,
+    "forwardKeep": 0.4,
+    "elbowOutTarget": 12,
+    "elbowOutPull": 0.6,
+    "elbowFlexMin": 45,
+    "palmTarget": 8,
+    "palmPull": 0.6,
+    "wristKeep": 0.4,
+    "wristMaxBend": 20,
+    "fingerCurl": 30,
+    "thumbCurl": 14
+   },
+   "talk": {
+    "abductionTarget": 5.5,
+    "abductionPull": 0.85,
+    "forwardMax": 25,
+    "forwardKeep": 0.3,
+    "elbowOutTarget": 8,
+    "elbowOutPull": 0.75,
+    "elbowFlexMin": 12,
+    "palmTarget": 8,
+    "palmPull": 0.8,
+    "wristKeep": 0.35,
+    "wristMaxBend": 15
+   },
+   "air": {
+    "abductionTarget": 20,
+    "abductionPull": 0.4,
+    "forwardMax": 70,
+    "forwardKeep": 0.5,
+    "elbowOutTarget": 20,
+    "elbowOutPull": 0.4,
+    "elbowFlexMin": 15,
+    "palmTarget": 8,
+    "palmPull": 0.4,
+    "wristKeep": 0.6,
+    "wristMaxBend": 25
+   }
+  }
+ },
+ "characters": [
+  {
+   "match": "^player$",
+   "label": "player",
+   "profile": "player",
+   "overrides": {
+    "corrector": {
+     "pistolAimWeight": 1.0
+    }
+   }
+  }
+ ],
+ "playerWeapon": {
+  "carryPitch": 40,
+  "carryWristShare": 0.8,
+  "carryWristMax": 30
+ },
+ "playerGrip": {
+  "pistolLeft": []
+ },
+ "aboutPlayerWeapon": "playerWeapon: fields set on the player's PlayerWeaponPose by install (originals kept in player_weapon_original.json for rollback); playerGrip: fields on the body's PlayerHandGrip (pistolLeft [] = the procedural support-hand curl instead of the solved grip that left the fingers in a V)."
+}

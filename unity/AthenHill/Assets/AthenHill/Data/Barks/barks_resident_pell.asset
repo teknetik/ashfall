@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce3127b2b0bed0c4789d9872eddff4de, type: 3}
+  m_Name: barks_resident_pell
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.BarkSet
+  speakerId: resident_pell
+  displayName: Pell
+  lines:
+  - id: pass_bay
+    trigger: 5
+    text: Bay two's live. Stand clear of the canisters.
+    voice: {fileID: 8300000, guid: f93bc168b9153cb53a8e06ef2779e66b, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: pass_count
+    trigger: 5
+    text: Forty-one in, nine out. Don't make me count again.
+    voice: {fileID: 8300000, guid: b6a4d85d8c693849b815f5d65de884fa, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: idle_goods
+    trigger: 1
+    text: Goods only through the Tube. People still ask.
+    voice: {fileID: 8300000, guid: e0a22177b7f08e050815c1adaa070abd, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: idle_scale
+    trigger: 1
+    text: Scale's reading heavy again. Sand in the plate.
+    voice: {fileID: 8300000, guid: bd15453d7384347c4b411adab3ef7b7f, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1
+  - id: idle_night
+    trigger: 1
+    text: Night shift. The node runs on half power, so we count slow.
+    voice: {fileID: 8300000, guid: a83740d3680378d27a4ff2518c3f2ddc, type: 3}
+    requires: 
+    hours: {x: 20, y: 5}
+    once: 0
+    weight: 1
+  - id: weapon
+    trigger: 2
+    text: Not near the canisters. Please.
+    voice: {fileID: 8300000, guid: 54759201e56b4989e8b74df07426104e, type: 3}
+    requires: 
+    hours: {x: 0, y: 24}
+    once: 0
+    weight: 1

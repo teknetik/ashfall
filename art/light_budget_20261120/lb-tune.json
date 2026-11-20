@@ -1,0 +1,240 @@
+{
+ "_doc": "Light budget pass (20 Nov 2026). Edit, then run LightBudgetPass20261120 --steps install,mira,verify (-nographics). 'merge': keepers get intensityScale x their ORIGINAL intensity (originals.json), the 'retire' lights get their Light component disabled. 'budget' sets LightBudget fields. 'priorities': ranking multipliers by path substring. 'noPool': lamps that fade without a pool. 'mira': Basic General lamp re-aim (aimAt world point, from the recorded original). Re-running NightFacadePass would undo the Mira re-aim.",
+ "merge": [
+  {
+   "keep": "Ward shops (hall district)/Air + Water/Practical lights/Rear door lamp light",
+   "retire": [
+    "Ward district retrofit/Shop retrofits/LIGHT_amber_air_water_rear/Practical light amber"
+   ],
+   "intensityScale": 1.25,
+   "reason": "Sep 26 retrofit amber fill 1.9 m from this shop's rear door lamp (night facade pass); same door lit twice"
+  },
+  {
+   "keep": "Ward shops (hall district)/Field Supply/Practical lights/Rear door lamp light",
+   "retire": [
+    "Ward district retrofit/Shop retrofits/LIGHT_amber_field_supply_rear/Practical light amber"
+   ],
+   "intensityScale": 1.25,
+   "reason": "Sep 26 retrofit amber fill 2.0 m from this shop's rear door lamp (night facade pass); same door lit twice"
+  },
+  {
+   "keep": "Ward shops (hall district)/Finery/Practical lights/Rear door lamp light",
+   "retire": [
+    "Ward district retrofit/Shop retrofits/LIGHT_amber_finery_rear/Practical light amber"
+   ],
+   "intensityScale": 1.25,
+   "reason": "Sep 26 retrofit amber fill 0.9 m from this shop's rear door lamp (night facade pass); same door lit twice"
+  },
+  {
+   "keep": "Ward shops (hall district)/Relay Works/Practical lights/Rear door lamp light",
+   "retire": [
+    "Ward district retrofit/Shop retrofits/LIGHT_amber_relay_works_rear/Practical light amber"
+   ],
+   "intensityScale": 1.25,
+   "reason": "Sep 26 retrofit amber fill 1.3 m from this shop's rear door lamp (night facade pass); same door lit twice"
+  },
+  {
+   "keep": "Ward shops (north avenue)/Repairs/Practical lights/Rear door lamp light",
+   "retire": [
+    "Ward district retrofit/Shop retrofits/LIGHT_amber_repairs_rear/Practical light amber"
+   ],
+   "intensityScale": 1.25,
+   "reason": "Sep 26 retrofit amber fill 1.5 m from this shop's rear door lamp (night facade pass); same door lit twice"
+  },
+  {
+   "keep": "Ward shops (north avenue)/Salvage/Practical lights/Rear door lamp light",
+   "retire": [
+    "Ward district retrofit/Shop retrofits/LIGHT_amber_salvage_rear/Practical light amber"
+   ],
+   "intensityScale": 1.25,
+   "reason": "Sep 26 retrofit amber fill 1.5 m from this shop's rear door lamp (night facade pass); same door lit twice"
+  },
+  {
+   "keep": "Ward shops (north avenue)/Thread + Hide/Practical lights/Rear door lamp light",
+   "retire": [
+    "Ward district retrofit/Shop retrofits/LIGHT_amber_thread_hide_rear/Practical light amber"
+   ],
+   "intensityScale": 1.25,
+   "reason": "Sep 26 retrofit amber fill 0.9 m from this shop's rear door lamp (night facade pass); same door lit twice"
+  },
+  {
+   "keep": "Ward shops (hall district)/Tool Exchange/Practical lights/Rear door lamp light",
+   "retire": [
+    "Ward district retrofit/Shop retrofits/LIGHT_amber_tool_exchange_rear/Practical light amber"
+   ],
+   "intensityScale": 1.25,
+   "reason": "Sep 26 retrofit amber fill 1.1 m from this shop's rear door lamp (night facade pass); same door lit twice"
+  }
+ ],
+ "retire": [],
+ "budget": {
+  "hardCap": 28,
+  "fadeMargin": 2,
+  "hysteresis": 1.35,
+  "minHoldSeconds": 1.0,
+  "fadeSeconds": 0.6,
+  "offscreenKeep": 12,
+  "pinBoost": 4.0,
+  "wideFovScale": 1.3,
+  "poolGain": 0.65,
+  "poolAlbedo": [
+   0.42,
+   0.36,
+   0.3
+  ],
+  "poolMinStrength": 0.15,
+  "poolMaxDistance": 120,
+  "cookiePoolScale": 0.4,
+  "shadowedPoolScale": 0.6,
+  "nearMetres": 15,
+  "poolRangeScale": 0.85,
+  "maxPools": 44,
+  "minPoolPixels": 6
+ },
+ "priorities": [
+  {
+   "match": "Ward west gate arches/",
+   "priority": 1.5
+  },
+  {
+   "match": "Ward utility lamps/",
+   "priority": 1.3
+  },
+  {
+   "match": "Ward hill/Practical lights/Tree uplight",
+   "priority": 1.3
+  }
+ ],
+ "noPool": [
+  "Mission terminal glow",
+  "Ward hill/Terminals",
+  "Grow glow"
+ ],
+ "cameras": [
+  {
+   "name": "cam_lb_spawn_apron",
+   "from": "cam_night_spawn_apron"
+  },
+  {
+   "name": "cam_lb_avenue_west",
+   "from": "cam_night_avenue_west"
+  },
+  {
+   "name": "cam_lb_avenue_east",
+   "from": "cam_sd_avenue_east"
+  },
+  {
+   "name": "cam_lb_hill_stair",
+   "from": "cam_hill_stair_west"
+  },
+  {
+   "name": "cam_lb_courtyard",
+   "from": "cam_pv_courtyard_edge"
+  },
+  {
+   "name": "cam_lb_hall_back",
+   "from": "cam_grounding_hall_back",
+   "offset": [
+    0,
+    0.05,
+    0
+   ]
+  },
+  {
+   "name": "cam_lb_market",
+   "from": "cam_ss_market_lane"
+  },
+  {
+   "name": "cam_lb_berms_return",
+   "from": "cam_westgate_return",
+   "offset": [
+    0,
+    1.4,
+    0
+   ]
+  },
+  {
+   "name": "cam_lb_range",
+   "from": "cam_range_bays",
+   "offset": [
+    0,
+    1.5,
+    0
+   ]
+  },
+  {
+   "name": "cam_lb_salvage_inside",
+   "from": "cam_ss_inside_out",
+   "offset": [
+    0,
+    -0.5,
+    0
+   ]
+  },
+  {
+   "name": "cam_lb_fieldsupply_inside",
+   "from": "cam_fs_inside_out",
+   "offset": [
+    0,
+    -0.5,
+    0
+   ]
+  },
+  {
+   "name": "cam_lb_home_inside",
+   "from": "cam_home_inside_bunk",
+   "offset": [
+    0,
+    -0.5,
+    0
+   ]
+  },
+  {
+   "name": "cam_lb_mira",
+   "pos": [
+    8.0,
+    1.6,
+    19.4
+   ],
+   "euler": [
+    0,
+    180,
+    0
+   ],
+   "lookAt": [
+    8.0,
+    1.75,
+    15.8
+   ],
+   "fov": 45
+  }
+ ],
+ "mira": [
+  {
+   "path": "Ward shops (north avenue)/Basic General/Practical lights/Counter lamp west light",
+   "note": "restored to the night facade pass's aim (no aimAt): tilting it at Mira (variant A, 20 Nov) only side-lit her face (face 51->67) and left the shelves dark"
+  },
+  {
+   "path": "Ward shops (north avenue)/Basic General/Practical lights/Counter lamp east light",
+   "note": "restored, as west"
+  },
+  {
+   "path": "Ward shops (north avenue)/Basic General/Practical lights/Pier lamp west light",
+   "aimAt": [
+    8.0,
+    1.4,
+    15.6
+   ],
+   "note": "variant B: the front pier lamps, 1 m in front of her face plane, tilted back onto her chest; native 20:30 face 51->93-98, face/floor 0.16->0.45-0.5, no clipping"
+  },
+  {
+   "path": "Ward shops (north avenue)/Basic General/Practical lights/Pier lamp east light",
+   "aimAt": [
+    8.0,
+    1.4,
+    15.6
+   ],
+   "note": "as west"
+  }
+ ]
+}

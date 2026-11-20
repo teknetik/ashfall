@@ -137,6 +137,8 @@ def main():
     manifest = {"provider": "ElevenLabs", "model_id": MODEL, "output_format": OUTPUT,
                 "api_reference": "https://elevenlabs.io/docs/api-reference/text-to-speech/convert", "actors": []}
     for actor_id, (voice_name, accent, voice_id) in VOICES.items():
+        if actor_id == "npc_linn":
+            continue  # 20 Nov 2026: Linn's takes are made by art/linn_voice_20261120/linn_voice.py (other voice and settings)
         path = DATA / f"{actor_id}.asset"
         _, dialogue = nodes(path)
         references = {}

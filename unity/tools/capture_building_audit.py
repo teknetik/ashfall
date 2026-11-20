@@ -104,7 +104,10 @@ async def capture(args):
         snapshot = read(native / "snapshot.json")
         assert snapshot["session"]["state"] == "Play", "Close native modals before capturing"
         assert (snapshot["width"], snapshot["height"]) == (1920, 1080), "Native 1920×1080 required"
-        assert report["environment"]["actorCount"] == 9, "All nine actors must be present"
+        # 20 Nov 2026 (residents pass): the saved city has 19 active ActorAnimation components (player and view models, eight talking
+        # colonists, Daro/Sel/Anso, the yard mechanic, three residents...): WardResidentsInstall20261120 verify.json roster.
+        # The old 9 dated from September and was already stale. Re-check on the native run.
+        assert report["environment"]["actorCount"] == 19, "All 19 actors must be present"
         assert report["settings"]["renderScale"] == 1, "Full native render scale required"
         if args.hour is not None:
             restore_clock = await clock_state()

@@ -69,6 +69,8 @@ def jobs():
                         text=d["text"], voice=voices[d["npc"]], mp3=STAGE_DIALOGUE / f"{name}.mp3", record=STAGE_DIALOGUE / f"{name}.json",
                         wav=ASSETS / "NpcVoices" / f"{name}.wav"))
     for s in DATA["speakers"]:
+        if s["id"] == "npc_linn":
+            continue  # 20 Nov 2026: Linn's barks are made by art/linn_voice_20261120/linn_voice.py (other voice and settings)
         for line in s["lines"]:
             name = f"{s['id']}-{line['id']}"
             out.append(dict(kind="bark", priority="c" if s["kind"] == "npc" else "d", speaker=s["id"], line=line["id"],

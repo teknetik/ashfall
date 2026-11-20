@@ -45,6 +45,13 @@ namespace AthenHill
   public Vector4 bermsRect=new Vector4(-104,-54,1f/44,1f/102);
   [HideInInspector]public int bermsWidth,bermsHeight;
   [HideInInspector]public byte[] bermsSurfaces=new byte[0];
+  [Header("Berms variety map (art/berms_variety_20261120)")]
+  [Tooltip("Lower-case 'parent/child' names of colliders that read the variety map (the expanse ground tiles, the earthworks); empty map = off.")]
+  public string[] varietyColliders=new string[0];
+  [Tooltip("x0, z0, 1/width, 1/depth of the variety map (the Berms Ground V3 shader's _VarRect).")]
+  public Vector4 varietyRect=new Vector4(-572,-256,1f/512,1f/512);
+  [HideInInspector]public int varietyWidth,varietyHeight;
+  [HideInInspector]public byte[] varietySurfaces=new byte[0];
   [Header("Contact detection")]
   [Tooltip("Foot height above the player's feet (metres) that counts as planted.")]
   [Min(0)]public float contactHeight=.07f;
@@ -144,9 +151,24 @@ namespace AthenHill
    {
     string n=t.name.ToLowerInvariant();
     if(!string.IsNullOrEmpty(bermsGroundName)&&n.Contains(bermsGroundName))return BermsSurface(point);
+    if(VarietyCollider(t,n))return VarietySurface(point);
     foreach(var r in colliderRules)if(r!=null&&!string.IsNullOrEmpty(r.nameContains)&&n.Contains(r.nameContains))return r.surface;
    }
    return defaultSurface;
+  }
+  bool VarietyCollider(Transform t,string n)
+  {
+   if(varietyWidth<=0||varietySurfaces==null||varietySurfaces.Length!=varietyWidth*varietyHeight||varietyColliders==null||!t.parent)return false;
+   string key=t.parent.name.ToLowerInvariant()+"/"+n;
+   foreach(var c in varietyColliders)if(!string.IsNullOrEmpty(c)&&key==c)return true;
+   return false;
+  }
+  /// Surface from the Berms variety map (sand, gravel or stone over the expansion bowl).
+  public FootSurface VarietySurface(Vector3 point)
+  {
+   float u=(point.x-varietyRect.x)*varietyRect.z,v=(point.z-varietyRect.y)*varietyRect.w;
+   int x=Mathf.Clamp((int)(u*varietyWidth),0,varietyWidth-1),y=Mathf.Clamp((int)(v*varietyHeight),0,varietyHeight-1);
+   return (FootSurface)varietySurfaces[y*varietyWidth+x];
   }
   public FootSurface BermsSurface(Vector3 point)
   {

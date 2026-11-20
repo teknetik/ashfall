@@ -18,6 +18,9 @@ namespace AthenHill
   public PlayerWeaponPose scaleByAim;
   [Min(.01f)]public float blendSeconds=.12f;
   [Tooltip("Elbow direction in the upper bone's parent space: the solved arm turns about the shoulder-hand line so the elbow points this way; zero = keep the animated bend plane.")]public Vector3 poleHint=Vector3.zero;
+  [Tooltip("Share of the hand's twist about the forearm (relative to Rest Hand Local) moved into the forearm bone, so the skin twists along the forearm instead of wrapping at the wrist (the rig has no twist bones). 0 = all at the wrist.")]
+  [Range(0,1)]public float twistShare;
+  [Tooltip("The hand's local rotation under the forearm in the bind pose (no twist), set by the installer.")]public Quaternion restHandLocal=Quaternion.identity;
   float weight;Transform current;
   void LateUpdate()
   {
@@ -60,6 +63,27 @@ namespace AthenHill
    }
    // hand: turn to the grip frame
    hand.rotation=Quaternion.Slerp(hand.rotation,target.rotation,w);
+   // 20 Nov 2026 (rifle_hands_20261120): spread the wrist twist into the forearm
+   if(twistShare>0&&hand.parent==lower)
+   {
+    var ax=hand.localPosition;
+    if(ax.sqrMagnitude>1e-10f)
+    {
+     ax.Normalize();
+     float twist=TwistDegrees(hand.localRotation*Quaternion.Inverse(restHandLocal),ax);
+     var keep=hand.rotation;
+     lower.localRotation=lower.localRotation*Quaternion.AngleAxis(twist*twistShare,ax);
+     hand.rotation=keep;
+    }
+   }
+  }
+  /// Signed twist angle (degrees) of rotation q about the unit axis (swing-twist decomposition).
+  public static float TwistDegrees(Quaternion q,Vector3 axis)
+  {
+   float p=q.x*axis.x+q.y*axis.y+q.z*axis.z;
+   float ang=2*Mathf.Atan2(p,q.w)*Mathf.Rad2Deg;
+   if(ang>180)ang-=360;else if(ang<-180)ang+=360;
+   return ang;
   }
  }
 }

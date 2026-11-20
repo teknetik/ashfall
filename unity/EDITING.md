@@ -1540,3 +1540,229 @@ the `west_gate` landmark, `cam_wga_*`, `WestGateArchesPass`, `Art/WestGate*`) st
 | Player-facing text | `UI/StartupMenu.uxml`, `UI/CityHUD.uxml`, `SettingsPanel.cs`, `WardSaveGame.cs`, `WorldMapData.cs`, catalog notes (`NewNote` in the pass) | the README's string table lists every string |
 
 Review cameras: `cam_gn_spawn`, `cam_gn_spawn_b`, `cam_gn_avenue`, `cam_gn_rampart_n`, `cam_gn_rampart_s`, `cam_gn_under_b`.
+
+## Showcase phase 2: light budget, colonist, Berms ground, residents, rifle hands, character arms (19-20 November 2026)
+
+Programme record: `art/showcase_phase2_20261120/README.md`. Each item README lists its files, values, commands, what
+was verified and its open defects. All scene wiring comes from one Editor installer per item
+(`Assets/AthenHill/Editor/<Name>.RunBatch --steps ...`, each with `verify` and `rollback`). Re-running `install`
+resets what the pass owns, so tune its source file (json, script fields or Python) and re-run, not the Inspector.
+
+| What | Where to edit | Record and installer |
+| --- | --- | --- |
+| Lamps real or pooled at night, Mira's lamps | `art/light_budget_20261120/lb-tune.json` (cap, hysteresis, fade, pool gain/albedo/cap, priorities, merges, Mira); runtime `Scripts/Lighting/LightBudget.cs`, logic `LightBudgetMath.cs`, pool `Shaders/LampPool.shader` | `art/light_budget_20261120/README.md`, `LightBudgetPass20261120` |
+| Colonist suit texture, vest, plate carrier, helmet | `art/colonist_back_20261120/make_suit.py` (tables at the top), `edit_suit_mesh.py`, `hair_tex.py`, `blender/fit_piece.py`, `fit_all.sh` (`FACES`); rebuild with `build.sh` | `art/colonist_back_20261120/README.md`, `ColonistBackPass20261120` |
+| Outer Berms ground regions, relief, outcrops, kit placement, footsteps | `art/berms_variety_20261120/layout.py`, `masks.py`, `meshes.py`, `material.json` (`_VarStrength` 0 = the V2 look) | `art/berms_variety_20261120/README.md`, `BermsVarietyPass20261120` |
+| Residents' routes, work stops, barks | `art/ward_residents_20261120/routes.json`, `barks.json`; `AmbientWalker.stops` in the Inspector; `Data/Barks/barks_resident_*.asset` | `art/ward_residents_20261120/README.md`, `WardResidentsInstall20261120` |
+| First-person rifle grips, hip and ADS framing | `public static` fields at the top of `RifleHandsPass20261120.cs` | `art/rifle_hands_20261120/README.md`, `RifleHandsPass20261120` |
+| Arm envelope per actor and state, player pistol carry and aim | `art/character_arms_20261120/characters.json` (`profiles.meshy`, `profiles.player`, `characters[]`, `playerWeapon`, `playerGrip`) | `art/character_arms_20261120/README.md`, `CharacterArmsPass20261120` |
+
+Commands go through the phase 2 wrappers (memory caps, one Unity job at a time), for example, with
+`P2=~/.local/state/ward-programme/showcase-phase2-20261120`:
+`$P2/seq.sh install NAME AthenHill.Editor.<Pass>.RunBatch install,verify`.
+Scripts compile-check without Unity: `python3 unity/tools/compile_check.py`.
+
+### Light budget
+
+URP on the Linux OpenGL player draws 32 lights per camera (sun, sky fill and 30 local lights). **Ward light budget**
+(`LightBudget`, execution order 2000, after `CityLightCircuit`) keeps the local lights enabled in the rendering camera's
+view at or under `hardCap` 28, minus `fadeMargin` 2 for cross-fades. The best-ranked lamps are real; the rest keep
+their bulbs and show a pool (`Athen Hill/Lamp Pool`) that cross-fades with the real light over `fadeSeconds` 0.6 s,
+with hysteresis ×1.35, a 1 s hold after a promotion and `offscreenKeep` 12. Pools: `poolGain` 0.65,
+`cookiePoolScale` 0.4, `shadowedPoolScale` 0.6, `poolRangeScale` 0.85, at most `maxPools` 44 a frame, none under
+`minPoolPixels` 6, none beyond 120 m or by day. Ranking priorities: East Gate arch bulkheads 1.5, avenue utility lamps
+and hill tree uplights 1.3, the rest 1.
+
+- The budget's `lamps` list holds every clock lamp, static light and salvage marker. Interior lamps, fires, arc
+  flashes and combat FX are only counted. After adding lamps to the light clock or the scene, re-run
+  `install,verify`, or the new lamp is outside the budget.
+- Mira: the `mira` step tilts Basic General's two front pier lamps back onto her (variant B in the README; the
+  counter lamps keep their night-facade aim). It is a prefab-instance override in the scene. **Do not re-run
+  `NightFacadePass`**: it would undo this re-aim. To dim her, add an `intensityScale`
+  (× the recorded original intensity) to the two pier lamp entries under `mira` in `lb-tune.json` and re-run
+  `install,mira,verify`.
+- Off for a test: `ATHEN_LIGHT_BUDGET=0` (development players), or untick the **Ward light budget** object; in any
+  build `LightBudget.Active.enabled = false` hands every lamp back as its owner last set it. Runtime tuning without a
+  rebuild: `ATHEN_LB_TUNE=file` (examples in `art/light_budget_20261120/tunes/`).
+- Rollback: `--steps rollback` re-enables the 8 merged retrofit lights, restores the keepers and Mira's lamps from
+  `originals.json` and removes the two roots (not yet run). Native check: `unity/tools/check_showcase_light_budget.py`.
+
+### Colonist seen from behind
+
+The suit's base colour and normal are synthesised in its own UVs by `make_suit.py` from Cycles bakes and written into
+`colonist.glb` by `patch_glb.py`, which swaps embedded images only. `edit_suit_mesh.py` moves vertex positions only
+(collar and sleeve rims onto smooth rings, the collar band smoothed; `CB_SMOOTH=0` turns that smoothing off). The
+rig, bind matrices, clips and the 3 and 5 October face and polish work stay as they were. The vest, plate carrier and
+helmet are re-fitted by `blender/fit_piece.py` and `decimate.py`.
+
+- Rebuild everything in `out/` with `art/colonist_back_20261120/build.sh`, then `install,verify`. `install` copies
+  only files whose hashes differ and needs no `MainCharacterInstall`.
+- **Do not re-export the armour with `art/tutorial_set_20261002/blender/rebuild_armour.sh`**: it brings back the
+  holes, torn borders and arm-driven side flaps. Do not re-run `MainCharacterInstall` or `TutorialSetInstall`.
+- Rollback: `--steps rollback` copies the shipped files back from `rollback/` (hashes in `sha256.json`).
+- Review cameras: `cam_cb_conv`, `cam_cb_follow`, `cam_cb_back`, `cam_cb_quarter`, `cam_cb_helmet`, `cam_cb_vest`
+  (root **Colonist back review cameras**). `cam_cb_conv` reproduces `ConversationFraming.Solve` with the default
+  shot; the colonist sits nearer the centre than the 0.27 the shot asks for, which is a camera tuning question.
+
+### Outer Berms ground variety
+
+The 54 expansion tiles use `Art/BermsVariety/Ground/BermsVarietyGround.mat` (*Athen Hill/Berms Ground V3*: V2 plus a
+region mask over x −572…−60, z −256…256). Scene root **Outer Berms/Berms variety** holds Earthworks, Dunes, Craters
+(generated meshes on the ground material, walkable MeshColliders), Outcrops
+(`Art/BermsVariety/Rock/BermsVarietyRock.mat` on a recoloured Poly Haven Cliff Side scan, with a cap and apron on the ground material), Wreckage, Clusters and the
+review cameras. `FootstepAudio`'s *Berms variety map* gives sand, gravel or stone on the tiles and relief.
+
+- To change the layout or regions, run the Python chain in order through
+  `~/.local/state/ward-programme/heavy.sh uv run --with numpy --with scipy --with pillow --with matplotlib python`:
+  `layout.py` → `masks.py` → `meshes.py` (`recolour_rock.py` for the rock map), then `material,install,verify`.
+- `install` deletes and rebuilds the root, and `material` overwrites Inspector edits to the V3 material. Do not edit
+  the GLB or the root's children by hand. `layout.py`'s clearance table and `verify`'s marker and droid's-eye checks
+  keep objects off spawns, loot, landmarks, sites and trails; check `layout-check.json` after a change.
+- A/B and rollback: `--steps toggle:off` (root inactive, tiles back on V2, footstep map off), `toggle:on`.
+  `uninstall` deletes the root after a rollback. `cost:cam+cam` estimates draws and triangles per view.
+- Craters are painted bowls with a raised rim: the walkable ground mesh is locked. After a change to the bowl, re-render
+  the world map's survey picture (`WorldMapInstall20261119 --steps survey`, needs graphics).
+
+### Ward residents
+
+Nadje, Pell and Oren are `AmbientWalker` roots under **Ward residents**, with prefabs built by the installer from the
+Meshy files in `meshy/ward-residents-20261120/` (`residents_meshy.py`, `prepare_unity.sh`).
+
+- Routes and stops: edit `art/ward_residents_20261120/routes.json`, run `check_routes.py`, then
+  `simulate,install,verify` (`install` rebuilds the waypoints under **Ward residents/Routes**). In the Inspector an
+  `AmbientWalker`'s Stops list sets each pause (waypoint index, seconds, facing yaw, Talk Clip = the second work
+  motion); Ease Distance (0.9 m) and Slow Factor (0.45) shape the approach. Walkers with no stops run the old code path.
+  Route speeds are the planted-foot speeds of the walk clips (0.80–0.95 m/s); a faster route makes the feet slide.
+- Barks: `barks.json` is the source; takes are generated by `generate_voices.py` and bound to
+  `Data/Barks/barks_resident_*.asset` by the `barks` step. `NpcLifeInstall20261119 --steps scene` rebuilds
+  `BarkDirector.speakers` from its own list and drops the residents: run this pass's `install` after it.
+- Off: deactivate the **Ward residents** root, or `--steps rollback` (root and cameras off, barkers out of the
+  director).
+- Review cameras: `cam_res_<name>_face`, `_body`, `_beside` follow their resident (`ResidentReviewCamera`), so
+  re-issue the view before each capture; the other `cam_res_*` frame a fixed work stop. QA landmarks `res_nadje`,
+  `res_pell`, `res_oren`. Native frames: `unity/tools/capture_residents_native.py`.
+- Skin: Meshy baked a woven crosshatch into the skin. `art/ward_residents_20261120/tex/deweave.py` (run by
+  `apply_deweave.py`) notches it out of the skin texels only and flattens the normal map there; the unfiltered GLBs
+  are kept as `meshy/ward-residents-20261120/<key>/rigged_fixed_weave.glb`. Re-run it after any re-import from Meshy,
+  then `import,prefab,install,verify`.
+
+### First-person rifle hands
+
+The field rifle's view model is weapon-driven like the pistol's: it sits on `RH weapon mount`, the arms are placed at
+the camera-space hip and aim anchors of `ViewModelArmsRig` (`followWeapon` 0.6, `drawFollow` 1.0), and `RH right arm IK`
+and the arms' `SupportHandIK` (`twistShare` 0.6) hold `RH shooting grip` and `RH support grip`. Fingers are solved
+against the rifle into the arms' `PlayerHandGrip.rifleRight/rifleLeft`.
+
+- Tune with the `public static` fields of `RifleHandsPass20261120` (grip location, palm, hand searches, arms
+  configuration, `HipFromAim`/`HipWeapon`/`HipConverge`/`HipCant`, `FollowWeapon`, `TwistShare`, `AimButtBehindEye`)
+  and re-run `install,verify`. `install` undoes its previous install from `previous.json` first, so Inspector edits to
+  the anchors, poles, `aimOffset`/`aimEuler` or `hipOffset`/`hipEuler` are reset. `HipFromAim = false` keeps the new
+  hands with the old hip framing.
+- **Before re-running `MainCharacterInstall` or `TutorialSetInstall`** (they call `PlayerFace20261003.FirstPersonHands`,
+  whose `Unmount` only knows its own `Weapon mount`), run this pass's `rollback`, then `install` afterwards.
+- `--steps rollback` restores the clip-driven rifle and the old pistol mirror. `--steps dump` plus
+  `art/rifle_hands_20261120/render_dump.py` (Blender) or `render_soft.py` (CPU) gives review frames without
+  graphics-mode Unity. Native frames: `unity/tools/capture_rifle_hands_native.py` (`ATHEN_EXE`, `ATHEN_OUT`).
+  `check_rifle_quest.py` asserts each hand within 2 cm of its grip.
+- `verify` compares 44 reference values recorded at install (pistol view model, rifle hip, muzzle, held mounts, body
+  grips, `PlayerWeaponPose`). When a later pass changes one on purpose, run `--steps rebaseline --keys <key>` (it
+  rewrites `reference.json` only and logs old and new values in `rebaseline.txt`); the arms pass's pistol carry
+  needed `--keys body.pose`.
+
+### Character arms and pistol hold
+
+Every actor with an `ActorAnimation` carries an `Arm Pose Corrector` (`Scripts/ArmPose/`, LateUpdate order −20, after
+the clips sample and before `PlayerWeaponPose`, `PlayerHandGrip` and the look-at). `ArmPoseFingerPass` (added at
+runtime, order 20) curls the fingers and, for the player with the pistol raised, places both hands for the
+two-handed aim. Five state profiles (idle, walk, run, talk, air) blend by the actor's current clip. The clips
+themselves are unchanged.
+
+- Values live in `art/character_arms_20261120/characters.json`: `profiles.meshy` (every NPC, walker, resident and the
+  mechanic), `profiles.player`, `characters[]` (regex on the actor key → profile and overrides), `playerWeapon`
+  (`PlayerWeaponPose`: `carryPitch` 40, `carryWristShare` 0.8, `carryWristMax` 30) and `playerGrip`. `install` writes
+  them into the components and overwrites Inspector edits, so tune the json, or tune in the Inspector and copy back.
+- **Adding a character:** put it in the scene with an `ActorAnimation` (legacy Animation or Humanoid Animator) and
+  re-run `install,verify`. Bones are found by name (`LeftShoulder/LeftArm/LeftForeArm/LeftHand`,
+  `clavicle_l/upperarm_l/lowerarm_l/hand_l`, `mixamorig:` names) or through the Humanoid avatar; it gets
+  `profiles.meshy` unless a `characters[]` entry says otherwise. Check it with `survey` and `dump` (read-only).
+- Off for one actor: its corrector's `weight` 0. `--steps rollback` removes every corrector and the review cameras
+  and restores the `PlayerWeaponPose`/`PlayerHandGrip` values from `player_weapon_original.json` (`verify` then reports
+  FAIL, as expected).
+- Review without the GPU: `splat_sheets.py` (point splats of the `dump` OBJs). Review cameras `cam_arms_<label>` and
+  `cam_arms_talk_<label>`; the riding rigs `Arms review rig [...]` are inactive and switched on by NativeQa `setActive`
+  in development builds. Native frames: `unity/tools/capture_character_arms_native.py`.
+
+## Playtest fixes: loadout body maps, eye slot, hotbar reorder, Linn's voice, market barrels (20 November 2026)
+
+Carl's six notes on the phase 2 build (`art/showcase_phase2_20261120/PLAYTEST-NOTES.md`), fixed in
+`Builds/batch-p2-notes`. Programme record: `art/showcase_phase2_20261120/README.md`, section "Playtest fixes,
+20 November morning". One Editor installer per fix, each with `install`, `verify` and `rollback`, run through the
+phase 2 wrappers (`$P2/seq.sh install NAME AthenHill.Editor.<Pass>.RunBatch install,verify`).
+
+| What | Where to edit | Record and installer |
+| --- | --- | --- |
+| Body-map dots, leaders and boxes (implants, armour) | anchor tables and layout constants in `Scripts/AnatomyLayout.cs`; styles `.anatomy-*` in `UI/CityHUD.uss` | `art/loadout_fix_20261120/README.md`, `LoadoutFixPass20261120` |
+| Implant and armour slots (incl. EYE), what fits each | `Resources/CharacterCatalog.asset` (`slots`; each `equipment` entry's `slots`) | same |
+| Hotbar strip drag, reorder and clear | `PackPanel.cs` (`BuildHotbarStrip`, `MoveHotbar`, `ClearHotbar`, `HotbarHelp`); drags in `CharacterLoadoutPanel.cs` (`BindHotbarCell`, `DropAt`, `CancelDrag`) | same (code only) |
+| Linn's voice | `art/linn_voice_20261120/voice.json` (voice, settings, per-voice spellings), `linn_voice.py` | `art/linn_voice_20261120/README.md`, `LinnVoicePass20261120` |
+| Broken barrel colliders at the market | `GateBarrelsPass20261120.cs` (box values); measure with its `heightmaps` step | `art/gate_barrels_20261120/README.md`, `GateBarrelsPass20261120` |
+
+### Body maps, the eye slot and the hotbar
+
+Each body-map slot's dot is an anchor on the figure image `Resources/UI/ImplantBody.png` (1024 × 1536), held in the
+two anchor tables (implants, armour) at the top of `Scripts/AnatomyLayout.cs` as pixel x, y plus the side its box goes
+on. `AnatomyLayout.Arrange` sizes the figure to the page, puts each dot at image rectangle + anchor × image size,
+stacks each column's boxes as near their dots' heights as they fit, and draws the leaders on one overlay element
+(`anatomy-leaders`); `CharacterLoadoutPanel.ArrangeAnatomy` re-runs it on every size change.
+
+- **Adding a slot:** add it to `slots` in `Resources/CharacterCatalog.asset` (id, label, section IMPLANTS or ARMOUR),
+  then give it an anchor and a side in `AnatomyLayout.cs`, measured on the image. Without an anchor it is spread down
+  the spine and `LoadoutFixPass20261120 verify` reports it. Make it fit items through their `equipment` entries'
+  `slots` lists. The EYE slot (`implant_eye`) was added by the pass's `install` step; `rollback` removes it (the
+  previous list is in `previous/character-slots.json`). Equipment is saved per slot id, so a new slot needs no save
+  migration.
+- **Changing the figure image:** re-measure every anchor on the new image (`implantAnchors`, `armourAnchors`) and the
+  body-part regions `PartRegions` in `Tests/Editor/LoadoutFixTests.cs` (the test checks that each anchor lies
+  inside its body part's region). Keep
+  `BoxWidth`/`BoxHeight` equal to the `.anatomy-slot` USS rule.
+- **Hotbar:** the strip shares the pack's drag, so there is at most one drag label. Dragging a cell 3–0 onto another
+  moves or swaps them (`PackPanel.MoveHotbar` → `HotbarModel.Swap`); a focused cell and a number key sends it there;
+  right-click, Delete or dragging off the strip clears it; 1 and 2 follow the equipped weapons and refuse drops.
+  The order is saved in the save's `hotbar` field (v4).
+- The Item Lab export `Data/Crafting/Export/ward-crafting.v1.json` lacks the eye slot until it is regenerated
+  (`CraftingDataExporter.Export`).
+
+### Linn's voice
+
+All 13 of Linn's lines are in Seer Morganna (`7NsaqHdLuKNFvEfjpUno`), Carl's pick. The WAVs keep their paths, `.meta`
+files and GUIDs; `LinnVoicePass20261120` binds the two housing takes in `Data/npc_linn.asset` and its `verify`
+compares each imported length with the mastered WAV.
+
+- **Switching voice:** `python3 art/linn_voice_20261120/linn_voice.py --generate --voice <id>` writes all 13 mastered
+  takes (cached voices cost nothing: Empress `MHPwHxLx0nmGIb5Jnbly`, Maria Moody `wGcFBfKz5yUQqhqr0mVy`), then run
+  `LinnVoicePass20261120 install,verify` so the clips re-import. Set `default_voice` in `voice.json` to make it stick.
+  `linn_voice.py` with no arguments is a dry run; `--stt` transcribes the takes.
+- **Why the other generators skip her:** `unity/tools/generate_npc_voices.py` and
+  `art/showcase_20261119/npc_life/generate_voices.py` still list Linn in Amelia; each has a one-line guard so a re-run
+  of either cannot overwrite her lines. Change her voice only through `linn_voice.py`.
+- Spoken spellings (generator only, captions unchanged) are per voice in `voice.json`: "nano-fab", and "Kah-rah-veen"
+  for Seer Morganna. `probe_pron.py 'phrase'` tests a spelling for a few credits.
+- Rollback to Amelia: `art/linn_voice_20261120/rollback.sh` (the Editor pass, then the audio from `previous/`; not
+  exercised).
+
+### Market barrel colliders
+
+The Poly Haven `wooden_barrels_01` set (two whole barrels and a broken one in pieces) is merged into two market
+`Goods` meshes: the Karaveen caravan overflow by the truck and the side of the Rations stall. Only the whole barrels
+collide: `Caravan stock/COL_barrels` (west barrel) plus `Gate barrels colliders/COL_caravan_barrel_east`, and
+`Stall Rations/COL_goods.010` (both small barrels). Staves, lids and barrel halves (at most 0.39 m) have no collider.
+
+- The boxes were measured from the mesh in the saved scene, not from `build_market.py`: the `heightmaps` step writes a
+  0.1 m grid of the highest LOD0 vertex and the highest collider top for each place (`heightmaps.json`). The build
+  script's coordinates do not match the imported mesh, which is how the 3 October box ended up over the staves. If a
+  barrel set moves, move its colliders with it and re-measure.
+- `verify` walks the five lines both ways with a CharacterController copied from the player (step offset 0.3 m);
+  debris under that height needs no collider, and a 0.3–0.4 m box would stop or pop the player.
+- Rollback: `--steps rollback` restores both boxes and transforms from `art/gate_barrels_20261120/record.json` and
+  removes the added collider, the cameras and the landmarks (tested). Review cameras `cam_gb_*`; QA landmarks
+  `gb_<line>_a/_b`; native check `unity/tools/check_gate_barrels.py`.

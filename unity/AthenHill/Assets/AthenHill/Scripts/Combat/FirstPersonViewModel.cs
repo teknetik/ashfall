@@ -48,6 +48,8 @@ namespace AthenHill
   void OnDisable(){all.Remove(this);}
   bool OverlayWanted(){foreach(var v in all)if(v&&v.overlayCamera==overlayCamera&&v.Visible)return true;return false;}
   public float AimBlend=>aim;
+  /// Draw/holster slide, 0 (holstered) to 1 (drawn) (20 Nov 2026, rifle_hands_20261120: read by ViewModelArmsRig).
+  public float DrawBlend=>draw;
   float draw,aim,aimVelocity,recoil,bobPhase,lastShot=-99;
   Vector2 sway,lastLook;
   bool looked;

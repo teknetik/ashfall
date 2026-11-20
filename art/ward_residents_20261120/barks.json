@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "note": "Barks for the three Ward residents (showcase phase 2, 20 Nov 2026). Same schema, model and voice settings as art/showcase_20261119/npc_life/barks.json; read by generate_voices.py here and by WardResidentsInstall20261120 (BarkSet assets Data/Barks/barks_<id>.asset, takes Audio/ElevenLabs/NpcBarks/<id>-<line>.wav). Walkers speak Passing lines when the player comes within 3.2 m; while a resident stands at a work stop BarkDirector also lets it make Idle remarks (player within 9 m and in sight). hours = [from, to) on CityTimeOfDay.",
+  "model_id": "eleven_multilingual_v2",
+  "voice_settings": {
+    "stability": 0.55,
+    "similarity_boost": 0.78,
+    "style": 0.12,
+    "use_speaker_boost": true
+  },
+  "speakers": [
+    {
+      "id": "resident_nadje",
+      "name": "Nadje",
+      "kind": "walker",
+      "walker": "npc_resident_nadje",
+      "voice": {
+        "name": "Kirsty",
+        "accent": "British (Yorkshire)",
+        "id": "3HCsOhirtjbPmdcSOPBt",
+        "assigned": "20 Nov 2026 (residents: Karaveen produce and pottery trader)"
+      },
+      "lines": [
+        {
+          "id": "pass_caravan",
+          "trigger": "Passing",
+          "text": "Fresh off the caravan. Dates, beans and salt."
+        },
+        {
+          "id": "pass_jars",
+          "trigger": "Passing",
+          "text": "Water jars, sealed and tested. Mind your feet."
+        },
+        {
+          "id": "idle_berms",
+          "trigger": "Idle",
+          "text": "Every jar on this table crossed the Berms on a beast's back."
+        },
+        {
+          "id": "idle_dust",
+          "trigger": "Idle",
+          "text": "Dust front's coming. I can smell it. Cover the grain.",
+          "hours": [
+            10,
+            18
+          ]
+        },
+        {
+          "id": "idle_lamps",
+          "trigger": "Idle",
+          "text": "Ward keeps its lamps low. Good for prices, bad for eyes.",
+          "hours": [
+            18,
+            23
+          ]
+        },
+        {
+          "id": "weapon",
+          "trigger": "Weapon",
+          "text": "Holster that. Nobody haggles at gunpoint."
+        }
+      ]
+    },
+    {
+      "id": "resident_pell",
+      "name": "Pell",
+      "kind": "walker",
+      "walker": "npc_resident_pell",
+      "voice": {
+        "name": "Alfie",
+        "accent": "British",
+        "id": "BuptxElFd80GDtsmyQIU",
+        "assigned": "20 Nov 2026 (residents: Node 07 dock tally clerk)"
+      },
+      "lines": [
+        {
+          "id": "pass_bay",
+          "trigger": "Passing",
+          "text": "Bay two's live. Stand clear of the canisters."
+        },
+        {
+          "id": "pass_count",
+          "trigger": "Passing",
+          "text": "Forty-one in, nine out. Don't make me count again."
+        },
+        {
+          "id": "idle_goods",
+          "trigger": "Idle",
+          "text": "Goods only through the Tube. People still ask."
+        },
+        {
+          "id": "idle_scale",
+          "trigger": "Idle",
+          "text": "Scale's reading heavy again. Sand in the plate."
+        },
+        {
+          "id": "idle_night",
+          "trigger": "Idle",
+          "text": "Night shift. The node runs on half power, so we count slow.",
+          "hours": [
+            20,
+            5
+          ]
+        },
+        {
+          "id": "weapon",
+          "trigger": "Weapon",
+          "text": "Not near the canisters. Please."
+        }
+      ]
+    },
+    {
+      "id": "resident_oren",
+      "name": "Oren",
+      "kind": "walker",
+      "walker": "npc_resident_oren",
+      "voice": {
+        "name": "Bill",
+        "accent": "American (old)",
+        "id": "pqHfZKP75CvOlQylNhV4",
+        "assigned": "20 Nov 2026 (residents: old water carrier from the south wall homes)"
+      },
+      "lines": [
+        {
+          "id": "pass_ration",
+          "trigger": "Passing",
+          "text": "Two cans a house. Same as in my father's day."
+        },
+        {
+          "id": "pass_slow",
+          "trigger": "Passing",
+          "text": "Mind the old man. Slow, but he gets there."
+        },
+        {
+          "id": "idle_tap",
+          "trigger": "Idle",
+          "text": "Cold, from the deep rock. Best water on Tir."
+        },
+        {
+          "id": "idle_wall",
+          "trigger": "Idle",
+          "text": "Forty years I've lived on that wall. It's never fallen."
+        },
+        {
+          "id": "idle_dust",
+          "trigger": "Idle",
+          "text": "Dust front tonight, mark me. My knees know.",
+          "hours": [
+            12,
+            20
+          ]
+        },
+        {
+          "id": "weapon",
+          "trigger": "Weapon",
+          "text": "Put it away, son. The Wardens are watching."
+        }
+      ]
+    }
+  ],
+  "dialogue": []
+}

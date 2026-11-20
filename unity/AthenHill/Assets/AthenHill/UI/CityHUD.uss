@@ -385,15 +385,20 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .weapon-socket .character-slot-copy { align-items: center; }
 .weapon-socket .character-slot-value { font-size: 14px; -unity-text-align: middle-center; }
 .anatomy-layout { flex-direction: row; flex-grow: 0; flex-shrink: 0; overflow: hidden; }
-.anatomy-map { width: 306px; min-width: 306px; height: 100%; flex-shrink: 0; position: relative; margin-right: 12px; }
-.anatomy-image { position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.9; }
+/* Body map (20 Nov 2026): the map's width, the figure's rectangle, the slot boxes and the dots are placed by
+   AnatomyLayout.Arrange from anchors on the figure image; the values here are only the first-frame fallback. */
+.anatomy-map { width: 451px; min-width: 0; height: 100%; flex-shrink: 0; position: relative; margin-right: 12px; }
+.anatomy-image { position: absolute; opacity: 0.9; }
 .armour-anatomy-image { opacity: 0.5; }
-.anatomy-slot { position: absolute; width: 112px; min-height: 50px; height: 50px; margin: -25px 0 0; padding: 4px; background-color: rgba(7, 29, 35, 0.98); }
+.anatomy-slot { position: absolute; width: 112px; min-height: 50px; height: 50px; margin: 0; padding: 4px; background-color: rgba(7, 29, 35, 0.98); }
 .anatomy-slot .character-slot-icon { width: 23px; height: 28px; margin-right: 4px; }
 .anatomy-slot .character-slot-label { font-size: 13px; white-space: nowrap; }
 .anatomy-slot .character-slot-value { font-size: 13px; max-height: 29px; overflow: hidden; text-overflow: ellipsis; }
-.anatomy-leader { position: absolute; width: 25px; height: 1px; background-color: #58b9c2; }
-.anatomy-node { position: absolute; width: 9px; height: 9px; margin-top: -4px; border-width: 1px; border-color: #83e2e3; background-color: #16434b; border-radius: 5px; }
+.anatomy-slot.compact .character-slot-icon { display: none; }
+.anatomy-map .anatomy-slot.compact .character-slot-label, .anatomy-map .anatomy-slot.compact .character-slot-value { font-size: 12px; }
+.anatomy-leaders { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
+.anatomy-node { position: absolute; width: 9px; height: 9px; margin-top: -4.5px; margin-left: -4.5px; border-width: 1px; border-color: #83e2e3; background-color: #16434b; border-radius: 5px; }
+.anatomy-node.selected { background-color: #58d5d7; border-color: #eee9dc; }
 .equipment-inspector-scroll { flex-grow: 1; flex-shrink: 1; flex-basis: 0; min-width: 170px; height: 100%; border-left-width: 1px; border-left-color: #294f56; }
 .equipment-inspector-scroll .unity-scroll-view__content-viewport { overflow: hidden; }
 .equipment-inspector { flex-grow: 1; flex-shrink: 0; min-width: 0; padding: 3px 5px 8px 9px; }
@@ -706,6 +711,12 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .packbar-slot .slot-count { font-size: 11px; top: 2px; right: 3px; }
 .packbar-slot .empty-slot-marker { font-size: 14px; }
 .packbar-slot.weapon-slot .slot-label { color: #bca581; }
+/* 20 Nov 2026: 1 and 2 follow the equipped weapons and do not move: a duller frame and a gap before 3. While a cell or a
+   pack item is dragged, the cell under it takes the focus frame and the dragged cell dims. */
+.packbar-slot.packbar-fixed { -unity-background-image-tint-color: #9c9a8c; }
+.packbar-slot.packbar-fixed-last { margin-right: 9px; }
+.packbar-slot.drop-target { background-image: url("Art/button-focus.png"); }
+.drag-source { opacity: 0.55; }
 .small-window .pack-hotbar-title { font-size: 16px; }
 .small-window .pack-hotbar-help { font-size: 14px; }
 

@@ -1,0 +1,522 @@
+[install] copied colonist.glb, TS_FieldVest.glb, TS_Helmet.glb; cameras and verify in install.json
+[verify] {
+  "files": {
+    "colonist.glb": {
+      "asset": "Assets/AthenHill/Art/Imported/Meshy/colonist.glb",
+      "sha256": "267568c305a7babc7c5f57553636fb2ef38f832b5c4951e987e26a89291e6b52",
+      "installed": true,
+      "guid": "17ec666031c8fa2da8bd3e4971fdd5e3"
+    },
+    "TS_FieldVest.glb": {
+      "asset": "Assets/AthenHill/Art/Armour/TutorialSet/TS_FieldVest.glb",
+      "sha256": "fffdf07f6a14b838bfee0b8a9cb26e40a36c2dc6f3da2e3cef04a95bea200d90",
+      "installed": true,
+      "guid": "29450032cf09cafb8a596574816cc171"
+    },
+    "TS_Helmet.glb": {
+      "asset": "Assets/AthenHill/Art/Armour/TutorialSet/TS_Helmet.glb",
+      "sha256": "b5322215611bd1331a4f52fb383e884c17b9330c7baf5f19a428058911589212",
+      "installed": true,
+      "guid": "531bf33f273bf3098bde478e64125b08"
+    },
+    "TS_WardenCarrier.glb": {
+      "asset": "Assets/AthenHill/Art/Armour/TutorialSet/TS_WardenCarrier.glb",
+      "sha256": "d7f790a62ad703b51c684ef3f3b7d157d3c3bab02e54b7f4bbef454b0346834c",
+      "installed": true,
+      "guid": "c7e9d0e8ce804c3e184269ca44f90058"
+    }
+  },
+  "body": {
+    "mesh": "char1",
+    "triangles": 76043,
+    "vertices": 57091,
+    "bones": 54,
+    "materials": [
+      "PlayerSkin (Shader Graphs/glTF-pbrMetallicRoughness)",
+      "PlayerEyes (Shader Graphs/glTF-pbrMetallicRoughness)",
+      "PlayerEyelashes02 (Shader Graphs/glTF-pbrMetallicRoughness)",
+      "PlayerJumpsuit (Shader Graphs/glTF-pbrMetallicRoughness)",
+      "PlayerHairShell (Shader Graphs/glTF-pbrMetallicRoughness)",
+      "PlayerFieldWebbing (Shader Graphs/glTF-pbrMetallicRoughness)",
+      "PlayerBeltHardware (Shader Graphs/glTF-pbrMetallicRoughness)"
+    ],
+    "textureMB": 97.75,
+    "textures": [
+      {
+        "material": "PlayerSkin",
+        "property": "baseColorTexture",
+        "name": "skin_base",
+        "width": 4096,
+        "height": 4096,
+        "format": "RGBA_BC7_SRGB",
+        "mips": 13,
+        "mb": 21.33
+      },
+      {
+        "material": "PlayerSkin",
+        "property": "metallicRoughnessTexture",
+        "name": "skin_rough",
+        "width": 2048,
+        "height": 2048,
+        "format": "RGBA_BC7_UNorm",
+        "mips": 12,
+        "mb": 5.33
+      },
+      {
+        "material": "PlayerSkin",
+        "property": "normalTexture",
+        "name": "skin_normal",
+        "width": 4096,
+        "height": 4096,
+        "format": "RGBA_BC7_UNorm",
+        "mips": 13,
+        "mb": 21.33
+      },
+      {
+        "material": "PlayerEyes",
+        "property": "baseColorTexture",
+        "name": "eye_brown",
+        "width": 1024,
+        "height": 1024,
+        "format": "RGBA_BC7_SRGB",
+        "mips": 11,
+        "mb": 1.33
+      },
+      {
+        "material": "PlayerEyelashes02",
+        "property": "baseColorTexture",
+        "name": "eyelashes02",
+        "width": 512,
+        "height": 512,
+        "format": "RGBA_BC7_SRGB",
+        "mips": 10,
+        "mb": 0.33
+      },
+      {
+        "material": "PlayerJumpsuit",
+        "property": "baseColorTexture",
+        "name": "suit_base",
+        "width": 4096,
+        "height": 4096,
+        "format": "RGBA_BC7_SRGB",
+        "mips": 13,
+        "mb": 21.33
+      },
+      {
+        "material": "PlayerJumpsuit",
+        "property": "normalTexture",
+        "name": "player_normal_4k",
+        "width": 4096,
+        "height": 4096,
+        "format": "RGBA_BC7_UNorm",
+        "mips": 13,
+        "mb": 21.33
+      },
+      {
+        "material": "PlayerHairShell",
+        "property": "baseColorTexture",
+        "name": "hair_shell",
+        "width": 2048,
+        "height": 2048,
+        "format": "RGBA_BC7_SRGB",
+        "mips": 12,
+        "mb": 5.33
+      },
+      {
+        "material": "PlayerFieldWebbing",
+        "property": "baseColorTexture",
+        "name": "field_canvas",
+        "width": 256,
+        "height": 256,
+        "format": "RGBA_BC7_SRGB",
+        "mips": 9,
+        "mb": 0.08
+      }
+    ]
+  },
+  "clips": [
+    "lib_idle_252 Assets/AthenHill/Art/CharacterMotion/Player/lib_idle_252.anim",
+    "walk Assets/AthenHill/Art/Imported/Meshy/colonist.glb",
+    "run Assets/AthenHill/Art/Imported/Meshy/colonist.glb"
+  ],
+  "pieces": [
+    {
+      "itemId": "field_helmet",
+      "slot": "armour_head",
+      "model": "Armour field_helmet",
+      "active": false,
+      "asset": "Assets/AthenHill/Art/Armour/TutorialSet/TS_Helmet.glb",
+      "bindMaxDiff": 0.0,
+      "detail": {
+        "mesh": "TS_Helmet",
+        "triangles": 11999,
+        "vertices": 20892,
+        "bones": 54,
+        "materials": [
+          "Material_0 (Shader Graphs/glTF-pbrMetallicRoughness)"
+        ],
+        "textureMB": 16.0,
+        "textures": [
+          {
+            "material": "Material_0",
+            "property": "baseColorTexture",
+            "name": "Image_0",
+            "width": 2048,
+            "height": 2048,
+            "format": "RGBA_BC7_SRGB",
+            "mips": 12,
+            "mb": 5.33
+          },
+          {
+            "material": "Material_0",
+            "property": "metallicRoughnessTexture",
+            "name": "Image_1",
+            "width": 2048,
+            "height": 2048,
+            "format": "RGBA_BC7_UNorm",
+            "mips": 12,
+            "mb": 5.33
+          },
+          {
+            "material": "Material_0",
+            "property": "normalTexture",
+            "name": "normal",
+            "width": 2048,
+            "height": 2048,
+            "format": "RGBA_BC7_UNorm",
+            "mips": 12,
+            "mb": 5.33
+          }
+        ]
+      }
+    },
+    {
+      "itemId": "field_vest",
+      "slot": "armour_chest",
+      "model": "Armour field_vest",
+      "active": false,
+      "asset": "Assets/AthenHill/Art/Armour/TutorialSet/TS_FieldVest.glb",
+      "bindMaxDiff": 0.0,
+      "detail": {
+        "mesh": "TS_FieldVest",
+        "triangles": 13999,
+        "vertices": 25346,
+        "bones": 54,
+        "materials": [
+          "Material_0 (Shader Graphs/glTF-pbrMetallicRoughness)"
+        ],
+        "textureMB": 16.0,
+        "textures": [
+          {
+            "material": "Material_0",
+            "property": "baseColorTexture",
+            "name": "Image_0",
+            "width": 2048,
+            "height": 2048,
+            "format": "RGBA_BC7_SRGB",
+            "mips": 12,
+            "mb": 5.33
+          },
+          {
+            "material": "Material_0",
+            "property": "metallicRoughnessTexture",
+            "name": "Image_1",
+            "width": 2048,
+            "height": 2048,
+            "format": "RGBA_BC7_UNorm",
+            "mips": 12,
+            "mb": 5.33
+          },
+          {
+            "material": "Material_0",
+            "property": "normalTexture",
+            "name": "normal",
+            "width": 2048,
+            "height": 2048,
+            "format": "RGBA_BC7_UNorm",
+            "mips": 12,
+            "mb": 5.33
+          }
+        ]
+      }
+    },
+    {
+      "itemId": "field_armguards",
+      "slot": "armour_arms",
+      "model": "Armour field_armguards",
+      "active": false,
+      "asset": "Assets/AthenHill/Art/Armour/TutorialSet/TS_ArmGuards.glb",
+      "bindMaxDiff": 0.0,
+      "detail": {
+        "mesh": "TS_bracer",
+        "triangles": 7253,
+        "vertices": 11609,
+        "bones": 54,
+        "materials": [
+          "Material_0 (Shader Graphs/glTF-pbrMetallicRoughness)"
+        ],
+        "textureMB": 16.0,
+        "textures": [
+          {
+            "material": "Material_0",
+            "property": "baseColorTexture",
+            "name": "Image_0",
+            "width": 2048,
+            "height": 2048,
+            "format": "RGBA_BC7_SRGB",
+            "mips": 12,
+            "mb": 5.33
+          },
+          {
+            "material": "Material_0",
+            "property": "metallicRoughnessTexture",
+            "name": "Image_1",
+            "width": 2048,
+            "height": 2048,
+            "format": "RGBA_BC7_UNorm",
+            "mips": 12,
+            "mb": 5.33
+          },
+          {
+            "material": "Material_0",
+            "property": "normalTexture",
+            "name": "normal",
+            "width": 2048,
+            "height": 2048,
+            "format": "RGBA_BC7_UNorm",
+            "mips": 12,
+            "mb": 5.33
+          }
+        ]
+      }
+    },
+    {
+      "itemId": "field_gloves",
+      "slot": "armour_hands",
+      "model": "Armour field_gloves",
+      "active": false,
+      "asset": "Assets/AthenHill/Art/Armour/TutorialSet/TS_Gloves.glb",
+      "bindMaxDiff": 0.0,
+      "detail": {
+        "mesh": "TS_Gloves",
+        "triangles": 4240,
+        "vertices": 2504,
+        "bones": 54,
+        "materials": [
+          "TutorialGloves (Shader Graphs/glTF-pbrMetallicRoughness)"
+        ],
+        "textureMB": 48.0,
+        "textures": [
+          {
+            "material": "TutorialGloves",
+            "property": "baseColorTexture",
+            "name": "tex0_base_color",
+            "width": 4096,
+            "height": 4096,
+            "format": "RGBA_BC7_SRGB",
+            "mips": 13,
+            "mb": 21.33
+          },
+          {
+            "material": "TutorialGloves",
+            "property": "metallicRoughnessTexture",
+            "name": "tex0_metallic.png-tex0_roughness",
+            "width": 2048,
+            "height": 2048,
+            "format": "RGBA_BC7_UNorm",
+            "mips": 12,
+            "mb": 5.33
+          },
+          {
+            "material": "TutorialGloves",
+            "property": "normalTexture",
+            "name": "tex0_normal",
+            "width": 4096,
+            "height": 4096,
+            "format": "RGBA_BC7_UNorm",
+            "mips": 13,
+            "mb": 21.33
+          }
+        ]
+      }
+    },
+    {
+      "itemId": "field_leggings",
+      "slot": "armour_legs",
+      "model": "Armour field_leggings",
+      "active": false,
+      "asset": "Assets/AthenHill/Art/Armour/TutorialSet/TS_LegArmour.glb",
+      "bindMaxDiff": 0.0,
+      "detail": {
+        "mesh": "TS_kneeshin",
+        "triangles": 8376,
+        "vertices": 13942,
+        "bones": 54,
+        "materials": [
+          "Material_0 (Shader Graphs/glTF-pbrMetallicRoughness)"
+        ],
+        "textureMB": 16.0,
+        "textures": [
+          {
+            "material": "Material_0",
+            "property": "baseColorTexture",
+            "name": "Image_0",
+            "width": 2048,
+            "height": 2048,
+            "format": "RGBA_BC7_SRGB",
+            "mips": 12,
+            "mb": 5.33
+          },
+          {
+            "material": "Material_0",
+            "property": "metallicRoughnessTexture",
+            "name": "Image_1",
+            "width": 2048,
+            "height": 2048,
+            "format": "RGBA_BC7_UNorm",
+            "mips": 12,
+            "mb": 5.33
+          },
+          {
+            "material": "Material_0",
+            "property": "normalTexture",
+            "name": "normal",
+            "width": 2048,
+            "height": 2048,
+            "format": "RGBA_BC7_UNorm",
+            "mips": 12,
+            "mb": 5.33
+          }
+        ]
+      }
+    },
+    {
+      "itemId": "field_boots",
+      "slot": "armour_feet",
+      "model": "Armour field_boots",
+      "active": false,
+      "asset": "Assets/AthenHill/Art/Armour/TutorialSet/TS_Boots.glb",
+      "bindMaxDiff": 0.0,
+      "detail": {
+        "mesh": "TS_bootplates",
+        "triangles": 7547,
+        "vertices": 11627,
+        "bones": 54,
+        "materials": [
+          "Material_0 (Shader Graphs/glTF-pbrMetallicRoughness)"
+        ],
+        "textureMB": 16.0,
+        "textures": [
+          {
+            "material": "Material_0",
+            "property": "baseColorTexture",
+            "name": "Image_0",
+            "width": 2048,
+            "height": 2048,
+            "format": "RGBA_BC7_SRGB",
+            "mips": 12,
+            "mb": 5.33
+          },
+          {
+            "material": "Material_0",
+            "property": "metallicRoughnessTexture",
+            "name": "Image_1",
+            "width": 2048,
+            "height": 2048,
+            "format": "RGBA_BC7_UNorm",
+            "mips": 12,
+            "mb": 5.33
+          },
+          {
+            "material": "Material_0",
+            "property": "normalTexture",
+            "name": "normal",
+            "width": 2048,
+            "height": 2048,
+            "format": "RGBA_BC7_UNorm",
+            "mips": 12,
+            "mb": 5.33
+          }
+        ]
+      }
+    },
+    {
+      "itemId": "warden_plate_carrier",
+      "slot": "armour_chest",
+      "model": "Armour warden_plate_carrier",
+      "active": false,
+      "asset": "Assets/AthenHill/Art/Armour/TutorialSet/TS_WardenCarrier.glb",
+      "bindMaxDiff": 0.0,
+      "detail": {
+        "mesh": "TS_WardenCarrier",
+        "triangles": 8993,
+        "vertices": 16968,
+        "bones": 54,
+        "materials": [
+          "Material_0 (Shader Graphs/glTF-pbrMetallicRoughness)"
+        ],
+        "textureMB": 16.0,
+        "textures": [
+          {
+            "material": "Material_0",
+            "property": "baseColorTexture",
+            "name": "Image_0",
+            "width": 2048,
+            "height": 2048,
+            "format": "RGBA_BC7_SRGB",
+            "mips": 12,
+            "mb": 5.33
+          },
+          {
+            "material": "Material_0",
+            "property": "metallicRoughnessTexture",
+            "name": "Image_1",
+            "width": 2048,
+            "height": 2048,
+            "format": "RGBA_BC7_UNorm",
+            "mips": 12,
+            "mb": 5.33
+          },
+          {
+            "material": "Material_0",
+            "property": "normalTexture",
+            "name": "Image_2",
+            "width": 2048,
+            "height": 2048,
+            "format": "RGBA_BC7_UNorm",
+            "mips": 12,
+            "mb": 5.33
+          }
+        ]
+      }
+    }
+  ],
+  "armourTrianglesAllPieces": 62407,
+  "armourMirrors": [
+    {
+      "name": "Weapon mount",
+      "sources": 2,
+      "mirrors": 2,
+      "total": 2
+    },
+    {
+      "name": "Player arms rig",
+      "sources": 2,
+      "mirrors": 2,
+      "total": 2
+    }
+  ],
+  "fpArmsRenderers": 2,
+  "fpArmsSha256": "69f03809a657802909c5c517fecfbe85982b67a58fe017f9350b85e4794e8a3d",
+  "reviewCameras": [
+    "cam_cb_back",
+    "cam_cb_conv",
+    "cam_cb_follow",
+    "cam_cb_helmet",
+    "cam_cb_quarter",
+    "cam_cb_vest"
+  ],
+  "missingScriptsUnderPlayer": 0,
+  "pass": true,
+  "fails": []
+}

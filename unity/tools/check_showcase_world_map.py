@@ -47,7 +47,12 @@ def body():
     st = m()
     ok(st.get('installed'), 'world map installed', st.get('survey'))
     note('discovered on load', st['discovered'])
-    ok(site_ids(st) == ['site:machine_depot'], 'old save loads with only the machine depot among the Berms sites', site_ids(st))
+    # A save from before the map (no `map` field) must load with only the machine depot. Since Carl played the phase 1
+    # build on 19 Nov 2026 his save records its own discoveries (he found the scrapper camp), so a save with a `map`
+    # field must load with exactly the Berms sites it recorded.
+    recorded = sorted(i for i in (ORIG.get('map') or {}).get('discovered', []) if i.startswith('site:'))
+    expected = recorded if 'map' in ORIG else ['site:machine_depot']
+    ok(sorted(site_ids(st)) == expected, 'the save loads with exactly its recorded Berms sites (only the machine depot for a save from before the map)', {'got': site_ids(st), 'expected': expected})
     note('survey', st['survey'])
 
     # ---- 1-2. M opens and closes, Esc closes to Play

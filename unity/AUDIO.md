@@ -91,7 +91,7 @@ not use the API at runtime.
 | Mira | Ward / Basic General | Clara | British | `aj0fZfXTBc7E3By4X8L2` | 1 |
 | Torr | Ward / Terminal court | Chris | American | `iP95p4xoKVk53GoZ742B` | 2 |
 | Vex | Ward / West Gate | Charlie | Australian | `IKne3meq5aSn9XLyUdCD` | 2 |
-| Linn | Ward / Hill | Amelia | British | `ZF6FPAbjXT4488VcRRnw` | 2 |
+| Linn (re-voiced 20 Nov 2026, Carl's pick) | Ward / Hill | Seer Morganna | not stated | `7NsaqHdLuKNFvEfjpUno` | 4 |
 | Brann | Ward / Salvage shop | Callum | American | `N2lVS1w4EtoT3dr4eOWO` | 15 |
 | Warden Ossa | Outer Berms / West Gate post | Victoria | British | `N8SmJJ4vvs5Mz9VaT6u5` | 6 |
 | Warden Rell | Outer Berms / Checkpoint | Roger | American | `CwhRBWXzGAHq8TQ4Fs17` | 2 |

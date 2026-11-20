@@ -1,0 +1,252 @@
+{
+ "name": "check_linn_voice_native",
+ "exe": "/home/teknetik/code/ao2/unity/AthenHill/Builds/batch-p2-notes/AthenHill.x86_64",
+ "exeMtime": "Thu Nov 19 14:08:38 2026",
+ "started": "2026-11-20 08:59:12",
+ "checks": [
+  {
+   "check": "Linn prompt on the hill",
+   "passed": true,
+   "detail": "E \u00b7 Talk to Linn"
+  },
+  {
+   "check": "E opens Linn's dialogue",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "greeting: node open and npc_linn-greeting is the clip playing",
+   "passed": true,
+   "detail": [
+    "npc_linn-greeting"
+   ]
+  },
+  {
+   "check": "greeting: playback passes the old take's length (new take in the build)",
+   "passed": true,
+   "detail": {
+    "seen": 11.42,
+    "old": 7.76,
+    "new": 11.515
+   }
+  },
+  {
+   "check": "choice \"Why does everyone meet here?\" offered",
+   "passed": true,
+   "detail": [
+    "Why does everyone meet here?",
+    "Is there anywhere in Ward I could stay?",
+    "I will stay for a moment."
+   ]
+  },
+  {
+   "check": "hill: node open and npc_linn-hill is the clip playing",
+   "passed": true,
+   "detail": [
+    "npc_linn-hill"
+   ]
+  },
+  {
+   "check": "hill: playback passes the old take's length (new take in the build)",
+   "passed": true,
+   "detail": {
+    "seen": 11.01,
+    "old": 10.22,
+    "new": 11.133
+   }
+  },
+  {
+   "check": "choice \"Who comes up here?\" offered",
+   "passed": true,
+   "detail": [
+    "Who comes up here?",
+    "On the hill. Got it."
+   ]
+  },
+  {
+   "check": "choice \"Is there anywhere in Ward I could stay?\" offered",
+   "passed": true,
+   "detail": [
+    "Why does everyone meet here?",
+    "Is there anywhere in Ward I could stay?",
+    "I will stay for a moment."
+   ]
+  },
+  {
+   "check": "housing: npc_linn-housing plays",
+   "passed": true,
+   "detail": [
+    "npc_linn-housing"
+   ]
+  },
+  {
+   "check": "choice \"Not yet. I'll come back.\" offered",
+   "passed": true,
+   "detail": [
+    "I'll take the lease (40 credits).",
+    "Not yet. I'll come back."
+   ]
+  },
+  {
+   "check": "leaving during the housing take: back in play and her voice stops",
+   "passed": true,
+   "detail": {
+    "state": "Play",
+    "playing": []
+   }
+  },
+  {
+   "check": "Linn's dialogue opens again after leaving early",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "choice \"Is there anywhere in Ward I could stay?\" offered",
+   "passed": true,
+   "detail": [
+    "Why does everyone meet here?",
+    "Is there anywhere in Ward I could stay?",
+    "I will stay for a moment."
+   ]
+  },
+  {
+   "check": "housing: node open and npc_linn-housing is the clip playing",
+   "passed": true,
+   "detail": [
+    "npc_linn-housing"
+   ]
+  },
+  {
+   "check": "housing: plays to its end (28.233 s) without being cut off",
+   "passed": true,
+   "detail": {
+    "seen": 28.2,
+    "nodes": [
+     "housing"
+    ]
+   }
+  },
+  {
+   "check": "choice \"I'll take the lease (40 credits).\" offered",
+   "passed": true,
+   "detail": [
+    "I'll take the lease (40 credits).",
+    "Not yet. I'll come back."
+   ]
+  },
+  {
+   "check": "the lease takes 40 credits",
+   "passed": true,
+   "detail": {
+    "credits": 160
+   }
+  },
+  {
+   "check": "housing_leased: node open and npc_linn-housing_leased is the clip playing",
+   "passed": true,
+   "detail": [
+    "npc_linn-housing_leased"
+   ]
+  },
+  {
+   "check": "housing_leased: plays to its end (12.348 s) without being cut off",
+   "passed": true,
+   "detail": {
+    "seen": 12.33,
+    "nodes": [
+     "housing_leased"
+    ]
+   }
+  },
+  {
+   "check": "choice \"Thank you, Linn.\" offered",
+   "passed": true,
+   "detail": [
+    "Thank you, Linn."
+   ]
+  },
+  {
+   "check": "dialogue closed, no Linn dialogue take left playing",
+   "passed": true,
+   "detail": "Play"
+  },
+  {
+   "check": "one of Linn's bark takes plays near her",
+   "passed": true,
+   "detail": {
+    "last": {
+     "speaker": "Linn",
+     "speakerId": "npc_linn",
+     "line": "ack_home",
+     "text": "How's the container? Keep the window shut against the dust.",
+     "trigger": "Acknowledge",
+     "voiced": true,
+     "time": 86.70342
+    },
+    "caption": "How's the container? Keep the window shut against the dust.",
+    "clips": [
+     "npc_linn-ack_home"
+    ]
+   }
+  },
+  {
+   "check": "the bark caption shows her line",
+   "passed": true,
+   "detail": {
+    "caption": "How's the container? Keep the window shut against the dust.",
+    "visible": true
+   }
+  },
+  {
+   "check": "no runtime exceptions in Player.log",
+   "passed": true,
+   "detail": []
+  }
+ ],
+ "captures": [
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/notes/linn_voice/run/linn-greeting.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/notes/linn_voice/run/linn-housing.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/notes/linn_voice/run/linn-bark.png"
+ ],
+ "notes": [
+  {
+   "note": "NOT VERIFIED BY EAR: the voice, its age and roughness, pronunciation of Karaveen and Berms, levels and lip timing",
+   "detail": null
+  }
+ ],
+ "voice": {
+  "name": "Seer Morganna - Intimidating, and Clear",
+  "id": "7NsaqHdLuKNFvEfjpUno",
+  "newSeconds": {
+   "greeting": 11.515,
+   "hill": 11.133,
+   "housing": 28.233,
+   "housing_leased": 12.348,
+   "greet_shade": 3.02,
+   "greet_evening": 3.234,
+   "idle_market": 2.342,
+   "idle_tree": 2.64,
+   "idle_pumps": 4.279,
+   "weapon": 3.218,
+   "ack_primer": 3.225,
+   "ack_home": 3.704,
+   "order_done": 4.505
+  },
+  "oldSeconds": {
+   "greeting": 7.75546485260771,
+   "hill": 10.216780045351474,
+   "greet_shade": 1.9969160997732427,
+   "greet_evening": 2.5541950113378684,
+   "idle_market": 2.182675736961451,
+   "idle_tree": 1.9504761904761905,
+   "idle_pumps": 2.8792743764172335,
+   "weapon": 2.2291156462585033,
+   "ack_primer": 2.3219954648526078,
+   "ack_home": 3.1579138321995464,
+   "order_done": 3.4829931972789114
+  }
+ },
+ "passed": true,
+ "summary": "25/25 passed",
+ "finished": "2026-11-20 09:00:50"
+}

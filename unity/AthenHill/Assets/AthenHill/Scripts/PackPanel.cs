@@ -83,24 +83,26 @@ namespace AthenHill
    previewView.RegisterCallback<ClickEvent>(e=>{if(e.clickCount==2&&preview)preview.Yaw=0;});
    characterPanel=new CharacterLoadoutPanel(root,session,crafting,()=>selectedItem,Refresh);
    characterPanel.DroppedOnHotbar=(item,slot)=>session.AssignHotbar(slot,item);
+   characterPanel.MovedOnHotbar=(from,to)=>{if(to==0)ClearHotbar(from);else MoveHotbar(from,to);};
    BuildCapacity();
    BuildHotbarStrip();
   }
 
-  // ------------------------------------------------------------------ hotbar strip (5 Oct 2026)
+  // ------------------------------------------------------------------ hotbar strip (5 Oct 2026; reordering 20 Nov 2026)
   // The ten HUD hotbar slots under the pack grid: drop a carried medkit or nano recharge on 3–0 (or select it and press
-  // 3–9 / 0), drag a cell onto another to swap them or off the strip to clear it, right-click (or Delete) clears it.
-  // A carried weapon dropped on 1 or 2 is equipped there.
+  // 3–9 / 0); drag a cell onto another to move or swap them (or focus a cell and press the number to send it there);
+  // drag a cell off the strip, right-click it or press Delete to clear it. Cells 1 and 2 follow the equipped primary
+  // weapon and sidearm: a carried weapon dropped on them is equipped there, and they do not move.
+  public const string HotbarHelp="3–0: drag items here or select one and press its key · drag a cell onto another to reorder · right-click or drag off to clear · 1 and 2 follow your weapons";
   readonly List<Button> barCells=new List<Button>();
   readonly string[] barSignatures=new string[HotbarModel.Slots+1];
-  int barPointer=-1,barFrom;Vector2 barOrigin;bool barDragging;Label barGhost;
   void BuildHotbarStrip()
   {
    var col=root.Q("pack-col");if(col==null)return;
    var strip=new VisualElement{name="pack-hotbar"};strip.AddToClassList("pack-hotbar");
    var head=new VisualElement{pickingMode=PickingMode.Ignore};head.AddToClassList("pack-hotbar-head");
    var title=new Label("HOTBAR"){pickingMode=PickingMode.Ignore};title.AddToClassList("pack-hotbar-title");head.Add(title);
-   var help=new Label("Drag medkits and nano recharges onto 3–0 · or select one and press its key"){name="pack-hotbar-help",pickingMode=PickingMode.Ignore};help.AddToClassList("pack-hotbar-help");head.Add(help);
+   var help=new Label(HotbarHelp){name="pack-hotbar-help",pickingMode=PickingMode.Ignore};help.AddToClassList("pack-hotbar-help");head.Add(help);
    strip.Add(head);
    var row=new VisualElement{pickingMode=PickingMode.Ignore};row.AddToClassList("pack-hotbar-row");strip.Add(row);
    col.Add(strip); // under the footer; the grid's scroll view gives up the height
@@ -109,22 +111,52 @@ namespace AthenHill
     int slot=i;
     var cell=new Button{name="packbar-slot"+i,userData=new HotbarDrop{slot=i},focusable=true};
     cell.AddToClassList("hotbar-slot");cell.AddToClassList("packbar-slot");
-    cell.RegisterCallback<PointerDownEvent>(e=>BarDown(e,slot),TrickleDown.TrickleDown);
-    cell.RegisterCallback<KeyDownEvent>(e=>{if(e.keyCode==KeyCode.Delete||e.keyCode==KeyCode.Backspace){if(session.Quickbar!=null&&session.Quickbar.Clear(slot))session.Notify($"Hotbar {HotbarModel.Key(slot)} cleared.","Field Pack");e.StopPropagation();}});
+    // 1 and 2 are fixed to the weapon slots: set apart from 3–0 by a gap and a plain frame.
+    cell.EnableInClassList("packbar-fixed",HotbarModel.IsWeaponSlot(slot));cell.EnableInClassList("packbar-fixed-last",slot==2);
+    cell.RegisterCallback<PointerDownEvent>(e=>{if(e.button==1&&HotbarModel.IsItemSlot(slot)&&session.Quickbar?.Item(slot)!=null){ClearHotbar(slot);e.StopPropagation();}},TrickleDown.TrickleDown);
+    cell.RegisterCallback<KeyDownEvent>(e=>{if(e.keyCode==KeyCode.Delete||e.keyCode==KeyCode.Backspace){ClearHotbar(slot);e.StopPropagation();}});
+    characterPanel.BindHotbarCell(cell,slot,()=>session.Quickbar?.Item(slot));
     row.Add(cell);barCells.Add(cell);
    }
-   root.RegisterCallback<PointerMoveEvent>(BarMove,TrickleDown.TrickleDown);
-   root.RegisterCallback<PointerUpEvent>(BarUp,TrickleDown.TrickleDown);
-   // Number keys assign the selected pack item (not while typing in the search field).
+   // Number keys: with a strip cell focused, send its item to that number; otherwise assign the selected pack item
+   // (not while typing in the search field).
    col.RegisterCallback<KeyDownEvent>(e=>
    {
-    if(session.State!=CityState.Inventory||ActiveTab!=Tab.Items||selectedItem==null||root.focusController?.focusedElement is TextField)return;
+    if(session.State!=CityState.Inventory||root.focusController?.focusedElement is TextField)return;
     int slot=e.keyCode>=KeyCode.Alpha1&&e.keyCode<=KeyCode.Alpha9?e.keyCode-KeyCode.Alpha0:e.keyCode==KeyCode.Alpha0?HotbarModel.Slots:e.keyCode>=KeyCode.Keypad1&&e.keyCode<=KeyCode.Keypad9?e.keyCode-KeyCode.Keypad0:e.keyCode==KeyCode.Keypad0?HotbarModel.Slots:0;
     if(slot==0)return;
+    int from=barCells.IndexOf(root.focusController?.focusedElement as Button)+1;
+    if(from>0)
+    {
+     if(HotbarModel.IsWeaponSlot(from))session.Notify("Hotbar 1 and 2 follow your primary weapon and sidearm and stay where they are.","Field Pack");
+     else if(session.Quickbar?.Item(from)==null)session.Notify($"Hotbar {HotbarModel.Key(from)} is empty. Select a pack item and press a number to put it on the bar.","Field Pack");
+     else if(slot!=from&&MoveHotbar(from,slot))barCells[slot-1].Focus();
+     e.StopPropagation();return;
+    }
+    if(ActiveTab!=Tab.Items||selectedItem==null)return;
     if(HotbarModel.IsItemSlot(slot))session.AssignHotbar(slot,selectedItem);
     else session.Notify("Hotbar 1 and 2 hold your primary weapon and sidearm. Drag a weapon onto them to equip it.","Field Pack");
     e.StopPropagation();
    },TrickleDown.TrickleDown);
+  }
+  /// Moves the item on hotbar slot from to slot to, swapping with whatever is there. 1 and 2 hold the weapons and refuse.
+  public bool MoveHotbar(int from,int to)
+  {
+   var bar=session.Quickbar;if(bar==null||from==to)return false;
+   if(!HotbarModel.IsItemSlot(to)||!HotbarModel.IsItemSlot(from))
+   {
+    session.Notify("Hotbar 1 and 2 follow your primary weapon and sidearm. Items go on 3–0.","Field Pack");return false;
+   }
+   string moving=bar.Item(from),other=bar.Item(to);
+   if(moving==null||!bar.Swap(from,to))return false;
+   string name=session.Shop.Spec(moving)?.name??moving;
+   session.Notify(other==null?$"{name} moved to hotbar {HotbarModel.Key(to)}.":$"Hotbar {HotbarModel.Key(from)} and {HotbarModel.Key(to)} swapped.","Field Pack");
+   Refresh();return true;
+  }
+  public bool ClearHotbar(int slot)
+  {
+   if(session.Quickbar==null||!session.Quickbar.Clear(slot))return false;
+   session.Notify($"Hotbar {HotbarModel.Key(slot)} cleared.","Field Pack");Refresh();return true;
   }
   void RefreshHotbarStrip()
   {
@@ -141,35 +173,6 @@ namespace AthenHill
     else badge?.RemoveFromHierarchy();
     b.EnableInClassList("slot-depleted",count==0);
    }
-  }
-  void BarDown(PointerDownEvent e,int slot)
-  {
-   if(!HotbarModel.IsItemSlot(slot)||session.Quickbar?.Item(slot)==null)return;
-   if(e.button==1){session.Quickbar.Clear(slot);session.Notify($"Hotbar {HotbarModel.Key(slot)} cleared.","Field Pack");e.StopPropagation();return;}
-   if(e.button!=0)return;
-   barPointer=e.pointerId;barFrom=slot;barOrigin=e.position;barDragging=false;
-  }
-  void BarMove(PointerMoveEvent e)
-  {
-   if(barPointer!=e.pointerId)return;
-   if(!barDragging&&Vector2.Distance(barOrigin,e.position)<7)return;
-   if(!barDragging)
-   {
-    barDragging=true;
-    barGhost=new Label(session.Shop.Spec(session.Quickbar.Item(barFrom))?.name??""){pickingMode=PickingMode.Ignore};barGhost.AddToClassList("equipment-drag-ghost");root.Add(barGhost);
-   }
-   var p=root.WorldToLocal(e.position);barGhost.style.left=p.x+14;barGhost.style.top=p.y+14;
-  }
-  void BarUp(PointerUpEvent e)
-  {
-   if(barPointer!=e.pointerId)return;
-   int from=barFrom;bool dragged=barDragging;
-   barPointer=-1;barDragging=false;barGhost?.RemoveFromHierarchy();barGhost=null;
-   if(!dragged)return;
-   HotbarDrop to=null;for(var v=root.panel?.Pick(e.position);v!=null;v=v.parent)if(v.userData is HotbarDrop h){to=h;break;}
-   if(to==null){if(session.Quickbar.Clear(from))session.Notify($"Hotbar {HotbarModel.Key(from)} cleared.","Field Pack");}
-   else if(to.slot!=from&&HotbarModel.IsItemSlot(to.slot)){session.Quickbar.Swap(from,to.slot);session.Notify($"Hotbar {HotbarModel.Key(from)} and {HotbarModel.Key(to.slot)} swapped.","Field Pack");}
-   e.StopPropagation();
   }
   /// Slots, facts and stat rows come from the crafting data, which the crafting session loads after the HUD starts.
   void EnsureBuilt()
@@ -197,7 +200,6 @@ namespace AthenHill
   {
    open=false;hoverKey=null;live?.Pause();
    characterPanel.CancelDrag();
-   barPointer=-1;barDragging=false;barGhost?.RemoveFromHierarchy();barGhost=null;
    if(dragPointer>=0&&previewView.HasPointerCapture(dragPointer))previewView.ReleasePointer(dragPointer);
    dragPointer=-1;
    if(preview)preview.SetActive(false);
@@ -279,7 +281,7 @@ namespace AthenHill
   public void SetTab(Tab tab)
   {
    if(ActiveTab==tab)return;
-   ActiveTab=tab;hoverKey=null;signature=null;
+   ActiveTab=tab;hoverKey=null;signature=null;characterPanel.CancelDrag();
    if(DetailsOpen)session.CloseItemDetails();
    Refresh();
   }

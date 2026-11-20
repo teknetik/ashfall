@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a4268b9049014e28943db0ce62a90101, type: 3}
   m_Name: CharacterCatalog
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   attributes:
   - id: strength
     label: Strength
@@ -407,7 +407,7 @@ MonoBehaviour:
   derivedStats:
   - id: health
     label: Health
-    unit: ''
+    unit: 
     initial: 50
     perLevel: 2
     minimum: 0
@@ -417,7 +417,7 @@ MonoBehaviour:
       factor: 5
   - id: stamina
     label: Stamina
-    unit: ''
+    unit: 
     initial: 50
     perLevel: 2
     minimum: 0
@@ -427,7 +427,7 @@ MonoBehaviour:
       factor: 5
   - id: nano
     label: Nano
-    unit: ''
+    unit: 
     initial: 30
     perLevel: 1
     minimum: 0
@@ -439,7 +439,7 @@ MonoBehaviour:
       factor: 2
   - id: carryCapacity
     label: Carry capacity
-    unit: 'kg'
+    unit: kg
     initial: 10
     perLevel: 0
     minimum: 0
@@ -457,7 +457,7 @@ MonoBehaviour:
     dependencies: []
   - id: storageCapacity
     label: Storage capacity
-    unit: 'kg'
+    unit: kg
     initial: 5
     perLevel: 0
     minimum: 0
@@ -475,7 +475,7 @@ MonoBehaviour:
       factor: 0.005
   - id: armour
     label: Armour
-    unit: ''
+    unit: 
     initial: 0
     perLevel: 0
     minimum: 0
@@ -561,7 +561,7 @@ MonoBehaviour:
       factor: 0.001
   - id: staminaRegeneration
     label: Stamina regeneration
-    unit: '/s'
+    unit: /s
     initial: 1
     perLevel: 0
     minimum: 0
@@ -571,7 +571,7 @@ MonoBehaviour:
       factor: 0.1
   - id: nanoRegeneration
     label: Nano regeneration
-    unit: '/s'
+    unit: /s
     initial: 1
     perLevel: 0
     minimum: 0
@@ -601,7 +601,7 @@ MonoBehaviour:
       factor: 0.002
   - id: accuracy
     label: Accuracy
-    unit: ''
+    unit: 
     initial: 0
     perLevel: 0
     minimum: 0
@@ -667,6 +667,9 @@ MonoBehaviour:
   - id: implant_head
     label: Head
     section: IMPLANTS
+  - id: implant_eye
+    label: Eye
+    section: IMPLANTS
   - id: implant_arms
     label: Arms
     section: IMPLANTS
@@ -698,11 +701,12 @@ MonoBehaviour:
     tier: 0
     upgradeLevel: 0
     weight: 2.4
+    modificationSockets: []
     requirements: []
     operatingRequirements: []
     modifiers: []
-    installationFacility:
-    upgradeToItemId:
+    installationFacility: 
+    upgradeToItemId: 
     upgradeIngredients: []
     upgradeCredits: 0
     comfortableStrength: 0
@@ -715,6 +719,7 @@ MonoBehaviour:
     tier: 0
     upgradeLevel: 0
     weight: 4.8
+    modificationSockets: []
     requirements:
     - stat: rifle
       minimum: 20
@@ -723,8 +728,8 @@ MonoBehaviour:
     - stat: rangedDamage
       flat: 0
       percent: 0.05
-    installationFacility:
-    upgradeToItemId:
+    installationFacility: 
+    upgradeToItemId: 
     upgradeIngredients: []
     upgradeCredits: 0
     comfortableStrength: 0
@@ -756,8 +761,8 @@ MonoBehaviour:
     - stat: physicalResistance
       flat: 0.08
       percent: 0
-    installationFacility:
-    upgradeToItemId:
+    installationFacility: 
+    upgradeToItemId: 
     upgradeIngredients: []
     upgradeCredits: 0
     comfortableStrength: 8
@@ -789,8 +794,8 @@ MonoBehaviour:
     - stat: physicalResistance
       flat: 0.12
       percent: 0
-    installationFacility:
-    upgradeToItemId:
+    installationFacility: 
+    upgradeToItemId: 
     upgradeIngredients: []
     upgradeCredits: 0
     comfortableStrength: 10
@@ -819,8 +824,8 @@ MonoBehaviour:
     - stat: movementSpeed
       flat: 0
       percent: 0.03
-    installationFacility:
-    upgradeToItemId:
+    installationFacility: 
+    upgradeToItemId: 
     upgradeIngredients: []
     upgradeCredits: 0
     comfortableStrength: 0
@@ -833,6 +838,7 @@ MonoBehaviour:
     tier: 1
     upgradeLevel: 0
     weight: 0.15
+    modificationSockets: []
     requirements:
     - stat: intellect
       minimum: 10
@@ -847,7 +853,7 @@ MonoBehaviour:
     - stat: criticalChance
       flat: 0.01
       percent: 0
-    installationFacility:
+    installationFacility: 
     upgradeToItemId: targeting_implant_mk2
     upgradeIngredients:
     - id: scrap_coil
@@ -863,6 +869,7 @@ MonoBehaviour:
     tier: 2
     upgradeLevel: 1
     weight: 0.17
+    modificationSockets: []
     requirements:
     - stat: intellect
       minimum: 12
@@ -879,8 +886,8 @@ MonoBehaviour:
     - stat: criticalChance
       flat: 0.02
       percent: 0
-    installationFacility:
-    upgradeToItemId:
+    installationFacility: 
+    upgradeToItemId: 
     upgradeIngredients: []
     upgradeCredits: 0
     comfortableStrength: 0
@@ -893,6 +900,7 @@ MonoBehaviour:
     tier: 1
     upgradeLevel: 0
     weight: 0.3
+    modificationSockets: []
     requirements:
     - stat: endurance
       minimum: 11
@@ -907,8 +915,8 @@ MonoBehaviour:
     - stat: carryCapacity
       flat: 5
       percent: 0
-    installationFacility:
-    upgradeToItemId:
+    installationFacility: 
+    upgradeToItemId: 
     upgradeIngredients: []
     upgradeCredits: 0
     comfortableStrength: 0
@@ -934,8 +942,8 @@ MonoBehaviour:
     - stat: packSlots
       flat: 16
       percent: 0
-    installationFacility:
-    upgradeToItemId:
+    installationFacility: 
+    upgradeToItemId: 
     upgradeIngredients: []
     upgradeCredits: 0
     comfortableStrength: 0
@@ -961,8 +969,8 @@ MonoBehaviour:
     - stat: armour
       flat: 4
       percent: 0
-    installationFacility:
-    upgradeToItemId:
+    installationFacility: 
+    upgradeToItemId: 
     upgradeIngredients: []
     upgradeCredits: 0
     comfortableStrength: 0
@@ -985,8 +993,8 @@ MonoBehaviour:
     - stat: armour
       flat: 4
       percent: 0
-    installationFacility:
-    upgradeToItemId:
+    installationFacility: 
+    upgradeToItemId: 
     upgradeIngredients: []
     upgradeCredits: 0
     comfortableStrength: 0
@@ -1012,8 +1020,8 @@ MonoBehaviour:
     - stat: armour
       flat: 2
       percent: 0
-    installationFacility:
-    upgradeToItemId:
+    installationFacility: 
+    upgradeToItemId: 
     upgradeIngredients: []
     upgradeCredits: 0
     comfortableStrength: 0
@@ -1039,8 +1047,8 @@ MonoBehaviour:
     - stat: armour
       flat: 6
       percent: 0
-    installationFacility:
-    upgradeToItemId:
+    installationFacility: 
+    upgradeToItemId: 
     upgradeIngredients: []
     upgradeCredits: 0
     comfortableStrength: 0
@@ -1060,8 +1068,8 @@ MonoBehaviour:
     - stat: stamina
       flat: 15
       percent: 0
-    installationFacility:
-    upgradeToItemId:
+    installationFacility: 
+    upgradeToItemId: 
     upgradeIngredients: []
     upgradeCredits: 0
     comfortableStrength: 0
@@ -1081,8 +1089,8 @@ MonoBehaviour:
     - stat: movementSpeed
       flat: 0
       percent: 0.03
-    installationFacility:
-    upgradeToItemId:
+    installationFacility: 
+    upgradeToItemId: 
     upgradeIngredients: []
     upgradeCredits: 0
     comfortableStrength: 0
@@ -1102,8 +1110,8 @@ MonoBehaviour:
     - stat: armour
       flat: 3
       percent: 0
-    installationFacility:
-    upgradeToItemId:
+    installationFacility: 
+    upgradeToItemId: 
     upgradeIngredients: []
     upgradeCredits: 0
     comfortableStrength: 0

@@ -33,6 +33,10 @@ namespace AthenHill
   [Range(0,90)]public float carryPitch=60;
   [Tooltip("How far the pistol is turned onto the carry line (1 = fully).")]
   [Range(0,1)]public float carryAlign=1;
+  [Tooltip("Share of the carry turn taken by the wrist instead of turning the pistol inside the hand (character arms pass, 20 Nov 2026: the in-hand turn of 60-88 degrees took the grip out of the palm). 0 = the old behaviour.")]
+  [Range(0,1)]public float carryWristShare=0;
+  [Tooltip("Most the wrist bends for the carry (deg); the rest of the turn stays in the hand.")]
+  [Range(0,60)]public float carryWristMax=30;
   [Header("Field rifle")]
   [Tooltip("Two-handed rifle hold mixed over the upper body while the rifle is raised (aiming, after a shot, on draw).")]
   public AnimationClip rifleAimClip;
@@ -94,13 +98,24 @@ namespace AthenHill
   void LateUpdate()
   {
    if(state==null||!view)return;
+   Pose(view.transform.forward,Time.deltaTime);
+  }
+  /// Editor review (character arms pass, 20 Nov 2026): lay the held weapon and hand as LateUpdate would at a raise weight,
+  /// aiming along aimDir, with no recoil. The caller samples the locomotion and hold clips first; PlayerHandGrip.PreviewGrip
+  /// closes the fingers. Nothing here needs Start.
+  public void PreviewPose(float raise,Vector3 aimDir)
+  {
+   Weight=raise;recoil=0;
+   Pose(aimDir,0);
+  }
+  void Pose(Vector3 aimDir,float dt)
+  {
    var held=combat?combat.HeldWeapon:null;
    bool shown=rightHand&&held&&held.activeInHierarchy;
    if(Weight<=.001f&&!shown)return;
-   recoil=Mathf.MoveTowards(recoil,0,Time.deltaTime/recoilReturn);
+   recoil=Mathf.MoveTowards(recoil,0,dt/recoilReturn);
    var body=actor.transform;
    // Bend the spine toward the camera pitch (the clips hold the weapon level).
-   var aimDir=view.transform.forward;
    float pitch=-Mathf.Asin(Mathf.Clamp(aimDir.y,-1,1))*Mathf.Rad2Deg;
    float r=recoil*recoil*(3-2*recoil);
    if(spine.Length>0&&Weight>.001f)
@@ -120,7 +135,16 @@ namespace AthenHill
     // 117 degrees out of the hanging idle hand). The hand itself keeps its locomotion or carry-clip pose.
     if(Weight<.999f&&align>0)
     {
-     var carry=Quaternion.FromToRotation(weapon.forward,CarryDirection(body,pitchDown));
+     var line=CarryDirection(body,pitchDown);
+     if(!rifle&&carryWristShare>0)
+     {
+      // the wrist takes its share first, so the grip stays in the palm
+      Quaternion.FromToRotation(weapon.forward,line).ToAngleAxis(out float turn,out Vector3 axis);
+      if(turn>180)turn-=360;
+      float wrist=Mathf.Clamp(turn*carryWristShare,-carryWristMax,carryWristMax)*align*(1-Weight);
+      rightHand.rotation=Quaternion.AngleAxis(wrist,axis)*rightHand.rotation;
+     }
+     var carry=Quaternion.FromToRotation(weapon.forward,line);
      weapon.rotation=Quaternion.Slerp(Quaternion.identity,carry,align*(1-Weight))*weapon.rotation;
     }
     // Raised: turn the hand so the barrel follows the aim line, then kick it up on a shot.

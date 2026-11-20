@@ -25,6 +25,13 @@ namespace AthenHill
   public Quaternion[] rifleLeft=new Quaternion[0];
   Quaternion[] rightRest,leftRest;
   float right,left;
+  [Header("Pistol carry (character arms pass, 20 Nov 2026)")]
+  [Tooltip("Optional: with the pistol drawn but lowered, the left (support) hand stays relaxed instead of closing round a grip it is not holding; it closes as the pistol is raised.")]
+  public PlayerWeaponPose weaponPose;
+  public bool relaxSupportWhenLowered=true;
+  /// Current grip weights (0 = relaxed rest, 1 = gripping); ArmPoseCorrector relaxes the fingers by the remainder.
+  public float RightWeight=>right;
+  public float LeftWeight=>left;
   void Awake()
   {
    rightRest=Capture(rightFingers);leftRest=Capture(leftFingers);
@@ -40,7 +47,8 @@ namespace AthenHill
    bool armed=combat&&combat.Armed;
    float k=1-Mathf.Exp(-Time.deltaTime/Mathf.Max(.01f,blendSeconds)*3);
    right=Mathf.Lerp(right,armed?1:0,k);
-   left=Mathf.Lerp(left,armed?1:0,k);   // both holds are two-handed: the support hand wraps the rifle handguard or the pistol grip
+   bool support=armed&&!(relaxSupportWhenLowered&&weaponPose&&!(combat&&combat.RifleActive)&&weaponPose.Weight<.3f);
+   left=Mathf.Lerp(left,support?1:0,k);   // both holds are two-handed: the support hand wraps the rifle handguard or the pistol grip
    bool rifle=combat&&combat.RifleActive;
    Apply(rightFingers,rightRest,right,true,rifle?rifleRight:pistolRight);
    Apply(leftFingers,leftRest,left,false,rifle?rifleLeft:pistolLeft);

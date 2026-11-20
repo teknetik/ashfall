@@ -31,6 +31,9 @@ namespace AthenHill
         [System.NonSerialized] public string orderAcknowledged;
         AudioSource voice;
         public bool Walker => !agent;
+        AmbientWalker walker; bool walkerLooked;
+        /// An ambient walker standing at one of its work stops (AmbientWalker.stops).
+        public bool AtWork { get { if (!walkerLooked) { walker = GetComponent<AmbientWalker>(); walkerLooked = true; } return walker && walker.AtWork; } }
         public string SpeakerId => agent && agent.definition ? agent.definition.id : barks ? barks.speakerId : name;
         public string DisplayName => agent && agent.definition ? agent.definition.displayName : barks && !string.IsNullOrEmpty(barks.displayName) ? barks.displayName : name;
         public Vector3 Mouth => transform.position + Vector3.up * voiceHeight;

@@ -1,0 +1,1333 @@
+{
+ "name": "light_budget",
+ "exe": "/home/teknetik/code/ao2/unity/AthenHill/Builds/batch-p2-lb3/AthenHill.x86_64",
+ "exeMtime": "Thu Nov 19 14:08:38 2026",
+ "started": "2026-11-19 22:47:57",
+ "checks": [
+  {
+   "check": "light budget installed and on at start",
+   "passed": true,
+   "detail": {
+    "installed": true,
+    "enabled": true,
+    "budget": {
+     "hardCap": 28,
+     "ManagedLamps": 184,
+     "UnmanagedInView": 7,
+     "LightsInView": 25,
+     "candidatesInView": 138,
+     "enabledInView": 18,
+     "realInView": 18,
+     "poolsInView": 120,
+     "waiting": 0,
+     "PoolsActive": true
+    }
+   }
+  },
+  {
+   "check": "the light clock (active lamps, shadow lamps, strength) is identical with the budget on and off at 13:00 and 20:30",
+   "passed": true,
+   "detail": {
+    "13-on": {
+     "circuit": {
+      "ActiveLights": 46,
+      "ActiveShadowLights": 0,
+      "strength": 0.055,
+      "enabled": true
+     },
+     "lampStrength": 0.016,
+     "wanted": 38,
+     "inView": 25
+    },
+    "13-off": {
+     "circuit": {
+      "ActiveLights": 46,
+      "ActiveShadowLights": 0,
+      "strength": 0.055,
+      "enabled": true
+     },
+     "lampStrength": 0.016,
+     "wanted": 42,
+     "inView": 42
+    },
+    "20.5-on": {
+     "circuit": {
+      "ActiveLights": 164,
+      "ActiveShadowLights": 1,
+      "strength": 1.0,
+      "enabled": true
+     },
+     "lampStrength": 1.0,
+     "wanted": 128,
+     "inView": 25
+    },
+    "20.5-off": {
+     "circuit": {
+      "ActiveLights": 164,
+      "ActiveShadowLights": 1,
+      "strength": 1.0,
+      "enabled": true
+     },
+     "lampStrength": 1.0,
+     "wanted": 132,
+     "inView": 132
+    }
+   }
+  },
+  {
+   "check": "lamp strength by hour: daytime strength at 13:00, full at 20:30",
+   "passed": true,
+   "detail": {
+    "13": 0.055,
+    "20.5": 1.0
+   }
+  },
+  {
+   "check": "night-only lamps are off by day (fewer clock lamps active at 13:00)",
+   "passed": true,
+   "detail": {
+    "13": 46,
+    "20.5": 164
+   }
+  },
+  {
+   "check": "switch off: more than 30 lights in view at the spawn apron (URP would drop some)",
+   "passed": true,
+   "detail": 178
+  },
+  {
+   "check": "switch on: lights in view back under the budget",
+   "passed": true,
+   "detail": {
+    "inView": 26,
+    "hardCap": 28
+   }
+  },
+  {
+   "check": "night walk with turns: lights enabled in view never above 30 (every frame)",
+   "passed": true,
+   "detail": {
+    "maxInView": 28,
+    "framesOver30": 0,
+    "frames": 7334,
+    "maxWanted": 146
+   }
+  },
+  {
+   "check": "night walk: never above the budget cap (28)",
+   "passed": true,
+   "detail": {
+    "framesOverCap": 0,
+    "hardCuts": 123
+   }
+  },
+  {
+   "check": "no runtime exceptions in Player.log",
+   "passed": true,
+   "detail": []
+  }
+ ],
+ "captures": [
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/light_budget/lb3-check/run/switch-off-cam_night_spawn_apron.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/light_budget/lb3-check/run/switch-on-cam_night_spawn_apron.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/light_budget/lb3-check/run/walk-spawn-avenue.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/light_budget/lb3-check/run/walk-courtyard-hall.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/light_budget/lb3-check/run/walk-market-westgate.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/light_budget/lb3-check/run/walk-range.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/light_budget/lb3-check/run/walk-salvage.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/light_budget/lb3-check/run/walk-fieldsupply.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/light_budget/lb3-check/run/walk-home.png"
+ ],
+ "notes": [
+  {
+   "note": "walk spawn-avenue: did not reach point 2",
+   "detail": [
+    20.7758675,
+    0.0299998671,
+    3.86000037
+   ]
+  },
+  {
+   "note": "walk spawn-avenue: did not reach point 3",
+   "detail": [
+    20.770422,
+    0.0299998671,
+    3.86670756
+   ]
+  },
+  {
+   "note": "walk courtyard-hall: did not reach point 0",
+   "detail": [
+    12.649931,
+    0.0299998522,
+    -10.0
+   ]
+  },
+  {
+   "note": "walk: lamps the owners wanted in view (what URP would have had to drop from)",
+   "detail": {
+    "maxWanted": 146,
+    "mean": 23.38
+   }
+  }
+ ],
+ "clock": {
+  "13-on": {
+   "circuit": {
+    "ActiveLights": 46,
+    "ActiveShadowLights": 0,
+    "strength": 0.055,
+    "enabled": true
+   },
+   "lampStrength": 0.016,
+   "wanted": 38,
+   "inView": 25
+  },
+  "13-off": {
+   "circuit": {
+    "ActiveLights": 46,
+    "ActiveShadowLights": 0,
+    "strength": 0.055,
+    "enabled": true
+   },
+   "lampStrength": 0.016,
+   "wanted": 42,
+   "inView": 42
+  },
+  "20.5-on": {
+   "circuit": {
+    "ActiveLights": 164,
+    "ActiveShadowLights": 1,
+    "strength": 1.0,
+    "enabled": true
+   },
+   "lampStrength": 1.0,
+   "wanted": 128,
+   "inView": 25
+  },
+  "20.5-off": {
+   "circuit": {
+    "ActiveLights": 164,
+    "ActiveShadowLights": 1,
+    "strength": 1.0,
+    "enabled": true
+   },
+   "lampStrength": 1.0,
+   "wanted": 132,
+   "inView": 132
+  }
+ },
+ "switch": {
+  "off": {
+   "frame": 1203,
+   "lastCommand": "395da92db031",
+   "enabled": false,
+   "installed": true,
+   "camera": "cam_night_spawn_apron",
+   "hour": 20.5,
+   "lampStrength": 1.0,
+   "circuit": {
+    "ActiveLights": 164,
+    "ActiveShadowLights": 2,
+    "strength": 1.0,
+    "enabled": true
+   },
+   "inView": 178,
+   "wantedInView": 178,
+   "budget": null,
+   "running": {
+    "frames": 1203,
+    "seconds": 17.7,
+    "meanInView": 42.9,
+    "maxInView": 178,
+    "maxWantedInView": 178,
+    "framesOver30": 266,
+    "framesOverCap": 0,
+    "maxUnmanaged": 7,
+    "hardCuts": 229,
+    "promotions": 24,
+    "demotions": 390
+   },
+   "tune": null
+  },
+  "on": {
+   "frame": 1284,
+   "lastCommand": "0a4b4bb9543a",
+   "enabled": true,
+   "installed": true,
+   "camera": "cam_night_spawn_apron",
+   "hour": 20.5,
+   "lampStrength": 1.0,
+   "circuit": {
+    "ActiveLights": 164,
+    "ActiveShadowLights": 2,
+    "strength": 1.0,
+    "enabled": true
+   },
+   "inView": 26,
+   "wantedInView": 146,
+   "budget": {
+    "hardCap": 28,
+    "ManagedLamps": 184,
+    "UnmanagedInView": 7,
+    "LightsInView": 26,
+    "candidatesInView": 139,
+    "enabledInView": 19,
+    "realInView": 19,
+    "poolsInView": 120,
+    "waiting": 0,
+    "PoolsActive": true
+   },
+   "running": {
+    "frames": 1284,
+    "seconds": 20.3,
+    "meanInView": 43.4,
+    "maxInView": 178,
+    "maxWantedInView": 178,
+    "framesOver30": 279,
+    "framesOverCap": 0,
+    "maxUnmanaged": 7,
+    "hardCuts": 347,
+    "promotions": 24,
+    "demotions": 513
+   },
+   "tune": null
+  }
+ },
+ "walk": {
+  "running": {
+   "frames": 7334,
+   "seconds": 148.0,
+   "meanInView": 23.38,
+   "maxInView": 28,
+   "maxWantedInView": 146,
+   "framesOver30": 0,
+   "framesOverCap": 0,
+   "maxUnmanaged": 13,
+   "hardCuts": 123,
+   "promotions": 478,
+   "demotions": 438
+  },
+  "samples": [
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    25
+   ],
+   [
+    "spawn-avenue",
+    25
+   ],
+   [
+    "spawn-avenue",
+    25
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    25
+   ],
+   [
+    "spawn-avenue",
+    25
+   ],
+   [
+    "spawn-avenue",
+    25
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    21
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    25
+   ],
+   [
+    "spawn-avenue",
+    28
+   ],
+   [
+    "spawn-avenue",
+    19
+   ],
+   [
+    "spawn-avenue",
+    23
+   ],
+   [
+    "spawn-avenue",
+    27
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    23
+   ],
+   [
+    "spawn-avenue",
+    24
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "spawn-avenue",
+    27
+   ],
+   [
+    "spawn-avenue",
+    28
+   ],
+   [
+    "spawn-avenue",
+    28
+   ],
+   [
+    "spawn-avenue",
+    27
+   ],
+   [
+    "spawn-avenue",
+    27
+   ],
+   [
+    "spawn-avenue",
+    21
+   ],
+   [
+    "spawn-avenue",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    23
+   ],
+   [
+    "courtyard-hall",
+    23
+   ],
+   [
+    "courtyard-hall",
+    22
+   ],
+   [
+    "courtyard-hall",
+    25
+   ],
+   [
+    "courtyard-hall",
+    24
+   ],
+   [
+    "courtyard-hall",
+    24
+   ],
+   [
+    "courtyard-hall",
+    25
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    24
+   ],
+   [
+    "courtyard-hall",
+    27
+   ],
+   [
+    "courtyard-hall",
+    25
+   ],
+   [
+    "courtyard-hall",
+    24
+   ],
+   [
+    "courtyard-hall",
+    28
+   ],
+   [
+    "courtyard-hall",
+    27
+   ],
+   [
+    "courtyard-hall",
+    23
+   ],
+   [
+    "courtyard-hall",
+    23
+   ],
+   [
+    "courtyard-hall",
+    23
+   ],
+   [
+    "courtyard-hall",
+    25
+   ],
+   [
+    "courtyard-hall",
+    23
+   ],
+   [
+    "courtyard-hall",
+    25
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    27
+   ],
+   [
+    "courtyard-hall",
+    28
+   ],
+   [
+    "courtyard-hall",
+    28
+   ],
+   [
+    "courtyard-hall",
+    28
+   ],
+   [
+    "courtyard-hall",
+    27
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "courtyard-hall",
+    26
+   ],
+   [
+    "market-westgate",
+    28
+   ],
+   [
+    "market-westgate",
+    22
+   ],
+   [
+    "market-westgate",
+    21
+   ],
+   [
+    "market-westgate",
+    26
+   ],
+   [
+    "market-westgate",
+    24
+   ],
+   [
+    "market-westgate",
+    24
+   ],
+   [
+    "market-westgate",
+    24
+   ],
+   [
+    "market-westgate",
+    23
+   ],
+   [
+    "market-westgate",
+    24
+   ],
+   [
+    "market-westgate",
+    25
+   ],
+   [
+    "market-westgate",
+    25
+   ],
+   [
+    "market-westgate",
+    22
+   ],
+   [
+    "market-westgate",
+    23
+   ],
+   [
+    "market-westgate",
+    23
+   ],
+   [
+    "market-westgate",
+    23
+   ],
+   [
+    "market-westgate",
+    22
+   ],
+   [
+    "market-westgate",
+    20
+   ],
+   [
+    "market-westgate",
+    22
+   ],
+   [
+    "market-westgate",
+    21
+   ],
+   [
+    "market-westgate",
+    21
+   ],
+   [
+    "market-westgate",
+    21
+   ],
+   [
+    "market-westgate",
+    18
+   ],
+   [
+    "market-westgate",
+    25
+   ],
+   [
+    "market-westgate",
+    24
+   ],
+   [
+    "market-westgate",
+    23
+   ],
+   [
+    "market-westgate",
+    22
+   ],
+   [
+    "market-westgate",
+    21
+   ],
+   [
+    "market-westgate",
+    24
+   ],
+   [
+    "market-westgate",
+    28
+   ],
+   [
+    "market-westgate",
+    28
+   ],
+   [
+    "market-westgate",
+    26
+   ],
+   [
+    "market-westgate",
+    28
+   ],
+   [
+    "market-westgate",
+    26
+   ],
+   [
+    "market-westgate",
+    23
+   ],
+   [
+    "market-westgate",
+    28
+   ],
+   [
+    "market-westgate",
+    25
+   ],
+   [
+    "market-westgate",
+    22
+   ],
+   [
+    "market-westgate",
+    23
+   ],
+   [
+    "market-westgate",
+    22
+   ],
+   [
+    "market-westgate",
+    20
+   ],
+   [
+    "market-westgate",
+    17
+   ],
+   [
+    "market-westgate",
+    17
+   ],
+   [
+    "market-westgate",
+    20
+   ],
+   [
+    "range",
+    17
+   ],
+   [
+    "range",
+    17
+   ],
+   [
+    "range",
+    16
+   ],
+   [
+    "range",
+    16
+   ],
+   [
+    "range",
+    16
+   ],
+   [
+    "range",
+    20
+   ],
+   [
+    "range",
+    26
+   ],
+   [
+    "range",
+    28
+   ],
+   [
+    "range",
+    25
+   ],
+   [
+    "range",
+    26
+   ],
+   [
+    "range",
+    25
+   ],
+   [
+    "range",
+    23
+   ],
+   [
+    "range",
+    25
+   ],
+   [
+    "range",
+    22
+   ],
+   [
+    "range",
+    21
+   ],
+   [
+    "range",
+    24
+   ],
+   [
+    "range",
+    20
+   ],
+   [
+    "range",
+    18
+   ],
+   [
+    "range",
+    15
+   ],
+   [
+    "range",
+    15
+   ],
+   [
+    "range",
+    18
+   ],
+   [
+    "salvage",
+    26
+   ],
+   [
+    "salvage",
+    26
+   ],
+   [
+    "salvage",
+    25
+   ],
+   [
+    "salvage",
+    22
+   ],
+   [
+    "salvage",
+    23
+   ],
+   [
+    "salvage",
+    21
+   ],
+   [
+    "salvage",
+    26
+   ],
+   [
+    "salvage",
+    25
+   ],
+   [
+    "salvage",
+    28
+   ],
+   [
+    "salvage",
+    28
+   ],
+   [
+    "salvage",
+    28
+   ],
+   [
+    "salvage",
+    28
+   ],
+   [
+    "salvage",
+    28
+   ],
+   [
+    "salvage",
+    27
+   ],
+   [
+    "salvage",
+    28
+   ],
+   [
+    "salvage",
+    26
+   ],
+   [
+    "salvage",
+    23
+   ],
+   [
+    "salvage",
+    24
+   ],
+   [
+    "salvage",
+    26
+   ],
+   [
+    "fieldsupply",
+    26
+   ],
+   [
+    "fieldsupply",
+    26
+   ],
+   [
+    "fieldsupply",
+    26
+   ],
+   [
+    "fieldsupply",
+    26
+   ],
+   [
+    "fieldsupply",
+    28
+   ],
+   [
+    "fieldsupply",
+    26
+   ],
+   [
+    "fieldsupply",
+    23
+   ],
+   [
+    "fieldsupply",
+    26
+   ],
+   [
+    "fieldsupply",
+    26
+   ],
+   [
+    "fieldsupply",
+    23
+   ],
+   [
+    "fieldsupply",
+    25
+   ],
+   [
+    "fieldsupply",
+    25
+   ],
+   [
+    "fieldsupply",
+    26
+   ],
+   [
+    "fieldsupply",
+    27
+   ],
+   [
+    "fieldsupply",
+    28
+   ],
+   [
+    "fieldsupply",
+    28
+   ],
+   [
+    "fieldsupply",
+    28
+   ],
+   [
+    "fieldsupply",
+    26
+   ],
+   [
+    "fieldsupply",
+    27
+   ],
+   [
+    "fieldsupply",
+    24
+   ],
+   [
+    "home",
+    26
+   ],
+   [
+    "home",
+    22
+   ],
+   [
+    "home",
+    20
+   ],
+   [
+    "home",
+    21
+   ],
+   [
+    "home",
+    14
+   ],
+   [
+    "home",
+    10
+   ],
+   [
+    "home",
+    7
+   ],
+   [
+    "home",
+    8
+   ],
+   [
+    "home",
+    8
+   ],
+   [
+    "home",
+    9
+   ],
+   [
+    "home",
+    14
+   ],
+   [
+    "home",
+    28
+   ],
+   [
+    "home",
+    28
+   ],
+   [
+    "home",
+    27
+   ],
+   [
+    "home",
+    26
+   ],
+   [
+    "home",
+    25
+   ]
+  ]
+ },
+ "passed": true,
+ "summary": "9/9 passed",
+ "finished": "2026-11-19 22:50:53"
+}

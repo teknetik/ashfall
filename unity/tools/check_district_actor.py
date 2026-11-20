@@ -8,7 +8,7 @@ async def main():
  async with Client() as c:
   for i in range(30):
    await c.command({'action':'actorSnapshot'})
-   actors=json.loads((out/'actors.json').read_text()); assert len(actors)==9
+   actors=json.loads((out/'actors.json').read_text()); assert len(actors)==19   # 20 Nov 2026: saved-scene roster from WardResidentsInstall20261120 verify (was 9, stale since Oct)
    a=next(a for a in actors if a['name']=='npc_yard_mechanic');samples.append(a)
    (out/'mechanic-animation.json').write_text(json.dumps({'complete':False,'samples':samples},indent=2))
    assert a['humanoid'] and a['CurrentClip']=='walk',a

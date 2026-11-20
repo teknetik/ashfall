@@ -1,0 +1,748 @@
+{
+ "name": "weather",
+ "exe": "/home/teknetik/code/ao2/unity/AthenHill/Builds/batch-p2-final/AthenHill.x86_64",
+ "exeMtime": "Thu Nov 19 14:08:38 2026",
+ "started": "2026-11-20 01:59:55",
+ "checks": [
+  {
+   "check": "new game: calm, in grace, no front before the primer",
+   "passed": true,
+   "detail": {
+    "state": "calm",
+    "grace": true,
+    "frontAllowed": false,
+    "remaining": 180.38707
+   }
+  },
+  {
+   "check": "Continue starts calm in the grace period",
+   "passed": true,
+   "detail": {
+    "state": "calm",
+    "grace": true,
+    "frontAllowed": true
+   }
+  },
+  {
+   "check": "each state forced and held",
+   "passed": true,
+   "detail": {
+    "calm": [
+     "calm",
+     true
+    ],
+    "breezy": [
+     "breezy",
+     true
+    ],
+    "gusting": [
+     "gusting",
+     true
+    ],
+    "buildup": [
+     "buildup",
+     true
+    ],
+    "peak": [
+     "peak",
+     true
+    ],
+    "clearing": [
+     "clearing",
+     true
+    ]
+   }
+  },
+  {
+   "check": "wind strength calm <= breezy < gusting",
+   "passed": true,
+   "detail": {
+    "calm": 0.85,
+    "breezy": 1.01259089,
+    "gusting": 1.33074141
+   }
+  },
+  {
+   "check": "fog closes in: peak < build-up < breezy",
+   "passed": true,
+   "detail": {
+    "calm": [
+     38.0,
+     420.0
+    ],
+    "breezy": [
+     38.0,
+     420.0
+    ],
+    "gusting": [
+     35.1851845,
+     388.8889
+    ],
+    "buildup": [
+     25.333334,
+     280.0
+    ],
+    "peak": [
+     17.2727261,
+     190.909088
+    ],
+    "clearing": [
+     29.23077,
+     323.076935
+    ]
+   }
+  },
+  {
+   "check": "front peak visibility about 0.45",
+   "passed": true,
+   "detail": 0.454545438
+  },
+  {
+   "check": "blowing sand only in the front",
+   "passed": true,
+   "detail": {
+    "calm": 0.0,
+    "breezy": 0.0,
+    "gusting": 0.0,
+    "buildup": 0.35,
+    "peak": 1.0,
+    "clearing": 0.2
+   }
+  },
+  {
+   "check": "peak: blowing sand particles stream around the player",
+   "passed": true,
+   "detail": {
+    "sandParticles": 18,
+    "sandPlaying": true
+   }
+  },
+  {
+   "check": "Reduced Motion: no blowing sand at the peak",
+   "passed": true,
+   "detail": {
+    "reducedMotion": true,
+    "sandParticles": 0,
+    "windStrength": 1.7,
+    "gust": 0.4
+   }
+  },
+  {
+   "check": "Esc pause freezes the weather schedule",
+   "passed": true,
+   "detail": {
+    "before": 70.4207,
+    "paused": 70.12759
+   }
+  },
+  {
+   "check": "a whole front runs build-up -> peak -> clearing -> back",
+   "passed": true,
+   "detail": [
+    [
+     "buildup",
+     0
+    ],
+    [
+     "peak",
+     69
+    ],
+    [
+     "clearing",
+     232
+    ],
+    [
+     "calm",
+     305
+    ]
+   ]
+  },
+  {
+   "check": "radio: Ossa warns at build-up and calls the all-clear",
+   "passed": true,
+   "detail": [
+    [
+     "Warden Ossa",
+     "Dust front rolling in off the berms. Visibility's dropping. Keep your bearings and stay near cover."
+    ],
+    [
+     "Warden Ossa",
+     "Front's passing. Air's clearing over the berms."
+    ]
+   ]
+  },
+  {
+   "check": "no runtime exceptions in Player.log",
+   "passed": true,
+   "detail": []
+  }
+ ],
+ "captures": [
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-1300-calm-cam_hill.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-1300-calm-cam_gate.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-1300-calm-cam_bx_relay_knoll.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-1300-breezy-cam_hill.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-1300-breezy-cam_gate.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-1300-breezy-cam_bx_relay_knoll.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-1300-gusting-cam_hill.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-1300-gusting-cam_gate.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-1300-gusting-cam_bx_relay_knoll.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-1300-buildup-cam_hill.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-1300-buildup-cam_gate.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-1300-buildup-cam_bx_relay_knoll.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-1300-peak-cam_hill.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-1300-peak-cam_gate.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-1300-peak-cam_bx_relay_knoll.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-1300-clearing-cam_hill.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-1300-clearing-cam_gate.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-1300-clearing-cam_bx_relay_knoll.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/weather-sheet-1300.jpg",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-2030-calm-cam_hill.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-2030-calm-cam_gate.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-2030-calm-cam_bx_relay_knoll.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-2030-breezy-cam_hill.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-2030-breezy-cam_gate.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-2030-breezy-cam_bx_relay_knoll.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-2030-gusting-cam_hill.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-2030-gusting-cam_gate.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-2030-gusting-cam_bx_relay_knoll.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-2030-buildup-cam_hill.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-2030-buildup-cam_gate.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-2030-buildup-cam_bx_relay_knoll.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-2030-peak-cam_hill.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-2030-peak-cam_gate.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-2030-peak-cam_bx_relay_knoll.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-2030-clearing-cam_hill.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-2030-clearing-cam_gate.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-2030-clearing-cam_bx_relay_knoll.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/weather-sheet-2030.jpg",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-peak-follow-berms.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-peak-follow-gate.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/final/weather/run/weather-front-peak-follow.png"
+ ],
+ "notes": [
+  {
+   "note": "weather values at 13:00",
+   "detail": {
+    "calm": {
+     "state": "calm",
+     "held": true,
+     "windStrength": 0.85,
+     "visibility": 1.0,
+     "haze": 1.0,
+     "sand": 0.0,
+     "sunDim": 0.0,
+     "warmth": 0.0,
+     "fogStart": 38.0,
+     "fogEnd": 420.0,
+     "sandParticles": 0,
+     "audio": {
+      "bedVolume": 0.055263143,
+      "bedPlaying": true,
+      "bedClip": "weather_wind_bed",
+      "frontVolume": 0.0,
+      "frontPlaying": false,
+      "frontClip": "weather_dust_front",
+      "group": "Ambience"
+     }
+    },
+    "breezy": {
+     "state": "breezy",
+     "held": true,
+     "windStrength": 1.01259089,
+     "visibility": 1.0,
+     "haze": 1.0,
+     "sand": 0.0,
+     "sunDim": 0.0,
+     "warmth": 0.0,
+     "fogStart": 38.0,
+     "fogEnd": 420.0,
+     "sandParticles": 0,
+     "audio": {
+      "bedVolume": 0.08191301,
+      "bedPlaying": true,
+      "bedClip": "weather_wind_bed",
+      "frontVolume": 0.0,
+      "frontPlaying": false,
+      "frontClip": "weather_dust_front",
+      "group": "Ambience"
+     }
+    },
+    "gusting": {
+     "state": "gusting",
+     "held": true,
+     "windStrength": 1.33074141,
+     "visibility": 0.9259259,
+     "haze": 1.08,
+     "sand": 0.0,
+     "sunDim": 0.0,
+     "warmth": 0.05,
+     "fogStart": 35.1851845,
+     "fogEnd": 388.8889,
+     "sandParticles": 0,
+     "audio": {
+      "bedVolume": 0.130531967,
+      "bedPlaying": true,
+      "bedClip": "weather_wind_bed",
+      "frontVolume": 0.0,
+      "frontPlaying": false,
+      "frontClip": "weather_dust_front",
+      "group": "Ambience"
+     }
+    },
+    "buildup": {
+     "state": "buildup",
+     "held": true,
+     "windStrength": 1.46781421,
+     "visibility": 0.6666667,
+     "haze": 1.5,
+     "sand": 0.35,
+     "sunDim": 0.2,
+     "warmth": 0.35,
+     "fogStart": 25.333334,
+     "fogEnd": 280.0,
+     "sandParticles": 22,
+     "audio": {
+      "bedVolume": 0.154998943,
+      "bedPlaying": true,
+      "bedClip": "weather_wind_bed",
+      "frontVolume": 0.139998734,
+      "frontPlaying": true,
+      "frontClip": "weather_dust_front",
+      "group": "Ambience"
+     }
+    },
+    "peak": {
+     "state": "peak",
+     "held": true,
+     "windStrength": 1.72863281,
+     "visibility": 0.454545438,
+     "haze": 2.2,
+     "sand": 1.0,
+     "sunDim": 0.4,
+     "warmth": 0.8,
+     "fogStart": 17.2727261,
+     "fogEnd": 190.909088,
+     "sandParticles": 68,
+     "audio": {
+      "bedVolume": 0.192367435,
+      "bedPlaying": true,
+      "bedClip": "weather_wind_bed",
+      "frontVolume": 0.399994522,
+      "frontPlaying": true,
+      "frontClip": "weather_dust_front",
+      "group": "Ambience"
+     }
+    },
+    "clearing": {
+     "state": "clearing",
+     "held": true,
+     "windStrength": 1.15,
+     "visibility": 0.7692308,
+     "haze": 1.3,
+     "sand": 0.2,
+     "sunDim": 0.1,
+     "warmth": 0.25,
+     "fogStart": 29.23077,
+     "fogEnd": 323.076935,
+     "sandParticles": 38,
+     "audio": {
+      "bedVolume": 0.10263361,
+      "bedPlaying": true,
+      "bedClip": "weather_wind_bed",
+      "frontVolume": 0.0800075,
+      "frontPlaying": true,
+      "frontClip": "weather_dust_front",
+      "group": "Ambience"
+     }
+    }
+   }
+  },
+  {
+   "note": "weather audio at the peak",
+   "detail": {
+    "bedVolume": 0.189473614,
+    "bedPlaying": true,
+    "bedClip": "weather_wind_bed",
+    "frontVolume": 0.399999827,
+    "frontPlaying": true,
+    "frontClip": "weather_dust_front",
+    "group": "Ambience"
+   }
+  },
+  {
+   "note": "front phases (state, seconds)",
+   "detail": [
+    [
+     "buildup",
+     0
+    ],
+    [
+     "peak",
+     69
+    ],
+    [
+     "clearing",
+     232
+    ],
+    [
+     "calm",
+     305
+    ]
+   ]
+  },
+  {
+   "note": "radio during the front",
+   "detail": [
+    [
+     "Warden Ossa",
+     "Dust front rolling in off the berms. Visibility's dropping. Keep your bearings and stay near cover."
+    ],
+    [
+     "Warden Ossa",
+     "Front's passing. Air's clearing over the berms."
+    ]
+   ]
+  }
+ ],
+ "newGame": {
+  "available": true,
+  "state": "calm",
+  "held": false,
+  "forcedRun": false,
+  "remaining": 180.38707,
+  "elapsed": 1.49810636,
+  "grace": true,
+  "fronts": 0,
+  "sinceFront": 1.49810636,
+  "frontAllowed": false,
+  "windStrength": 0.853627741,
+  "windRate": 0.9,
+  "gust": 0.05,
+  "gustEnvelope": 0.08535811,
+  "visibility": 1.0,
+  "wind": [
+   4.057573,
+   0.0,
+   1.32405019
+  ],
+  "haze": 1.0,
+  "dust": 0.75,
+  "sand": 0.0,
+  "sunDim": 0.0,
+  "warmth": 0.0,
+  "reducedMotion": false,
+  "sandParticles": 0,
+  "sandPlaying": false,
+  "fogStart": 38.0,
+  "fogEnd": 420.0,
+  "audio": {
+   "bedVolume": 0.05552665,
+   "bedPlaying": true,
+   "bedClip": "weather_wind_bed",
+   "frontVolume": 0.0,
+   "frontPlaying": false,
+   "frontClip": "weather_dust_front",
+   "group": "Ambience"
+  }
+ },
+ "values": {
+  "1300-calm": {
+   "state": "calm",
+   "held": true,
+   "windStrength": 0.85,
+   "visibility": 1.0,
+   "haze": 1.0,
+   "sand": 0.0,
+   "sunDim": 0.0,
+   "warmth": 0.0,
+   "fogStart": 38.0,
+   "fogEnd": 420.0,
+   "sandParticles": 0,
+   "audio": {
+    "bedVolume": 0.055263143,
+    "bedPlaying": true,
+    "bedClip": "weather_wind_bed",
+    "frontVolume": 0.0,
+    "frontPlaying": false,
+    "frontClip": "weather_dust_front",
+    "group": "Ambience"
+   }
+  },
+  "1300-breezy": {
+   "state": "breezy",
+   "held": true,
+   "windStrength": 1.01259089,
+   "visibility": 1.0,
+   "haze": 1.0,
+   "sand": 0.0,
+   "sunDim": 0.0,
+   "warmth": 0.0,
+   "fogStart": 38.0,
+   "fogEnd": 420.0,
+   "sandParticles": 0,
+   "audio": {
+    "bedVolume": 0.08191301,
+    "bedPlaying": true,
+    "bedClip": "weather_wind_bed",
+    "frontVolume": 0.0,
+    "frontPlaying": false,
+    "frontClip": "weather_dust_front",
+    "group": "Ambience"
+   }
+  },
+  "1300-gusting": {
+   "state": "gusting",
+   "held": true,
+   "windStrength": 1.33074141,
+   "visibility": 0.9259259,
+   "haze": 1.08,
+   "sand": 0.0,
+   "sunDim": 0.0,
+   "warmth": 0.05,
+   "fogStart": 35.1851845,
+   "fogEnd": 388.8889,
+   "sandParticles": 0,
+   "audio": {
+    "bedVolume": 0.130531967,
+    "bedPlaying": true,
+    "bedClip": "weather_wind_bed",
+    "frontVolume": 0.0,
+    "frontPlaying": false,
+    "frontClip": "weather_dust_front",
+    "group": "Ambience"
+   }
+  },
+  "1300-buildup": {
+   "state": "buildup",
+   "held": true,
+   "windStrength": 1.46781421,
+   "visibility": 0.6666667,
+   "haze": 1.5,
+   "sand": 0.35,
+   "sunDim": 0.2,
+   "warmth": 0.35,
+   "fogStart": 25.333334,
+   "fogEnd": 280.0,
+   "sandParticles": 22,
+   "audio": {
+    "bedVolume": 0.154998943,
+    "bedPlaying": true,
+    "bedClip": "weather_wind_bed",
+    "frontVolume": 0.139998734,
+    "frontPlaying": true,
+    "frontClip": "weather_dust_front",
+    "group": "Ambience"
+   }
+  },
+  "1300-peak": {
+   "state": "peak",
+   "held": true,
+   "windStrength": 1.72863281,
+   "visibility": 0.454545438,
+   "haze": 2.2,
+   "sand": 1.0,
+   "sunDim": 0.4,
+   "warmth": 0.8,
+   "fogStart": 17.2727261,
+   "fogEnd": 190.909088,
+   "sandParticles": 68,
+   "audio": {
+    "bedVolume": 0.192367435,
+    "bedPlaying": true,
+    "bedClip": "weather_wind_bed",
+    "frontVolume": 0.399994522,
+    "frontPlaying": true,
+    "frontClip": "weather_dust_front",
+    "group": "Ambience"
+   }
+  },
+  "1300-clearing": {
+   "state": "clearing",
+   "held": true,
+   "windStrength": 1.15,
+   "visibility": 0.7692308,
+   "haze": 1.3,
+   "sand": 0.2,
+   "sunDim": 0.1,
+   "warmth": 0.25,
+   "fogStart": 29.23077,
+   "fogEnd": 323.076935,
+   "sandParticles": 38,
+   "audio": {
+    "bedVolume": 0.10263361,
+    "bedPlaying": true,
+    "bedClip": "weather_wind_bed",
+    "frontVolume": 0.0800075,
+    "frontPlaying": true,
+    "frontClip": "weather_dust_front",
+    "group": "Ambience"
+   }
+  },
+  "2030-calm": {
+   "state": "calm",
+   "held": true,
+   "windStrength": 0.85,
+   "visibility": 1.0,
+   "haze": 1.0,
+   "sand": 0.0,
+   "sunDim": 0.0,
+   "warmth": 0.0,
+   "fogStart": 38.0,
+   "fogEnd": 420.0,
+   "sandParticles": 8,
+   "audio": {
+    "bedVolume": 0.0552635863,
+    "bedPlaying": true,
+    "bedClip": "weather_wind_bed",
+    "frontVolume": 7.2680524e-07,
+    "frontPlaying": false,
+    "frontClip": "weather_dust_front",
+    "group": "Ambience"
+   }
+  },
+  "2030-breezy": {
+   "state": "breezy",
+   "held": true,
+   "windStrength": 1.00123107,
+   "visibility": 1.0,
+   "haze": 1.0,
+   "sand": 0.0,
+   "sunDim": 0.0,
+   "warmth": 0.0,
+   "fogStart": 38.0,
+   "fogEnd": 420.0,
+   "sandParticles": 0,
+   "audio": {
+    "bedVolume": 0.07901118,
+    "bedPlaying": true,
+    "bedClip": "weather_wind_bed",
+    "frontVolume": 2.936086e-21,
+    "frontPlaying": false,
+    "frontClip": "weather_dust_front",
+    "group": "Ambience"
+   }
+  },
+  "2030-gusting": {
+   "state": "gusting",
+   "held": true,
+   "windStrength": 1.3,
+   "visibility": 0.9259259,
+   "haze": 1.08,
+   "sand": 0.0,
+   "sunDim": 0.0,
+   "warmth": 0.05,
+   "fogStart": 35.1851845,
+   "fogEnd": 388.8889,
+   "sandParticles": 0,
+   "audio": {
+    "bedVolume": 0.126315355,
+    "bedPlaying": true,
+    "bedClip": "weather_wind_bed",
+    "frontVolume": 1.282425e-35,
+    "frontPlaying": false,
+    "frontClip": "weather_dust_front",
+    "group": "Ambience"
+   }
+  },
+  "2030-buildup": {
+   "state": "buildup",
+   "held": true,
+   "windStrength": 1.45,
+   "visibility": 0.6666667,
+   "haze": 1.5,
+   "sand": 0.35,
+   "sunDim": 0.2,
+   "warmth": 0.35,
+   "fogStart": 25.333334,
+   "fogEnd": 280.0,
+   "sandParticles": 20,
+   "audio": {
+    "bedVolume": 0.149999946,
+    "bedPlaying": true,
+    "bedClip": "weather_wind_bed",
+    "frontVolume": 0.13999708,
+    "frontPlaying": true,
+    "frontClip": "weather_dust_front",
+    "group": "Ambience"
+   }
+  },
+  "2030-peak": {
+   "state": "peak",
+   "held": true,
+   "windStrength": 1.864935,
+   "visibility": 0.454545438,
+   "haze": 2.2,
+   "sand": 1.0,
+   "sunDim": 0.4,
+   "warmth": 0.8,
+   "fogStart": 17.2727261,
+   "fogEnd": 190.909088,
+   "sandParticles": 72,
+   "audio": {
+    "bedVolume": 0.214697167,
+    "bedPlaying": true,
+    "bedClip": "weather_wind_bed",
+    "frontVolume": 0.3999963,
+    "frontPlaying": true,
+    "frontClip": "weather_dust_front",
+    "group": "Ambience"
+   }
+  },
+  "2030-clearing": {
+   "state": "clearing",
+   "held": true,
+   "windStrength": 1.15,
+   "visibility": 0.7692308,
+   "haze": 1.3,
+   "sand": 0.2,
+   "sunDim": 0.1,
+   "warmth": 0.25,
+   "fogStart": 29.23077,
+   "fogEnd": 323.076935,
+   "sandParticles": 37,
+   "audio": {
+    "bedVolume": 0.102640726,
+    "bedPlaying": true,
+    "bedClip": "weather_wind_bed",
+    "frontVolume": 0.0800019,
+    "frontPlaying": true,
+    "frontClip": "weather_dust_front",
+    "group": "Ambience"
+   }
+  }
+ },
+ "front": {
+  "phases": [
+   [
+    "buildup",
+    0
+   ],
+   [
+    "peak",
+    69
+   ],
+   [
+    "clearing",
+    232
+   ],
+   [
+    "calm",
+    305
+   ]
+  ],
+  "radio": [
+   [
+    "Warden Ossa",
+    "Dust front rolling in off the berms. Visibility's dropping. Keep your bearings and stay near cover."
+   ],
+   [
+    "Warden Ossa",
+    "Front's passing. Air's clearing over the berms."
+   ]
+  ]
+ },
+ "passed": true,
+ "summary": "13/13 passed",
+ "finished": "2026-11-20 02:07:13"
+}

@@ -1,0 +1,274 @@
+[report] installed: True
+First-person rifle view model [FirstPersonViewModel,ViewModelArmsRig] lp 0,0,0 ls 1,1,1
+  Visuals [] lp 0,0,0 ls 1,1,1 (inactive)
+    Player arms rig [Animation,PlayerHandGrip,SupportHandIK,ViewModelArmourMirror] lp -0.1677,-1.5469,-0.5956 ls 0.9933,0.9933,0.9933
+      Armature [] lp 0,0,0 ls 1,1,1
+        TS_FPArms [SkinnedMeshRenderer] lp 0,0,0 ls 1,1,1
+        Hips [] lp -0.0389,0.9591,0.0047 ls 1,1,1
+          LeftUpLeg [] lp -0.112,-0.009,-0.0146 ls 1,1,1
+          RightUpLeg [] lp 0.112,-0.009,-0.0146 ls 1,1,1
+          Spine02 [] lp 0,0.0899,0 ls 1,1,1
+        FP armour field_armguards [SkinnedMeshRenderer] lp 0,0,0 ls 1,1,1 (inactive)
+        FP armour field_gloves [SkinnedMeshRenderer] lp 0,0,0 ls 1,1,1 (inactive)
+      RH right arm IK [SupportHandIK] lp 0,0,0 ls 1,1,1
+    RH weapon mount [] lp 0.084,-0.2647,0.2276 ls 1,1,1
+      View model rifle [] lp 0,0,0 ls 1,1,1
+        FieldRifle [MeshFilter,MeshRenderer] lp -0.0006,0.0324,0.1346 ls 0.4728,0.4728,0.4728
+        Rifle muzzle [] lp 0,0.0334,0.585 ls 1,1,1
+          View model muzzle flash [MuzzleFlash] lp 0,0,0 ls 1,1,1
+        Support grip [] lp -0.0018,0.0331,0.1194 ls 1,1,1
+        View model pivot [] lp 0,0,0 ls 1,1,1
+        RH shooting grip [] lp 0.0235,-0.0534,-0.2016 ls 1,1,1
+        RH support grip [] lp -0.0098,0.0307,0.0941 ls 1,1,1
+vm: rig Visuals/RH weapon mount pistol Visuals/RH weapon mount/View model rifle/View model pivot muzzle Visuals/RH weapon mount/View model rifle/Rifle muzzle hip 0.13,-0.19,0.4 2,-4,-5 aim 0.011,-0.1723,0.33 -3.267,0,0 holster 0.05,-0.32,0.1 35,-10,-20 recoil 0.035 3.5 clip rifle_hold
+ik Player arms rig: upper LeftArm rifleGrip Visuals/RH weapon mount/View model rifle/RH support grip w 1 pistolGrip  pole -0.9346,0.3311,-0.13
+ik RH right arm IK: upper RightArm rifleGrip Visuals/RH weapon mount/View model rifle/RH shooting grip w 1 pistolGrip  pole 0.9524,0.258,0.1621
+rifle shape: bounds -0.0371,-0.1057,-0.315..0.0371,0.1725,0.585; grip top -0.0104,-0.0262,-0.129 bottom -0.0106,-0.0695,-0.1375 depth 0.049 width 0.034; weapon origin 0.650 from the muzzle, 0.38 high
+pistol mirror FP armour field_armguards active False parent Visuals/Weapon mount lp 0,0,0 ls 1,1,1 root Visuals/Weapon mount bones 54 under arms 0 mesh TS_bracer bounds -0.0026,0.1585,0/0.1311,0.2049,0.1223 first bones Weapon mount,Weapon mount,Weapon mount,Weapon mount
+pistol mirror FP armour field_gloves active False parent Visuals/Weapon mount lp 0,0,0 ls 1,1,1 root Visuals/Weapon mount bones 54 under arms 0 mesh TS_Gloves bounds 0.0893,0.1464,0.3842/0.2967,0.388,0.8453 first bones Weapon mount,Weapon mount,Weapon mount,Weapon mount
+pistol arms mesh TS_FPArms parent Visuals/Player arms rig/Armature lp 0,0,0 ls 1,1,1 root Visuals/Player arms rig/Armature/Hips
+rifle mirror FP armour field_armguards active False parent Visuals/Player arms rig/Armature lp 0,0,0 ls 1,1,1 root Visuals/Player arms rig/Armature/Hips bones 54 under arms 54 mesh TS_bracer bounds -0.1592,0.3128,0.4515/0.4937,0.219,0.3747 first bones Hips,LeftUpLeg,LeftLeg,LeftFoot
+rifle mirror FP armour field_gloves active False parent Visuals/Player arms rig/Armature lp 0,0,0 ls 1,1,1 root Visuals/Player arms rig/Armature/Hips bones 54 under arms 54 mesh TS_Gloves bounds -0.1028,0.4966,0.6899/0.8471,0.598,0.703 first bones Hips,LeftUpLeg,LeftLeg,LeftFoot
+rifle arms mesh TS_FPArms parent Visuals/Player arms rig/Armature lp 0,0,0 ls 1,1,1 root Visuals/Player arms rig/Armature/Hips
+rifle metrics: {
+  "hip": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 50 twist 1",
+    "rightElbowVp": "behind",
+    "rightElbow": "0.2379,-0.3784,0.0013",
+    "leftErrCm": 0.36,
+    "leftWrist": "swing 29 twist 19",
+    "leftElbowVp": "0.04,-1.85",
+    "leftElbow": "0.0098,-0.2283,0.2647",
+    "rightFingerHits": [
+      "thumb_02_r",
+      "thumb_03_r"
+    ],
+    "leftFingerHits": [
+      "thumb_01_l",
+      "thumb_02_l"
+    ],
+    "weaponNearestZ": 0.074,
+    "muzzle": "0.0892,-0.2104,0.9842"
+  },
+  "ads": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 32 twist 2",
+    "rightElbowVp": "behind",
+    "rightElbow": "0.1281,-0.2912,-0.1027",
+    "leftErrCm": 0.0,
+    "leftWrist": "swing 22 twist 21",
+    "leftElbowVp": "-0.41,-2.48",
+    "leftElbow": "-0.0625,-0.214,0.185",
+    "rightFingerHits": [
+      "thumb_02_r",
+      "thumb_03_r"
+    ],
+    "leftFingerHits": [
+      "thumb_01_l",
+      "thumb_02_l"
+    ],
+    "weaponNearestZ": 0.015,
+    "muzzle": "0.011,-0.139,0.915"
+  },
+  "burst": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 51 twist 1",
+    "rightElbowVp": "behind",
+    "rightElbow": "0.2397,-0.4041,-0.0193",
+    "leftErrCm": 0.0,
+    "leftWrist": "swing 36 twist 18",
+    "leftElbowVp": "0.01,-2.24",
+    "leftElbow": "0.0023,-0.2629,0.2512",
+    "rightFingerHits": [
+      "thumb_02_r",
+      "thumb_03_r"
+    ],
+    "leftFingerHits": [
+      "thumb_01_l",
+      "thumb_02_l"
+    ],
+    "weaponNearestZ": 0.044,
+    "muzzle": "0.0891,-0.1747,0.9493"
+  },
+  "ads_burst": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 35 twist 2",
+    "rightElbowVp": "behind",
+    "rightElbow": "0.1323,-0.3263,-0.1246",
+    "leftErrCm": 0.0,
+    "leftWrist": "swing 29 twist 21",
+    "leftElbowVp": "-0.53,-3.19",
+    "leftElbow": "-0.0734,-0.2504,0.1684",
+    "rightFingerHits": [
+      "thumb_02_r",
+      "thumb_03_r"
+    ],
+    "leftFingerHits": [
+      "thumb_01_l",
+      "thumb_02_l"
+    ],
+    "weaponNearestZ": -0.03,
+    "muzzle": "0.011,-0.1033,0.8769"
+  },
+  "walk": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 49 twist 1",
+    "rightElbowVp": "behind",
+    "rightElbow": "0.2382,-0.389,-0.0005",
+    "leftErrCm": 0.39,
+    "leftWrist": "swing 28 twist 19",
+    "leftElbowVp": "0.06,-1.92",
+    "leftElbow": "0.0127,-0.2378,0.2659",
+    "rightFingerHits": [
+      "thumb_02_r",
+      "thumb_03_r"
+    ],
+    "leftFingerHits": [
+      "thumb_01_l",
+      "thumb_02_l"
+    ],
+    "weaponNearestZ": 0.076,
+    "muzzle": "0.1041,-0.2157,0.9849"
+  },
+  "sprint": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 50 twist 2",
+    "rightElbowVp": "behind",
+    "rightElbow": "0.2443,-0.3725,0.0027",
+    "leftErrCm": 0.3,
+    "leftWrist": "swing 30 twist 19",
+    "leftElbowVp": "0.05,-1.83",
+    "leftElbow": "0.0105,-0.2232,0.2622",
+    "rightFingerHits": [
+      "thumb_02_r",
+      "thumb_03_r"
+    ],
+    "leftFingerHits": [
+      "thumb_01_l",
+      "thumb_02_l"
+    ],
+    "weaponNearestZ": 0.073,
+    "muzzle": "0.0672,-0.2145,0.9821"
+  },
+  "lowered": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 66 twist 2",
+    "rightElbowVp": "behind",
+    "rightElbow": "0.2053,-0.3805,-0.1727",
+    "leftErrCm": 0.0,
+    "leftWrist": "swing 57 twist 18",
+    "leftElbowVp": "-0.63,-6.41",
+    "leftElbow": "-0.063,-0.3614,0.121",
+    "rightFingerHits": [
+      "thumb_02_r",
+      "thumb_03_r"
+    ],
+    "leftFingerHits": [
+      "thumb_01_l",
+      "thumb_02_l"
+    ],
+    "weaponNearestZ": -0.104,
+    "muzzle": "0.0131,-0.4744,0.7701"
+  }
+}
+pistol metrics: {
+  "hip": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 29 twist 31",
+    "rightElbowVp": "1.29,-3.24",
+    "rightElbow": "0.2755,-0.3899,0.258",
+    "leftErrCm": 0.0,
+    "leftWrist": "swing 28 twist 117",
+    "leftElbowVp": "-0.22,-2.71",
+    "leftElbow": "-0.0437,-0.3057,0.242",
+    "rightFingerHits": [],
+    "leftFingerHits": [],
+    "weaponNearestZ": 0.407,
+    "muzzle": "0.1162,-0.1417,0.6747"
+  },
+  "ads": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 36 twist 14",
+    "rightElbowVp": "0.76,-2.38",
+    "rightElbow": "0.1821,-0.3188,0.2877",
+    "leftErrCm": 0.0,
+    "leftWrist": "swing 40 twist 134",
+    "leftElbowVp": "-0.61,-2.54",
+    "leftElbow": "-0.1331,-0.3122,0.2639",
+    "rightFingerHits": [],
+    "leftFingerHits": [],
+    "weaponNearestZ": 0.414,
+    "muzzle": "0.0008,-0.0551,0.6739"
+  },
+  "burst": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 33 twist 28",
+    "rightElbowVp": "1.43,-3.63",
+    "rightElbow": "0.2871,-0.4104,0.2426",
+    "leftErrCm": 0.0,
+    "leftWrist": "swing 30 twist 114",
+    "leftElbowVp": "-0.32,-3.21",
+    "leftElbow": "-0.0618,-0.3501,0.234",
+    "rightFingerHits": [],
+    "leftFingerHits": [],
+    "weaponNearestZ": 0.358,
+    "muzzle": "0.1164,-0.1194,0.6217"
+  },
+  "ads_burst": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 39 twist 8",
+    "rightElbowVp": "0.81,-2.59",
+    "rightElbow": "0.1908,-0.3427,0.2833",
+    "leftErrCm": 0.0,
+    "leftWrist": "swing 40 twist 132",
+    "leftElbowVp": "-0.69,-2.84",
+    "leftElbow": "-0.1458,-0.3389,0.2561",
+    "rightFingerHits": [],
+    "leftFingerHits": [],
+    "weaponNearestZ": 0.355,
+    "muzzle": "0.0008,-0.0329,0.6196"
+  },
+  "walk": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 29 twist 31",
+    "rightElbowVp": "1.33,-3.35",
+    "rightElbow": "0.2788,-0.3961,0.2537",
+    "leftErrCm": 0.0,
+    "leftWrist": "swing 26 twist 116",
+    "leftElbowVp": "-0.19,-2.71",
+    "leftElbow": "-0.0374,-0.3029,0.2396",
+    "rightFingerHits": [],
+    "leftFingerHits": [],
+    "weaponNearestZ": 0.408,
+    "muzzle": "0.1245,-0.1502,0.6748"
+  },
+  "sprint": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 29 twist 33",
+    "rightElbowVp": "1.27,-3.20",
+    "rightElbow": "0.274,-0.3877,0.2594",
+    "leftErrCm": 0.0,
+    "leftWrist": "swing 29 twist 118",
+    "leftElbowVp": "-0.24,-2.73",
+    "leftElbow": "-0.0473,-0.309,0.2428",
+    "rightFingerHits": [],
+    "leftFingerHits": [],
+    "weaponNearestZ": 0.405,
+    "muzzle": "0.1076,-0.1411,0.6744"
+  },
+  "lowered": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 66 twist 12",
+    "rightElbowVp": "2.54,-8.13",
+    "rightElbow": "0.2808,-0.5063,0.1336",
+    "leftErrCm": 0.0,
+    "leftWrist": "swing 61 twist 125",
+    "leftElbowVp": "-1.34,-8.46",
+    "leftElbow": "-0.1364,-0.4833,0.1226",
+    "rightFingerHits": [],
+    "leftFingerHits": [],
+    "weaponNearestZ": 0.177,
+    "muzzle": "0.0637,-0.3033,0.4619"
+  }
+}
