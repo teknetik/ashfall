@@ -64,7 +64,7 @@ namespace AthenHill.Editor
         /// Searched jointly with the grips: torso blade (deg), mid-shoulder depth at the hip (m, the aim anchor keeps
         /// AimShoulders.z - HipShoulders.z behind it) and the right elbow direction.
         public static float[] BladeYaws={40};
-        public static float[] HipMidZs={.06f,0f};
+        public static float[] HipMidZs={.06f,.10f,.14f};
         /// Aim anchor's mid-shoulder depth relative to the hip one (searched).
         public static float[] AimDzs={-.17f,-.23f};
         public static Vector3[] RightPoles={new Vector3(.3f,-.95f,-.1f)};
@@ -78,9 +78,9 @@ namespace AthenHill.Editor
         /// Share of the wrist twist moved into the forearm (SupportHandIK.twistShare) on both rifle arms.
         public static float TwistShare=.6f,LeftTwistShare=.6f;
         /// Hip mid-shoulder heights searched (m below the eye).
-        public static float[] HipShoulderYs={-.25f,-.30f};
-        public static float[] HipShoulderXs={.07f,-.03f};
-        public static Vector3[] LeftPoles={new Vector3(-.45f,-.88f,-.15f),new Vector3(-.75f,-.6f,-.2f),new Vector3(-.9f,-.3f,-.3f)};
+        public static float[] HipShoulderYs={-.25f,-.30f,-.34f};
+        public static float[] HipShoulderXs={.12f,.17f,.22f};
+        public static Vector3[] LeftPoles={new Vector3(-.75f,-.6f,-.2f),new Vector3(-.9f,-.3f,-.3f)};   // hero base (20 Nov 2026): the thicker forearm filled the lower centre with the elbow under the view (-.45,-.88,-.15 dropped)
         /// Aim-down-sights from the rifle's own sights (the old pose had the eye 5 cm below the top rail, so the sights sat
         /// well above the crosshair, and the butt plate 2.5 cm in front of the eye filled the lower view): the top rail
         /// levelled with the line of sight, the front sight post's tip on it, the butt this far behind the eye (cheek weld).
@@ -89,7 +89,7 @@ namespace AthenHill.Editor
         /// crosshair this far ahead, and the cant (deg, negative = top to the left). The old hip pose had the rifle low and
         /// close (origin 0.13, -0.19, 0.40 with yaw -4), filling the lower right with the receiver, the hands out of frame.
         public static bool HipFromAim=true;
-        public static Vector3 HipWeapon=new Vector3(.17f,-.15f,.56f);
+        public static Vector3 HipWeapon=new Vector3(.26f,-.24f,.58f);   // 20 Nov 13:30 (Carl: "we show too much of the gun"); was .17,-.15,.56
         public static float HipConverge=12f,HipCant=-6f;
         /// Arms follow while lowered in the draw slide (ViewModelArmsRig.drawFollow).
         public static float DrawFollow=1f;
@@ -98,7 +98,7 @@ namespace AthenHill.Editor
         /// Wrist-score penalty per finger that already overlaps the weapon with the hand open (it would have to bend backwards).
         public static float FingerInsidePenalty=60f;
         /// Finger capsule radii for the solve: the MPFB finger plus a 2 mm glove allowance.
-        public static float FingerRadius=.0102f,ThumbRadius=.0115f;
+        public static float FingerRadius=.0145f,ThumbRadius=.0165f;   // hero base hands + 2 mm (20 Nov 2026); MPFB: .0102 / .0115
         const int TempLayer=31;
         static readonly string[] Digits={"index","middle","ring","pinky","thumb"};
 

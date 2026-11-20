@@ -1,0 +1,513 @@
+{
+ "checks": [
+  {
+   "check": "in play the cursor is locked and hidden",
+   "passed": true,
+   "detail": {
+    "lockState": "Locked",
+    "visible": false,
+    "looking": true,
+    "freed": false
+   }
+  },
+  {
+   "check": "opening the field pack frees the cursor",
+   "passed": true,
+   "detail": {
+    "lockState": "None",
+    "visible": true,
+    "looking": false,
+    "freed": false
+   }
+  },
+  {
+   "check": "the field pack shows the HOTBAR strip with ten cells",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "dragging the trauma kit onto strip cell 0 puts it on hotbar 0",
+   "passed": true,
+   "detail": {
+    "slot": 10,
+    "key": "0",
+    "item": "trauma_kit",
+    "count": 1
+   }
+  },
+  {
+   "check": "selecting the medkit and pressing 7 moves it to hotbar 7",
+   "passed": true,
+   "detail": {
+    "1": null,
+    "2": "scrap_pistol",
+    "3": null,
+    "4": "nano_cell",
+    "5": null,
+    "6": null,
+    "7": "medkit",
+    "8": null,
+    "9": null,
+    "10": "trauma_kit"
+   }
+  },
+  {
+   "check": "salvage dropped on the strip is refused",
+   "passed": true,
+   "detail": {
+    "notice": "Scrap Alloy cannot be used from the hotbar. Medkits and nano recharges can."
+   }
+  },
+  {
+   "check": "closing the pack locks the cursor again",
+   "passed": true,
+   "detail": {
+    "lockState": "Locked",
+    "visible": false,
+    "looking": true,
+    "freed": false
+   }
+  },
+  {
+   "check": "the HUD hotbar shows the pistol on 2 and the trauma kit on 0",
+   "passed": true,
+   "detail": {
+    "slot2": [
+     "unity-button",
+     "unity-text-element",
+     "hotbar-slot",
+     "weapon-slot"
+    ],
+    "slot10": [
+     "unity-button",
+     "unity-text-element",
+     "hotbar-slot"
+    ]
+   }
+  },
+  {
+   "check": "holding Left Alt frees the cursor in play",
+   "passed": true,
+   "detail": {
+    "lockState": "None",
+    "visible": true,
+    "looking": false,
+    "freed": true
+   }
+  },
+  {
+   "check": "hotbar 0 uses the trauma kit on a wound (healed to full)",
+   "passed": true,
+   "detail": {
+    "before": 102.0,
+    "wounded": 64.5,
+    "healed": 102.0,
+    "notice": "Used Trauma Kit: +38 health. 0 left."
+   }
+  },
+  {
+   "check": "J opens the journal",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "the journal lists the primer (complete), field order 1 and A Roof in Ward (active)",
+   "passed": true,
+   "detail": {
+    "arrival": "Complete",
+    "primer": "Complete",
+    "order:order_steady_hands": "Active",
+    "home": "Active"
+   }
+  },
+  {
+   "check": "the running field order is tracked by default",
+   "passed": true,
+   "detail": "order:order_steady_hands"
+  },
+  {
+   "check": "T tracks the selected mission",
+   "passed": true,
+   "detail": "home"
+  },
+  {
+   "check": "J closes the journal",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "Field Notes shows the tracked mission",
+   "passed": true,
+   "detail": "A ROOF IN WARD"
+  },
+  {
+   "check": "the compass carries the tracked marker (pointing at Linn before the lease)",
+   "passed": true,
+   "detail": {
+    "target": "npc_linn",
+    "label": "LINN"
+   }
+  },
+  {
+   "check": "Linn on the hill",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "Linn offers the housing roll after the primer",
+   "passed": true,
+   "detail": [
+    "Why does everyone meet here?",
+    "Is there anywhere in Ward I could stay?",
+    "I will stay for a moment."
+   ]
+  },
+  {
+   "check": "the lease takes 40 credits and the home is leased",
+   "passed": true,
+   "detail": {
+    "credits": 80,
+    "home": {
+     "present": true,
+     "leased": true,
+     "stored": false,
+     "rested": false,
+     "doorLocked": false,
+     "doorOpen": 0.0,
+     "insideZone": false,
+     "confined": false,
+     "stash": [],
+     "stashSlots": 0,
+     "stashCapacity": 60
+    }
+   }
+  },
+  {
+   "check": "the tracked marker moves to the home locker",
+   "passed": true,
+   "detail": "HOME LOCKER"
+  },
+  {
+   "check": "the door swings open as the tenant arrives",
+   "passed": true,
+   "detail": {
+    "present": true,
+    "leased": true,
+    "stored": false,
+    "rested": false,
+    "doorLocked": false,
+    "doorOpen": 1.0,
+    "insideZone": false,
+    "confined": false,
+    "stash": [],
+    "stashSlots": 0,
+    "stashCapacity": 60
+   }
+  },
+  {
+   "check": "walked in through the door; the camera holds first person inside",
+   "passed": true,
+   "detail": {
+    "pos": [
+     28.875,
+     0.529999852,
+     -40.43556
+    ],
+    "home": {
+     "present": true,
+     "leased": true,
+     "stored": false,
+     "rested": false,
+     "doorLocked": false,
+     "doorOpen": 1.0,
+     "insideZone": true,
+     "confined": true,
+     "stash": [],
+     "stashSlots": 0,
+     "stashCapacity": 60
+    },
+    "camera": {
+     "yaw": 180.0,
+     "pitch": 12.0,
+     "boom": 0.0,
+     "distance": 0.0,
+     "firstPerson": true,
+     "playerHidden": true,
+     "position": [
+      28.875,
+      2.17999983,
+      -40.43556
+     ],
+     "overlaps": []
+    }
+   }
+  },
+  {
+   "check": "E at the locker opens the stash window",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "Store all salvage moves the salvage and keeps the toolkit and medkit in the pack",
+   "passed": true,
+   "detail": {
+    "stash": {
+     "copper_filament": 3,
+     "droid_servo_damaged": 2,
+     "scrap_alloy": 4,
+     "scrap_coil": 2
+    },
+    "notice": "Stored 11 items of salvage (4 kinds) in the locker."
+   }
+  },
+  {
+   "check": "Take 1 brings one scrap alloy back to the pack",
+   "passed": true,
+   "detail": {
+    "stash": {
+     "copper_filament": 3,
+     "droid_servo_damaged": 2,
+     "scrap_alloy": 3,
+     "scrap_coil": 2
+    }
+   }
+  },
+  {
+   "check": "storing salvage completes A Roof in Ward and tracking moves on",
+   "passed": true,
+   "detail": {
+    "home": {
+     "present": true,
+     "leased": true,
+     "stored": true,
+     "rested": false,
+     "doorLocked": false,
+     "doorOpen": 1.0,
+     "insideZone": true,
+     "confined": true,
+     "stash": [
+      {
+       "item": "copper_filament",
+       "quantity": 3
+      },
+      {
+       "item": "droid_servo_damaged",
+       "quantity": 2
+      },
+      {
+       "item": "scrap_alloy",
+       "quantity": 3
+      },
+      {
+       "item": "scrap_coil",
+       "quantity": 2
+      }
+     ],
+     "stashSlots": 4,
+     "stashCapacity": 60
+    },
+    "tracked": "order:order_steady_hands"
+   }
+  },
+  {
+   "check": "E at the bunk opens the rest window",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "sleeping until morning restores vitality, sets 06:30 and records the rest",
+   "passed": true,
+   "detail": {
+    "health": 102.0,
+    "hour": 6.5,
+    "home": {
+     "present": true,
+     "leased": true,
+     "stored": true,
+     "rested": true,
+     "doorLocked": false,
+     "doorOpen": 0.0,
+     "insideZone": true,
+     "confined": true,
+     "stash": [
+      {
+       "item": "copper_filament",
+       "quantity": 3
+      },
+      {
+       "item": "droid_servo_damaged",
+       "quantity": 2
+      },
+      {
+       "item": "scrap_alloy",
+       "quantity": 3
+      },
+      {
+       "item": "scrap_coil",
+       "quantity": 2
+      }
+     ],
+     "stashSlots": 4,
+     "stashCapacity": 60
+    }
+   }
+  },
+  {
+   "check": "2 draws the scrap pistol in the Berms",
+   "passed": true,
+   "detail": {
+    "armed": true,
+    "weapon": "weapon_scrap_pistol"
+   }
+  },
+  {
+   "check": "the left mouse button fires without aiming",
+   "passed": true,
+   "detail": {
+    "before": 0,
+    "after": 1
+   }
+  },
+  {
+   "check": "no exceptions in Player.log",
+   "passed": true,
+   "detail": []
+  },
+  {
+   "check": "the save (v4) keeps the hotbar and the locker",
+   "passed": true,
+   "detail": {
+    "version": 4,
+    "hotbar": [
+     {
+      "slot": 4,
+      "itemId": "nano_cell"
+     },
+     {
+      "slot": 7,
+      "itemId": "medkit"
+     },
+     {
+      "slot": 10,
+      "itemId": "trauma_kit"
+     }
+    ],
+    "stash": [
+     {
+      "itemId": "copper_filament",
+      "quantity": 3
+     },
+     {
+      "itemId": "droid_servo_damaged",
+      "quantity": 2
+     },
+     {
+      "itemId": "scrap_alloy",
+      "quantity": 3
+     },
+     {
+      "itemId": "scrap_coil",
+      "quantity": 2
+     }
+    ],
+    "journal": {
+     "tracked": "order:order_steady_hands",
+     "chosen": false
+    }
+   }
+  },
+  {
+   "check": "Continue wakes the colonist at the bunk",
+   "passed": true,
+   "detail": {
+    "pos": [
+     25.8,
+     0.515,
+     -41.2
+    ],
+    "wake": [
+     25.8,
+     0.515,
+     -41.2
+    ],
+    "notice": "You wake in your container home. Progress restored \u00b7 field order: Steady Hands."
+   }
+  },
+  {
+   "check": "the locker and the hotbar survive the restart",
+   "passed": true,
+   "detail": {
+    "stash": {
+     "copper_filament": 3,
+     "droid_servo_damaged": 2,
+     "scrap_alloy": 3,
+     "scrap_coil": 2
+    },
+    "hotbar": {
+     "1": null,
+     "2": "scrap_pistol",
+     "3": null,
+     "4": "nano_cell",
+     "5": null,
+     "6": null,
+     "7": "medkit",
+     "8": null,
+     "9": null,
+     "10": "trauma_kit"
+    }
+   }
+  },
+  {
+   "check": "no exceptions in Player.log after Continue",
+   "passed": true,
+   "detail": []
+  }
+ ],
+ "wake": [
+  25.8,
+  0.515,
+  -41.2
+ ],
+ "errors": [],
+ "saved": {
+  "version": 4,
+  "hotbar": [
+   {
+    "slot": 4,
+    "itemId": "nano_cell"
+   },
+   {
+    "slot": 7,
+    "itemId": "medkit"
+   },
+   {
+    "slot": 10,
+    "itemId": "trauma_kit"
+   }
+  ],
+  "stash": [
+   {
+    "itemId": "copper_filament",
+    "quantity": 3
+   },
+   {
+    "itemId": "droid_servo_damaged",
+    "quantity": 2
+   },
+   {
+    "itemId": "scrap_alloy",
+    "quantity": 3
+   },
+   {
+    "itemId": "scrap_coil",
+    "quantity": 2
+   }
+  ],
+  "journal": {
+   "tracked": "order:order_steady_hands",
+   "chosen": false
+  }
+ },
+ "errors2": [],
+ "passed": true
+}

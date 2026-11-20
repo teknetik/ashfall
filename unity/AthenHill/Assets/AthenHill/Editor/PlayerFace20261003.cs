@@ -668,7 +668,7 @@ namespace AthenHill.Editor
             {
                 if(digit*3+2>=fingers.Length)break;
                 var f0=fingers[digit*3];var f1=fingers[digit*3+1];var f2=fingers[digit*3+2];var tip=f2.position+(f2.position-f1.position)*.85f;
-                Cap(f0.position,f1.position,.009f);Cap(f1.position,f2.position,.008f);Cap(f2.position,tip,.0075f);
+                Cap(f0.position,f1.position,.0135f);Cap(f1.position,f2.position,.0125f);Cap(f2.position,tip,.012f);   // hero base hands (20 Nov 2026)
             }
         }
 
@@ -681,7 +681,7 @@ namespace AthenHill.Editor
             {
                 if(d*3+2>=f.Length)break;
                 bool thumb=f[d*3].name.StartsWith("thumb");
-                float r=thumb?.0095f:.0082f;
+                float r=thumb?.0145f:.0125f;   // hero base hands (20 Nov 2026); MPFB: .0095 / .0082
                 float[] max=thumb?new[]{40f,60f,60f}:new[]{90f,100f,80f};
                 var ch=new[]{f[d*3],f[d*3+1],f[d*3+2]};var rs=new[]{rest[d*3],rest[d*3+1],rest[d*3+2]};
                 bool Hit(int k)
@@ -738,6 +738,7 @@ namespace AthenHill.Editor
         // ------------------------------------------------------------------ rollback
         static string Rollback()
         {
+            HeroBasePass20261120.Guard("PlayerFace20261003 rollback");
             var prevModel=Path.Combine(Previous,"colonist_mpfb.glb");var prevArms=Path.Combine(Previous,"TS_FPArms.glb");
             if(!File.Exists(prevModel)||!File.Exists(prevArms))throw new FileNotFoundException("previous GLBs missing in "+Previous);
             File.Copy(prevModel,Path.GetFullPath(ModelPath),true);File.Copy(prevArms,Path.GetFullPath(FPArmsPath),true);

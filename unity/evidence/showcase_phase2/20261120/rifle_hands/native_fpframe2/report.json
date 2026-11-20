@@ -1,0 +1,36 @@
+{
+ "name": "capture_rifle_hands_native",
+ "exe": "/home/teknetik/code/ao2/unity/AthenHill/Builds/batch-p2-fpframe/AthenHill.x86_64",
+ "exeMtime": "Thu Nov 19 14:08:38 2026",
+ "started": "2026-11-20 13:52:22",
+ "checks": [
+  {
+   "check": "gloves and arm guards not worn",
+   "passed": true,
+   "detail": [
+    "field_helmet",
+    "field_leggings",
+    "field_boots",
+    "warden_plate_carrier"
+   ]
+  },
+  {
+   "check": "script completed without error",
+   "passed": false,
+   "detail": "TimeoutError(\"bridge did not acknowledge {'landmark': 'rifle_stand', 'action': 'goto', 'id': 'fe42ea76853c4a4ba00a9028'}\")"
+  },
+  {
+   "check": "no runtime exceptions in Player.log",
+   "passed": true,
+   "detail": []
+  }
+ ],
+ "captures": [
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/rifle_hands/native_fpframe2/run-bare/error-state.png"
+ ],
+ "notes": [],
+ "error": "Traceback (most recent call last):\n  File \"/home/teknetik/code/ao2/unity/tools/showcase_qa.py\", line 124, in run\n    body()\n    ~~~~^^\n  File \"/home/teknetik/code/ao2/unity/tools/capture_rifle_hands_native.py\", line 113, in body\n    one_run(False)\n    ~~~~~~~^^^^^^^\n  File \"/home/teknetik/code/ao2/unity/tools/capture_rifle_hands_native.py\", line 104, in one_run\n    weapon_set('rifle', '1', 'weapon_field_rifle', suffix)\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/teknetik/code/ao2/unity/tools/capture_rifle_hands_native.py\", line 75, in weapon_set\n    stand()\n    ~~~~~^^\n  File \"/home/teknetik/code/ao2/unity/tools/capture_rifle_hands_native.py\", line 70, in stand\n    qa.goto('rifle_stand'); qa.view('follow'); time.sleep(.5)\n    ~~~~~~~^^^^^^^^^^^^^^^\n  File \"/home/teknetik/code/ao2/unity/evidence/gameplay-v2/20260930-reqa2/qa.py\", line 264, in goto\n    cmd('goto', landmark=landmark)\n    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/teknetik/code/ao2/unity/evidence/gameplay-v2/20260930-reqa2/qa.py\", line 191, in cmd\n    raise TimeoutError('bridge did not acknowledge %s' % j)\nTimeoutError: bridge did not acknowledge {'landmark': 'rifle_stand', 'action': 'goto', 'id': 'fe42ea76853c4a4ba00a9028'}\n",
+ "passed": false,
+ "summary": "2/3 passed",
+ "finished": "2026-11-20 13:53:12"
+}

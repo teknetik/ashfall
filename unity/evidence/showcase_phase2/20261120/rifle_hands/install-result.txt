@@ -1,0 +1,227 @@
+[install] clip-driven state recorded in previous.json
+clip-driven hip: shoulders L -0.0335,-0.1256,0.0859 R 0.3977,-0.1108,0.1111, right hand 0.188,-0.1732,0.3505, left hand 0.1152,-0.1762,0.4757, weapon root 0.13,-0.19,0.4, muzzle 0.0892,-0.2105,0.9842
+arm lengths: upper 0.243 fore 0.263 m; weapon lossy scale 1,1,1
+ADS from the sights: post tip -0.011,0.1723,0.4927, rail top y 0.170 (-0.2 cm under the line of sight), butt 1.5 cm behind the eye; aim offset 0,-0.118,0.34 -> 0.011,-0.1723,0.33, aim euler 0,0,0 -> -3.267,0,0
+hip framing: weapon origin 0.17,-0.15,0.56, bore onto the crosshair 12 m ahead, cant -6; hip offset 0.13,-0.19,0.4 -> 0.17,-0.15,0.56, hip euler 2,-4,-5 -> -3.8339,-0.5268,-6.0132
+rifle (weapon frame): bounds -0.0371,-0.1057,-0.315..0.0371,0.1725,0.585, length 0.900 m; pistol grip top -0.0104,-0.0262,-0.129 bottom -0.0106,-0.0695,-0.1375 axis -0.0039,-0.9815,-0.1913 (rake 11 deg), depth 4.9 cm width 3.4 cm; old grip point (weapon origin) 0.650 of the length from the muzzle, 0.38 of the height
+arms configuration chosen of 32 (config_candidates.txt): blade 40 deg, mid-shoulder x 0.07 y -0.25 z 0.06 (aim -0.17), right pole 0.3,-0.95,-0.1, left pole -0.75,-0.6,-0.2; anchors hip -0.0189,-1.6585,0.0036 / 0.03018,0.30794,-0.05567,0.9493, aim -0.0534,-1.6285,-0.2184 / 0.02772,0.34905,-0.05693,0.93496, follow 0.6
+shooting grip candidates:
+  p0 r0 lat 3.4cm: hip err 0.0cm swing 54 twist 8 elbow 0.2576,-0.3507,0.1479; aim err 0.0cm swing 46 twist 3 elbow 0.1437,-0.3111,-0.0993 => 117 inside 1 -> 177
+  p0 r15 lat 3.4cm: hip err 0.0cm swing 54 twist 2 elbow 0.2576,-0.3507,0.1479; aim err 0.0cm swing 47 twist 3 elbow 0.1437,-0.3111,-0.0993 => 108 inside 1 -> 168
+  p0 r30 lat 3.4cm: hip err 0.0cm swing 54 twist 5 elbow 0.2576,-0.3507,0.1479; aim err 0.0cm swing 47 twist 9 elbow 0.1437,-0.3111,-0.0993 => 122 inside 0 -> 122
+  p0 r45 lat 3.4cm: hip err 0.0cm swing 54 twist 11 elbow 0.2576,-0.3507,0.1479; aim err 0.0cm swing 47 twist 15 elbow 0.1437,-0.3111,-0.0993 => 140 inside 0 -> 140
+  p10 r0 lat 3.4cm: hip err 0.0cm swing 44 twist 7 elbow 0.2575,-0.3586,0.1438; aim err 0.0cm swing 37 twist 2 elbow 0.1448,-0.3181,-0.1023 => 96 inside 2 -> 216
+  p10 r15 lat 3.4cm: hip err 0.0cm swing 44 twist 1 elbow 0.2575,-0.3586,0.1438; aim err 0.0cm swing 38 twist 4 elbow 0.1448,-0.3181,-0.1023 => 89 inside 1 -> 149
+  p10 r30 lat 3.4cm: hip err 0.0cm swing 44 twist 5 elbow 0.2575,-0.3586,0.1438; aim err 0.0cm swing 39 twist 10 elbow 0.1448,-0.3181,-0.1023 => 106 inside 1 -> 166
+  p10 r45 lat 3.4cm: hip err 0.0cm swing 44 twist 11 elbow 0.2575,-0.3586,0.1438; aim err 0.0cm swing 39 twist 16 elbow 0.1448,-0.3181,-0.1023 => 125 inside 0 -> 125
+  p20 r0 lat 3.4cm: hip err 0.0cm swing 33 twist 6 elbow 0.257,-0.3646,0.1405; aim err 0.0cm swing 30 twist 2 elbow 0.1453,-0.3224,-0.1044 => 75 inside 2 -> 195
+  p20 r15 lat 3.4cm: hip err 0.0cm swing 34 twist 0 elbow 0.257,-0.3646,0.1405; aim err 0.0cm swing 31 twist 4 elbow 0.1453,-0.3224,-0.1044 => 72 inside 2 -> 192
+  p20 r30 lat 3.4cm: hip err 0.0cm swing 34 twist 6 elbow 0.257,-0.3646,0.1405; aim err 0.0cm swing 32 twist 10 elbow 0.1453,-0.3224,-0.1044 => 91 inside 2 -> 211
+  p20 r45 lat 3.4cm: hip err 0.0cm swing 34 twist 12 elbow 0.257,-0.3646,0.1405; aim err 0.0cm swing 32 twist 17 elbow 0.1453,-0.3224,-0.1044 => 110 inside 1 -> 170
+  p30 r0 lat 3.4cm: hip err 0.0cm swing 24 twist 6 elbow 0.256,-0.3684,0.1383; aim err 0.0cm swing 25 twist 1 elbow 0.145,-0.3239,-0.1053 => 59 inside 2 -> 179
+  p30 r15 lat 3.4cm: hip err 0.0cm swing 25 twist 0 elbow 0.256,-0.3684,0.1383; aim err 0.0cm swing 26 twist 5 elbow 0.145,-0.3239,-0.1053 => 59 inside 2 -> 179
+  p30 r30 lat 3.4cm: hip err 0.0cm swing 25 twist 6 elbow 0.256,-0.3684,0.1383; aim err 0.0cm swing 28 twist 11 elbow 0.145,-0.3239,-0.1053 => 80 inside 2 -> 200
+  p30 r45 lat 3.4cm: hip err 0.0cm swing 26 twist 13 elbow 0.256,-0.3684,0.1383; aim err 0.0cm swing 29 twist 17 elbow 0.145,-0.3239,-0.1053 => 99 inside 0 -> 99
+shooting grip chosen: pitch 30 roll 45 lateral 3.4 cm: hip err 0.0cm swing 26 twist 13 elbow 0.256,-0.3684,0.1383; aim err 0.0cm swing 29 twist 17 elbow 0.145,-0.3239,-0.1053 => 99 inside 0 -> 99 local 0.0234,-0.0777,-0.2081 / -0.05698,0.7851,0.61429,-0.05486
+support grip candidates: 132 (support_candidates.txt); chosen: station 0.53 of the length from the muzzle (24 cm ahead of the grip), yaw 45 roll 30: hip err 0.2cm swing 30 twist 43 elbow -0.011,-0.2024,0.3901; aim err 0.0cm swing 31 twist 48 elbow -0.1848,-0.2663,0.1891 => 198 inside 0 local -0.0493,0.0292,0.0576 / 0.27144,-0.21621,-0.63893,0.68654
+fingers solved: right in 160,mi 100,ri 270,pi 270,th 120 | left in 220,mi 160,ri 270,pi 270,th 120
+after install: {
+  "hip": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 26 twist 13",
+    "rightElbowVp": "2.23,-5.71",
+    "rightElbow": "0.256,-0.3684,0.1383",
+    "leftErrCm": 0.15,
+    "leftWrist": "swing 30 twist 43",
+    "leftElbowVp": "-0.03,-1.11",
+    "leftElbowJoint": "flex 22 twist 60 angle 173",
+    "leftElbow": "-0.011,-0.2024,0.3901",
+    "rightFingerHits": [
+      "index_01_r",
+      "index_02_r",
+      "thumb_01_r",
+      "thumb_02_r",
+      "thumb_03_r"
+    ],
+    "leftFingerHits": [
+      "thumb_01_l",
+      "thumb_02_l",
+      "thumb_03_l"
+    ],
+    "weaponNearestZ": 0.243,
+    "rightKnuckleVp": "0.43,-0.77",
+    "leftKnuckleVp": "0.36,-0.38",
+    "boreAtCrosshairM": 19.05,
+    "muzzle": "0.1646,-0.1108,1.1446"
+  },
+  "ads": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 29 twist 17",
+    "rightElbowVp": "behind",
+    "rightElbow": "0.145,-0.3239,-0.1053",
+    "leftErrCm": 0.0,
+    "leftWrist": "swing 31 twist 48",
+    "leftElbowVp": "-1.18,-3.02",
+    "leftElbowJoint": "flex 59 twist 56 angle 117",
+    "leftElbow": "-0.1848,-0.2663,0.1891",
+    "rightFingerHits": [
+      "index_01_r",
+      "index_02_r",
+      "thumb_01_r",
+      "thumb_02_r",
+      "thumb_03_r"
+    ],
+    "leftFingerHits": [
+      "thumb_01_l",
+      "thumb_02_l",
+      "thumb_03_l"
+    ],
+    "weaponNearestZ": 0.015,
+    "rightKnuckleVp": "0.04,-1.70",
+    "leftKnuckleVp": "0.13,-0.64",
+    "boreAtCrosshairM": -1.0,
+    "muzzle": "0.011,-0.139,0.915"
+  },
+  "burst": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 27 twist 13",
+    "rightElbowVp": "2.62,-7.11",
+    "rightElbow": "0.2585,-0.3946,0.1189",
+    "leftErrCm": 0.0,
+    "leftWrist": "swing 30 twist 43",
+    "leftElbowVp": "-0.11,-1.27",
+    "leftElbowJoint": "flex 27 twist 58 angle 155",
+    "leftElbow": "-0.0342,-0.2284,0.3853",
+    "rightFingerHits": [
+      "index_01_r",
+      "index_02_r",
+      "thumb_01_r",
+      "thumb_02_r",
+      "thumb_03_r"
+    ],
+    "leftFingerHits": [
+      "thumb_01_l",
+      "thumb_02_l",
+      "thumb_03_l"
+    ],
+    "weaponNearestZ": 0.198,
+    "rightKnuckleVp": "0.46,-0.85",
+    "leftKnuckleVp": "0.38,-0.37",
+    "boreAtCrosshairM": 19.01,
+    "muzzle": "0.1647,-0.0752,1.1061"
+  },
+  "ads_burst": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 30 twist 18",
+    "rightElbowVp": "behind",
+    "rightElbow": "0.1483,-0.3538,-0.127",
+    "leftErrCm": 0.0,
+    "leftWrist": "swing 31 twist 48",
+    "leftElbowVp": "-1.38,-3.53",
+    "leftElbowJoint": "flex 65 twist 54 angle 111",
+    "leftElbow": "-0.1931,-0.2767,0.1682",
+    "rightFingerHits": [
+      "index_01_r",
+      "index_02_r",
+      "thumb_01_r",
+      "thumb_02_r",
+      "thumb_03_r"
+    ],
+    "leftFingerHits": [
+      "thumb_01_l",
+      "thumb_02_l",
+      "thumb_03_l"
+    ],
+    "weaponNearestZ": -0.03,
+    "rightKnuckleVp": "0.05,-2.04",
+    "leftKnuckleVp": "0.15,-0.65",
+    "boreAtCrosshairM": -1.0,
+    "muzzle": "0.011,-0.1033,0.8769"
+  },
+  "walk": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 26 twist 13",
+    "rightElbowVp": "2.25,-5.92",
+    "rightElbow": "0.2559,-0.3787,0.1371",
+    "leftErrCm": 0.16,
+    "leftWrist": "swing 30 twist 43",
+    "leftElbowVp": "-0.03,-1.16",
+    "leftElbowJoint": "flex 22 twist 60 angle 173",
+    "leftElbow": "-0.0086,-0.2124,0.3924",
+    "rightFingerHits": [
+      "index_01_r",
+      "index_02_r",
+      "thumb_01_r",
+      "thumb_02_r",
+      "thumb_03_r"
+    ],
+    "leftFingerHits": [
+      "thumb_01_l",
+      "thumb_02_l",
+      "thumb_03_l"
+    ],
+    "weaponNearestZ": 0.242,
+    "rightKnuckleVp": "0.44,-0.82",
+    "leftKnuckleVp": "0.37,-0.40",
+    "boreAtCrosshairM": -20.6,
+    "muzzle": "0.1796,-0.1161,1.1443"
+  },
+  "sprint": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 26 twist 12",
+    "rightElbowVp": "2.28,-5.60",
+    "rightElbow": "0.2628,-0.3628,0.139",
+    "leftErrCm": 0.1,
+    "leftWrist": "swing 30 twist 43",
+    "leftElbowVp": "-0.03,-1.09",
+    "leftElbowJoint": "flex 22 twist 60 angle 173",
+    "leftElbow": "-0.0093,-0.1962,0.3859",
+    "rightFingerHits": [
+      "index_01_r",
+      "index_02_r",
+      "thumb_01_r",
+      "thumb_02_r",
+      "thumb_03_r"
+    ],
+    "leftFingerHits": [
+      "thumb_01_l",
+      "thumb_02_l",
+      "thumb_03_l"
+    ],
+    "weaponNearestZ": 0.243,
+    "rightKnuckleVp": "0.43,-0.75",
+    "leftKnuckleVp": "0.35,-0.37",
+    "boreAtCrosshairM": 4.38,
+    "muzzle": "0.1426,-0.1149,1.1445"
+  },
+  "lowered": {
+    "rightErrCm": 0.0,
+    "rightWrist": "swing 29 twist 13",
+    "rightElbowVp": "behind",
+    "rightElbow": "0.2086,-0.3146,-0.1678",
+    "leftErrCm": 0.0,
+    "leftWrist": "swing 32 twist 44",
+    "leftElbowVp": "-0.94,-4.00",
+    "leftElbowJoint": "flex 30 twist 57 angle 149",
+    "leftElbow": "-0.1021,-0.2444,0.131",
+    "rightFingerHits": [
+      "index_01_r",
+      "index_02_r",
+      "thumb_01_r",
+      "thumb_02_r",
+      "thumb_03_r"
+    ],
+    "leftFingerHits": [
+      "thumb_01_l",
+      "thumb_02_l",
+      "thumb_03_l"
+    ],
+    "weaponNearestZ": -0.037,
+    "rightKnuckleVp": "0.61,-2.40",
+    "leftKnuckleVp": "0.36,-1.38",
+    "boreAtCrosshairM": 1.26,
+    "muzzle": "0.0432,-0.4335,0.8483"
+  }
+}
+reference values unchanged (44 keys, reference.json)
+pistol armour mirror re-skinned onto the pistol arms: FP armour field_armguards (54/54 bones on the arms), FP armour field_gloves (54/54 bones on the arms)

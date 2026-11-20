@@ -329,3 +329,22 @@ Run on 20 Nov 01:03 (`rifle_hands-rebase`, `rebaseline,verify --keys body.pose`)
 
 A later pass that deliberately changes `PlayerWeaponPose` (or any other referenced value) needs
 `RifleHandsPass20261120 --steps rebaseline --keys <key>` afterwards.
+
+## Hip framing round 2 (20 Nov 2026, 13:30, Carl: "we show too much of the gun")
+
+Carl compared a native frame (rifle receiver filling the right third of the screen, a large forearm in the lower
+centre) with a reference from another shooter: the rifle low in the lower-right corner, the muzzle reaching towards
+the centre, the support forearm on the handguard and the shooting hand out of frame.
+
+- `HipWeapon` (0.17, −0.15, 0.56) → **(0.26, −0.24, 0.58)**: the old grip point moves from viewport (0.30, −0.46) to
+  about (0.44, −0.72). Bore still converges on the crosshair (`HipConverge` 12, cant −6); `hipOffset` is now
+  (0.26, −0.24, 0.58), `hipEuler` (−4.29, −0.98, −6.02). ADS is unchanged.
+- The arm search had to follow: at the old shoulder options the support arm fell 4.7 cm short. `HipShoulderXs`
+  {.07, −.03} → {.12, .17, .22}, `HipShoulderYs` {−.25, −.30} → {−.25, −.30, −.34}, `HipMidZs` {.06, 0} →
+  {.06, .10, .14}. Chosen of 108: mid-shoulder (0.12, −0.25, 0.10), aim z −0.13. Support hand 0.22 cm off its grip
+  at the hip (0.15 before), wrists swing 17/20° (26/30° before).
+- Installs `fpframe-A`/`-B` (shoulder options too narrow, rejected), `fpframe-C` (kept); `verify` PASS (`fpframe-verify`).
+  Blender review renders in `unity/evidence/showcase_phase2/20261120/rifle_hands/review/fpC/`.
+- Rollback of only this round: `--hipw 0.17,-0.15,0.56` with the old arrays, then `install`.
+
+Carl, 20 Nov, on `fpframe_compare.png`: "i think it looks better". Not yet played with real input.

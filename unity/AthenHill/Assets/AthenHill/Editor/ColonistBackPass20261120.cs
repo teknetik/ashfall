@@ -112,6 +112,7 @@ namespace AthenHill.Editor
         // ------------------------------------------------------------------ install
         static string Install()
         {
+            HeroBasePass20261120.Guard("ColonistBackPass20261120 install");
             var rb = Path.Combine(ArtDir, "rollback"); Directory.CreateDirectory(rb);
             var record = new Dictionary<string, object>(); var copied = new List<string>();
             var shaFile = Path.Combine(rb, "sha256.json");
@@ -250,6 +251,7 @@ namespace AthenHill.Editor
         // ------------------------------------------------------------------ rollback
         static string Rollback()
         {
+            HeroBasePass20261120.Guard("ColonistBackPass20261120 rollback");
             var rb = Path.Combine(ArtDir, "rollback"); var restored = new List<string>();
             foreach (var (file, asset) in Files)
             {

@@ -1766,3 +1766,53 @@ collide: `Caravan stock/COL_barrels` (west barrel) plus `Gate barrels colliders/
 - Rollback: `--steps rollback` restores both boxes and transforms from `art/gate_barrels_20261120/record.json` and
   removes the added collider, the cameras and the landmarks (tested). Review cameras `cam_gb_*`; QA landmarks
   `gb_<line>_a/_b`; native check `unity/tools/check_gate_barrels.py`.
+
+## Hero base: the player body (20 November 2026)
+
+The player is a new body: a Rodin 2.5 mesh from a concept sheet, on its own Meshy rig, with a repainted face and the
+tutorial armour set re-fitted to it. Record: `art/hero_base_20261120/README.md` (what it is, how it was made, checks,
+open defects). It replaces the MPFB2 body described under "MPFB2 player and the tutorial armour set"; the sections on
+that body, "Colonist seen from behind" and the player parts of the phase 2 sections describe systems that still run
+(installers, grips, view models, arm corrector), but their body-specific recipes (MPFB blends, `fitlib.load_final`,
+`art/colonist_back_20261120/build.sh`) no longer produce the installed files.
+
+| What | Where to edit | Rebuild |
+| --- | --- | --- |
+| Look, build, clothing of the body | `art/hero_base_20261120/concept/p_hero_sheet_v1.txt`, then a new Rodin run (settings in the README) and a new Meshy rig (`rig/hero_rig.py`) | everything below, and the armour re-fit |
+| Face, skin and hair colour | repainted views in `face/tight/out_*_v1.png`; projection and tone match in `face/face_project.py` | `face_project.py`, `finish_textures.py`, `build_hero.py` |
+| Normal strength on face and skin, skin roughness, the painted-out hem tag | constants in `build/finish_textures.py` | `finish_textures.py`, `build_hero.py` |
+| Triangle count, wrist joints, finger roll, hand weights, idle/walk/run in the file | `build/build_hero.py` (`tris=`, `fix_wrist`, the clip section) | `build_hero.py`, `check_hero.py` |
+| Armour fit | `art/hero_base_20261120/armour/` (its README lists each piece's script and constants) | the piece's fit script; it must export from the current `build/hero.blend` |
+| A new library clip for the player | add the Meshy action id to `CLIPS` in `rig/hero_rig.py` and run it (3 credits), `build/slim_clip.py` it to `Art/CharacterMotion/Source/Player/Player_<name>.glb`, add `<name>` to the clip list that uses it (`CharacterFeelPass.PlayerClips` or `RifleArmourInstall.Clips`) | `install.sh main arms rh rh-base` |
+| Finger thickness the grip solvers assume | `PlayerFace20261003.cs` (`SolveFingers`, the hand capsules), `RifleHandsPass20261120.FingerRadius`/`ThumbRadius`; applied by `art/hero_base_20261120/unity/apply.py` | `install.sh rh-rollback main arms rh rh-base` |
+| Height in the game | `MainCharacterInstall.Height` (1.8) plus the controller capsule, `FollowCamera` heights and `ConversationCamera.playerHeadHeight` | `install.sh rh-rollback main arms rh rh-base` |
+
+```
+B=~/.local/state/ward-programme/showcase-phase2-20261120/blender.sh; H=$PWD/art/hero_base_20261120
+$B $H/build/finish_textures.py && $B $H/build/build_hero.py -- tris=80000 && $B $H/build/check_hero.py -- $H/build/out/colonist.glb $H/build/renders
+art/hero_base_20261120/unity/install.sh all      # code rh-rollback files main check arms rh rh-base verify
+art/hero_base_20261120/unity/install.sh tests
+```
+
+Rules that are easy to break:
+
+- **The file contract.** `colonist.glb` must keep: root node `Armature`, mesh `char1`, the 24 game bones plus the 30
+  finger bones named `{index,middle,ring,pinky,thumb}_{01,02,03}_{l,r}` (54 joints), fingers that close with a positive
+  rotation about local X, one material named `PlayerSkin`, legacy clips `idle`, `walk`, `run`, 40k-90k triangles.
+  `build_hero.py` produces this and `check_hero.py` renders a fist to prove the finger roll; `HeroBasePass20261120
+  verify` audits the installed result.
+- **Armour shares the body's bind poses.** `TutorialSetInstall.Attach` refuses a piece whose bind pose differs from the
+  body's by more than 0.01. Export every piece together with the armature from the same `build/hero.blend` that
+  produced the installed `colonist.glb`. If `build_hero.py` changes a bone (it did once: the left wrist), re-export
+  all seven pieces.
+- **Order of the installers.** `RifleHandsPass20261120 rollback` before `MainCharacterInstall`; `CharacterArmsPass20261120
+  install` and `RifleHandsPass20261120 install` after it (the corrector and the rifle arms live on objects the main
+  install rebuilds). `install.sh` does this. `RifleHandsPass20261120 verify` needs `rebaseline` after any change to the
+  body (`install.sh rh-base`).
+- **Do not run** `ColonistBackPass20261120 install` or `rollback`, `PlayerFace20261003 --steps rollback`, or
+  `art/tutorial_set_20261002/blender/rebuild_*.sh` expecting them to update the player: the first three refuse while
+  the hero base is installed (they copy the previous body's files), the scripts build the previous body.
+- **The base is dressed.** Shirt, trousers and boots are part of the body mesh and its one texture set. A different
+  outfit is a retexture of `build/tex/hero_base.png` or a new generation, not a new mesh layer.
+- **Previous body.** `art/hero_base_20261120/unity/install.sh rollback` restores the 21 replaced files from
+  `rollback/assets/` and re-runs the installers; then `unity/apply.py --revert`.
