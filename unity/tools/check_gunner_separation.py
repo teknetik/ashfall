@@ -89,6 +89,7 @@ def main():
         qa.wait_menu(); qa.focus(); qa.tap('Return'); qa.wait(lambda: qa.state() == 'Play', 40, what='Play after Continue'); qa.release_all()
         qa.cmd('resize', width=1920, height=1080); time.sleep(1.5)
         qa.cmd('timeSet', hour=13); qa.cmd('timePause', paused=True)
+        for w in ('weapon_scrap_pistol', 'weapon_field_rifle'): qa.cmd('dev.weapon.condition', weaponId=w, full=True)  # Phase 3: condition wears per shot; start every run at full condition
         qa.goto('relay_knoll_approach'); qa.view('follow'); time.sleep(.5)
         here = qa.pos(); centre = (here[0], here[2])
         # the nest activates within 75 m; give it a moment to spawn
@@ -111,7 +112,8 @@ def main():
         ok(worst is not None and worst[0] >= MIN_SEPARATION, f'pairwise separation stays >= {MIN_SEPARATION} m over 20 s', {'worst': worst, 'samples': len(report['samples'])})
         ok(stuck == 0, 'no droid ever sits at another droid\'s position', stuck)
         # step in until the gunners engage so their bars (tier-tinted) show, then capture
-        qa.tap('7', settle=.6); ok(qa.snap()['combat']['Armed'], 'pistol drawn with 7')
+        # The scrap pistol is hotbar key 2 since the 5 Oct 2026 hotbar (it was 7 when this check was written).
+        qa.tap('2', settle=.6); ok(qa.snap()['combat']['Armed'], 'pistol drawn with 2')
         qa.goto('relay_knoll_approach'); qa.view('follow'); qa.face(centre[0], centre[1]); time.sleep(.3); qa.hold('w', 2.5)   # enemies agent, nl1 fix: the player may be back at the gate here; approach from the landmark instead of a 200 m walk
         qa.wait(lambda: any(e['state'] not in ('Idle', 'Returning') for e in near_knoll(qa.snap(), centre)), 12, what='nest engages')
         time.sleep(.8); s = qa.snap(); engaged = [e for e in near_knoll(s, centre) if e['alive']]

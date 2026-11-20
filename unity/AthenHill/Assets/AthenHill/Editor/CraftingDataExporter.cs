@@ -32,15 +32,18 @@ namespace AthenHill.Editor
     // Additive to schema 1: rarity/sellOnly/icon on items, all base stats and bounds on weapons, recipe groups,
     // loot min/max quantity, bad-luck protection and first-collection guarantees. "quantity" mirrors minQuantity.
     // 3 Oct 2026: craftSeconds on recipes (bench time; 0 = instant).
+    // 20 Nov 2026: requiredTools (item ids or tool tags), skill, craftXp and skillUse on recipes; stations carry their fixed tools.
     // 30 Sep 2026: partsPrice on items (Basic General Buy parts; 0 = not stocked) and the Foreman's two escorts.
     items=city.items.Select((x,i)=>new{x.id,x.name,x.description,tags=x.tags??Array.Empty<string>(),x.maxStack,x.excludeFromTrade,x.buyPrice,x.sellPrice,x.startingQuantity,rarity=x.rarity.ToString(),x.sellOnly,x.icon,x.partsPrice,x.weightKg,catalogIndex=i}).ToArray(),
-    weapons=craft.weapons.Select(x=>new{x.id,x.name,baseStats=Stats(x.stats),minStats=Stats(x.minStats),maxStats=Stats(x.maxStats),x.slots,stateSource="PlayerCombat.hasPistol"}).ToArray(),
+    weapons=craft.weapons.Select(x=>new{x.id,x.name,baseStats=Stats(x.stats),minStats=Stats(x.minStats),maxStats=Stats(x.maxStats),x.slots,x.wearPerShot,stateSource="PlayerCombat.hasPistol"}).ToArray(),
+    // 20 Nov 2026 (Phase 3): wearPerShot on weapons and the catalog's condition rules (field repair, overhaul).
+    condition=craft.condition,
     modifiers=craft.modifiers,stations=craft.stations,
     // Optional authoring context: same stable item/slot IDs used by the character runtime.
     character=character?new{character.basePackSlots,character.slots,character.equipment,character.modifications,
      stats=character.attributes.Select(x=>new{x.id,x.label}).Concat(character.skills.Select(x=>new{x.id,x.label})).Concat(character.derivedStats.Select(x=>new{x.id,x.label})).ToArray(),
      modifierPercentConvention="fraction: 0.08 means +8%"}:null,
-    recipes=craft.recipes.Select(x=>new{x.id,x.name,group=x.group.ToString(),x.stationId,x.requiresWeaponId,x.outputItemId,x.outputQuantity,x.inputs,x.knownByDefault,x.unlocks,x.lockedHint,x.craftSeconds}).ToArray(),
+    recipes=craft.recipes.Select(x=>new{x.id,x.name,group=x.group.ToString(),x.stationId,x.requiresWeaponId,x.outputItemId,x.outputQuantity,x.inputs,x.knownByDefault,x.unlocks,x.lockedHint,x.craftSeconds,x.requiredTools,x.skill,x.craftXp,x.skillUse}).ToArray(),
     lootTables=craft.lootTables.Select(t=>new{t.id,entries=t.entries.Select(e=>new{e.itemId,quantity=e.minQuantity,e.minQuantity,maxQuantity=Math.Max(e.minQuantity,e.maxQuantity),e.chance,e.pityAfter,e.guaranteeUntilCollected}).ToArray()}).ToArray(),
     enemies=new[]{new{id="feral_scrap_drone",prefab="Assets/AthenHill/Prefabs/OuterBerms/FeralScrapDrone.prefab",lootTableId="loot_feral_scrap_drone"},new{id="feral_worker_droid",prefab="Assets/AthenHill/Prefabs/OuterBerms/FeralWorkerDroid.prefab",lootTableId="loot_feral_worker_droid"},new{id="depot_foreman",prefab="Assets/AthenHill/Prefabs/OuterBerms/FeralDepotForeman.prefab",lootTableId="loot_depot_foreman"}},
     encounters=new object[]{new{id="first_contact",spawns=new[]{"feral_scrap_drone"},tutorial=true},new{id="machine_depot",spawns=new[]{"feral_worker_droid","feral_worker_droid","feral_scrap_drone"},tutorial=true},new{id="depot_foreman",spawns=new[]{"depot_foreman","feral_worker_droid","feral_worker_droid"},fieldOrder="order_depot_foreman"}},
@@ -49,7 +52,7 @@ namespace AthenHill.Editor
    var recipe=craft.recipes.Single(x=>x.id=="recipe_grip_stabilised_pistol");
    var pack=new ShopModel(city.items);
    var model=new CraftingModel(craft,city.items,pack,()=>true);
-   model.Acquire("droid_servo_damaged");
+   model.Identify("npc_ossa:servo_look");
    var initial=new[]{new KeyValuePair<string,int>("droid_servo_damaged",1),new KeyValuePair<string,int>("scrap_alloy",2),new KeyValuePair<string,int>("nanite_residue",5)};
    if(!pack.TryApply(initial,0,out _)||!model.TryCraft(recipe.id,recipe.stationId,out _)||!model.TryFit("grip_stabilised_pistol",out _)||model.RecoilStat!=31)throw new Exception("Runtime parity vector failed");
    var random=new LootRng(1729);
@@ -65,8 +68,16 @@ namespace AthenHill.Editor
    AssetDatabase.Refresh();Debug.Log("CRAFT_EXPORT validated runtime data and wrote "+Root);
   }
   static Dictionary<string,float> Stats(WeaponStats s)=>WeaponStats.Ids.Select((id,i)=>(id,i)).ToDictionary(x=>x.id,x=>s[x.i]);
+  /// A tool entry is an item id or a tool tag that some item carries or some station provides.
+  static bool ValidTool(CityCatalog city,CraftingCatalog craft,string id)=>!string.IsNullOrEmpty(id)&&(city.items.Any(x=>x.id==id||x.tags!=null&&x.tags.Contains(id))||craft.stations.Any(s=>s.tools!=null&&s.tools.Contains(id)));
   public static void Validate(CityCatalog city,CraftingCatalog craft)
   {
+   if(craft.nodeGifts!=null&&craft.nodeGifts.Any(g=>g==null||string.IsNullOrEmpty(g.topic)||!city.items.Any(x=>x.id==g.itemId)))throw new Exception("Invalid node gift");
+   var rules=craft.condition;
+   if(rules==null||rules.repairAmounts==null||rules.repairAmounts.Any(x=>x<0||float.IsNaN(x))||rules.capLossPerRepair<0||rules.repairSeconds<0||rules.misfireMaxChance<0||rules.misfireMaxChance>1||rules.spreadMaxScale<1
+    ||!ValidTool(city,craft,rules.repairTool)||(rules.overhaulInputs??new CraftIngredient[0]).Any(i=>i==null||i.quantity<1||(i.kind=="item"?!city.items.Any(x=>x.id==i.id):!city.items.Any(x=>x.tags!=null&&x.tags.Contains(i.id))))
+    ||!string.IsNullOrEmpty(rules.overhaulStationId)&&!craft.stations.Any(x=>x.id==rules.overhaulStationId))throw new Exception("Invalid weapon condition rules");
+   if(craft.weapons.Any(w=>w.wearPerShot<0||float.IsNaN(w.wearPerShot)))throw new Exception("Invalid wearPerShot");
    string[] legacy={"water_flask","medkit","scrap_coil"};
    if(city.items.Length<9||!city.items.Take(3).Select(x=>x.id).SequenceEqual(legacy))throw new Exception("Legacy shop rows changed");
    if(city.items.Any(x=>x==null||!System.Text.RegularExpressions.Regex.IsMatch(x.id??"","^[a-z][a-z0-9_]*$")||x.maxStack<0)||city.items.Select(x=>x.id).Distinct().Count()!=city.items.Length)throw new Exception("Invalid or duplicate item ID/cap");
@@ -76,10 +87,11 @@ namespace AthenHill.Editor
     if(!ids.Contains(recipe.outputItemId)||recipe.outputQuantity<1||!craft.stations.Any(x=>x.id==recipe.stationId)||!string.IsNullOrEmpty(recipe.requiresWeaponId)&&!craft.weapons.Any(x=>x.id==recipe.requiresWeaponId))throw new Exception("Recipe reference invalid: "+recipe.id);
     if(craft.recipes.Count(x=>x.id==recipe.id)!=1)throw new Exception("Duplicate recipe: "+recipe.id);
     if(float.IsNaN(recipe.craftSeconds)||recipe.craftSeconds<0||recipe.craftSeconds>600)throw new Exception("Craft time out of range (0-600 s): "+recipe.id);
-    if(recipe.requiredTools!=null&&recipe.requiredTools.Any(id=>!ids.Contains(id)))throw new Exception("Invalid recipe tool: "+recipe.id);
+    if(recipe.requiredTools!=null&&recipe.requiredTools.Any(id=>!ValidTool(city,craft,id)))throw new Exception("Invalid recipe tool: "+recipe.id);
+    if(recipe.craftXp<0||float.IsNaN(recipe.skillUse)||recipe.skillUse<0||recipe.skillUse>craft.useGainCap*4||(recipe.craftXp>0||recipe.skillUse>0)&&string.IsNullOrEmpty(recipe.skill))throw new Exception("Invalid skill/XP on recipe: "+recipe.id);
     if(recipe.requiredSchematics!=null&&recipe.requiredSchematics.Any(id=>!craft.recipes.Any(r=>r.id==id)))throw new Exception("Invalid prerequisite schematic: "+recipe.id);
     if(!string.IsNullOrEmpty(recipe.outputWeaponId)&&!craft.weapons.Any(w=>w.id==recipe.outputWeaponId&&w.itemId==recipe.outputItemId&&recipe.outputQuantity==1&&recipe.outputSlots!=null&&recipe.outputSlots.All(s=>!string.IsNullOrEmpty(s))&&recipe.outputSlots.Distinct().Count()==recipe.outputSlots.Length))throw new Exception("Invalid weapon schematic: "+recipe.id);
-    if(recipe.unlocks!=null)foreach(var u in recipe.unlocks)if(u==null||u.type!="acquireItem"&&u.type!="orderStart"||u.type=="acquireItem"&&!ids.Contains(u.id))throw new Exception("Invalid unlock on "+recipe.id);
+    if(recipe.unlocks!=null)foreach(var u in recipe.unlocks)if(u==null||u.type!="acquireItem"&&u.type!="orderStart"&&u.type!="identify"&&u.type!="magazine"||u.type=="acquireItem"&&!ids.Contains(u.id))throw new Exception("Invalid unlock on "+recipe.id);
     if(recipe.inputs.Select(x=>x.kind+":"+x.id).Distinct().Count()!=recipe.inputs.Length)throw new Exception("Duplicate ingredient");
     foreach(var input in recipe.inputs)
      if(input.quantity<1||input.kind=="item"&&(!ids.Contains(input.id)||input.id==recipe.outputItemId)||input.kind=="tag"&&!city.items.Any(x=>x.tags!=null&&x.tags.Contains(input.id))||input.kind!="item"&&input.kind!="tag")throw new Exception("Invalid ingredient: "+input.id);
@@ -88,7 +100,7 @@ namespace AthenHill.Editor
    foreach(var mod in craft.modifiers)
    {
     if(!ids.Contains(mod.itemId)||mod.weaponIds==null||!mod.weaponIds.All(w=>craft.weapons.Any(x=>x.id==w&&((craft.recipes.FirstOrDefault(r=>r.outputWeaponId==w&&(string.IsNullOrEmpty(x.recipeId)||r.id==x.recipeId))?.outputSlots??x.slots)?.Contains(mod.slot)??false))))throw new Exception("Invalid modifier: "+mod.id);
-    if(mod.requiredTools!=null&&mod.requiredTools.Any(id=>!ids.Contains(id)))throw new Exception("Invalid modifier tool: "+mod.id);
+    if(mod.requiredTools!=null&&mod.requiredTools.Any(id=>!ValidTool(city,craft,id)))throw new Exception("Invalid modifier tool: "+mod.id);
     if(mod.effects==null||mod.effects.Any(e=>WeaponStats.IndexOf(e.stat)<0||e.op!="add"&&e.op!="percent"))throw new Exception("Invalid modifier effect: "+mod.id);
    }
    foreach(var table in craft.lootTables)foreach(var entry in table.entries)

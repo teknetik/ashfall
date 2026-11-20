@@ -35,7 +35,7 @@ MonoBehaviour:
       reloadTime: 0
       heatGeneration: 0
       cooling: 0
-      durability: 0
+      durability: 100
       armourPenetration: 0
     minStats:
       damage: 1
@@ -79,6 +79,7 @@ MonoBehaviour:
     - grip
     - barrel
     - cell
+    wearPerShot: 0.15
   - id: weapon_field_rifle
     name: Field Rifle
     itemId: field_rifle
@@ -144,6 +145,7 @@ MonoBehaviour:
     slots:
     - barrel
     - cell
+    wearPerShot: 0.2
   modifiers:
   - id: mod_rifle_precision_barrel
     itemId: rifle_precision_barrel
@@ -264,6 +266,12 @@ MonoBehaviour:
   stations:
   - id: station_field_fabricator
     name: Salvage workbench
+    tools:
+    - tool:vise
+    - tool:grinder
+    - tool:solder
+    - tool:nanite_press
+    - tool:welder
   recipes:
   - id: recipe_field_rifle
     name: Field Rifle
@@ -299,6 +307,9 @@ MonoBehaviour:
     group: 3
     lockedHint: Ossa's Long Arm order. A Warden rifle receiver from the relay-knoll gunners, then Brann's bench.
     craftSeconds: 20
+    skill: engineering
+    craftXp: 25
+    skillUse: 1.5
   - id: recipe_rifle_precision_barrel
     name: Precision Rifle Barrel
     stationId: station_field_fabricator
@@ -326,6 +337,9 @@ MonoBehaviour:
     group: 4
     lockedHint: 
     craftSeconds: 12
+    skill: engineering
+    craftXp: 15
+    skillUse: 1
   - id: recipe_wound_coil
     name: Wound Copper Coil
     stationId: station_field_fabricator
@@ -351,6 +365,9 @@ MonoBehaviour:
     group: 0
     lockedHint: Ossa issues this schematic with her Keep the Charge order.
     craftSeconds: 4
+    skill: electronics
+    craftXp: 3
+    skillUse: 0.5
   - id: recipe_charge_cell_core
     name: Charge Cell Core
     stationId: station_field_fabricator
@@ -381,6 +398,9 @@ MonoBehaviour:
     group: 0
     lockedHint: Recover a micro capacitor from a scrap drone to learn this.
     craftSeconds: 5
+    skill: electronics
+    craftXp: 4
+    skillUse: 0.5
   - id: recipe_alloy_plate
     name: Refined Alloy Plate
     stationId: station_field_fabricator
@@ -408,6 +428,9 @@ MonoBehaviour:
     group: 0
     lockedHint: Ossa issues this schematic with her Warden Kit and Bore It True orders.
     craftSeconds: 6
+    skill: engineering
+    craftXp: 3
+    skillUse: 0.5
   - id: recipe_grip_stabilised_pistol
     name: Stabilised Pistol Grip
     stationId: station_field_fabricator
@@ -428,14 +451,18 @@ MonoBehaviour:
     outputQuantity: 1
     knownByDefault: 0
     unlocks:
-    - type: acquireItem
-      id: droid_servo_damaged
+    - type: identify
+      id: npc_ossa:servo_look
     requirements: []
-    requiredTools: []
+    requiredTools:
+    - tool:screwdriver
     requiredSchematics: []
     group: 1
-    lockedHint: Salvage a worker-droid servo at the machine depot to learn this.
+    lockedHint: Show a salvaged worker-droid servo to Warden Ossa to learn this.
     craftSeconds: 8
+    skill: engineering
+    craftXp: 12
+    skillUse: 1
   - id: recipe_cell_salvaged_capacitor
     name: Salvaged Capacitor Cell
     stationId: station_field_fabricator
@@ -461,6 +488,9 @@ MonoBehaviour:
     group: 1
     lockedHint: Ossa issues this schematic with her Keep the Charge order.
     craftSeconds: 9
+    skill: electronics
+    craftXp: 10
+    skillUse: 1
   - id: recipe_barrel_bored_alloy
     name: Bored Alloy Barrel
     stationId: station_field_fabricator
@@ -486,6 +516,9 @@ MonoBehaviour:
     group: 1
     lockedHint: Ossa issues this schematic with her Bore It True order.
     craftSeconds: 10
+    skill: engineering
+    craftXp: 10
+    skillUse: 1
   - id: recipe_grip_gyro_braced
     name: Gyro-Braced Grip
     stationId: station_field_fabricator
@@ -511,6 +544,9 @@ MonoBehaviour:
     group: 2
     lockedHint: Ossa thinks the depot foreman's control core still holds Mark II schematics.
     craftSeconds: 11
+    skill: robotics
+    craftXp: 14
+    skillUse: 1
   - id: recipe_barrel_lattice_focused
     name: Lattice-Focused Barrel
     stationId: station_field_fabricator
@@ -542,6 +578,9 @@ MonoBehaviour:
     group: 2
     lockedHint: Ossa thinks the depot foreman's control core still holds Mark II schematics.
     craftSeconds: 12
+    skill: nanotechnology
+    craftXp: 14
+    skillUse: 1
   - id: recipe_cell_overclocked
     name: Overclocked Charge Cell
     stationId: station_field_fabricator
@@ -567,6 +606,9 @@ MonoBehaviour:
     group: 2
     lockedHint: Ossa thinks the depot foreman's control core still holds Mark II schematics.
     craftSeconds: 12
+    skill: electronics
+    craftXp: 14
+    skillUse: 1
   - id: recipe_field_helmet
     name: Field Helmet
     stationId: station_field_fabricator
@@ -598,6 +640,9 @@ MonoBehaviour:
     group: 5
     lockedHint: Ossa's Warden Kit orders. Webbing from the Berms heaps, liner from the wrecks, rivets from the droids.
     craftSeconds: 15
+    skill: engineering
+    craftXp: 10
+    skillUse: 0.75
   - id: recipe_field_armguards
     name: Field Arm Guards
     stationId: station_field_fabricator
@@ -626,6 +671,9 @@ MonoBehaviour:
     group: 5
     lockedHint: Ossa's Warden Kit orders. Webbing from the Berms heaps, rivets from the droids.
     craftSeconds: 20
+    skill: engineering
+    craftXp: 12
+    skillUse: 0.75
   - id: recipe_field_gloves
     name: Field Gloves
     stationId: station_field_fabricator
@@ -657,6 +705,9 @@ MonoBehaviour:
     group: 5
     lockedHint: Ossa's Warden Kit orders. Webbing from the Berms heaps, liner from the wrecks, rivets from the droids.
     craftSeconds: 16
+    skill: engineering
+    craftXp: 10
+    skillUse: 0.75
   - id: recipe_field_leggings
     name: Field Leg Armour
     stationId: station_field_fabricator
@@ -688,6 +739,9 @@ MonoBehaviour:
     group: 5
     lockedHint: Ossa's Warden Kit orders. The far wrecks and outpost lockers still hold liner.
     craftSeconds: 25
+    skill: engineering
+    craftXp: 14
+    skillUse: 0.75
   - id: recipe_canvas_rucksack
     name: Stitched Canvas Rucksack
     stationId: station_field_fabricator
@@ -716,6 +770,9 @@ MonoBehaviour:
     group: 6
     lockedHint: "Field Supply's magazine shelf: Packcraft Quarterly \xB7 Issue 12."
     craftSeconds: 12
+    skill: engineering
+    craftXp: 6
+    skillUse: 0.5
   - id: recipe_pack_side_pouches
     name: Side Pouch Pair
     stationId: station_field_fabricator
@@ -741,6 +798,9 @@ MonoBehaviour:
     group: 6
     lockedHint: "Field Supply's magazine shelf: Packcraft Quarterly \xB7 Issue 12."
     craftSeconds: 6
+    skill: engineering
+    craftXp: 3
+    skillUse: 0.5
   - id: recipe_pack_hip_belt
     name: Padded Hip Belt
     stationId: station_field_fabricator
@@ -769,6 +829,9 @@ MonoBehaviour:
     group: 6
     lockedHint: "Field Supply's magazine shelf: Packcraft Quarterly \xB7 Issue 12."
     craftSeconds: 6
+    skill: engineering
+    craftXp: 3
+    skillUse: 0.5
   - id: recipe_frame_pack
     name: Karaveen Frame Pack
     stationId: station_field_fabricator
@@ -802,6 +865,9 @@ MonoBehaviour:
     group: 6
     lockedHint: "Field Supply's magazine shelf: Karaveen Freight Notes \xB7 Vol. 3."
     craftSeconds: 16
+    skill: engineering
+    craftXp: 8
+    skillUse: 0.5
   - id: recipe_porter_carrier
     name: Porter's Load Carrier
     stationId: station_field_fabricator
@@ -838,6 +904,9 @@ MonoBehaviour:
     group: 6
     lockedHint: "Field Supply's magazine shelf: Karaveen Freight Notes \xB7 Vol. 3."
     craftSeconds: 20
+    skill: engineering
+    craftXp: 10
+    skillUse: 0.5
   - id: recipe_pack_nanoweave_pouch
     name: Nanoweave Expansion Pouch
     stationId: station_field_fabricator
@@ -868,6 +937,9 @@ MonoBehaviour:
     group: 6
     lockedHint: "Field Supply's magazine shelf: Nanoweave Monthly \xB7 Load Tech."
     craftSeconds: 10
+    skill: nanotechnology
+    craftXp: 7
+    skillUse: 0.5
   - id: recipe_pack_servo_lifter
     name: Servo Load Lifter
     stationId: station_field_fabricator
@@ -901,6 +973,9 @@ MonoBehaviour:
     group: 6
     lockedHint: "Field Supply's magazine shelf: Nanoweave Monthly \xB7 Load Tech."
     craftSeconds: 14
+    skill: robotics
+    craftXp: 8
+    skillUse: 0.5
   - id: recipe_courier_cargo_rig
     name: Courier Cargo Rig
     stationId: station_field_fabricator
@@ -942,6 +1017,9 @@ MonoBehaviour:
     group: 6
     lockedHint: "Field Supply's magazine shelf: Nanoweave Monthly \xB7 Load Tech."
     craftSeconds: 25
+    skill: nanotechnology
+    craftXp: 12
+    skillUse: 0.75
   - id: recipe_armour_impact_liner
     name: Impact Liner
     stationId: station_field_fabricator
@@ -970,6 +1048,9 @@ MonoBehaviour:
     group: 7
     lockedHint: "Field Supply's magazine shelf: Ward Armourer's Digest \xB7 Liners & Plates."
     craftSeconds: 8
+    skill: engineering
+    craftXp: 6
+    skillUse: 0.5
   - id: recipe_armour_thermal_liner
     name: Thermal Liner
     stationId: station_field_fabricator
@@ -998,6 +1079,9 @@ MonoBehaviour:
     group: 7
     lockedHint: "Field Supply's magazine shelf: Ward Armourer's Digest \xB7 Liners & Plates."
     craftSeconds: 8
+    skill: nanotechnology
+    craftXp: 6
+    skillUse: 0.5
   - id: recipe_armour_extra_plate
     name: Ablative Chest Plate
     stationId: station_field_fabricator
@@ -1023,6 +1107,9 @@ MonoBehaviour:
     group: 7
     lockedHint: "Field Supply's magazine shelf: Ward Armourer's Digest \xB7 Liners & Plates."
     craftSeconds: 10
+    skill: engineering
+    craftXp: 8
+    skillUse: 0.5
   lootTables:
   - id: loot_feral_scrap_drone
     entries:
@@ -1690,6 +1777,35 @@ MonoBehaviour:
       chance: 1
       pityAfter: 0
       guaranteeUntilCollected: 0
+  nodeGifts:
+  - topic: npc_brann:toolkit
+    itemId: field_toolkit
+    flag: brann_toolkit
+    quantity: 1
+  useGainCap: 1.5
+  useRepeatFactor: 0.5
+  condition:
+    spreadBelow: 50
+    spreadMaxScale: 2
+    misfireBelow: 30
+    misfireMaxChance: 0.35
+    repairAmounts:
+    - 30
+    - 20
+    - 12
+    - 6
+    capLossPerRepair: 8
+    brokenBelow: 70
+    repairSeconds: 4
+    repairTool: tool:screwdriver
+    overhaulStationId: station_field_fabricator
+    overhaulInputs:
+    - kind: item
+      id: scrap_alloy
+      quantity: 3
+    - kind: tag
+      id: nanite:tier1
+      quantity: 4
   slotLabels:
   - id: grip
     label: Grip
@@ -1708,6 +1824,18 @@ MonoBehaviour:
     label: Any capacitor
   - id: component:optic
     label: Any optic lens
+  - id: tool:screwdriver
+    label: Screwdriver
+  - id: tool:vise
+    label: Bench vise
+  - id: tool:grinder
+    label: Bench grinder
+  - id: tool:solder
+    label: Soldering station
+  - id: tool:nanite_press
+    label: Nanite press
+  - id: tool:welder
+    label: Bench welder
   groupLabels:
   - id: Component
     label: Refined components

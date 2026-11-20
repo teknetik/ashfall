@@ -81,8 +81,8 @@ namespace AthenHill.Tests
    var modal=root.Q("fabricator-panel");
    var tabStops=modal.Query<Button>().ToList().Where(b=>b.focusable).Select(b=>b.name).ToList();
    Assert.That(tabStops[0],Does.StartWith("fab-recipe-"));
-   Assert.That(tabStops.Skip(1).Take(3),Is.EqualTo(new[]{"fabricator-craft","fabricator-fit","fabricator-remove"}));
-   Assert.That(tabStops.Skip(4),Is.EqualTo(new[]{"fab-slot-grip","fab-slot-barrel","fab-slot-cell"}));
+   Assert.That(tabStops.Skip(1).Take(4),Is.EqualTo(new[]{"fabricator-craft","fabricator-fit","fabricator-remove","fabricator-overhaul"}),"phase 3 added the weapon overhaul action after the others");
+   Assert.That(tabStops.Skip(5),Is.EqualTo(new[]{"fab-slot-grip","fab-slot-barrel","fab-slot-cell"}));
   }
 
   [Test] public void FabricatorActionsWorkOnTheVisiblySelectedModAndKeepFocus()

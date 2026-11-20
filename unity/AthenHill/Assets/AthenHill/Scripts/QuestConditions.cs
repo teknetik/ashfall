@@ -14,6 +14,10 @@ namespace AthenHill
   /// The current order's report-to colonist has been visited (FieldOrder.reportTo).
   bool CurrentReported {get;}
   bool HasFlag(string id);
+  /// The pack holds at least one of this item (default: nothing is carried).
+  bool HasItem(string itemId)=>false;
+  /// This schematic is known (default: none).
+  bool KnowsRecipe(string recipeId)=>false;
  }
  /// Dialogue conditions (NpcDefinition entries and choices): comma-separated terms that must all hold; "!" negates one.
  ///  primer          the Outer Berms primer is complete
@@ -23,10 +27,12 @@ namespace AthenHill
  ///  reported        the current order's report-to colonist has been visited
  ///  freeplay        every field order is done
  ///  flag:ID         a story flag set by a dialogue choice (saved)
+ ///  carry:ITEM      the pack holds that item (20 Nov 2026)
+ ///  recipe:ID       that schematic is known (20 Nov 2026)
  /// e.g. "order:order_steady_hands, !reported" or "primer, !flag:brann_met".
  public static class QuestConditions
  {
-  static readonly HashSet<string> Keys=new HashSet<string>{"primer","pistol","order","stage","reported","freeplay","flag"};
+  static readonly HashSet<string> Keys=new HashSet<string>{"primer","pistol","order","stage","reported","freeplay","flag","carry","recipe"};
   public static bool Evaluate(string expression,IQuestState state)
   {
    if(string.IsNullOrWhiteSpace(expression))return true;
@@ -56,6 +62,8 @@ namespace AthenHill
     case "reported":return s.CurrentReported;
     case "freeplay":return s.Stage==OrderStage.FreePlay;
     case "flag":return !string.IsNullOrEmpty(value)&&s.HasFlag(value);
+    case "carry":return !string.IsNullOrEmpty(value)&&s.HasItem(value);
+    case "recipe":return !string.IsNullOrEmpty(value)&&s.KnowsRecipe(value);
     default:Debug.LogWarning("Unknown dialogue condition: "+term);return false;
    }
   }
@@ -68,7 +76,7 @@ namespace AthenHill
     var term=raw.Trim().TrimStart('!').Trim();if(term.Length==0)continue;
     Split(term,out var key,out var value);
     if(!Keys.Contains(key))yield return term;
-    else if((key=="order"||key=="flag"||key=="stage")&&string.IsNullOrEmpty(value))yield return term;
+    else if((key=="order"||key=="flag"||key=="stage"||key=="carry"||key=="recipe")&&string.IsNullOrEmpty(value))yield return term;
     else if(key=="stage"&&!Enum.TryParse(value,true,out OrderStage _))yield return term;
    }
   }

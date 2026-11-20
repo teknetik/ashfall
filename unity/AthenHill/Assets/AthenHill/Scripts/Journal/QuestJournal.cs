@@ -188,13 +188,19 @@ namespace AthenHill
      default:
      {
       // Gather → (Report) → Fabricate → (Fit → TestFire): a step is done once the order has moved past it.
-      int at=done?99:stage switch{OrderStage.Gather=>0,OrderStage.Report=>1,OrderStage.Fabricate=>2,OrderStage.Fit=>3,OrderStage.TestFire=>4,_=>0};
+      // 20 Nov 2026: an order whose schematic is identified by a colonist (Steady Hands: Ossa) has an Identify step in between.
+      var recipe=o.goal==FieldOrderGoal.CraftItem||o.goal==FieldOrderGoal.FitMod?orders.Progress.RecipeFor(model,o):null;
+      bool identify=!string.IsNullOrEmpty(o.identifyBrief)&&recipe!=null&&recipe.unlocks!=null&&recipe.unlocks.Any(u=>u!=null&&u.type=="identify");
+      int at=done?99:stage switch{OrderStage.Gather=>0,OrderStage.Identify=>1,OrderStage.Report=>2,OrderStage.Fabricate=>3,OrderStage.Fit=>4,OrderStage.TestFire=>5,_=>0};
+      if(!identify&&at>0&&at<99)at=stage==OrderStage.Identify?1:at-1;
+      int b=identify?1:0;
       Step(m,"Gather the parts",at>0);
-      if(report)Step(m,$"Take them to {reportName}",at>1);
-      Step(m,$"Fabricate the {item} at the workbench",at>2);
+      if(identify)Step(m,"Show the salvage to Warden Ossa",done||at>1||model.Knows(recipe.id));
+      if(report)Step(m,$"Take them to {reportName}",at>1+b);
+      Step(m,$"Fabricate the {item} at the workbench",at>2+b);
       if(o.goal==FieldOrderGoal.FitMod)
       {
-       Step(m,$"Fit the {item}",at>3);
+       Step(m,$"Fit the {item}",at>3+b);
        if(o.requireTestFire)Step(m,"Test-fire it in the Outer Berms",done);
       }
       break;

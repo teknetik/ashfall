@@ -84,6 +84,8 @@ namespace AthenHill
   string IQuestState.CurrentOrderId{get{BindQuest();return questOrders&&questOrders.Progress!=null?questOrders.Progress.Current?.id:null;}}
   OrderStage IQuestState.Stage{get{BindQuest();return questOrders&&questOrders.Ready?questOrders.Progress.Stage(questOrders.crafting.Model,Shop):OrderStage.NotStarted;}}
   bool IQuestState.CurrentReported{get{BindQuest();return questOrders&&questOrders.Progress!=null&&questOrders.Progress.CurrentReported;}}
+  bool IQuestState.HasItem(string itemId)=>Shop!=null&&!string.IsNullOrEmpty(itemId)&&Shop.Quantity(itemId)>0;
+  bool IQuestState.KnowsRecipe(string recipeId)=>GetComponent<CraftingSession>()?.Model?.Knows(recipeId)==true;
   public bool HasFlag(string id)=>!string.IsNullOrEmpty(id)&&Flags.Contains(id);
   public void SetFlag(string id){if(!string.IsNullOrEmpty(id)&&Flags.Add(id)){FlagSet?.Invoke(id);Changed?.Invoke();}}
   /// A story flag was recorded (autosave hook).
@@ -468,7 +470,19 @@ namespace AthenHill
   public void ResetPlayer(){if(!HasStarted)return;Close();player.ReturnToGate();follow.yaw=-90;follow.pitch=17;follow.FixedView=false;}
   public void ToggleMute(){Settings.Sound.muted=!Settings.Sound.muted;Settings.SaveSound();Settings.Flush();}
   public void ToggleReducedMotion(){reducedMotion=!reducedMotion;Settings.SaveReducedMotion(reducedMotion);Changed?.Invoke();}
-  void SpeakDialogue(){if(ActiveNpc)ActiveNpc.Speak(Dialogue,Settings,FindAnyObjectByType<CityAudio>()?.steps);}
+  /// Every dialogue node shown goes through here: first any schematic that node identifies is taught ("npc_ossa:servo_look"
+  /// in a recipe's identify unlock), then the node is voiced.
+  void SpeakDialogue()
+  {
+   var model=ActiveNpc&&ActiveNpc.definition?GetComponent<CraftingSession>()?.Model:null;
+   var learned=model?.Identify(ActiveNpc.definition.id+":"+dialogueNode);
+   if(learned!=null&&learned.Count>0)Notify(CraftingText.Discovered(learned)+" Make it at Brann's workbench in Salvage.","Salvage");
+   // 20 Nov 2026: a node can hand over an item once (Brann's basic Field Toolkit); the gift's flag stops a second one.
+   string giftFlag=null;var gift=model!=null?model.Gift(ActiveNpc.definition.id+":"+dialogueNode,HasFlag,out giftFlag):null;
+   if(gift!=null){SetFlag(giftFlag);Notify($"{ActiveNpc.definition.displayName} gives you a {gift.name}.",ActiveNpc.definition.displayName);}
+   SpeakNode();
+  }
+  void SpeakNode(){if(ActiveNpc)ActiveNpc.Speak(Dialogue,Settings,FindAnyObjectByType<CityAudio>()?.steps);}
   void SetState(CityState state){if(State==CityState.Dialogue&&state!=CityState.Dialogue&&ActiveNpc)ActiveNpc.StopSpeaking();State=state;input.SetGameplay(state==CityState.Play);player.Blocked=state!=CityState.Play;player.Talking=state==CityState.Dialogue;Time.timeScale=state==CityState.MainMenu||state==CityState.Paused||state==CityState.Settings?0:1;AudioListener.pause=state==CityState.Paused;Changed?.Invoke();}
   public void Notify(string text,string speaker="System"){notice=text;noticeTime=Mathf.Clamp(2.5f+noticeSecondsPerWord*RadioQueue.Words(text),4,10);AddLog(speaker,text);Changed?.Invoke();}
   /// A radio line (field briefings): logged now, shown on the radio channel when its turn comes. gapBefore leaves a

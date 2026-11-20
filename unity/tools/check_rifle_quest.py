@@ -211,6 +211,7 @@ def phase_a():
         qa.wait_menu(); qa.focus(); qa.tap('Return'); qa.wait(lambda: qa.state() == 'Play', 40, what='new game'); qa.release_all()
         qa.cmd('resize', width=1920, height=1080); time.sleep(1.5)
         qa.cmd('timeSet', hour=13); qa.cmd('timePause', paused=True)
+        for w in ('weapon_scrap_pistol', 'weapon_field_rifle'): qa.cmd('dev.weapon.condition', weaponId=w, full=True)  # Phase 3: condition wears per shot; start every run at full condition
         # locker, draw, plates (as qa.primer does, then stop before first contact to inspect it)
         qa.goto('checkpoint_approach'); qa.view('follow'); qa.yaw(270); time.sleep(.3); qa.hold('w', 1.3); time.sleep(.4)
         qa.goto('checkpoint_locker'); time.sleep(.4); qa.tap('e', settle=.4)
@@ -280,6 +281,7 @@ def phase_b():
         qa.wait_menu(); qa.focus(); qa.tap('Return'); qa.wait(lambda: qa.state() == 'Play', 40, what='Play after Continue'); qa.release_all()
         qa.cmd('resize', width=1920, height=1080); time.sleep(1.5)
         qa.cmd('timeSet', hour=13); qa.cmd('timePause', paused=True)
+        for w in ('weapon_scrap_pistol', 'weapon_field_rifle'): qa.cmd('dev.weapon.condition', weaponId=w, full=True)  # Phase 3: condition wears per shot; start every run at full condition
         c = qa.craft(); r['start'] = {k: c.get(k) for k in ('fieldOrder', 'orderStage', 'objective')}
         ok(c.get('fieldOrder') == LONG_ARM and c.get('orderStage') == 'Report', 'B: continued at Long Arm, waiting for the report to Brann', r['start'])
         ok(qa.qty('field_rifle') in (None, 0), 'B: no test-issue rifle in the pack', qa.qty('field_rifle'))
@@ -335,8 +337,17 @@ def phase_b():
         qa.tap('1', settle=.6); qa.cmd('cameraBoom', boom=0.0); time.sleep(.8); s = qa.snap(); ok(not s['combat'].get('viewModelVisible', False), 'B: the pistol view model stays hidden with the rifle drawn in first person', s['combat'].get('viewModelVisible')); cap('b-rifle-first-person')
         # 3 Oct 2026: the field rifle has its own first-person view model (arms + rifle); hip view above, aim view here
         ok(s['combat'].get('rifleViewModelVisible', False), 'B: the rifle view model shows with the rifle drawn in first person', s['combat'].get('rifleViewModelVisible'))
+        # 20 Nov 2026 (rifle_hands_20261120): weapon-driven rifle hands, the shooting hand on the pistol grip, both hands on their grip points
+        rh = s['combat'].get('rifleHands') or {}
+        if rh.get('available'):
+            ok(rh.get('weaponDriven') and rh.get('shootingGrip') == 'RH shooting grip' and rh.get('supportGrip') == 'RH support grip', 'B: first-person rifle hands are weapon-driven onto the pistol grip and handguard grip points', rh)
+            ok(0 <= rh.get('rightErrCm', -1) <= 2.0 and 0 <= rh.get('leftErrCm', -1) <= 2.0, 'B: first-person rifle hands within 2 cm of their grip points (hip)', rh)
+        else:
+            print('  (no combat.rifleHands read-out in this build: rifle hand placement not checked)')
         qa.button(3, True); time.sleep(1.0); s = qa.snap(); cap('b-rifle-first-person-aim')
         ok(s['combat'].get('rifleViewModelVisible', False), 'B: the rifle view model stays up while aiming in first person', s['combat'].get('rifleViewModelVisible'))
+        rh = s['combat'].get('rifleHands') or {}
+        if rh.get('available'): ok(0 <= rh.get('rightErrCm', -1) <= 2.0 and 0 <= rh.get('leftErrCm', -1) <= 2.0, 'B: first-person rifle hands within 2 cm of their grip points (aiming)', rh)
         qa.button(3, False); time.sleep(.4)
         qa.cmd('cameraBoom', boom=2.4); qa.tap('1', settle=.5)
         # plate carrier: the caravan scavengers and the strongbox

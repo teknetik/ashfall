@@ -22,6 +22,11 @@ namespace AthenHill
   public string activateEncounter;
   [Tooltip("Guidance key while gathering (fabricator guidance is automatic once the part can be fabricated or fitted).")]
   public string guidance;
+  [Header("Identify (optional)")]
+  [Tooltip("CraftItem and FitMod: Field Notes text while the player carries salvage the schematic needs but nobody has identified it yet (ItemSpec.identifyBy, e.g. the Damaged Servo shown to Ossa). {item} = target item name.")]
+  [TextArea(2,4)]public string identifyBrief;
+  [Tooltip("Guidance key for the Identify stage (FieldOrders guidance target). Empty = no marker.")]
+  public string identifyGuidance;
   [Header("Report (optional)")]
   [Tooltip("FitMod and CraftItem: NpcDefinition id of the colonist the player takes the parts to before fabricating (Brann at Salvage for the first order). Until the player has spoken to them, a gathered order waits at its Report stage.")]
   public string reportTo;

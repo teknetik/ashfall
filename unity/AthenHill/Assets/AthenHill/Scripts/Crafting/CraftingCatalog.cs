@@ -4,7 +4,9 @@ namespace AthenHill
 {
  [Serializable] public class CraftIngredient {public string kind,id;public int quantity;}
  /// type: acquireItem (the item first enters the pack), orderStart (a field order becomes current) or magazine (the
- /// digital magazine with that item ID is bought at a counter's magazine shelf, e.g. Field Supply).
+ /// digital magazine with that item ID is bought at a counter's magazine shelf, e.g. Field Supply) or identify (20 Nov 2026:
+ /// the id is "<npc id>:<dialogue node id>"; the schematic is learned when that colonist's dialogue node is shown, e.g.
+ /// npc_ossa:servo_look. Salvage is not self-explaining: someone who knows it has to say what it could become).
  [Serializable] public class CraftUnlock {public string type,id;}
  /// Fabricator window grouping; new weapon families can have their own sections. New values are appended so the
  /// serialized numbers stay valid (Armour = 5, 3 Oct 2026: the Warden kit pieces; Gear = 6 packs and pack upgrades and
@@ -30,6 +32,12 @@ namespace AthenHill
   [TextArea]public string lockedHint;
   [Tooltip("Seconds at the bench before the part is made (timed crafting, 3 Oct 2026). Parts are used and the output given only when the timer completes; closing the bench, Cancel or taking damage stops it and nothing is used. 0 = instant.")]
   [Min(0)]public float craftSeconds;
+  [Tooltip("Skill this schematic exercises (CharacterCatalog skill id: engineering, electronics, nanotechnology, robotics). Empty = none. 20 Nov 2026.")]
+  public string skill;
+  [Tooltip("Experience granted when the craft completes (character XP; 100 per level). Skill points from levelling are the main way skills grow.")]
+  [Min(0)]public int craftXp;
+  [Tooltip("Skill points gained from use on the first completed craft of this schematic. Later crafts gain Use Repeat Factor times the last gain; never above the catalog's Use Gain Cap. Fractions accumulate.")]
+  [Min(0)]public float skillUse;
  }
  /// stat: a WeaponStats field name (damage, fireInterval, range, recoil, nanoMax, nanoPerShot, nanoRegen, aimAssist).
  /// op: add (flat) or percent (summed, applied once after the flat terms).
@@ -52,8 +60,32 @@ namespace AthenHill
   [Tooltip("Effective stats are clamped to these bounds after every fitted mod applies.")]
   public WeaponStats minStats=WeaponStats.DefaultMin,maxStats=WeaponStats.DefaultMax;
   public string[] slots;
+  [Tooltip("Condition lost per shot (20 Nov 2026, Phase 3). Condition is the weapon's Durability stat; a weapon whose base Durability is 0 does not wear.")]
+  [Min(0)]public float wearPerShot;
  }
- [Serializable] public class CraftStation {public string id,name;}
+ /// Weapon condition, field repair and bench overhaul numbers (20 Nov 2026, Phase 3). All in data; the catalog holds one set.
+ /// Condition (Durability) runs from the weapon's cap down to 0 (jammed). Under SpreadBelow the shot cone widens up to SpreadMaxScale
+ /// at 0; under MisfireBelow a trigger pull may misfire (nothing fired or spent), up to MisfireMaxChance just above 0.
+ /// A field repair with a RepairTool carried (a few RepairSeconds, stopped by damage, drawing or firing) restores RepairAmounts[repairs
+ /// so far] and lowers the cap by CapLossPerRepair; a weapon whose cap is under BrokenBelow, or that has used every entry of
+ /// RepairAmounts, is broken: field repair is refused and the bench Overhaul (OverhaulInputs at OverhaulStationId) restores the cap.
+ [Serializable] public class ConditionRules
+ {
+  [Min(0)]public float spreadBelow=50,spreadMaxScale=2,misfireBelow=30;
+  [Range(0,1)]public float misfireMaxChance=.35f;
+  public float[] repairAmounts=new[]{30f,20f,12f,6f};
+  [Min(0)]public float capLossPerRepair=8,brokenBelow=70,repairSeconds=4;
+  public string repairTool="tool:screwdriver";
+  public string overhaulStationId="station_field_fabricator";
+  public CraftIngredient[] overhaulInputs;
+ }
+ /// tools: tool tags this fixed bench provides to whoever works at it (tool:vise, tool:grinder, tool:solder, tool:nanite_press,
+ /// tool:welder). Carried tools are items tagged the same way (Field Toolkit: tool:screwdriver); a recipe's requiredTools entry
+ /// is an item id or a tool tag, met by a carried item OR the station's tool (20 Nov 2026).
+ [Serializable] public class CraftStation {public string id,name;public string[] tools;}
+ /// A colonist hands over an item when a dialogue node is shown ("npc_brann:toolkit"), once: only while the item is not carried
+ /// and the story flag is unset; the flag is set on the first showing.
+ [Serializable] public class NodeGift {public string topic,itemId,flag;[Min(1)]public int quantity=1;}
  /// Player-facing name for a slot or ingredient tag ID (e.g. grip → "Grip", nanite:tier1 → "Any tier-one nanites").
  [Serializable] public class IdLabel {public string id,label;}
  /// Fabricator stats table row: label, number format, unit and whether a lower value is the improvement.
@@ -79,6 +111,14 @@ namespace AthenHill
   public CraftStation[] stations;
   public CraftRecipe[] recipes;
   public LootTable[] lootTables;
+  public NodeGift[] nodeGifts;
+  [Header("Weapon condition (20 Nov 2026)")]
+  public ConditionRules condition=new ConditionRules();
+  [Header("Skill use (20 Nov 2026)")]
+  [Tooltip("Most skill points one completed craft can add from use, however high the recipe's Skill Use.")]
+  [Min(0)]public float useGainCap=1.5f;
+  [Tooltip("Each repeat craft of the same schematic gains this fraction of the previous gain (diminishing returns).")]
+  [Range(0,1)]public float useRepeatFactor=0.5f;
   [Header("Presentation")]
   public IdLabel[] slotLabels,tagLabels;
   [Tooltip("Fabricator list headings by RecipeGroup name (Component, MarkI, MarkII).")]

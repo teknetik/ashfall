@@ -37,6 +37,7 @@ def site(landmark, part, prefix, seconds=45, kill=True):
     """Visit a site, alert its droids with rifle fire, record voice lines, try for a kill (death line)."""
     try:
         qa.cmd('dev.item.grant', itemId='medkit', quantity=2)
+        for w in ('weapon_scrap_pistol', 'weapon_field_rifle'): qa.cmd('dev.weapon.condition', weaponId=w, full=True)  # Phase 3: start each site at full condition
     except RuntimeError as e:
         note('grant refused', str(e))
     qa.goto(landmark); qa.view('follow'); time.sleep(2.0)

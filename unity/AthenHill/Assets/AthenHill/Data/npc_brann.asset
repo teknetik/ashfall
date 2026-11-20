@@ -18,8 +18,12 @@ MonoBehaviour:
   entries:
   - node: first_visit
     requires: '!primer, !flag:brann_met'
+  - node: toolkit
+    requires: '!flag:brann_toolkit, !carry:field_toolkit'
   - node: report_ready
     requires: order:order_steady_hands, !reported, stage:Report
+  - node: steady_identify
+    requires: order:order_steady_hands, stage:Identify
   - node: report_early
     requires: order:order_steady_hands, !reported
   - node: steady_gather
@@ -335,6 +339,46 @@ MonoBehaviour:
       setFlag: 
     - id: close_832
       label: I'll find one.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: toolkit
+    title: Salvage
+    text: 'No toolkit on you? Then you''re not touching my bench. Here, take this one: a screwdriver, a few gauges, the basics. Every salvager starts with one. Don''t leave it lying about.'
+    voice: {fileID: 8300000, guid: 1b9901823e40912d785a99d9c66ab20c, type: 3}
+    choices:
+    - id: report
+      label: I've brought the servo.
+      next: report_ready
+      action: 
+      requires: order:order_steady_hands, !reported, stage:Report
+      setFlag: 
+    - id: shop
+      label: Show me what you trade.
+      next: 
+      action: shop
+      requires: 
+      setFlag: 
+    - id: thanks
+      label: Thanks, Brann.
+      next: greeting
+      action: 
+      requires: 
+      setFlag: 
+  - id: steady_identify
+    title: Steady Hands
+    text: That's a worker servo. Good. Before I touch it, show it to Ossa. She reads salvage better than I do, and she'll tell you what it's good for. Then come back with alloy and nanites.
+    voice: {fileID: 8300000, guid: bf21c56995ed93833c9154200b644906, type: 3}
+    choices:
+    - id: shop
+      label: Show me what you trade.
+      next: 
+      action: shop
+      requires: 
+      setFlag: 
+    - id: close
+      label: I'll go and see her.
       next: 
       action: close
       requires: 

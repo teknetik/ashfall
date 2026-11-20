@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 namespace AthenHill
@@ -22,15 +23,22 @@ namespace AthenHill
   bool AnatomySection=>section=="IMPLANTS"||section=="ARMOUR";
   public string PreviewWeaponItem=>Character?.Equipped(section=="PRIMARY"?"primary":"secondary");
   string dragItem,dragSlot,dragSocket,dragWeapon;
-  int pointer=-1;
-  Vector2 origin;
+  int pointer=-1,dragBar,releasedTicks;
+  Vector2 origin,lastPointer;
   bool dragging;
-  VisualElement source;
+  VisualElement source,dropHover;
   Label ghost;
+  // The body map of the IMPLANTS / ARMOUR page (rebuilt with the page); laid out by ArrangeAnatomy.
+  VisualElement anatomyLayout,anatomyMap,anatomyLeaders;
+  Image anatomyImage;
+  readonly System.Collections.Generic.List<(string id,AnatomyLayout.Anchor anchor,VisualElement cell,VisualElement node)> anatomySlots=new System.Collections.Generic.List<(string,AnatomyLayout.Anchor,VisualElement,VisualElement)>();
+  AnatomyLayout.Result anatomy;
   CharacterModel Character=>session.Character;
   CraftingModel Craft=>crafting?crafting.Model:null;
   /// A carried item was dropped on a cell of the field pack's HOTBAR strip (item, hotbar slot 1–10).
   public Action<string,int> DroppedOnHotbar;
+  /// A HOTBAR strip cell was dragged onto another cell (from, to) or off the strip (from, 0).
+  public Action<int,int> MovedOnHotbar;
 
   public CharacterLoadoutPanel(VisualElement root,GameSession session,CraftingSession crafting,Func<string> selectedItem,Action changed)
   {
@@ -40,7 +48,7 @@ namespace AthenHill
    tabs=new VisualElement();tabs.AddToClassList("character-tabs");host.Add(tabs);
    foreach(var name in new[]{"PRIMARY","SECONDARY","STATS","IMPLANTS","ARMOUR"})
    {
-    string value=name;var tab=new Button(()=>{section=value;selectedSlot=null;selectedSocket=null;selectedWeapon=null;selectedModification=-1;signature=null;changed();}){text=name,name="character-tab-"+name.ToLowerInvariant()};
+    string value=name;var tab=new Button(()=>{CancelDrag();section=value;selectedSlot=null;selectedSocket=null;selectedWeapon=null;selectedModification=-1;signature=null;changed();}){text=name,name="character-tab-"+name.ToLowerInvariant()};
     tab.AddToClassList("character-tab");tabs.Add(tab);
    }
    capacity=new Label{name="character-capacity"};capacity.AddToClassList("character-capacity");host.Add(capacity);
@@ -60,6 +68,14 @@ namespace AthenHill
    root.RegisterCallback<PointerCancelEvent>(_=>CancelDrag());
    scroll.RegisterCallback<FocusInEvent>(e=>{if(!AnatomySection&&e.target is VisualElement v)scroll.ScrollTo(v);});
    scroll.contentViewport.RegisterCallback<GeometryChangedEvent>(_=>FitAnatomyViewport());
+   // A release the panel never reported (pointer let go outside the window, focus lost mid-drag) still ends the drag:
+   // two quiet ticks with the left button up drop it where the pointer last was.
+   root.schedule.Execute(()=>
+   {
+    var mouse=Mouse.current;
+    if(!dragging||mouse==null||mouse.leftButton.isPressed){releasedTicks=0;return;}
+    if(++releasedTicks>=2)DropAt(lastPointer);
+   }).Every(100);
   }
   static void AddAction(VisualElement target,string text,Action action,string name)
   {var b=new Button(action){text=text,name=name};b.AddToClassList("character-action");target.Add(b);}
@@ -90,7 +106,7 @@ namespace AthenHill
     var previousInspector=body.Q<ScrollView>("equipment-inspector-scroll");
     bool keepInspectorOffset=previousInspector!=null&&(string)previousInspector.userData==selectedSlot;
     var inspectorOffset=previousInspector?.scrollOffset??Vector2.zero;
-    body.Clear();scroll.verticalScrollerVisibility=AnatomySection?ScrollerVisibility.Hidden:ScrollerVisibility.Auto;
+    body.Clear();anatomyLayout=anatomyMap=null;anatomy=null;anatomySlots.Clear();scroll.verticalScrollerVisibility=AnatomySection?ScrollerVisibility.Hidden:ScrollerVisibility.Auto;
     if(section=="STATS")BuildStats();else BuildEquipment();
     var nextInspector=body.Q<ScrollView>("equipment-inspector-scroll");
     if(focus!=null||keepInspectorOffset)root.schedule.Execute(()=>
@@ -101,9 +117,10 @@ namespace AthenHill
     });
    }
    foreach(var cell in body.Query<Button>(className:"character-slot").ToList())cell.EnableInClassList("selected",cell.name=="equipment-"+selectedSlot||cell.name=="socket-"+selectedSocket||selectedModification>=0&&cell.name=="modification-socket-"+selectedModification);
-   selection.style.display=section=="STATS"?DisplayStyle.None:DisplayStyle.Flex;
+   // The body map's inspector already names the selected slot and what is in it.
+   selection.style.display=section=="STATS"||AnatomySection?DisplayStyle.None:DisplayStyle.Flex;
    root.Q("character-equip").parent.style.display=section=="STATS"?DisplayStyle.None:DisplayStyle.Flex;
-   selection.text=selectedModification>=0?SlotName(selectedSlot)+" · "+Character.ModificationSockets(selectedSlot)[selectedModification].label:selectedSlot!=null?SlotName(selectedSlot):selectedSocket!=null?"Socket: "+Craft?.Data.SlotName(selectedSocket):"";
+   selection.text=selectedModification>=0?SlotName(selectedSlot)+" · "+Character.ModificationSockets(selectedSlot)[selectedModification].label:selectedSlot!=null?SlotName(selectedSlot)+" · "+ItemName(Character.Equipped(selectedSlot)):selectedSocket!=null?"Socket: "+Craft?.Data.SlotName(selectedSocket)+" · "+ItemName(Craft?.GetLoadout(selectedWeapon)?.Fitted(selectedSocket)):"";
    root.Q("character-equip").SetEnabled(section!="STATS"&&(selectedSlot!=null||selectedSocket!=null)&&selectedItem()!=null);
    root.Q("character-remove").SetEnabled(selectedModification>=0?Character.InstalledModification(selectedSlot,selectedModification)!=null:selectedSlot!=null&&Character.Equipped(selectedSlot)!=null||selectedSocket!=null&&Craft?.GetLoadout(selectedWeapon)?.Fitted(selectedSocket)!=null);
    root.Q("character-upgrade").style.display=section=="IMPLANTS"&&selectedModification<0?DisplayStyle.Flex:DisplayStyle.None;
@@ -121,7 +138,7 @@ namespace AthenHill
   string WeaponSignature(string item)
   {
    var weapon=Craft.FindWeapon(item);var loadout=weapon!=null?Craft.GetLoadout(weapon.id):null;
-   return loadout==null?"":weapon.id+":"+string.Join(";",loadout.Slots.Select(s=>s+":"+loadout.Fitted(s)));
+   return loadout==null?"":weapon.id+":"+string.Join(";",loadout.Slots.Select(s=>s+":"+loadout.Fitted(s)))+":c"+Mathf.Ceil(loadout.Durability)+"/"+Mathf.Floor(loadout.MaxDurability)+"/"+loadout.Repairs+(crafting&&crafting.RepairJob!=null?"r":"");
   }
   public string DescribeItem(string item)
   {
@@ -162,6 +179,7 @@ namespace AthenHill
    }
    var weapon=Craft?.FindWeapon(item);var loadout=weapon!=null?Craft.GetLoadout(weapon.id):null;
    if(loadout==null){Copy(body,DescribeItem(item));return;}
+   BuildCondition(loadout);
    Heading("ATTACHMENT SLOTS");
    var sockets=new VisualElement();sockets.AddToClassList("weapon-sockets");body.Add(sockets);
    foreach(var socket in loadout.Slots)
@@ -186,6 +204,26 @@ namespace AthenHill
     row.AddToClassList("character-breakdown");row.Add(new Label($"Base {CraftingText.FormatStat(stat,loadout.Base[index])} · Mod {mod:+0.##;-0.##;0} · Character {character:+0.##;-0.##;0}"));body.Add(row);
    }
   }
+  /// Condition line and the field repair action (20 Nov 2026, Phase 3). The repair runs a few seconds with the carried toolkit.
+  void BuildCondition(WeaponLoadout loadout)
+  {
+   if(!loadout.HasCondition||Craft==null)return;
+   Heading("CONDITION");
+   var rules=Craft.Condition;
+   string line=CraftingText.Condition(loadout,Craft);
+   float next=WeaponCondition.NextRepairAmount(loadout,rules);
+   if(!WeaponCondition.IsBroken(loadout,rules)&&next>0)line+=$"\nNext field repair: +{next:0.#}, best condition −{rules.capLossPerRepair:0.#}.";
+   Copy(body,line);
+   var job=crafting?crafting.RepairJob:null;
+   string weaponId=loadout.WeaponId;
+   if(job!=null&&job.recipeId==weaponId)
+   {
+    AddAction(body,"Stop repair",()=>{crafting.CancelRepair();signature=null;changed();},"weapon-repair-cancel");
+    Copy(body,$"Repairing: {CraftingText.Duration(job.Remaining(Time.time))} left. Reopen this tab to refresh.");
+    return;
+   }
+   AddAction(body,"Repair with toolkit",()=>{bool ok=crafting.BeginFieldRepair(weaponId,out string reason);message.text=ok?"":CraftingText.ConditionReason(reason,Craft,loadout);message.EnableInClassList("rejected",!ok);signature=null;changed();},"weapon-repair");
+  }
   void ChooseSlot(string id)
   {
    selectedSlot=id;selectedSocket=null;selectedWeapon=null;selectedModification=-1;signature=null;Refresh();
@@ -202,26 +240,61 @@ namespace AthenHill
    if(float.IsNaN(height)||height<=0)height=400;
    layout.style.height=height;layout.style.minHeight=height;layout.style.maxHeight=height;
    scroll.scrollOffset=Vector2.zero;
+   ArrangeAnatomy();
+  }
+  /// Places the figure, the slot boxes, the dots and the leader lines for the current size (AnatomyLayout.Arrange).
+  void ArrangeAnatomy()
+  {
+   if(anatomyLayout==null||anatomyMap==null||anatomyLayout.panel==null&&anatomy!=null)return;
+   float width=scroll.contentViewport.layout.width,height=anatomyLayout.resolvedStyle.height;
+   if(float.IsNaN(height)||height<=0)height=anatomyLayout.style.height.value.value;
+   var next=AnatomyLayout.Arrange(anatomySlots.Select(s=>(s.id,s.anchor)).ToList(),width,height);
+   if(anatomy!=null&&Mathf.Abs(anatomy.mapWidth-next.mapWidth)<.25f&&Mathf.Abs(anatomy.mapHeight-next.mapHeight)<.25f)return;
+   anatomy=next;
+   anatomyMap.style.width=next.mapWidth;anatomyMap.style.minWidth=next.mapWidth;anatomyMap.style.maxWidth=next.mapWidth;
+   var r=next.image;
+   anatomyImage.style.left=r.x;anatomyImage.style.top=r.y;anatomyImage.style.width=r.width;anatomyImage.style.height=r.height;
+   for(int i=0;i<anatomySlots.Count;i++)
+   {
+    var p=next.slots[i];var cell=anatomySlots[i].cell;var node=anatomySlots[i].node;
+    cell.style.left=p.box.x;cell.style.top=p.box.y;cell.style.width=p.box.width;cell.style.height=p.box.height;cell.EnableInClassList("compact",next.compact);
+    node.style.left=p.node.x;node.style.top=p.node.y;
+   }
+   anatomyLeaders.MarkDirtyRepaint();
+  }
+  void DrawLeaders(MeshGenerationContext context)
+  {
+   if(anatomy==null)return;
+   var painter=context.painter2D;painter.lineCap=LineCap.Round;
+   for(int pass=0;pass<2;pass++)
+    for(int i=0;i<anatomy.slots.Count&&i<anatomySlots.Count;i++)
+    {
+     bool chosen=anatomySlots[i].id==selectedSlot;if(chosen!=(pass==1))continue;
+     painter.strokeColor=chosen?new Color32(0x8b,0xe6,0xdf,0xff):new Color32(0x58,0xb9,0xc2,0xe6);painter.lineWidth=chosen?2f:1.4f;
+     painter.BeginPath();painter.MoveTo(anatomy.slots[i].leaderStart);painter.LineTo(anatomy.slots[i].node);painter.Stroke();
+    }
   }
   void BuildAnatomy()
   {
    bool implants=section=="IMPLANTS";
-   var layout=new VisualElement{name="anatomy-layout"};layout.AddToClassList("anatomy-layout");body.Add(layout);FitAnatomyViewport();
-   var map=new VisualElement{name=implants?"implant-body-map":"armour-body-map"};map.AddToClassList("anatomy-map");layout.Add(map);
+   var layout=new VisualElement{name="anatomy-layout"};layout.AddToClassList("anatomy-layout");body.Add(layout);
+   anatomyLayout=layout;anatomy=null;anatomySlots.Clear();FitAnatomyViewport();
+   var map=new VisualElement{name=implants?"implant-body-map":"armour-body-map"};map.AddToClassList("anatomy-map");layout.Add(map);anatomyMap=map;
    var image=new Image{name="anatomy-image",pickingMode=PickingMode.Ignore,scaleMode=ScaleMode.ScaleToFit,image=Resources.Load<Texture2D>("UI/ImplantBody")};
-   image.AddToClassList("anatomy-image");if(!implants)image.AddToClassList("armour-anatomy-image");map.Add(image);
+   image.AddToClassList("anatomy-image");if(!implants)image.AddToClassList("armour-anatomy-image");map.Add(image);anatomyImage=image;
+   // Leaders are drawn over the figure and under the boxes and dots.
+   var leaders=new VisualElement{name="anatomy-leaders",pickingMode=PickingMode.Ignore};leaders.AddToClassList("anatomy-leaders");leaders.generateVisualContent+=DrawLeaders;map.Add(leaders);anatomyLeaders=leaders;
    var all=Character.Data.slots.Where(s=>s.section==section||section=="ARMOUR"&&s.section=="STORAGE").ToArray();
    for(int n=0;n<all.Length;n++)
    {
-    var slot=all[n];string id=slot.id,item=Character.Equipped(id);var position=AnatomyPosition(id,n,implants);
+    var slot=all[n];string id=slot.id,item=Character.Equipped(id);
     var cell=EquipmentButton("equipment-"+id,id=="storage"?"Pack":slot.label,item,()=>ChooseSlot(id));cell.AddToClassList("anatomy-slot");
-    cell.style.top=Length.Percent(position.y);if(position.x>0)cell.style.right=0;else cell.style.left=0;
     cell.userData=new Target{slot=id};BindDrag(cell,item,id,null,null);map.Add(cell);
-    var lead=new VisualElement{pickingMode=PickingMode.Ignore};lead.AddToClassList("anatomy-leader");lead.style.top=Length.Percent(position.y);
-    if(position.x>0)lead.style.right=111;else lead.style.left=111;map.Add(lead);
-    var dot=new VisualElement{pickingMode=PickingMode.Ignore};dot.AddToClassList("anatomy-node");dot.style.top=Length.Percent(position.y);
-    if(position.x>0)dot.style.right=135;else dot.style.left=135;map.Add(dot);
+    var dot=new VisualElement{name="anatomy-node-"+id,pickingMode=PickingMode.Ignore};dot.AddToClassList("anatomy-node");dot.EnableInClassList("selected",id==selectedSlot);map.Add(dot);
+    anatomySlots.Add((id,AnatomyLayout.AnchorFor(implants,id,n,all.Length),cell,dot));
    }
+   layout.RegisterCallback<GeometryChangedEvent>(_=>ArrangeAnatomy());
+   ArrangeAnatomy();
    var inspectorScroll=new ScrollView(ScrollViewMode.Vertical){name="equipment-inspector-scroll",userData=selectedSlot};
    inspectorScroll.AddToClassList("equipment-inspector-scroll");layout.Add(inspectorScroll);
    inspectorScroll.RegisterCallback<FocusInEvent>(e=>{if(e.target is VisualElement v)inspectorScroll.ScrollTo(v);});
@@ -232,7 +305,10 @@ namespace AthenHill
    Copy(inspector,ItemName(equipped),"equipment-inspector-title");
    if(equipped==null)
    {
+    var fits=Character.Data.equipment.Where(e=>e!=null&&e.slots!=null&&e.slots.Contains(selectedSlot)).Select(e=>ItemName(e.itemId)).Distinct().ToArray();
+    if(fits.Length==0){Copy(inspector,$"Nothing made or sold in Ward fits the {SlotName(selectedSlot).ToLowerInvariant()} slot yet.");return;}
     Copy(inspector,implants?"No implant installed. Select a compatible implant from your pack and choose Equip selected. Each implant supports three augmentations.":"No armour fitted. Select a compatible component from your pack and choose Equip selected.");
+    Copy(inspector,"Fits here: "+string.Join(", ",fits)+".");
     CompatibleEquipment(inspector,selectedSlot);return;
    }
    var illustration=new VisualElement{pickingMode=PickingMode.Ignore};illustration.AddToClassList("equipment-inspector-icon");illustration.AddToClassList(session.Shop.Spec(equipped)?.icon??"pack-icon");inspector.Add(illustration);
@@ -251,19 +327,6 @@ namespace AthenHill
    if(selectedModification>=sockets.Count)selectedModification=-1;
    if(selectedModification>=0)BuildModificationPanel(inspector,selectedSlot,selectedModification);
    else Copy(inspector,"Select a socket to inspect, install or remove its augmentation.");
-  }
-  static Vector2 AnatomyPosition(string id,int fallback,bool implants)
-  {
-   string part=id.Contains("_")?id.Substring(id.IndexOf('_')+1):id;
-   if(implants)
-   {
-    switch(part){case "head":return new Vector2(0,8);case "arms":return new Vector2(1,21);case "chest":return new Vector2(0,32);case "wrist":return new Vector2(1,46);case "waist":return new Vector2(0,57);case "hand":return new Vector2(1,68);case "legs":return new Vector2(0,80);case "feet":return new Vector2(1,92);}
-   }
-   else
-   {
-    switch(part){case "head":return new Vector2(0,8);case "arms":return new Vector2(1,22);case "chest":return new Vector2(0,35);case "hands":return new Vector2(1,51);case "legs":return new Vector2(0,67);case "feet":return new Vector2(1,89);case "storage":return new Vector2(1,35);}
-   }
-   return new Vector2(fallback%2,Mathf.Min(92,8+fallback*12));
   }
   void CompatibleEquipment(VisualElement target,string slot)
   {
@@ -403,14 +466,37 @@ namespace AthenHill
    element.RegisterCallback<PointerDownEvent>(e=>
    {
     if(e.button!=0||e.ctrlKey||item==null||Character==null)return;
-    CancelDrag();pointer=e.pointerId;origin=e.position;source=element;dragItem=item;dragSlot=slot;dragSocket=socket;dragWeapon=weapon;
+    Begin(e,element,item);dragSlot=slot;dragSocket=socket;dragWeapon=weapon;
     // Clickable owns capture until movement crosses the drag threshold.
    },TrickleDown.TrickleDown);
+   DragCallbacks(element);
+  }
+  /// A cell of the field pack's HOTBAR strip (slots 3–0): dragging it onto another cell moves or swaps the two, dragging
+  /// it off the strip clears it (MovedOnHotbar). Cells 1 and 2 follow the equipped weapons and do not drag.
+  public void BindHotbarCell(VisualElement cell,int slot,Func<string> item)
+  {
+   cell.RegisterCallback<PointerDownEvent>(e=>
+   {
+    if(e.button!=0||e.ctrlKey||!HotbarModel.IsItemSlot(slot))return;
+    string id=item();if(id==null)return;
+    Begin(e,cell,id);dragBar=slot;
+   },TrickleDown.TrickleDown);
+   DragCallbacks(cell);
+  }
+  void Begin(PointerDownEvent e,VisualElement element,string item)
+  {
+   CancelDrag();pointer=e.pointerId;origin=lastPointer=e.position;source=element;dragItem=item;
+  }
+  // The same handlers on the root and on the pressed element: while an element holds the pointer, its events reach it
+  // whichever way the panel dispatches captured events.
+  void DragCallbacks(VisualElement element)
+  {
    element.RegisterCallback<PointerMoveEvent>(Move,TrickleDown.TrickleDown);
    element.RegisterCallback<PointerUpEvent>(Drop,TrickleDown.TrickleDown);
    element.RegisterCallback<MouseMoveEvent>(e=>MoveAt(e.mousePosition),TrickleDown.TrickleDown);
    element.RegisterCallback<MouseUpEvent>(e=>{if(pointer>=0&&e.button==0){bool wasDragging=dragging;DropAt(e.mousePosition);if(wasDragging)e.StopImmediatePropagation();}},TrickleDown.TrickleDown);
    element.RegisterCallback<PointerCancelEvent>(_=>CancelDrag());
+   element.RegisterCallback<PointerCaptureOutEvent>(_=>{if(dragging)CancelDrag();});
   }
   void Move(PointerMoveEvent e)
   {
@@ -421,11 +507,18 @@ namespace AthenHill
   void MoveAt(Vector2 position)
   {
    if(pointer<0||source==null||!dragging&&Vector2.Distance(origin,position)<7)return;
+   lastPointer=position;
    if(!dragging)
    {
-    dragging=true;source.CapturePointer(pointer);ghost=new Label(ItemName(dragItem)){pickingMode=PickingMode.Ignore};ghost.AddToClassList("equipment-drag-ghost");root.Add(ghost);
+    dragging=true;source.CapturePointer(pointer);RemoveGhosts();
+    ghost=new Label(ItemName(dragItem)){name="equipment-drag-ghost",pickingMode=PickingMode.Ignore};ghost.AddToClassList("equipment-drag-ghost");root.Add(ghost);
+    source.AddToClassList("drag-source");
    }
    var p=root.WorldToLocal(position);ghost.style.left=p.x+14;ghost.style.top=p.y+14;
+   // Strip cells light up under a dragged item or cell.
+   VisualElement over=null;
+   for(var v=root.panel?.Pick(position);v!=null;v=v.parent)if(v.userData is HotbarDrop){over=v;break;}
+   if(over!=dropHover){dropHover?.RemoveFromClassList("drop-target");dropHover=over;dropHover?.AddToClassList("drop-target");}
   }
   void Drop(PointerUpEvent e)
   {
@@ -437,8 +530,14 @@ namespace AthenHill
    if(!dragging){CancelDrag();return;}
    var target=root.panel?.Pick(position);Target destination=null;HotbarDrop bar=null;bool pack=false;
    for(var v=target;v!=null;v=v.parent){if(v.userData is Target t)destination=t;if(v.userData is HotbarDrop h)bar=h;if(v.name=="pack-col")pack=true;}
-   string item=dragItem,slot=dragSlot,socket=dragSocket,weapon=dragWeapon;CancelDrag();
-   if(bar!=null)
+   string item=dragItem,slot=dragSlot,socket=dragSocket,weapon=dragWeapon;int fromBar=dragBar;CancelDrag();
+   if(fromBar>0)
+   {
+    // A strip cell: onto another cell moves or swaps; anywhere else clears it.
+    if(bar==null)MovedOnHotbar?.Invoke(fromBar,0);
+    else if(bar.slot!=fromBar)MovedOnHotbar?.Invoke(fromBar,bar.slot);
+   }
+   else if(bar!=null)
    {
     // Hotbar 1/2 hold the weapons: a carried weapon dropped there is equipped; 3–0 take usable items.
     var weaponSlot=HotbarModel.WeaponSlot(bar.slot);
@@ -453,10 +552,22 @@ namespace AthenHill
    }
    else Result(false,"Drop onto an equipment slot, a compatible socket, or the pack.",null);
   }
+  /// Ends any drag and removes its floating label. Called on drop, Escape, a new press, a page change and on closing.
   public void CancelDrag()
   {
-   if(dragging&&pointer>=0&&source!=null&&source.HasPointerCapture(pointer))source.ReleasePointer(pointer);
-   ghost?.RemoveFromHierarchy();ghost=null;pointer=-1;dragging=false;source=null;dragItem=dragSlot=dragSocket=dragWeapon=null;
+   var held=source;int id=pointer;
+   ghost=null;pointer=-1;dragging=false;source=null;dragItem=dragSlot=dragSocket=dragWeapon=null;dragBar=0;releasedTicks=0;
+   if(id>=0&&held!=null&&held.HasPointerCapture(id))held.ReleasePointer(id);
+   held?.RemoveFromClassList("drag-source");
+   dropHover?.RemoveFromClassList("drop-target");dropHover=null;
+   RemoveGhosts();
   }
+  /// At most one drag label exists: every one under the panel root is removed, not only the last one made.
+  void RemoveGhosts()
+  {
+   if(root==null)return;
+   foreach(var g in root.Query(className:"equipment-drag-ghost").ToList())g.RemoveFromHierarchy();
+  }
+
  }
 }

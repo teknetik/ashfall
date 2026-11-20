@@ -10,6 +10,8 @@ namespace AthenHill
   public ItemRarity rarity;
   [Tooltip("Basic General buys this salvage but does not stock it; it is listed under Sell salvage.")]
   public bool sellOnly;
+  [Tooltip("NpcDefinition id of the colonist who can say what this salvage could become (20 Nov 2026: Ossa for the servo). Empty = nothing to identify. Pickup notes and the pack tooltip say \"Show this to …\" while a schematic that uses it is still unidentified.")]
+  public string identifyBy;
   [Tooltip("USS illustration class (flask-icon, scrap-icon, pistol-icon…). Empty uses the field-pack illustration.")]
   public string icon;
   [Tooltip("Basic General's Buy parts price (Mira's premium over what she pays). 0 = not stocked. Rare parts are never stocked.")]

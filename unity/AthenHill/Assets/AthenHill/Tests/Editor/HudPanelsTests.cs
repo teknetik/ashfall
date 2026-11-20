@@ -53,7 +53,7 @@ namespace AthenHill.Tests
    Assert.That(root.Query(className:"fab-slot").ToList().Count,Is.EqualTo(3));
    Assert.That(root.Query(className:"fab-stat-row").ToList().Count,Is.EqualTo(1+Data().statLabels.Length));
    // Know the grip, carry part of it: have/need rows and a worded reason, Fabricate disabled.
-   rig.model.Acquire("droid_servo_damaged");
+   rig.model.Identify("npc_ossa:servo_look");
    Assert.That(rig.pack.TryApply(new[]{new KeyValuePair<string,int>("droid_servo_damaged",1),new KeyValuePair<string,int>("scrap_alloy",2),new KeyValuePair<string,int>("nanite_residue",2)},0,out _));
    panel.Select("recipe_grip_stabilised_pistol");panel.Refresh();
    var counts=root.Query<Label>(className:"fab-input-count").ToList();

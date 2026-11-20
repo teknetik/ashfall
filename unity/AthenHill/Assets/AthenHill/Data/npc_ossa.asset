@@ -16,6 +16,8 @@ MonoBehaviour:
   displayName: Warden Ossa
   role: West Gate watch
   entries:
+  - node: servo
+    requires: carry:droid_servo_damaged, !recipe:recipe_grip_stabilised_pistol
   - node: warden_kit
     requires: order:order_kit_helmet
   - node: warden_kit
@@ -29,6 +31,40 @@ MonoBehaviour:
   - node: long_arm
     requires: order:order_long_arm
   nodes:
+  - id: servo
+    title: Salvage
+    text: 'Hold it up. Worker servo. Anything you pull off the machines, you can sell, or you can build it into guns and armour. That''s how it works around here: we salvage what we can. Let me look closer.'
+    voice: {fileID: 8300000, guid: dd02617495b0a1d85758af4138848684, type: 3}
+    choices:
+    - id: look
+      label: Go on.
+      next: servo_look
+      action: 
+      requires: 
+      setFlag: 
+    - id: later
+      label: Another time.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: servo_look
+    title: Salvage
+    text: Hm. The gimbal is still true. Wired into a pistol grip, that should take the kick out of your scrap pistol. Brann at Salvage has the bench, on the north avenue. Take him alloy and nanites too.
+    voice: {fileID: 8300000, guid: 0d1d014c3486784789699389b1508971, type: 3}
+    choices:
+    - id: brann
+      label: I'll find Brann.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+    - id: else
+      label: Anything else, Ossa?
+      next: greeting
+      action: 
+      requires: 
+      setFlag: 
   - id: warden_kit
     title: Warden kit
     text: Nobody issues Warden kit; you build it. Webbing turns up in the scrap heaps all over the Berms, padded liner in the wrecked trucks and drones, rivets on the droids you put down. Brann's bench rolls scrap alloy and nanites into plate and rivets the rest together. Helm, bracers, gloves, then leg plates.

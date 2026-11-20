@@ -32,7 +32,7 @@ SALVAGE = [('scrap_alloy', 4), ('copper_filament', 3), ('droid_servo_damaged', 2
     'version': 3, 'savedUtc': '2026-10-05T04:00:00Z', 'build': 'qa', 'credits': 120, 'purchases': 0, 'sales': 0,
     'items': [{'itemId': i, 'quantity': q} for i, q in SALVAGE] + [{'itemId': 'medkit', 'quantity': 1}, {'itemId': 'trauma_kit', 'quantity': 1},
                                                                      {'itemId': 'field_toolkit', 'quantity': 1}],
-    'crafting': {'known': [], 'crafted': [], 'crafts': 0, 'fitted': []},
+    'crafting': {'known': ['recipe_grip_stabilised_pistol'], 'crafted': [], 'crafts': 0, 'fitted': []},  # servo already identified by Ossa (phase 1): the pickup no longer teaches the grip
     'bermsStep': 'Complete', 'hasPistol': True, 'orders': {'index': 0, 'id': 'order_steady_hands', 'testFired': [], 'reported': []},
     'city': {'visitedHill': True, 'boughtFlask': True, 'soldScrap': True, 'linked': True,
              'spoken': ['npc_linn', 'npc_mira', 'npc_torr', 'npc_vex'], 'selectedDestination': '', 'flags': []},

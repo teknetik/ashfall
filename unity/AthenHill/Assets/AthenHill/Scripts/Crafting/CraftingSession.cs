@@ -38,11 +38,11 @@ namespace AthenHill
    Model=new CraftingModel(data,Session.catalog.items,Session.Shop,()=>combat&&combat.hasPistol,character:Session.Character);
    // 5 Oct 2026: the leased home's locker feeds the bench (WardHome.lockerFeedsBench); the pack is always used first
    Model.Reserve=Session.Stash;Model.ReserveOpen=()=>Session.Home&&Session.Home.lockerFeedsBench&&Session.HasFlag(WardHome.LeasedFlag);
-   if(combat){combat.BindLoadout(Model.Loadout);combat.BindCraftingModel(Model);if(combat.Health)combat.Health.Damaged+=OnDamaged;}
+   if(combat){combat.BindLoadout(Model.Loadout);combat.BindCraftingModel(Model);if(combat.Health)combat.Health.Damaged+=OnDamaged;combat.WeaponHandled+=OnWeaponHandled;}
    Session.PartBought+=OnPartBought;
    Session.Changed+=OnSessionChanged;
   }
-  void OnDestroy(){if(combat){if(combat.Health)combat.Health.Damaged-=OnDamaged;combat.BindCraftingModel(null);combat.BindLoadout(null);}if(Session){Session.PartBought-=OnPartBought;Session.Changed-=OnSessionChanged;}}
+  void OnDestroy(){if(combat){if(combat.Health)combat.Health.Damaged-=OnDamaged;combat.WeaponHandled-=OnWeaponHandled;combat.BindCraftingModel(null);combat.BindLoadout(null);}if(Session){Session.PartBought-=OnPartBought;Session.Changed-=OnSessionChanged;}}
   // ---- Timed fabrication (3 Oct 2026). One job at a time; the bench window stays open (modal) while it runs.
   /// The fabrication in progress, or null.
   public CraftJob Job=>Model?.Job;
@@ -51,10 +51,21 @@ namespace AthenHill
   public event Action<CraftJob,bool,string> CraftFinished;
   string jobBench;
   /// Leaving the bench (Esc, Close, any other state) stops the job at once; nothing was used.
-  void OnSessionChanged(){if(Model?.Job!=null&&Session.State!=CityState.Fabricator)CancelCraft("You left the bench.");}
-  void OnDamaged(float amount,Vector3 point){if(amount>0&&Model?.Job!=null)CancelCraft("You were hit.");}
+  void OnSessionChanged()
+  {
+   if(Model?.Job!=null&&Session.State!=CityState.Fabricator)CancelCraft("You left the bench.");
+   if(Model?.RepairJob!=null&&!RepairState(Session.State))CancelRepair("You stopped work on it.");
+  }
+  void OnDamaged(float amount,Vector3 point){if(amount>0&&Model?.Job!=null)CancelCraft("You were hit.");if(amount>0&&Model?.RepairJob!=null)CancelRepair("You were hit.");}
+  /// Drawing or firing a weapon (PlayerCombat.WeaponHandled) interrupts a field repair.
+  void OnWeaponHandled(){if(Model?.RepairJob!=null)CancelRepair("You picked up a weapon.");}
+  static bool RepairState(CityState state)=>state==CityState.Play||state==CityState.Inventory;
   void Update()
   {
+   if(Model?.RepairJob!=null)
+   {
+    if(!Session||!RepairState(Session.State))CancelRepair("You stopped work on it.");else TickRepair(Time.time);
+   }
    if(Model?.Job==null)return;
    if(!Session||Session.State!=CityState.Fabricator){CancelCraft("You left the bench.");return;}
    TickCraft(Time.time);
@@ -89,7 +100,66 @@ namespace AthenHill
    CraftFinished?.Invoke(job,false,"cancelled");
    return true;
   }
-  string Fabricated(CraftRecipe recipe)=>$"{CraftingText.ItemName(Model,recipe.outputItemId)} fabricated."+(Model.Loadout.Modifier(recipe.outputItemId)!=null?" Fit it to a compatible weapon.":"");
+  // ---- Field repair (20 Nov 2026, Phase 3). The carried Field Toolkit (tag tool:screwdriver) works on a carried weapon for
+  // Condition.repairSeconds. Damage, drawing or firing a weapon, or leaving play and the field pack stop it with nothing changed.
+  /// The field repair in progress, or null.
+  public CraftJob RepairJob=>Model?.RepairJob;
+  /// A field repair ended: (job, completed, reason). Completed = condition restored; otherwise nothing changed.
+  public event Action<CraftJob,bool,string> RepairFinished;
+  const string RepairBench="Field Pack";
+  /// Starts a field repair of a carried weapon (from the weapon's panel in the field pack, or any caller). The refusal is a notice.
+  public bool BeginFieldRepair(string weaponId,out string reason)
+  {
+   reason="no_model";
+   if(Model==null||!Session)return false;
+   var loadout=Model.GetLoadout(weaponId);
+   if(!RepairState(Session.State)){reason="busy";return false;}
+   if(!Model.BeginRepair(weaponId,Time.time,out reason))
+   {
+    Session.Notify("Cannot repair. "+CraftingText.ConditionReason(reason,Model,loadout),RepairBench);Session.Cue(CitySoundCue.Unavailable);return false;
+   }
+   float gain=Model.RepairGain(weaponId);
+   Session.Notify($"Repairing the {loadout.WeaponName}: {CraftingText.Duration(Model.RepairJob.seconds)} with your toolkit, about +{Mathf.Round(gain)} condition, and its best condition drops by {Model.Condition.capLossPerRepair:0.#}. Drawing or firing a weapon, or being hit, stops it.",RepairBench);
+   return true;
+  }
+  /// Advances the repair to time now (Update passes Time.time; tests pass the job's end time).
+  public void TickRepair(float now)
+  {
+   if(Model==null)return;
+   var tick=Model.TickRepair(now,out var job,out var reason,out float amount);
+   if(tick==CraftTick.None)return;
+   var loadout=Model.GetLoadout(job.recipeId);bool ok=tick==CraftTick.Completed;
+   if(Session)
+   {
+    Session.Notify(ok?$"The {loadout.WeaponName} is repaired: +{Mathf.Round(amount)} condition. {CraftingText.Condition(loadout,Model)}."+(WeaponCondition.IsBroken(loadout,Model.Condition)?" That is as far as the field can take it.":""):"Repair failed. "+CraftingText.ConditionReason(reason,Model,loadout),RepairBench);
+    Session.Cue(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);
+   }
+   RepairFinished?.Invoke(job,ok,reason);
+  }
+  /// Stops the repair (nothing changed). why: a short sentence for the notice (null = the Cancel button).
+  public bool CancelRepair(string why=null)
+  {
+   if(Model==null||!Model.CancelRepair(out var job))return false;
+   var loadout=Model.GetLoadout(job.recipeId);
+   if(Session)
+   {
+    Session.Notify((string.IsNullOrEmpty(why)?"":why+" ")+$"The {loadout?.WeaponName} repair stopped. Nothing changed.",RepairBench);
+    Session.Cue(CitySoundCue.Unavailable);
+   }
+   RepairFinished?.Invoke(job,false,"cancelled");
+   return true;
+  }
+  /// Bench overhaul (placeholder until Phase 6): restores a worn or broken weapon's best condition for scrap alloy and nanites.
+  public bool Overhaul(string weaponId,out string reason)
+  {
+   if(!BenchFree(out reason))return false;
+   var loadout=Model.GetLoadout(weaponId);
+   bool ok=Model.TryOverhaul(weaponId,Session.ActiveStationId,out reason);
+   Session.Notify(ok?$"The {loadout.WeaponName} is overhauled: back to full condition ({CraftingText.OverhaulCost(Model)} used).":"Cannot overhaul. "+CraftingText.ConditionReason(reason,Model,loadout),Bench);
+   Session.Cue(ok?CitySoundCue.Trade:CitySoundCue.Unavailable);
+   return ok;
+  }
+  string Fabricated(CraftRecipe recipe)=>$"{CraftingText.ItemName(Model,recipe.outputItemId)} fabricated."+CraftingText.AwardText(Model,Model.LastAward?.recipeId==recipe.id?Model.LastAward:null)+(Model.Loadout.Modifier(recipe.outputItemId)!=null?" Fit it to a compatible weapon.":"");
   /// A part bought at a counter reveals the schematics that use it, exactly like finding one.
   void OnPartBought(PartPurchase purchase)
   {
@@ -138,7 +208,7 @@ namespace AthenHill
    if(!BenchFree(out reason))return false;
    var loadout=Model.GetLoadout(weaponId);
    var before=loadout?.Stats??default;
-   bool ok=Model.TryFit(weaponId,itemId,out reason);
+   bool ok=Model.TryFit(weaponId,itemId,out reason,Session.ActiveStationId);
    var mod=loadout?.Modifier(itemId);
    Session.Notify(ok?$"{CraftingText.ItemName(Model,itemId)} fitted. {CraftingText.StatChanges(data,before,loadout.Stats)}":"Cannot fit. "+CraftingText.Reason(reason,Model,null,reason=="stack_full"&&mod!=null?loadout.Fitted(mod.slot):itemId),Bench);
    return ok;
@@ -189,7 +259,9 @@ namespace AthenHill
    contents.Collect(Session.Shop,out pickup.taken,out pickup.left);
    foreach(var s in pickup.taken){Loot.MarkCollected(s.itemId);pickup.discovered.AddRange(Model.Acquire(s.itemId));}
    LastLoot=(pickup.taken.Count>0?"Collected: "+Describe(pickup.taken):"Collected nothing")+(pickup.left.Count>0?" · pack full, left in the cache: "+Describe(pickup.left):"");
-   Session.Record(LastLoot+(pickup.discovered.Count>0?" "+CraftingText.Discovered(pickup.discovered):""),"Field Pack");
+   // 20 Nov 2026: salvage nobody has identified yet says who to show it to (Damaged Servo: Ossa).
+   var show=pickup.taken.Where(s=>Model.NeedsIdentifying(s.itemId)).Select(s=>$"Show the {CraftingText.ItemName(Model,s.itemId)} to {CraftingText.NpcName(Session,Model.Item(s.itemId).identifyBy)}.").Distinct().ToList();
+   Session.Record(LastLoot+(pickup.discovered.Count>0?" "+CraftingText.Discovered(pickup.discovered):"")+(show.Count>0?" "+string.Join(" ",show):""),"Field Pack");
    Collected?.Invoke(pickup);
    return pickup;
   }

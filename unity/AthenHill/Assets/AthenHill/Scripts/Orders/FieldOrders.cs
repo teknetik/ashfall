@@ -66,7 +66,8 @@ namespace AthenHill
   void OnCollected(LootPickup _)=>dirty=true;
   void OnShot(){if(Ready&&Progress.NoteShot(crafting.Model))dirty=true;}
   /// Speaking to the current order's report-to colonist (Brann for the first order) moves it on to fabrication.
-  void OnTalked(NpcAgent npc){if(Ready&&npc&&npc.definition&&Progress.NoteReport(npc.definition.id))dirty=true;}
+  /// 20 Nov 2026: not while the salvage is still unidentified (Brann sends the player to Ossa first; that is not the report).
+  void OnTalked(NpcAgent npc){if(Ready&&npc&&npc.definition&&Progress.Stage(crafting.Model,session.Shop)!=OrderStage.Identify&&Progress.NoteReport(npc.definition.id))dirty=true;}
   bool Collected(string itemId)=>crafting.Loot.HasCollected(itemId)||session.Shop.Quantity(itemId)>0;
   void Update()
   {
@@ -190,6 +191,6 @@ namespace AthenHill
   }
   public FieldOrderState Capture()=>Progress?.Capture()??new FieldOrderState();
   /// Pre-v2 tooling name for the grip tutorial state (Dormant, Salvage, Report, Fabricate, Fit, TestFire, Done).
-  public string LegacyGripStep=>Progress==null||!Progress.Started?"Dormant":Progress.Index>0?"Done":Stage switch{OrderStage.Gather=>"Salvage",OrderStage.Report=>"Report",OrderStage.Fabricate=>"Fabricate",OrderStage.Fit=>"Fit",_=>"TestFire"};
+  public string LegacyGripStep=>Progress==null||!Progress.Started?"Dormant":Progress.Index>0?"Done":Stage switch{OrderStage.Gather=>"Salvage",OrderStage.Identify=>"Salvage",OrderStage.Report=>"Report",OrderStage.Fabricate=>"Fabricate",OrderStage.Fit=>"Fit",_=>"TestFire"};
  }
 }

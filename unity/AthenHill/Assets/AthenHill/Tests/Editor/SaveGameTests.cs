@@ -173,7 +173,7 @@ namespace AthenHill.Tests
     a.session.StartGame();
     Assert.That(a.pack.TryApply(new[]{new KeyValuePair<string,int>("scrap_alloy",7),new KeyValuePair<string,int>("barrel_bored_alloy",1),new KeyValuePair<string,int>("grip_stabilised_pistol",1),new KeyValuePair<string,int>("lattice_shard",1)},12,out _));
     a.combat.RestorePistol(true);a.tutorial.Restore(BermsStep.Complete);
-    a.model.Acquire("droid_servo_damaged");a.model.OrderStarted("order_keep_charge");
+    a.model.Identify("npc_ossa:servo_look");a.model.OrderStarted("order_keep_charge");
     Assert.That(a.model.TryFit("barrel_bored_alloy",out _));Assert.That(a.model.TryFit("grip_stabilised_pistol",out _));
     Assert.That(a.pack.TryApply(new[]{new KeyValuePair<string,int>("copper_filament",2)},0,out _));Assert.That(a.model.TryCraft("recipe_wound_coil","station_field_fabricator",out _));
     for(int i=0;i<5;i++)a.crafting.Loot.Roll(Data().lootTables.Single(t=>t.id=="loot_feral_scrap_drone"));

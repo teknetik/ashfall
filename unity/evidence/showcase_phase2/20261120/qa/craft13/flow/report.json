@@ -1,0 +1,352 @@
+{
+ "name": "check_crafting_flow_native",
+ "exe": "/home/teknetik/code/ao2/unity/AthenHill/Builds/batch-p2-craft13/AthenHill.x86_64",
+ "exeMtime": "Thu Nov 19 14:08:38 2026",
+ "started": "2026-11-20 10:49:13",
+ "checks": [
+  {
+   "check": "fresh save: the grip recipe is not known",
+   "passed": true,
+   "detail": [
+    "recipe_field_rifle",
+    "recipe_rifle_precision_barrel"
+   ]
+  },
+  {
+   "check": "Steady Hands is at the Identify stage with the servo carried",
+   "passed": true,
+   "detail": {
+    "stage": "Identify",
+    "objective": "Show the servo to Warden Ossa at the West Gate post. She knows what salvage can become."
+   }
+  },
+  {
+   "check": "Brann's dialogue is steady_identify (shows the servo to Ossa)",
+   "passed": true,
+   "detail": {
+    "npc": "Brann",
+    "node": "steady_identify",
+    "choices": [
+     "Show me what you trade.",
+     "I'll go and see her."
+    ]
+   }
+  },
+  {
+   "check": "Brann's line names Ossa",
+   "passed": true,
+   "detail": "That's a worker servo. Good. Before I touch it, show it to Ossa. She reads salvage better than I do, and she'll tell you what it's good for. Then come back with alloy and nanites."
+  },
+  {
+   "check": "talking to Brann does not teach the grip",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "Ossa opens with the servo node",
+   "passed": true,
+   "detail": {
+    "npc": "Warden Ossa",
+    "node": "servo",
+    "choices": [
+     "Go on.",
+     "Another time."
+    ]
+   }
+  },
+  {
+   "check": "Go on leads to servo_look",
+   "passed": true,
+   "detail": {
+    "node": "servo_look"
+   }
+  },
+  {
+   "check": "servo_look teaches the grip recipe",
+   "passed": true,
+   "detail": [
+    "recipe_field_rifle",
+    "recipe_rifle_precision_barrel",
+    "recipe_grip_stabilised_pistol"
+   ]
+  },
+  {
+   "check": "the order moved Identify -> Report",
+   "passed": true,
+   "detail": {
+    "before": "Identify",
+    "after": "Report",
+    "objective": "Take the servo to Brann at Salvage, on the north avenue inside the walls. His workbench can make the Stabilised Pistol Grip."
+   }
+  },
+  {
+   "check": "Brann now opens report_ready",
+   "passed": true,
+   "detail": {
+    "node": "report_ready"
+   }
+  },
+  {
+   "check": "talking to Brann moves the order to Fabricate",
+   "passed": true,
+   "detail": "Fabricate"
+  },
+  {
+   "check": "toolkit removed from the pack for the refusal check",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "the bench refuses with the missing-tool reason",
+   "passed": true,
+   "detail": "Missing tool: Screwdriver. Carry a Field Toolkit."
+  },
+  {
+   "check": "clicking Fabricate without the toolkit starts nothing",
+   "passed": true,
+   "detail": {
+    "job": null,
+    "crafts": 0,
+    "notice": ""
+   }
+  },
+  {
+   "check": "toolkit returned",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "the recipe panel lists \"Exercises Engineering \u00b7 +N XP\"",
+   "passed": true,
+   "detail": "A field-fabricated grip that steadies the scrap pistol.\nGrip mod: Recoil\u00a038\u00a0\u2192\u00a031\nTool: Screwdriver (carried)\nBench time: 8 s\nExercises Engineering \u00b7 +12 XP"
+  },
+  {
+   "check": "Fabricate starts the grip on the bench timer",
+   "passed": true,
+   "detail": {
+    "recipeId": "recipe_grip_stabilised_pistol",
+    "seconds": 8.0,
+    "progress": 0.181944847,
+    "remaining": 6.54443932
+   }
+  },
+  {
+   "check": "the grip is fabricated",
+   "passed": true,
+   "detail": {
+    "qty": 1
+   }
+  },
+  {
+   "check": "the fabrication notice shows the XP and Engineering award",
+   "passed": true,
+   "detail": "Stabilised Pistol Grip fabricated. +12 XP \u00b7 Engineering +1. Fit it to a compatible weapon."
+  },
+  {
+   "check": "engineering increased",
+   "passed": true,
+   "detail": {
+    "before": 10.0,
+    "after": 11.0
+   }
+  },
+  {
+   "check": "2 draws the scrap pistol",
+   "passed": true,
+   "detail": {
+    "weapon": "weapon_scrap_pistol"
+   }
+  },
+  {
+   "check": "a pistol in good condition fires",
+   "passed": true,
+   "detail": {
+    "before": 0,
+    "after": 1
+   }
+  },
+  {
+   "check": "a worn pistol (condition 3) misfires and the HUD says so",
+   "passed": true,
+   "detail": {
+    "notice": "Scrap Pistol misfired. Its condition is low: repair it in the field pack.",
+    "attempts": 3,
+    "fired": 2
+   }
+  },
+  {
+   "check": "at condition 0 the pistol is jammed: no shot and the HUD notice says so",
+   "passed": true,
+   "detail": {
+    "notice": "Scrap Pistol jammed. Repair it with your Field Toolkit in the field pack, or overhaul it at the workbench.",
+    "shots": [
+     3,
+     3
+    ]
+   }
+  },
+  {
+   "check": "a jammed pistol stays jammed over repeated trigger pulls",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "field pack, SECONDARY tab shows Condition 20 / 100",
+   "passed": true,
+   "detail": "Condition 20 / 100 \u00b7 misfires\nNext field repair: +30, best condition \u22128."
+  },
+  {
+   "check": "the weapon panel has the Repair with toolkit button",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "the panel announces the next field repair (+30)",
+   "passed": true,
+   "detail": "Condition 20 / 100 \u00b7 misfires\nNext field repair: +30, best condition \u22128."
+  },
+  {
+   "check": "a field repair starts (button becomes Stop repair)",
+   "passed": true,
+   "detail": "Repairing the Scrap Pistol: 4 s with your toolkit, about +30 condition, and its best condition drops by 8. Drawing or firing a weapon, or being hit, stops it."
+  },
+  {
+   "check": "repair 1 restores +30 (20 -> 50) and lowers the cap to 92",
+   "passed": true,
+   "detail": {
+    "line": "Condition 50 / 92\nNext field repair: +20, best condition \u22128.",
+    "notice": "The Scrap Pistol is repaired: +30 condition. Condition 50 / 92"
+   }
+  },
+  {
+   "check": "damage during a repair cancels it: condition and cap unchanged",
+   "passed": true,
+   "detail": {
+    "started": true,
+    "before": [
+     50,
+     92
+    ],
+    "after": [
+     50,
+     92
+    ],
+    "notice": "You were hit. The Scrap Pistol repair stopped. Nothing changed."
+   }
+  },
+  {
+   "check": "the cancel notice says why",
+   "passed": true,
+   "detail": "You were hit. The Scrap Pistol repair stopped. Nothing changed."
+  },
+  {
+   "check": "each field repair lowers the best condition by 8 (92, 84, 76, 68)",
+   "passed": true,
+   "detail": [
+    92,
+    84,
+    76,
+    68
+   ]
+  },
+  {
+   "check": "after four repairs the weapon reads as needing a bench overhaul",
+   "passed": true,
+   "detail": "Condition 16 / 68 \u00b7 misfires \u00b7 needs a bench overhaul"
+  },
+  {
+   "check": "a fifth field repair is refused",
+   "passed": true,
+   "detail": {
+    "message": "Dev: Weapon condition restored.\nDev: Weapon condition set.\nField Pack: Repairing the Scrap Pistol: 4 s with your toolkit, about +30 condition, and its best condition drops by 8. Drawing or firing a weapon, or being hit, stops it.\nField Pack: The Scrap Pistol is repaired: +30 condition. Condition 50 / 92\nField Pack: Repairing the Scrap Pistol: 4 s with your toolkit, about +20 condition, and its best condition drops by 8. Drawing or firing a weapon, or being hit, stops it.\nField Pack: You were hit. The Scrap Pistol repair stopped. Nothing changed.\nDev: Weapon condition set.\nField Pack: Repairing the Scrap Pistol: 4 s with your toolkit, about +20 condition, and its best condition drops by 8. Drawing or firing a weapon, or being hit, stops it.\nField Pack: The Scrap Pistol is repaired: +20 condition. Condition 30 / 84 \u00b7 worn\nDev: Weapon condition set.\nField Pack: Repairing the Scrap Pistol: 4 s with your toolkit, about +12 condition, and its best condition drops by 8. Drawing or firing a weapon, or being hit, stops it.\nField Pack: The Scrap Pistol is repaired: +12 condition. Condition 22 / 76 \u00b7 misfires\nDev: Weapon condition set.\nField Pack: Repairing the Scrap Pistol: 4 s with your toolkit, about +6 condition, and its best condition drops by 8. Drawing or firing a weapon, or being hit, stops it.\nField Pack: The Scrap Pistol is repaired: +6 condition. Condition 16 / 68 \u00b7 misfires \u00b7 needs a bench overhaul It is as good as the field can make it: the next fix needs a bench overhaul.\nField Pack: Cannot repair. The Scrap Pistol is worn past a field fix (its best condition is down to 68). It needs a bench overhaul at the workbench at Salvage.",
+    "notice": "Cannot repair. The Scrap Pistol is worn past a field fix (its best condition is down to 68). It needs a bench overhaul at the workbench at Salvage."
+   }
+  },
+  {
+   "check": "the bench window shows the worn pistol condition",
+   "passed": true,
+   "detail": "SCRAP PISTOL \u00b7 CONDITION 16 / 68 \u00b7 MISFIRES \u00b7 NEEDS A BENCH OVERHAUL"
+  },
+  {
+   "check": "the bench Overhaul restores condition and best condition to 100 / 100",
+   "passed": true,
+   "detail": {
+    "title": "SCRAP PISTOL \u00b7 CONDITION 100 / 100",
+    "notice": "The Scrap Pistol is overhauled: back to full condition (3 \u00d7 Scrap Alloy, 4 \u00d7 Any tier-one nanites used)."
+   }
+  },
+  {
+   "check": "the field pack agrees: Condition 100 / 100",
+   "passed": true,
+   "detail": "Condition 100 / 100\nNext field repair: +30, best condition \u22128."
+  },
+  {
+   "check": "field repair is available again after the overhaul (repair count reset)",
+   "passed": true,
+   "detail": "Condition 100 / 100\nNext field repair: +30, best condition \u22128."
+  },
+  {
+   "check": "no runtime exceptions in Player.log",
+   "passed": true,
+   "detail": []
+  }
+ ],
+ "captures": [
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/craft13/flow/run/01-brann-identify.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/craft13/flow/run/02-ossa-servo.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/craft13/flow/run/03-ossa-servo-look.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/craft13/flow/run/04-brann-report.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/craft13/flow/run/05-bench-no-toolkit.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/craft13/flow/run/06-bench-grip.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/craft13/flow/run/07-bench-xp-notice.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/craft13/flow/run/08-misfire-notice.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/craft13/flow/run/09-jam-notice.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/craft13/flow/run/10-pack-condition-before.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/craft13/flow/run/11-pack-repairing.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/craft13/flow/run/12-pack-condition-after-repair1.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/craft13/flow/run/13-pack-repair-cancelled.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/craft13/flow/run/14-pack-after-four-repairs.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/craft13/flow/run/15-pack-fifth-repair-refused.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/craft13/flow/run/16-bench-before-overhaul.png",
+  "/home/teknetik/code/ao2/unity/evidence/showcase_phase2/20261120/qa/craft13/flow/run/17-bench-after-overhaul.png"
+ ],
+ "notes": [
+  {
+   "note": "stage before Ossa (the brief said Gather; the code reports the Identify stage once salvage is carried)",
+   "detail": "Identify"
+  },
+  {
+   "note": "saved character after the craft (the game may only write it on rest/quit)",
+   "detail": {
+    "experience": 12,
+    "level": 1,
+    "useProgress": []
+   }
+  },
+  {
+   "note": "repair 2",
+   "detail": {
+    "line": "Condition 30 / 84 \u00b7 worn\nNext field repair: +12, best condition \u22128."
+   }
+  },
+  {
+   "note": "repair 3",
+   "detail": {
+    "line": "Condition 22 / 76 \u00b7 misfires\nNext field repair: +6, best condition \u22128."
+   }
+  },
+  {
+   "note": "repair 4",
+   "detail": {
+    "line": "Condition 16 / 68 \u00b7 misfires \u00b7 needs a bench overhaul"
+   }
+  },
+  {
+   "note": "NOT VERIFIED: audio, live repair progress bar (panel text says reopen the tab to refresh)",
+   "detail": null
+  }
+ ],
+ "passed": true,
+ "summary": "40/40 passed",
+ "finished": "2026-11-20 10:51:30"
+}

@@ -6,7 +6,9 @@ namespace AthenHill
 {
  /// Report: the parts are gathered and the order's report-to colonist has not been visited yet (appended last, so
  /// existing numeric values are unchanged).
- public enum OrderStage { NotStarted, Gather, Fabricate, Fit, TestFire, Hunt, Craft, FreePlay, Report }
+ /// Identify (20 Nov 2026): the player carries salvage the schematic needs (the Damaged Servo) but the schematic is not
+ /// learned yet; the colonist named by the item's identifyBy (Ossa) has to look at it first.
+ public enum OrderStage { NotStarted, Gather, Fabricate, Fit, TestFire, Hunt, Craft, FreePlay, Report, Identify }
  /// Pure field-order state machine. The index only ever moves forward, so repeating a finished task (crafting or
  /// fitting again, firing again) can never restart an order or repeat Ossa's completion line.
  public sealed class FieldOrderProgress
@@ -72,14 +74,14 @@ namespace AthenHill
     case FieldOrderGoal.CraftItem:
     {
      var r=RecipeFor(model,o);
-     if(r==null||!model.CanCraft(r.id,r.stationId,out _))return OrderStage.Gather;
+     if(r==null||!model.CanCraft(r.id,r.stationId,out _))return r!=null&&model.UnidentifiedCarried(r.id)!=null?OrderStage.Identify:OrderStage.Gather;
      return HasReport(o)&&!reported.Contains(o.id)?OrderStage.Report:OrderStage.Fabricate;
     }
    }
    if(Fitted(model,o.targetItemId))return OrderStage.TestFire;
    if(pack.Quantity(o.targetItemId)>0)return OrderStage.Fit;
    var recipe=RecipeFor(model,o);
-   if(recipe==null||!model.CanCraft(recipe.id,recipe.stationId,out _))return OrderStage.Gather;
+   if(recipe==null||!model.CanCraft(recipe.id,recipe.stationId,out _))return recipe!=null&&model.UnidentifiedCarried(recipe.id)!=null?OrderStage.Identify:OrderStage.Gather;
    return HasReport(o)&&!reported.Contains(o.id)?OrderStage.Report:OrderStage.Fabricate;
   }
   public string GuidanceKey(CraftingModel model,ShopModel pack)
@@ -89,6 +91,7 @@ namespace AthenHill
     case OrderStage.Fabricate:case OrderStage.Fit:case OrderStage.Craft:return "fabricator";
     case OrderStage.Gather:case OrderStage.Hunt:return Current.guidance;
     case OrderStage.Report:return Current.reportGuidance;
+    case OrderStage.Identify:return Current.identifyGuidance;
     case OrderStage.FreePlay:return Data.freePlayGuidance;
     default:return null;
    }
@@ -101,6 +104,7 @@ namespace AthenHill
    if(stage==OrderStage.FreePlay)return Data.freePlayObjective;
    var o=Current;var recipe=RecipeFor(model,o);
    string item=CraftingText.ItemName(model,o.targetItemId);
+   if(stage==OrderStage.Identify)return Fill(o.identifyBrief??"",("item",item)).Trim();
    if(stage==OrderStage.Report)return Fill(o.reportBrief??"",("item",item)).Trim();
    string template=stage switch
    {

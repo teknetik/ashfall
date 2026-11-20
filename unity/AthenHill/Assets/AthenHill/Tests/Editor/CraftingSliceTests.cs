@@ -63,7 +63,7 @@ namespace AthenHill.Tests
    bool pistol=false;var model=new CraftingModel(Data(),City().items,pack,()=>pistol);
    Assert.That(model.TryCraft(Grip().id,"station_field_fabricator",out var reason),Is.False);
    Assert.That(reason,Is.EqualTo("recipe_locked"));
-   model.Acquire("droid_servo_damaged");
+   model.Identify("npc_ossa:servo_look");   // 20 Nov 2026: Ossa identifies the servo; picking it up no longer teaches the grip
    Assert.That(pack.TryApply(new[]{Delta("droid_servo_damaged",1),Delta("scrap_alloy",2),Delta("nanite_residue",4)},0,out _));
    pistol=true;Assert.That(model.TryCraft(Grip().id,"station_field_fabricator",out reason),Is.False);
    Assert.That(reason,Is.EqualTo("missing_ingredients"));Assert.That(pack.Quantity("scrap_alloy"),Is.EqualTo(2));

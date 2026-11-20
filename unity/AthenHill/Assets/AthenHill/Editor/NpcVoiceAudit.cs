@@ -14,8 +14,8 @@ namespace AthenHill.Editor
     {
         static readonly Dictionary<string, int> Expected = new Dictionary<string, int>
         {
-            {"npc_mira", 1}, {"npc_torr", 2}, {"npc_vex", 2}, {"npc_linn", 2},
-            {"npc_brann", 19}, {"npc_ossa", 7}, {"npc_rell", 2},
+            {"npc_mira", 1}, {"npc_torr", 2}, {"npc_vex", 2}, {"npc_linn", 4},   // 20 Nov 2026: housing nodes voiced (art/linn_voice_20261120)
+            {"npc_brann", 21}, {"npc_ossa", 9}, {"npc_rell", 2},   // 20 Nov 2026: Ossa identifies the servo (art/crafting_assembly_20261120)
             {"npc_tamsin", 5}   // 19 Nov 2026: Evelyn (art/showcase_20261119/npc_life)
         };
 

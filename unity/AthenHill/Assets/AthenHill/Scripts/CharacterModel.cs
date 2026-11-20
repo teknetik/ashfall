@@ -14,6 +14,9 @@ namespace AthenHill
   public const int CurrentVersion=2;
   public int version=CurrentVersion,level=1,experience,attributePoints,skillPoints;
   public CountEntry[] attributes,skills;
+  /// Skill progress earned by use that has not yet added up to a whole point, in thousandths (20 Nov 2026). Absent in older
+  /// saves; the version stays 2 because a missing array is simply no progress.
+  public CountEntry[] useProgress;
   public SlotEntry[] equipped;
   public CharacterModificationEntry[] modifications;
  }
@@ -26,6 +29,7 @@ namespace AthenHill
  {
   readonly ShopModel pack;
   readonly Dictionary<string,int> attributes=new Dictionary<string,int>(),skills=new Dictionary<string,int>();
+  readonly Dictionary<string,int> useProgress=new Dictionary<string,int>();
   readonly Dictionary<string,string> equipped=new Dictionary<string,string>();
   readonly Dictionary<string,string> modifications=new Dictionary<string,string>();
   readonly Dictionary<string,CharacterModifier[]> effects=new Dictionary<string,CharacterModifier[]>();
@@ -49,7 +53,7 @@ namespace AthenHill
   }
   void Reset()
   {
-   attributes.Clear();skills.Clear();equipped.Clear();modifications.Clear();effects.Clear();Level=1;Experience=0;
+   attributes.Clear();skills.Clear();useProgress.Clear();equipped.Clear();modifications.Clear();effects.Clear();Level=1;Experience=0;
    AttributePoints=Math.Max(0,Data.initialAttributePoints);SkillPoints=Math.Max(0,Data.initialSkillPoints);
    foreach(var a in Data.attributes)attributes[a.id]=Math.Max(0,a.initial);
    foreach(var s in Data.skills)skills[s.id]=Math.Max(0,s.initial);
@@ -290,6 +294,25 @@ namespace AthenHill
    if(SkillPoints<s.cost){reason="Not enough skill points.";return false;}
    SkillPoints-=s.cost;skills[id]=(int)Math.Min(s.maximum,(long)skills[id]+s.trainingStep);Recalculate();reason="ok";return true;
   }
+  /// Skill progress from use (crafting, 20 Nov 2026): fractional points accumulate and each whole point raises the trained
+  /// skill by one, the same unit a spent skill point adds trainingStep of. Skill points from levelling stay the main route.
+  /// Returns the whole points added; false for an unknown skill or a non-positive amount.
+  public bool GrantSkillUse(string id,float amount,out int whole)
+  {
+   whole=0;
+   var s=Data.skills.FirstOrDefault(x=>x.id==id);
+   if(s==null||!(amount>0)||float.IsNaN(amount)||float.IsInfinity(amount))return false;
+   if(TrainedSkill(id)>=s.maximum)return true;
+   long milli=(long)(useProgress.TryGetValue(id,out var have)?have:0)+(long)Math.Round(amount*1000f);
+   whole=(int)Math.Min(s.maximum-TrainedSkill(id),milli/1000);
+   milli-=whole*1000L;
+   useProgress[id]=(int)Math.Min(999,Math.Max(0,milli));
+   if(whole>0){skills[id]=skills[id]+whole;Recalculate();}
+   else Changed?.Invoke();
+   return true;
+  }
+  /// Progress toward the next whole point from use, 0 to under 1.
+  public float SkillUseProgress(string id)=>id!=null&&useProgress.TryGetValue(id,out var v)?v/1000f:0;
   public bool GrantExperience(int amount,out string reason)
   {
    if(amount<0||Data.experiencePerLevel<1){reason="Invalid experience award.";return false;}
@@ -350,7 +373,7 @@ namespace AthenHill
    value.finalValue=Mathf.Clamp((value.baseValue+value.progression+value.dependencies+value.flat)*Mathf.Max(0,1+value.percent),minimum,Mathf.Max(minimum,maximum));
    result[id]=value;
   }
-  public CharacterState Capture()=>new CharacterState{level=Level,experience=Experience,attributePoints=AttributePoints,skillPoints=SkillPoints,attributes=attributes.OrderBy(x=>x.Key).Select(x=>new CountEntry{id=x.Key,count=x.Value}).ToArray(),skills=skills.OrderBy(x=>x.Key).Select(x=>new CountEntry{id=x.Key,count=x.Value}).ToArray(),equipped=equipped.OrderBy(x=>x.Key).Select(x=>new SlotEntry{slot=x.Key,itemId=x.Value}).ToArray(),modifications=modifications.OrderBy(x=>x.Key).Select(x=>new CharacterModificationEntry{slot=x.Key.Substring(0,x.Key.LastIndexOf(':')),socketIndex=int.Parse(x.Key.Substring(x.Key.LastIndexOf(':')+1)),itemId=x.Value}).ToArray()};
+  public CharacterState Capture()=>new CharacterState{level=Level,experience=Experience,attributePoints=AttributePoints,skillPoints=SkillPoints,attributes=attributes.OrderBy(x=>x.Key).Select(x=>new CountEntry{id=x.Key,count=x.Value}).ToArray(),skills=skills.OrderBy(x=>x.Key).Select(x=>new CountEntry{id=x.Key,count=x.Value}).ToArray(),useProgress=useProgress.Where(x=>x.Value>0).OrderBy(x=>x.Key).Select(x=>new CountEntry{id=x.Key,count=x.Value}).ToArray(),equipped=equipped.OrderBy(x=>x.Key).Select(x=>new SlotEntry{slot=x.Key,itemId=x.Value}).ToArray(),modifications=modifications.OrderBy(x=>x.Key).Select(x=>new CharacterModificationEntry{slot=x.Key.Substring(0,x.Key.LastIndexOf(':')),socketIndex=int.Parse(x.Key.Substring(x.Key.LastIndexOf(':')+1)),itemId=x.Value}).ToArray()};
   public List<string> Restore(CharacterState state)
   {
    Reset();var skipped=new List<string>();
@@ -359,6 +382,7 @@ namespace AthenHill
     Level=Math.Max(1,state.level);Experience=Mathf.Clamp(state.experience,0,Math.Max(0,Data.experiencePerLevel-1));AttributePoints=Math.Max(0,state.attributePoints);SkillPoints=Math.Max(0,state.skillPoints);
     foreach(var a in state.attributes??Array.Empty<CountEntry>())if(a!=null){var spec=Data.attributes.FirstOrDefault(x=>x.id==a.id);if(spec!=null)attributes[a.id]=Mathf.Clamp(a.count,0,spec.maximum);else skipped.Add(a.id);}
     foreach(var s in state.skills??Array.Empty<CountEntry>())if(s!=null){var spec=Data.skills.FirstOrDefault(x=>x.id==s.id);if(spec!=null)skills[s.id]=Mathf.Clamp(s.count,0,spec.maximum);else skipped.Add(s.id);}
+    foreach(var u in state.useProgress??Array.Empty<CountEntry>())if(u!=null&&Data.skills.Any(x=>x.id==u.id))useProgress[u.id]=Mathf.Clamp(u.count,0,999);
     equipped.Clear();
     foreach(var e in state.equipped??Array.Empty<SlotEntry>())if(e!=null){if(Accepts(e.itemId,e.slot)&&pack.Spec(e.itemId)!=null&&!equipped.ContainsKey(e.slot))equipped[e.slot]=e.itemId;else skipped.Add(e.itemId);}
     foreach(var entry in state.modifications??Array.Empty<CharacterModificationEntry>())if(entry!=null)

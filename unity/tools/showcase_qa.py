@@ -73,6 +73,14 @@ def start(continue_game=True, timeout=60):
     qa.wait(lambda: qa.state() == 'Play', timeout, what='Play')
     qa.release_all()
     time.sleep(1.0)
+    full_condition()
+
+
+def full_condition():
+    """Phase 3 (20 Nov 2026): weapons wear per shot and a worn one misfires. Start every run at full condition (older builds lack the command)."""
+    for w in ('weapon_scrap_pistol', 'weapon_field_rifle'):
+        try: qa.cmd('dev.weapon.condition', weaponId=w, full=True)
+        except Exception as e: note('weapon condition reset unavailable', str(e)); return
 
 
 def stop():

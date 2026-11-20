@@ -20,7 +20,7 @@ namespace AthenHill
   readonly CraftingSession crafting;
   readonly VisualElement list,inputs,slots,stats;
   readonly Label title,description,reason,pistolTitle;
-  readonly Button craft,fit,remove,cancel;
+  readonly Button craft,fit,remove,cancel,overhaul;
   readonly VisualElement progress,progressFill;
   readonly Label progressLabel;
   string progressText;float progressShown=-1;
@@ -48,6 +48,9 @@ namespace AthenHill
    title=root.Q<Label>("fabricator-recipe");description=root.Q<Label>("fab-description");reason=root.Q<Label>("fab-reason");pistolTitle=root.Q<Label>("fabricator-stat");
    craft=root.Q<Button>("fabricator-craft");fit=root.Q<Button>("fabricator-fit");remove=root.Q<Button>("fabricator-remove");
    craft.clicked+=Craft;fit.clicked+=Fit;remove.clicked+=Remove;
+   // 20 Nov 2026 (Phase 3): the placeholder weapon overhaul sits beside the other bench actions (no UXML change).
+   overhaul=new Button(Overhaul){name="fabricator-overhaul",text="Overhaul weapon"};overhaul.AddToClassList(remove.GetClasses().FirstOrDefault(c=>c!="unity-button")??"unity-button");
+   remove.parent?.Add(overhaul);
    progress=root.Q("fab-progress");progressFill=root.Q("fab-progress-fill");progressLabel=root.Q<Label>("fab-progress-label");cancel=root.Q<Button>("fabricator-cancel");
    if(cancel!=null){cancel.clicked+=Cancel;cancel.focusable=false;}
    if(crafting)crafting.CraftFinished+=OnCraftFinished;
@@ -193,6 +196,8 @@ namespace AthenHill
   /// Fraction shown on the bar and its label (tests, QA).
   public float ProgressShown=>progressShown;
   public string ProgressText=>progressText;
+  /// Bench overhaul of the weapon this schematic belongs to: restores its best condition (placeholder until Phase 6).
+  public void Overhaul(){var l=SelectedLoadout;if(l!=null&&crafting.Overhaul(l.WeaponId,out _))AfterAction(null);}
   public void Fit(){var r=Recipe;if(r!=null&&crafting.Fit(SelectedLoadout.WeaponId,r.outputItemId,out _))AfterAction(null);}
   public void Remove(){var m=Mod;if(m!=null&&crafting.Remove(SelectedLoadout.WeaponId,m.slot,out _))AfterAction(fit);}
   /// The element focus moves to after a successful action (the pressed button usually disables itself).
@@ -237,7 +242,14 @@ namespace AthenHill
     pair.Value.EnableInClassList("empty",item==null);
     pair.Value.EnableInClassList("selected",Mod!=null&&Mod.slot==pair.Key);
    }
-   pistolTitle.text=loadout.WeaponName.ToUpperInvariant();
+   pistolTitle.text=loadout.WeaponName.ToUpperInvariant()+(loadout.HasCondition?" · "+CraftingText.Condition(loadout,model).ToUpperInvariant():"");
+   if(overhaul!=null)
+   {
+    bool can=loadout.HasCondition&&model.CanOverhaul(loadout.WeaponId,session.ActiveStationId,out _);
+    overhaul.style.display=loadout.HasCondition?DisplayStyle.Flex:DisplayStyle.None;
+    overhaul.SetEnabled(can&&!busy);
+    overhaul.tooltip=loadout.HasCondition?$"Restores the {loadout.WeaponName}'s condition and best condition. Costs {CraftingText.OverhaulCost(model)}.":"";
+   }
    var recipe=Recipe;var selectedMod=Mod;
    inputs.Clear();
    if(recipe==null){title.text="Choose a schematic.";description.text="";reason.text="";craft.SetEnabled(false);fit.SetEnabled(false);remove.SetEnabled(false);FillStats(model,null);return;}
@@ -253,9 +265,10 @@ namespace AthenHill
     string label=session.Character?.Data.Label(requirement.stat)??requirement.stat;
     conditions.Add($"{label}: {session.Character?.Stat(requirement.stat)??0:0.#} / {requirement.minimum:0.#}");
    }
-   foreach(var tool in recipe.requiredTools??Array.Empty<string>())conditions.Add($"Tool: {CraftingText.ItemName(model,tool)} ({(pack.Quantity(tool)>0?"carried":"missing")})");
+   foreach(var tool in recipe.requiredTools??Array.Empty<string>())conditions.Add(CraftingText.ToolLine(model,tool,session.ActiveStationId));
    foreach(var id in recipe.requiredSchematics??Array.Empty<string>())conditions.Add($"Schematic: {model.Recipe(id)?.name??id} ({(model.Knows(id)?"known":"unknown")})");
    if(craftSeconds>0)conditions.Add($"Bench time: {CraftingText.Duration(craftSeconds)}");
+   if(!string.IsNullOrEmpty(recipe.skill)&&(recipe.craftXp>0||recipe.skillUse>0))conditions.Add($"Exercises {session.Character?.Data.Label(recipe.skill)??recipe.skill}"+(recipe.craftXp>0?$" · +{recipe.craftXp} XP":""));
    if(conditions.Count>0)description.text+="\n"+string.Join("\n",conditions);
    foreach(var input in recipe.inputs)
    {
@@ -271,7 +284,7 @@ namespace AthenHill
    craft.tooltip=craftSeconds>0?$"Takes {CraftingText.Duration(craftSeconds)} at the bench. Parts are used only when it is finished; Cancel or Esc stops it.":"";
    bool fitted=selectedMod!=null&&loadout.Fitted(selectedMod.slot)==recipe.outputItemId;
    int carriedOut=pack.Quantity(recipe.outputItemId);
-   bool canFit=selectedMod!=null&&model.CanFit(loadout.WeaponId,recipe.outputItemId,out _);
+   bool canFit=selectedMod!=null&&model.CanFit(loadout.WeaponId,recipe.outputItemId,out _,session.ActiveStationId);
    fit.SetEnabled(canFit&&!busy);fit.text=selectedMod!=null?$"Fit to {model.Data.SlotName(selectedMod.slot).ToLowerInvariant()}":"Fit to weapon";
    bool canRemove=selectedMod!=null&&loadout.Fitted(selectedMod.slot)!=null&&model.HasWeapon(loadout.WeaponId);
    remove.SetEnabled(canRemove&&!busy);remove.text=selectedMod!=null?$"Remove {model.Data.SlotName(selectedMod.slot).ToLowerInvariant()} mod":"Remove";

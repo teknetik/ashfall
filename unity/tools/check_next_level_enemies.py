@@ -299,6 +299,7 @@ def main():
         qa.wait_menu(); qa.focus(); qa.tap('Return'); qa.wait(lambda: qa.state() == 'Play', 40, what='Play after Continue'); qa.release_all()
         qa.cmd('resize', width=1920, height=1080); time.sleep(1.5)
         qa.cmd('timeSet', hour=13); qa.cmd('timePause', paused=True)
+        for w in ('weapon_scrap_pistol', 'weapon_field_rifle'): qa.cmd('dev.weapon.condition', weaponId=w, full=True)  # Phase 3: condition wears per shot; start every run at full condition
         qa.cmd('dev.state'); ch = qa.dev().get('character') or {}
         eq = (ch.get('equipped') or {}) if ch.get('available') else {}
         ok(eq.get('primary') == 'field_rifle' and eq.get('armour_chest') == 'warden_plate_carrier' and eq.get('armour_head') == 'field_helmet', 'fixture: rifle and the basic armour set equipped', eq)

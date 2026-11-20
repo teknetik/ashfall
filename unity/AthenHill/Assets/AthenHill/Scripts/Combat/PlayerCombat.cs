@@ -119,6 +119,8 @@ namespace AthenHill
   public float RecoilScale=>BaseStats.recoil>0?Stats.recoil/BaseStats.recoil:1;
   public float LastKickDegrees {get;private set;}
   public event Action ShotFired;
+  /// A weapon was drawn, holstered or the trigger pulled (a field repair stops on it).
+  public event Action WeaponHandled;
   /// Hit marker: (target, killed).
   public event Action<Health,bool> TargetHit;
   /// Every landed shot with its detail (19 Nov 2026 combat feel: marker variant, critical flash, QA).
@@ -133,7 +135,7 @@ namespace AthenHill
   public event Action Downed;
   /// Experience awarded for a kill: (amount, tier, levelled up). Easy kills raise it with 0.
   public event Action<int,ThreatTier,bool> ExperienceAwarded;
-  float nextFire,faceUntil,tracerOff,emptyNotice;
+  float nextFire,faceUntil,tracerOff,emptyNotice,jamNotice;
   void Awake(){Health=GetComponent<Health>();ApplyLoadout();Nano=Stats.nanoMax;Health.Damaged+=OnDamaged;Health.Died+=OnDied;}
   /// CraftingSession binds the pistol's loadout once its model exists. Null returns to the serialized fallback.
   public void BindLoadout(WeaponLoadout loadout)
@@ -235,6 +237,7 @@ namespace AthenHill
   public void ToggleDraw(string slot)
   {
    if(session.State!=CityState.Play)return;
+   WeaponHandled?.Invoke();
    if(!hasPistol){session.Notify("Complete the field primer before drawing a weapon.");return;}
    if(Character!=null&&Character.Equipped(slot)==null){session.Notify(slot=="primary"?"No rifle equipped. Fit one in your loadout first.":"Equip a weapon in your loadout first.");return;}
    if(!Armed&&!InBerms){session.Notify("Wardens keep weapons holstered inside the walls.","Ward");return;}
@@ -276,7 +279,27 @@ namespace AthenHill
   public void Fire()
   {
    if(!Armed||Time.time<nextFire||!Health.Alive)return;
+   WeaponHandled?.Invoke();
    var stats=Stats;
+   // Condition (20 Nov 2026, Phase 3): a jammed weapon will not fire; a worn one may misfire (nothing fired, no nano spent).
+   var condition=Crafting!=null&&Loadout!=null&&Loadout.HasCondition?Crafting.Condition:null;
+   if(condition!=null)
+   {
+    var outcome=WeaponCondition.BeforeShot(Loadout,condition,UnityEngine.Random.value);
+    if(outcome!=ShotOutcome.Fire)
+    {
+     var set=ActiveSoundSet;
+     var click=set!=null&&set.empty!=null&&set.empty.Length>0?Pick(set.empty,ref lastEmpty):emptyClips!=null&&emptyClips.Length>0?Pick(emptyClips,ref lastEmpty):emptyClip;
+     if(audioSource&&click)audioSource.PlayOneShot(click,.7f);
+     if(Time.time>jamNotice)
+     {
+      jamNotice=Time.time+(outcome==ShotOutcome.Jammed?3:1);
+      string weaponName=Loadout.WeaponName;
+      session.Notify(outcome==ShotOutcome.Jammed?$"{weaponName} jammed. Repair it with your Field Toolkit in the field pack, or overhaul it at the workbench.":$"{weaponName} misfired. Its condition is low: repair it in the field pack.");
+     }
+     nextFire=Time.time+stats.fireInterval;return;
+    }
+   }
    if(Nano<stats.nanoPerShot)
    {
     var set=ActiveSoundSet;
@@ -286,6 +309,7 @@ namespace AthenHill
     nextFire=Time.time+stats.fireInterval;return;
    }
    nextFire=Time.time+stats.fireInterval;Nano-=stats.nanoPerShot;ShotsFired++;LastShotTime=Time.time;faceUntil=Time.time+.7f;
+   if(condition!=null)Loadout.Wear(Loadout.WearPerShot);
    var cam=view.transform;
    // Start past the boom so geometry behind the player cannot block a shot.
    float skip=follow?follow.Distance:0;
@@ -293,7 +317,7 @@ namespace AthenHill
    float range=stats.range;
    // Cone: weapon spread narrowed by effective accuracy (weapon + character + skill), halved while aiming, widened on the move.
    bool moving=motor&&motor.Speed>WeaponBallistics.MovingSpeed;
-   float cone=WeaponBallistics.Cone(stats.spread,stats.accuracy,Aiming,moving);LastCone=cone;
+   float cone=WeaponBallistics.Cone(stats.spread,stats.accuracy,Aiming,moving)*(condition!=null?WeaponCondition.SpreadScale(condition,Loadout.Durability):1);LastCone=cone;
    Vector2 scatter=UnityEngine.Random.insideUnitCircle*cone;
    Vector3 direction=(Quaternion.AngleAxis(scatter.x,cam.up)*Quaternion.AngleAxis(-scatter.y,cam.right)*cam.forward).normalized;
    Vector3 end=origin+direction*range;Health target=null;

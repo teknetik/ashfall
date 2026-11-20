@@ -38,7 +38,7 @@ namespace AthenHill.Tests
   [Test] public void BrannOpensWithTheRightLineAtEachStepOfTheFirstOrder()
   {
    var d=Brann();Assert.That(d,Is.Not.Null);
-   var s=new State();
+   var s=new State();s.flags.Add("brann_toolkit"); // the player has been given (or starts with) a toolkit: see CraftingSkillsToolsTests
    Assert.That(DialogueFlow.StartNode(d,s),Is.EqualTo("first_visit"));
    s.flags.Add("brann_met");Assert.That(DialogueFlow.StartNode(d,s),Is.EqualTo("greeting"));
    s.primer=true;s.pistol=true;s.order="order_steady_hands";s.stage=OrderStage.Gather;

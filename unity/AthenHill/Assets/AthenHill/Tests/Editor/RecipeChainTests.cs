@@ -91,8 +91,10 @@ namespace AthenHill.Tests
   {
    var pack=new ShopModel(City().items);var model=new CraftingModel(Data(),City().items,pack,()=>true);
    Assert.That(model.KnownRecipes,Is.EquivalentTo(new[]{"recipe_field_rifle","recipe_rifle_precision_barrel"}));
-   Assert.That(model.Acquire("droid_servo_damaged").Select(r=>r.id),Is.EqualTo(new[]{"recipe_grip_stabilised_pistol"}));
+   // 20 Nov 2026: the grip is taught by Ossa's identification, no longer by picking the servo up
    Assert.That(model.Acquire("droid_servo_damaged"),Is.Empty);
+   Assert.That(model.Identify("npc_ossa:servo_look").Select(r=>r.id),Is.EqualTo(new[]{"recipe_grip_stabilised_pistol"}));
+   Assert.That(model.Identify("npc_ossa:servo_look"),Is.Empty);
    Assert.That(model.Acquire("micro_capacitor").Select(r=>r.id),Is.EqualTo(new[]{"recipe_charge_cell_core"}));
    Assert.That(model.OrderStarted("order_keep_charge").Select(r=>r.id),Is.EquivalentTo(new[]{"recipe_wound_coil","recipe_cell_salvaged_capacitor"}));
    Assert.That(model.OrderStarted("order_bore_true").Select(r=>r.id),Is.EquivalentTo(new[]{"recipe_alloy_plate","recipe_barrel_bored_alloy"}));

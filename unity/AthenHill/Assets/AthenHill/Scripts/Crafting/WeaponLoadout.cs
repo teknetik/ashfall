@@ -60,6 +60,50 @@ namespace AthenHill
    slots=(recipeSlots??weapon.slots??Array.Empty<string>()).Where(x=>!string.IsNullOrEmpty(x)).Distinct().ToArray();
    if(modifiers!=null)foreach(var m in modifiers)if(m!=null&&!string.IsNullOrEmpty(m.itemId)&&!byItem.ContainsKey(m.itemId))byItem.Add(m.itemId,m);
    Stats=Compute(weapon,Enumerable.Empty<CraftModifier>());
+   ResetCondition();
+  }
+  // ---- Condition (20 Nov 2026, Phase 3). The weapon's Durability stat is its full condition; weapons with 0 do not wear.
+  /// True when this weapon has a condition (its base Durability stat is above 0).
+  public bool HasCondition=>weapon.stats.durability>0;
+  /// Current condition, 0 = jammed.
+  public float Durability {get;private set;}
+  /// Highest condition field repairs can bring it back to; each field repair lowers it, a bench overhaul restores it.
+  public float MaxDurability {get;private set;}
+  /// Field repairs made since the last overhaul.
+  public int Repairs {get;private set;}
+  public float WearPerShot=>Mathf.Max(0,weapon.wearPerShot);
+  public bool Jammed=>HasCondition&&Durability<=0;
+  /// Raised when condition changes by a whole point or on any repair, overhaul or restore (not on every shot).
+  public event Action ConditionChanged;
+  /// New or overhauled: full condition at the full cap, no repairs.
+  internal void ResetCondition()
+  {
+   MaxDurability=Mathf.Max(0,weapon.stats.durability);Durability=MaxDurability;Repairs=0;
+   ConditionChanged?.Invoke();
+  }
+  /// Save restore. Values are clamped (cap to the weapon's own, condition to the cap).
+  internal void SetCondition(float durability,float max,int repairs)
+  {
+   float full=Mathf.Max(0,weapon.stats.durability);
+   MaxDurability=Mathf.Clamp(float.IsNaN(max)?full:max,0,full);
+   Durability=Mathf.Clamp(float.IsNaN(durability)?MaxDurability:durability,0,MaxDurability);
+   Repairs=Math.Max(0,repairs);
+   ConditionChanged?.Invoke();
+  }
+  /// One shot's wear. Returns the condition after it.
+  public float Wear(float amount)
+  {
+   if(!HasCondition||amount<=0)return Durability;
+   float before=Durability;Durability=Mathf.Max(0,Durability-amount);
+   if(Mathf.Ceil(before)!=Mathf.Ceil(Durability))ConditionChanged?.Invoke();
+   return Durability;
+  }
+  /// A field repair: lowers the cap by capLoss, then restores up to amount (never above the new cap).
+  internal void ApplyRepair(float amount,float capLoss)
+  {
+   MaxDurability=Mathf.Max(0,MaxDurability-Mathf.Max(0,capLoss));
+   Durability=Mathf.Min(MaxDurability,Durability+Mathf.Max(0,amount));
+   Repairs++;ConditionChanged?.Invoke();
   }
   public string Fitted(string slot)=>slot!=null&&fitted.TryGetValue(slot,out var id)?id:null;
   public IEnumerable<KeyValuePair<string,string>> FittedMods=>fitted;
@@ -124,6 +168,48 @@ namespace AthenHill
     result[i]=(float)Math.Max(lo,Math.Min(hi>=lo?hi:lo,value));
    }
    return result;
+  }
+ }
+ public enum ShotOutcome { Fire, Misfire, Jammed }
+ /// Pure condition rules (ConditionRules in the catalog): spread, misfire, jam, field repair and broken state.
+ public static class WeaponCondition
+ {
+  /// Shot cone multiplier: 1 above SpreadBelow, rising linearly to SpreadMaxScale at 0.
+  public static float SpreadScale(ConditionRules r,float durability)
+  {
+   if(r==null||r.spreadBelow<=0||durability>=r.spreadBelow)return 1;
+   float t=1-Mathf.Clamp01(durability/r.spreadBelow);
+   return Mathf.Lerp(1,Mathf.Max(1,r.spreadMaxScale),t);
+  }
+  /// Misfire chance per trigger pull: 0 at MisfireBelow, MisfireMaxChance as condition nears 0 (0 itself is a jam, not a misfire).
+  public static float MisfireChance(ConditionRules r,float durability)
+  {
+   if(r==null||r.misfireBelow<=0||durability>=r.misfireBelow||durability<=0)return 0;
+   return Mathf.Lerp(0,Mathf.Clamp01(r.misfireMaxChance),1-Mathf.Clamp01(durability/r.misfireBelow));
+  }
+  /// What a trigger pull does: roll is a uniform 0..1 sample.
+  public static ShotOutcome BeforeShot(WeaponLoadout loadout,ConditionRules r,float roll)
+  {
+   if(loadout==null||!loadout.HasCondition)return ShotOutcome.Fire;
+   if(loadout.Durability<=0)return ShotOutcome.Jammed;
+   return roll<MisfireChance(r,loadout.Durability)?ShotOutcome.Misfire:ShotOutcome.Fire;
+  }
+  /// Broken for field repair: the cap fell under BrokenBelow, or every repair entry was used.
+  public static bool IsBroken(WeaponLoadout loadout,ConditionRules r)
+   =>loadout!=null&&loadout.HasCondition&&r!=null&&(loadout.MaxDurability<r.brokenBelow||loadout.Repairs>=(r.repairAmounts?.Length??0));
+  /// Condition the next field repair would restore (0 when none remain).
+  public static float NextRepairAmount(WeaponLoadout loadout,ConditionRules r)
+   =>loadout!=null&&r?.repairAmounts!=null&&loadout.Repairs>=0&&loadout.Repairs<r.repairAmounts.Length?Mathf.Max(0,r.repairAmounts[loadout.Repairs]):0;
+  /// "Condition 76 / 92" with a state word: jammed, worn, broken.
+  public static string Label(WeaponLoadout loadout,ConditionRules r)
+  {
+   if(loadout==null||!loadout.HasCondition)return "";
+   string text=$"Condition {Mathf.Ceil(loadout.Durability):0} / {Mathf.Floor(loadout.MaxDurability):0}";
+   if(loadout.Jammed)text+=" · jammed";
+   else if(r!=null&&loadout.Durability<r.misfireBelow)text+=" · misfires";
+   else if(r!=null&&loadout.Durability<r.spreadBelow)text+=" · worn";
+   if(IsBroken(loadout,r))text+=" · needs a bench overhaul";
+   return text;
   }
  }
  /// The same character contribution is used by combat and inspection panels after socket effects.

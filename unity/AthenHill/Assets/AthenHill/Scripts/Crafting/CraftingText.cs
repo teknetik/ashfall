@@ -15,6 +15,46 @@ namespace AthenHill
    if(input.kind=="item"){var item=model.Item(input.id);return item!=null?item.name:input.id;}
    return model.Data.TagName(input.id);
   }
+  /// A tool entry for the player: an item id gives the item's name, a tool tag its catalog label ("Screwdriver").
+  public static string ToolName(CraftingModel model,string tool)
+  {
+   var item=model?.Item(tool);if(item!=null)return item.name;
+   var label=model?.Data.TagName(tool);
+   return string.IsNullOrEmpty(label)||label==tool?(tool??"").Replace("tool:","").Replace('_',' '):label;
+  }
+  /// "Carry a Field Toolkit." for tools a carried item provides; "Use a bench that has it." for fixed tools.
+  public static string ToolHint(CraftingModel model,IEnumerable<string> missing)
+  {
+   var carried=new List<string>();bool fixedTool=false;
+   foreach(var tool in missing)
+   {
+    var names=model.ToolItems(tool).Select(i=>i.name).Distinct().ToList();
+    if(names.Count>0)carried.AddRange(names);else fixedTool=true;
+   }
+   var parts=new List<string>();
+   if(carried.Count>0)parts.Add("Carry a "+string.Join(" or ",carried.Distinct())+".");
+   if(fixedTool)parts.Add("It is fixed to a bench that has it.");
+   return string.Join(" ",parts);
+  }
+  /// One line for a recipe's tool requirement: "Tool: Screwdriver (carried)" / "(at this bench)" / "(missing)".
+  public static string ToolLine(CraftingModel model,string tool,string stationId)
+  {
+   string state=model.ToolState(tool,stationId);
+   return $"Tool: {ToolName(model,tool)} ({(state=="bench"?"at this bench":state)})";
+  }
+  /// Experience and skill use of a completed craft for the notice: "+12 XP · Engineering +1".
+  public static string AwardText(CraftingModel model,CraftAward award)
+  {
+   if(award==null)return "";
+   var parts=new List<string>();
+   if(award.xp>0)parts.Add($"+{award.xp} XP"+(award.levels>0?" · level up":""));
+   if(award.skillGain>0&&!string.IsNullOrEmpty(award.skill))
+   {
+    string name=char.ToUpperInvariant(award.skill[0])+award.skill.Substring(1);
+    parts.Add($"{name} {(award.skillPoints>0?"+"+award.skillPoints:"practice")}");
+   }
+   return parts.Count==0?"":" "+string.Join(" · ",parts)+".";
+  }
   public static string ItemName(CraftingModel model,string id){var item=model.Item(id);return item!=null?item.name:id;}
   /// "2 × Micro Capacitor, 3 × Any tier-one nanites" — only the lines still short.
   public static string Shortfall(CraftingModel model,CraftRecipe recipe)
@@ -34,6 +74,29 @@ namespace AthenHill
    int s=Math.Max(0,(int)Math.Ceiling(seconds-1e-4));
    return s<60?$"{s} s":$"{s/60}:{s%60:00}";
   }
+  /// Why a field repair or overhaul was refused (20 Nov 2026, Phase 3), in the player's words.
+  public static string ConditionReason(string code,CraftingModel model,WeaponLoadout loadout=null)
+  {
+   string name=loadout!=null?loadout.WeaponName:"weapon";
+   var rules=model?.Condition;
+   switch(code)
+   {
+    case "no_condition":return $"The {name} does not wear.";
+    case "missing_weapon":return $"You are not carrying the {name}.";
+    case "broken":return $"The {name} is worn past a field fix (its best condition is down to {(loadout!=null?Math.Floor(loadout.MaxDurability):0):0}). It needs a bench overhaul at "+Workbench+".";
+    case "in_good_order":return loadout!=null&&loadout.Repairs>0?$"The {name} is as good as the field can make it. A bench overhaul at {Workbench} restores its best condition.":$"The {name} is in good order.";
+    case "missing_tool":return "Missing tool: "+ToolName(model,rules?.repairTool)+". Carry a Field Toolkit.";
+    case "busy":return "Finish what you are doing first.";
+    case "wrong_station":return "A weapon overhaul is done at "+Workbench+".";
+    case "missing_ingredients":return "Missing parts for the overhaul: "+OverhaulCost(model)+".";
+    default:return "That repair is not possible.";
+   }
+  }
+  /// "Condition 76 / 92 · worn" (empty for a weapon that does not wear).
+  public static string Condition(WeaponLoadout loadout,CraftingModel model)=>WeaponCondition.Label(loadout,model?.Condition);
+  /// "3 × Scrap Alloy, 4 × Any tier-one nanites".
+  public static string OverhaulCost(CraftingModel model)
+   =>string.Join(", ",(model?.Condition.overhaulInputs??new CraftIngredient[0]).Select(i=>$"{i.quantity} × {InputName(model,i)}"));
   public static string Reason(string code,CraftingModel model,CraftRecipe recipe=null,string itemId=null)
   {
    if(!string.IsNullOrEmpty(code)&&code.Contains(" "))return code;
@@ -47,8 +110,16 @@ namespace AthenHill
      return station!=null?$"This schematic needs {station.name}.":"Use the station specified by this schematic.";
     }
     case "missing_weapon":return "You need to carry or equip the required weapon first.";
-    case "unmet_requirements":return "Your attributes or skills do not yet meet the requirements.";
-    case "missing_tool":return "A required reusable tool is missing from your pack.";
+    case "unmet_requirements":
+    {
+     var unmet=model?.UnmetRequirement(recipe);
+     return string.IsNullOrEmpty(unmet)?"Your attributes or skills do not yet meet the requirements.":"Your skill is too low. "+unmet;
+    }
+    case "missing_tool":
+    {
+     var missing=model!=null&&recipe!=null?model.MissingTools(recipe.requiredTools,recipe.stationId):null;
+     return missing!=null&&missing.Count>0?"Missing tool: "+string.Join(", ",missing.Select(x=>ToolName(model,x)))+". "+ToolHint(model,missing):"A required reusable tool is missing from your pack.";
+    }
     case "missing_schematic":return "Learn the prerequisite schematic first.";
     case "missing_ingredients":
     {
@@ -70,6 +141,12 @@ namespace AthenHill
     case "unknown_recipe":case "invalid_recipe":case "unknown_item":return "This schematic record is damaged; check the crafting data.";
     default:return "The fabricator refused that operation.";
    }
+  }
+  /// Display name of the colonist with this NpcDefinition id ("npc_ossa" -> "Warden Ossa"); the id itself when unknown.
+  public static string NpcName(GameSession session,string npcId)
+  {
+   var npc=session&&session.npcs!=null?session.npcs.FirstOrDefault(n=>n&&n.definition&&n.definition.id==npcId):null;
+   return npc?npc.definition.displayName:npcId;
   }
   /// "Schematic discovered: Charge Cell Core, Salvaged Capacitor Cell."
   public static string Discovered(IEnumerable<CraftRecipe> recipes)

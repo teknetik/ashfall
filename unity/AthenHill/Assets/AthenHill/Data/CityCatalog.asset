@@ -63,7 +63,7 @@ MonoBehaviour:
     weightKg: 0.8
   - id: droid_servo_damaged
     name: Damaged Servo
-    description: A salvaged worker-droid servo, still fit for a field repair.
+    description: A salvaged worker-droid servo, still fit for a field repair. Show it to Ossa at the West Gate post; she can tell you what it could become.
     buyPrice: 0
     sellPrice: 3
     startingQuantity: 0
@@ -80,6 +80,7 @@ MonoBehaviour:
     icon: servo-icon
     partsPrice: 10
     weightKg: 1.4
+    identifyBy: npc_ossa
   - id: scrap_alloy
     name: Scrap Alloy
     description: Cleaned structural alloy recovered from feral machines.
@@ -649,13 +650,14 @@ MonoBehaviour:
     weightKg: 0.7
   - id: field_toolkit
     name: Field Toolkit
-    description: Reusable gauges and hand tools for fitting and fabrication work.
+    description: Reusable gauges and hand tools for fitting, fabrication and field repairs. Open a weapon in your field pack to repair it.
     buyPrice: 0
     sellPrice: 0
     startingQuantity: 1
     tags:
     - tool
     - fabrication
+    - tool:screwdriver
     maxStack: 1
     excludeFromTrade: 1
     rarity: 0

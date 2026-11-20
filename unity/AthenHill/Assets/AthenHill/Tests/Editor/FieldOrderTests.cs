@@ -63,8 +63,13 @@ namespace AthenHill.Tests
    Assert.That(run.orders.Objective(run.model,run.pack),Does.Contain("Stabilised Pistol Grip: Any servo 0/1 · Scrap Alloy 0/2 · Any tier-one nanites 0/5"));
    Assert.That(run.orders.GuidanceKey(run.model,run.pack),Is.EqualTo("depot"));
    Give(run.pack,("droid_servo_damaged",1),("scrap_alloy",2),("nanite_residue",3));
+   // 20 Nov 2026: the servo in the pack is not enough; Ossa has to say what it could become (Identify stage)
+   Assert.That(run.model.Acquire("droid_servo_damaged"),Is.Empty,"picking it up teaches nothing");
+   Assert.That(run.orders.Stage(run.model,run.pack),Is.EqualTo(OrderStage.Identify));Assert.That(run.orders.Objective(run.model,run.pack),Does.Contain("Warden Ossa"));
+   run.model.Identify("npc_ossa:servo_look");
+   Assert.That(run.orders.Stage(run.model,run.pack),Is.EqualTo(OrderStage.Gather),"nanites are still short");
    Assert.That(run.orders.Objective(run.model,run.pack),Does.Contain("Any servo 1/1 · Scrap Alloy 2/2 · Any tier-one nanites 3/5"));
-   Give(run.pack,("nanite_residue",2));run.model.Acquire("droid_servo_damaged");
+   Give(run.pack,("nanite_residue",2));
    // 1 Oct 2026: with the parts in the pack the order waits for the visit to Brann at Salvage
    Assert.That(run.orders.Stage(run.model,run.pack),Is.EqualTo(OrderStage.Report));Assert.That(run.orders.GuidanceKey(run.model,run.pack),Is.EqualTo("dealer"));
    Assert.That(run.orders.Objective(run.model,run.pack),Does.Contain("Brann at Salvage"));

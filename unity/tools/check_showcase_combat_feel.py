@@ -78,6 +78,7 @@ def body():
     # ---- 1. range plates with the pistol (real 2 and F)
     qa.goto('checkpoint_firingline'); qa.view('follow'); time.sleep(.8)
     qa.cmd('dev.range.raise'); time.sleep(.5)
+    for w in ('weapon_scrap_pistol', 'weapon_field_rifle'): qa.cmd('dev.weapon.condition', weaponId=w, full=True)  # Phase 3: condition wears per shot; start every run at full condition
     ok(draw('2', 'weapon_scrap_pistol'), 'pistol drawn with 2 at the range')
     f0 = S.feel()
     for i in range(1, 4):

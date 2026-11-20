@@ -113,6 +113,32 @@ namespace AthenHill
                 else return Result.Fail("unknown_action", "Unknown developer operation.");
                 return Result.Ok();
             }
+            if (action == "dev.recipe.identify" || action == "dev.weapon.condition")
+            {
+                // 20 Nov 2026 (crafting rework): QA scripts reach the grip without the Ossa conversation, and keep long scripted firing from jamming.
+                var craftModel = session.GetComponent<CraftingSession>()?.Model;
+                if (craftModel == null) return Result.Fail("unavailable", "The crafting system is not ready.");
+                if (action == "dev.recipe.identify")
+                {
+                    var topic = command["topic"]?.Type == JTokenType.String ? (string)command["topic"] : null;
+                    var recipe = command["recipeId"]?.Type == JTokenType.String ? (string)command["recipeId"] : null;
+                    if ((topic == null) == (recipe == null)) return Result.Fail("invalid_argument", "Give exactly one of topic (npc_ossa:servo_look) or recipeId.");
+                    if (topic != null) { if (!Regex.IsMatch(topic, "^[a-z][a-z0-9_]*:[a-z][a-z0-9_]*$")) return Result.Fail("invalid_argument", "Topic is npc id:dialogue node id."); craftModel.Identify(topic); }
+                    else if (!ItemId.IsMatch(recipe) || craftModel.Recipe(recipe) == null) return Result.Fail("unknown_recipe", "Only recipes in the live crafting catalogue can be unlocked.");
+                    else craftModel.Unlock(recipe);
+                    session.DevChanged("Schematic identified."); return Result.Ok();
+                }
+                var weaponId = command["weaponId"]?.Type == JTokenType.String ? (string)command["weaponId"] : "weapon_scrap_pistol";
+                var loadout = craftModel.GetLoadout(weaponId);
+                if (loadout == null || !loadout.HasCondition) return Result.Fail("unknown_weapon", "That weapon has no condition.");
+                // durability: 0..cap; maxDurability and repairs optional (omitted = unchanged). "full" true restores everything.
+                if (command["full"]?.Type == JTokenType.Boolean && (bool)command["full"]) { loadout.ResetCondition(); session.DevChanged("Weapon condition restored."); return Result.Ok(); }
+                float max = loadout.MaxDurability, dur = loadout.Durability; int repairs = loadout.Repairs;
+                if (command["maxDurability"] != null && !Number(command, "maxDurability", 0, 100000, false, out max)) return Result.Fail("invalid_range", "maxDurability must be finite and 0..100000.");
+                if (command["durability"] != null && !Number(command, "durability", 0, 100000, false, out dur)) return Result.Fail("invalid_range", "durability must be finite and 0..100000.");
+                if (command["repairs"] != null && !Integer(command, "repairs", 100, out repairs)) return Result.Fail("invalid_range", "repairs must be an integer 1..100.");
+                loadout.SetCondition(dur, max, repairs); session.DevChanged("Weapon condition set."); return Result.Ok();
+            }
             if (action == "dev.interaction.resetCityVisit")
                 return session.DevResetCityVisit() ? Result.Ok() : Result.Fail("invalid_state", "City visit reset requires Play or Paused.");
             if (action == "dev.range.raise")
