@@ -1,0 +1,804 @@
+{
+ "family": "grip",
+ "glb": "grip.glb",
+ "blender": "5.2.2",
+ "generated": "2026-11-21T17:49:32Z",
+ "unit_scale_m": 1.0,
+ "parts": [
+  {
+   "id": "grip.screw_a",
+   "node": "grip_screw_a",
+   "label": "Upper grip screw (brass)",
+   "kind": "fastener",
+   "parent": "grip.core",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 762,
+   "size_mm": [
+    8.5,
+    8.6,
+    36.6
+   ],
+   "seat": {
+    "clear": "grip_screw_a__clear",
+    "symmetry": 0,
+    "tol_mm": 3.0,
+    "tol_deg": 25.0
+   },
+   "held_by": [],
+   "fastener": {
+    "bit": "cross",
+    "turns": 7,
+    "holds": [
+     "materials.sheet_a_plate",
+     "grip.core"
+    ],
+    "into": "pistol.frame",
+    "shank_mm": 3.8
+   },
+   "steps": [
+    "s6.screws"
+   ],
+   "note": "M4 x 34 pan head, cross drive, from Brann's jar: through the left plate and the hollow peg, the tang, into the right wall"
+  },
+  {
+   "id": "grip.screw_b",
+   "node": "grip_screw_b",
+   "label": "Lower grip screw (brass)",
+   "kind": "fastener",
+   "parent": "grip.core",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 762,
+   "size_mm": [
+    8.4,
+    8.6,
+    36.6
+   ],
+   "seat": {
+    "clear": "grip_screw_b__clear",
+    "symmetry": 0,
+    "tol_mm": 3.0,
+    "tol_deg": 25.0
+   },
+   "held_by": [],
+   "fastener": {
+    "bit": "cross",
+    "turns": 7,
+    "holds": [
+     "materials.sheet_a_plate",
+     "grip.core"
+    ],
+    "into": "pistol.frame",
+    "shank_mm": 3.8
+   },
+   "steps": [
+    "s6.screws"
+   ],
+   "note": "M4 x 34 pan head, cross drive, from Brann's jar: through the left plate and the hollow peg, the tang, into the right wall"
+  },
+  {
+   "id": "grip.seam_l",
+   "node": "grip_seam_l",
+   "label": "Nanite seam, left plate",
+   "kind": "part",
+   "parent": "grip.core",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 640,
+   "size_mm": [
+    85.7,
+    0.8,
+    96.0
+   ],
+   "seat": {
+    "clear": "grip_seam_l__clear",
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s5.seam",
+    "s5.cure"
+   ],
+   "zones": [
+    {
+     "id": "seam",
+     "node": "grip_seam_l__zone_seam"
+    }
+   ],
+   "wipes": [
+    {
+     "id": "seam",
+     "zone": "grip_seam_l__zone_seam",
+     "label": "Uncured nanite paste",
+     "color": "tex/grip__dirty_color.png",
+     "normal": "tex/grip__dirty_normal.png",
+     "orm": "tex/grip__dirty_orm.png"
+    }
+   ],
+   "flex": true,
+   "note": "a bead, not a part to carry: shown as the seam is traced along path grip.core/seam_l (front edge, base, back edge and the bite; the plate's top edge is the core's own edge). The as-found texture set is the uncured grey paste, the clean set the cured bead"
+  },
+  {
+   "id": "grip.seam_r",
+   "node": "grip_seam_r",
+   "label": "Nanite seam, right plate",
+   "kind": "part",
+   "parent": "grip.core",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 640,
+   "size_mm": [
+    85.7,
+    0.8,
+    96.0
+   ],
+   "seat": {
+    "clear": "grip_seam_r__clear",
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s5.seam",
+    "s5.cure"
+   ],
+   "zones": [
+    {
+     "id": "seam",
+     "node": "grip_seam_r__zone_seam"
+    }
+   ],
+   "wipes": [
+    {
+     "id": "seam",
+     "zone": "grip_seam_r__zone_seam",
+     "label": "Uncured nanite paste",
+     "color": "tex/grip__dirty_color.png",
+     "normal": "tex/grip__dirty_normal.png",
+     "orm": "tex/grip__dirty_orm.png"
+    }
+   ],
+   "flex": true,
+   "note": "a bead, not a part to carry: shown as the seam is traced along path grip.core/seam_r (front edge, base, back edge and the bite; the plate's top edge is the core's own edge). The as-found texture set is the uncured grey paste, the clean set the cured bead"
+  },
+  {
+   "id": "grip.core",
+   "node": "grip_core",
+   "label": "Grip core",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": "grip_stabilised_pistol",
+   "material": "alloy",
+   "mass": "medium",
+   "tris": 6132,
+   "size_mm": [
+    93.0,
+    38.6,
+    114.6
+   ],
+   "seat": {
+    "clear": "grip_core__clear",
+    "symmetry": 1,
+    "tol_mm": 4,
+    "tol_deg": 12
+   },
+   "held_by": [
+    "pistol.housing_pin",
+    "grip.screw_a",
+    "grip.screw_b"
+   ],
+   "steps": [
+    "s4.press",
+    "s4.open",
+    "s4.flash",
+    "s4.pressfit",
+    "s5.loop",
+    "s6.slide"
+   ],
+   "paths": [
+    {
+     "id": "lead",
+     "nodes": [
+      "grip_core__path_lead_00",
+      "grip_core__path_lead_01",
+      "grip_core__path_lead_02",
+      "grip_core__path_lead_03",
+      "grip_core__path_lead_04",
+      "grip_core__path_lead_05",
+      "grip_core__path_lead_06",
+      "grip_core__path_lead_07",
+      "grip_core__path_lead_08",
+      "grip_core__path_lead_09",
+      "grip_core__path_lead_10",
+      "grip_core__path_lead_11",
+      "grip_core__path_lead_12",
+      "grip_core__path_lead_13"
+     ]
+    },
+    {
+     "id": "loop",
+     "nodes": [
+      "grip_core__path_loop_00",
+      "grip_core__path_loop_01",
+      "grip_core__path_loop_02",
+      "grip_core__path_loop_03",
+      "grip_core__path_loop_04",
+      "grip_core__path_loop_05",
+      "grip_core__path_loop_06",
+      "grip_core__path_loop_07",
+      "grip_core__path_loop_08",
+      "grip_core__path_loop_09",
+      "grip_core__path_loop_10",
+      "grip_core__path_loop_11",
+      "grip_core__path_loop_12",
+      "grip_core__path_loop_13"
+     ]
+    },
+    {
+     "id": "parting",
+     "nodes": [
+      "grip_core__path_parting_00",
+      "grip_core__path_parting_01",
+      "grip_core__path_parting_02",
+      "grip_core__path_parting_03",
+      "grip_core__path_parting_04",
+      "grip_core__path_parting_05",
+      "grip_core__path_parting_06",
+      "grip_core__path_parting_07",
+      "grip_core__path_parting_08",
+      "grip_core__path_parting_09",
+      "grip_core__path_parting_10",
+      "grip_core__path_parting_11",
+      "grip_core__path_parting_12",
+      "grip_core__path_parting_13",
+      "grip_core__path_parting_14",
+      "grip_core__path_parting_15",
+      "grip_core__path_parting_16",
+      "grip_core__path_parting_17",
+      "grip_core__path_parting_18",
+      "grip_core__path_parting_19",
+      "grip_core__path_parting_20",
+      "grip_core__path_parting_21",
+      "grip_core__path_parting_22",
+      "grip_core__path_parting_23",
+      "grip_core__path_parting_24",
+      "grip_core__path_parting_25",
+      "grip_core__path_parting_26",
+      "grip_core__path_parting_27",
+      "grip_core__path_parting_28",
+      "grip_core__path_parting_29",
+      "grip_core__path_parting_30",
+      "grip_core__path_parting_31",
+      "grip_core__path_parting_32",
+      "grip_core__path_parting_33",
+      "grip_core__path_parting_34",
+      "grip_core__path_parting_35",
+      "grip_core__path_parting_36",
+      "grip_core__path_parting_37",
+      "grip_core__path_parting_38",
+      "grip_core__path_parting_39"
+     ]
+    },
+    {
+     "id": "seam_l",
+     "nodes": [
+      "grip_core__path_seam_l_00",
+      "grip_core__path_seam_l_01",
+      "grip_core__path_seam_l_02",
+      "grip_core__path_seam_l_03",
+      "grip_core__path_seam_l_04",
+      "grip_core__path_seam_l_05",
+      "grip_core__path_seam_l_06",
+      "grip_core__path_seam_l_07",
+      "grip_core__path_seam_l_08",
+      "grip_core__path_seam_l_09",
+      "grip_core__path_seam_l_10",
+      "grip_core__path_seam_l_11",
+      "grip_core__path_seam_l_12",
+      "grip_core__path_seam_l_13",
+      "grip_core__path_seam_l_14",
+      "grip_core__path_seam_l_15",
+      "grip_core__path_seam_l_16",
+      "grip_core__path_seam_l_17",
+      "grip_core__path_seam_l_18",
+      "grip_core__path_seam_l_19",
+      "grip_core__path_seam_l_20",
+      "grip_core__path_seam_l_21",
+      "grip_core__path_seam_l_22",
+      "grip_core__path_seam_l_23",
+      "grip_core__path_seam_l_24",
+      "grip_core__path_seam_l_25",
+      "grip_core__path_seam_l_26",
+      "grip_core__path_seam_l_27",
+      "grip_core__path_seam_l_28",
+      "grip_core__path_seam_l_29",
+      "grip_core__path_seam_l_30",
+      "grip_core__path_seam_l_31",
+      "grip_core__path_seam_l_32",
+      "grip_core__path_seam_l_33",
+      "grip_core__path_seam_l_34",
+      "grip_core__path_seam_l_35",
+      "grip_core__path_seam_l_36",
+      "grip_core__path_seam_l_37",
+      "grip_core__path_seam_l_38",
+      "grip_core__path_seam_l_39"
+     ]
+    },
+    {
+     "id": "seam_r",
+     "nodes": [
+      "grip_core__path_seam_r_00",
+      "grip_core__path_seam_r_01",
+      "grip_core__path_seam_r_02",
+      "grip_core__path_seam_r_03",
+      "grip_core__path_seam_r_04",
+      "grip_core__path_seam_r_05",
+      "grip_core__path_seam_r_06",
+      "grip_core__path_seam_r_07",
+      "grip_core__path_seam_r_08",
+      "grip_core__path_seam_r_09",
+      "grip_core__path_seam_r_10",
+      "grip_core__path_seam_r_11",
+      "grip_core__path_seam_r_12",
+      "grip_core__path_seam_r_13",
+      "grip_core__path_seam_r_14",
+      "grip_core__path_seam_r_15",
+      "grip_core__path_seam_r_16",
+      "grip_core__path_seam_r_17",
+      "grip_core__path_seam_r_18",
+      "grip_core__path_seam_r_19",
+      "grip_core__path_seam_r_20",
+      "grip_core__path_seam_r_21",
+      "grip_core__path_seam_r_22",
+      "grip_core__path_seam_r_23",
+      "grip_core__path_seam_r_24",
+      "grip_core__path_seam_r_25",
+      "grip_core__path_seam_r_26",
+      "grip_core__path_seam_r_27",
+      "grip_core__path_seam_r_28",
+      "grip_core__path_seam_r_29",
+      "grip_core__path_seam_r_30",
+      "grip_core__path_seam_r_31",
+      "grip_core__path_seam_r_32",
+      "grip_core__path_seam_r_33",
+      "grip_core__path_seam_r_34",
+      "grip_core__path_seam_r_35",
+      "grip_core__path_seam_r_36",
+      "grip_core__path_seam_r_37",
+      "grip_core__path_seam_r_38",
+      "grip_core__path_seam_r_39"
+     ]
+    }
+   ],
+   "marks": [
+    {
+     "id": "clear_gimbal",
+     "node": "grip_core__mark_clear_gimbal",
+     "pose": true,
+     "accepts": [
+      "servo.gimbal_cradle"
+     ]
+    },
+    {
+     "id": "clear_plate_l",
+     "node": "grip_core__mark_clear_plate_l",
+     "pose": true,
+     "accepts": [
+      "materials.sheet_a_plate"
+     ]
+    },
+    {
+     "id": "clear_plate_r",
+     "node": "grip_core__mark_clear_plate_r",
+     "pose": true,
+     "accepts": [
+      "materials.sheet_b_plate"
+     ]
+    },
+    {
+     "id": "clear_plate_screw_lc",
+     "node": "grip_core__mark_clear_plate_screw_lc",
+     "pose": true,
+     "accepts": [
+      "servo.screw_case_a",
+      "servo.screw_case_b",
+      "servo.screw_case_c",
+      "servo.screw_case_d"
+     ]
+    },
+    {
+     "id": "clear_plate_screw_ld",
+     "node": "grip_core__mark_clear_plate_screw_ld",
+     "pose": true,
+     "accepts": [
+      "servo.screw_case_a",
+      "servo.screw_case_b",
+      "servo.screw_case_c",
+      "servo.screw_case_d"
+     ]
+    },
+    {
+     "id": "clear_plate_screw_rc",
+     "node": "grip_core__mark_clear_plate_screw_rc",
+     "pose": true,
+     "accepts": [
+      "servo.screw_case_a",
+      "servo.screw_case_b",
+      "servo.screw_case_c",
+      "servo.screw_case_d"
+     ]
+    },
+    {
+     "id": "clear_plate_screw_rd",
+     "node": "grip_core__mark_clear_plate_screw_rd",
+     "pose": true,
+     "accepts": [
+      "servo.screw_case_a",
+      "servo.screw_case_b",
+      "servo.screw_case_c",
+      "servo.screw_case_d"
+     ]
+    },
+    {
+     "id": "clear_strap",
+     "node": "grip_core__mark_clear_strap",
+     "pose": true,
+     "accepts": [
+      "materials.strap_bent"
+     ]
+    },
+    {
+     "id": "mend",
+     "node": "grip_core__mark_mend"
+    },
+    {
+     "id": "pocket_shoulder",
+     "node": "grip_core__mark_pocket_shoulder"
+    },
+    {
+     "id": "seat_gimbal",
+     "node": "grip_core__mark_seat_gimbal",
+     "pose": true,
+     "accepts": [
+      "servo.gimbal_cradle"
+     ]
+    },
+    {
+     "id": "seat_plate_l",
+     "node": "grip_core__mark_seat_plate_l",
+     "pose": true,
+     "accepts": [
+      "materials.sheet_a_plate"
+     ]
+    },
+    {
+     "id": "seat_plate_r",
+     "node": "grip_core__mark_seat_plate_r",
+     "pose": true,
+     "accepts": [
+      "materials.sheet_b_plate"
+     ]
+    },
+    {
+     "id": "seat_plate_screw_lc",
+     "node": "grip_core__mark_seat_plate_screw_lc",
+     "pose": true,
+     "accepts": [
+      "servo.screw_case_a",
+      "servo.screw_case_b",
+      "servo.screw_case_c",
+      "servo.screw_case_d"
+     ]
+    },
+    {
+     "id": "seat_plate_screw_ld",
+     "node": "grip_core__mark_seat_plate_screw_ld",
+     "pose": true,
+     "accepts": [
+      "servo.screw_case_a",
+      "servo.screw_case_b",
+      "servo.screw_case_c",
+      "servo.screw_case_d"
+     ]
+    },
+    {
+     "id": "seat_plate_screw_rc",
+     "node": "grip_core__mark_seat_plate_screw_rc",
+     "pose": true,
+     "accepts": [
+      "servo.screw_case_a",
+      "servo.screw_case_b",
+      "servo.screw_case_c",
+      "servo.screw_case_d"
+     ]
+    },
+    {
+     "id": "seat_plate_screw_rd",
+     "node": "grip_core__mark_seat_plate_screw_rd",
+     "pose": true,
+     "accepts": [
+      "servo.screw_case_a",
+      "servo.screw_case_b",
+      "servo.screw_case_c",
+      "servo.screw_case_d"
+     ]
+    },
+    {
+     "id": "seat_strap",
+     "node": "grip_core__mark_seat_strap",
+     "pose": true,
+     "accepts": [
+      "materials.strap_bent"
+     ]
+    }
+   ],
+   "zones": [
+    {
+     "id": "flash",
+     "node": "grip_core__zone_flash"
+    },
+    {
+     "id": "pocket",
+     "node": "grip_core__zone_pocket"
+    },
+    {
+     "id": "skin",
+     "node": "grip_core__zone_skin"
+    }
+   ],
+   "wipes": [
+    {
+     "id": "skin",
+     "zone": "grip_core__zone_skin",
+     "label": "Release powder on the dull cast skin (as-found set = fresh from the mould)",
+     "color": "tex/grip__dirty_color.png",
+     "normal": "tex/grip__dirty_normal.png",
+     "orm": "tex/grip__dirty_orm.png"
+    },
+    {
+     "id": "flash",
+     "zone": "grip_core__zone_flash",
+     "label": "Parting line: filed bright where the flash was (s4.flash)",
+     "color": "tex/grip__dirty_color.png",
+     "normal": "tex/grip__dirty_normal.png",
+     "orm": "tex/grip__dirty_orm.png"
+    },
+    {
+     "id": "pocket",
+     "zone": "grip_core__zone_pocket",
+     "label": "Bearing pocket: eased bright with the round file (s4.flash)",
+     "color": "tex/grip__dirty_color.png",
+     "normal": "tex/grip__dirty_normal.png",
+     "orm": "tex/grip__dirty_orm.png"
+    }
+   ],
+   "note": "fused alloy spine: flat seat faces for the two plates, T-slot for the tang, pocket for the damper unit, loop channel with two clips, lead channel and plug window in the back, strap bed, pegs at A and B, lightening pockets under the right plate. It is the pressed core from the moment the mould opens (SEAM.md section 10): the as-found texture set is the core fresh from the mould, and materials.core_flash and core_sprue stand on it along path parting"
+  }
+ ],
+ "params": [],
+ "sequence": [
+  {
+   "op": "insert",
+   "part": "grip.core",
+   "step": "check.bare_core"
+  },
+  {
+   "op": "insert",
+   "part": "servo.gimbal_cradle",
+   "step": "s4.pressfit",
+   "unit": true,
+   "among": [
+    "grip",
+    "servo",
+    "materials"
+   ],
+   "seat": "grip_core__mark_seat_gimbal",
+   "clear": "grip_core__mark_clear_gimbal"
+  },
+  {
+   "op": "insert",
+   "part": "materials.strap_bent",
+   "step": "s5.strap",
+   "among": [
+    "grip",
+    "servo",
+    "materials"
+   ],
+   "seat": "grip_core__mark_seat_strap",
+   "clear": "grip_core__mark_clear_strap"
+  },
+  {
+   "op": "insert",
+   "part": "materials.sheet_a_plate",
+   "step": "s5.plates",
+   "group": "plates",
+   "among": [
+    "grip",
+    "servo",
+    "materials"
+   ],
+   "seat": "grip_core__mark_seat_plate_l",
+   "clear": "grip_core__mark_clear_plate_l",
+   "expect": [
+    "servo.gimbal_cradle"
+   ]
+  },
+  {
+   "op": "insert",
+   "part": "materials.sheet_b_plate",
+   "step": "s5.plates",
+   "group": "plates",
+   "among": [
+    "grip",
+    "servo",
+    "materials"
+   ],
+   "seat": "grip_core__mark_seat_plate_r",
+   "clear": "grip_core__mark_clear_plate_r"
+  },
+  {
+   "op": "insert",
+   "part": "servo.screw_case_a",
+   "step": "s5.torque",
+   "group": "pscrews",
+   "among": [
+    "grip",
+    "servo",
+    "materials"
+   ],
+   "expect": [
+    "materials.sheet_a_plate",
+    "materials.sheet_b_plate",
+    "grip.core"
+   ],
+   "seat": "grip_core__mark_seat_plate_screw_lc",
+   "clear": "grip_core__mark_clear_plate_screw_lc"
+  },
+  {
+   "op": "insert",
+   "part": "servo.screw_case_b",
+   "step": "s5.torque",
+   "group": "pscrews",
+   "among": [
+    "grip",
+    "servo",
+    "materials"
+   ],
+   "expect": [
+    "materials.sheet_a_plate",
+    "materials.sheet_b_plate",
+    "grip.core"
+   ],
+   "seat": "grip_core__mark_seat_plate_screw_ld",
+   "clear": "grip_core__mark_clear_plate_screw_ld"
+  },
+  {
+   "op": "insert",
+   "part": "servo.screw_case_c",
+   "step": "s5.torque",
+   "group": "pscrews",
+   "among": [
+    "grip",
+    "servo",
+    "materials"
+   ],
+   "expect": [
+    "materials.sheet_a_plate",
+    "materials.sheet_b_plate",
+    "grip.core"
+   ],
+   "seat": "grip_core__mark_seat_plate_screw_rc",
+   "clear": "grip_core__mark_clear_plate_screw_rc"
+  },
+  {
+   "op": "insert",
+   "part": "servo.screw_case_d",
+   "step": "s5.torque",
+   "group": "pscrews",
+   "among": [
+    "grip",
+    "servo",
+    "materials"
+   ],
+   "expect": [
+    "materials.sheet_a_plate",
+    "materials.sheet_b_plate",
+    "grip.core"
+   ],
+   "seat": "grip_core__mark_seat_plate_screw_rd",
+   "clear": "grip_core__mark_clear_plate_screw_rd"
+  },
+  {
+   "op": "insert",
+   "part": "grip.seam_l",
+   "step": "s5.seam",
+   "group": "seams"
+  },
+  {
+   "op": "insert",
+   "part": "grip.seam_r",
+   "step": "s5.seam",
+   "group": "seams"
+  },
+  {
+   "op": "remove",
+   "part": "grip.core",
+   "step": "check.assembled_off"
+  },
+  {
+   "op": "insert",
+   "part": "grip.core",
+   "step": "s6.slide",
+   "unit": true
+  },
+  {
+   "op": "insert",
+   "part": "pistol.lead_plug",
+   "step": "s6.plug"
+  },
+  {
+   "op": "insert",
+   "part": "pistol.housing_pin",
+   "step": "s6.pin"
+  },
+  {
+   "op": "insert",
+   "part": "grip.screw_a",
+   "step": "s6.screws",
+   "group": "gscrews"
+  },
+  {
+   "op": "insert",
+   "part": "grip.screw_b",
+   "step": "s6.screws",
+   "group": "gscrews"
+  }
+ ],
+ "absent_at_start": [
+  "grip.core",
+  "grip.screw_a",
+  "grip.screw_b",
+  "grip.seam_l",
+  "grip.seam_r"
+ ],
+ "frame": "P: the pistol metric frame (metres); place this family root on the pistol family root and the grip is fitted",
+ "seats_on_pistol": "grip_core rest pose = seated on pistol.frame (same frame as pistol.glb); grip_core__clear = slid 75 mm down off the tang; the trigger lead is tucked along path grip.core/lead (grip_core__path_lead_00..13)",
+ "interface": "INTERFACE.md / interface.json",
+ "foreign_parts": {
+  "about": "parts of other families that seat on grip.core: place the part's node on the seat mark (world transform), approach from the clear mark",
+  "servo.gimbal_cradle (with what rides on it)": [
+   "grip_core__mark_seat_gimbal",
+   "grip_core__mark_clear_gimbal"
+  ],
+  "materials.sheet_a_plate": [
+   "grip_core__mark_seat_plate_l",
+   "grip_core__mark_clear_plate_l"
+  ],
+  "materials.sheet_b_plate": [
+   "grip_core__mark_seat_plate_r",
+   "grip_core__mark_clear_plate_r"
+  ],
+  "materials.strap_bent": [
+   "grip_core__mark_seat_strap",
+   "grip_core__mark_clear_strap"
+  ],
+  "servo.screw_case_a..d (any screw in any hole)": [
+   "grip_core__mark_seat_plate_screw_lc",
+   "..._ld",
+   "..._rc",
+   "..._rd",
+   "grip_core__mark_clear_plate_screw_*"
+  ],
+  "materials.loop_tucked": "path grip.core/loop (the channel centre line, datum D at z -1.7)"
+ },
+ "in_hand": "none from this family (SEAM.md section 9): integration builds grip_stabilised_pistol from the seated bench parts",
+ "as_found": "grip.core is the pressed core from the moment the mould opens (SEAM.md section 10). Its as-found set (tex/grip__dirty_*) is the core fresh from the mould: dull grey skin under release powder, pocket and holes as cast, a dark witness line on the parting plane. Three wipes on the core: skin (the whole core), flash (the slab round the parting plane, Y = 0) and pocket. The zones overlap: a texel should show the clean set only when EVERY zone that holds it has been wiped, so the pocket and the parting line stay as cast until s4.flash even if the skin is cleaned first. The seams' as-found state is the uncured paste. The two spring clips in the loop channel are part of the core mesh and are there in both sets"
+}

@@ -26,7 +26,7 @@ namespace AthenHill.Tests
   {
    var pack=new ShopModel(City().items);
    var catalog=ScriptableObject.CreateInstance<CharacterCatalog>();catalog.skills=new[]{new CharacterSkill{id="engineering",initial=20}};
-   var model=new CraftingModel(Data(),City().items,pack,()=>true,character:new CharacterModel(catalog,pack));
+   var model=new CraftingModel(Data(),City().items,pack,()=>true,character:new CharacterModel(catalog,pack));model.HandsOnAvailable=_=>false; /* 20 Nov 2026: the timer route (Steady Hands bench: made by hand once first) */
    return (pack,model,new FieldOrderProgress(Orders()));
   }
 

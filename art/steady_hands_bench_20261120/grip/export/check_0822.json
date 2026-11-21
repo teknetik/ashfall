@@ -1,0 +1,533 @@
+{
+ "family": "grip",
+ "generated": "2026-11-21T08:22:29Z",
+ "blender": "5.2.2 LTS",
+ "shrink_mm": 0.030000000000000002,
+ "contact_mm": 0.3,
+ "stand_ins": [],
+ "externals": {
+  "pistol": [
+   "pistol.barrel",
+   "pistol.bind_wire_a",
+   "pistol.bind_wire_b",
+   "pistol.card_a",
+   "pistol.card_b",
+   "pistol.cell",
+   "pistol.cell_bus",
+   "pistol.cell_latch",
+   "pistol.dust_cover",
+   "pistol.frame",
+   "pistol.housing",
+   "pistol.housing_pin",
+   "pistol.housing_spring",
+   "pistol.lead",
+   "pistol.lead_plug",
+   "pistol.scale_l",
+   "pistol.scale_r",
+   "pistol.screw_grip_a",
+   "pistol.screw_grip_b",
+   "pistol.status_lamp",
+   "pistol.trigger",
+   "pistol.wrap"
+  ],
+  "servo": [
+   "servo.gimbal_coil",
+   "servo.gimbal_cradle",
+   "servo.gimbal_grit_1",
+   "servo.gimbal_grit_2",
+   "servo.gimbal_grit_3",
+   "servo.gimbal_race",
+   "servo.gimbal_retainer",
+   "servo.gimbal_ring",
+   "servo.gimbal_rotor",
+   "servo.screw_case_a",
+   "servo.screw_case_b",
+   "servo.screw_case_c",
+   "servo.screw_case_d"
+  ],
+  "materials": [
+   "materials.sheet_a_plate",
+   "materials.sheet_b_plate",
+   "materials.strap_bent"
+  ]
+ },
+ "stand_ins_replaced_by_the_real_part": [
+  "materials.sheet_a_plate",
+  "materials.sheet_b_plate",
+  "materials.strap_bent"
+ ],
+ "contract": {
+  "ok": true,
+  "problems": [],
+  "parts": 5,
+  "tris": 8704,
+  "budget": 25000
+ },
+ "params": {
+  "ok": true,
+  "params": {},
+  "note": "no rig"
+ },
+ "sequence": {
+  "ok": true,
+  "events": [
+   {
+    "step": "check.bare_core",
+    "op": "insert",
+    "part": "grip.core",
+    "ok": true,
+    "against": 8,
+    "near": 2,
+    "riders": [],
+    "travel_mm": 75.0,
+    "overlap_steps": {},
+    "contacts_seated_mm": {
+     "pistol.frame": 0.05,
+     "pistol.cell_bus": 0.15
+    },
+    "unexpected_contacts": [],
+    "min_clearance_on_path_mm": 0.086
+   },
+   {
+    "step": "s4.pressfit",
+    "op": "insert",
+    "part": "servo.gimbal_cradle",
+    "ok": true,
+    "seat": "grip_core__mark_seat_gimbal",
+    "seat_owner": "grip.core",
+    "own_rest_to_seat_mm": 113.254,
+    "among": [
+     "grip",
+     "servo",
+     "materials"
+    ],
+    "against": 1,
+    "near": 1,
+    "riders": [
+     "servo.gimbal_rotor",
+     "servo.gimbal_ring",
+     "servo.gimbal_retainer",
+     "servo.gimbal_race",
+     "servo.gimbal_grit_3",
+     "servo.gimbal_grit_2",
+     "servo.gimbal_grit_1",
+     "servo.gimbal_coil"
+    ],
+    "travel_mm": 40.0,
+    "overlap_steps": {},
+    "contacts_seated_mm": {
+     "grip.core": 0.022
+    },
+    "unexpected_contacts": [],
+    "min_clearance_on_path_mm": 0.022
+   },
+   {
+    "step": "s5.strap",
+    "op": "insert",
+    "part": "materials.strap_bent",
+    "ok": true,
+    "seat": "grip_core__mark_seat_strap",
+    "seat_owner": "grip.core",
+    "own_rest_to_seat_mm": 118.284,
+    "among": [
+     "grip",
+     "servo",
+     "materials"
+    ],
+    "against": 10,
+    "near": 6,
+    "riders": [],
+    "travel_mm": 65.0,
+    "overlap_steps": {},
+    "contacts_seated_mm": {
+     "grip.core": 0.142
+    },
+    "unexpected_contacts": [],
+    "min_clearance_on_path_mm": 0.102
+   },
+   {
+    "step": "s5.plates",
+    "op": "insert",
+    "part": "materials.sheet_a_plate",
+    "ok": true,
+    "seat": "grip_core__mark_seat_plate_l",
+    "seat_owner": "grip.core",
+    "own_rest_to_seat_mm": 180.576,
+    "among": [
+     "grip",
+     "servo",
+     "materials"
+    ],
+    "against": 11,
+    "near": 7,
+    "riders": [],
+    "travel_mm": 30.0,
+    "overlap_steps": {},
+    "contacts_seated_mm": {
+     "grip.core": 0.05,
+     "servo.gimbal_cradle": 0.05
+    },
+    "unexpected_contacts": [],
+    "min_clearance_on_path_mm": 1.429
+   },
+   {
+    "step": "s5.plates",
+    "op": "insert",
+    "part": "materials.sheet_b_plate",
+    "ok": true,
+    "seat": "grip_core__mark_seat_plate_r",
+    "seat_owner": "grip.core",
+    "own_rest_to_seat_mm": 327.666,
+    "among": [
+     "grip",
+     "servo",
+     "materials"
+    ],
+    "against": 12,
+    "near": 1,
+    "riders": [],
+    "travel_mm": 30.0,
+    "overlap_steps": {},
+    "contacts_seated_mm": {
+     "grip.core": 0.05
+    },
+    "unexpected_contacts": [],
+    "min_clearance_on_path_mm": 1.438
+   },
+   {
+    "step": "s5.torque",
+    "op": "insert",
+    "part": "servo.screw_case_a",
+    "ok": true,
+    "seat": "grip_core__mark_seat_plate_screw_lc",
+    "seat_owner": "grip.core",
+    "own_rest_to_seat_mm": 118.542,
+    "among": [
+     "grip",
+     "servo",
+     "materials"
+    ],
+    "against": 16,
+    "near": 3,
+    "riders": [],
+    "travel_mm": 16.0,
+    "overlap_steps": {},
+    "contacts_seated_mm": {
+     "grip.core": 0.069,
+     "materials.sheet_a_plate": 0.0
+    },
+    "unexpected_contacts": [],
+    "min_clearance_on_path_mm": 0.069
+   },
+   {
+    "step": "s5.torque",
+    "op": "insert",
+    "part": "servo.screw_case_b",
+    "ok": true,
+    "seat": "grip_core__mark_seat_plate_screw_ld",
+    "seat_owner": "grip.core",
+    "own_rest_to_seat_mm": 136.978,
+    "among": [
+     "grip",
+     "servo",
+     "materials"
+    ],
+    "against": 16,
+    "near": 3,
+    "riders": [],
+    "travel_mm": 16.0,
+    "overlap_steps": {},
+    "contacts_seated_mm": {
+     "grip.core": 0.069,
+     "materials.sheet_a_plate": 0.0
+    },
+    "unexpected_contacts": [],
+    "min_clearance_on_path_mm": 0.069
+   },
+   {
+    "step": "s5.torque",
+    "op": "insert",
+    "part": "servo.screw_case_c",
+    "ok": true,
+    "seat": "grip_core__mark_seat_plate_screw_rc",
+    "seat_owner": "grip.core",
+    "own_rest_to_seat_mm": 94.181,
+    "among": [
+     "grip",
+     "servo",
+     "materials"
+    ],
+    "against": 16,
+    "near": 3,
+    "riders": [],
+    "travel_mm": 16.0,
+    "overlap_steps": {},
+    "contacts_seated_mm": {
+     "grip.core": 0.069,
+     "materials.sheet_b_plate": 0.0
+    },
+    "unexpected_contacts": [],
+    "min_clearance_on_path_mm": 0.069
+   },
+   {
+    "step": "s5.torque",
+    "op": "insert",
+    "part": "servo.screw_case_d",
+    "ok": true,
+    "seat": "grip_core__mark_seat_plate_screw_rd",
+    "seat_owner": "grip.core",
+    "own_rest_to_seat_mm": 172.011,
+    "among": [
+     "grip",
+     "servo",
+     "materials"
+    ],
+    "against": 16,
+    "near": 3,
+    "riders": [],
+    "travel_mm": 16.0,
+    "overlap_steps": {},
+    "contacts_seated_mm": {
+     "grip.core": 0.069,
+     "materials.sheet_b_plate": 0.0
+    },
+    "unexpected_contacts": [],
+    "min_clearance_on_path_mm": 0.069
+   },
+   {
+    "step": "s5.seam",
+    "op": "insert",
+    "part": "grip.seam_l",
+    "ok": true,
+    "skipped": "flexible part (peeled, snipped or bent off): not swept"
+   },
+   {
+    "step": "s5.seam",
+    "op": "insert",
+    "part": "grip.seam_r",
+    "ok": true,
+    "skipped": "flexible part (peeled, snipped or bent off): not swept"
+   },
+   {
+    "step": "check.assembled_off",
+    "op": "remove",
+    "part": "grip.core",
+    "ok": true,
+    "against": 8,
+    "near": 2,
+    "riders": [
+     "grip.seam_l",
+     "grip.seam_r",
+     "materials.sheet_a_plate",
+     "materials.sheet_b_plate",
+     "materials.strap_bent",
+     "servo.screw_case_d",
+     "servo.screw_case_c",
+     "servo.screw_case_b",
+     "servo.screw_case_a",
+     "servo.gimbal_cradle",
+     "servo.gimbal_rotor",
+     "servo.gimbal_ring",
+     "servo.gimbal_retainer",
+     "servo.gimbal_race",
+     "servo.gimbal_grit_3",
+     "servo.gimbal_grit_2",
+     "servo.gimbal_grit_1",
+     "servo.gimbal_coil"
+    ],
+    "travel_mm": 75.0,
+    "overlap_steps": {},
+    "contacts_seated_mm": {
+     "pistol.frame": 0.05,
+     "pistol.cell_bus": 0.15
+    },
+    "unexpected_contacts": [],
+    "min_clearance_on_path_mm": 0.086
+   },
+   {
+    "step": "s6.slide",
+    "op": "insert",
+    "part": "grip.core",
+    "ok": true,
+    "against": 8,
+    "near": 2,
+    "riders": [
+     "grip.seam_l",
+     "grip.seam_r",
+     "materials.sheet_a_plate",
+     "materials.sheet_b_plate",
+     "materials.strap_bent",
+     "servo.screw_case_d",
+     "servo.screw_case_c",
+     "servo.screw_case_b",
+     "servo.screw_case_a",
+     "servo.gimbal_cradle",
+     "servo.gimbal_rotor",
+     "servo.gimbal_ring",
+     "servo.gimbal_retainer",
+     "servo.gimbal_race",
+     "servo.gimbal_grit_3",
+     "servo.gimbal_grit_2",
+     "servo.gimbal_grit_1",
+     "servo.gimbal_coil"
+    ],
+    "travel_mm": 75.0,
+    "overlap_steps": {},
+    "contacts_seated_mm": {
+     "pistol.frame": 0.05,
+     "pistol.cell_bus": 0.15
+    },
+    "unexpected_contacts": [],
+    "min_clearance_on_path_mm": 0.086
+   },
+   {
+    "step": "s6.plug",
+    "op": "insert",
+    "part": "pistol.lead_plug",
+    "ok": true,
+    "against": 27,
+    "near": 4,
+    "riders": [],
+    "travel_mm": 14.0,
+    "overlap_steps": {},
+    "contacts_seated_mm": {
+     "pistol.cell_bus": 0.079
+    },
+    "unexpected_contacts": [],
+    "min_clearance_on_path_mm": 0.079
+   },
+   {
+    "step": "s6.pin",
+    "op": "insert",
+    "part": "pistol.housing_pin",
+    "ok": true,
+    "against": 29,
+    "near": 8,
+    "riders": [],
+    "travel_mm": 48.0,
+    "overlap_steps": {},
+    "contacts_seated_mm": {
+     "grip.core": 0.072,
+     "pistol.frame": 0.115
+    },
+    "unexpected_contacts": [],
+    "min_clearance_on_path_mm": 0.072
+   },
+   {
+    "step": "s6.screws",
+    "op": "insert",
+    "part": "grip.screw_a",
+    "ok": true,
+    "against": 31,
+    "near": 5,
+    "riders": [],
+    "travel_mm": 42.0,
+    "overlap_steps": {},
+    "contacts_seated_mm": {
+     "pistol.frame": 0.221,
+     "grip.core": 0.17,
+     "materials.sheet_a_plate": 0.02
+    },
+    "unexpected_contacts": [],
+    "min_clearance_on_path_mm": 0.209
+   },
+   {
+    "step": "s6.screws",
+    "op": "insert",
+    "part": "grip.screw_b",
+    "ok": true,
+    "against": 31,
+    "near": 7,
+    "riders": [],
+    "travel_mm": 42.0,
+    "overlap_steps": {},
+    "contacts_seated_mm": {
+     "pistol.frame": 0.221,
+     "grip.core": 0.17,
+     "materials.sheet_a_plate": 0.02
+    },
+    "unexpected_contacts": [],
+    "min_clearance_on_path_mm": 0.209
+   }
+  ],
+  "never_moved": [],
+  "left_at_end": [
+   "grip.core",
+   "grip.screw_a",
+   "grip.screw_b",
+   "grip.seam_l",
+   "grip.seam_r"
+  ]
+ },
+ "fasteners": {
+  "ok": true,
+  "fasteners": {
+   "grip.screw_a": {
+    "ok": true,
+    "holes": {
+     "materials.sheet_a_plate": {
+      "ok": true,
+      "samples_in_hole": 4,
+      "samples_in_solid": 0
+     },
+     "grip.core": {
+      "ok": true,
+      "samples_in_hole": 45,
+      "samples_in_solid": 0
+     },
+     "pistol.frame": {
+      "ok": true,
+      "samples_in_hole": 16,
+      "samples_in_solid": 0
+     }
+    },
+    "head_gap_mm": 0.02,
+    "axis_depth_mm": 34.0,
+    "shank_r_mm": 1.9
+   },
+   "grip.screw_b": {
+    "ok": true,
+    "holes": {
+     "materials.sheet_a_plate": {
+      "ok": true,
+      "samples_in_hole": 4,
+      "samples_in_solid": 0
+     },
+     "grip.core": {
+      "ok": true,
+      "samples_in_hole": 45,
+      "samples_in_solid": 0
+     },
+     "pistol.frame": {
+      "ok": true,
+      "samples_in_hole": 16,
+      "samples_in_solid": 0
+     }
+    },
+    "head_gap_mm": 0.02,
+    "axis_depth_mm": 34.0,
+    "shank_r_mm": 1.9
+   }
+  }
+ },
+ "export": {
+  "ok": true,
+  "problems": [],
+  "glb": {
+   "bytes": 13341672,
+   "nodes": 180,
+   "meshes": 5,
+   "materials": [
+    "M_grip"
+   ],
+   "images": 3,
+   "animations": {}
+  },
+  "tris_total": 8704,
+  "max_bounds_dev_mm": 0.0,
+  "helpers_in_glb": 175,
+  "rig_imported_as": "nodes"
+ },
+ "ok": true,
+ "seconds": 5.8
+}

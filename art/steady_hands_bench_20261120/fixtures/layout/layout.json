@@ -1,0 +1,515 @@
+{
+ "about": "Bench layout for the tools and fixtures families (model-bench, 20 Nov 2026). One source for both build scripts and the plan drawing.",
+ "frame": "Bench frame, Blender metres, Z up. Origin on the worktop surface under the SS_Workbench pivot. +X = the player's right, -Y = toward the player (bench front edge at y -0.583), +Y = toward the back. Unity bench-local (x, y, z) = (-X, Z + 0.8637, -Y). Both GLBs are exported in this frame: put each GLB root at bench-local (0, 0.8637, 0) with identity rotation.",
+ "yaw_note": "yaw is the turn of the object's own frame about Z; a tool's own frame has its working end at +Y, so yaw 0 lies it with the handle toward the player",
+ "bench": {
+  "worktop_x": [
+   -1.085,
+   1.05
+  ],
+  "worktop_y": [
+   -0.583,
+   0.567
+  ],
+  "worktop_unity_y": 0.8637,
+  "obstacles": [
+   {
+    "id": "screen_plate",
+    "x": [
+     -0.45,
+     0.43
+    ],
+    "y": [
+     0.103,
+     0.135
+    ],
+    "z": [
+     0.06,
+     0.324
+    ],
+    "note": "the bench's monitor, on a foot"
+   },
+   {
+    "id": "screen_foot",
+    "x": [
+     -0.18,
+     0.18
+    ],
+    "y": [
+     0.07,
+     0.29
+    ],
+    "z": [
+     0.0,
+     0.111
+    ]
+   },
+   {
+    "id": "pendant_control",
+    "x": [
+     0.675,
+     0.935
+    ],
+    "y": [
+     0.335,
+     0.545
+    ],
+    "z": [
+     0.11,
+     0.55
+    ],
+    "note": "hangs on two cables"
+   },
+   {
+    "id": "hanging_loop_and_wrench",
+    "x": [
+     -0.94,
+     -0.64
+    ],
+    "y": [
+     0.395,
+     0.495
+    ],
+    "z": [
+     0.111,
+     0.55
+    ]
+   },
+   {
+    "id": "print_head_and_gantry",
+    "x": [
+     -0.845,
+     0.83
+    ],
+    "y": [
+     -0.165,
+     0.415
+    ],
+    "z": [
+     0.577,
+     1.3
+    ],
+    "note": "overhead, not on the worktop"
+   }
+  ]
+ },
+ "camera": {
+  "note": "DESIGN.md section 4 default, used for the review renders: standing eye 1.65 m above the floor, 0.50 m in front of the front edge, 40 degrees down, 35 mm on a 36 mm sensor",
+  "eye": [
+   0.0,
+   -1.083,
+   0.786
+  ],
+  "pitch_down_deg": 40,
+  "lens_mm": 35
+ },
+ "items": {
+  "fixtures_worksurface": {
+   "pos": [
+    0.0,
+    -0.303,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.9,
+    0.55,
+    0.008
+   ],
+   "label": "work surface + bench rule (front strip)"
+  },
+  "fixtures_workmat": {
+   "pos": [
+    0.03,
+    -0.195,
+    0.008
+   ],
+   "yaw": 0,
+   "size": [
+    0.36,
+    0.26,
+    0.006
+   ],
+   "label": "work mat (felt)"
+  },
+  "fixtures_partsmat": {
+   "pos": [
+    0.03,
+    -0.44,
+    0.008
+   ],
+   "yaw": 0,
+   "size": [
+    0.44,
+    0.2,
+    0.003
+   ],
+   "label": "parts mat"
+  },
+  "fixtures_vise": {
+   "pos": [
+    -0.325,
+    -0.33,
+    0.008
+   ],
+   "yaw": 0,
+   "size": [
+    0.15,
+    0.32,
+    0.135
+   ],
+   "off": [
+    0.0,
+    -0.035
+   ],
+   "label": "vise (jaw line at pos, handle toward the player)"
+  },
+  "fixtures_dish": {
+   "pos": [
+    0.36,
+    -0.455,
+    0.008
+   ],
+   "yaw": 0,
+   "size": [
+    0.108,
+    0.108,
+    0.028
+   ],
+   "round": true,
+   "label": "magnetic dish"
+  },
+  "fixtures_cradle": {
+   "pos": [
+    0.335,
+    -0.3,
+    0.008
+   ],
+   "yaw": 0,
+   "size": [
+    0.18,
+    0.09,
+    0.11
+   ],
+   "label": "cradle stand"
+  },
+  "fixtures_pad": {
+   "pos": [
+    0.36,
+    -0.125,
+    0.008
+   ],
+   "yaw": 0,
+   "size": [
+    0.13,
+    0.104,
+    0.024
+   ],
+   "label": "insulated pad"
+  },
+  "fixtures_board": {
+   "pos": [
+    -0.76,
+    0.29,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.6,
+    0.13,
+    0.36
+   ],
+   "off": [
+    0.0,
+    0.05
+   ],
+   "label": "card board + schematic (stands, tilted back 10 deg)"
+  },
+  "fixtures_tester": {
+   "pos": [
+    -0.58,
+    0.035,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.16,
+    0.076,
+    0.13
+   ],
+   "label": "bench tester"
+  },
+  "fixtures_jar": {
+   "pos": [
+    -0.76,
+    0.03,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.124,
+    0.124,
+    0.16
+   ],
+   "round": true,
+   "label": "solvent jar"
+  },
+  "fixtures_bin": {
+   "pos": [
+    -0.95,
+    0.07,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.2,
+    0.2,
+    0.14
+   ],
+   "round": true,
+   "label": "scrap bin"
+  },
+  "fixtures_lamp": {
+   "pos": [
+    0.3,
+    0.03,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.11,
+    0.11,
+    0.45
+   ],
+   "round": true,
+   "label": "cure lamp (base; arm parked folded toward the front right)"
+  },
+  "fixtures_tray": {
+   "pos": [
+    0.64,
+    -0.06,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.3,
+    0.2,
+    0.03
+   ],
+   "label": "salvage tray"
+  },
+  "fixtures_press": {
+   "pos": [
+    0.56,
+    0.22,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.23,
+    0.3,
+    0.49
+   ],
+   "label": "nanite press (bed at the front, column at the back, lever on the right)"
+  },
+  "fixtures_mouldrack": {
+   "pos": [
+    0.82,
+    0.19,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.142,
+    0.16,
+    0.17
+   ],
+   "label": "mould rack"
+  },
+  "tools_roll": {
+   "pos": [
+    -0.77,
+    -0.38,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.56,
+    0.3,
+    0.03
+   ],
+   "label": "Field Toolkit roll (unrolled; rolled bundle at its left end)"
+  },
+  "tools_thirdhand": {
+   "pos": [
+    -0.2,
+    -0.105,
+    0.008
+   ],
+   "yaw": 0,
+   "size": [
+    0.08,
+    0.08,
+    0.12
+   ],
+   "round": true,
+   "label": "third hand"
+  },
+  "tools_oil_bottle": {
+   "pos": [
+    0.5,
+    -0.485,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.034,
+    0.034,
+    0.1
+   ],
+   "round": true,
+   "label": "oil dropper"
+  },
+  "tools_applicator": {
+   "pos": [
+    0.5,
+    -0.36,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.014,
+    0.15,
+    0.014
+   ],
+   "label": "nanite applicator"
+  },
+  "tools_mallet": {
+   "pos": [
+    0.6,
+    -0.38,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.08,
+    0.28,
+    0.038
+   ],
+   "label": "mallet (head away from the player)"
+  },
+  "tools_file_flat": {
+   "pos": [
+    0.69,
+    -0.37,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.03,
+    0.34,
+    0.03
+   ],
+   "label": "flat file"
+  },
+  "tools_file_round": {
+   "pos": [
+    0.74,
+    -0.385,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.028,
+    0.31,
+    0.028
+   ],
+   "label": "round file"
+  },
+  "tools_snips": {
+   "pos": [
+    0.82,
+    -0.4,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.07,
+    0.25,
+    0.02
+   ],
+   "label": "tin snips"
+  },
+  "tools_drill": {
+   "pos": [
+    0.95,
+    -0.38,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.13,
+    0.3,
+    0.09
+   ],
+   "label": "hand drill"
+  },
+  "tools_rag": {
+   "pos": [
+    0.97,
+    -0.165,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.16,
+    0.1,
+    0.02
+   ],
+   "label": "rag"
+  },
+  "tools_iron_stand": {
+   "pos": [
+    0.92,
+    -0.055,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.13,
+    0.06,
+    0.05
+   ],
+   "label": "soldering iron on its stand"
+  },
+  "tools_solder_reel": {
+   "pos": [
+    0.96,
+    0.07,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.05,
+    0.05,
+    0.04
+   ],
+   "round": true,
+   "label": "solder reel"
+  },
+  "fixtures_holster": {
+   "pos": [
+    -0.6,
+    -0.583,
+    0.0
+   ],
+   "yaw": 0,
+   "size": [
+    0.07,
+    0.06,
+    0.25
+   ],
+   "label": "holster on a hook over the worktop front edge (hangs below it)"
+  }
+ }
+}

@@ -40,6 +40,15 @@ namespace AthenHill
   [Range(0,.1f)]public float recoilBack=.05f;
   [Range(0,15)]public float recoilPitch=6;
   [Min(.01f)]public float recoilReturn=.13f;
+  [Header("Handling (Steady Hands bench, 20 Nov 2026): read from the weapon's handling stats")]
+  [Tooltip("Share of the weapon's Aim Sway (degrees) the held weapon shows: a slow figure of eight plus tremor, visual only (the shot follows the crosshair).")]
+  [Range(0,2)]public float handlingSwayScale=1;
+  [Tooltip("While aiming down the sights the sway is multiplied by this.")]
+  [Range(0,1)]public float aimSwayShare=.8f;
+  [Tooltip("Degrees of view-model yaw per degree of the shot's side kick.")]
+  [Range(0,5)]public float sideKickYaw=1.6f;
+  [Tooltip("Reduced Motion keeps this share of the idle sway.")]
+  [Range(0,1)]public float reducedSwayShare=.3f;
   [Tooltip("Shown with the field rifle instead of the pistol (3 Oct 2026: one view model per weapon, sharing the overlay camera).")]
   public bool rifle;
   public bool Visible {get;private set;}
@@ -50,7 +59,7 @@ namespace AthenHill
   public float AimBlend=>aim;
   /// Draw/holster slide, 0 (holstered) to 1 (drawn) (20 Nov 2026, rifle_hands_20261120: read by ViewModelArmsRig).
   public float DrawBlend=>draw;
-  float draw,aim,aimVelocity,recoil,bobPhase,lastShot=-99;
+  float draw,aim,aimVelocity,recoil,bobPhase,lastShot=-99,shotSide,shotRecover=.18f,shotOvershoot;
   Vector2 sway,lastLook;
   bool looked;
   void Start()
@@ -77,7 +86,11 @@ namespace AthenHill
    if(overlayCamera){bool o=OverlayWanted();if(overlayCamera.enabled!=o)overlayCamera.enabled=o;}
    if(!Visible){looked=false;return;}
    if(animationSource&&holdClip&&!animationSource.IsPlaying(holdClip.name))animationSource.Play(holdClip.name);
-   if(combat.LastShotTime!=lastShot){lastShot=combat.LastShotTime;if(Time.time-lastShot<.1f)Kick();}
+   if(combat.LastShotTime!=lastShot)
+   {
+    lastShot=combat.LastShotTime;
+    if(Time.time-lastShot<.1f){Kick();shotSide=combat.LastSideKick;shotRecover=combat.RecoverySeconds;shotOvershoot=WeaponHandlingRules.OvershootFraction(shotRecover);}
+   }
    bool reduced=session&&session.reducedMotion;
    aim=Mathf.SmoothDamp(aim,combat.Aiming?1:0,ref aimVelocity,aimSeconds*.5f,Mathf.Infinity,dt);
    // look sway: lag behind camera rotation
@@ -91,10 +104,17 @@ namespace AthenHill
    bobPhase+=dt*Mathf.Lerp(0,9,Mathf.Clamp01(speed/4));
    float bob=reduced?0:bobAmount*Mathf.Clamp01(speed/3)*(1-aim*.75f);
    var bobOffset=new Vector3(Mathf.Cos(bobPhase)*bob,Mathf.Abs(Mathf.Sin(bobPhase))*-bob,0);
-   recoil=Mathf.MoveTowards(recoil,0,dt/recoilReturn);
+   // 20 Nov 2026: the return time follows the weapon's recovery (recoilReturn at the default 0.18 s); a slow one swings
+   // once past rest (negative r) before it settles.
+   float returnSeconds=recoilReturn*Mathf.Max(.25f,shotRecover/WeaponHandlingRules.DefaultRecoverySeconds);
+   recoil=Mathf.MoveTowards(recoil,0,dt/returnSeconds);
    float r=recoil*recoil*(3-2*recoil);
+   float sinceShot=Time.time-lastShot;
+   if(recoil<=0&&shotOvershoot>0&&sinceShot<returnSeconds*1.8f)r=-shotOvershoot*Mathf.Sin(Mathf.PI*Mathf.Clamp01((sinceShot-returnSeconds)/(returnSeconds*.8f)));
+   // idle handling sway: figure of eight and tremor, degrees (WeaponFeel.Sway)
+   var hold=WeaponFeel.Sway(Time.time,combat.Stats.sway*handlingSwayScale*(reduced?reducedSwayShare:1)*Mathf.Lerp(1,aimSwayShare,aim));
    var offset=Vector3.Lerp(hipOffset,aimOffset,aim)+bobOffset+new Vector3(sway.x*swayAmount,sway.y*swayAmount,0)+Vector3.back*recoilBack*r;
-   var euler=Vector3.Lerp(hipEuler,aimEuler,aim)+new Vector3(-recoilPitch*combat.RecoilScale*r+sway.y*swayRotation,sway.x*swayRotation,sway.x*swayRotation*.5f);
+   var euler=Vector3.Lerp(hipEuler,aimEuler,aim)+new Vector3(-recoilPitch*combat.RecoilScale*r+sway.y*swayRotation-hold.y,sway.x*swayRotation+hold.x+shotSide*sideKickYaw*Mathf.Max(0,r),sway.x*swayRotation*.5f);
    float d=draw*draw*(3-2*draw);
    offset=Vector3.Lerp(holsterOffset,offset,d);euler=Vector3.Lerp(holsterEuler,euler,d);
    var cam=viewCamera.transform;

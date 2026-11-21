@@ -28,7 +28,7 @@ namespace AthenHill.Tests
     go=new GameObject("fixes rig");go.SetActive(false);
     session=go.AddComponent<GameSession>();session.catalog=City();crafting=go.AddComponent<CraftingSession>();crafting.data=Data();
     var player=new GameObject("combat");player.transform.SetParent(go.transform);combat=player.AddComponent<PlayerCombat>();combat.hasPistol=true;crafting.combat=combat;
-    pack=new ShopModel(City().items,credits);model=new CraftingModel(Data(),City().items,pack,()=>combat.hasPistol);
+    pack=new ShopModel(City().items,credits);model=new CraftingModel(Data(),City().items,pack,()=>combat.hasPistol);model.HandsOnAvailable=_=>false; /* 20 Nov 2026: the timer route (Steady Hands bench: made by hand once first) */
     Set(session,"Shop",pack);Set(session,"State",state);Set(session,"ActiveStationId",Station);
     Set(crafting,"Model",model);Set(crafting,"Session",session);combat.BindLoadout(model.Loadout);
    }

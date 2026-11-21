@@ -8,12 +8,14 @@ namespace AthenHill
     {
         /// True while photo mode is open or a conversation camera is engaged (blending in, holding or blending out,
         /// including the depth-of-field-only first-person case).
-        public static bool UnderControl => PhotoActive || ConversationEngaged;
+        public static bool UnderControl => PhotoActive || ConversationEngaged || BenchActive;
         public static bool PhotoActive { get; internal set; }
         public static bool ConversationEngaged { get; internal set; }
+        /// True while the bench camera owns the main camera (Steady Hands bench, 20 Nov 2026): FollowCamera writes nothing.
+        public static bool BenchActive { get; internal set; }
 
         // Statics survive play-mode entry when domain reload is disabled.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void ResetStatics() { PhotoActive = false; ConversationEngaged = false; }
+        static void ResetStatics() { PhotoActive = false; ConversationEngaged = false; BenchActive = false; }
     }
 }

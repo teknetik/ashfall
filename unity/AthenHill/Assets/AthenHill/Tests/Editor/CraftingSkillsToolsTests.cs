@@ -21,7 +21,7 @@ namespace AthenHill.Tests
    var pack=new ShopModel(City().items);
    if(!toolkit&&pack.Quantity("field_toolkit")>0)Give(pack,("field_toolkit",-pack.Quantity("field_toolkit")));
    var character=new CharacterModel(Chars(),pack);
-   var model=new CraftingModel(data??Data(),City().items,pack,()=>true,character:character);
+   var model=new CraftingModel(data??Data(),City().items,pack,()=>true,character:character);model.HandsOnAvailable=_=>false; /* 20 Nov 2026: the timer route (Steady Hands bench: made by hand once first) */
    return (pack,model,character);
   }
   sealed class State:IQuestState
@@ -208,7 +208,7 @@ namespace AthenHill.Tests
     {
      var recipe=data.recipes.Single(r=>r.id==template.id);recipe.requirements=new CharacterRequirement[0]; // skill levels are the quest path's job; this test is about parts and tools
      var pack=new ShopModel(city.items);
-     var model=new CraftingModel(data,city.items,pack,()=>true,character:new CharacterModel(Chars(),pack));
+     var model=new CraftingModel(data,city.items,pack,()=>true,character:new CharacterModel(Chars(),pack));model.HandsOnAvailable=_=>false; /* 20 Nov 2026: the timer route (Steady Hands bench: made by hand once first) */
      // the toolkit comes with the player or from Brann; either way it is in the pack
      if(pack.Quantity("field_toolkit")==0)Assert.That(model.Gift(GiftTopic,new HashSet<string>().Contains,out _),Is.Not.Null);
      foreach(var id in recipe.requiredSchematics??new string[0])model.Unlock(id);

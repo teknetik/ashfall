@@ -1,0 +1,7138 @@
+{
+ "name": "check_steady_hands_bench",
+ "exe": "/home/teknetik/code/ao2/unity/AthenHill/Builds/batch-sh-real6/AthenHill.x86_64",
+ "exeMtime": "Thu Nov 19 14:08:38 2026",
+ "started": "2026-11-21 15:22:36",
+ "checks": [
+  {
+   "check": "the bench opens (state Assembly)",
+   "passed": true,
+   "detail": {
+    "state": "Assembly",
+    "assembly": {
+     "open": true,
+     "detached": false,
+     "lastNotice": ""
+    }
+   }
+  },
+  {
+   "check": "the cursor is free and visible at the bench",
+   "passed": true,
+   "detail": {
+    "lockState": "None",
+    "visible": true,
+    "looking": false,
+    "freed": false
+   }
+  },
+  {
+   "check": "the bench camera has the view",
+   "passed": true,
+   "detail": {
+    "shot": "wide",
+    "pinned": null,
+    "shots": [
+     "wide",
+     "work",
+     "vise",
+     "over",
+     "vise_l",
+     "vise_r",
+     "mat",
+     "parts",
+     "card",
+     "tray",
+     "press",
+     "tester",
+     "room"
+    ],
+    "zoom": 0.0,
+    "yaw": 0.0,
+    "pitch": 0.0,
+    "blending": false,
+    "active": true
+   }
+  },
+  {
+   "check": "the bench is entered on 'work', or on 'wide' when the pistol to pick up lies outside it (21 Nov: it does, at the right end)",
+   "passed": true,
+   "detail": "wide"
+  },
+  {
+   "check": "there is work open",
+   "passed": true,
+   "detail": [
+    "s0.pistol:lay",
+    "s0.roll:untie",
+    "s0.salvage:servo",
+    "s0.salvage:sheet_a",
+    "s0.salvage:sheet_b",
+    "s0.salvage:vial"
+   ]
+  },
+  {
+   "check": "no shade and no window over the bench",
+   "passed": true,
+   "detail": {
+    "shade": false,
+    "modal": false
+   }
+  },
+  {
+   "check": "the key legend shows on first use",
+   "passed": true,
+   "detail": {
+    "legend": true,
+    "stage": "",
+    "action": "Drag the pistol onto the black work mat and let go  \u00b7  the view moves to the work mat"
+   }
+  },
+  {
+   "check": "every shot was held for a frame and let go again",
+   "passed": true,
+   "detail": {
+    "shots": [
+     "wide",
+     "work",
+     "vise",
+     "over",
+     "vise_l",
+     "vise_r",
+     "mat",
+     "parts",
+     "card",
+     "tray",
+     "press",
+     "tester",
+     "room"
+    ],
+    "camera": {
+     "shot": "wide",
+     "pinned": null,
+     "shots": [
+      "wide",
+      "work",
+      "vise",
+      "over",
+      "vise_l",
+      "vise_r",
+      "mat",
+      "parts",
+      "card",
+      "tray",
+      "press",
+      "tester",
+      "room"
+     ],
+     "zoom": 0.0,
+     "yaw": 0.0,
+     "pitch": 0.0,
+     "blending": false,
+     "active": true
+    }
+   }
+  },
+  {
+   "check": "stage s0: Lay out the job",
+   "passed": true,
+   "detail": {
+    "voice": [
+     "take_bench",
+     "tutor_welcome",
+     "tutor_s0_pistol",
+     "tutor_seat_verb"
+    ],
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "Brann's guidance: the first step of stage s0 is spoken (s0.pistol:lay)",
+   "passed": true,
+   "detail": {
+    "line": "tutor_s0_pistol",
+    "heard": [
+     "tutor_s0_pistol",
+     "tutor_seat_verb",
+     "tutor_welcome"
+    ]
+   }
+  },
+  {
+   "check": "Brann's guidance: how to seat is spoken the first time it comes up (s0.pistol:lay)",
+   "passed": true,
+   "detail": {
+    "line": "tutor_seat_verb",
+    "heard": [
+     "tutor_s0_pistol",
+     "tutor_seat_verb",
+     "tutor_welcome"
+    ]
+   }
+  },
+  {
+   "check": "s0.pistol:lay Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 7.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "Brann's guidance: how to turn is spoken the first time it comes up (s0.roll:untie)",
+   "passed": true,
+   "detail": {
+    "line": "tutor_turn_verb",
+    "heard": [
+     "tutor_s0_pistol",
+     "tutor_s0_roll",
+     "tutor_seat_verb",
+     "tutor_turn_verb",
+     "tutor_welcome"
+    ]
+   }
+  },
+  {
+   "check": "s0.roll:untie Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 4.2,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "s0.roll:unroll Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s0.salvage:servo Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.2,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s0.salvage:sheet_b Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 0.9,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s0.salvage:sheet_a Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s0.salvage:vial Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "Brann's guidance: how to point_aim is spoken the first time it comes up (s0.card_before:pulses)",
+   "passed": true,
+   "detail": {
+    "line": "tutor_point_aim_verb",
+    "heard": [
+     "tutor_point_aim_verb",
+     "tutor_s0_card_before",
+     "tutor_s0_pistol",
+     "tutor_s0_roll",
+     "tutor_s0_salvage",
+     "tutor_s0_salvage_vial",
+     "tutor_seat_verb",
+     "tutor_turn_verb",
+     "tutor_welcome"
+    ]
+   }
+  },
+  {
+   "check": "s0.card_before:pulses: the pistol is in the lower third of the picture while it is aimed",
+   "passed": true,
+   "detail": {
+    "pistol": [
+     922,
+     767
+    ],
+    "window": [
+     1920,
+     1080
+    ],
+    "shot": "card"
+   }
+  },
+  {
+   "check": "s0.card_before:pulses Point (aim) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 6.3,
+    "held": {
+     "part": "pistol.frame",
+     "partAt": [
+      530.2,
+      846.9,
+      1.0
+     ],
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s0.shake_before:shake Flick (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 0.9,
+    "held": {
+     "part": "pistol.frame",
+     "partAt": [
+      930.8,
+      488.4,
+      1.0
+     ],
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "s0.cell:latch Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.5,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "s0.cell:cell Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 5.8,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "stage s1: Strip the pistol",
+   "passed": true,
+   "detail": {
+    "voice": [
+     "tutor_turn_verb",
+     "tutor_s0_salvage",
+     "tutor_s0_salvage_vial",
+     "tutor_s0_card_before",
+     "tutor_point_aim_verb",
+     "card_before",
+     "tutor_s0_cell",
+     "tutor_flick_verb"
+    ],
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "Brann's guidance: the first step of stage s1 is spoken (s1.clamp:set)",
+   "passed": true,
+   "detail": {
+    "line": "tutor_s1_clamp",
+    "heard": [
+     "tutor_flick_verb",
+     "tutor_point_aim_verb",
+     "tutor_s0_card_before",
+     "tutor_s0_cell",
+     "tutor_s0_pistol",
+     "tutor_s0_roll",
+     "tutor_s0_salvage",
+     "tutor_s0_salvage_vial",
+     "tutor_s1_clamp",
+     "tutor_seat_verb",
+     "tutor_turn_verb",
+     "tutor_welcome"
+    ]
+   }
+  },
+  {
+   "check": "s1.clamp:set Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.5,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s1.clamp:snug Turn (stop) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 9.9,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "Brann's guidance: how to point is spoken the first time it comes up (s1.bind:snip_a)",
+   "passed": true,
+   "detail": {
+    "line": "tutor_point_verb",
+    "heard": [
+     "tutor_point_verb",
+     "tutor_s0_card_before",
+     "tutor_s0_cell",
+     "tutor_s0_pistol",
+     "tutor_s0_roll",
+     "tutor_s0_salvage",
+     "tutor_s0_salvage_vial",
+     "tutor_s1_bind",
+     "tutor_s1_clamp",
+     "tutor_seat_verb",
+     "tutor_turn_verb",
+     "tutor_welcome"
+    ]
+   }
+  },
+  {
+   "check": "took tool:cutters for s1.bind:snip_a",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.cutters",
+    "toolMode": "",
+    "toolAt": [
+     296.9,
+     467.1,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s1.bind:snip_a Point (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.1,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.cutters",
+     "toolMode": "",
+     "toolAt": [
+      621.8,
+      714.9,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise_r"
+   }
+  },
+  {
+   "check": "took tool:cutters for s1.bind:snip_b",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.cutters",
+    "toolMode": "",
+    "toolAt": [
+     666.7,
+     725.5,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s1.bind:snip_b Point (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 0.9,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.cutters",
+     "toolMode": "",
+     "toolAt": [
+      615.5,
+      748.7,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "Brann's guidance: how to path is spoken the first time it comes up (s1.tape:peel)",
+   "passed": true,
+   "detail": {
+    "line": "tutor_path_verb",
+    "heard": [
+     "tutor_s0_card_before",
+     "tutor_s0_cell",
+     "tutor_s0_pistol",
+     "tutor_s0_roll",
+     "tutor_s0_salvage",
+     "tutor_s0_salvage_vial",
+     "tutor_s1_bind",
+     "tutor_s1_clamp",
+     "tutor_s1_tape",
+     "tutor_seat_verb",
+     "tutor_turn_verb",
+     "tutor_welcome"
+    ]
+   }
+  },
+  {
+   "check": "s1.tape:peel Path (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 53.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:screwdriver for s1.screw_a:turn",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.screwdriver",
+    "toolMode": "slot",
+    "toolAt": [
+     173.4,
+     543.2,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s1.screw_a:turn Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 14.0,
+    "held": {
+     "part": "pistol.screw_grip_a",
+     "partAt": [
+      793.0,
+      637.5,
+      1.0
+     ],
+     "tool": "tools.screwdriver",
+     "toolMode": "slot",
+     "toolAt": [
+      793.0,
+      637.5,
+      1.0
+     ],
+     "action": "s1.screw_a:dish",
+     "leaving": false,
+     "distanceMm": 652.3712,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s1.screw_a:dish Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 0.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.screwdriver",
+     "toolMode": "slot",
+     "toolAt": [
+      1431.0,
+      305.3,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "took tool:oil for s1.screw_b:oil",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.oil_dropper",
+    "toolMode": "",
+    "toolAt": [
+     1886.0,
+     228.7,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s1.screw_b:oil Point (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.1,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.oil_dropper",
+     "toolMode": "",
+     "toolAt": [
+      760.0,
+      696.6,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "Brann's guidance: how to window_strike is spoken the first time it comes up (s1.screw_b:tap)",
+   "passed": true,
+   "detail": {
+    "line": "tutor_window_strike_verb",
+    "heard": [
+     "tutor_s0_salvage_vial",
+     "tutor_s1_bind",
+     "tutor_s1_clamp",
+     "tutor_s1_screw_a",
+     "tutor_s1_screw_a_dish",
+     "tutor_s1_screw_b",
+     "tutor_s1_screw_b_tap",
+     "tutor_s1_tape",
+     "tutor_seat_verb",
+     "tutor_turn_verb",
+     "tutor_welcome",
+     "tutor_window_strike_verb"
+    ]
+   }
+  },
+  {
+   "check": "took tool:screwdriver for s1.screw_b:tap",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.screwdriver",
+    "toolMode": "slot",
+    "toolAt": [
+     174.7,
+     543.6,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s1.screw_b:tap Window (strike) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.screwdriver",
+     "toolMode": "slot",
+     "toolAt": [
+      763.9,
+      716.7,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "took tool:screwdriver for s1.screw_b:turn",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.screwdriver",
+    "toolMode": "slot",
+    "toolAt": [
+     764.0,
+     716.6,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s1.screw_b:turn Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 24.1,
+    "held": {
+     "part": "pistol.screw_grip_b",
+     "partAt": [
+      759.6,
+      681.5,
+      1.0
+     ],
+     "tool": "tools.screwdriver",
+     "toolMode": "slot",
+     "toolAt": [
+      759.6,
+      681.5,
+      1.0
+     ],
+     "action": "s1.screw_b:dish",
+     "leaving": false,
+     "distanceMm": 692.4295,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s1.screw_b:dish Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 0.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.screwdriver",
+     "toolMode": "slot",
+     "toolAt": [
+      1400.2,
+      326.5,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s1.scales:left Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 5.2,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s1.scales:right Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 4.2,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s1.lead:unplug Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s1.pin:punch Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.3,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:mallet for s1.pin:taps",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.mallet",
+    "toolMode": "",
+    "toolAt": [
+     1583.6,
+     430.4,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s1.pin:taps Window (strike) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 3.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.mallet",
+     "toolMode": "",
+     "toolAt": [
+      738.8,
+      642.5,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:pliers for s1.pin:pull",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.pliers",
+    "toolMode": "",
+    "toolAt": [
+     246.2,
+     482.8,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s1.pin:pull Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.2,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.pliers",
+     "toolMode": "",
+     "toolAt": [
+      1782.2,
+      186.5,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s1.housing:slide Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 4.2,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s1.housing:spring Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.3,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s1.inspect:find Turn (reveal) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "stage s2: Open the servo",
+   "passed": true,
+   "detail": {
+    "voice": [
+     "tutor_s1_screw_b_tap",
+     "tutor_window_strike_verb",
+     "tutor_s1_scales",
+     "tutor_s1_lead",
+     "tutor_s1_pin",
+     "tutor_s1_pin_pull",
+     "tutor_s1_housing",
+     "tutor_s1_inspect"
+    ],
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "Brann's guidance: the first step of stage s2 is spoken (s2.swap:open)",
+   "passed": true,
+   "detail": {
+    "line": "tutor_s2_swap",
+    "heard": [
+     "tutor_s1_pin_pull",
+     "tutor_s1_scales",
+     "tutor_s1_screw_a",
+     "tutor_s1_screw_a_dish",
+     "tutor_s1_screw_b",
+     "tutor_s1_screw_b_tap",
+     "tutor_s1_tape",
+     "tutor_s2_swap",
+     "tutor_seat_verb",
+     "tutor_turn_verb",
+     "tutor_welcome",
+     "tutor_window_strike_verb"
+    ]
+   }
+  },
+  {
+   "check": "s2.swap:open Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 7.4,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s2.swap:frame Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.8,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s2.swap:servo Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s2.swap:snug Turn (stop) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 5.1,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "Brann's guidance: how to wipe is spoken the first time it comes up (s2.dust:lid)",
+   "passed": true,
+   "detail": {
+    "line": "tutor_wipe_verb",
+    "heard": [
+     "tutor_s1_screw_a",
+     "tutor_s1_screw_a_dish",
+     "tutor_s1_screw_b",
+     "tutor_s1_screw_b_tap",
+     "tutor_s1_tape",
+     "tutor_s2_dust",
+     "tutor_s2_swap",
+     "tutor_seat_verb",
+     "tutor_turn_verb",
+     "tutor_welcome",
+     "tutor_window_strike_verb",
+     "tutor_wipe_verb"
+    ]
+   }
+  },
+  {
+   "check": "took tool:brush for s2.dust:lid",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.wirebrush",
+    "toolMode": "",
+    "toolAt": [
+     418.4,
+     506.3,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s2.dust:lid Wipe (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 7.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.wirebrush",
+     "toolMode": "",
+     "toolAt": [
+      897.8,
+      490.0,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "took tool:brush for s2.dust:side",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.wirebrush",
+    "toolMode": "",
+    "toolAt": [
+     897.8,
+     490.0,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s2.dust:side Wipe (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 6.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.wirebrush",
+     "toolMode": "",
+     "toolAt": [
+      995.1,
+      434.4,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:screwdriver for s2.screws:a_turn",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.screwdriver",
+    "toolMode": "cross",
+    "toolAt": [
+     183.7,
+     522.4,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s2.screws:a_turn Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 9.5,
+    "held": {
+     "part": "servo.screw_case_a",
+     "partAt": [
+      812.3,
+      574.1,
+      1.0
+     ],
+     "tool": "tools.screwdriver",
+     "toolMode": "cross",
+     "toolAt": [
+      812.3,
+      574.1,
+      1.0
+     ],
+     "action": "s2.screws:a_dish",
+     "leaving": false,
+     "distanceMm": 591.656067,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s2.screws:a_dish Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 0.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.screwdriver",
+     "toolMode": "cross",
+     "toolAt": [
+      1439.4,
+      309.8,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "over"
+   }
+  },
+  {
+   "check": "took tool:screwdriver for s2.screws:b_turn",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.screwdriver",
+    "toolMode": "cross",
+    "toolAt": [
+     1523.1,
+     289.1,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s2.screws:b_turn Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 9.4,
+    "held": {
+     "part": "servo.screw_case_b",
+     "partAt": [
+      945.0,
+      571.8,
+      1.0
+     ],
+     "tool": "tools.screwdriver",
+     "toolMode": "cross",
+     "toolAt": [
+      945.0,
+      571.8,
+      1.0
+     ],
+     "action": "s2.screws:b_dish",
+     "leaving": false,
+     "distanceMm": 477.516418,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s2.screws:b_dish Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 0.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.screwdriver",
+     "toolMode": "cross",
+     "toolAt": [
+      1433.3,
+      296.1,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "over"
+   }
+  },
+  {
+   "check": "took tool:screwdriver for s2.screws:c_turn",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.screwdriver",
+    "toolMode": "cross",
+    "toolAt": [
+     1505.8,
+     274.9,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s2.screws:c_turn Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 9.5,
+    "held": {
+     "part": "servo.screw_case_c",
+     "partAt": [
+      938.6,
+      423.5,
+      1.0
+     ],
+     "tool": "tools.screwdriver",
+     "toolMode": "cross",
+     "toolAt": [
+      938.6,
+      423.5,
+      1.0
+     ],
+     "action": "s2.screws:c_dish",
+     "leaving": false,
+     "distanceMm": 462.175568,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s2.screws:c_dish Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 0.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.screwdriver",
+     "toolMode": "cross",
+     "toolAt": [
+      1472.2,
+      263.8,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "Brann's guidance: how to window_hold is spoken the first time it comes up (s2.stripped:grip)",
+   "passed": true,
+   "detail": {
+    "line": "tutor_window_hold_verb",
+    "heard": [
+     "tutor_s1_screw_b_tap",
+     "tutor_s1_tape",
+     "tutor_s2_dust",
+     "tutor_s2_screws",
+     "tutor_s2_stripped",
+     "tutor_s2_swap",
+     "tutor_seat_verb",
+     "tutor_turn_verb",
+     "tutor_welcome",
+     "tutor_window_hold_verb",
+     "tutor_window_strike_verb",
+     "tutor_wipe_verb"
+    ]
+   }
+  },
+  {
+   "check": "took tool:pliers for s2.stripped:grip",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.pliers",
+    "toolMode": "",
+    "toolAt": [
+     233.9,
+     458.7,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s2.stripped:grip Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.pliers",
+     "toolMode": "",
+     "toolAt": [
+      831.4,
+      419.3,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "over"
+   }
+  },
+  {
+   "check": "took tool:pliers for s2.stripped:turn",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.pliers",
+    "toolMode": "",
+    "toolAt": [
+     831.4,
+     419.3,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s2.stripped:turn Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 14.2,
+    "held": {
+     "part": "servo.screw_case_d",
+     "partAt": [
+      741.5,
+      440.8,
+      1.0
+     ],
+     "tool": "tools.pliers",
+     "toolMode": "",
+     "toolAt": [
+      741.5,
+      440.8,
+      1.0
+     ],
+     "action": "s2.stripped:dish",
+     "leaving": false,
+     "distanceMm": 612.457,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s2.stripped:dish Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 0.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.pliers",
+     "toolMode": "",
+     "toolAt": [
+      1430.2,
+      245.3,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "took tool:pick for s2.pry:clip_1",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.pick",
+    "toolMode": "",
+    "toolAt": [
+     79.0,
+     205.7,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s2.pry:clip_1 Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.pick",
+     "toolMode": "",
+     "toolAt": [
+      884.1,
+      567.1,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "took tool:pick for s2.pry:clip_2",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.pick",
+    "toolMode": "",
+    "toolAt": [
+     884.2,
+     567.1,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s2.pry:clip_2 Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.pick",
+     "toolMode": "",
+     "toolAt": [
+      939.6,
+      575.9,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "over"
+   }
+  },
+  {
+   "check": "took tool:pick for s2.pry:clip_3",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.pick",
+    "toolMode": "",
+    "toolAt": [
+     939.6,
+     559.4,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s2.pry:clip_3 Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.pick",
+     "toolMode": "",
+     "toolAt": [
+      905.7,
+      415.3,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s2.pry:lid Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.5,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:cutters for s2.leads:snip",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.cutters",
+    "toolMode": "",
+    "toolAt": [
+     297.1,
+     456.8,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s2.leads:snip Point (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.cutters",
+     "toolMode": "",
+     "toolAt": [
+      822.5,
+      518.9,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "over"
+   }
+  },
+  {
+   "check": "s2.board:unplug Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.4,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "over"
+   }
+  },
+  {
+   "check": "s2.board:lift Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:cutters for s2.board:snip",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.cutters",
+    "toolMode": "",
+    "toolAt": [
+     234.5,
+     491.0,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s2.board:snip Point (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.9,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.cutters",
+     "toolMode": "",
+     "toolAt": [
+      870.7,
+      455.0,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "over"
+   }
+  },
+  {
+   "check": "s2.board:bin Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:pliers for s2.circlip:spring",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.pliers",
+    "toolMode": "",
+    "toolAt": [
+     228.9,
+     449.9,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s2.circlip:spring Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.9,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.pliers",
+     "toolMode": "",
+     "toolAt": [
+      866.0,
+      529.3,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "over"
+   }
+  },
+  {
+   "check": "s2.circlip:set Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.pliers",
+     "toolMode": "",
+     "toolAt": [
+      1263.2,
+      352.3,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "over"
+   }
+  },
+  {
+   "check": "s2.gears:top Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.1,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "over"
+   }
+  },
+  {
+   "check": "s2.gears:mid Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.1,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "over"
+   }
+  },
+  {
+   "check": "s2.gears:low Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.4,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:screwdriver for s2.trunnion:a_turn",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.screwdriver",
+    "toolMode": "cross",
+    "toolAt": [
+     153.0,
+     474.4,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s2.trunnion:a_turn Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 9.8,
+    "held": {
+     "part": "servo.screw_trunnion_a",
+     "partAt": [
+      852.9,
+      500.9,
+      1.0
+     ],
+     "tool": "tools.screwdriver",
+     "toolMode": "cross",
+     "toolAt": [
+      852.9,
+      500.9,
+      1.0
+     ],
+     "action": "s2.trunnion:a_dish",
+     "leaving": false,
+     "distanceMm": 602.619,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s2.trunnion:a_dish Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 0.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.screwdriver",
+     "toolMode": "cross",
+     "toolAt": [
+      1599.1,
+      226.9,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "over"
+   }
+  },
+  {
+   "check": "took tool:screwdriver for s2.trunnion:b_turn",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.screwdriver",
+    "toolMode": "cross",
+    "toolAt": [
+     1559.0,
+     224.0,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s2.trunnion:b_turn Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 9.5,
+    "held": {
+     "part": "servo.screw_trunnion_b",
+     "partAt": [
+      941.2,
+      496.8,
+      1.0
+     ],
+     "tool": "tools.screwdriver",
+     "toolMode": "cross",
+     "toolAt": [
+      941.2,
+      496.8,
+      1.0
+     ],
+     "action": "s2.trunnion:b_dish",
+     "leaving": false,
+     "distanceMm": 514.811768,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s2.trunnion:b_dish Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 0.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.screwdriver",
+     "toolMode": "cross",
+     "toolAt": [
+      1614.8,
+      242.4,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "over"
+   }
+  },
+  {
+   "check": "s2.trunnion:lift Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 3.4,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s2.winding:bobbin Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s2.winding:wind Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 13.2,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s2.winding:set Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s2.winding:open Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 3.5,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s2.winding:bin Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "stage s3: Work the parts",
+   "passed": true,
+   "detail": {
+    "voice": [
+     "tutor_s2_pry",
+     "tutor_s2_leads",
+     "tutor_s2_board",
+     "tutor_s2_circlip",
+     "tutor_s2_gears",
+     "tutor_s2_trunnion",
+     "tutor_s2_winding",
+     "stage3"
+    ],
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "Brann's guidance: the first step of stage s3 is spoken (s3.bath:dip)",
+   "passed": true,
+   "detail": {
+    "line": "tutor_s3_bath",
+    "heard": [
+     "tutor_s2_screws",
+     "tutor_s2_stripped",
+     "tutor_s2_swap",
+     "tutor_s2_trunnion",
+     "tutor_s2_winding",
+     "tutor_s3_bath",
+     "tutor_seat_verb",
+     "tutor_turn_verb",
+     "tutor_welcome",
+     "tutor_window_hold_verb",
+     "tutor_window_strike_verb",
+     "tutor_wipe_verb"
+    ]
+   }
+  },
+  {
+   "check": "s3.bath:dip Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.5,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s3.bath:swirl Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 8.2,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s3.bath:out Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:brush for s3.brush:race",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.wirebrush",
+    "toolMode": "",
+    "toolAt": [
+     335.1,
+     499.2,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.brush:race Wipe (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 4.4,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.wirebrush",
+     "toolMode": "",
+     "toolAt": [
+      427.9,
+      422.6,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "took tool:brush for s3.brush:trunnion_a",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.wirebrush",
+    "toolMode": "",
+    "toolAt": [
+     427.9,
+     422.6,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.brush:trunnion_a Wipe (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.wirebrush",
+     "toolMode": "",
+     "toolAt": [
+      395.1,
+      459.4,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "took tool:brush for s3.brush:trunnion_b",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.wirebrush",
+    "toolMode": "",
+    "toolAt": [
+     395.1,
+     459.4,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.brush:trunnion_b Wipe (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.wirebrush",
+     "toolMode": "",
+     "toolAt": [
+      452.1,
+      472.6,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:pick for s3.pick:grit",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.pick",
+    "toolMode": "",
+    "toolAt": [
+     360.2,
+     462.3,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.pick:grit Point (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.pick",
+     "toolMode": "",
+     "toolAt": [
+      440.6,
+      440.1,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "took tool:oil for s3.oil:drops",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.oil_dropper",
+    "toolMode": "",
+    "toolAt": [
+     1848.7,
+     212.1,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.oil:drops Point (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.9,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.oil_dropper",
+     "toolMode": "",
+     "toolAt": [
+      427.8,
+      422.0,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "Brann's guidance: how to flick is spoken the first time it comes up (s3.spin:flick)",
+   "passed": true,
+   "detail": {
+    "line": "tutor_flick_verb",
+    "heard": [
+     "tutor_s2_trunnion",
+     "tutor_s2_winding",
+     "tutor_s3_bath",
+     "tutor_s3_brush",
+     "tutor_s3_oil",
+     "tutor_s3_pick",
+     "tutor_seat_verb",
+     "tutor_turn_verb",
+     "tutor_welcome",
+     "tutor_window_hold_verb",
+     "tutor_window_strike_verb",
+     "tutor_wipe_verb"
+    ]
+   }
+  },
+  {
+   "check": "s3.spin:flick Flick (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.2,
+    "held": {
+     "part": "servo.gimbal_cradle",
+     "partAt": [
+      848.6,
+      484.9,
+      1.0
+     ],
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:cutters for s3.trim:trim",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.cutters",
+    "toolMode": "",
+    "toolAt": [
+     209.7,
+     453.8,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.trim:trim Point (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.cutters",
+     "toolMode": "",
+     "toolAt": [
+      444.0,
+      414.2,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:strippers for s3.strip:a_squeeze",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.strippers",
+    "toolMode": "",
+    "toolAt": [
+     270.1,
+     476.2,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.strip:a_squeeze Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.8,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.strippers",
+     "toolMode": "",
+     "toolAt": [
+      341.8,
+      337.4,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "took tool:strippers for s3.strip:a_pull",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.strippers",
+    "toolMode": "",
+    "toolAt": [
+     341.8,
+     337.4,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.strip:a_pull Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.4,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.strippers",
+     "toolMode": "",
+     "toolAt": [
+      341.9,
+      411.3,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "took tool:strippers for s3.strip:b_squeeze",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.strippers",
+    "toolMode": "",
+    "toolAt": [
+     341.9,
+     440.2,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.strip:b_squeeze Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.strippers",
+     "toolMode": "",
+     "toolAt": [
+      420.5,
+      338.3,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "took tool:strippers for s3.strip:b_pull",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.strippers",
+    "toolMode": "",
+    "toolAt": [
+     420.5,
+     338.3,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.strip:b_pull Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.4,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.strippers",
+     "toolMode": "",
+     "toolAt": [
+      452.2,
+      423.5,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:solder for s3.tin:a",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.iron",
+    "toolMode": "",
+    "toolAt": [
+     1711.3,
+     701.0,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.tin:a Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.3,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.iron",
+     "toolMode": "",
+     "toolAt": [
+      339.3,
+      348.8,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "took tool:solder for s3.tin:b",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.iron",
+    "toolMode": "",
+    "toolAt": [
+     339.3,
+     348.8,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.tin:b Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.2,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.iron",
+     "toolMode": "",
+     "toolAt": [
+      440.3,
+      402.3,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "parts"
+   }
+  },
+  {
+   "check": "took tool:solder for s3.tin:legs",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.iron",
+    "toolMode": "",
+    "toolAt": [
+     424.1,
+     346.8,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.tin:legs Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.2,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.iron",
+     "toolMode": "",
+     "toolAt": [
+      1237.3,
+      503.8,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s3.loop:clip Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.1,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:solder for s3.loop:joint_a",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.iron",
+    "toolMode": "",
+    "toolAt": [
+     1723.8,
+     704.1,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.loop:joint_a Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.4,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.iron",
+     "toolMode": "",
+     "toolAt": [
+      339.3,
+      348.8,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "took tool:solder for s3.loop:joint_b",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.iron",
+    "toolMode": "",
+    "toolAt": [
+     339.3,
+     348.8,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.loop:joint_b Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.2,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.iron",
+     "toolMode": "",
+     "toolAt": [
+      423.3,
+      348.8,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "took tool:solder for s3.loop:shrink",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.iron",
+    "toolMode": "",
+    "toolAt": [
+     423.3,
+     348.8,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.loop:shrink Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 3.2,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.iron",
+     "toolMode": "",
+     "toolAt": [
+      125.8,
+      838.2,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "took tool:probe for s3.test:probe",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "fixtures.tester_probes",
+    "toolMode": "",
+    "toolAt": [
+     345.5,
+     803.8,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.test:probe Point (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.9,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "fixtures.tester_probes",
+     "toolMode": "",
+     "toolAt": [
+      428.7,
+      364.7,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s3.scribe:sheet Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.1,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s3.scribe:template Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "took tool:scribe for s3.scribe:scribe",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.scribe",
+    "toolMode": "",
+    "toolAt": [
+     -1.5,
+     274.3,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.scribe:scribe Path (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 60.2,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.scribe",
+     "toolMode": "",
+     "toolAt": [
+      957.2,
+      539.1,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "s3.scribe:back Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s3.cut:stack Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s3.cut:clamp Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.3,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "over"
+   }
+  },
+  {
+   "check": "s3.cut:snug Turn (stop) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 9.9,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:snips for s3.cut:strap",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.snips",
+    "toolMode": "",
+    "toolAt": [
+     1725.3,
+     423.7,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.cut:strap Path (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 12.2,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.snips",
+     "toolMode": "",
+     "toolAt": [
+      1056.2,
+      616.0,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "over"
+   }
+  },
+  {
+   "check": "took tool:snips for s3.cut:cut",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.snips",
+    "toolMode": "",
+    "toolAt": [
+     1056.2,
+     616.0,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.cut:cut Path (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 59.9,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.snips",
+     "toolMode": "",
+     "toolAt": [
+      1038.6,
+      608.3,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:file for s3.file:strokes",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.file_flat",
+    "toolMode": "",
+    "toolAt": [
+     1600.9,
+     420.1,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.file:strokes Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 5.3,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.file_flat",
+     "toolMode": "",
+     "toolAt": [
+      1160.0,
+      731.0,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s3.punch:template Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "took tool:punch for s3.punch:marks",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.punch",
+    "toolMode": "",
+    "toolAt": [
+     119.3,
+     82.4,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.punch:marks Point (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 3.2,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.punch",
+     "toolMode": "",
+     "toolAt": [
+      1209.7,
+      619.8,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s3.punch:back Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:drill for s3.drill:hole_1",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.drill",
+    "toolMode": "",
+    "toolAt": [
+     1921.8,
+     389.4,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.drill:hole_1 Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 8.9,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.drill",
+     "toolMode": "",
+     "toolAt": [
+      1166.8,
+      866.5,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "took tool:drill for s3.drill:hole_2",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.drill",
+    "toolMode": "",
+    "toolAt": [
+     1166.7,
+     866.7,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.drill:hole_2 Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 8.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.drill",
+     "toolMode": "",
+     "toolAt": [
+      1147.1,
+      779.5,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "took tool:drill for s3.drill:hole_3",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.drill",
+    "toolMode": "",
+    "toolAt": [
+     1146.7,
+     779.6,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.drill:hole_3 Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 8.5,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.drill",
+     "toolMode": "",
+     "toolAt": [
+      1060.7,
+      747.7,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "took tool:drill for s3.drill:hole_4",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.drill",
+    "toolMode": "",
+    "toolAt": [
+     1060.0,
+     747.9,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s3.drill:hole_4 Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 8.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.drill",
+     "toolMode": "",
+     "toolAt": [
+      1193.3,
+      663.5,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s3.drill:open Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 7.4,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s3.drill:out Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s3.strap:clamp Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 3.8,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s3.strap:snug Turn (stop) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 9.9,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s3.strap:bend_1 Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.8,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s3.strap:bend_2 Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s3.strap:open Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 7.4,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s3.strap:out Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 3.8,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "press"
+   }
+  },
+  {
+   "check": "stage s4: Fuse the grip core",
+   "passed": true,
+   "detail": {
+    "voice": [
+     "tutor_s3_scribe",
+     "tutor_s3_cut",
+     "tutor_s3_cut_strap",
+     "tutor_s3_file",
+     "tutor_s3_punch",
+     "tutor_s3_drill",
+     "tutor_s3_strap",
+     "stage4"
+    ],
+    "shot": "press"
+   }
+  },
+  {
+   "check": "Brann's guidance: the first step of stage s4 is spoken (s4.mould:mould)",
+   "passed": true,
+   "detail": {
+    "line": "tutor_s4_mould",
+    "heard": [
+     "tutor_s3_spin",
+     "tutor_s3_strap",
+     "tutor_s3_strip",
+     "tutor_s3_test",
+     "tutor_s3_tin",
+     "tutor_s4_mould",
+     "tutor_seat_verb",
+     "tutor_turn_verb",
+     "tutor_welcome",
+     "tutor_window_hold_verb",
+     "tutor_window_strike_verb",
+     "tutor_wipe_verb"
+    ]
+   }
+  },
+  {
+   "check": "s4.mould:mould Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.8,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:brush for s4.mould:brush",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.wirebrush",
+    "toolMode": "",
+    "toolAt": [
+     363.6,
+     475.6,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s4.mould:brush Wipe (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 7.1,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.wirebrush",
+     "toolMode": "",
+     "toolAt": [
+      835.3,
+      437.2,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s4.charge:offcuts Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "tray"
+   }
+  },
+  {
+   "check": "s4.charge:uncork Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "press"
+   }
+  },
+  {
+   "check": "s4.charge:raise Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "press"
+   }
+  },
+  {
+   "check": "s4.charge:pour Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.5,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "press"
+   }
+  },
+  {
+   "check": "s4.charge:back Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "s4.press:close Turn (-) by mouse",
+   "passed": false,
+   "detail": {
+    "seconds": 60.8,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "press"
+   }
+  },
+  {
+   "check": "s4.press:knit Window (sustain) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 7.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "press"
+   }
+  },
+  {
+   "check": "s4.open:vent Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "press"
+   }
+  },
+  {
+   "check": "s4.open:open Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.8,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:pliers for s4.open:quench",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.pliers",
+    "toolMode": "",
+    "toolAt": [
+     195.2,
+     456.3,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s4.open:quench Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.pliers",
+     "toolMode": "",
+     "toolAt": [
+      411.4,
+      776.1,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "s4.open:out Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.3,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.pliers",
+     "toolMode": "",
+     "toolAt": [
+      987.7,
+      542.2,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:mallet for s4.flash:knock",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.mallet",
+    "toolMode": "",
+    "toolAt": [
+     1519.8,
+     402.8,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s4.flash:knock Window (strike) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.5,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.mallet",
+     "toolMode": "",
+     "toolAt": [
+      995.0,
+      511.5,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:file for s4.flash:file",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.file_flat",
+    "toolMode": "",
+    "toolAt": [
+     1581.3,
+     389.1,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s4.flash:file Path (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 58.5,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.file_flat",
+     "toolMode": "",
+     "toolAt": [
+      1042.6,
+      521.7,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:file_round for s4.flash:ease",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.file_round",
+    "toolMode": "",
+    "toolAt": [
+     1626.4,
+     373.1,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s4.flash:ease Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 4.1,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.file_round",
+     "toolMode": "",
+     "toolAt": [
+      783.0,
+      535.1,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:pliers for s4.pressfit:ring",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.pliers",
+    "toolMode": "",
+    "toolAt": [
+     157.9,
+     472.0,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s4.pressfit:ring Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.pliers",
+     "toolMode": "",
+     "toolAt": [
+      504.3,
+      450.3,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s4.pressfit:rotor Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.5,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s4.pressfit:start Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.5,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s4.pressfit:clamp Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.2,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s4.pressfit:press Turn (stop) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 9.2,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s4.pressfit:open Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 5.3,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s4.pressfit:out Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "stage s5: Assemble the grip",
+   "passed": true,
+   "detail": {
+    "voice": [
+     "tutor_s4_mould",
+     "tutor_s4_charge",
+     "press",
+     "tutor_s4_press",
+     "tutor_s4_open",
+     "tutor_s4_flash",
+     "tutor_s4_pressfit",
+     "stage5"
+    ],
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "s5.loop:tuck Path (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 18.1,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s5.rotor:rotor Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.4,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:pliers for s5.rotor:ring",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.pliers",
+    "toolMode": "",
+    "toolAt": [
+     236.6,
+     473.9,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s5.rotor:ring Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 6.4,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.pliers",
+     "toolMode": "",
+     "toolAt": [
+      762.2,
+      559.0,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "took tool:pliers for s5.rotor:snap",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.pliers",
+    "toolMode": "",
+    "toolAt": [
+     755.1,
+     572.4,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s5.rotor:snap Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.pliers",
+     "toolMode": "",
+     "toolAt": [
+      755.7,
+      570.9,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "s5.strap:strap Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.5,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "s5.plates:left Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.5,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "s5.plates:over Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 0.8,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "s5.plates:right Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 8.1,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s5.start:r_c Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s5.start:r_d Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "s5.start:back Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 0.8,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s5.start:l_c Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s5.start:l_d Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:screwdriver for s5.torque:l_c_turn",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.screwdriver",
+    "toolMode": "cross",
+    "toolAt": [
+     79.9,
+     530.4,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s5.torque:l_c_turn Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 9.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.screwdriver",
+     "toolMode": "cross",
+     "toolAt": [
+      697.4,
+      579.0,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "took tool:screwdriver for s5.torque:l_d_turn",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.screwdriver",
+    "toolMode": "cross",
+    "toolAt": [
+     697.4,
+     579.0,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s5.torque:l_d_turn Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 9.5,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.screwdriver",
+     "toolMode": "cross",
+     "toolAt": [
+      857.8,
+      533.5,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "took tool:screwdriver for s5.torque:l_c_torque",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.screwdriver",
+    "toolMode": "cross",
+    "toolAt": [
+     857.8,
+     533.4,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s5.torque:l_c_torque Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.9,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.screwdriver",
+     "toolMode": "cross",
+     "toolAt": [
+      656.7,
+      602.2,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "took tool:screwdriver for s5.torque:l_d_torque",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.screwdriver",
+    "toolMode": "cross",
+    "toolAt": [
+     656.7,
+     602.2,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s5.torque:l_d_torque Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.screwdriver",
+     "toolMode": "cross",
+     "toolAt": [
+      782.4,
+      476.7,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "s5.torque:over Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 0.8,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:screwdriver for s5.torque:r_c_turn",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.screwdriver",
+    "toolMode": "cross",
+    "toolAt": [
+     80.7,
+     517.4,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s5.torque:r_c_turn Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 9.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.screwdriver",
+     "toolMode": "cross",
+     "toolAt": [
+      719.0,
+      489.8,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:pliers for s5.torque:r_d_turn",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.pliers",
+    "toolMode": "",
+    "toolAt": [
+     156.7,
+     480.7,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s5.torque:r_d_turn Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 14.4,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.pliers",
+     "toolMode": "",
+     "toolAt": [
+      820.3,
+      519.0,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:screwdriver for s5.torque:r_c_torque",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.screwdriver",
+    "toolMode": "cross",
+    "toolAt": [
+     82.9,
+     517.4,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s5.torque:r_c_torque Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.screwdriver",
+     "toolMode": "cross",
+     "toolAt": [
+      688.0,
+      510.1,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:pliers for s5.torque:r_d_torque",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.pliers",
+    "toolMode": "",
+    "toolAt": [
+     160.8,
+     483.3,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s5.torque:r_d_torque Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.1,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.pliers",
+     "toolMode": "",
+     "toolAt": [
+      842.4,
+      518.4,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "took tool:applicator for s5.seam:right",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.applicator",
+    "toolMode": "",
+    "toolAt": [
+     1722.0,
+     309.4,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s5.seam:right Path (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 57.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.applicator",
+     "toolMode": "",
+     "toolAt": [
+      783.8,
+      578.7,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "s5.seam:back Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 0.8,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "took tool:applicator for s5.seam:left",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.applicator",
+    "toolMode": "",
+    "toolAt": [
+     1720.6,
+     310.4,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s5.seam:left Path (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 57.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.applicator",
+     "toolMode": "",
+     "toolAt": [
+      732.8,
+      691.1,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s5.cure:swing Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.8,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "s5.cure:wait Window (wait) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 9.4,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "s5.cure:away Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.8,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "s5.damp:tilt Flick (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.2,
+    "held": {
+     "part": "grip.core",
+     "partAt": [
+      897.7,
+      486.2,
+      1.0
+     ],
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "stage s6: Fit the grip",
+   "passed": true,
+   "detail": {
+    "voice": [
+     "press",
+     "tutor_s4_press",
+     "tutor_s4_open",
+     "tutor_s4_flash",
+     "tutor_s4_pressfit",
+     "stage5",
+     "tutor_s5_strap",
+     "damper_good"
+    ],
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s6.slide:clamp Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s6.slide:snug Turn (stop) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 9.9,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s6.slide:grip Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 8.1,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s6.plug:route Path (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 16.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise_r"
+   }
+  },
+  {
+   "check": "s6.plug:plug Seat (keyed) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 0.9,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s6.pin:start Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:mallet for s6.pin:taps",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.mallet",
+    "toolMode": "",
+    "toolAt": [
+     1472.3,
+     425.6,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s6.pin:taps Window (strike) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.mallet",
+     "toolMode": "",
+     "toolAt": [
+      211.3,
+      634.0,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s6.screws:a_start Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.5,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:screwdriver for s6.screws:a_turn",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.screwdriver",
+    "toolMode": "cross",
+    "toolAt": [
+     175.4,
+     544.9,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s6.screws:a_turn Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 17.8,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.screwdriver",
+     "toolMode": "cross",
+     "toolAt": [
+      677.1,
+      914.2,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "took tool:screwdriver for s6.screws:a_torque",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.screwdriver",
+    "toolMode": "cross",
+    "toolAt": [
+     677.1,
+     914.2,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s6.screws:a_torque Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.screwdriver",
+     "toolMode": "cross",
+     "toolAt": [
+      774.9,
+      619.1,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s6.screws:b_start Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.5,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "took tool:screwdriver for s6.screws:b_turn",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.screwdriver",
+    "toolMode": "cross",
+    "toolAt": [
+     166.8,
+     529.4,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s6.screws:b_turn Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 17.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.screwdriver",
+     "toolMode": "cross",
+     "toolAt": [
+      786.2,
+      646.7,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "took tool:screwdriver for s6.screws:b_torque",
+   "passed": true,
+   "detail": {
+    "part": null,
+    "partAt": null,
+    "tool": "tools.screwdriver",
+    "toolMode": "cross",
+    "toolAt": [
+     786.2,
+     646.7,
+     1.0
+    ],
+    "action": null,
+    "leaving": false,
+    "distanceMm": -1.0,
+    "yawError": 0.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "check": "s6.screws:b_torque Window (hold) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 2.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": "tools.screwdriver",
+     "toolMode": "cross",
+     "toolAt": [
+      764.0,
+      697.3,
+      1.0
+     ],
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s6.cell:open Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 7.4,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s6.cell:clear Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "vise"
+   }
+  },
+  {
+   "check": "s6.cell:mat Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.5,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s6.cell:cell Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 5.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "s6.cell:latch Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "stage s7: Test it",
+   "passed": true,
+   "detail": {
+    "voice": [
+     "tutor_s4_open",
+     "tutor_s4_flash",
+     "tutor_s4_pressfit",
+     "stage5",
+     "tutor_s5_strap",
+     "damper_good",
+     "stage6",
+     "stage7"
+    ],
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "s7.shake:shake Flick (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.2,
+    "held": {
+     "part": "pistol.frame",
+     "partAt": [
+      918.9,
+      485.4,
+      1.0
+     ],
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "s7.inspect:look Seat (inspect) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.4,
+    "held": {
+     "part": "pistol.frame",
+     "partAt": [
+      1140.7,
+      480.0,
+      1.0
+     ],
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "card"
+   }
+  },
+  {
+   "check": "s7.card_after:pulses: the pistol is in the lower third of the picture while it is aimed",
+   "passed": true,
+   "detail": {
+    "pistol": [
+     1075,
+     767
+    ],
+    "window": [
+     1920,
+     1080
+    ],
+    "shot": "card"
+   }
+  },
+  {
+   "check": "s7.card_after:pulses Point (aim) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 5.0,
+    "held": {
+     "part": "pistol.frame",
+     "partAt": [
+      783.2,
+      853.8,
+      1.0
+     ],
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": "s7.leave:holster",
+     "leaving": false,
+     "distanceMm": 916.482,
+     "yawError": 90.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "s7.leave:holster Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 4.0,
+    "held": {},
+    "verb": null,
+    "refusals": null,
+    "shot": null
+   }
+  },
+  {
+   "check": "the job is finished and the bench has closed",
+   "passed": true,
+   "detail": {
+    "quality": "Fine",
+    "score": 0.918593943,
+    "faults": 1,
+    "seconds": 1344.959
+   }
+  },
+  {
+   "check": "no action had to be completed for the run",
+   "passed": false,
+   "detail": [
+    "s4.press:close"
+   ]
+  },
+  {
+   "check": "the player has control back",
+   "passed": true,
+   "detail": "Play"
+  },
+  {
+   "check": "the cursor is locked for play again",
+   "passed": true,
+   "detail": {
+    "lockState": "Locked",
+    "visible": false,
+    "looking": true,
+    "freed": false
+   }
+  },
+  {
+   "check": "no runtime exceptions in Player.log",
+   "passed": true,
+   "detail": []
+  }
+ ],
+ "captures": [
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/00-at-the-bench.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/shot-wide.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/shot-work.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/shot-vise.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/shot-over.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/shot-vise_l.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/shot-vise_r.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/shot-mat.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/shot-parts.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/shot-card.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/shot-tray.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/shot-press.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/shot-tester.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/shot-room.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/01-stage-s0.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/02-s0_pistol_lay.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/03-s0_roll_untie.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/04-s0_roll_unroll.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/05-s0_salvage_servo.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/06-s0_salvage_sheet_b.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/07-s0_salvage_sheet_a.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/08-s0_salvage_vial.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/09-s0_card_before_pulses-aim.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/10-s0_card_before_pulses.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/11-s0_shake_before_shake.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/12-s0_cell_latch.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/13-s0_cell_cell.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/14-stage-s1.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/15-s1_clamp_set.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/16-s1_clamp_snug.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/17-s1_bind_snip_a.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/18-s1_bind_snip_b.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/19-s1_tape_peel.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/20-s1_screw_a_turn.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/21-s1_screw_a_dish.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/22-s1_screw_b_oil.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/23-s1_screw_b_tap.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/24-s1_screw_b_turn.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/25-s1_screw_b_dish.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/26-s1_scales_left.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/27-s1_scales_right.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/28-s1_lead_unplug.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/29-s1_pin_punch.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/30-s1_pin_taps.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/31-s1_pin_pull.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/32-s1_housing_slide.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/33-s1_housing_spring.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/34-s1_inspect_find.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/35-stage-s2.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/36-s2_swap_open.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/37-s2_swap_frame.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/38-s2_swap_servo.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/39-s2_swap_snug.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/40-s2_dust_lid.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/41-s2_dust_side.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/42-s2_screws_a_turn.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/43-s2_screws_a_dish.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/44-s2_screws_b_turn.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/45-s2_screws_b_dish.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/46-s2_screws_c_turn.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/47-s2_screws_c_dish.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/48-s2_stripped_grip.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/49-s2_stripped_turn.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/50-s2_stripped_dish.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/51-s2_pry_clip_1.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/52-s2_pry_clip_2.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/53-s2_pry_clip_3.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/54-s2_pry_lid.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/55-s2_leads_snip.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/56-s2_board_unplug.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/57-s2_board_lift.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/58-s2_board_snip.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/59-s2_board_bin.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/60-s2_circlip_spring.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/61-s2_circlip_set.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/62-s2_gears_top.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/63-s2_gears_mid.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/64-s2_gears_low.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/65-s2_trunnion_a_turn.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/66-s2_trunnion_a_dish.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/67-s2_trunnion_b_turn.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/68-s2_trunnion_b_dish.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/69-s2_trunnion_lift.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/70-s2_winding_bobbin.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/71-s2_winding_wind.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/72-s2_winding_set.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/73-s2_winding_open.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/74-s2_winding_bin.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/75-stage-s3.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/76-s3_bath_dip.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/77-s3_bath_swirl.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/78-s3_bath_out.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/79-s3_brush_race.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/80-s3_brush_trunnion_a.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/81-s3_brush_trunnion_b.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/82-s3_pick_grit.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/83-s3_oil_drops.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/84-s3_spin_flick.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/85-s3_trim_trim.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/86-s3_strip_a_squeeze.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/87-s3_strip_a_pull.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/88-s3_strip_b_squeeze.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/89-s3_strip_b_pull.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/90-s3_tin_a.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/91-s3_tin_b.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/92-s3_tin_legs.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/93-s3_loop_clip.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/94-s3_loop_joint_a.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/95-s3_loop_joint_b.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/96-s3_loop_shrink.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/97-s3_test_probe.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/98-s3_scribe_sheet.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/99-s3_scribe_template.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/100-s3_scribe_scribe.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/101-s3_scribe_back.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/102-s3_cut_stack.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/103-s3_cut_clamp.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/104-s3_cut_snug.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/105-s3_cut_strap.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/106-s3_cut_cut.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/107-s3_file_strokes.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/108-s3_punch_template.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/109-s3_punch_marks.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/110-s3_punch_back.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/111-s3_drill_hole_1.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/112-s3_drill_hole_2.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/113-s3_drill_hole_3.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/114-s3_drill_hole_4.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/115-s3_drill_open.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/116-s3_drill_out.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/117-s3_strap_clamp.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/118-s3_strap_snug.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/119-s3_strap_bend_1.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/120-s3_strap_bend_2.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/121-s3_strap_open.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/122-s3_strap_out.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/123-stage-s4.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/124-s4_mould_mould.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/125-s4_mould_brush.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/126-s4_charge_offcuts.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/127-s4_charge_uncork.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/128-s4_charge_raise.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/129-s4_charge_pour.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/130-s4_charge_back.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/131-s4_press_close.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/132-s4_press_knit.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/133-s4_open_vent.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/134-s4_open_open.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/135-s4_open_quench.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/136-s4_open_out.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/137-s4_flash_knock.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/138-s4_flash_file.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/139-s4_flash_ease.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/140-s4_pressfit_ring.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/141-s4_pressfit_rotor.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/142-s4_pressfit_start.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/143-s4_pressfit_clamp.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/144-s4_pressfit_press.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/145-s4_pressfit_open.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/146-s4_pressfit_out.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/147-stage-s5.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/148-s5_loop_tuck.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/149-s5_rotor_rotor.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/150-s5_rotor_ring.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/151-s5_rotor_snap.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/152-s5_strap_strap.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/153-s5_plates_left.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/154-s5_plates_over.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/155-s5_plates_right.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/156-s5_start_r_c.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/157-s5_start_r_d.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/158-s5_start_back.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/159-s5_start_l_c.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/160-s5_start_l_d.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/161-s5_torque_l_c_turn.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/162-s5_torque_l_d_turn.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/163-s5_torque_l_c_torque.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/164-s5_torque_l_d_torque.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/165-s5_torque_over.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/166-s5_torque_r_c_turn.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/167-s5_torque_r_d_turn.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/168-s5_torque_r_c_torque.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/169-s5_torque_r_d_torque.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/170-s5_seam_right.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/171-s5_seam_back.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/172-s5_seam_left.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/173-s5_cure_swing.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/174-s5_cure_wait.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/175-s5_cure_away.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/176-s5_damp_tilt.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/177-stage-s6.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/178-s6_slide_clamp.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/179-s6_slide_snug.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/180-s6_slide_grip.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/181-s6_plug_route.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/182-s6_plug_plug.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/183-s6_pin_start.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/184-s6_pin_taps.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/185-s6_screws_a_start.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/186-s6_screws_a_turn.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/187-s6_screws_a_torque.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/188-s6_screws_b_start.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/189-s6_screws_b_turn.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/190-s6_screws_b_torque.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/191-s6_cell_open.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/192-s6_cell_clear.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/193-s6_cell_mat.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/194-s6_cell_cell.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/195-s6_cell_latch.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/196-stage-s7.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/197-s7_shake_shake.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/198-s7_inspect_look.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/199-s7_card_after_pulses-aim.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/200-s7_card_after_pulses.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/201-s7_leave_holster.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real6-mouse/run/99-after.png"
+ ],
+ "notes": [
+  {
+   "note": "opened the bench through Build by hand",
+   "detail": {
+    "notice": ""
+   }
+  },
+  {
+   "note": "s0.salvage:sheet_a: the hand took materials.sheet_b, which lay on top and has its own place to go; playing that first",
+   "detail": {
+    "part": "materials.sheet_b",
+    "partAt": [
+     89.3,
+     138.0,
+     1.0
+    ],
+    "tool": null,
+    "toolMode": null,
+    "toolAt": null,
+    "action": "s0.salvage:sheet_b",
+    "leaving": false,
+    "distanceMm": 1228.95569,
+    "yawError": 3.0,
+    "aiming": false,
+    "flipped": false
+   }
+  },
+  {
+   "note": "s4.press:close: completed for the run (BENCH_SOFT); 1 so far",
+   "detail": null
+  }
+ ],
+ "mode": "mouse",
+ "captures_count": 201,
+ "passed": false,
+ "summary": "298/300 passed",
+ "finished": "2026-11-21 15:45:21"
+}

@@ -28,7 +28,21 @@ MonoBehaviour:
     reportGuidance: dealer
     brief: Salvage a worker-droid servo at the machine depot, show it to Warden Ossa, then take it to Brann at Salvage for a steadier pistol grip.
     startLine: 
-    completeLine: Stabilised grip tested. Your pistol holds steadier.
+    completeLine: 'Steady. I''ll log the order. Keep that grip clean.'
+    testFireShots: 3
+    testFireAt: {x: -65.47, y: -1.46, z: 9.03}
+    testFireRadius: 4
+    testFireBrief: 'Test the {item} at the Warden range: stand at the firing line by Ossa''s post and put three shots on the plates.'
+    testFireStep: Test-fire it from the Warden range's firing line
+    testFireLabel: FIRING LINE
+    testFireTightDegrees: 3.5
+    testFireLine: 'Brann says it''s steady. Show me. Three on the plate.'
+    testFireTightLine: 'Tight. That pistol''s finally pulling its weight.'
+    testFirePoorLine: 'Wide. Breathe out, then squeeze. Again.'
+    completeVoice: {fileID: 8300000, guid: dd08fcb2e3ba67c31ca21ad689b83530, type: 3}
+    testFirePoorVoice: {fileID: 8300000, guid: cbc99f54f48203ae3e84e5a7f328b63e, type: 3}
+    testFireTightVoice: {fileID: 8300000, guid: e9c40801cf1086aa80c4620073ae59b7, type: 3}
+    testFireVoice: {fileID: 8300000, guid: 8669928b79fc1a0ec00c3cce6c7aac83, type: 3}
     urgentStart: 0
     engageLine: 
     speaker: Warden Ossa
@@ -238,6 +252,10 @@ MonoBehaviour:
   gatherFormat: '{brief}
     {recipe}: {inputs}'
   fabricateFormat: Fabricate the {item} at Brann's workbench in Salvage, on the north avenue.
+  benchFormat: 'Build and fit the {item} at Brann''s bench in Salvage, on the north avenue.
+
+    {stage}'
+  benchStepFormat: Build and fit the {item} at Brann's bench
   fitFormat: Fit the {item} to your {weapon} at Brann's workbench in Salvage.
   testFireFormat: Fire your upgraded pistol in the Outer Berms.
   collectFormat: '{brief}'

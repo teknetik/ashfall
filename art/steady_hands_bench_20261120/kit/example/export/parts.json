@@ -1,0 +1,272 @@
+{
+ "family": "example",
+ "glb": "example.glb",
+ "blender": "5.2.2",
+ "generated": "2026-11-20T21:02:07Z",
+ "unit_scale_m": 1.0,
+ "parts": [
+  {
+   "id": "example.base",
+   "node": "example_base",
+   "label": "Junction base",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "medium",
+   "tris": 962,
+   "size_mm": [
+    60.0,
+    40.0,
+    14.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true
+  },
+  {
+   "id": "example.cover",
+   "node": "example_cover",
+   "label": "Cover plate",
+   "kind": "part",
+   "parent": "example.base",
+   "item": null,
+   "material": "alloy",
+   "mass": "light",
+   "tris": 428,
+   "size_mm": [
+    26.0,
+    40.0,
+    1.5
+   ],
+   "seat": {
+    "clear": "example_cover__clear",
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [
+    "example.screw_a",
+    "example.screw_b"
+   ],
+   "steps": [
+    "x.cover"
+   ],
+   "zones": [
+    {
+     "id": "dust",
+     "node": "example_cover__zone_dust"
+    }
+   ],
+   "wipes": [
+    {
+     "id": "dust",
+     "zone": "example_cover__zone_dust",
+     "label": "Caked dust",
+     "color": "tex/example__dirty_color.png",
+     "normal": "tex/example__dirty_normal.png",
+     "orm": "tex/example__dirty_orm.png"
+    }
+   ]
+  },
+  {
+   "id": "example.fuse",
+   "node": "example_fuse",
+   "label": "Fuse",
+   "kind": "part",
+   "parent": "example.base",
+   "item": null,
+   "material": "ceramic",
+   "mass": "tiny",
+   "tris": 128,
+   "size_mm": [
+    32.0,
+    7.2,
+    7.2
+   ],
+   "seat": {
+    "clear": "example_fuse__clear",
+    "symmetry": 2,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "x.fuse"
+   ],
+   "marks": [
+    {
+     "id": "probe",
+     "node": "example_fuse__mark_probe"
+    }
+   ],
+   "rides": "fuse_seat"
+  },
+  {
+   "id": "example.latch",
+   "node": "example_latch",
+   "label": "Fuse latch",
+   "kind": "part",
+   "parent": "example.base",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 44,
+   "size_mm": [
+    2.0,
+    14.0,
+    11.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true,
+   "rides": "latch"
+  },
+  {
+   "id": "example.screw_a",
+   "node": "example_screw_a",
+   "label": "Cover screw",
+   "kind": "fastener",
+   "parent": "example.base",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 486,
+   "size_mm": [
+    5.7,
+    5.6,
+    10.9
+   ],
+   "seat": {
+    "clear": "example_screw_a__clear",
+    "symmetry": 0,
+    "tol_mm": 3.0,
+    "tol_deg": 25.0
+   },
+   "held_by": [],
+   "fastener": {
+    "bit": "slot",
+    "turns": 6,
+    "holds": [
+     "example.cover"
+    ],
+    "into": "example.base",
+    "shank_mm": 3.0
+   },
+   "steps": [
+    "x.screws"
+   ]
+  },
+  {
+   "id": "example.screw_b",
+   "node": "example_screw_b",
+   "label": "Cover screw",
+   "kind": "fastener",
+   "parent": "example.base",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 534,
+   "size_mm": [
+    5.7,
+    5.6,
+    10.9
+   ],
+   "seat": {
+    "clear": "example_screw_b__clear",
+    "symmetry": 0,
+    "tol_mm": 3.0,
+    "tol_deg": 25.0
+   },
+   "held_by": [],
+   "fastener": {
+    "bit": "cross",
+    "turns": 6,
+    "holds": [
+     "example.cover"
+    ],
+    "into": "example.base",
+    "shank_mm": 3.0
+   },
+   "steps": [
+    "x.screws"
+   ]
+  }
+ ],
+ "params": [
+  {
+   "id": "example.latch",
+   "node": "example_rig",
+   "bone": "latch",
+   "action": "latch_param",
+   "type": "hinge",
+   "min": 0.0,
+   "max": 95.0,
+   "unit": "deg",
+   "continuous": false,
+   "rest": 0.0,
+   "parent_bone": "root",
+   "requires": {},
+   "parts": [
+    "example.latch"
+   ]
+  },
+  {
+   "id": "example.fuse_seat",
+   "node": "example_rig",
+   "bone": "fuse_seat",
+   "action": "fuse_seat_param",
+   "type": "slide",
+   "min": 0.0,
+   "max": 30.0,
+   "unit": "mm",
+   "continuous": false,
+   "rest": 0.0,
+   "parent_bone": "root",
+   "requires": {
+    "latch": 1.0
+   },
+   "parts": [
+    "example.fuse"
+   ]
+  }
+ ],
+ "sequence": [
+  {
+   "op": "remove",
+   "part": "example.fuse",
+   "step": "x.fuse",
+   "params": {
+    "latch": 1.0
+   }
+  },
+  {
+   "op": "remove",
+   "part": "example.screw_a",
+   "step": "x.screws",
+   "group": "screws"
+  },
+  {
+   "op": "remove",
+   "part": "example.screw_b",
+   "step": "x.screws",
+   "group": "screws"
+  },
+  {
+   "op": "remove",
+   "part": "example.cover",
+   "step": "x.cover"
+  }
+ ],
+ "absent_at_start": []
+}

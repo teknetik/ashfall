@@ -1,0 +1,445 @@
+{
+ "family": "tools",
+ "generated": "2026-11-21T18:22:03Z",
+ "blender": "5.2.2 LTS",
+ "shrink_mm": 0.030000000000000002,
+ "contact_mm": 0.3,
+ "contract": {
+  "ok": true,
+  "problems": [],
+  "parts": 34,
+  "tris": 74916,
+  "budget": 80000
+ },
+ "params": {
+  "ok": true,
+  "params": {
+   "screwdriver_bit": {
+    "ok": true,
+    "type": "slide",
+    "min": 0.0,
+    "max": 0.004,
+    "unit": "m",
+    "moving": [
+     "tools.screwdriver_collar"
+    ],
+    "with": {},
+    "steps": 51,
+    "overlap_at_rest": {},
+    "steps_with_new_overlap": [],
+    "first_new_overlap": null,
+    "min_clearance_mm": 0.066,
+    "clamp_error_mm": [
+     0.0,
+     0.0
+    ],
+    "rig": "tools_screwdriver_rig",
+    "against": "own parts"
+   },
+   "pliers_jaws": {
+    "ok": true,
+    "type": "hinge",
+    "min": 0.0,
+    "max": -34.0,
+    "unit": "deg",
+    "moving": [
+     "tools.pliers_b"
+    ],
+    "with": {},
+    "steps": 51,
+    "overlap_at_rest": {},
+    "steps_with_new_overlap": [],
+    "first_new_overlap": null,
+    "min_clearance_mm": 0.1,
+    "clamp_error_mm": [
+     0.0,
+     0.0
+    ],
+    "rig": "tools_pliers_rig",
+    "against": "own parts"
+   },
+   "cutters_jaws": {
+    "ok": true,
+    "type": "hinge",
+    "min": 0.0,
+    "max": -30.0,
+    "unit": "deg",
+    "moving": [
+     "tools.cutters_b"
+    ],
+    "with": {},
+    "steps": 51,
+    "overlap_at_rest": {},
+    "steps_with_new_overlap": [],
+    "first_new_overlap": null,
+    "min_clearance_mm": 0.1,
+    "clamp_error_mm": [
+     0.0,
+     0.0
+    ],
+    "rig": "tools_cutters_rig",
+    "against": "own parts"
+   },
+   "strippers_jaws": {
+    "ok": true,
+    "type": "hinge",
+    "min": 0.0,
+    "max": -28.0,
+    "unit": "deg",
+    "moving": [
+     "tools.strippers_b"
+    ],
+    "with": {},
+    "steps": 51,
+    "overlap_at_rest": {},
+    "steps_with_new_overlap": [],
+    "first_new_overlap": null,
+    "min_clearance_mm": 0.1,
+    "clamp_error_mm": [
+     0.0,
+     0.0
+    ],
+    "rig": "tools_strippers_rig",
+    "against": "own parts"
+   },
+   "snips_jaws": {
+    "ok": true,
+    "type": "hinge",
+    "min": 0.0,
+    "max": -22.0,
+    "unit": "deg",
+    "moving": [
+     "tools.snips_b"
+    ],
+    "with": {},
+    "steps": 51,
+    "overlap_at_rest": {},
+    "steps_with_new_overlap": [],
+    "first_new_overlap": null,
+    "min_clearance_mm": 0.114,
+    "clamp_error_mm": [
+     0.0,
+     0.0
+    ],
+    "rig": "tools_snips_rig",
+    "against": "own parts"
+   },
+   "drill_crank": {
+    "type": "continuous",
+    "note": "code-driven, not swept",
+    "rig": "tools_drill_rig",
+    "against": "own parts"
+   },
+   "drill_spindle": {
+    "type": "continuous",
+    "note": "code-driven, not swept",
+    "rig": "tools_drill_rig",
+    "against": "own parts"
+   },
+   "drill_chuck": {
+    "ok": true,
+    "type": "hinge",
+    "min": 0.0,
+    "max": -150.0,
+    "unit": "deg",
+    "moving": [
+     "tools.drill_chuck"
+    ],
+    "with": {},
+    "steps": 51,
+    "overlap_at_rest": {},
+    "steps_with_new_overlap": [],
+    "first_new_overlap": null,
+    "min_clearance_mm": 0.0,
+    "clamp_error_mm": [
+     0.0,
+     0.0
+    ],
+    "rig": "tools_drill_rig",
+    "against": "own parts"
+   }
+  },
+  "rigs": [
+   "tools_cutters_rig",
+   "tools_drill_rig",
+   "tools_pliers_rig",
+   "tools_screwdriver_rig",
+   "tools_snips_rig",
+   "tools_strippers_rig"
+  ]
+ },
+ "custom": {
+  "ok": true,
+  "rigs": {
+   "tools_roll_rig": {
+    "clips": {
+     "roll_strap_param": {
+      "seconds": 1.0,
+      "steps": 25,
+      "lowest_z_mm": -1.2,
+      "size_at_0_mm": [
+       87.4,
+       300.0,
+       85.8
+      ],
+      "size_at_1_mm": [
+       74.3,
+       430.0,
+       79.8
+      ]
+     },
+     "roll_unroll_param": {
+      "seconds": 1.0,
+      "steps": 25,
+      "lowest_z_mm": -1.2,
+      "size_at_0_mm": [
+       74.3,
+       430.0,
+       79.8
+      ],
+      "size_at_1_mm": [
+       587.9,
+       430.0,
+       29.3
+      ]
+     }
+    },
+    "problems": [],
+    "ok": true
+   },
+   "tools_dropper_rig": {
+    "clips": {
+     "dropper_bulb_param": {
+      "seconds": 1.0,
+      "steps": 25,
+      "lowest_z_mm": 65.5,
+      "size_at_0_mm": [
+       17.0,
+       17.0,
+       34.7
+      ],
+      "size_at_1_mm": [
+       9.4,
+       13.2,
+       33.3
+      ]
+     }
+    },
+    "problems": [],
+    "ok": true
+   }
+  }
+ },
+ "seats": {
+  "ok": true,
+  "seats": {
+   "tools.bit_cross": {
+    "ok": true,
+    "against": [
+     "tools_bitblock"
+    ],
+    "steps": 41,
+    "overlaps": [],
+    "min_clearance_mm": 0.1,
+    "contact_when_seated": [
+     "tools_bitblock"
+    ],
+    "travel_mm": 22.0
+   },
+   "tools.bit_slot": {
+    "ok": true,
+    "against": [
+     "tools_screwdriver_collar",
+     "tools_screwdriver"
+    ],
+    "steps": 41,
+    "overlaps": [],
+    "min_clearance_mm": 0.075,
+    "contact_when_seated": [
+     "tools_screwdriver"
+    ],
+    "travel_mm": 22.0
+   },
+   "tools.bitblock": {
+    "ok": true,
+    "note": "seats in cloth (tools.roll): not swept"
+   },
+   "tools.cutters": {
+    "ok": true,
+    "note": "seats in cloth (tools.roll): not swept"
+   },
+   "tools.drill_bit": {
+    "ok": true,
+    "against": [
+     "tools_drill_chuck",
+     "tools_drill_spindle",
+     "tools_drill",
+     "tools_drill_wheel"
+    ],
+    "steps": 41,
+    "overlaps": [],
+    "min_clearance_mm": 0.334,
+    "contact_when_seated": [],
+    "travel_mm": 45.0
+   },
+   "tools.oil_dropper": {
+    "ok": true,
+    "against": [
+     "tools_oil_bottle"
+    ],
+    "steps": 41,
+    "overlaps": [],
+    "min_clearance_mm": 0.319,
+    "contact_when_seated": [],
+    "travel_mm": 70.0
+   },
+   "tools.pick": {
+    "ok": true,
+    "note": "seats in cloth (tools.roll): not swept"
+   },
+   "tools.pliers": {
+    "ok": true,
+    "note": "seats in cloth (tools.roll): not swept"
+   },
+   "tools.punch": {
+    "ok": true,
+    "note": "seats in cloth (tools.roll): not swept"
+   },
+   "tools.screwdriver": {
+    "ok": true,
+    "note": "seats in cloth (tools.roll): not swept"
+   },
+   "tools.scribe": {
+    "ok": true,
+    "note": "seats in cloth (tools.roll): not swept"
+   },
+   "tools.strippers": {
+    "ok": true,
+    "note": "seats in cloth (tools.roll): not swept"
+   },
+   "tools.wirebrush": {
+    "ok": true,
+    "note": "seats in cloth (tools.roll): not swept"
+   }
+  }
+ },
+ "fasteners": {
+  "ok": true,
+  "note": "no part of this family is a fastener the player removes (bolts, rivets and screws here are fixed)"
+ },
+ "nobake": false,
+ "export": {
+  "ok": true,
+  "problems": [],
+  "glb": {
+   "bytes": 143532704,
+   "nodes": 382,
+   "meshes": 34,
+   "materials": [
+    "M_tools_a",
+    "M_tools_a_emissive",
+    "M_tools_b",
+    "glass_clear",
+    "glass_amber",
+    "M_tools_r"
+   ],
+   "images": 10,
+   "skins": 8,
+   "animations": {
+    "drill_chuck_param": {
+     "channels": 1,
+     "seconds": 1
+    },
+    "dropper_bulb_param": {
+     "channels": 1,
+     "seconds": 1
+    },
+    "roll_unroll_param": {
+     "channels": 320,
+     "seconds": 1
+    },
+    "roll_strap_param": {
+     "channels": 15,
+     "seconds": 1
+    },
+    "cutters_jaws_param": {
+     "channels": 1,
+     "seconds": 1
+    },
+    "pliers_jaws_param": {
+     "channels": 1,
+     "seconds": 1
+    },
+    "screwdriver_bit_param": {
+     "channels": 1,
+     "seconds": 1
+    },
+    "strippers_jaws_param": {
+     "channels": 1,
+     "seconds": 1
+    },
+    "snips_jaws_param": {
+     "channels": 1,
+     "seconds": 1
+    }
+   }
+  },
+  "bounds_not_compared": [
+   "tools_oil_dropper_bulb"
+  ],
+  "skinned_nodes": [
+   "tools_roll"
+  ],
+  "tris_total": 74916,
+  "max_bounds_dev_mm": 0.0002,
+  "helpers_in_glb": 68,
+  "clip_ends": {
+   "tools.screwdriver_bit": {
+    "travel_mm": 4.0,
+    "expected_mm": 4.0
+   },
+   "tools.pliers_jaws": {
+    "turn_deg": 34.0,
+    "expected_deg": 34.0
+   },
+   "tools.cutters_jaws": {
+    "turn_deg": 30.0,
+    "expected_deg": 30.0
+   },
+   "tools.strippers_jaws": {
+    "turn_deg": 28.0,
+    "expected_deg": 28.0
+   },
+   "tools.snips_jaws": {
+    "turn_deg": 22.0,
+    "expected_deg": 22.0
+   },
+   "tools.drill_chuck": {
+    "turn_deg": 150.0,
+    "expected_deg": 150.0
+   },
+   "tools.roll_unroll": {
+    "channels": 320,
+    "nodes": 240
+   },
+   "tools.roll_strap": {
+    "channels": 15,
+    "nodes": 15
+   },
+   "tools.dropper_bulb": {
+    "scale_end": [
+     0.55,
+     0.96,
+     0.78
+    ],
+    "expected": [
+     0.55,
+     0.96,
+     0.78
+    ]
+   }
+  }
+ },
+ "ok": true,
+ "seconds": 3.3
+}

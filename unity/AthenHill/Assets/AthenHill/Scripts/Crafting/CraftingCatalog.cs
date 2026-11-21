@@ -38,10 +38,14 @@ namespace AthenHill
   [Min(0)]public int craftXp;
   [Tooltip("Skill points gained from use on the first completed craft of this schematic. Later crafts gain Use Repeat Factor times the last gain; never above the catalog's Use Gain Cap. Fractions accumulate.")]
   [Min(0)]public float skillUse;
+  [Tooltip("Hands-on bench job (AssemblyRecipe id in Data/Assembly, Steady Hands bench 20 Nov 2026). Set = the first one is made by hand at the bench; the timed craft opens only after one hand-made success and then makes Standard quality. Empty = timed craft only.")]
+  public string assembly;
  }
  /// stat: a WeaponStats field name (damage, fireInterval, range, recoil, nanoMax, nanoPerShot, nanoRegen, aimAssist).
  /// op: add (flat) or percent (summed, applied once after the flat terms).
- [Serializable] public class CraftEffect {public string stat,op;public float value;}
+ /// byQuality (20 Nov 2026): optional explicit values for Rough, Standard and Fine crafted quality (three entries); empty =
+ /// value scaled by the modifier's qualityScale.
+ [Serializable] public class CraftEffect {public string stat,op;public float value;public float[] byQuality;}
  [Serializable] public class CraftModifier
  {
   public string id,itemId,slot;
@@ -49,6 +53,8 @@ namespace AthenHill
   public CraftEffect[] effects;
   public CharacterRequirement[] requirements;
   public string[] requiredTools;
+  [Tooltip("Effect scale for Rough, Standard and Fine crafted quality when an effect has no By Quality values (three entries; empty = 0.75, 1, 1.25).")]
+  public float[] qualityScale;
  }
  [Serializable] public class CraftWeapon
  {
@@ -124,6 +130,8 @@ namespace AthenHill
   [Tooltip("Fabricator list headings by RecipeGroup name (Component, MarkI, MarkII).")]
   public IdLabel[] groupLabels;
   public StatLabel[] statLabels;
+  [Tooltip("Steady Hands bench (20 Nov 2026): the loose grip's rattle (asm.rattle.*) and the damper's settling tick (asm.damper.tick), used by PlayerCombat when its own clip fields are empty. Bound by art/steady_hands_bench_20261120/data/apply_data.py.")]
+  public AudioClip[] rattleClips,damperClips;
   public string SlotName(string slot)=>Label(slotLabels,slot);
   public string TagName(string tag)=>Label(tagLabels,tag);
   public string GroupName(RecipeGroup group)=>Label(groupLabels,group.ToString());

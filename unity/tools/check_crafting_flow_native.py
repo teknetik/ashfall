@@ -4,8 +4,9 @@ Fresh save at Steady Hands with a damaged servo, parts and a toolkit in the pack
   1. identify: the grip is not known; Brann's steady_identify line sends the player to Ossa; Ossa's `servo` -> `servo_look`
      (driven with real Tab/Return on the choices) teaches the grip; the order moves Identify -> Report.
   2. tools: without the Field Toolkit the bench refuses with the missing-tool reason (and a click on Fabricate makes nothing).
-  3. XP: fabricating the grip at Brann's bench shows the XP / Engineering award in the notice; the engineering stat and the
-     saved experience rise.
+  3. XP: building the grip at Brann's bench (Build by hand -> the hands-on bench job, finished with dev.assembly.finish through
+     the real crafting ticket) shows the XP / Engineering award in the notice; the engineering stat and the saved experience
+     rise. The grip has no timer or Auto-assemble button (21 Nov 2026, Carl: "no auto assemble for anything ever").
   4. condition: a worn pistol misfires, at 0 it jams and the HUD says so; field repair from the field pack (Tab -> SECONDARY
      -> Repair with toolkit) restores +30 and lowers the cap; damage during a repair cancels it; after four repairs the
      fifth is refused; the bench Overhaul restores full condition and the repair count.
@@ -26,6 +27,7 @@ def fixture(folder):
     s = {'version': 2, 'savedUtc': '2026-11-20T09:00:00.0000000Z', 'build': 'qa', 'credits': 60, 'purchases': 0, 'sales': 0,
          'items': [{'itemId': 'scrap_alloy', 'quantity': 12}, {'itemId': 'copper_filament', 'quantity': 6}, {'itemId': 'nanite_residue', 'quantity': 8},
                    {'itemId': 'droid_servo_damaged', 'quantity': 1}, {'itemId': 'field_toolkit', 'quantity': 1}, {'itemId': 'medkit', 'quantity': 1}],
+         # 21 Nov 2026: the grip is built by hand at the bench every time (no timer route); handMade no longer matters
          'crafting': {'known': [], 'crafted': [], 'crafts': 0, 'fitted': []},
          'loot': {'rng': 'bc1721a626f0570d', 'rolls': 4, 'misses': [], 'collected': ['scrap_alloy', 'copper_filament', 'nanite_residue', 'droid_servo_damaged']},
          'bermsStep': 'Complete', 'hasPistol': True,
@@ -186,13 +188,16 @@ def body():
     ok('tool' in reason.lower() and 'screwdriver' in reason.lower(), 'the bench refuses with the missing-tool reason', reason)
     S.cap('05-bench-no-toolkit')
     crafts = qa.craft().get('crafts')
-    e = qa.el(lay, 'fabricator-craft')
-    try:
-        qa.click_at(*centre(lay, 'fabricator-craft')); time.sleep(.8)
-    except AssertionError:
-        pass
-    ok(not qa.craft().get('craftJob') and (qa.qty('grip_stabilised_pistol') or 0) == 0 and qa.craft().get('crafts') == crafts,
-       'clicking Fabricate without the toolkit starts nothing', {'job': qa.craft().get('craftJob'), 'crafts': qa.craft().get('crafts'), 'notice': notice()})
+    e = qa.el(lay, 'fabricator-craft') or {}
+    ok(not e.get('visible'), 'the grip has no timer (Fabricate / Auto-assemble) button', e)
+    b = qa.el(lay, 'fabricator-build') or {}
+    if b.get('visible'):
+        try:
+            qa.click_at(*centre(lay, 'fabricator-build')); time.sleep(1.0)
+        except AssertionError:
+            pass
+    ok(qa.state() != 'Assembly' and not qa.craft().get('craftJob') and (qa.qty('grip_stabilised_pistol') or 0) == 0 and qa.craft().get('crafts') == crafts,
+       'Build by hand without the toolkit starts nothing', {'state': qa.state(), 'build': b, 'job': qa.craft().get('craftJob'), 'crafts': qa.craft().get('crafts'), 'notice': notice()})
     close_bench()
     qa.cmd('dev.item.grant', itemId='field_toolkit', quantity=1)
     ok((qa.qty('field_toolkit') or 0) == 1, 'toolkit returned')
@@ -205,14 +210,22 @@ def body():
     desc = find_text(r'Exercises')
     ok(desc is not None and 'Engineering' in desc, 'the recipe panel lists "Exercises Engineering · +N XP"', desc)
     S.cap('06-bench-grip')
-    click('fabricator-craft')
-    time.sleep(.8)
-    job = qa.craft().get('craftJob') or {}
-    ok(job.get('recipeId') == 'recipe_grip_stabilised_pistol', 'Fabricate starts the grip on the bench timer', job)
-    qa.wait(lambda: not qa.craft().get('craftJob'), float(job.get('seconds') or 10) + 15, step=.3, what='craft timer')
+    lay = qa.ui()
+    ok(not (qa.el(lay, 'fabricator-craft') or {}).get('visible'), 'no timer or Auto-assemble button for the grip', qa.el(lay, 'fabricator-craft'))
+    ok(find_text(r'(?i)auto.?assembl', lay) is None, 'no Auto-assemble wording anywhere in the window', find_text(r'(?i)auto.?assembl', lay))
+    ok(((qa.el(lay, 'fabricator-build') or {}).get('text') or '') == 'Build by hand', 'the only way is Build by hand', qa.el(lay, 'fabricator-build'))
+    click('fabricator-build')
+    qa.wait(lambda: qa.state() == 'Assembly', 8, what='the bench job')
+    ok(qa.state() == 'Assembly', 'Build by hand opens the hands-on bench job (real crafting ticket)', {'state': qa.state(), 'assembly': {k: (S.snap().get('assembly') or {}).get(k) for k in ('open', 'detached')}})
+    ok(not (S.snap().get('assembly') or {}).get('detached'), 'the bench job is the real one, not a detached QA job', (S.snap().get('assembly') or {}).get('detached'))
+    S.cap('06b-bench-job')
+    qa.cmd('dev.assembly.finish', quality='Standard')
+    qa.wait(lambda: qa.state() == 'Play', 10, what='the bench job finished')
     time.sleep(.6)
     n = notice()
-    ok((qa.qty('grip_stabilised_pistol') or 0) >= 1, 'the grip is fabricated', {'qty': qa.qty('grip_stabilised_pistol')})
+    c = qa.craft()
+    ok((c.get('slots') or {}).get('grip') == 'grip_stabilised_pistol' or (qa.qty('grip_stabilised_pistol') or 0) >= 1, 'the grip is built (fitted to the pistol)', {'slots': c.get('slots'), 'qty': qa.qty('grip_stabilised_pistol')})
+    ok('timer' not in n.lower() and 'auto' not in n.lower(), 'the completion notice offers no timer route', n)
     ok(re.search(r'\+\d+ XP', n) is not None and 'Engineering' in n, 'the fabrication notice shows the XP and Engineering award', n)
     S.cap('07-bench-xp-notice')
     eng1 = stat('engineering')

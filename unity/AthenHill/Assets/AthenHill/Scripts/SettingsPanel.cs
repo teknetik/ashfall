@@ -22,6 +22,7 @@ namespace AthenHill
         readonly Dictionary<string, Label> percentages = new Dictionary<string, Label>();
         readonly Dictionary<string, DropdownField> choices = new Dictionary<string, DropdownField>();
         readonly Toggle mute, vsync, post, motion, invertY, hitMarkers, captions, conversationCamera;
+        readonly Toggle benchGuidance;   // tutor agent, 21 Nov 2026: Brann's guided first job at the bench (BenchTutor.Enabled)
         readonly GameSession session;
         readonly IVisualElementScheduledItem ticker;
         List<Vector2Int> resolutions;
@@ -71,6 +72,7 @@ namespace AthenHill
             Note(controlsPage, "Camera shake follows shots, hits taken and nearby wrecks. Reduced motion (Sound tab) turns it off.");
             Heading(controlsPage, "Camera and interface");
             conversationCamera = Toggle(controlsPage, "conversation-camera", "Conversation camera", value => { settings.Interface.conversationCamera = value; settings.SaveInterface(); });
+            benchGuidance = Toggle(controlsPage, "bench-guidance", "Brann's guidance", value => BenchTutor.Enabled = value);
             Choice(controlsPage, "interface-mode", "Interface", new List<string> { "Full", "Adaptive" }, index => { settings.Interface.mode = index; settings.SaveInterface(); });
             Note(controlsPage, "The conversation camera frames whoever you talk to over your shoulder and moves the conversation to the bottom of the screen. Adaptive fades the colonist panel, Field Notes, event log and key hints after a few quiet seconds; each returns when it changes, in combat, while a window is open and while Left Alt is held.");
             Heading(controlsPage, "Keys");
@@ -154,6 +156,7 @@ namespace AthenHill
             Value("mouse-sensitivity", settings.Controls.sensitivity); invertY.SetValueWithoutNotify(settings.Controls.invertY);
             Value("camera-shake", settings.Controls.cameraShake); hitMarkers.SetValueWithoutNotify(settings.Controls.hitMarkers);
             captions.SetValueWithoutNotify(BarkDirector.CaptionsEnabled);
+            benchGuidance.SetValueWithoutNotify(BenchTutor.Enabled);
             conversationCamera.SetValueWithoutNotify(settings.Interface.conversationCamera); ChoiceValue("interface-mode", (int)settings.Interface.Mode);
             resolutions = settings.Resolutions(); choices["resolution"].choices = resolutions.Select(r => r.x + " × " + r.y).ToList();
             ChoiceValue("resolution", resolutions.IndexOf(new Vector2Int(v.width, v.height)));

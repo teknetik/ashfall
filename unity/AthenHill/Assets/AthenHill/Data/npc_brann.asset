@@ -28,6 +28,8 @@ MonoBehaviour:
     requires: order:order_steady_hands, !reported
   - node: steady_gather
     requires: order:order_steady_hands, stage:Gather
+  - node: steady_bench_open
+    requires: order:order_steady_hands, bench
   - node: steady_bench
     requires: order:order_steady_hands, stage:Fabricate
   - node: steady_fit
@@ -399,6 +401,23 @@ MonoBehaviour:
       next: depot
       action: 
       requires: 
+      setFlag: 
+    - id: close_93
+      label: Later, Brann.
+      next: 
+      action: close
+      requires: 
+      setFlag: 
+  - id: steady_bench_open
+    title: Steady Hands
+    text: 'Pick up where you left off.'
+    voice: {fileID: 8300000, guid: 21d5dc59db3c66d596858c8d7ef1501d, type: 3}
+    choices:
+    - id: fabricator_630
+      label: Back to the bench.
+      next: 
+      action: fabricator
+      requires: pistol
       setFlag: 
     - id: close_93
       label: Later, Brann.

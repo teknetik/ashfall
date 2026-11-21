@@ -43,7 +43,7 @@ namespace AthenHill.Editor
     character=character?new{character.basePackSlots,character.slots,character.equipment,character.modifications,
      stats=character.attributes.Select(x=>new{x.id,x.label}).Concat(character.skills.Select(x=>new{x.id,x.label})).Concat(character.derivedStats.Select(x=>new{x.id,x.label})).ToArray(),
      modifierPercentConvention="fraction: 0.08 means +8%"}:null,
-    recipes=craft.recipes.Select(x=>new{x.id,x.name,group=x.group.ToString(),x.stationId,x.requiresWeaponId,x.outputItemId,x.outputQuantity,x.inputs,x.knownByDefault,x.unlocks,x.lockedHint,x.craftSeconds,x.requiredTools,x.skill,x.craftXp,x.skillUse}).ToArray(),
+    recipes=craft.recipes.Select(x=>new{x.id,x.name,group=x.group.ToString(),x.stationId,x.requiresWeaponId,x.outputItemId,x.outputQuantity,x.inputs,x.knownByDefault,x.unlocks,x.lockedHint,x.craftSeconds,x.requiredTools,x.skill,x.craftXp,x.skillUse,x.assembly}).ToArray(),
     lootTables=craft.lootTables.Select(t=>new{t.id,entries=t.entries.Select(e=>new{e.itemId,quantity=e.minQuantity,e.minQuantity,maxQuantity=Math.Max(e.minQuantity,e.maxQuantity),e.chance,e.pityAfter,e.guaranteeUntilCollected}).ToArray()}).ToArray(),
     enemies=new[]{new{id="feral_scrap_drone",prefab="Assets/AthenHill/Prefabs/OuterBerms/FeralScrapDrone.prefab",lootTableId="loot_feral_scrap_drone"},new{id="feral_worker_droid",prefab="Assets/AthenHill/Prefabs/OuterBerms/FeralWorkerDroid.prefab",lootTableId="loot_feral_worker_droid"},new{id="depot_foreman",prefab="Assets/AthenHill/Prefabs/OuterBerms/FeralDepotForeman.prefab",lootTableId="loot_depot_foreman"}},
     encounters=new object[]{new{id="first_contact",spawns=new[]{"feral_scrap_drone"},tutorial=true},new{id="machine_depot",spawns=new[]{"feral_worker_droid","feral_worker_droid","feral_scrap_drone"},tutorial=true},new{id="depot_foreman",spawns=new[]{"depot_foreman","feral_worker_droid","feral_worker_droid"},fieldOrder="order_depot_foreman"}},
@@ -102,6 +102,8 @@ namespace AthenHill.Editor
     if(!ids.Contains(mod.itemId)||mod.weaponIds==null||!mod.weaponIds.All(w=>craft.weapons.Any(x=>x.id==w&&((craft.recipes.FirstOrDefault(r=>r.outputWeaponId==w&&(string.IsNullOrEmpty(x.recipeId)||r.id==x.recipeId))?.outputSlots??x.slots)?.Contains(mod.slot)??false))))throw new Exception("Invalid modifier: "+mod.id);
     if(mod.requiredTools!=null&&mod.requiredTools.Any(id=>!ValidTool(city,craft,id)))throw new Exception("Invalid modifier tool: "+mod.id);
     if(mod.effects==null||mod.effects.Any(e=>WeaponStats.IndexOf(e.stat)<0||e.op!="add"&&e.op!="percent"))throw new Exception("Invalid modifier effect: "+mod.id);
+    // 20 Nov 2026 (Steady Hands bench): per-quality effect values and scales are Rough, Standard, Fine
+    if(mod.effects.Any(e=>e.byQuality!=null&&e.byQuality.Length!=0&&(e.byQuality.Length!=3||e.byQuality.Any(v=>float.IsNaN(v)||float.IsInfinity(v))))||mod.qualityScale!=null&&mod.qualityScale.Length!=0&&mod.qualityScale.Length!=3)throw new Exception("Invalid quality values on modifier: "+mod.id);
    }
    foreach(var table in craft.lootTables)foreach(var entry in table.entries)
    {

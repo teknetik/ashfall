@@ -61,6 +61,10 @@ namespace AthenHill
                 return Result.Fail("not_in_game", "Start a playable session before using developer controls.");
             bool adjustable = session.State == CityState.Play || session.State == CityState.Paused || session.State == CityState.Inventory || session.State == CityState.Shop;
             if (action == "dev.state") return Result.Ok();
+            // Steady Hands (20 Nov 2026, craft agent): dev.craft.handmade / fit / strip / heat.
+            if (action.StartsWith("dev.craft.", StringComparison.Ordinal)) return CraftDevCommands.Execute(action, command, session, adjustable);
+            // Steady Hands bench (20 Nov 2026): open, complete a step, raise a fault, grant stages, finish, abandon, camera shot.
+            if (action.StartsWith("dev.assembly.", StringComparison.Ordinal)) return AssemblyQa.Execute(command, session);
             if (action == "dev.weather.set" || action == "dev.weather.reset")
             {
                 var weather = WeatherDirector.Active;

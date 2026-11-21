@@ -37,6 +37,10 @@ MonoBehaviour:
       cooling: 0
       durability: 100
       armourPenetration: 0
+      sway: 1.2
+      sideKick: 0.9
+      recovery: 0.34
+      scatterGrowth: 0.35
     minStats:
       damage: 1
       fireInterval: 0.08
@@ -56,6 +60,10 @@ MonoBehaviour:
       cooling: 0
       durability: 0
       armourPenetration: 0
+      sway: 0
+      sideKick: 0
+      recovery: 0
+      scatterGrowth: 0
     maxStats:
       damage: 400
       fireInterval: 2
@@ -75,6 +83,10 @@ MonoBehaviour:
       cooling: 1000
       durability: 100000
       armourPenetration: 100
+      sway: 20
+      sideKick: 20
+      recovery: 5
+      scatterGrowth: 5
     slots:
     - grip
     - barrel
@@ -104,6 +116,10 @@ MonoBehaviour:
       cooling: 15
       durability: 100
       armourPenetration: 8
+      sway: 0
+      sideKick: 0
+      recovery: 0
+      scatterGrowth: 0
     minStats:
       damage: 1
       fireInterval: 0.08
@@ -123,6 +139,10 @@ MonoBehaviour:
       cooling: 0
       durability: 0
       armourPenetration: 0
+      sway: 0
+      sideKick: 0
+      recovery: 0
+      scatterGrowth: 0
     maxStats:
       damage: 400
       fireInterval: 2
@@ -142,6 +162,10 @@ MonoBehaviour:
       cooling: 1000
       durability: 100000
       armourPenetration: 100
+      sway: 20
+      sideKick: 20
+      recovery: 5
+      scatterGrowth: 5
     slots:
     - barrel
     - cell
@@ -179,6 +203,38 @@ MonoBehaviour:
     - stat: recoil
       op: add
       value: -7
+      byQuality:
+      - -5
+      - -7
+      - -10
+    - stat: sway
+      op: add
+      value: -0.75
+      byQuality:
+      - -0.6
+      - -0.75
+      - -0.95
+    - stat: sideKick
+      op: add
+      value: -0.7
+      byQuality:
+      - -0.5
+      - -0.7
+      - -0.82
+    - stat: recovery
+      op: add
+      value: -0.16
+      byQuality:
+      - -0.1
+      - -0.16
+      - -0.2
+    - stat: scatterGrowth
+      op: add
+      value: -0.23
+      byQuality:
+      - -0.17
+      - -0.23
+      - -0.28
     requirements: []
     requiredTools: []
   - id: mod_barrel_bored_alloy
@@ -224,6 +280,18 @@ MonoBehaviour:
     - stat: aimAssist
       op: add
       value: 1
+    - stat: sway
+      op: add
+      value: -0.98
+    - stat: sideKick
+      op: add
+      value: -0.84
+    - stat: recovery
+      op: add
+      value: -0.2
+    - stat: scatterGrowth
+      op: add
+      value: -0.29
     requirements: []
     requiredTools: []
   - id: mod_barrel_lattice_focused
@@ -463,6 +531,7 @@ MonoBehaviour:
     skill: engineering
     craftXp: 12
     skillUse: 1
+    assembly: assembly_grip_stabilised_pistol
   - id: recipe_cell_salvaged_capacitor
     name: Salvaged Capacitor Cell
     stationId: station_field_fabricator
@@ -1853,6 +1922,15 @@ MonoBehaviour:
     label: Packs and pack upgrades
   - id: ArmourMod
     label: Armour upgrades
+  rattleClips:
+  - {fileID: 8300000, guid: 2718eb78c0df32e0576e91f42c37a121, type: 3}
+  - {fileID: 8300000, guid: 2680aa44d242e5208c8ab2c17bdccb23, type: 3}
+  - {fileID: 8300000, guid: 2252c93882a5df385ecaa5df889f56b3, type: 3}
+  damperClips:
+  - {fileID: 8300000, guid: 37f3121daac22b3a684eb4be4181120d, type: 3}
+  - {fileID: 8300000, guid: 52743843d434e86a7a012873ebcf868f, type: 3}
+  - {fileID: 8300000, guid: 426c98efe14b0508dfb82f782734cf01, type: 3}
+  - {fileID: 8300000, guid: 7ee6cee0d302beea3ee4e1fd900172f6, type: 3}
   statLabels:
   - stat: damage
     label: Damage
@@ -1903,4 +1981,24 @@ MonoBehaviour:
     label: Spread
     format: 0.0
     unit: "\xB0"
+    lowerIsBetter: 1
+  - stat: sway
+    label: Aim sway
+    format: 0.00
+    unit: "\xB0"
+    lowerIsBetter: 1
+  - stat: sideKick
+    label: Side kick
+    format: 0.00
+    unit: "\xB0"
+    lowerIsBetter: 1
+  - stat: recovery
+    label: Recovery
+    format: 0.00
+    unit: ' s'
+    lowerIsBetter: 1
+  - stat: scatterGrowth
+    label: Rapid-fire scatter
+    format: 0%
+    unit: 
     lowerIsBetter: 1

@@ -87,6 +87,7 @@ namespace AthenHill
     case "in_good_order":return loadout!=null&&loadout.Repairs>0?$"The {name} is as good as the field can make it. A bench overhaul at {Workbench} restores its best condition.":$"The {name} is in good order.";
     case "missing_tool":return "Missing tool: "+ToolName(model,rules?.repairTool)+". Carry a Field Toolkit.";
     case "busy":return "Finish what you are doing first.";
+    case "on_bench":return $"The {name} is on the bench in pieces. Finish the job at "+Workbench+" or abandon it there.";
     case "wrong_station":return "A weapon overhaul is done at "+Workbench+".";
     case "missing_ingredients":return "Missing parts for the overhaul: "+OverhaulCost(model)+".";
     default:return "That repair is not possible.";
@@ -138,9 +139,37 @@ namespace AthenHill
     case "busy":return "The bench is already working on a piece. Wait for it or cancel it.";
     case "cancelled":return "Fabrication stopped. Nothing was used.";
     case "insufficient_items":return "Those parts are no longer in your pack.";
+    // Steady Hands bench (20 Nov 2026)
+    case "hand_made_first":return $"The {(recipe!=null?ItemName(model,recipe.outputItemId):"part")} is built by hand at the bench, every time: Build by hand.";
+    case "on_bench":return itemId!=null&&model!=null?$"The {WeaponOnBench(model,itemId)} is on the bench in pieces. Finish the job or abandon it at the bench.":"That job is open on the bench. Carry on with it by hand.";
+    case "bench_busy":{var open=model?.OpenTicket!=null?model.Recipe(model.OpenTicket.recipeId):null;return open!=null?$"The bench is still set up for the {ItemName(model,open.outputItemId)}. Finish or abandon that job first.":"The bench is set up for another job. Finish or abandon it first.";}
+    case "no_assembly":return "This schematic is made on the timer.";
+    case "no_job":return "Nothing is on the bench.";
+    case "byproducts_left":return "Your pack was too full for the spare parts; they stayed on the bench.";
     case "unknown_recipe":case "invalid_recipe":case "unknown_item":return "This schematic record is damaged; check the crafting data.";
     default:return "The fabricator refused that operation.";
    }
+  }
+  /// The weapon name for an on-bench notice: itemId may be a weapon id, a weapon item id or a mod.
+  static string WeaponOnBench(CraftingModel model,string id)
+  {
+   var loadout=model.GetLoadout(model.OpenTicket?.weaponId)??model.GetLoadout(id);
+   return loadout!=null?loadout.WeaponName:ItemName(model,id);
+  }
+  /// "Rough", "Standard", "Fine".
+  public static string QualityName(CraftQuality q)=>q.ToString();
+  /// "Stabilised Pistol Grip · Fine" for a part made by hand; plain name for Standard unless always is set.
+  public static string WithQuality(CraftingModel model,string itemId,CraftQuality q,bool always=false)
+   =>ItemName(model,itemId)+(always||q!=CraftQuality.Standard?" · "+QualityName(q):"");
+  /// The loadout panel's state line for a weapon taken apart on the bench.
+  public const string OnBenchLabel="On Brann's bench";
+  /// The mod in a weapon slot with its crafted quality: "Stabilised Pistol Grip · Fine". Parts that can be made by hand always
+  /// name their quality; others only when it is not Standard. Null when the slot is empty.
+  public static string FittedName(CraftingModel model,WeaponLoadout loadout,string slot)
+  {
+   var item=loadout?.Fitted(slot);if(item==null||model==null)return null;
+   bool hands=model.Data.recipes.Any(r=>r.outputItemId==item&&!string.IsNullOrEmpty(r.assembly));
+   return WithQuality(model,item,loadout.Quality(slot),hands);
   }
   /// Display name of the colonist with this NpcDefinition id ("npc_ossa" -> "Warden Ossa"); the id itself when unknown.
   public static string NpcName(GameSession session,string npcId)

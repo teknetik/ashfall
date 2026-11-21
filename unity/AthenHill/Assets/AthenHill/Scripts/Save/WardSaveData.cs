@@ -33,6 +33,10 @@ namespace AthenHill
   /// written before it, which load with only what their progress implies (found waystations; the depot once the primer
   /// is done). An older v4 build ignores the field.
   public MapState map;
+  /// Steady Hands bench (20 Nov 2026, additive, still version 4): the bench system's opaque record of an unfinished
+  /// hands-on job (CraftingSession.AssemblyBlob); null = no job. The reserved inputs and the weapon on the bench are in
+  /// crafting.bench. Older saves have neither and load with an empty bench.
+  public string benchJob;
  }
  /// Reads and writes save files. Nothing here throws on bad input: unreadable files produce an error message.
  public static class WardSaveFile

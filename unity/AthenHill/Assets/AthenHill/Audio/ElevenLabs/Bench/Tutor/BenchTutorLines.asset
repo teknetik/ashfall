@@ -1,0 +1,1497 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c2bf7d774f4b58f8b4eef8dc3671a0e, type: 3}
+  m_Name: BenchTutorLines
+  m_EditorClassIdentifier: AthenHill.Runtime::AthenHill.BenchTutorLines
+  lines:
+  - id: tutor_welcome
+    kind: welcome
+    step: 
+    verb: 
+    key: 
+    trigger: tutor.welcome
+    stage: -1
+    text: First one's by hand. I'll talk you through it.
+    clip: {fileID: 8300000, guid: 9e6647d37254bbfa13700793ed320284, type: 3}
+  - id: tutor_s0_pistol
+    kind: step
+    step: s0.pistol
+    verb: 
+    key: 
+    trigger: tutor.step:s0.pistol
+    stage: 0
+    text: Pistol first. Lay it on the black mat, flat.
+    clip: {fileID: 8300000, guid: d47b0abb1979581af76a4b0dcaab57a8, type: 3}
+  - id: tutor_s0_roll
+    kind: step
+    step: s0.roll
+    verb: 
+    key: 
+    trigger: tutor.step:s0.roll
+    stage: 0
+    text: Your tool roll. Undo the strap, then roll it out.
+    clip: {fileID: 8300000, guid: 0cafb8341dc8bcb56718447e1dccbbf5, type: 3}
+  - id: tutor_s0_salvage
+    kind: step
+    step: s0.salvage
+    verb: 
+    key: 
+    trigger: tutor.step:s0.salvage
+    stage: 0
+    text: Servo, both alloy sheets and the vial. Into the tray.
+    clip: {fileID: 8300000, guid: 955ebbe9447976184c4d88bf02baacef, type: 3}
+  - id: tutor_s0_salvage_vial
+    kind: action
+    step: s0.salvage
+    verb: 
+    key: vial
+    trigger: tutor.action:s0.salvage:vial
+    stage: 0
+    text: Vial's round. Set it down gentle or it rolls.
+    clip: {fileID: 8300000, guid: 169d38b08c6aca97202832b241dbc972, type: 3}
+  - id: tutor_s0_salvage_r
+    kind: recovery
+    step: s0.salvage.r
+    verb: 
+    key: 
+    trigger: tutor.recovery:s0.salvage.r
+    stage: 0
+    text: It rolled. Pick it up and try again, slower.
+    clip: {fileID: 8300000, guid: 06514631f0ff6b62581092b5528e383c, type: 3}
+  - id: tutor_s0_card_before
+    kind: step
+    step: s0.card_before
+    verb: 
+    key: 
+    trigger: tutor.step:s0.card_before
+    stage: 0
+    text: Pistol up. Three pulses at the card. See how it walks.
+    clip: {fileID: 8300000, guid: fd6907860939518002617834e35385b5, type: 3}
+  - id: tutor_s0_shake_before
+    kind: step
+    step: s0.shake_before
+    verb: 
+    key: 
+    trigger: tutor.step:s0.shake_before
+    stage: 0
+    text: Give it a shake if you like. Hear that rattle.
+    clip: {fileID: 8300000, guid: a9835787f44bb2d63e99a2865d2eace7, type: 3}
+  - id: tutor_s0_cell
+    kind: step
+    step: s0.cell
+    verb: 
+    key: 
+    trigger: tutor.step:s0.cell
+    stage: 0
+    text: Cell out before anything else. Thumb the latch, then pull.
+    clip: {fileID: 8300000, guid: 13ae86f11914ea2254a9125d457a4eeb, type: 3}
+  - id: tutor_seat_verb
+    kind: verb
+    step: 
+    verb: seat
+    key: 
+    trigger: tutor.verb:seat
+    stage: -1
+    text: Take it and carry it over. Square it up and it drops in.
+    clip: {fileID: 8300000, guid: ef2bb0e7dd5418f2a40cbd6e879d663c, type: 3}
+  - id: tutor_turn_verb
+    kind: verb
+    step: 
+    verb: turn
+    key: 
+    trigger: tutor.verb:turn
+    stage: -1
+    text: Hold on it and circle the mouse slow. Feel it bite.
+    clip: {fileID: 8300000, guid: e0869671c9d040ef3c14c17cf954cb0e, type: 3}
+  - id: tutor_point_aim_verb
+    kind: verb
+    step: 
+    verb: point_aim
+    key: 
+    trigger: tutor.verb:point_aim
+    stage: -1
+    text: Hold it on the card. It wanders. Fire when it's on.
+    clip: {fileID: 8300000, guid: 79b590ce15a889819dbdc525c64ae654, type: 3}
+  - id: tutor_point_verb
+    kind: verb
+    step: 
+    verb: point
+    key: 
+    trigger: tutor.verb:point
+    stage: -1
+    text: Tool on the mark, then click. Just the mark.
+    clip: {fileID: 8300000, guid: 1f0e058e1e07a563ca04c7b82e68f86b, type: 3}
+  - id: tutor_flick_verb
+    kind: verb
+    step: 
+    verb: flick
+    key: 
+    trigger: tutor.verb:flick
+    stage: -1
+    text: Hold it and shake the mouse. Short and sharp.
+    clip: {fileID: 8300000, guid: 226e6a03dfd0aea1aec4d0225c644ee4, type: 3}
+  - id: tutor_path_verb
+    kind: verb
+    step: 
+    verb: path
+    key: 
+    trigger: tutor.verb:path
+    stage: -1
+    text: Hold and follow the line. Steady pace, don't rush it.
+    clip: {fileID: 8300000, guid: 6dfaf601fa6857f84fb1896f70a69713, type: 3}
+  - id: tutor_window_strike_verb
+    kind: verb
+    step: 
+    verb: window_strike
+    key: 
+    trigger: tutor.verb:window_strike
+    stage: -1
+    text: Hold to lift, let go to strike. Higher hits harder.
+    clip: {fileID: 8300000, guid: d03789406710455eab98824b55fe1918, type: 3}
+  - id: tutor_window_hold_verb
+    kind: verb
+    step: 
+    verb: window_hold
+    key: 
+    trigger: tutor.verb:window_hold
+    stage: -1
+    text: Hold it down and listen. Let go when it sounds right.
+    clip: {fileID: 8300000, guid: 099669e26e90650c3f4a985492b35931, type: 3}
+  - id: tutor_wipe_verb
+    kind: verb
+    step: 
+    verb: wipe
+    key: 
+    trigger: tutor.verb:wipe
+    stage: -1
+    text: Hold and scrub over it. Keep going till it's bright.
+    clip: {fileID: 8300000, guid: 73a2743ce3fe5f66afe4acab787b5cfb, type: 3}
+  - id: tutor_blocked_refused
+    kind: refused
+    step: 
+    verb: blocked
+    key: 
+    trigger: tutor.refused:blocked
+    stage: -1
+    text: Something's still holding it. Free that first.
+    clip: {fileID: 8300000, guid: d184942bd696b607262e91fe0a7c65f5, type: 3}
+  - id: tutor_not_yet_refused
+    kind: refused
+    step: 
+    verb: not_yet
+    key: 
+    trigger: tutor.refused:not_yet
+    stage: -1
+    text: Not that one yet. Look for what's lit.
+    clip: {fileID: 8300000, guid: 4acc884b297f17af3dc1b07da7379806, type: 3}
+  - id: tutor_needs_tool_refused
+    kind: refused
+    step: 
+    verb: needs_tool
+    key: 
+    trigger: tutor.refused:needs_tool
+    stage: -1
+    text: You'll want a tool for that.
+    clip: {fileID: 8300000, guid: 9b96f6bb5818241f0f977faa14b875ee, type: 3}
+  - id: tutor_wrong_tool_refused
+    kind: refused
+    step: 
+    verb: wrong_tool
+    key: 
+    trigger: tutor.refused:wrong_tool
+    stage: -1
+    text: Wrong tool for that. Put it back.
+    clip: {fileID: 8300000, guid: f0ddf545679685ce000b4853ee3fc97e, type: 3}
+  - id: tutor_s1_clamp
+    kind: step
+    step: s1.clamp
+    verb: 
+    key: 
+    trigger: tutor.step:s1.clamp
+    stage: 1
+    text: Frame in the vise. Snug, not tight, or you'll mark it.
+    clip: {fileID: 8300000, guid: 4602aea66e87b843515344e8d7ffd8fb, type: 3}
+  - id: tutor_s1_bind
+    kind: step
+    step: s1.bind
+    verb: 
+    key: 
+    trigger: tutor.step:s1.bind
+    stage: 1
+    text: Cutters. Snip both wire twists on the old grip.
+    clip: {fileID: 8300000, guid: 640e97f6f001d6062d6f1526c12de2f3, type: 3}
+  - id: tutor_s1_tape
+    kind: step
+    step: s1.tape
+    verb: 
+    key: 
+    trigger: tutor.step:s1.tape
+    stage: 1
+    text: Peel the tape off. Find the loose end and follow it round.
+    clip: {fileID: 8300000, guid: 72a4718cb49986ea5790075304685f2a, type: 3}
+  - id: tutor_s1_screw_a
+    kind: step
+    step: s1.screw_a
+    verb: 
+    key: 
+    trigger: tutor.step:s1.screw_a
+    stage: 1
+    text: Upper screw first. Slotted bit in the driver.
+    clip: {fileID: 8300000, guid: 7ecb05afbfb7b5025cc71db5a1b8097c, type: 3}
+  - id: tutor_s1_screw_a_dish
+    kind: action
+    step: s1.screw_a
+    verb: 
+    key: dish
+    trigger: tutor.action:s1.screw_a:dish
+    stage: 1
+    text: Screws go in the dish. Lose one and you're making another.
+    clip: {fileID: 8300000, guid: e848f35ba6d1b1b4bcc8c11d1a605a2a, type: 3}
+  - id: tutor_s1_screw_b
+    kind: step
+    step: s1.screw_b
+    verb: 
+    key: 
+    trigger: tutor.step:s1.screw_b
+    stage: 1
+    text: Oil on the lower screw first. One drop. Let it soak.
+    clip: {fileID: 8300000, guid: 136ffdc4d8a1305f8d5c1764dcb039b2, type: 3}
+  - id: tutor_s1_screw_b_tap
+    kind: action
+    step: s1.screw_b
+    verb: 
+    key: tap
+    trigger: tutor.action:s1.screw_b:tap
+    stage: 1
+    text: Now tap the driver's head. Two taps. Wakes the thread up.
+    clip: {fileID: 8300000, guid: 4975a94641303942696d7ff6ffde2097, type: 3}
+  - id: tutor_s1_screw_b_r
+    kind: recovery
+    step: s1.screw_b.r
+    verb: 
+    key: 
+    trigger: tutor.recovery:s1.screw_b.r
+    stage: 1
+    text: Slot's gone round. Pliers on the head, back it out slow.
+    clip: {fileID: 8300000, guid: fe6d8841f09792368fb1126bf2e86fc9, type: 3}
+  - id: tutor_s1_scales
+    kind: step
+    step: s1.scales
+    verb: 
+    key: 
+    trigger: tutor.step:s1.scales
+    stage: 1
+    text: Screws are out. Lift both scales off, onto the mat.
+    clip: {fileID: 8300000, guid: e0ebcc705177eef0132b602e4d70d050, type: 3}
+  - id: tutor_s1_lead
+    kind: step
+    step: s1.lead
+    verb: 
+    key: 
+    trigger: tutor.step:s1.lead
+    stage: 1
+    text: Trigger lead. Pinch the tab, not the wire.
+    clip: {fileID: 8300000, guid: 09ee956120c541362b8373fb2fd0378a, type: 3}
+  - id: tutor_s1_pin
+    kind: step
+    step: s1.pin
+    verb: 
+    key: 
+    trigger: tutor.step:s1.pin
+    stage: 1
+    text: Punch on the pin, then the mallet. Three firm taps.
+    clip: {fileID: 8300000, guid: 2478f54fe7c3a87b8a914ba40d863518, type: 3}
+  - id: tutor_s1_pin_pull
+    kind: action
+    step: s1.pin
+    verb: 
+    key: pull
+    trigger: tutor.action:s1.pin:pull
+    stage: 1
+    text: Pliers now. Pull it the rest of the way.
+    clip: {fileID: 8300000, guid: fd64d6c7551e39021ca8ea954a76f3da, type: 3}
+  - id: tutor_s1_pin_r
+    kind: recovery
+    step: s1.pin.r
+    verb: 
+    key: 
+    trigger: tutor.recovery:s1.pin.r
+    stage: 1
+    text: Bent it. On the vise, tap it straight.
+    clip: {fileID: 8300000, guid: 82d0bcaf27e681ae25324f7d57b7f731, type: 3}
+  - id: tutor_s1_housing
+    kind: step
+    step: s1.housing
+    verb: 
+    key: 
+    trigger: tutor.step:s1.housing
+    stage: 1
+    text: Slide the housing off. Thumb on that spring, it jumps.
+    clip: {fileID: 8300000, guid: 0a2ffab30c2c2c08ccf9ee35b72add84, type: 3}
+  - id: tutor_s1_inspect
+    kind: step
+    step: s1.inspect
+    verb: 
+    key: 
+    trigger: tutor.step:s1.inspect
+    stage: 1
+    text: Turn the frame round in the vise. Look at the tang.
+    clip: {fileID: 8300000, guid: 90361d9a18bc47c8d7447a1e2333c4c9, type: 3}
+  - id: tutor_s2_swap
+    kind: step
+    step: s2.swap
+    verb: 
+    key: 
+    trigger: tutor.step:s2.swap
+    stage: 2
+    text: Frame to the stand. Servo in the vise.
+    clip: {fileID: 8300000, guid: 205311da9e4239494a54def45439f8e4, type: 3}
+  - id: tutor_s2_dust
+    kind: step
+    step: s2.dust
+    verb: 
+    key: 
+    trigger: tutor.step:s2.dust
+    stage: 2
+    text: Brush it. The screws are under that muck.
+    clip: {fileID: 8300000, guid: e3519fc3c53889fad310e4164345307d, type: 3}
+  - id: tutor_s2_screws
+    kind: step
+    step: s2.screws
+    verb: 
+    key: 
+    trigger: tutor.step:s2.screws
+    stage: 2
+    text: Case screws. Cross bit this time.
+    clip: {fileID: 8300000, guid: 5a0f6cda721f74d43ce2558df02f7575, type: 3}
+  - id: tutor_s2_stripped
+    kind: step
+    step: s2.stripped
+    verb: 
+    key: 
+    trigger: tutor.step:s2.stripped
+    stage: 2
+    text: That one's chewed. Squeeze the pliers first, then turn.
+    clip: {fileID: 8300000, guid: 1aaa8d7bc62fe044bd3a1cd485251a99, type: 3}
+  - id: tutor_s2_pry
+    kind: step
+    step: s2.pry
+    verb: 
+    key: 
+    trigger: tutor.step:s2.pry
+    stage: 2
+    text: Pick in the seam. Three clips. Lean, don't stab.
+    clip: {fileID: 8300000, guid: 8bf84b34611b09f084990780830cbecf, type: 3}
+  - id: tutor_s2_leads
+    kind: step
+    step: s2.leads
+    verb: 
+    key: 
+    trigger: tutor.step:s2.leads
+    stage: 2
+    text: Snip the leads at the board end. On the bands.
+    clip: {fileID: 8300000, guid: adcd4db1c3f70f25e13c2cb8881f699a, type: 3}
+  - id: tutor_s2_board
+    kind: step
+    step: s2.board
+    verb: 
+    key: 
+    trigger: tutor.step:s2.board
+    stage: 2
+    text: Burnt board out. Keep its resistor, bin the rest.
+    clip: {fileID: 8300000, guid: 2efb4c2806aca368d95f71b400b598f8, type: 3}
+  - id: tutor_s2_circlip
+    kind: step
+    step: s2.circlip
+    verb: 
+    key: 
+    trigger: tutor.step:s2.circlip
+    stage: 2
+    text: Circlip next. Pliers. Keep hold or it flies.
+    clip: {fileID: 8300000, guid: 3f89b54e1984e6b214b2d59342f8f3d4, type: 3}
+  - id: tutor_s2_gears
+    kind: step
+    step: s2.gears
+    verb: 
+    key: 
+    trigger: tutor.step:s2.gears
+    stage: 2
+    text: Gears off. Top one first.
+    clip: {fileID: 8300000, guid: 374bae53ca40be5d33204a68cfec5787, type: 3}
+  - id: tutor_s2_trunnion
+    kind: step
+    step: s2.trunnion
+    verb: 
+    key: 
+    trigger: tutor.step:s2.trunnion
+    stage: 2
+    text: Two small screws, then lift the gimbal. That's the prize.
+    clip: {fileID: 8300000, guid: 069339d2c906a7a79808f6824b7d93c9, type: 3}
+  - id: tutor_s2_winding
+    kind: step
+    step: s2.winding
+    verb: 
+    key: 
+    trigger: tutor.step:s2.winding
+    stage: 2
+    text: Wind the copper onto the bobbin. Steady, it snaps.
+    clip: {fileID: 8300000, guid: 5efb9e68261ceac8fd8b7cdf5a318a2f, type: 3}
+  - id: tutor_s3_bath
+    kind: step
+    step: s3.bath
+    verb: 
+    key: 
+    trigger: tutor.step:s3.bath
+    stage: 3
+    text: Gimbal in the jar. Swirl it.
+    clip: {fileID: 8300000, guid: 92fd8491637e1839ad0a349d232ddcd5, type: 3}
+  - id: tutor_s3_brush
+    kind: step
+    step: s3.brush
+    verb: 
+    key: 
+    trigger: tutor.step:s3.brush
+    stage: 3
+    text: Brush the race and both trunnions. Bright metal.
+    clip: {fileID: 8300000, guid: 962a24f6e487673af44bfddce4dfc426, type: 3}
+  - id: tutor_s3_pick
+    kind: step
+    step: s3.pick
+    verb: 
+    key: 
+    trigger: tutor.step:s3.pick
+    stage: 3
+    text: Pick the grit out. Three little holes.
+    clip: {fileID: 8300000, guid: feb3876cacc68b667501729022acfd0e, type: 3}
+  - id: tutor_s3_oil
+    kind: step
+    step: s3.oil
+    verb: 
+    key: 
+    trigger: tutor.step:s3.oil
+    stage: 3
+    text: One drop on each trunnion. One.
+    clip: {fileID: 8300000, guid: 3e3a869729470f17ad5d39891815a3c1, type: 3}
+  - id: tutor_s3_spin
+    kind: step
+    step: s3.spin
+    verb: 
+    key: 
+    trigger: tutor.step:s3.spin
+    stage: 3
+    text: Flick the rotor. Listen to it.
+    clip: {fileID: 8300000, guid: a2a24240e63a12f82dbbeb37cc81155c, type: 3}
+  - id: tutor_s3_trim
+    kind: step
+    step: s3.trim
+    verb: 
+    key: 
+    trigger: tutor.step:s3.trim
+    stage: 3
+    text: Trim the leads at the marks. Sense lead, flush.
+    clip: {fileID: 8300000, guid: d5842a63130c581136154eecc841bd6a, type: 3}
+  - id: tutor_s3_lead_r
+    kind: recovery
+    step: s3.lead.r
+    verb: 
+    key: 
+    trigger: tutor.recovery:s3.lead.r
+    stage: 3
+    text: Frayed lead. Strip it back and twist it tidy.
+    clip: {fileID: 8300000, guid: 3b8915e0033f8b6a5bbf4d7b74bf06b9, type: 3}
+  - id: tutor_s3_strip
+    kind: step
+    step: s3.strip
+    verb: 
+    key: 
+    trigger: tutor.step:s3.strip
+    stage: 3
+    text: Strippers. Squeeze, then pull. Don't bite the copper.
+    clip: {fileID: 8300000, guid: 053297931ce22a84ad8c7e1204d78fd3, type: 3}
+  - id: tutor_s3_tin
+    kind: step
+    step: s3.tin
+    verb: 
+    key: 
+    trigger: tutor.step:s3.tin
+    stage: 3
+    text: Iron and solder. Tin the ends till they shine.
+    clip: {fileID: 8300000, guid: ed06dec35a2e39506b2ca58783f04d32, type: 3}
+  - id: tutor_s3_loop
+    kind: step
+    step: s3.loop
+    verb: 
+    key: 
+    trigger: tutor.step:s3.loop
+    stage: 3
+    text: Leads in the clip. Solder across the resistor, then shrink.
+    clip: {fileID: 8300000, guid: 8199ec4d79ba8dbb1f81b1e122373c78, type: 3}
+  - id: tutor_s3_loop_r
+    kind: recovery
+    step: s3.loop.r
+    verb: 
+    key: 
+    trigger: tutor.recovery:s3.loop.r
+    stage: 3
+    text: Short lead. Splice a bit on. One more joint.
+    clip: {fileID: 8300000, guid: 26951a0e31b4926d289d9572db965ec8, type: 3}
+  - id: tutor_s3_test
+    kind: step
+    step: s3.test
+    verb: 
+    key: 
+    trigger: tutor.step:s3.test
+    stage: 3
+    text: Probes across the resistor. Lamp should light.
+    clip: {fileID: 8300000, guid: afabdc1249126fc28f4d388c6443833d, type: 3}
+  - id: tutor_s3_scribe
+    kind: step
+    step: s3.scribe
+    verb: 
+    key: 
+    trigger: tutor.step:s3.scribe
+    stage: 3
+    text: Old scale on the sheet. Scribe round it.
+    clip: {fileID: 8300000, guid: 913f714cc35fcaf2ac6d1de45ba32e5f, type: 3}
+  - id: tutor_s3_cut
+    kind: step
+    step: s3.cut
+    verb: 
+    key: 
+    trigger: tutor.step:s3.cut
+    stage: 3
+    text: Clamp both sheets. Snips, cut on the line.
+    clip: {fileID: 8300000, guid: d2dc8d7425f5f6c76ec854bafa0cf364, type: 3}
+  - id: tutor_s3_cut_strap
+    kind: action
+    step: s3.cut
+    verb: 
+    key: strap
+    trigger: tutor.action:s3.cut:strap
+    stage: 3
+    text: Strip off the edge first. That's your strap.
+    clip: {fileID: 8300000, guid: bbcbd43a69e143590542e8774ed87665, type: 3}
+  - id: tutor_s3_file
+    kind: step
+    step: s3.file
+    verb: 
+    key: 
+    trigger: tutor.step:s3.file
+    stage: 3
+    text: File to the line. Long strokes. Stop at the line.
+    clip: {fileID: 8300000, guid: 321f3363249c19b2a0ef9f273f8ffd7e, type: 3}
+  - id: tutor_s3_punch
+    kind: step
+    step: s3.punch
+    verb: 
+    key: 
+    trigger: tutor.step:s3.punch
+    stage: 3
+    text: Template back on. Punch each hole mark.
+    clip: {fileID: 8300000, guid: a281ab0c940da216ab941d077fae2259, type: 3}
+  - id: tutor_s3_drill
+    kind: step
+    step: s3.drill
+    verb: 
+    key: 
+    trigger: tutor.step:s3.drill
+    stage: 3
+    text: Four holes. Let the bit cut, don't lean on it.
+    clip: {fileID: 8300000, guid: 1f19f7a40a4dee23968983af9cbd67df, type: 3}
+  - id: tutor_s3_strap
+    kind: step
+    step: s3.strap
+    verb: 
+    key: 
+    trigger: tutor.step:s3.strap
+    stage: 3
+    text: Strap in the vise. Bend it to the mark. Twice.
+    clip: {fileID: 8300000, guid: cff09c97c613384cab6e9d3255679f87, type: 3}
+  - id: tutor_s3_strap_r
+    kind: recovery
+    step: s3.strap.r
+    verb: 
+    key: 
+    trigger: tutor.recovery:s3.strap.r
+    stage: 3
+    text: Cracked. Spare strip's on the mat. Same again.
+    clip: {fileID: 8300000, guid: 8a487c2b3d1fc74607fed65cb9cd1ee3, type: 3}
+  - id: tutor_s4_mould
+    kind: step
+    step: s4.mould
+    verb: 
+    key: 
+    trigger: tutor.step:s4.mould
+    stage: 4
+    text: Tang mould from the rack. Seat it, brush it out.
+    clip: {fileID: 8300000, guid: 295ba9b8ead8b163e9629686fdef5cf3, type: 3}
+  - id: tutor_s4_charge
+    kind: step
+    step: s4.charge
+    verb: 
+    key: 
+    trigger: tutor.step:s4.charge
+    stage: 4
+    text: Offcuts in, then pour the nanites to the line.
+    clip: {fileID: 8300000, guid: e87c249e7e1dfc61ca522c8a44a04ba2, type: 3}
+  - id: tutor_s4_press
+    kind: step
+    step: s4.press
+    verb: 
+    key: 
+    trigger: tutor.step:s4.press
+    stage: 4
+    text: Close and lock it. Pump, then hold.
+    clip: {fileID: 8300000, guid: a2483bf9a5a46e8b775bb6e2587a9011, type: 3}
+  - id: tutor_s4_open
+    kind: step
+    step: s4.open
+    verb: 
+    key: 
+    trigger: tutor.step:s4.open
+    stage: 4
+    text: Vent it first. Pliers, it's hot. Then quench.
+    clip: {fileID: 8300000, guid: cfd03fd6d12b41a11229ed8eb866372d, type: 3}
+  - id: tutor_s4_flash
+    kind: step
+    step: s4.flash
+    verb: 
+    key: 
+    trigger: tutor.step:s4.flash
+    stage: 4
+    text: Knock the sprue off. File the flash. Ease the pocket.
+    clip: {fileID: 8300000, guid: 6db71eb00d03bebbc1f822d0cd8ad22f, type: 3}
+  - id: tutor_s4_pressfit
+    kind: step
+    step: s4.pressfit
+    verb: 
+    key: 
+    trigger: tutor.step:s4.pressfit
+    stage: 4
+    text: Rotor out, then press the gimbal home. Stop at flush.
+    clip: {fileID: 8300000, guid: 0da5f1d6df21ac1dbce9ba107d203cbd, type: 3}
+  - id: tutor_s4_pressfit_r
+    kind: recovery
+    step: s4.pressfit.r
+    verb: 
+    key: 
+    trigger: tutor.recovery:s4.pressfit.r
+    stage: 4
+    text: Cracked the lug. Bead of nanites on it, it'll hold.
+    clip: {fileID: 8300000, guid: 8abc1abd86bbe7662f160b33dd3bb3b3, type: 3}
+  - id: tutor_s5_loop
+    kind: step
+    step: s5.loop
+    verb: 
+    key: 
+    trigger: tutor.step:s5.loop
+    stage: 5
+    text: Tuck the loop in the side channel. Into the clips.
+    clip: {fileID: 8300000, guid: 1d1047e83834b0a4a15996d6f8d335a3, type: 3}
+  - id: tutor_s5_rotor
+    kind: step
+    step: s5.rotor
+    verb: 
+    key: 
+    trigger: tutor.step:s5.rotor
+    stage: 5
+    text: Rotor back in. Ring on, snap it home.
+    clip: {fileID: 8300000, guid: 49875831fa7dc0b03a12118c94b43aeb, type: 3}
+  - id: tutor_s5_strap
+    kind: step
+    step: s5.strap
+    verb: 
+    key: 
+    trigger: tutor.step:s5.strap
+    stage: 5
+    text: Strap over the spine. It clicks.
+    clip: {fileID: 8300000, guid: bc81983adc643f71ef923d9d1ce774f1, type: 3}
+  - id: tutor_s5_plates
+    kind: step
+    step: s5.plates
+    verb: 
+    key: 
+    trigger: tutor.step:s5.plates
+    stage: 5
+    text: Plates on their pegs. Left, turn it over, right.
+    clip: {fileID: 8300000, guid: f56becf3d3fc3bfe593e57fa55f341b7, type: 3}
+  - id: tutor_s5_start
+    kind: step
+    step: s5.start
+    verb: 
+    key: 
+    trigger: tutor.step:s5.start
+    stage: 5
+    text: Start the screws by hand. Feel them catch.
+    clip: {fileID: 8300000, guid: 085ca1d6951163a52969a57f0ac79318, type: 3}
+  - id: tutor_s5_torque
+    kind: step
+    step: s5.torque
+    verb: 
+    key: 
+    trigger: tutor.step:s5.torque
+    stage: 5
+    text: Drive them home, then torque. Stop when it pitches up.
+    clip: {fileID: 8300000, guid: 2fd19a56201c9646c8beb5729e17360b, type: 3}
+  - id: tutor_s5_seam
+    kind: step
+    step: s5.seam
+    verb: 
+    key: 
+    trigger: tutor.step:s5.seam
+    stage: 5
+    text: Applicator along both seams. Steady.
+    clip: {fileID: 8300000, guid: b016c77893c1bbbc2ba11f5068493f1a, type: 3}
+  - id: tutor_s5_cure
+    kind: step
+    step: s5.cure
+    verb: 
+    key: 
+    trigger: tutor.step:s5.cure
+    stage: 5
+    text: Lamp over. Ten seconds. Leave it be.
+    clip: {fileID: 8300000, guid: 3ef0db6a350b34fff46cf86a8ed1a4c5, type: 3}
+  - id: tutor_s5_damp
+    kind: step
+    step: s5.damp
+    verb: 
+    key: 
+    trigger: tutor.step:s5.damp
+    stage: 5
+    text: Tilt it hard. It should swing once and stop.
+    clip: {fileID: 8300000, guid: 11a93c6bb86e4b1c467e152f40b85a4a, type: 3}
+  - id: tutor_s5_damp_r
+    kind: recovery
+    step: s5.damp.r
+    verb: 
+    key: 
+    trigger: tutor.recovery:s5.damp.r
+    stage: 5
+    text: Lead's pinched. Ease it back along its channel.
+    clip: {fileID: 8300000, guid: 7b49d0f41a52d8f84dbff5fe534a3138, type: 3}
+  - id: tutor_s6_slide
+    kind: step
+    step: s6.slide
+    verb: 
+    key: 
+    trigger: tutor.step:s6.slide
+    stage: 6
+    text: Frame back in the vise. Grip up onto the tang.
+    clip: {fileID: 8300000, guid: 517b1cae7b4d27b605744a89482f4f81, type: 3}
+  - id: tutor_s6_plug
+    kind: step
+    step: s6.plug
+    verb: 
+    key: 
+    trigger: tutor.step:s6.plug
+    stage: 6
+    text: Lead down the back channel. Plug it, right way up.
+    clip: {fileID: 8300000, guid: 41023d81fe3339f58ee38cf90c426bea, type: 3}
+  - id: tutor_s6_pin
+    kind: step
+    step: s6.pin
+    verb: 
+    key: 
+    trigger: tutor.step:s6.pin
+    stage: 6
+    text: Pin back in. Two taps.
+    clip: {fileID: 8300000, guid: 4eca7d3af65bf73d2bca5722af74dbb3, type: 3}
+  - id: tutor_s6_pin_r
+    kind: recovery
+    step: s6.pin.r
+    verb: 
+    key: 
+    trigger: tutor.recovery:s6.pin.r
+    stage: 6
+    text: Pin's proud. Tap it flush.
+    clip: {fileID: 8300000, guid: 7e73d8fa5d6aa07f0d7160ca9d62dd43, type: 3}
+  - id: tutor_s6_screws
+    kind: step
+    step: s6.screws
+    verb: 
+    key: 
+    trigger: tutor.step:s6.screws
+    stage: 6
+    text: New screws from the dish. Cross bit.
+    clip: {fileID: 8300000, guid: 336e408badd73682e378874454338579, type: 3}
+  - id: tutor_s6_cell
+    kind: step
+    step: s6.cell
+    verb: 
+    key: 
+    trigger: tutor.step:s6.cell
+    stage: 6
+    text: Old bits in the bin. Pistol on the mat. Cell in.
+    clip: {fileID: 8300000, guid: 3b7d860737b941b81fcfb3fb28e26c18, type: 3}
+  actions:
+  - key: s0.card_before:pulses
+    value: Hold the pistol on the card and click to fire
+  - key: s0.cell:cell
+    value: Drag the charge cell out onto the insulated pad
+  - key: s0.cell:latch
+    value: Hold left on the cell latch and circle the mouse to open it
+  - key: s0.pistol:lay
+    value: Drag the pistol onto the black work mat and let go
+  - key: s0.roll:unroll
+    value: Drag the tool roll flat onto the bench to unroll it
+  - key: s0.roll:untie
+    value: Hold left on the tool roll strap and circle the mouse slowly to untie it
+  - key: s0.salvage.r:vial
+    value: Drag the nanite vial to the tray and let go (the wheel turns it to fit)
+  - key: s0.salvage:servo
+    value: Drag the servo to the tray and let go (the wheel turns it to fit)
+  - key: s0.salvage:sheet_a
+    value: Drag the alloy sheet to the tray and let go (the wheel turns it to fit)
+  - key: s0.salvage:sheet_b
+    value: Drag the second alloy sheet to the tray and let go (the wheel turns it to fit)
+  - key: s0.salvage:vial
+    value: Drag the nanite vial to the tray and let go (the wheel turns it to fit)
+  - key: s0.shake_before:shake
+    value: 'Optional: hold the pistol up and shake the mouse side to side to hear it rattle'
+  - key: s1.bind:snip
+    value: With the wire cutters, click each lit wire twist
+  - key: s1.bind:snip_a
+    value: With the wire cutters, click the lit wire twist
+  - key: s1.bind:snip_b
+    value: With the wire cutters, click the second lit wire twist
+  - key: s1.clamp:set
+    value: Drag the pistol to the vise jaws and let go (the wheel turns it to fit)
+  - key: s1.clamp:snug
+    value: Hold left on the vise handle and circle the mouse until the jaws are snug, then let go (not too tight)
+  - key: s1.housing.r:spring
+    value: Drag the spring to its outline on the parts mat and let go (the wheel turns it to fit)
+  - key: s1.housing:slide
+    value: Drag the backstrap housing to its outline on the parts mat and let go (the wheel turns it to fit)
+  - key: s1.housing:spring
+    value: Drag the spring to its outline on the parts mat and let go (the wheel turns it to fit)
+  - key: s1.inspect:find
+    value: Hold left on the vise and circle the mouse to turn the frame round until you see the crack
+  - key: s1.lead:unplug
+    value: Drag the trigger lead plug off and away
+  - key: s1.pin.r:anvil
+    value: Drag the housing pin to the vise jaws and let go (the wheel turns it to fit)
+  - key: s1.pin.r:back
+    value: Drag the housing pin to its outline on the parts mat and let go (the wheel turns it to fit)
+  - key: s1.pin.r:straighten
+    value: With the mallet, hold left to lift and let go to strike
+  - key: s1.pin:pull
+    value: With the pliers, drag the housing pin to its outline on the parts mat and let go (the wheel turns it to fit)
+  - key: s1.pin:punch
+    value: Drag the punch to the housing pin and let go (the wheel turns it to fit)
+  - key: s1.pin:taps
+    value: With the mallet, hold left to lift and let go to strike
+  - key: s1.scales:left
+    value: Drag the left scale to its outline on the parts mat and let go (the wheel turns it to fit)
+  - key: s1.scales:right
+    value: Drag the right scale to its outline on the parts mat and let go (the wheel turns it to fit)
+  - key: s1.screw_a:dish
+    value: Drag the upper grip screw to the magnetic dish and let go (the wheel turns it to fit)
+  - key: s1.screw_a:turn
+    value: With the screwdriver, hold left on the upper grip screw and circle the mouse slowly to undo it
+  - key: s1.screw_b.r:pliers
+    value: With the pliers, hold left on the lower grip screw and circle the mouse slowly to undo it
+  - key: s1.screw_b:dish
+    value: Drag the lower grip screw to the magnetic dish and let go (the wheel turns it to fit)
+  - key: s1.screw_b:oil
+    value: 'With the oil dropper, click the lower screw head: one drop'
+  - key: s1.screw_b:tap
+    value: 'With the screwdriver on the lower screw, hold left to lift and let go to tap it: two taps'
+  - key: s1.screw_b:turn
+    value: With the screwdriver, hold left on the lower grip screw and circle the mouse slowly to undo it
+  - key: s1.tape:peel
+    value: Hold left on the loose end of the tape and follow the lit line round the grip at a steady pace
+  - key: s2.board:bin
+    value: Drag the burnt board to the scrap bin and let go (the wheel turns it to fit)
+  - key: s2.board:lift
+    value: Drag the burnt board to its outline on the parts mat and let go (the wheel turns it to fit)
+  - key: s2.board:snip
+    value: With the wire cutters, click each lit mark
+  - key: s2.board:unplug
+    value: Drag the board plug off and away
+  - key: s2.circlip.r:find
+    value: Drag the circlip to its outline on the parts mat and let go (the wheel turns it to fit)
+  - key: s2.circlip:set
+    value: Drag the circlip to its outline on the parts mat and let go (the wheel turns it to fit)
+  - key: s2.circlip:spring
+    value: With the pliers, hold left on the circlip; let go when it looks and sounds right
+  - key: s2.dust:lid
+    value: With the wire brush, hold left and scrub over the dirty patch until it is clean
+  - key: s2.dust:side
+    value: With the wire brush, hold left and scrub over the dirty patch until it is clean
+  - key: s2.gears:low
+    value: Drag the bottom gear to the scrap bin and let go (the wheel turns it to fit)
+  - key: s2.gears:mid
+    value: Drag the middle gear to the scrap bin and let go (the wheel turns it to fit)
+  - key: s2.gears:top
+    value: Drag the top gear to the scrap bin and let go (the wheel turns it to fit)
+  - key: s2.leads:snip
+    value: With the wire cutters, click each lit mark
+  - key: s2.pry:clip_1
+    value: With the pick, hold left on the first case clip; let go when it looks and sounds right
+  - key: s2.pry:clip_2
+    value: With the pick, hold left on the second case clip; let go when it looks and sounds right
+  - key: s2.pry:clip_3
+    value: With the pick, hold left on the third case clip; let go when it looks and sounds right
+  - key: s2.pry:lid
+    value: Drag the case lid to its outline on the parts mat and let go (the wheel turns it to fit)
+  - key: s2.screws:a_dish
+    value: Drag the case screw to the magnetic dish and let go (the wheel turns it to fit)
+  - key: s2.screws:a_turn
+    value: With the screwdriver, hold left on the case screw and circle the mouse slowly to undo it
+  - key: s2.screws:b_dish
+    value: Drag the case screw to the magnetic dish and let go (the wheel turns it to fit)
+  - key: s2.screws:b_turn
+    value: With the screwdriver, hold left on the case screw and circle the mouse slowly to undo it
+  - key: s2.screws:c_dish
+    value: Drag the case screw to the magnetic dish and let go (the wheel turns it to fit)
+  - key: s2.screws:c_turn
+    value: With the screwdriver, hold left on the case screw and circle the mouse slowly to undo it
+  - key: s2.stripped:dish
+    value: Drag the chewed screw to the magnetic dish and let go (the wheel turns it to fit)
+  - key: s2.stripped:grip
+    value: With the pliers on the chewed screw, hold left to squeeze; let go when they bite
+  - key: s2.stripped:turn
+    value: With the pliers, hold left on the chewed screw and circle the mouse slowly to undo it
+  - key: s2.swap:frame
+    value: Drag the pistol to the cradle stand and let go (the wheel turns it to fit)
+  - key: s2.swap:open
+    value: Hold left on the vise handle and circle the mouse the other way to open the jaws
+  - key: s2.swap:servo
+    value: Drag the servo to the vise jaws and let go (the wheel turns it to fit)
+  - key: s2.swap:snug
+    value: Hold left on the vise handle and circle the mouse until it is snug, then let go
+  - key: s2.trunnion:a_dish
+    value: Drag the trunnion screw to the magnetic dish and let go (the wheel turns it to fit)
+  - key: s2.trunnion:a_turn
+    value: With the screwdriver, hold left on the trunnion screw and circle the mouse slowly to undo it
+  - key: s2.trunnion:b_dish
+    value: Drag the trunnion screw to the magnetic dish and let go (the wheel turns it to fit)
+  - key: s2.trunnion:b_turn
+    value: With the screwdriver, hold left on the trunnion screw and circle the mouse slowly to undo it
+  - key: s2.trunnion:lift
+    value: Drag the gimbal to the black work mat and let go (the wheel turns it to fit)
+  - key: s2.winding:bin
+    value: Drag the servo to the scrap bin and let go (the wheel turns it to fit)
+  - key: s2.winding:bobbin
+    value: Drag the bobbin to the servo and let go (the wheel turns it to fit)
+  - key: s2.winding:open
+    value: Hold left on the vise handle and circle the mouse to open the jaws
+  - key: s2.winding:set
+    value: Drag the bobbin to its outline on the parts mat and let go (the wheel turns it to fit)
+  - key: s2.winding:wind
+    value: Hold left on the bobbin and circle the mouse slowly to turn it
+  - key: s3.bath:dip
+    value: Drag the gimbal to the solvent jar and let go (the wheel turns it to fit)
+  - key: s3.bath:out
+    value: Drag the gimbal to the black work mat and let go (the wheel turns it to fit)
+  - key: s3.bath:swirl
+    value: Hold left on the gimbal in the jar and circle the mouse to swirl it
+  - key: s3.brush:race
+    value: With the wire brush, hold left and scrub over the dirty patch until it is clean
+  - key: s3.brush:trunnion_a
+    value: With the wire brush, hold left and scrub over the dirty patch until it is clean
+  - key: s3.brush:trunnion_b
+    value: With the wire brush, hold left and scrub over the dirty patch until it is clean
+  - key: s3.cut:clamp
+    value: Drag the alloy sheet to the vise jaws and let go (the wheel turns it to fit)
+  - key: s3.cut:cut
+    value: With the snips, hold left at the start of the lit line and follow it to the end at a steady pace
+  - key: s3.cut:snug
+    value: Hold left on the vise handle and circle the mouse until it is snug, then let go
+  - key: s3.cut:stack
+    value: Drag the second alloy sheet to the other sheet and let go (the wheel turns it to fit)
+  - key: s3.cut:strap
+    value: With the snips, hold left at the start of the lit line and follow it to the end at a steady pace
+  - key: s3.drill:hole_1
+    value: With the hand drill, hold left on the hole slug and circle the mouse slowly to turn it
+  - key: s3.drill:hole_2
+    value: With the hand drill, hold left on the hole slug and circle the mouse slowly to turn it
+  - key: s3.drill:hole_3
+    value: With the hand drill, hold left on the hole slug and circle the mouse slowly to turn it
+  - key: s3.drill:hole_4
+    value: With the hand drill, hold left on the hole slug and circle the mouse slowly to turn it
+  - key: s3.drill:open
+    value: Hold left on the vise handle and circle the mouse to open the jaws
+  - key: s3.drill:out
+    value: Drag the left plate to the work mat and let go (the wheel turns it to fit)
+  - key: s3.file:strokes
+    value: With the flat file, hold left on the left plate; let go when it looks and sounds right
+  - key: s3.lead.r:strip
+    value: With the wire strippers, hold left on the trigger lead plug; let go when it looks and sounds right
+  - key: s3.loop.r:splice
+    value: With the soldering iron, hold left on the lead; let go when it looks and sounds right
+  - key: s3.loop:clip
+    value: Drag the resistor to the third-hand clip and let go (the wheel turns it to fit)
+  - key: s3.loop:joint_a
+    value: With the soldering iron, hold left on the lead; let go when it looks and sounds right
+  - key: s3.loop:joint_b
+    value: With the soldering iron, hold left on the lead; let go when it looks and sounds right
+  - key: s3.loop:shrink
+    value: With the soldering iron, hold left on the resistor; let go when it looks and sounds right
+  - key: s3.oil:drops
+    value: With the oil dropper, click each lit mark
+  - key: s3.pick:grit
+    value: With the pick, click each lit mark
+  - key: s3.punch:back
+    value: Drag the left scale to its outline on the parts mat and let go (the wheel turns it to fit)
+  - key: s3.punch:marks
+    value: With the punch, click each lit mark
+  - key: s3.punch:template
+    value: Drag the left scale to the plates and let go (the wheel turns it to fit)
+  - key: s3.scribe:back
+    value: Drag the left scale to its outline on the parts mat and let go (the wheel turns it to fit)
+  - key: s3.scribe:scribe
+    value: With the scribe, hold left at the start of the lit line and follow it to the end at a steady pace
+  - key: s3.scribe:sheet
+    value: Drag the alloy sheet to the work mat and let go (the wheel turns it to fit)
+  - key: s3.scribe:template
+    value: Drag the left scale to the other sheet and let go (the wheel turns it to fit)
+  - key: s3.spin.r:race
+    value: With the wire brush, hold left and scrub over the dirty patch until it is clean
+  - key: s3.spin:flick
+    value: Hold the gimbal up and flick the mouse sharply, then listen
+  - key: s3.strap.r:bend_1
+    value: Hold left on the spare strip; let go when it looks and sounds right
+  - key: s3.strap.r:bend_2
+    value: Hold left on the strap; let go when it looks and sounds right
+  - key: s3.strap.r:open
+    value: Hold left on the vise handle and circle the mouse to open the jaws
+  - key: s3.strap.r:out
+    value: Drag the strap to the work mat and let go (the wheel turns it to fit)
+  - key: s3.strap:bend_1
+    value: Hold left on the alloy strip; let go when it looks and sounds right
+  - key: s3.strap:bend_2
+    value: Hold left on the strap; let go when it looks and sounds right
+  - key: s3.strap:clamp
+    value: Drag the alloy strip to the vise jaws and let go (the wheel turns it to fit)
+  - key: s3.strap:open
+    value: Hold left on the vise handle and circle the mouse to open the jaws
+  - key: s3.strap:out
+    value: Drag the strap to the work mat and let go (the wheel turns it to fit)
+  - key: s3.strap:snug
+    value: Hold left on the vise handle and circle the mouse until it is snug, then let go
+  - key: s3.strip:a_pull
+    value: With the strippers still closed, drag away from the lead to pull the insulation off
+  - key: s3.strip:a_squeeze
+    value: With the wire strippers, hold left on the insulation slug; let go when it looks and sounds right
+  - key: s3.strip:b_pull
+    value: With the strippers still closed, drag away from the lead to pull the insulation off
+  - key: s3.strip:b_squeeze
+    value: With the wire strippers, hold left on the insulation slug; let go when it looks and sounds right
+  - key: s3.test.r:reflow
+    value: With the soldering iron, hold left on the damper loop; let go when it looks and sounds right
+  - key: s3.test:probe
+    value: With the tester's probes, click each lit mark
+  - key: s3.tin:a
+    value: With the soldering iron, hold left on the lead; let go when it looks and sounds right
+  - key: s3.tin:b
+    value: With the soldering iron, hold left on the lead; let go when it looks and sounds right
+  - key: s3.tin:legs
+    value: With the soldering iron, hold left on the resistor; let go when it looks and sounds right
+  - key: s3.trim:trim
+    value: With the wire cutters, click each lit mark
+  - key: s4.charge:back
+    value: Drag the nanite vial to the tray and let go (the wheel turns it to fit)
+  - key: s4.charge:offcuts
+    value: Drag the alloy sheet to the mould and let go (the wheel turns it to fit)
+  - key: s4.charge:pour
+    value: Hold left to tip the vial and pour; let go at the line
+  - key: s4.charge:raise
+    value: Drag the nanite vial to the press and let go (the wheel turns it to fit)
+  - key: s4.charge:uncork
+    value: Drag the vial stopper off and away
+  - key: s4.flash:ease
+    value: With the round file, hold left on the grip; let go when it looks and sounds right
+  - key: s4.flash:file
+    value: With the flat file, hold left at the start of the lit line and follow it to the end at a steady pace
+  - key: s4.flash:knock
+    value: With the mallet, hold left to lift and let go to strike
+  - key: s4.mould:brush
+    value: With the wire brush, hold left and scrub over the dirty patch until it is clean
+  - key: s4.mould:mould
+    value: Drag the tang mould to the press and let go (the wheel turns it to fit)
+  - key: s4.open:open
+    value: Hold left on the press lever and circle the mouse slowly to undo it
+  - key: s4.open:out
+    value: Drag the grip to the black work mat and let go (the wheel turns it to fit)
+  - key: s4.open:quench
+    value: With the pliers, drag the grip to the solvent jar and let go (the wheel turns it to fit)
+  - key: s4.open:vent
+    value: Hold left on the press vent; let go when the hiss stops
+  - key: s4.press:close
+    value: Hold left on the press lever and circle the mouse to close and lock the press
+  - key: s4.press:knit
+    value: Hold left to pump the press into the green band and keep it there until the core has knit
+  - key: s4.pressfit.r:mend
+    value: With the nanite applicator, click each lit mark
+  - key: s4.pressfit:clamp
+    value: Drag the grip to the vise jaws and let go (the wheel turns it to fit)
+  - key: s4.pressfit:open
+    value: Hold left on the vise handle and circle the mouse to open the jaws
+  - key: s4.pressfit:out
+    value: Drag the grip to the black work mat and let go (the wheel turns it to fit)
+  - key: s4.pressfit:press
+    value: Hold left on the vise handle and circle the mouse until it is snug, then let go
+  - key: s4.pressfit:ring
+    value: With the pliers, hold left on the retaining ring; let go when it looks and sounds right
+  - key: s4.pressfit:rotor
+    value: Drag the rotor to its outline on the parts mat and let go (the wheel turns it to fit)
+  - key: s4.pressfit:start
+    value: Drag the gimbal to the grip and let go (the wheel turns it to fit)
+  - key: s5.cure:away
+    value: Hold left on the cure lamp arm and circle the mouse to swing it away
+  - key: s5.cure:swing
+    value: Hold left on the cure lamp arm and circle the mouse to swing the lamp over the grip
+  - key: s5.cure:wait
+    value: 'Leave the grip under the lamp for ten seconds: put tools back meanwhile, do not lift it'
+  - key: s5.damp.r:ease
+    value: Hold left at the start of the lit line and follow it to the end at a steady pace
+  - key: s5.damp:tilt
+    value: 'Hold the grip up and flick the mouse sharply to tilt it: it should swing once and stop'
+  - key: s5.loop:tuck
+    value: Hold left at the start of the lit line and follow it to the end at a steady pace
+  - key: s5.plates:left
+    value: Drag the left plate to the grip and let go (the wheel turns it to fit)
+  - key: s5.plates:over
+    value: Drag the grip to the black work mat and let go (the wheel turns it to fit)
+  - key: s5.plates:right
+    value: Drag the right plate to the grip and let go (the wheel turns it to fit)
+  - key: s5.rotor.r:find
+    value: Drag the retaining ring to its socket and let go (the wheel turns it to fit)
+  - key: s5.rotor:ring
+    value: With the pliers, drag the retaining ring to its socket and let go (the wheel turns it to fit)
+  - key: s5.rotor:rotor
+    value: Drag the rotor to its socket and let go (the wheel turns it to fit)
+  - key: s5.rotor:snap
+    value: With the pliers, hold left on the retaining ring; let go when it looks and sounds right
+  - key: s5.seam:back
+    value: Drag the grip to the black work mat and let go (the wheel turns it to fit)
+  - key: s5.seam:left
+    value: With the nanite applicator, hold left at the start of the lit line and follow it to the end at a steady pace
+  - key: s5.seam:right
+    value: With the nanite applicator, hold left at the start of the lit line and follow it to the end at a steady pace
+  - key: s5.start:back
+    value: Drag the grip to the black work mat and let go (the wheel turns it to fit)
+  - key: s5.start:l_c
+    value: Drag the case screw to the grip and let go (the wheel turns it to fit)
+  - key: s5.start:l_d
+    value: Drag the case screw to the grip and let go (the wheel turns it to fit)
+  - key: s5.start:r_c
+    value: Drag the case screw to the grip and let go (the wheel turns it to fit)
+  - key: s5.start:r_d
+    value: Drag the chewed screw to the grip and let go (the wheel turns it to fit)
+  - key: s5.strap:strap
+    value: Drag the strap to the grip and let go (the wheel turns it to fit)
+  - key: s5.torque:l_c_torque
+    value: With the screwdriver, hold left on the case screw; let go when it looks and sounds right
+  - key: s5.torque:l_c_turn
+    value: With the screwdriver, hold left on the case screw and circle the mouse slowly to turn it in
+  - key: s5.torque:l_d_torque
+    value: With the screwdriver, hold left on the case screw; let go when it looks and sounds right
+  - key: s5.torque:l_d_turn
+    value: With the screwdriver, hold left on the case screw and circle the mouse slowly to turn it in
+  - key: s5.torque:over
+    value: Drag the grip to the black work mat and let go (the wheel turns it to fit)
+  - key: s5.torque:r_c_torque
+    value: With the screwdriver, hold left on the case screw; let go when it looks and sounds right
+  - key: s5.torque:r_c_turn
+    value: With the screwdriver, hold left on the case screw and circle the mouse slowly to turn it in
+  - key: s5.torque:r_d_torque
+    value: With the pliers, hold left on the chewed screw; let go when it looks and sounds right
+  - key: s5.torque:r_d_turn
+    value: With the pliers, hold left on the chewed screw and circle the mouse slowly to turn it
+  - key: s6.cell:cell
+    value: Drag the charge cell to its socket and let go (the wheel turns it to fit)
+  - key: s6.cell:clear
+    value: Drag the backstrap housing to the scrap bin and let go (the wheel turns it to fit)
+  - key: s6.cell:latch
+    value: Hold left on the cell latch and circle the mouse slowly to undo it
+  - key: s6.cell:mat
+    value: Drag the pistol to the black work mat and let go (the wheel turns it to fit)
+  - key: s6.cell:open
+    value: Hold left on the vise handle and circle the mouse to open the jaws
+  - key: s6.pin.r:flush
+    value: With the mallet, hold left to lift and let go to strike
+  - key: s6.pin:start
+    value: Drag the housing pin to its socket and let go (the wheel turns it to fit)
+  - key: s6.pin:taps
+    value: With the mallet, hold left to lift and let go to strike
+  - key: s6.plug:plug
+    value: Drag the trigger lead plug to its socket and let go (the wheel turns it to fit)
+  - key: s6.plug:route
+    value: Hold left at the start of the lit line and follow it to the end at a steady pace
+  - key: s6.screws:a_start
+    value: Drag the new screw to its socket and let go (the wheel turns it to fit)
+  - key: s6.screws:a_torque
+    value: With the screwdriver, hold left on the new screw; let go when it looks and sounds right
+  - key: s6.screws:a_turn
+    value: With the screwdriver, hold left on the new screw and circle the mouse slowly to turn it in
+  - key: s6.screws:b_start
+    value: Drag the new screw to its socket and let go (the wheel turns it to fit)
+  - key: s6.screws:b_torque
+    value: With the screwdriver, hold left on the new screw; let go when it looks and sounds right
+  - key: s6.screws:b_turn
+    value: With the screwdriver, hold left on the new screw and circle the mouse slowly to turn it in
+  - key: s6.slide:clamp
+    value: Drag the pistol to the vise jaws and let go (the wheel turns it to fit)
+  - key: s6.slide:grip
+    value: Drag the grip to its socket and let go (the wheel turns it to fit)
+  - key: s6.slide:snug
+    value: Hold left on the vise handle and circle the mouse until it is snug, then let go
+  - key: s7.card_after:pulses
+    value: Hold the pistol on the card and click to fire
+  - key: s7.inspect:look
+    value: 'Optional: pick the pistol up and turn it with the wheel to look it over'
+  - key: s7.leave:holster
+    value: Put the pistol in the holster, or press Esc to step back
+  - key: s7.shake:shake
+    value: Hold the pistol up and shake the mouse side to side
+  names:
+  - key: fixtures.lamp_head
+    value: the cure lamp
+  - key: fixtures.mould_tang
+    value: the tang mould
+  - key: fixtures.press_lever
+    value: the press lever
+  - key: fixtures.press_vents
+    value: the press vent
+  - key: fixtures.vise
+    value: the vise
+  - key: fixtures.vise_screw
+    value: the vise handle
+  - key: grip.core
+    value: the grip
+  - key: grip.screw_a
+    value: the new screw
+  - key: grip.screw_b
+    value: the new screw
+  - key: materials.bobbin
+    value: the bobbin
+  - key: materials.core_flash
+    value: the flash
+  - key: materials.core_sprue
+    value: the sprue
+  - key: materials.lead_a_slug
+    value: the insulation slug
+  - key: materials.lead_a_strands
+    value: the lead
+  - key: materials.lead_b_slug
+    value: the insulation slug
+  - key: materials.lead_b_strands
+    value: the lead
+  - key: materials.loop_resistor
+    value: the damper loop
+  - key: materials.resistor
+    value: the resistor
+  - key: materials.sheet_a
+    value: the alloy sheet
+  - key: materials.sheet_a_plate
+    value: the left plate
+  - key: materials.sheet_a_plug_1
+    value: the hole slug
+  - key: materials.sheet_a_plug_2
+    value: the hole slug
+  - key: materials.sheet_a_plug_3
+    value: the hole slug
+  - key: materials.sheet_a_plug_4
+    value: the hole slug
+  - key: materials.sheet_a_strap
+    value: the alloy strip
+  - key: materials.sheet_b
+    value: the second alloy sheet
+  - key: materials.sheet_b_plate
+    value: the right plate
+  - key: materials.sheet_b_strap
+    value: the spare strip
+  - key: materials.strap_bent
+    value: the strap
+  - key: materials.strap_bent_1
+    value: the strap
+  - key: materials.vial
+    value: the nanite vial
+  - key: materials.vial_stopper
+    value: the vial stopper
+  - key: pistol.cell
+    value: the charge cell
+  - key: pistol.cell_latch
+    value: the cell latch
+  - key: pistol.frame
+    value: the pistol
+  - key: pistol.housing
+    value: the backstrap housing
+  - key: pistol.housing_pin
+    value: the housing pin
+  - key: pistol.housing_spring
+    value: the spring
+  - key: pistol.lead
+    value: the trigger lead
+  - key: pistol.lead_plug
+    value: the trigger lead plug
+  - key: pistol.scale_l
+    value: the left scale
+  - key: pistol.scale_r
+    value: the right scale
+  - key: pistol.screw_grip_a
+    value: the upper grip screw
+  - key: pistol.screw_grip_b
+    value: the lower grip screw
+  - key: pistol.wrap
+    value: the tape and leather wrap
+  - key: servo.board
+    value: the burnt board
+  - key: servo.case_body
+    value: the servo
+  - key: servo.case_lid
+    value: the case lid
+  - key: servo.circlip
+    value: the circlip
+  - key: servo.clip_1
+    value: the first case clip
+  - key: servo.clip_2
+    value: the second case clip
+  - key: servo.clip_3
+    value: the third case clip
+  - key: servo.gear_low
+    value: the bottom gear
+  - key: servo.gear_mid
+    value: the middle gear
+  - key: servo.gear_top
+    value: the top gear
+  - key: servo.gimbal_cradle
+    value: the gimbal
+  - key: servo.gimbal_race
+    value: the gimbal race
+  - key: servo.gimbal_retainer
+    value: the retaining ring
+  - key: servo.gimbal_rotor
+    value: the rotor
+  - key: servo.lead_plug
+    value: the board plug
+  - key: servo.screw_case_a
+    value: the case screw
+  - key: servo.screw_case_b
+    value: the case screw
+  - key: servo.screw_case_c
+    value: the case screw
+  - key: servo.screw_case_d
+    value: the chewed screw
+  - key: servo.screw_trunnion_a
+    value: the trunnion screw
+  - key: servo.screw_trunnion_b
+    value: the trunnion screw
+  - key: tools.punch
+    value: the punch
+  - key: tools.roll
+    value: the tool roll
+  tools:
+  - key: tool:applicator
+    value: the nanite applicator
+  - key: tool:brush
+    value: the wire brush
+  - key: tool:cutters
+    value: the wire cutters
+  - key: tool:drill
+    value: the hand drill
+  - key: tool:file
+    value: the flat file
+  - key: tool:file_round
+    value: the round file
+  - key: tool:mallet
+    value: the mallet
+  - key: tool:oil
+    value: the oil dropper
+  - key: tool:pick
+    value: the pick
+  - key: tool:pliers
+    value: the pliers
+  - key: tool:probe
+    value: the tester's probes
+  - key: tool:punch
+    value: the punch
+  - key: tool:screwdriver
+    value: the screwdriver
+  - key: tool:scribe
+    value: the scribe
+  - key: tool:snips
+    value: the snips
+  - key: tool:solder
+    value: the soldering iron
+  - key: tool:strippers
+    value: the wire strippers
+  shots:
+  - key: card
+    value: the test card on the board
+  - key: mat
+    value: the work mat, close
+  - key: over
+    value: a view from above
+  - key: parts
+    value: the parts mat
+  - key: press
+    value: the nanite press
+  - key: press_low
+    value: the nanite press, from low down
+  - key: press_side
+    value: the nanite press, from the side
+  - key: roll
+    value: the tool roll
+  - key: room
+    value: the shop
+  - key: tester
+    value: the bench tester
+  - key: tray
+    value: the tray
+  - key: vise
+    value: the vise
+  - key: vise_l
+    value: the vise, from the left
+  - key: vise_r
+    value: the vise, from the right
+  - key: wide
+    value: the whole bench
+  - key: work
+    value: the work mat
+  prefix:
+  - key: pick_up
+    value: Click {part} to pick it up
+  - key: put_back
+    value: 'Put {held} back first: right click'
+  - key: take_tool
+    value: 'Take {tool}: click it'
+  - key: view
+    value: the view moves to {shot}
+  - key: view_back
+    value: Back to {shot}
+  - key: view_now
+    value: 'Now: {shot}'
+  refused:
+  - key: blocked
+    value: 'The {part} will not come yet: {other} holds it. Free that first.'
+  - key: needs_tool
+    value: 'That needs {other}: click it to take it.'
+  - key: not_yet
+    value: Not {part} yet.
+  - key: wrong_place
+    value: '{part} does not go there.'
+  - key: wrong_tool
+    value: '{other} is the wrong tool for that: right click to put it back.'
+  silentSteps:
+  - s1.housing.r
+  - s2.circlip.r
+  - s3.spin.r
+  - s3.test.r
+  - s5.rotor.r
+  - s7.card_after
+  - s7.inspect
+  - s7.leave
+  - s7.shake
+  sourceHash: ff6d2eccc49c67ec7be467fb65efed039eb35a1e

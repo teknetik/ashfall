@@ -1,0 +1,527 @@
+{
+ "name": "check_steady_hands_bench",
+ "exe": "/home/teknetik/code/ao2/unity/AthenHill/Builds/batch-sh-real10b/AthenHill.x86_64",
+ "exeMtime": "Thu Nov 19 14:08:38 2026",
+ "started": "2026-11-21 18:52:21",
+ "checks": [
+  {
+   "check": "the bench opens (state Assembly)",
+   "passed": true,
+   "detail": {
+    "state": "Assembly",
+    "assembly": {
+     "open": true,
+     "detached": false,
+     "lastNotice": ""
+    }
+   }
+  },
+  {
+   "check": "the cursor is free and visible at the bench",
+   "passed": true,
+   "detail": {
+    "lockState": "None",
+    "visible": true,
+    "looking": false,
+    "freed": false
+   }
+  },
+  {
+   "check": "the bench camera has the view",
+   "passed": true,
+   "detail": {
+    "shot": "wide",
+    "pinned": null,
+    "shots": [
+     "wide",
+     "work",
+     "vise",
+     "over",
+     "vise_l",
+     "vise_r",
+     "mat",
+     "parts",
+     "card",
+     "tray",
+     "press",
+     "press_low",
+     "press_side",
+     "roll",
+     "tester",
+     "room"
+    ],
+    "zoom": 0.0,
+    "yaw": 0.0,
+    "pitch": 0.0,
+    "blending": false,
+    "active": true
+   }
+  },
+  {
+   "check": "the bench is entered on 'work', or on 'wide' when the pistol to pick up lies outside it (21 Nov: it does, at the right end)",
+   "passed": true,
+   "detail": "wide"
+  },
+  {
+   "check": "there is work open",
+   "passed": true,
+   "detail": [
+    "s0.pistol:lay",
+    "s0.roll:untie",
+    "s0.salvage:servo",
+    "s0.salvage:sheet_a",
+    "s0.salvage:sheet_b",
+    "s0.salvage:vial"
+   ]
+  },
+  {
+   "check": "no shade and no window over the bench",
+   "passed": true,
+   "detail": {
+    "shade": false,
+    "modal": false
+   }
+  },
+  {
+   "check": "the key legend shows on first use",
+   "passed": true,
+   "detail": {
+    "legend": true,
+    "stage": "",
+    "action": "Drag the pistol onto the black work mat and let go  \u00b7  the view moves to the work mat"
+   }
+  },
+  {
+   "check": "every shot was held for a frame and let go again",
+   "passed": true,
+   "detail": {
+    "shots": [
+     "wide",
+     "work",
+     "vise",
+     "over",
+     "vise_l",
+     "vise_r",
+     "mat",
+     "parts",
+     "card",
+     "tray",
+     "press",
+     "press_low",
+     "press_side",
+     "roll",
+     "tester",
+     "room"
+    ],
+    "camera": {
+     "shot": "wide",
+     "pinned": null,
+     "shots": [
+      "wide",
+      "work",
+      "vise",
+      "over",
+      "vise_l",
+      "vise_r",
+      "mat",
+      "parts",
+      "card",
+      "tray",
+      "press",
+      "press_low",
+      "press_side",
+      "roll",
+      "tester",
+      "room"
+     ],
+     "zoom": 0.0,
+     "yaw": 0.0,
+     "pitch": 0.0,
+     "blending": false,
+     "active": true
+    }
+   }
+  },
+  {
+   "check": "stage s0: Lay out the job",
+   "passed": true,
+   "detail": {
+    "voice": [
+     "take_bench",
+     "tutor_welcome",
+     "tutor_s0_pistol",
+     "tutor_seat_verb",
+     "tutor_s0_pistol"
+    ],
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "Brann's guidance: the first step of stage s0 is spoken (s0.pistol:lay)",
+   "passed": true,
+   "detail": {
+    "line": "tutor_s0_pistol",
+    "heard": [
+     "tutor_s0_pistol",
+     "tutor_seat_verb",
+     "tutor_welcome"
+    ]
+   }
+  },
+  {
+   "check": "Brann's guidance: how to seat is spoken the first time it comes up (s0.pistol:lay)",
+   "passed": true,
+   "detail": {
+    "line": "tutor_seat_verb",
+    "heard": [
+     "tutor_s0_pistol",
+     "tutor_seat_verb",
+     "tutor_welcome"
+    ]
+   }
+  },
+  {
+   "check": "s0.pistol:lay Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 7.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "Brann's guidance: how to turn is spoken the first time it comes up (s0.roll:untie)",
+   "passed": true,
+   "detail": {
+    "line": "tutor_turn_verb",
+    "heard": [
+     "tutor_s0_pistol",
+     "tutor_s0_roll",
+     "tutor_seat_verb",
+     "tutor_turn_verb",
+     "tutor_welcome"
+    ]
+   }
+  },
+  {
+   "check": "s0.roll:untie Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 4.2,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "s0.roll:unroll Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.0,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s0.salvage:servo Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.3,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s0.salvage:sheet_b Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 0.7,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s0.salvage:sheet_a Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.3,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "s0.salvage:vial Seat (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.3,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "work"
+   }
+  },
+  {
+   "check": "Brann's guidance: how to point_aim is spoken the first time it comes up (s0.card_before:pulses)",
+   "passed": true,
+   "detail": {
+    "line": "tutor_point_aim_verb",
+    "heard": [
+     "tutor_point_aim_verb",
+     "tutor_s0_card_before",
+     "tutor_s0_pistol",
+     "tutor_s0_roll",
+     "tutor_s0_salvage",
+     "tutor_s0_salvage_vial",
+     "tutor_seat_verb",
+     "tutor_turn_verb",
+     "tutor_welcome"
+    ]
+   }
+  },
+  {
+   "check": "s0.card_before:pulses: the pistol is in the lower third of the picture while it is aimed",
+   "passed": true,
+   "detail": {
+    "pistol": [
+     923,
+     767
+    ],
+    "window": [
+     1920,
+     1080
+    ],
+    "shot": "card"
+   }
+  },
+  {
+   "check": "s0.card_before:pulses Point (aim) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 6.3,
+    "held": {
+     "part": "pistol.frame",
+     "partAt": [
+      506.1,
+      895.3,
+      1.0
+     ],
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "wide"
+   }
+  },
+  {
+   "check": "s0.shake_before:shake Flick (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 0.9,
+    "held": {
+     "part": "pistol.frame",
+     "partAt": [
+      920.3,
+      488.8,
+      1.0
+     ],
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  },
+  {
+   "check": "s0.cell:latch Turn (-) by mouse",
+   "passed": true,
+   "detail": {
+    "seconds": 1.6,
+    "held": {
+     "part": null,
+     "partAt": null,
+     "tool": null,
+     "toolMode": null,
+     "toolAt": null,
+     "action": null,
+     "leaving": false,
+     "distanceMm": -1.0,
+     "yawError": 0.0,
+     "aiming": false,
+     "flipped": false
+    },
+    "verb": null,
+    "refusals": 0,
+    "shot": "mat"
+   }
+  }
+ ],
+ "captures": [
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/00-at-the-bench.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/shot-wide.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/shot-work.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/shot-vise.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/shot-over.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/shot-vise_l.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/shot-vise_r.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/shot-mat.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/shot-parts.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/shot-card.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/shot-tray.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/shot-press.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/shot-press_low.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/shot-press_side.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/shot-roll.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/shot-tester.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/shot-room.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/01-stage-s0.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/02-s0_pistol_lay.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/03-s0_roll_untie.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/04-s0_roll_unroll.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/05-s0_salvage_servo.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/06-s0_salvage_sheet_b.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/07-s0_salvage_sheet_a.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/08-s0_salvage_vial.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/09-s0_card_before_pulses-aim.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/10-s0_card_before_pulses.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-video/run/11-s0_shake_before_shake.png"
+ ],
+ "notes": [
+  {
+   "note": "opened the bench through Build by hand",
+   "detail": {
+    "notice": ""
+   }
+  },
+  {
+   "note": "s0.salvage:sheet_a: the hand took materials.sheet_b, which lay on top and has its own place to go; playing that first",
+   "detail": {
+    "part": "materials.sheet_b",
+    "partAt": [
+     95.5,
+     134.9,
+     1.0
+    ],
+    "tool": null,
+    "toolMode": null,
+    "toolAt": null,
+    "action": "s0.salvage:sheet_b",
+    "leaving": false,
+    "distanceMm": 1208.38367,
+    "yawError": 3.0,
+    "aiming": false,
+    "flipped": false
+   }
+  }
+ ]
+}

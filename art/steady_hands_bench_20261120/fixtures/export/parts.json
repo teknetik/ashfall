@@ -1,0 +1,2086 @@
+{
+ "family": "fixtures",
+ "glb": "fixtures.glb",
+ "blender": "5.2.2",
+ "generated": "2026-11-21T20:14:38Z",
+ "unit_scale_m": 1.0,
+ "parts": [
+  {
+   "id": "fixtures.bin",
+   "node": "fixtures_bin",
+   "label": "Scrap bin",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "medium",
+   "tris": 2112,
+   "size_mm": [
+    214.7,
+    209.8,
+    139.2
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s2.board",
+    "s2.gears",
+    "s6.slide"
+   ],
+   "marks": [
+    {
+     "id": "seat_scrap",
+     "node": "fixtures_bin__mark_seat_scrap"
+    }
+   ],
+   "loose": true
+  },
+  {
+   "id": "fixtures.board",
+   "node": "fixtures_board",
+   "label": "Card board",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "wood",
+   "mass": "medium",
+   "tris": 1024,
+   "size_mm": [
+    603.0,
+    175.0,
+    358.2
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s0.card_before",
+    "s7.card_after"
+   ],
+   "marks": [
+    {
+     "id": "seat_card_after",
+     "node": "fixtures_board__mark_seat_card_after",
+     "pose": true,
+     "accepts": [
+      "pistol.card_b"
+     ]
+    },
+    {
+     "id": "seat_card_before",
+     "node": "fixtures_board__mark_seat_card_before",
+     "pose": true,
+     "accepts": [
+      "pistol.card_a"
+     ]
+    },
+    {
+     "id": "seat_schematic",
+     "node": "fixtures_board__mark_seat_schematic",
+     "pose": true,
+     "accepts": []
+    }
+   ],
+   "loose": true
+  },
+  {
+   "id": "fixtures.board_clip_a",
+   "node": "fixtures_board_clip_a",
+   "label": "Card clip",
+   "kind": "part",
+   "parent": "fixtures.board",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 436,
+   "size_mm": [
+    40.0,
+    35.5,
+    66.8
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true,
+   "note": "fixed sub-part of fixtures.board, never separated on the bench"
+  },
+  {
+   "id": "fixtures.board_clip_b",
+   "node": "fixtures_board_clip_b",
+   "label": "Card clip",
+   "kind": "part",
+   "parent": "fixtures.board",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 436,
+   "size_mm": [
+    40.0,
+    35.5,
+    66.8
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true,
+   "note": "fixed sub-part of fixtures.board, never separated on the bench"
+  },
+  {
+   "id": "fixtures.schematic",
+   "node": "fixtures_schematic",
+   "label": "Schematic",
+   "kind": "fixture",
+   "parent": "fixtures.board",
+   "item": null,
+   "material": "paper",
+   "mass": "light",
+   "tris": 2328,
+   "size_mm": [
+    250.0,
+    372.9,
+    112.1
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "zones": [
+    {
+     "id": "region_0",
+     "node": "fixtures_schematic__zone_region_0"
+    },
+    {
+     "id": "region_1",
+     "node": "fixtures_schematic__zone_region_1"
+    },
+    {
+     "id": "region_2",
+     "node": "fixtures_schematic__zone_region_2"
+    },
+    {
+     "id": "region_3",
+     "node": "fixtures_schematic__zone_region_3"
+    },
+    {
+     "id": "region_4",
+     "node": "fixtures_schematic__zone_region_4"
+    },
+    {
+     "id": "region_5",
+     "node": "fixtures_schematic__zone_region_5"
+    },
+    {
+     "id": "region_6",
+     "node": "fixtures_schematic__zone_region_6"
+    },
+    {
+     "id": "region_7",
+     "node": "fixtures_schematic__zone_region_7"
+    }
+   ],
+   "loose": true,
+   "note": "hand-drawn exploded view of the grip in eight regions (stages 0 to 7); params schematic_s0..s7 put a wax-pencil ring round a region (0.5, the stage in hand) and a tick in it (1, done)"
+  },
+  {
+   "id": "fixtures.schematic_marks",
+   "node": "fixtures_schematic_marks",
+   "label": "Schematic ticks",
+   "kind": "fixture",
+   "parent": "fixtures.schematic",
+   "item": null,
+   "material": "paper",
+   "mass": "tiny",
+   "tris": 1600,
+   "size_mm": [
+    200.0,
+    41.6,
+    220.2
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true,
+   "note": "skinned on fixtures_schematic_rig; the bind pose shows every ring and tick, each clip at 0 shrinks its own to nothing"
+  },
+  {
+   "id": "fixtures.cradle",
+   "node": "fixtures_cradle",
+   "label": "Cradle stand",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "wood",
+   "mass": "medium",
+   "tris": 1396,
+   "size_mm": [
+    180.0,
+    90.0,
+    86.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s2.swap"
+   ],
+   "marks": [
+    {
+     "id": "saddle_l",
+     "node": "fixtures_cradle__mark_saddle_l"
+    },
+    {
+     "id": "saddle_r",
+     "node": "fixtures_cradle__mark_saddle_r"
+    },
+    {
+     "id": "seat_frame",
+     "node": "fixtures_cradle__mark_seat_frame",
+     "pose": true,
+     "accepts": [
+      "pistol.frame"
+     ]
+    }
+   ],
+   "loose": true
+  },
+  {
+   "id": "fixtures.dish",
+   "node": "fixtures_dish",
+   "label": "Magnetic dish",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "tris": 1436,
+   "size_mm": [
+    108.4,
+    108.4,
+    28.7
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s1.screw_a",
+    "s2.screws"
+   ],
+   "marks": [
+    {
+     "id": "seat_fasteners",
+     "node": "fixtures_dish__mark_seat_fasteners"
+    },
+    {
+     "id": "slot_00",
+     "node": "fixtures_dish__mark_slot_00"
+    },
+    {
+     "id": "slot_01",
+     "node": "fixtures_dish__mark_slot_01"
+    },
+    {
+     "id": "slot_02",
+     "node": "fixtures_dish__mark_slot_02"
+    },
+    {
+     "id": "slot_03",
+     "node": "fixtures_dish__mark_slot_03"
+    },
+    {
+     "id": "slot_04",
+     "node": "fixtures_dish__mark_slot_04"
+    },
+    {
+     "id": "slot_05",
+     "node": "fixtures_dish__mark_slot_05"
+    },
+    {
+     "id": "slot_06",
+     "node": "fixtures_dish__mark_slot_06"
+    },
+    {
+     "id": "slot_07",
+     "node": "fixtures_dish__mark_slot_07"
+    },
+    {
+     "id": "slot_08",
+     "node": "fixtures_dish__mark_slot_08"
+    },
+    {
+     "id": "slot_09",
+     "node": "fixtures_dish__mark_slot_09"
+    },
+    {
+     "id": "slot_10",
+     "node": "fixtures_dish__mark_slot_10"
+    },
+    {
+     "id": "slot_11",
+     "node": "fixtures_dish__mark_slot_11"
+    }
+   ],
+   "loose": true
+  },
+  {
+   "id": "fixtures.holster",
+   "node": "fixtures_holster",
+   "label": "Holster hook",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "canvas",
+   "mass": "light",
+   "tris": 2416,
+   "size_mm": [
+    56.6,
+    175.7,
+    213.3
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s7.leave"
+   ],
+   "marks": [
+    {
+     "id": "seat_pistol",
+     "node": "fixtures_holster__mark_seat_pistol",
+     "pose": true,
+     "accepts": [
+      "pistol.frame"
+     ]
+    }
+   ],
+   "loose": true,
+   "note": "a leather holster hanging from a hook on the worktop's front edge, left of the work surface"
+  },
+  {
+   "id": "fixtures.jar",
+   "node": "fixtures_jar",
+   "label": "Solvent jar",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "glass",
+   "mass": "medium",
+   "tris": 2712,
+   "size_mm": [
+    124.0,
+    157.6,
+    231.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.bath",
+    "s4.open"
+   ],
+   "marks": [
+    {
+     "id": "fluid_top",
+     "node": "fixtures_jar__mark_fluid_top"
+    },
+    {
+     "id": "seat_swirl",
+     "node": "fixtures_jar__mark_seat_swirl"
+    }
+   ],
+   "loose": true
+  },
+  {
+   "id": "fixtures.lamp",
+   "node": "fixtures_lamp",
+   "label": "Cure lamp",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "medium",
+   "tris": 576,
+   "size_mm": [
+    111.0,
+    111.0,
+    30.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s5.cure"
+   ],
+   "loose": true
+  },
+  {
+   "id": "fixtures.lamp_arm1",
+   "node": "fixtures_lamp_arm1",
+   "label": "Cure lamp arm",
+   "kind": "part",
+   "parent": "fixtures.lamp",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "tris": 660,
+   "size_mm": [
+    22.9,
+    21.4,
+    262.5
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true,
+   "rides": "lamp_shoulder",
+   "note": "fixed sub-part of fixtures.lamp, never separated on the bench"
+  },
+  {
+   "id": "fixtures.lamp_arm2",
+   "node": "fixtures_lamp_arm2",
+   "label": "Cure lamp arm",
+   "kind": "part",
+   "parent": "fixtures.lamp",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "tris": 660,
+   "size_mm": [
+    149.1,
+    199.4,
+    114.5
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true,
+   "rides": "lamp_elbow",
+   "note": "fixed sub-part of fixtures.lamp, never separated on the bench"
+  },
+  {
+   "id": "fixtures.lamp_head",
+   "node": "fixtures_lamp_head",
+   "label": "Cure lamp head",
+   "kind": "fixture",
+   "parent": "fixtures.lamp",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "tris": 1928,
+   "size_mm": [
+    93.0,
+    93.0,
+    114.5
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s5.cure"
+   ],
+   "grab": "fixtures_lamp_head__grab",
+   "loose": true,
+   "rides": "lamp_wrist",
+   "note": "the whole swinging head; its emitter is the only face on the emissive material (M_fixtures_b_emissive): light that, not the hood"
+  },
+  {
+   "id": "fixtures.lamp_turret",
+   "node": "fixtures_lamp_turret",
+   "label": "Cure lamp turret",
+   "kind": "part",
+   "parent": "fixtures.lamp",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "tris": 616,
+   "size_mm": [
+    26.9,
+    25.2,
+    50.8
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true,
+   "rides": "lamp_yaw",
+   "note": "fixed sub-part of fixtures.lamp, never separated on the bench"
+  },
+  {
+   "id": "fixtures.mouldrack",
+   "node": "fixtures_mouldrack",
+   "label": "Mould rack",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "medium",
+   "tris": 880,
+   "size_mm": [
+    142.0,
+    160.0,
+    168.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s4.mould"
+   ],
+   "loose": true
+  },
+  {
+   "id": "fixtures.mould_b",
+   "node": "fixtures_mould_b",
+   "label": "Mould (bracket)",
+   "kind": "part",
+   "parent": "fixtures.mouldrack",
+   "item": null,
+   "material": "steel",
+   "mass": "medium",
+   "tris": 278,
+   "size_mm": [
+    120.0,
+    146.0,
+    37.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true,
+   "note": "fixed sub-part of fixtures.mouldrack, never separated on the bench"
+  },
+  {
+   "id": "fixtures.mould_c",
+   "node": "fixtures_mould_c",
+   "label": "Mould (bush)",
+   "kind": "part",
+   "parent": "fixtures.mouldrack",
+   "item": null,
+   "material": "steel",
+   "mass": "medium",
+   "tris": 562,
+   "size_mm": [
+    120.0,
+    146.0,
+    37.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true,
+   "note": "fixed sub-part of fixtures.mouldrack, never separated on the bench"
+  },
+  {
+   "id": "fixtures.mould_tang",
+   "node": "fixtures_mould_tang",
+   "label": "Pistol-tang mould",
+   "kind": "part",
+   "parent": "fixtures.mouldrack",
+   "item": null,
+   "material": "steel",
+   "mass": "medium",
+   "tris": 4744,
+   "size_mm": [
+    120.0,
+    146.0,
+    37.0
+   ],
+   "seat": {
+    "clear": "fixtures_mould_tang__clear",
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s4.mould",
+    "s4.charge",
+    "s4.press",
+    "s4.open"
+   ],
+   "grab": "fixtures_mould_tang__grab",
+   "marks": [
+    {
+     "id": "port",
+     "node": "fixtures_mould_tang__mark_port"
+    },
+    {
+     "id": "seat_charge",
+     "node": "fixtures_mould_tang__mark_seat_charge",
+     "pose": true,
+     "accepts": [
+      "materials.sheet_a"
+     ]
+    },
+    {
+     "id": "seat_core",
+     "node": "fixtures_mould_tang__mark_seat_core",
+     "pose": true,
+     "accepts": [
+      "grip.core"
+     ]
+    }
+   ],
+   "zones": [
+    {
+     "id": "cavity",
+     "node": "fixtures_mould_tang__zone_cavity"
+    }
+   ],
+   "wipes": [
+    {
+     "id": "cavity",
+     "zone": "fixtures_mould_tang__zone_cavity",
+     "label": "Nanite dust and scale from the last pour (s4.mould brushes it out)",
+     "color": "tex/fixtures_d__dirty_color.png",
+     "normal": "tex/fixtures_d__dirty_normal.png",
+     "orm": "tex/fixtures_d__dirty_orm.png"
+    }
+   ],
+   "note": "the lower die; the top die rides the press platen. Keyed: a cross tongue and two dowel holes on its underside fit only the press bed"
+  },
+  {
+   "id": "fixtures.mould_charge",
+   "node": "fixtures_mould_charge",
+   "label": "Charge",
+   "kind": "consumable",
+   "parent": "fixtures.mould_tang",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 1858,
+   "size_mm": [
+    92.9,
+    114.6,
+    15.2
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s4.charge",
+    "s4.press",
+    "s4.open"
+   ],
+   "loose": true,
+   "note": "alloy offcuts in grey nanite paste; hidden at the start, shown after s4.charge, gone when the mould opens"
+  },
+  {
+   "id": "fixtures.pad",
+   "node": "fixtures_pad",
+   "label": "Insulated pad",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "ceramic",
+   "mass": "medium",
+   "tris": 904,
+   "size_mm": [
+    130.0,
+    104.0,
+    22.1
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s0.cell",
+    "s6.cell"
+   ],
+   "marks": [
+    {
+     "id": "seat_cell",
+     "node": "fixtures_pad__mark_seat_cell",
+     "pose": true,
+     "accepts": [
+      "pistol.cell"
+     ]
+    }
+   ],
+   "loose": true
+  },
+  {
+   "id": "fixtures.partsmat",
+   "node": "fixtures_partsmat",
+   "label": "Parts mat",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "rubber",
+   "mass": "light",
+   "tris": 138,
+   "size_mm": [
+    440.0,
+    200.0,
+    3.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s1.scales",
+    "s2.gears"
+   ],
+   "marks": [
+    {
+     "id": "seat_pistol_housing",
+     "node": "fixtures_partsmat__mark_seat_pistol_housing"
+    },
+    {
+     "id": "seat_pistol_pin",
+     "node": "fixtures_partsmat__mark_seat_pistol_pin"
+    },
+    {
+     "id": "seat_pistol_scale_l",
+     "node": "fixtures_partsmat__mark_seat_pistol_scale_l"
+    },
+    {
+     "id": "seat_pistol_scale_r",
+     "node": "fixtures_partsmat__mark_seat_pistol_scale_r"
+    },
+    {
+     "id": "seat_pistol_screw_grip_a",
+     "node": "fixtures_partsmat__mark_seat_pistol_screw_grip_a"
+    },
+    {
+     "id": "seat_pistol_screw_grip_b",
+     "node": "fixtures_partsmat__mark_seat_pistol_screw_grip_b"
+    },
+    {
+     "id": "seat_pistol_spring",
+     "node": "fixtures_partsmat__mark_seat_pistol_spring"
+    },
+    {
+     "id": "seat_pistol_wrap",
+     "node": "fixtures_partsmat__mark_seat_pistol_wrap"
+    },
+    {
+     "id": "seat_retainer",
+     "node": "fixtures_partsmat__mark_seat_retainer"
+    },
+    {
+     "id": "seat_servo_board",
+     "node": "fixtures_partsmat__mark_seat_servo_board"
+    },
+    {
+     "id": "seat_servo_bobbin",
+     "node": "fixtures_partsmat__mark_seat_servo_bobbin"
+    },
+    {
+     "id": "seat_servo_case_top",
+     "node": "fixtures_partsmat__mark_seat_servo_case_top"
+    },
+    {
+     "id": "seat_servo_circlip",
+     "node": "fixtures_partsmat__mark_seat_servo_circlip"
+    },
+    {
+     "id": "seat_servo_gear_a",
+     "node": "fixtures_partsmat__mark_seat_servo_gear_a"
+    },
+    {
+     "id": "seat_servo_gear_b",
+     "node": "fixtures_partsmat__mark_seat_servo_gear_b"
+    },
+    {
+     "id": "seat_servo_gear_c",
+     "node": "fixtures_partsmat__mark_seat_servo_gear_c"
+    },
+    {
+     "id": "seat_servo_gimbal",
+     "node": "fixtures_partsmat__mark_seat_servo_gimbal"
+    },
+    {
+     "id": "seat_servo_resistor",
+     "node": "fixtures_partsmat__mark_seat_servo_resistor"
+    },
+    {
+     "id": "seat_servo_rotor",
+     "node": "fixtures_partsmat__mark_seat_servo_rotor"
+    },
+    {
+     "id": "seat_servo_screw_case_1",
+     "node": "fixtures_partsmat__mark_seat_servo_screw_case_1"
+    },
+    {
+     "id": "seat_servo_screw_case_2",
+     "node": "fixtures_partsmat__mark_seat_servo_screw_case_2"
+    },
+    {
+     "id": "seat_servo_screw_case_3",
+     "node": "fixtures_partsmat__mark_seat_servo_screw_case_3"
+    },
+    {
+     "id": "seat_servo_screw_case_4",
+     "node": "fixtures_partsmat__mark_seat_servo_screw_case_4"
+    },
+    {
+     "id": "seat_servo_screw_trunnion_a",
+     "node": "fixtures_partsmat__mark_seat_servo_screw_trunnion_a"
+    },
+    {
+     "id": "seat_servo_screw_trunnion_b",
+     "node": "fixtures_partsmat__mark_seat_servo_screw_trunnion_b"
+    }
+   ],
+   "loose": true,
+   "note": "PLACEHOLDER outlines and seats until the pistol and servo families export"
+  },
+  {
+   "id": "fixtures.press",
+   "node": "fixtures_press",
+   "label": "Nanite press",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "heavy",
+   "tris": 5966,
+   "size_mm": [
+    230.0,
+    325.0,
+    370.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s4.mould",
+    "s4.charge",
+    "s4.press",
+    "s4.open"
+   ],
+   "marks": [
+    {
+     "id": "band_hi",
+     "node": "fixtures_press__mark_band_hi"
+    },
+    {
+     "id": "band_lo",
+     "node": "fixtures_press__mark_band_lo"
+    },
+    {
+     "id": "clear_mould",
+     "node": "fixtures_press__mark_clear_mould",
+     "pose": true,
+     "accepts": [
+      "fixtures.mould_tang"
+     ]
+    },
+    {
+     "id": "hopper_line",
+     "node": "fixtures_press__mark_hopper_line"
+    },
+    {
+     "id": "seat_mould",
+     "node": "fixtures_press__mark_seat_mould",
+     "pose": true,
+     "accepts": [
+      "fixtures.mould_tang"
+     ]
+    },
+    {
+     "id": "seat_pour",
+     "node": "fixtures_press__mark_seat_pour",
+     "pose": true,
+     "accepts": [
+      "materials.vial"
+     ]
+    }
+   ],
+   "zones": [
+    {
+     "id": "vents",
+     "node": "fixtures_press__zone_vents"
+    }
+   ],
+   "loose": true
+  },
+  {
+   "id": "fixtures.press_gauge",
+   "node": "fixtures_press_gauge",
+   "label": "Press sight tube",
+   "kind": "part",
+   "parent": "fixtures.press",
+   "item": null,
+   "material": "glass",
+   "mass": "tiny",
+   "tris": 128,
+   "size_mm": [
+    8.4,
+    8.4,
+    64.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true,
+   "note": "fixed sub-part of fixtures.press, never separated on the bench"
+  },
+  {
+   "id": "fixtures.press_lever",
+   "node": "fixtures_press_lever",
+   "label": "Press lever",
+   "kind": "part",
+   "parent": "fixtures.press",
+   "item": null,
+   "material": "steel",
+   "mass": "heavy",
+   "tris": 1150,
+   "size_mm": [
+    124.2,
+    81.9,
+    263.9
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "grab": "fixtures_press_lever__grab",
+   "loose": true,
+   "rides": "press_lever",
+   "note": "fixed sub-part of fixtures.press, never separated on the bench"
+  },
+  {
+   "id": "fixtures.press_ram",
+   "node": "fixtures_press_ram",
+   "label": "Press ram and top die",
+   "kind": "part",
+   "parent": "fixtures.press",
+   "item": null,
+   "material": "steel",
+   "mass": "heavy",
+   "tris": 2940,
+   "size_mm": [
+    128.0,
+    156.0,
+    280.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true,
+   "rides": "press_ram",
+   "note": "fixed sub-part of fixtures.press, never separated on the bench"
+  },
+  {
+   "id": "fixtures.press_slug",
+   "node": "fixtures_press_slug",
+   "label": "Pressure slug",
+   "kind": "part",
+   "parent": "fixtures.press",
+   "item": null,
+   "material": "copper",
+   "mass": "tiny",
+   "tris": 56,
+   "size_mm": [
+    6.8,
+    6.6,
+    10.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true,
+   "rides": "press_pressure",
+   "note": "fixed sub-part of fixtures.press, never separated on the bench"
+  },
+  {
+   "id": "fixtures.press_vents",
+   "node": "fixtures_press_vents",
+   "label": "Press vents",
+   "kind": "part",
+   "parent": "fixtures.press",
+   "item": null,
+   "material": "glass",
+   "mass": "tiny",
+   "tris": 60,
+   "size_mm": [
+    31.0,
+    1.2,
+    68.2
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true,
+   "note": "fixed sub-part of fixtures.press, never separated on the bench"
+  },
+  {
+   "id": "fixtures.tester",
+   "node": "fixtures_tester",
+   "label": "Bench tester",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "medium",
+   "tris": 5628,
+   "size_mm": [
+    192.7,
+    90.0,
+    133.3
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.test"
+   ],
+   "marks": [
+    {
+     "id": "probe_rest",
+     "node": "fixtures_tester__mark_probe_rest"
+    }
+   ],
+   "loose": true
+  },
+  {
+   "id": "fixtures.tester_lamp",
+   "node": "fixtures_tester_lamp",
+   "label": "Tester lamp",
+   "kind": "part",
+   "parent": "fixtures.tester",
+   "item": null,
+   "material": "glass",
+   "mass": "tiny",
+   "tris": 140,
+   "size_mm": [
+    16.8,
+    10.5,
+    16.8
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true,
+   "note": "fixed sub-part of fixtures.tester, never separated on the bench"
+  },
+  {
+   "id": "fixtures.tester_probes",
+   "node": "fixtures_tester_probes",
+   "label": "Tester probes",
+   "kind": "tool",
+   "parent": "fixtures.tester",
+   "item": null,
+   "material": "copper",
+   "mass": "light",
+   "tris": 2144,
+   "size_mm": [
+    10.1,
+    25.9,
+    142.0
+   ],
+   "seat": {
+    "clear": "fixtures_tester_probes__clear",
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "tool": {
+    "verbs": [
+     "Point"
+    ],
+    "tip": "fixtures_tester_probes__tip",
+    "tags": [
+     "tool:probe"
+    ]
+   },
+   "steps": [
+    "s3.test"
+   ],
+   "grab": "fixtures_tester_probes__grab",
+   "note": "both probes as one tool; the tip is the red probe's needle; the leads stay on the box (the probes plug in)"
+  },
+  {
+   "id": "fixtures.tray",
+   "node": "fixtures_tray",
+   "label": "Salvage tray",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "medium",
+   "tris": 724,
+   "size_mm": [
+    302.0,
+    202.0,
+    28.9
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s0.salvage",
+    "s4.charge"
+   ],
+   "marks": [
+    {
+     "id": "seat_alloy",
+     "node": "fixtures_tray__mark_seat_alloy",
+     "pose": true,
+     "accepts": [
+      "materials.sheet_a",
+      "materials.sheet_b"
+     ]
+    },
+    {
+     "id": "seat_servo",
+     "node": "fixtures_tray__mark_seat_servo",
+     "pose": true,
+     "accepts": [
+      "servo.case_body"
+     ]
+    },
+    {
+     "id": "seat_vial",
+     "node": "fixtures_tray__mark_seat_vial",
+     "pose": true,
+     "accepts": [
+      "materials.vial"
+     ]
+    }
+   ],
+   "loose": true
+  },
+  {
+   "id": "fixtures.vise_base",
+   "node": "fixtures_vise_base",
+   "label": "Vise base",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "heavy",
+   "tris": 356,
+   "size_mm": [
+    150.0,
+    130.0,
+    15.8
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s1.clamp"
+   ],
+   "loose": true,
+   "note": "bolted through the mat; the vise body swivels on it (param vise_swivel)"
+  },
+  {
+   "id": "fixtures.vise",
+   "node": "fixtures_vise",
+   "label": "Bench vise",
+   "kind": "fixture",
+   "parent": "fixtures.vise_base",
+   "item": null,
+   "material": "steel",
+   "mass": "heavy",
+   "tris": 1396,
+   "size_mm": [
+    114.0,
+    114.0,
+    115.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s1.clamp",
+    "s2.swap",
+    "s3.cut",
+    "s3.strap",
+    "s4.pressfit",
+    "s6.cell"
+   ],
+   "marks": [
+    {
+     "id": "anvil",
+     "node": "fixtures_vise__mark_anvil"
+    },
+    {
+     "id": "jaw_top",
+     "node": "fixtures_vise__mark_jaw_top"
+    },
+    {
+     "id": "seat_flat",
+     "node": "fixtures_vise__mark_seat_flat"
+    },
+    {
+     "id": "seat_servo",
+     "node": "fixtures_vise__mark_seat_servo",
+     "pose": true,
+     "accepts": [
+      "servo.case_body"
+     ]
+    },
+    {
+     "id": "seat_work",
+     "node": "fixtures_vise__mark_seat_work",
+     "pose": true,
+     "accepts": [
+      "pistol.frame"
+     ]
+    }
+   ],
+   "loose": true,
+   "rides": "vise_swivel",
+   "note": "the swivelling body: node origin on the vertical swivel axis through the base centre"
+  },
+  {
+   "id": "fixtures.vise_pad_f",
+   "node": "fixtures_vise_pad_f",
+   "label": "Fixed soft pad",
+   "kind": "part",
+   "parent": "fixtures.vise",
+   "item": null,
+   "material": "copper",
+   "mass": "light",
+   "tris": 208,
+   "size_mm": [
+    84.0,
+    12.8,
+    27.8
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true,
+   "note": "fixed sub-part of fixtures.vise, never separated on the bench"
+  },
+  {
+   "id": "fixtures.vise_pad_m",
+   "node": "fixtures_vise_pad_m",
+   "label": "Moving soft pad",
+   "kind": "part",
+   "parent": "fixtures.vise",
+   "item": null,
+   "material": "copper",
+   "mass": "light",
+   "tris": 208,
+   "size_mm": [
+    84.0,
+    12.8,
+    27.8
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true,
+   "rides": "vise_jaw",
+   "note": "fixed sub-part of fixtures.vise, never separated on the bench"
+  },
+  {
+   "id": "fixtures.vise_plate_f",
+   "node": "fixtures_vise_plate_f",
+   "label": "Fixed jaw plate",
+   "kind": "part",
+   "parent": "fixtures.vise",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "tris": 44,
+   "size_mm": [
+    80.0,
+    8.0,
+    22.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true,
+   "note": "fixed sub-part of fixtures.vise, never separated on the bench"
+  },
+  {
+   "id": "fixtures.vise_plate_m",
+   "node": "fixtures_vise_plate_m",
+   "label": "Moving jaw plate",
+   "kind": "part",
+   "parent": "fixtures.vise",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "tris": 44,
+   "size_mm": [
+    80.0,
+    8.0,
+    22.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true,
+   "rides": "vise_jaw",
+   "note": "fixed sub-part of fixtures.vise, never separated on the bench"
+  },
+  {
+   "id": "fixtures.vise_screw",
+   "node": "fixtures_vise_screw",
+   "label": "Vise screw and handle",
+   "kind": "part",
+   "parent": "fixtures.vise",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "tris": 3604,
+   "size_mm": [
+    148.0,
+    198.8,
+    27.6
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true,
+   "rides": "vise_handle",
+   "note": "fixed sub-part of fixtures.vise, never separated on the bench"
+  },
+  {
+   "id": "fixtures.vise_slide",
+   "node": "fixtures_vise_slide",
+   "label": "Sliding jaw",
+   "kind": "part",
+   "parent": "fixtures.vise",
+   "item": null,
+   "material": "steel",
+   "mass": "heavy",
+   "tris": 1256,
+   "size_mm": [
+    80.0,
+    194.8,
+    91.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "marks": [
+    {
+     "id": "handle",
+     "node": "fixtures_vise_slide__mark_handle"
+    }
+   ],
+   "loose": true,
+   "rides": "vise_jaw",
+   "note": "fixed sub-part of fixtures.vise, never separated on the bench"
+  },
+  {
+   "id": "fixtures.vise_bolts",
+   "node": "fixtures_vise_bolts",
+   "label": "Vise base bolts",
+   "kind": "part",
+   "parent": "fixtures.vise_base",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "tris": 1296,
+   "size_mm": [
+    161.0,
+    116.6,
+    36.2
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true,
+   "note": "fixed sub-part of fixtures.vise_base, never separated on the bench"
+  },
+  {
+   "id": "fixtures.workmat",
+   "node": "fixtures_workmat",
+   "label": "Work mat",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "canvas",
+   "mass": "light",
+   "tris": 1602,
+   "size_mm": [
+    362.0,
+    262.0,
+    7.5
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s0.pistol",
+    "s6.cell"
+   ],
+   "marks": [
+    {
+     "id": "seat_grip",
+     "node": "fixtures_workmat__mark_seat_grip",
+     "pose": true,
+     "accepts": []
+    },
+    {
+     "id": "seat_pistol",
+     "node": "fixtures_workmat__mark_seat_pistol",
+     "pose": true,
+     "accepts": [
+      "pistol.frame"
+     ]
+    },
+    {
+     "id": "seat_plate_l",
+     "node": "fixtures_workmat__mark_seat_plate_l",
+     "pose": true,
+     "accepts": [
+      "materials.sheet_a_plate"
+     ]
+    },
+    {
+     "id": "seat_plate_r",
+     "node": "fixtures_workmat__mark_seat_plate_r",
+     "pose": true,
+     "accepts": [
+      "materials.sheet_b_plate"
+     ]
+    },
+    {
+     "id": "seat_sheet",
+     "node": "fixtures_workmat__mark_seat_sheet",
+     "pose": true,
+     "accepts": [
+      "materials.sheet_a"
+     ]
+    },
+    {
+     "id": "seat_small",
+     "node": "fixtures_workmat__mark_seat_small"
+    },
+    {
+     "id": "seat_spare",
+     "node": "fixtures_workmat__mark_seat_spare",
+     "pose": true,
+     "accepts": [
+      "materials.sheet_b_strap"
+     ]
+    },
+    {
+     "id": "seat_strap",
+     "node": "fixtures_workmat__mark_seat_strap",
+     "pose": true,
+     "accepts": [
+      "materials.sheet_a_strap",
+      "materials.sheet_b_strap"
+     ]
+    }
+   ],
+   "zones": [
+    {
+     "id": "work",
+     "node": "fixtures_workmat__zone_work"
+    }
+   ],
+   "loose": true
+  },
+  {
+   "id": "fixtures.worksurface",
+   "node": "fixtures_worksurface",
+   "label": "Work surface and bench rule",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "rubber",
+   "mass": "heavy",
+   "tris": 1866,
+   "size_mm": [
+    900.0,
+    550.0,
+    11.3
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s0.pistol",
+    "s3.trim"
+   ],
+   "marks": [
+    {
+     "id": "entry_pistol",
+     "node": "fixtures_worksurface__mark_entry_pistol",
+     "pose": true,
+     "accepts": [
+      "pistol.frame"
+     ]
+    },
+    {
+     "id": "entry_roll",
+     "node": "fixtures_worksurface__mark_entry_roll",
+     "pose": true,
+     "accepts": [
+      "tools.roll"
+     ]
+    },
+    {
+     "id": "entry_servo",
+     "node": "fixtures_worksurface__mark_entry_servo",
+     "pose": true,
+     "accepts": [
+      "servo.case_body"
+     ]
+    },
+    {
+     "id": "entry_sheet_a",
+     "node": "fixtures_worksurface__mark_entry_sheet_a",
+     "pose": true,
+     "accepts": [
+      "materials.sheet_a"
+     ]
+    },
+    {
+     "id": "entry_sheet_b",
+     "node": "fixtures_worksurface__mark_entry_sheet_b",
+     "pose": true,
+     "accepts": [
+      "materials.sheet_b"
+     ]
+    },
+    {
+     "id": "entry_vial",
+     "node": "fixtures_worksurface__mark_entry_vial",
+     "pose": true,
+     "accepts": [
+      "materials.vial"
+     ]
+    },
+    {
+     "id": "lead_length",
+     "node": "fixtures_worksurface__mark_lead_length"
+    },
+    {
+     "id": "lead_zero",
+     "node": "fixtures_worksurface__mark_lead_zero"
+    },
+    {
+     "id": "seat_stray",
+     "node": "fixtures_worksurface__mark_seat_stray"
+    }
+   ],
+   "zones": [
+    {
+     "id": "rule",
+     "node": "fixtures_worksurface__zone_rule"
+    }
+   ],
+   "loose": true
+  }
+ ],
+ "params": [
+  {
+   "id": "fixtures.vise_jaw",
+   "node": "fixtures_vise_rig",
+   "bone": "vise_jaw",
+   "action": "vise_jaw_param",
+   "type": "slide",
+   "min": 0.0,
+   "max": 90.0,
+   "unit": "mm",
+   "continuous": false,
+   "rest": 0.0,
+   "parent_bone": "vise_root",
+   "requires": {},
+   "parts": [
+    "fixtures.vise_slide",
+    "fixtures.vise_plate_m",
+    "fixtures.vise_pad_m"
+   ],
+   "opening_mm": [
+    90.0,
+    0.0
+   ],
+   "note": "0 = open 90 mm (as found), 1 = soft pads touching; gap = 90 x (1 - value) mm",
+   "snug_at": {
+    "pistol.frame": {
+     "mark": "seat_work",
+     "jaw": 0.6022,
+     "gap_mm": 35.8
+    },
+    "servo.case_body": {
+     "mark": "seat_servo",
+     "jaw": 0.2784,
+     "gap_mm": 64.94
+    },
+    "two stacked alloy sheets": {
+     "jaw": 0.9556,
+     "gap_mm": 4.12,
+     "size_source": "thickness from grip/INTERFACE.md (2 x 2.0); a block, not the materials export"
+    },
+    "strap blank": {
+     "jaw": 0.9778,
+     "gap_mm": 2.12,
+     "size_source": "section from grip/INTERFACE.md (17 x 2); a block 90 long between the jaws, not the materials export"
+    },
+    "grip core with gimbal cradle (press fit)": {
+     "jaw": 0.3556,
+     "gap_mm": 58.12,
+     "size_source": "placeholder"
+    }
+   }
+  },
+  {
+   "id": "fixtures.vise_handle",
+   "node": "fixtures_vise_rig",
+   "bone": "vise_handle",
+   "action": null,
+   "type": "continuous",
+   "min": 0.0,
+   "max": 360.0,
+   "unit": "deg",
+   "continuous": true,
+   "rest": 0.0,
+   "parent_bone": "vise_jaw",
+   "requires": {},
+   "parts": [
+    "fixtures.vise_screw"
+   ],
+   "pitch_mm": 5.0,
+   "hand": "right",
+   "turns_for": {
+    "fixtures.vise_jaw": 18.0
+   },
+   "note": "positive turns about the bone +Y close the vise: turns = 18 x vise_jaw"
+  },
+  {
+   "id": "fixtures.vise_swivel",
+   "node": "fixtures_vise_swivel_rig",
+   "bone": "vise_swivel",
+   "action": null,
+   "type": "continuous",
+   "min": 0.0,
+   "max": 360.0,
+   "unit": "deg",
+   "continuous": true,
+   "rest": 0.0,
+   "parent_bone": "vise_swivel_root",
+   "requires": {},
+   "parts": [
+    "fixtures.vise"
+   ],
+   "note": "the vise body (and all on it) turns about the vertical axis through the base centre; positive = anticlockwise seen from above; code-driven, no clip; rest 0"
+  },
+  {
+   "id": "fixtures.press_pressure",
+   "node": "fixtures_press_rig",
+   "bone": "press_pressure",
+   "action": "press_pressure_param",
+   "type": "slide",
+   "min": 0.0,
+   "max": 53.0,
+   "unit": "mm",
+   "continuous": false,
+   "rest": 0.0,
+   "parent_bone": "press_root",
+   "requires": {},
+   "parts": [
+    "fixtures.press_slug"
+   ],
+   "band": [
+    0.55,
+    0.8
+   ],
+   "note": "the brass slug in the sight tube: 0 = no pressure (as found), 1 = top; the painted green band runs from 0.55 to 0.80, the s4.press sustain window. Not driven by the step table yet"
+  },
+  {
+   "id": "fixtures.press_lever",
+   "node": "fixtures_press_lever_rig",
+   "bone": null,
+   "bones": [
+    "press_lever",
+    "press_ram"
+   ],
+   "action": "press_lever_param",
+   "type": "custom",
+   "min": 0.0,
+   "max": 1.0,
+   "unit": "ratio",
+   "continuous": false,
+   "rest": 0.0,
+   "parent_bone": "press_lever_root",
+   "requires": {},
+   "parts": [
+    "fixtures.press_lever",
+    "fixtures.press_ram"
+   ],
+   "note": "0 = open, lever 10 degrees forward of vertical, platen at the top of its 110 mm stroke (as found); 1 = lever turned 110 degrees forward and down, the top die closed on the mould. The ram rides the lever through the rack and pinion (one clip moves both).",
+   "stroke_mm": 110.0,
+   "lever_deg": 110.0
+  },
+  {
+   "id": "fixtures.lamp_arm",
+   "node": "fixtures_lamp_rig",
+   "bone": null,
+   "bones": [
+    "lamp_yaw",
+    "lamp_shoulder",
+    "lamp_elbow",
+    "lamp_wrist"
+   ],
+   "action": "lamp_arm_param",
+   "type": "custom",
+   "min": 0.0,
+   "max": 1.0,
+   "unit": "ratio",
+   "continuous": false,
+   "rest": 0.0,
+   "parent_bone": "lamp_root",
+   "requires": {},
+   "parts": [
+    "fixtures.lamp_arm1",
+    "fixtures.lamp_arm2",
+    "fixtures.lamp_head",
+    "fixtures.lamp_turret"
+   ],
+   "note": "0 = parked: arm folded up beside its base, head hanging (as found); 1 = swung over the grip on the work mat (fixtures.workmat/seat_grip), the emitter 100 mm above it, facing down. Yaw, shoulder, elbow and wrist move together on one clip.",
+   "reaches": "fixtures.workmat/seat_grip"
+  },
+  {
+   "id": "fixtures.schematic_s0",
+   "node": "fixtures_schematic_rig",
+   "bone": null,
+   "bones": [
+    "schematic_s0_ring",
+    "schematic_s0_tick"
+   ],
+   "action": "schematic_s0_param",
+   "type": "skinned",
+   "min": 0.0,
+   "max": 1.0,
+   "unit": "ratio",
+   "continuous": false,
+   "parent_bone": "schematic_root",
+   "requires": {},
+   "parts": [
+    "fixtures.schematic_marks"
+   ],
+   "rest": 0.0,
+   "bind_pose_value": 1.0,
+   "region": "fixtures_schematic__zone_region_0",
+   "note": "stage s0: 0 = nothing drawn (as found), 0.5 = a wax-pencil ring round the region (the stage in hand), 1 = ring and tick (done). The skin's bind pose is 1."
+  },
+  {
+   "id": "fixtures.schematic_s1",
+   "node": "fixtures_schematic_rig",
+   "bone": null,
+   "bones": [
+    "schematic_s1_ring",
+    "schematic_s1_tick"
+   ],
+   "action": "schematic_s1_param",
+   "type": "skinned",
+   "min": 0.0,
+   "max": 1.0,
+   "unit": "ratio",
+   "continuous": false,
+   "parent_bone": "schematic_root",
+   "requires": {},
+   "parts": [
+    "fixtures.schematic_marks"
+   ],
+   "rest": 0.0,
+   "bind_pose_value": 1.0,
+   "region": "fixtures_schematic__zone_region_1",
+   "note": "stage s1: 0 = nothing drawn (as found), 0.5 = a wax-pencil ring round the region (the stage in hand), 1 = ring and tick (done). The skin's bind pose is 1."
+  },
+  {
+   "id": "fixtures.schematic_s2",
+   "node": "fixtures_schematic_rig",
+   "bone": null,
+   "bones": [
+    "schematic_s2_ring",
+    "schematic_s2_tick"
+   ],
+   "action": "schematic_s2_param",
+   "type": "skinned",
+   "min": 0.0,
+   "max": 1.0,
+   "unit": "ratio",
+   "continuous": false,
+   "parent_bone": "schematic_root",
+   "requires": {},
+   "parts": [
+    "fixtures.schematic_marks"
+   ],
+   "rest": 0.0,
+   "bind_pose_value": 1.0,
+   "region": "fixtures_schematic__zone_region_2",
+   "note": "stage s2: 0 = nothing drawn (as found), 0.5 = a wax-pencil ring round the region (the stage in hand), 1 = ring and tick (done). The skin's bind pose is 1."
+  },
+  {
+   "id": "fixtures.schematic_s3",
+   "node": "fixtures_schematic_rig",
+   "bone": null,
+   "bones": [
+    "schematic_s3_ring",
+    "schematic_s3_tick"
+   ],
+   "action": "schematic_s3_param",
+   "type": "skinned",
+   "min": 0.0,
+   "max": 1.0,
+   "unit": "ratio",
+   "continuous": false,
+   "parent_bone": "schematic_root",
+   "requires": {},
+   "parts": [
+    "fixtures.schematic_marks"
+   ],
+   "rest": 0.0,
+   "bind_pose_value": 1.0,
+   "region": "fixtures_schematic__zone_region_3",
+   "note": "stage s3: 0 = nothing drawn (as found), 0.5 = a wax-pencil ring round the region (the stage in hand), 1 = ring and tick (done). The skin's bind pose is 1."
+  },
+  {
+   "id": "fixtures.schematic_s4",
+   "node": "fixtures_schematic_rig",
+   "bone": null,
+   "bones": [
+    "schematic_s4_ring",
+    "schematic_s4_tick"
+   ],
+   "action": "schematic_s4_param",
+   "type": "skinned",
+   "min": 0.0,
+   "max": 1.0,
+   "unit": "ratio",
+   "continuous": false,
+   "parent_bone": "schematic_root",
+   "requires": {},
+   "parts": [
+    "fixtures.schematic_marks"
+   ],
+   "rest": 0.0,
+   "bind_pose_value": 1.0,
+   "region": "fixtures_schematic__zone_region_4",
+   "note": "stage s4: 0 = nothing drawn (as found), 0.5 = a wax-pencil ring round the region (the stage in hand), 1 = ring and tick (done). The skin's bind pose is 1."
+  },
+  {
+   "id": "fixtures.schematic_s5",
+   "node": "fixtures_schematic_rig",
+   "bone": null,
+   "bones": [
+    "schematic_s5_ring",
+    "schematic_s5_tick"
+   ],
+   "action": "schematic_s5_param",
+   "type": "skinned",
+   "min": 0.0,
+   "max": 1.0,
+   "unit": "ratio",
+   "continuous": false,
+   "parent_bone": "schematic_root",
+   "requires": {},
+   "parts": [
+    "fixtures.schematic_marks"
+   ],
+   "rest": 0.0,
+   "bind_pose_value": 1.0,
+   "region": "fixtures_schematic__zone_region_5",
+   "note": "stage s5: 0 = nothing drawn (as found), 0.5 = a wax-pencil ring round the region (the stage in hand), 1 = ring and tick (done). The skin's bind pose is 1."
+  },
+  {
+   "id": "fixtures.schematic_s6",
+   "node": "fixtures_schematic_rig",
+   "bone": null,
+   "bones": [
+    "schematic_s6_ring",
+    "schematic_s6_tick"
+   ],
+   "action": "schematic_s6_param",
+   "type": "skinned",
+   "min": 0.0,
+   "max": 1.0,
+   "unit": "ratio",
+   "continuous": false,
+   "parent_bone": "schematic_root",
+   "requires": {},
+   "parts": [
+    "fixtures.schematic_marks"
+   ],
+   "rest": 0.0,
+   "bind_pose_value": 1.0,
+   "region": "fixtures_schematic__zone_region_6",
+   "note": "stage s6: 0 = nothing drawn (as found), 0.5 = a wax-pencil ring round the region (the stage in hand), 1 = ring and tick (done). The skin's bind pose is 1."
+  },
+  {
+   "id": "fixtures.schematic_s7",
+   "node": "fixtures_schematic_rig",
+   "bone": null,
+   "bones": [
+    "schematic_s7_ring",
+    "schematic_s7_tick"
+   ],
+   "action": "schematic_s7_param",
+   "type": "skinned",
+   "min": 0.0,
+   "max": 1.0,
+   "unit": "ratio",
+   "continuous": false,
+   "parent_bone": "schematic_root",
+   "requires": {},
+   "parts": [
+    "fixtures.schematic_marks"
+   ],
+   "rest": 0.0,
+   "bind_pose_value": 1.0,
+   "region": "fixtures_schematic__zone_region_7",
+   "note": "stage s7: 0 = nothing drawn (as found), 0.5 = a wax-pencil ring round the region (the stage in hand), 1 = ring and tick (done). The skin's bind pose is 1."
+  }
+ ],
+ "sequence": [],
+ "absent_at_start": [
+  "fixtures.mould_charge"
+ ],
+ "frame": "Bench frame, Blender metres, Z up. Origin on the worktop surface under the SS_Workbench pivot. +X = the player's right, -Y = toward the player (bench front edge at y -0.583), +Y = toward the back. Unity bench-local (x, y, z) = (-X, Z + 0.8637, -Y). Both GLBs are exported in this frame: put each GLB root at bench-local (0, 0.8637, 0) with identity rotation.",
+ "rigs": [
+  "fixtures_press_rig",
+  "fixtures_vise_rig",
+  "fixtures_vise_swivel_rig"
+ ]
+}

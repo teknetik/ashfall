@@ -2,7 +2,8 @@
 
 Continues a prepared save taken just after the Outer Berms primer (servo, alloy and nanites in the pack, field order 1
 at its Report stage), then with real keyboard input: walks from the porch through the open loading bay to the counter,
-talks to Brann (quest opening), follows his dialogue to the workbench, fabricates and fits the stabilised grip, uses the
+talks to Brann (quest opening), follows his dialogue to the workbench, builds the stabilised grip by hand (21 Nov 2026: Build by
+hand opens the bench job, finished with dev.assembly.finish through the real crafting ticket; no timer route), uses the
 workbench directly, trades at his counter (parts bought, salvage sold, no supplies list), and test-fires the upgraded
 pistol on the range so order 1 completes. Captures the review cameras and first-person views at 13:00 and 20:30.
 
@@ -20,6 +21,8 @@ items = {'droid_servo_damaged': 1, 'scrap_alloy': 2, 'nanite_residue': 5, 'coppe
 (save / 'ward-save.json').write_text(json.dumps({
     'version': 2, 'savedUtc': '2026-10-01T20:00:00Z', 'build': 'qa', 'credits': 40, 'purchases': 0, 'sales': 0,
     'items': [{'itemId': k, 'quantity': v} for k, v in items.items()],
+    # 21 Nov 2026 (Carl: "no auto assemble for anything ever"): the grip is built by hand at the bench every time; the hands-on
+    # job is opened by Build by hand and finished by dev.assembly.finish here (the job itself: check_steady_hands_bench.py).
     'crafting': {'known': ['recipe_grip_stabilised_pistol'], 'crafted': [], 'crafts': 0, 'fitted': []},
     'bermsStep': 'Complete', 'hasPistol': True, 'orders': {'index': 0, 'testFired': []},
     'city': {'visitedHill': True, 'boughtFlask': True, 'soldScrap': True, 'linked': True,
@@ -104,20 +107,23 @@ try:
     ok(qa.state() == 'Fabricator' and inter()['station'] == 'Salvage workbench', '"Use the bench." opens the Salvage workbench', inter())
     qa.capture('workbench-open')
 
-    # fabricate and fit with Enter (the window focuses the order's part). 3 Oct 2026: timed crafting; the grip takes
-    # bench time (8 s), so Enter starts the job (progress bar, Cancel focused) and the check waits with the window open.
-    qa.tap('Return', settle=.8)
-    job = qa.craft().get('craftJob') or {}
-    ok(job.get('recipeId') == 'recipe_grip_stabilised_pistol' or (qa.qty('grip_stabilised_pistol') or 0) >= 1, 'Enter starts fabricating the stabilised grip at the bench', job)
-    qa.capture('workbench-fabricating')
-    try: qa.wait(lambda: (qa.qty('grip_stabilised_pistol') or 0) >= 1 and not qa.craft().get('craftJob'), float(job.get('seconds') or 0) + 8, step=.3, what='bench timer')
+    # 21 Nov 2026: the grip is hands-on only. The window shows no timer (Fabricate / Auto-assemble) button for it and focuses
+    # Build by hand; Enter opens the bench job, which is finished here through the real crafting ticket and fits the grip.
+    lay = qa.ui(); fab = qa.el(lay, 'fabricator-craft') or {}; build = qa.el(lay, 'fabricator-build') or {}
+    ok(not fab.get('visible'), 'no timer or Auto-assemble button for the grip', fab)
+    ok(build.get('visible') and build.get('text') == 'Build by hand', 'Build by hand is the only way to make it', build)
+    ok(not any('auto' in (e.get('text') or '').lower() and 'assembl' in (e.get('text') or '').lower() for e in lay['elements'] if e.get('visible')), 'no Auto-assemble wording in the window')
+    qa.tap('Return', settle=1.0)
+    try: qa.wait(lambda: qa.state() == 'Assembly', 8, what='the bench job')
     except TimeoutError: pass
-    c = qa.craft(); ok(c['crafts'] >= 1 and (qa.qty('grip_stabilised_pistol') or 0) >= 1, 'the bench finishes the stabilised grip', {'crafts': c['crafts'], 'grip': qa.qty('grip_stabilised_pistol'), 'job': c.get('craftJob'), 'notice': qa.snap()['session']['notice']})
-    time.sleep(.5)   # focus moves to Fit on the next UI tick
-    qa.tap('Return', settle=.8)
-    c = qa.craft(); ok((c.get('slots') or {}).get('grip') == 'grip_stabilised_pistol', 'Enter fits it to the pistol', c.get('slots'))
+    ok(qa.state() == 'Assembly' and not (qa.snap().get('assembly') or {}).get('detached'), 'Enter opens the hands-on bench job (real crafting ticket)', {'state': qa.state(), 'detached': (qa.snap().get('assembly') or {}).get('detached')})
+    qa.capture('bench-job-open')
+    qa.cmd('dev.assembly.finish', quality='Standard')
+    try: qa.wait(lambda: qa.state() == 'Play', 10, what='back in play')
+    except TimeoutError: pass
+    c = qa.craft(); ok(c['crafts'] >= 1 and (c.get('slots') or {}).get('grip') == 'grip_stabilised_pistol', 'the finished bench job fits the stabilised grip to the pistol', {'crafts': c['crafts'], 'slots': c.get('slots'), 'notice': qa.snap()['session']['notice']})
     qa.capture('grip-fitted')
-    qa.tap('Escape', settle=.5); ok(qa.state() == 'Play', 'Esc closes the workbench')
+    ok(qa.state() == 'Play', 'the player is back in play after the bench job')
     c = qa.craft(); ok(c['orderStage'] == 'TestFire', 'order 1 now asks for a test fire', c['objective'])
 
     # the workbench by itself

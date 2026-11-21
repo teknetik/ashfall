@@ -1,0 +1,627 @@
+{
+ "status": "nominal, held. Plate outline revised twice on 20 Nov (16:05, 16:15). 18:25: strap length confirmed at 118 with its path, plate and strap node frames and the marks on the core added (SEAM.md sections 7 and 9). 18:55: built and swept (as_built); no dimension changed.",
+ "units": "millimetres unless a key ends in _m",
+ "frames": {
+  "P": "pistol metric frame: metres, muzzle -X, up +Z, the player's right +Y, origin = ScrapPistol.glb origin. pistol.glb and grip.glb are both exported in this frame.",
+  "G": {
+   "about": "grip frame, for describing the grip: +S up the grip axis, +U toward the front strap, +Y = P +Y",
+   "origin_P_m": [
+    0.08,
+    0.0,
+    -0.03
+   ],
+   "S_in_P": [
+    -0.42038,
+    0.0,
+    0.90736
+   ],
+   "U_in_P": [
+    -0.90736,
+    0.0,
+    -0.42038
+   ]
+  },
+  "D": {
+   "about": "datum of the gimbal damper unit = node origin of the servo's cradle node: centre of the flange's outer face; +Z_D out of the pocket (the pistol's left, P -Y), +X_D = +S, +Y_D = +U",
+   "origin_P_m": [
+    0.09093,
+    -0.0175,
+    -0.053591
+   ],
+   "X_in_P": [
+    -0.42038,
+    0.0,
+    0.90736
+   ],
+   "Y_in_P": [
+    -0.90736,
+    0.0,
+    -0.42038
+   ],
+   "Z_in_P": [
+    0,
+    -1,
+    0
+   ],
+   "origin_G": {
+    "u": 0,
+    "s": -26,
+    "y": -17.5
+   }
+  }
+ },
+ "unit": {
+  "flange": {
+   "d": 30.0,
+   "z": [
+    -2.0,
+    0.0
+   ]
+  },
+  "body": {
+   "d": 26.0,
+   "z": [
+    -20.0,
+    -2.0
+   ]
+  },
+  "key_lug": {
+   "angle_deg_from_plusY": 180,
+   "width": 4.0,
+   "r_out": 14.5,
+   "z": [
+    -20.0,
+    -2.0
+   ]
+  },
+  "lead_notches": {
+   "angles_deg_from_plusY_toward_plusX": [
+    50,
+    -50
+   ],
+   "width": 3.0,
+   "r_in": 11.0
+  },
+  "moving_envelope": {
+   "r_max": 11.0,
+   "z": [
+    -19.0,
+    -0.3
+   ],
+   "note": "ring, rotor, coil and retaining ring stay inside this at every value of every parameter; the left plate's inner face is at z = +0.05"
+  },
+  "suggested_axes": {
+   "gimbal_pitch": "about X_D, +-12 deg",
+   "gimbal_roll": "about Y_D, +-12 deg",
+   "rotor": "about Z_D, continuous"
+  }
+ },
+ "pocket_as_modelled_in_grip_core": {
+  "counterbore": {
+   "d": 30.2,
+   "depth": 2.1
+  },
+  "bore": {
+   "d": 26.1,
+   "depth": 20.1
+  },
+  "keyway": {
+   "width": 4.2,
+   "r_out": 14.75
+  },
+  "notches": {
+   "width": 3.2
+  },
+  "clearance": "the unit is modelled at nominal, the pocket 0.05 mm bigger all round, so the path sweep sees no overlap"
+ },
+ "unit_seat": {
+  "rest": "grip_core__mark_seat_gimbal",
+  "clear": "grip_core__mark_clear_gimbal",
+  "clear_offset": "+40 mm along +Z_D",
+  "symmetry": 1
+ },
+ "loop": {
+  "about": "the damper loop: coil lead, trim resistor, coil lead, lying in the side channel of the core's left face under the left plate. Centreline in D, all at z = -1.7.",
+  "path_xy": [
+   [
+    8.4,
+    7.1
+   ],
+   [
+    11.6,
+    9.7
+   ],
+   [
+    13.4,
+    14.0
+   ],
+   [
+    13.4,
+    18.0
+   ],
+   [
+    11.4,
+    20.8
+   ],
+   [
+    8.0,
+    21.8
+   ],
+   [
+    4.0,
+    21.8
+   ],
+   [
+    -4.0,
+    21.8
+   ],
+   [
+    -8.0,
+    21.8
+   ],
+   [
+    -11.4,
+    20.8
+   ],
+   [
+    -13.4,
+    18.0
+   ],
+   [
+    -13.4,
+    14.0
+   ],
+   [
+    -11.6,
+    9.7
+   ],
+   [
+    -8.4,
+    7.1
+   ]
+  ],
+  "length_between_notches": 55.5,
+  "z": -1.7,
+  "lead": {
+   "d_sleeve": 1.6,
+   "d_core": 0.8
+  },
+  "resistor": {
+   "body_d": 2.4,
+   "body_len": 6.5,
+   "centre_xy": [
+    0.0,
+    21.8
+   ],
+   "axis": "X_D",
+   "leg_d": 0.6
+  },
+  "shrink_sleeves": {
+   "d": 2.9,
+   "len": 7.0,
+   "centres_xy": [
+    [
+     6.0,
+     21.8
+    ],
+    [
+     -6.0,
+     21.8
+    ]
+   ]
+  },
+  "channel": {
+   "width": 3.2,
+   "depth": 3.3
+  },
+  "resistor_bay": {
+   "len": 9.0,
+   "width": 4.4,
+   "depth": 3.3
+  },
+  "clips_xy": [
+   [
+    13.4,
+    14.0
+   ],
+   [
+    -13.4,
+    14.0
+   ]
+  ],
+  "path_empties": "grip_core__path_loop_00 .. _13"
+ },
+ "plate_screws": {
+  "about": "the servo's four case screws, reused two per plate",
+  "thread_d": 3.0,
+  "length_under_head": 10.0,
+  "head": "pan",
+  "head_d": 5.6,
+  "head_h": 2.2,
+  "drive": "cross",
+  "count": 4,
+  "hole_in_plate_d": 3.3,
+  "thread_in_core_depth": 8.5,
+  "seats_G": {
+   "C": {
+    "u": 22,
+    "s": -2
+   },
+   "D": {
+    "u": -22,
+    "s": -44
+   }
+  },
+  "seats_P_m": {
+   "left_C": [
+    0.060879,
+    -0.01955,
+    -0.041063
+   ],
+   "left_D": [
+    0.118459,
+    -0.01955,
+    -0.060675
+   ],
+   "right_C": [
+    0.060879,
+    0.01955,
+    -0.041063
+   ],
+   "right_D": [
+    0.118459,
+    0.01955,
+    -0.060675
+   ]
+  },
+  "axis": "left: head toward P -Y; right: head toward P +Y",
+  "marks": [
+   "grip_core__mark_seat_plate_screw_lc",
+   "grip_core__mark_seat_plate_screw_ld",
+   "grip_core__mark_seat_plate_screw_rc",
+   "grip_core__mark_seat_plate_screw_rd"
+  ]
+ },
+ "plate": {
+  "about": "left and right side plates, cut from Scrap Alloy with an old grip scale as the template. Flat sheet. The right plate is the mirror image (P +Y side).",
+  "thickness": 2.0,
+  "outer_face_y": 19.55,
+  "inner_face_y": 17.55,
+  "corner_radius": 2.0,
+  "outline_G_us": [
+   [
+    27.4,
+    39.7
+   ],
+   [
+    28.2,
+    27.0
+   ],
+   [
+    26.5,
+    10.0
+   ],
+   [
+    26.0,
+    -10.0
+   ],
+   [
+    25.0,
+    -30.0
+   ],
+   [
+    24.2,
+    -41.0
+   ],
+   [
+    21.5,
+    -44.6
+   ],
+   [
+    -22.5,
+    -50.8
+   ],
+   [
+    -26.6,
+    -47.5
+   ],
+   [
+    -27.8,
+    -30.0
+   ],
+   [
+    -27.8,
+    -6.0
+   ],
+   [
+    -26.0,
+    8.0
+   ],
+   [
+    -23.0,
+    21.0
+   ],
+   [
+    -24.2,
+    32.0
+   ],
+   [
+    -12.5,
+    32.0
+   ],
+   [
+    -12.5,
+    42.0
+   ],
+   [
+    -20.0,
+    42.0
+   ],
+   [
+    -18.5,
+    44.5
+   ],
+   [
+    -18.0,
+    56.5
+   ],
+   [
+    -5.5,
+    54.7
+   ],
+   [
+    11.4,
+    58.7
+   ],
+   [
+    19.4,
+    50.9
+   ]
+  ],
+  "holes_G": {
+   "A": {
+    "u": -4,
+    "s": 40,
+    "d": 6.1,
+    "use": "drops over the core's upper peg; the upper grip screw passes through it"
+   },
+   "B": {
+    "u": -4,
+    "s": 8,
+    "d": 6.1,
+    "use": "drops over the core's lower peg; the lower grip screw passes through it"
+   },
+   "C": {
+    "u": 22,
+    "s": -2,
+    "d": 3.3,
+    "use": "plate screw"
+   },
+   "D": {
+    "u": -22,
+    "s": -44,
+    "d": 3.3,
+    "use": "plate screw"
+   }
+  },
+  "paint": "old Warden orange on the outer face, bare alloy inside",
+  "note": "The square bite in the rear edge (U -24.2 .. -12.5, S 32 .. 42) leaves the housing pin's ear uncovered: the pin is driven through there.",
+  "node_frames": {
+   "about": "SEAM.md section 9, made right-handed. Origin = the grip-frame origin G projected onto the plate's inner (seat) face; +Y = S; +Z out of the grip. That fixes +X: on the right plate +X = +U, on the LEFT plate +X = -U (X = U with Y = S and Z outward would be a mirrored frame there, which a node cannot have). So in its own frame the left plate's outline is (x, y) = (-U, S) and the right plate's is (x, y) = (U, S): mirror images, as cut stacked.",
+   "right (materials.sheet_b_plate)": {
+    "origin_P_m": [
+     0.08,
+     0.01755,
+     -0.03
+    ],
+    "X_in_P": [
+     -0.90736,
+     0.0,
+     -0.42038
+    ],
+    "Y_in_P": [
+     -0.42038,
+     0.0,
+     0.90736
+    ],
+    "Z_in_P": [
+     0,
+     1,
+     0
+    ]
+   },
+   "left (materials.sheet_a_plate)": {
+    "origin_P_m": [
+     0.08,
+     -0.01755,
+     -0.03
+    ],
+    "X_in_P": [
+     0.90736,
+     -0.0,
+     0.42038
+    ],
+    "Y_in_P": [
+     -0.42038,
+     0.0,
+     0.90736
+    ],
+    "Z_in_P": [
+     0,
+     -1,
+     0
+    ]
+   },
+   "plate_occupies_z": [
+    0.0,
+    2.0
+   ]
+  }
+ },
+ "strap": {
+  "about": "reinforcement strap (materials.strap_bent): an alloy strip 17 wide and 2.0 thick, orange paint outward, bent twice. It goes on the core from below (+S), so the back leg and the toe lip are both parallel to the grip axis.",
+  "width": 17.0,
+  "thickness": 2.0,
+  "developed_length": 118.2,
+  "inner_face_length": 115.1,
+  "note": "118 stands (20 Nov 18:25): measured on the built path, inner face 115.1, neutral axis 118.2. The 112 in my Milestone 2 report was a wrong estimate.",
+  "legs": {
+   "back": "36.5 straight, inner face at U = back - 2.0 (about -28.4), from S -7.5 down to S -44",
+   "heel_bend": "about 98 degrees, inner radius about 3",
+   "base": "47.7 straight along the base, inner face 2.0 above the base line S = -55.1 + 0.1354 (U + 27.4)",
+   "toe_bend": "about 82 degrees, inner radius about 2",
+   "toe_lip": "15.9 straight up the front, inner face at U +27.8, from S -45.9 to S -30"
+  },
+  "inner_face_path_G_us": [
+   [
+    -28.4,
+    -7.5
+   ],
+   [
+    -28.4,
+    -16.0
+   ],
+   [
+    -28.5,
+    -26.0
+   ],
+   [
+    -28.5,
+    -36.0
+   ],
+   [
+    -28.45,
+    -44.0
+   ],
+   [
+    -28.4,
+    -48.6
+   ],
+   [
+    -28.0,
+    -51.0
+   ],
+   [
+    -26.4,
+    -52.5
+   ],
+   [
+    -24.0,
+    -52.64
+   ],
+   [
+    -12.0,
+    -51.01
+   ],
+   [
+    2.0,
+    -49.12
+   ],
+   [
+    16.0,
+    -47.22
+   ],
+   [
+    23.4,
+    -46.22
+   ],
+   [
+    26.2,
+    -45.9
+   ],
+   [
+    27.5,
+    -45.0
+   ],
+   [
+    27.8,
+    -43.0
+   ],
+   [
+    27.8,
+    -36.0
+   ],
+   [
+    27.8,
+    -30.0
+   ]
+  ],
+  "width_y": [
+   -8.5,
+   8.5
+  ],
+  "bed_in_core": "17.3 wide, 2.15 deep",
+  "node_frame": {
+   "about": "G itself (SEAM.md section 9)",
+   "origin_P_m": [
+    0.08,
+    0.0,
+    -0.03
+   ],
+   "X_in_P": [
+    -0.90736,
+    0.0,
+    -0.42038
+   ],
+   "Y_in_P": [
+    -0.42038,
+    0.0,
+    0.90736
+   ],
+   "Z_in_P": [
+    0,
+    1,
+    0
+   ]
+  }
+ },
+ "grip_screws": {
+  "about": "two new brass screws from Brann's jar (grip family), cross drive so the player changes bit",
+  "thread_d": 4.0,
+  "length_under_head": 34.0,
+  "head": "pan, cross drive",
+  "head_d": 8.6,
+  "head_h": 2.6,
+  "seats_G": {
+   "A": {
+    "u": -4,
+    "s": 40
+   },
+   "B": {
+    "u": -4,
+    "s": 8
+   }
+  }
+ },
+ "housing_pin": {
+  "d": 3.0,
+  "length": 30.0,
+  "at_G": {
+   "u": -16,
+   "s": 37
+  },
+  "axis": "P Y"
+ },
+ "marks_on_core": {
+  "about": "pose marks on grip.core (parts.json: \"pose\": true): the incoming part's node takes the mark's world transform. Each seat has a clear pose as a second mark.",
+  "seat_gimbal / clear_gimbal": "datum D of servo.gimbal_cradle; clear is 40 mm out along +Z_D",
+  "seat_plate_l / clear_plate_l": "the left plate's node frame; clear is 30 mm out along the plate's +Z",
+  "seat_plate_r / clear_plate_r": "the right plate's node frame; clear is 30 mm out along the plate's +Z",
+  "seat_strap / clear_strap": "G; clear is 65 mm down the grip axis (-S)",
+  "seat_plate_screw_lc, _ld, _rc, _rd / clear_plate_screw_*": "where the servo's four case screws seat in the plates: origin under the head on the plate's outer face, +Z out of the hole; clear is 16 mm out",
+  "paths": "loop (14 points, the damper loop's centre line in the channel), lead (14 points, the trigger lead in the back channel), seam_l and seam_r (40 points each)"
+ },
+ "unit_as_built": "servo.gimbal_cradle (servo/export/servo.glb), built to this interface, with two additions that only remove material: a 1.7 mm notch in the flange at +Y_D for the sense lead and two half-round scallops (r 1.45) in the flange rim at +X_D and -X_D for the trunnion screws. The pocket does not rely on flange material there.",
+ "as_built": {
+  "when": "20 Nov 18:55, grip/export/check.json PASS",
+  "core": "a flat-sided slab: side (seat) faces at Y -17.5 and +17.5, corner radius 2.0, back and front on the old grip's line",
+  "plates": "stand PROUD on the seat faces (inner face |Y| 17.55, outer 19.55). There is no recess. A land of 1.7 to 3.9 mm of core shows round each plate at the front, base and back; along the top the plate's edge is the core's own edge",
+  "strap": "lies in an open channel 17.3 wide, floor 0.15 under the strap's inner face: flush with the core on the back leg and the toe lip, 0.4 to 0.6 below the core's surface along the base and up to 1.1 below it round the heel",
+  "unit_in_pocket": "servo.gimbal_cradle with ring, race, rotor, retaining ring, coil and grit swept from clear_gimbal to seat_gimbal (40 mm) in 40 steps: no overlap, 0.022 mm from the bore wall (a 48-sided bore of d 26.1 round a d 26.0 body)",
+  "plate_screws": "servo.screw_case_a..d swept into holes C and D through the stand-in plates at marks seat_plate_screw_lc/ld/rc/rd: no overlap, head on the plate",
+  "seam": "an open line per plate (front edge, base, back edge, round the bite), 0.25 outside the plate outline and 0.3 above the seat face",
+  "real_plates_and_strap": "20:37: grip/check.py sweeps the materials family's own sheet_a_plate, sheet_b_plate and strap_bent in place of the stand-ins: no overlap, plates 0.05 mm off the seat faces, strap 0.14 mm off its bed; punch marks 1-4 are 0.00 mm off holes A-D (grip/export/crosscheck_materials.json)",
+  "parting": "the mould parts on the mid-plane Y = 0. Path grip.core/parting (up to 40 points on the surface: front strap, toe, base, heel, back strap; not across the top or the plug window) is where materials.core_flash stands. A band 1.6 mm wide there is filed bright in the clean set",
+  "as_found": "grip.core is the pressed core from the moment the mould opens (SEAM.md section 10): its as-found set is the core fresh from the mould; wipes skin, flash, pocket"
+ }
+}

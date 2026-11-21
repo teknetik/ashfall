@@ -20,7 +20,7 @@ namespace AthenHill
   readonly CraftingSession crafting;
   readonly VisualElement list,inputs,slots,stats;
   readonly Label title,description,reason,pistolTitle;
-  readonly Button craft,fit,remove,cancel,overhaul;
+  readonly Button craft,fit,remove,cancel,overhaul,build;
   readonly VisualElement progress,progressFill;
   readonly Label progressLabel;
   string progressText;float progressShown=-1;
@@ -51,6 +51,11 @@ namespace AthenHill
    // 20 Nov 2026 (Phase 3): the placeholder weapon overhaul sits beside the other bench actions (no UXML change).
    overhaul=new Button(Overhaul){name="fabricator-overhaul",text="Overhaul weapon"};overhaul.AddToClassList(remove.GetClasses().FirstOrDefault(c=>c!="unity-button")??"unity-button");
    remove.parent?.Add(overhaul);
+   // 20 Nov 2026 (Steady Hands bench): schematics with a hands-on job are built by hand at the bench the first time
+   // (CONTRACT B); the button sits before Fabricate (Auto-assemble once made by hand) and is hidden for the others.
+   build=new Button(BuildByHand){name="fabricator-build",text="Build by hand"};build.AddToClassList(craft.GetClasses().FirstOrDefault(c=>c!="unity-button")??"unity-button");
+   if(craft.parent!=null){craft.parent.Insert(craft.parent.IndexOf(craft),build);}
+   build.style.display=DisplayStyle.None;build.focusable=false;
    progress=root.Q("fab-progress");progressFill=root.Q("fab-progress-fill");progressLabel=root.Q<Label>("fab-progress-label");cancel=root.Q<Button>("fabricator-cancel");
    if(cancel!=null){cancel.clicked+=Cancel;cancel.focusable=false;}
    if(crafting)crafting.CraftFinished+=OnCraftFinished;
@@ -144,7 +149,7 @@ namespace AthenHill
   }
   void FocusSelected(){var b=SelectedButton;if(b!=null){b.focusable=true;b.Focus();}}
   /// Where an action hands focus: the first enabled action, else the selected schematic.
-  public Focusable ActionFocus=>crafting&&crafting.Job!=null&&cancel!=null?cancel:craft.enabledSelf?craft:fit.enabledSelf?fit:remove.enabledSelf?remove:SelectedButton;
+  public Focusable ActionFocus=>crafting&&crafting.Job!=null&&cancel!=null?cancel:build!=null&&build.enabledSelf&&build.style.display!=DisplayStyle.None?build:craft.enabledSelf?craft:fit.enabledSelf?fit:remove.enabledSelf?remove:SelectedButton;
   void FocusAction(){var f=ActionFocus;if(f==SelectedButton)FocusSelected();else f?.Focus();}
   /// Arrows inside the list: ↑/↓ step the selection, → jumps to the actions, ← stays. Each press is handled once
   /// here and withheld from UI Toolkit's own focus navigation (which previously moved focus a second time).
@@ -163,6 +168,8 @@ namespace AthenHill
   CraftRecipe Recipe=>Model?.Recipe(Selected);
   CraftModifier Mod=>Recipe!=null?Model.Loadout.Modifier(Recipe.outputItemId):null;
   // Action handlers (the buttons' click / Enter). They always act on Selected.
+  /// Build by hand: leaves the window for the bench (GameSession.OpenAssembly through CraftingSession.OpenAssembly).
+  public void BuildByHand(){var r=Recipe;if(r!=null&&crafting)crafting.OpenAssembly(session.ActiveStation,r.id);}
   public void Craft()
   {
    var r=Recipe;if(r==null)return;
@@ -223,6 +230,7 @@ namespace AthenHill
    foreach(var pair in recipeButtons)
    {
     var r=model.Recipe(pair.Key);bool known=model.Knows(r.id);bool ready=known&&model.CanCraft(r.id,session.ActiveStationId,out _);
+    bool onBench=model.OnBenchRecipe(r.id);
     var mod=model.Loadout.Modifier(r.outputItemId);bool isFitted=mod!=null&&LoadoutFor(r).Fitted(mod.slot)==r.outputItemId;
     int carried=pack.Quantity(r.outputItemId);
     bool selected=pair.Key==Selected;
@@ -231,14 +239,14 @@ namespace AthenHill
     pair.Value.focusable=selected;
     bool working=busy&&job.recipeId==r.id;
     pair.Value.EnableInClassList("working",working);
-    pair.Value.Q<Label>(className:"fab-recipe-state").text=working?"Working":!known?"Locked":isFitted?"Fitted":ready?"Ready":carried>0?$"×{carried}":"";
+    pair.Value.Q<Label>(className:"fab-recipe-state").text=working?"Working":onBench?"On the bench":!known?"Locked":isFitted?"Fitted":ready?(model.NeedsHandMade(r.id)?"By hand":"Ready"):carried>0?$"×{carried}":"";
     float seconds=model.CraftSeconds(r.id);
     pair.Value.tooltip=!known?CraftingText.Reason("recipe_locked",model,r):r.name+(seconds>0?$" · {CraftingText.Duration(seconds)} at the bench":"");
    }
    foreach(var pair in slotButtons)
    {
     var item=loadout.Fitted(pair.Key);
-    pair.Value.Q<Label>(className:"fab-slot-mod").text=item!=null?CraftingText.ItemName(model,item):"Empty";
+    pair.Value.Q<Label>(className:"fab-slot-mod").text=item!=null?CraftingText.WithQuality(model,item,loadout.Quality(pair.Key)):"Empty";
     pair.Value.EnableInClassList("empty",item==null);
     pair.Value.EnableInClassList("selected",Mod!=null&&Mod.slot==pair.Key);
    }
@@ -252,7 +260,7 @@ namespace AthenHill
    }
    var recipe=Recipe;var selectedMod=Mod;
    inputs.Clear();
-   if(recipe==null){title.text="Choose a schematic.";description.text="";reason.text="";craft.SetEnabled(false);fit.SetEnabled(false);remove.SetEnabled(false);FillStats(model,null);return;}
+   if(recipe==null){title.text="Choose a schematic.";description.text="";reason.text="";craft.SetEnabled(false);fit.SetEnabled(false);remove.SetEnabled(false);ShowBuild(false,false);FillStats(model,null);return;}
    float craftSeconds=model.CraftSeconds(recipe.id);
    var output=model.Item(recipe.outputItemId);
    bool knownRecipe=model.Knows(recipe.id);
@@ -279,9 +287,16 @@ namespace AthenHill
     var count=new Label(stored>0?$"{have} / {input.quantity}  ({stored} in your locker)":$"{have} / {input.quantity}"){pickingMode=PickingMode.Ignore};count.AddToClassList("fab-input-count");count.AddToClassList(ok?"have-ok":"have-short");
     row.Add(name);row.Add(count);inputs.Add(row);
    }
-   bool canCraft=model.CanCraft(recipe.id,session.ActiveStationId,out var craftReason);
-   craft.SetEnabled(canCraft&&!busy);craft.text="Fabricate";
-   craft.tooltip=craftSeconds>0?$"Takes {CraftingText.Duration(craftSeconds)} at the bench. Parts are used only when it is finished; Cancel or Esc stops it.":"";
+   // 20 Nov 2026 (Steady Hands bench); 21 Nov (Carl: "no auto assemble for anything ever"): a hands-on schematic is built by
+   // hand at the bench every time. Its timer button is not shown; Build by hand (or Back to the bench) is the only way.
+   bool hands=model.HasAssembly(recipe.id)&&(crafting==null||crafting.BenchPresent(recipe.id)||model.OnBenchRecipe(recipe.id));
+   bool canCraft=model.CanCraftOnTimer(recipe.id,session.ActiveStationId,out var craftReason);
+   bool canBuild=hands&&knownRecipe&&(model.OnBenchRecipe(recipe.id)||model.CanBeginAssembly(recipe.id,session.ActiveStationId,out _));
+   ShowBuild(hands,canBuild&&!busy);
+   if(hands)build.text=model.OnBenchRecipe(recipe.id)?"Back to the bench":"Build by hand";
+   var craftDisplay=hands?DisplayStyle.None:DisplayStyle.Flex;if(craft.style.display!=craftDisplay)craft.style.display=craftDisplay;
+   craft.SetEnabled(canCraft&&!busy&&!hands);craft.focusable=!hands;craft.text="Fabricate";
+   craft.tooltip=hands?CraftingText.Reason("hand_made_first",model,recipe):craftSeconds>0?$"Takes {CraftingText.Duration(craftSeconds)} at the bench. Parts are used only when it is finished; Cancel or Esc stops it.":"";
    bool fitted=selectedMod!=null&&loadout.Fitted(selectedMod.slot)==recipe.outputItemId;
    int carriedOut=pack.Quantity(recipe.outputItemId);
    bool canFit=selectedMod!=null&&model.CanFit(loadout.WeaponId,recipe.outputItemId,out _,session.ActiveStationId);
@@ -294,15 +309,25 @@ namespace AthenHill
    reason.EnableInClassList("fitted",fitted);
    FillStats(model,selectedMod!=null&&!fitted?selectedMod:null);
   }
+  void ShowBuild(bool show,bool enabled)
+  {
+   if(build==null)return;
+   var display=show?DisplayStyle.Flex:DisplayStyle.None;
+   if(build.style.display!=display)build.style.display=display;
+   build.SetEnabled(show&&enabled);build.focusable=show&&enabled;
+  }
   /// One line of guidance in words, and whether it reports a blocker (red).
   (string text,bool blocked) Guidance(CraftingModel model,CraftRecipe recipe,CraftModifier mod,bool known,bool canCraft,string craftReason,bool fitted,bool canFit,int carried)
   {
    if(!known)return (CraftingText.Reason("recipe_locked",model,recipe),false);
+   if(model.OnBenchRecipe(recipe.id))return ("This job is on the bench. Build by hand carries on where you left off.",false);
    if(fitted)
    {
     string another=!canCraft&&craftReason=="missing_ingredients"?CraftingText.Shortfall(model,recipe):"";
-    return ($"Fitted to your {SelectedLoadout.WeaponName}."+(another.Length>0?$" Another would need {another}.":""),false);
+    var q=SelectedLoadout.Quality(mod.slot);
+    return ($"Fitted to your {SelectedLoadout.WeaponName}"+(model.HasAssembly(recipe.id)?$" ({CraftingText.QualityName(q)})":"")+"."+(another.Length>0?$" Another would need {another}.":""),false);
    }
+   if(craftReason=="hand_made_first"&&model.CanCraft(recipe.id,session.ActiveStationId,out _))return (CraftingText.Reason(craftReason,model,recipe),false);
    if(canFit)return (carried>1?$"You carry {carried}; fit one here.":"Ready to fit.",false);
    if(!canCraft)return (CraftingText.Reason(craftReason,model,recipe),true);
    if(mod==null)return ("Components are used by other schematics; they are not fitted.",false);
@@ -321,7 +346,7 @@ namespace AthenHill
   void FillStats(CraftingModel model,CraftModifier preview)
   {
    var loadout=SelectedLoadout;var now=loadout.Stats;
-   var next=preview!=null?loadout.Preview(preview.slot,preview.itemId):now;
+   var next=preview!=null?loadout.Preview(preview.slot,preview.itemId,Model!=null&&Model.Item(preview.itemId)!=null?Model.BestCarried(preview.itemId):CraftQuality.Standard):now;
    foreach(var (label,current,previewCell,delta) in statRows)
    {
     int i=WeaponStats.IndexOf(label.stat);

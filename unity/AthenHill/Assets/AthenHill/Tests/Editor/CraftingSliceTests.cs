@@ -60,7 +60,7 @@ namespace AthenHill.Tests
   [Test] public void CraftAndFitAreSeparateAtomicTransactions()
   {
    var pack=new ShopModel(City().items);
-   bool pistol=false;var model=new CraftingModel(Data(),City().items,pack,()=>pistol);
+   bool pistol=false;var model=new CraftingModel(Data(),City().items,pack,()=>pistol);model.HandsOnAvailable=_=>false; /* 20 Nov 2026: the timer route (Steady Hands bench: made by hand once first) */
    Assert.That(model.TryCraft(Grip().id,"station_field_fabricator",out var reason),Is.False);
    Assert.That(reason,Is.EqualTo("recipe_locked"));
    model.Identify("npc_ossa:servo_look");   // 20 Nov 2026: Ossa identifies the servo; picking it up no longer teaches the grip
@@ -77,7 +77,7 @@ namespace AthenHill.Tests
   }
   [Test] public void FittedGripCannotBeRemovedIntoFullStack()
   {
-   var pack=new ShopModel(City().items);var model=new CraftingModel(Data(),City().items,pack,()=>true);
+   var pack=new ShopModel(City().items);var model=new CraftingModel(Data(),City().items,pack,()=>true);model.HandsOnAvailable=_=>false; /* 20 Nov 2026: the timer route (Steady Hands bench: made by hand once first) */
    Assert.That(pack.TryApply(new[]{Delta("grip_stabilised_pistol",1)},0,out _));Assert.That(model.TryFit("grip_stabilised_pistol",out _));
    Assert.That(pack.TryApply(new[]{Delta("grip_stabilised_pistol",3)},0,out _));
    Assert.That(model.TryRemove("grip",out var reason),Is.False);Assert.That(reason,Is.EqualTo("stack_full"));
@@ -114,7 +114,7 @@ namespace AthenHill.Tests
    try
    {
     var camera=go.AddComponent<FollowCamera>();
-    var pack=new ShopModel(City().items);var model=new CraftingModel(Data(),City().items,pack,()=>true);
+    var pack=new ShopModel(City().items);var model=new CraftingModel(Data(),City().items,pack,()=>true);model.HandsOnAvailable=_=>false; /* 20 Nov 2026: the timer route (Steady Hands bench: made by hand once first) */
     Assert.That(model.RecoilStat*.05f,Is.EqualTo(1.9f).Within(.0001f));
     camera.pitch=0;camera.ApplyShotKick(model.RecoilStat*.05f,.5f,.18f);
     Assert.That(camera.pitch,Is.EqualTo(-1.9f).Within(.0001f));
@@ -136,7 +136,7 @@ namespace AthenHill.Tests
    {
     catalog.skills=new[]{new CharacterSkill{id="engineering",initial=30,trainingStep=5}};
     var pack=new ShopModel(City().items);var character=new CharacterModel(catalog,pack);
-    var model=new CraftingModel(Data(),City().items,pack,()=>true,character:character);
+    var model=new CraftingModel(Data(),City().items,pack,()=>true,character:character);model.HandsOnAvailable=_=>false; /* 20 Nov 2026: the timer route (Steady Hands bench: made by hand once first) */
     const string recipe="recipe_rifle_precision_barrel",station="station_field_fabricator";
     // 2 Oct 2026: the rifle is earned in the Long Arm order, not issued; the barrel mod needs the rifle carried
     Assert.That(pack.TryApply(new[]{Delta("scrap_alloy",3),Delta("copper_filament",2),Delta("field_rifle",1)},0,out _));
@@ -164,7 +164,7 @@ namespace AthenHill.Tests
     var pack=new ShopModel(items);Assert.That(pack.TryApply(new[]{Delta("tool",1),Delta("alloy",1)},0,out _));
     data.weapons=new[]{new CraftWeapon{id="weapon"}};data.modifiers=Array.Empty<CraftModifier>();
     data.recipes=new[]{new CraftRecipe{id="recipe",knownByDefault=true,outputItemId="output",requiredTools=new[]{"tool"},inputs=new[]{new CraftIngredient{kind="tag",id="metal",quantity=1}}}};
-    var model=new CraftingModel(data,items,pack,()=>true);
+    var model=new CraftingModel(data,items,pack,()=>true);model.HandsOnAvailable=_=>false; /* 20 Nov 2026: the timer route (Steady Hands bench: made by hand once first) */
     Assert.That(model.TryCraft("recipe",null,out var reason),reason);
     Assert.That(pack.Quantity("tool"),Is.EqualTo(1));Assert.That(pack.Quantity("alloy"),Is.Zero);Assert.That(pack.Quantity("output"),Is.EqualTo(1));
    }

@@ -1,0 +1,77 @@
+{
+ "name": "check_steady_hands_bench",
+ "exe": "/home/teknetik/code/ao2/unity/AthenHill/Builds/batch-sh-real4b/AthenHill.x86_64",
+ "exeMtime": "Thu Nov 19 14:08:38 2026",
+ "started": "2026-11-21 13:20:24",
+ "checks": [
+  {
+   "check": "the bench opens (state Assembly)",
+   "passed": false,
+   "detail": {
+    "state": "Play",
+    "assembly": {
+     "open": false,
+     "detached": null,
+     "lastNotice": "You cannot start that here. You need to carry or equip the required weapon first."
+    }
+   }
+  },
+  {
+   "check": "the cursor is free and visible at the bench",
+   "passed": false,
+   "detail": {
+    "lockState": "Locked",
+    "visible": false,
+    "looking": true,
+    "freed": false
+   }
+  },
+  {
+   "check": "the bench camera has the view",
+   "passed": false,
+   "detail": null
+  },
+  {
+   "check": "the bench is entered on 'work', or on 'wide' when the pistol to pick up lies outside it (21 Nov: it does, at the right end)",
+   "passed": false,
+   "detail": null
+  },
+  {
+   "check": "there is work open",
+   "passed": false,
+   "detail": []
+  },
+  {
+   "check": "no shade and no window over the bench",
+   "passed": true,
+   "detail": {
+    "shade": false,
+    "modal": false
+   }
+  },
+  {
+   "check": "the key legend shows on first use",
+   "passed": false,
+   "detail": null
+  },
+  {
+   "check": "script completed without error",
+   "passed": false,
+   "detail": "RuntimeError(\"bridge rejected dev.assembly.shot: {'code': 'invalid_state', 'message': 'Open the bench first (dev.assembly.open).'}\")"
+  },
+  {
+   "check": "no runtime exceptions in Player.log",
+   "passed": true,
+   "detail": []
+  }
+ ],
+ "captures": [
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real4-mouse/run/00-at-the-bench.png",
+  "/home/teknetik/code/ao2/unity/evidence/steady_hands/20261120/bench/native-real4-mouse/run/error-state.png"
+ ],
+ "notes": [],
+ "error": "Traceback (most recent call last):\n  File \"/home/teknetik/code/ao2/unity/tools/showcase_qa.py\", line 124, in run\n    body()\n    ~~~~^^\n  File \"/home/teknetik/code/ao2/unity/tools/check_steady_hands_bench.py\", line 609, in body\n    qa.cmd('dev.assembly.shot', shot='auto'); time.sleep(.6)\n    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/teknetik/code/ao2/unity/evidence/gameplay-v2/20260930-reqa2/qa.py\", line 184, in cmd\n    raise RuntimeError('bridge rejected %s: %s' % (action, ack.get('error')))\nRuntimeError: bridge rejected dev.assembly.shot: {'code': 'invalid_state', 'message': 'Open the bench first (dev.assembly.open).'}\n",
+ "passed": false,
+ "summary": "2/9 passed",
+ "finished": "2026-11-21 13:20:49"
+}

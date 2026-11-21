@@ -8,7 +8,8 @@ namespace AthenHill
  public sealed class PartPurchase{public string itemId,note="";}
  /// Journal (5 Oct 2026) replaces the old City notes screen in place; Stash (the home locker) and Rest (the home bunk)
  /// are appended. Map (the world map window, 19 Nov 2026) is appended too.
- public enum CityState { Boot,Play,Dialogue,Shop,Grid,Paused,Inventory,Journal,Credits,Error,Settings,MainMenu,Fabricator,Stash,Rest,Map }
+ /// Assembly (the hands-on bench job, 20 Nov 2026) is appended: no window, the bench camera and the Bench input map.
+ public enum CityState { Boot,Play,Dialogue,Shop,Grid,Paused,Inventory,Journal,Credits,Error,Settings,MainMenu,Fabricator,Stash,Rest,Map,Assembly }
  public class GameSession:MonoBehaviour,IQuestState
  {
   public CityCatalog catalog;
@@ -173,6 +174,8 @@ namespace AthenHill
    {
     // "Use the bench": straight from the conversation to the workbench the colonist keeps.
     var bench=ActiveNpc.workbench;ActiveNpc.StopSpeaking();ActiveNpc.talking=false;ActiveNpc=null;
+    // 20 Nov 2026: with a hands-on job due, "Use the bench" goes to the bench job as pressing E at it does.
+    if(GetComponent<CraftingSession>()?.UseStation(bench)==true)return;
     ActiveStation=bench;ActiveStationId=bench.stationId;SetState(CityState.Fabricator);
    }
    else {dialogueNode=choice.next;AddLog(ActiveNpc.definition.displayName,Dialogue.text);SpeakDialogue();Changed?.Invoke();}
@@ -460,13 +463,21 @@ namespace AthenHill
    if(State!=CityState.Play||!station||string.IsNullOrEmpty(station.stationId))return;
    ActiveStation=station;ActiveStationId=station.stationId;SetState(CityState.Fabricator);
   }
+  /// The hands-on bench job at a workbench (CONTRACT.md section B): AssemblySession takes over from here. Esc (Close) steps
+  /// back with the job kept. From play, or from the fabricator window's Build by hand.
+  public string ActiveAssemblyRecipe {get;private set;}
+  public void OpenAssembly(CraftingStationMarker station,string recipeId)
+  {
+   if(State!=CityState.Play&&State!=CityState.Fabricator&&State!=CityState.Dialogue||!station||string.IsNullOrEmpty(station.stationId)||string.IsNullOrEmpty(recipeId))return;
+   ActiveStation=station;ActiveStationId=station.stationId;ActiveAssemblyRecipe=recipeId;SetState(CityState.Assembly);
+  }
   public void Open(CityState state)
   {
-   if(state==CityState.Fabricator)return; // Only the nearby station can open this modal.
+   if(state==CityState.Fabricator||state==CityState.Assembly)return; // Only the nearby station can open these.
    if(State==CityState.MainMenu){if(state!=CityState.Settings)return;settingsReturn=CityState.MainMenu;Settings.BeginEdit();SetState(state);return;}
    if(State==CityState.Play||State==CityState.Paused){if(state==CityState.Settings){settingsReturn=CityState.Paused;Settings.BeginEdit();}SetState(state);}
   }
-  public void Close(){if(State==CityState.Settings){if(Settings.Previewing){Settings.RevertVideo();return;}Settings.EndEdit();SetState(settingsReturn);return;}if(State==CityState.MainMenu||State==CityState.Boot)return;if(State==CityState.Inventory&&DetailItemId!=null){CloseItemDetails();return;}DetailItemId=null;ActiveStationId=null;ActiveStation=null;ActiveHome=null;if(ActiveNpc){ActiveNpc.StopSpeaking();ActiveNpc.talking=false;}ActiveNpc=null;GridProgress=0;SetState(CityState.Play);}
+  public void Close(){if(State==CityState.Settings){if(Settings.Previewing){Settings.RevertVideo();return;}Settings.EndEdit();SetState(settingsReturn);return;}if(State==CityState.MainMenu||State==CityState.Boot)return;if(State==CityState.Inventory&&DetailItemId!=null){CloseItemDetails();return;}DetailItemId=null;ActiveStationId=null;ActiveStation=null;ActiveAssemblyRecipe=null;ActiveHome=null;if(ActiveNpc){ActiveNpc.StopSpeaking();ActiveNpc.talking=false;}ActiveNpc=null;GridProgress=0;SetState(CityState.Play);}
   public void ResetPlayer(){if(!HasStarted)return;Close();player.ReturnToGate();follow.yaw=-90;follow.pitch=17;follow.FixedView=false;}
   public void ToggleMute(){Settings.Sound.muted=!Settings.Sound.muted;Settings.SaveSound();Settings.Flush();}
   public void ToggleReducedMotion(){reducedMotion=!reducedMotion;Settings.SaveReducedMotion(reducedMotion);Changed?.Invoke();}

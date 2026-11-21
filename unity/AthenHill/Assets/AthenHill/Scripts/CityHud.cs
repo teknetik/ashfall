@@ -174,7 +174,7 @@ namespace AthenHill
   /// Navigation: in play nothing moves; in a modal, Tab / Shift+Tab cycle only through the modal's own controls.
   void GuardNavigation(NavigationMoveEvent e)
   {
-   if(session.State==CityState.Play){GuardPlay(e);return;}
+   if(session.State==CityState.Play||session.State==CityState.Assembly){GuardPlay(e);return;}
    if(e.direction!=NavigationMoveEvent.Direction.Next&&e.direction!=NavigationMoveEvent.Direction.Previous)return;
    var scope=ModalScope();if(scope==null)return;
    var stops=UiNavigation.TabStops(scope);if(stops.Count==0)return;
@@ -201,7 +201,8 @@ namespace AthenHill
   /// In play the HUD is mouse/hotkey only: navigation and submit events (WASD, arrows, Tab, Enter) never reach it.
   void GuardPlay(EventBase e)
   {
-   if(session.State!=CityState.Play)return;
+   // The bench (CityState.Assembly, 20 Nov 2026) works like play here: Space, Enter and the arrows belong to the bench.
+   if(session.State!=CityState.Play&&session.State!=CityState.Assembly)return;
    UiNavigation.Consume(e,root);
    (root.focusController?.focusedElement as VisualElement)?.Blur();
   }
@@ -288,11 +289,12 @@ namespace AthenHill
    if(previous!=session.State)windowLayout.CancelDrag();
    bool startup=!session.HasStarted;
    SetMenuCamera(startup);
-   root.Q("hud").SetEnabled(!modal);Show("hud",!startup);
+   bool atBench=session.State==CityState.Assembly; // no window: AssemblyHud draws what little the bench shows
+   root.Q("hud").SetEnabled(!modal||atBench);Show("hud",!startup);
    Show("startup-screen",startup);Show("startup-content",session.State==CityState.MainMenu);
    root.Q("startup-content").SetEnabled(session.State==CityState.MainMenu);
    root.EnableInClassList("startup-settings",startup&&session.State==CityState.Settings);
-   Show("shade",modal&&session.State!=CityState.MainMenu);Show("notice",!modal&&!string.IsNullOrEmpty(session.notice));Text("notice",session.notice);Text("modal-notice",session.notice);
+   Show("shade",modal&&session.State!=CityState.MainMenu&&!atBench);Show("notice",!modal&&!string.IsNullOrEmpty(session.notice));Text("notice",session.notice);Text("modal-notice",session.notice);
    bool radioUp=session.HasStarted&&session.RadioLine.Showing;
    Show("radio",radioUp);
    if(radioUp){Text("radio-text",session.RadioLine.Text);Text("radio-speaker",(session.RadioLine.Speaker??"Radio").ToUpperInvariant()+" · RADIO");}
@@ -373,6 +375,7 @@ namespace AthenHill
      // The pack manages its own focus (the selected cell, or Close when the pack is empty) so Enter inspects items
      // rather than accidentally closing the modal.
      if(session.State==CityState.Inventory)pack.Opened();
+     else if(session.State==CityState.Assembly)root.focusController?.focusedElement?.Blur();
      else
      {
       if(session.State==CityState.Shop)merchant.Opened();

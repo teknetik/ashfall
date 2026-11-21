@@ -1,0 +1,435 @@
+{
+  "about": "Steady Hands bench, integration pass: every number of the look in one place. Read by SteadyHandsBenchInstall20261120 (steps import, materials, light). Positions are bench-local metres: +x the player's left, +y up, +z toward the player (worktop front edge z 0.583, worktop y 0.8637). Colours of lights are sRGB as typed in the Inspector; emission and glow are linear HDR.",
+  "import": {
+    "anisotropic": 8,
+    "dirtyMaxSize": {
+      "grip": 1024,
+      "default": 2048
+    },
+    "extraGlbs": [
+      "Pistol/pistol_hand.glb"
+    ]
+  },
+  "surface": {
+    "normalScale": 1.0,
+    "occlusion": 1.0,
+    "emission": 0.6,
+    "emissionNote": "multiplies the GLB's emissiveFactor x KHR_materials_emissive_strength (the cell is authored at 8)",
+    "rim": 1.0,
+    "rimPower": 2.0,
+    "rimFloor": 0.22,
+    "wipeGrain": 0.35,
+    "wipeEdge": 0.14,
+    "wipeReach": 0.012,
+    "glassSmoothnessCap": 0.92,
+    "emissionStrength": {
+      "M_pistol_emissive": 8.0
+    },
+    "emissionStrengthNote": "glTFast 6.20 ignores KHR_materials_emissive_strength and model-pistol's 4096 export (21 Nov 11:24) no longer carries it; the strength the pistol's cell was authored with (8) is given here by material name; the GLB's own extension wins where present"
+  },
+  "reveals": [
+    {
+      "parts": [
+        "grip.seam_l",
+        "grip.seam_r"
+      ],
+      "step": "s5.cure",
+      "action": "wait",
+      "progress": true,
+      "glow": [
+        0.5,
+        1.0,
+        1.9
+      ],
+      "settle": 1.2,
+      "note": "the nanite seam knits under the cure lamp: uncured paste (the family's as-found set) to the cured seam, bright in between"
+    }
+  ],
+  "key": {
+    "name": "Bench work lamp",
+    "pos": [
+      -0.12,
+      1.5,
+      0.02
+    ],
+    "aim": [
+      0.0,
+      0.87,
+      0.3
+    ],
+    "color": [
+      1.0,
+      0.8,
+      0.6
+    ],
+    "intensity": 0.58,
+    "range": 1.7,
+    "spot": 120,
+    "inner": 80,
+    "shadows": "soft",
+    "shadowResolution": 4096,
+    "shadowStrength": 0.88,
+    "bias": 0.6,
+    "normalBias": 0.6,
+    "nearPlane": 0.15,
+    "note": "about 3000 K. Under the gantry's front edge, behind and above the work so shadows fall toward the player; a spot, so the gantry and print head above it stay dark. White card (albedo 0.8) at the work mat reads about 1.0 in the red channel from this lamp, 1.3 with the shop's",
+    "biasNote": "URP measures both in texels of the tile at the far plane (tan(spot/2) x range / tile = 0.72 mm at 4096), times 2.5 for soft shadows: 0.6 -> 1.08 mm along the light and up to 1.08 mm of caster shrink at grazing light (URP's own defaults). A flat face lit at 45 degrees needs about 1.4 units to stay free of acne under the 5 x 5 filter, so lower values band; the tile is 4096 (the whole atlas, no other light in the shop casts) so that the unit is small instead",
+    "coneNote": "120 / 80 degrees: full strength over the work surface, about a quarter at the tray; the worktop is 2.2 m wide and one lamp 0.63 m over it cannot reach its ends (integration/light_numbers.py), which are left to the shop's own lamps",
+    "softQuality": "medium"
+  },
+  "cure": {
+    "name": "Cure lamp",
+    "part": "fixtures.lamp_head",
+    "color": [
+      0.58,
+      0.78,
+      1.0
+    ],
+    "intensity": 0.5,
+    "range": 0.7,
+    "spot": 80,
+    "inner": 40,
+    "offset": [
+      0,
+      -0.02,
+      0
+    ]
+  },
+  "session": {
+    "fadeSeconds": 0.6,
+    "roomDim": 0.85,
+    "screenDim": 0.12,
+    "screenMaterial": "SS_FabScreen",
+    "screenLamp": "Fabricator glow",
+    "partsCastShadows": true,
+    "roomDimNote": "the shop's pendants and bounce while the bench is in use: they are the only light on the ends of the worktop (tray, press, board, where things lie at the start), so they are barely taken down",
+    "glowDim": 0.04,
+    "glowDimNote": "the 'Fabricator glow' point light hangs 0.34 m over the work mat: at full strength it puts 2.5 of blue on a white card there, more than the work lamp's red",
+    "noShadowParts": [
+      "fixtures.worksurface",
+      "fixtures.workmat",
+      "fixtures.partsmat",
+      "tools.roll"
+    ],
+    "enclosedSlack": 0.001
+  },
+  "cameras": {
+    "fov": 37.8,
+    "near": 0.02,
+    "distance": 0.3,
+    "pitch": 40,
+    "close": [
+      {
+        "id": "pistol",
+        "frames": [
+          "pistol.frame"
+        ],
+        "yaw": 0
+      },
+      {
+        "id": "servo",
+        "frames": [
+          "servo.case_body"
+        ],
+        "yaw": 20
+      },
+      {
+        "id": "grip",
+        "at": "fixtures.workmat/seat_grip",
+        "yaw": -20
+      },
+      {
+        "id": "tools",
+        "frames": [
+          "tools.roll"
+        ],
+        "yaw": 0
+      },
+      {
+        "id": "fixtures",
+        "frames": [
+          "fixtures.vise"
+        ],
+        "yaw": 25
+      },
+      {
+        "id": "materials",
+        "frames": [
+          "materials.sheet_a"
+        ],
+        "yaw": -15
+      },
+      {
+        "id": "vise_work",
+        "at": "fixtures.vise/seat_work",
+        "yaw": -30,
+        "pitch": 30
+      },
+      {
+        "id": "mat_low",
+        "at": "fixtures.workmat/seat_pistol",
+        "yaw": 35,
+        "pitch": 18,
+        "distance": 0.38
+      }
+    ]
+  },
+  "budget": {
+    "triangles": 250000,
+    "draws": 120,
+    "lights": 28
+  },
+  "revealsNote": "Only what the bench's own masks do not show: the seam knitting DURING the cure wait, with its glow. Tinned strands, punch dimples, clip and screw dust and the ring's corrosion are revealed by the bench's effects (\"~part/wipe\") on whole-part zones since 21:16; BenchLook reads those masks like any other.",
+  "enclosed": [
+    {
+      "part": "servo.board",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.clip_1",
+        "servo.clip_2",
+        "servo.clip_3",
+        "servo.output_shaft",
+        "servo.screw_case_b",
+        "servo.screw_case_c"
+      ]
+    },
+    {
+      "part": "servo.lead_plug",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.clip_3",
+        "servo.output_shaft",
+        "servo.screw_case_d"
+      ]
+    },
+    {
+      "part": "servo.trim_resistor",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.clip_1",
+        "servo.clip_2",
+        "servo.output_shaft"
+      ]
+    },
+    {
+      "part": "servo.circlip",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.output_shaft",
+        "servo.screw_case_b"
+      ]
+    },
+    {
+      "part": "servo.gear_low",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.clip_1",
+        "servo.output_shaft"
+      ]
+    },
+    {
+      "part": "servo.gear_mid",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.clip_1",
+        "servo.clip_3",
+        "servo.output_shaft",
+        "servo.screw_case_c"
+      ]
+    },
+    {
+      "part": "servo.gear_top",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.clip_1",
+        "servo.output_shaft"
+      ]
+    },
+    {
+      "part": "servo.gimbal_cradle",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.clip_1",
+        "servo.clip_2",
+        "servo.clip_3",
+        "servo.output_shaft",
+        "servo.screw_case_a"
+      ]
+    },
+    {
+      "part": "servo.gimbal_coil",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.clip_1",
+        "servo.clip_2",
+        "servo.clip_3",
+        "servo.output_shaft",
+        "servo.screw_case_c"
+      ]
+    },
+    {
+      "part": "servo.gimbal_grit_1",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.clip_2",
+        "servo.screw_case_b"
+      ]
+    },
+    {
+      "part": "servo.gimbal_grit_2",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid"
+      ]
+    },
+    {
+      "part": "servo.gimbal_grit_3",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.clip_1",
+        "servo.clip_2",
+        "servo.screw_case_b"
+      ]
+    },
+    {
+      "part": "servo.gimbal_race",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.clip_1",
+        "servo.clip_2",
+        "servo.clip_3",
+        "servo.screw_case_a",
+        "servo.screw_case_b"
+      ]
+    },
+    {
+      "part": "servo.gimbal_retainer",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.clip_1",
+        "servo.clip_2",
+        "servo.clip_3",
+        "servo.screw_case_b"
+      ]
+    },
+    {
+      "part": "servo.gimbal_ring",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.clip_1",
+        "servo.clip_2",
+        "servo.clip_3",
+        "servo.screw_case_a",
+        "servo.screw_case_b"
+      ]
+    },
+    {
+      "part": "servo.gimbal_rotor",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.clip_1",
+        "servo.clip_2",
+        "servo.clip_3",
+        "servo.screw_case_b",
+        "servo.screw_case_c"
+      ]
+    },
+    {
+      "part": "servo.lead_coil_a",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.clip_1",
+        "servo.clip_2",
+        "servo.clip_3",
+        "servo.output_shaft"
+      ]
+    },
+    {
+      "part": "servo.lead_coil_b",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.clip_1",
+        "servo.clip_2",
+        "servo.clip_3",
+        "servo.output_shaft",
+        "servo.screw_case_d"
+      ]
+    },
+    {
+      "part": "servo.lead_sense",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.clip_2",
+        "servo.clip_3",
+        "servo.output_shaft",
+        "servo.screw_case_d"
+      ]
+    },
+    {
+      "part": "servo.screw_trunnion_a",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.clip_1",
+        "servo.clip_2",
+        "servo.clip_3"
+      ]
+    },
+    {
+      "part": "servo.screw_trunnion_b",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.screw_case_b"
+      ]
+    },
+    {
+      "part": "servo.stator",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.clip_1",
+        "servo.clip_2",
+        "servo.clip_3",
+        "servo.output_shaft",
+        "servo.screw_case_a",
+        "servo.screw_case_b",
+        "servo.screw_case_c"
+      ]
+    },
+    {
+      "part": "servo.stator_winding",
+      "shells": [
+        "servo.case_body",
+        "servo.case_lid",
+        "servo.clip_1",
+        "servo.clip_2",
+        "servo.clip_3",
+        "servo.output_shaft",
+        "servo.screw_case_a",
+        "servo.screw_case_b",
+        "servo.screw_case_c",
+        "servo.screw_case_d"
+      ]
+    }
+  ],
+  "enclosedNote": "parts no ray leaves while they and their shells sit as found (integration/enclosure.py -> enclosure.json, 48 points x 40 directions each); BenchLook does not draw them while every link sits at its rest pose on its rest parent; pistol parts left out: in pistol.glb the test cards lie under the pistol and block rays they do not block on the bench"
+}

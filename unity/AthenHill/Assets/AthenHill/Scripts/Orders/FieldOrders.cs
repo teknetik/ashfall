@@ -49,7 +49,7 @@ namespace AthenHill
    while(crafting.Model==null||crafting.Loot==null)yield return null;
    Progress??=new FieldOrderProgress(data);
    session.RadioLine.IsStale=StaleRadioTag;
-   crafting.Model.Changed+=MarkDirty;crafting.Collected+=OnCollected;
+   crafting.Model.Changed+=MarkDirty;crafting.Collected+=OnCollected;crafting.AssemblyChanged+=MarkDirty;crafting.AssemblyFinished+=OnBenchBuilt;
    session.Changed+=MarkDirty;session.Talked+=OnTalked;
    if(combat)combat.ShotFired+=OnShot;
    if(tutorial)tutorial.Changed+=MarkDirty;
@@ -57,14 +57,83 @@ namespace AthenHill
   }
   void OnDestroy()
   {
-   if(crafting){if(crafting.Model!=null)crafting.Model.Changed-=MarkDirty;crafting.Collected-=OnCollected;}
+   if(crafting){if(crafting.Model!=null)crafting.Model.Changed-=MarkDirty;crafting.Collected-=OnCollected;crafting.AssemblyChanged-=MarkDirty;crafting.AssemblyFinished-=OnBenchBuilt;}
    if(session){session.Changed-=MarkDirty;session.Talked-=OnTalked;}
    if(combat)combat.ShotFired-=OnShot;
    if(tutorial)tutorial.Changed-=MarkDirty;
   }
   void MarkDirty()=>dirty=true;
   void OnCollected(LootPickup _)=>dirty=true;
-  void OnShot(){if(Ready&&Progress.NoteShot(crafting.Model))dirty=true;}
+  void OnShot()
+  {
+   if(!Ready)return;
+   var o=Progress.Current;
+   bool done=Progress.NoteShot(crafting.Model,combat?combat.LastShotDirection:Vector3.forward,combat?combat.transform.position:(Vector3?)null,out var verdict);
+   if(verdict==TestFireVerdict.OffRange&&Time.unscaledTime>offRangeNotice)
+   {
+    offRangeNotice=Time.unscaledTime+8;
+    session.Notify($"Ossa wants the test from the firing line at the Warden range, by her post. Those shots don't count.",o.speaker);
+   }
+   // 20 Nov 2026 (Steady Hands bench): a bench-built part's test fire is a judged string; Ossa answers the group
+   if(o!=null&&(verdict==TestFireVerdict.Tight||verdict==TestFireVerdict.Poor||verdict==TestFireVerdict.Again))
+   {
+    var line=verdict==TestFireVerdict.Tight?o.testFireTightLine:o.testFirePoorLine;
+    if(!string.IsNullOrEmpty(line)){session.Radio(line,o.speaker,0,RadioTag(Array.IndexOf(data.orders,o),"group"),true);Voice(verdict==TestFireVerdict.Tight?o.testFireTightVoice:o.testFirePoorVoice,0);}
+   }
+   if(done||verdict!=TestFireVerdict.None)dirty=true;
+  }
+  /// The bench finished a hand-made part: when it was the current order's, its test fire becomes a judged string and Ossa
+  /// asks for it on the radio.
+  void OnBenchBuilt(string recipeId,AssemblyResult result)
+  {
+   if(!Ready)return;
+   var o=Progress.Current;
+   // the range line is spoken when the player reaches the firing line (RangeArrival), not here
+   Progress.NoteBenchBuilt(recipeId,crafting.Model);
+   dirty=true;
+  }
+  float offRangeNotice;
+  readonly HashSet<string> rangeGreeted=new HashSet<string>();
+  /// A bench-built part waiting for its test fire: once the player stands at the firing line with it fitted, the plates go
+  /// up (they stay down after the primer until someone resets them) and Ossa asks for the string.
+  void RangeArrival()
+  {
+   var o=Progress.Current;
+   if(o==null||!combat||!Progress.RangeTest(o)||rangeGreeted.Contains(o.id))return;
+   if(Progress.Stage(crafting.Model,session.Shop)!=OrderStage.TestFire||!FieldOrderProgress.AtFiringLine(o,combat.transform.position))return;
+   rangeGreeted.Add(o.id);
+   if(tutorial)foreach(var t in tutorial.targets)if(t&&t.Down)t.Raise();
+   if(!string.IsNullOrEmpty(o.testFireLine)){session.Radio(o.testFireLine,o.speaker,0,RadioTag(Array.IndexOf(data.orders,o),"testfire"),true);Voice(o.testFireVoice,0);}
+  }
+  Transform rangeMarker;
+  /// The firing line as a marker point (the order's data position; no scene object is needed).
+  Transform RangeMarker(FieldOrder o)
+  {
+   if(!rangeMarker){var go=new GameObject("Field order firing line (runtime marker)");go.transform.SetParent(transform,false);rangeMarker=go.transform;}
+   rangeMarker.position=o.testFireAt;return rangeMarker;
+  }
+  // ---- Radio voice (20 Nov 2026, Steady Hands bench): the radio queue shows captions only, so voiced order lines play here,
+  // on one 2D source in the SFX group, when they are queued (a newer line cuts an older one).
+  AudioSource radioVoice;
+  void Voice(AudioClip clip,float delay)
+  {
+   if(!clip)return;
+   if(!radioVoice)
+   {
+    radioVoice=gameObject.AddComponent<AudioSource>();radioVoice.playOnAwake=false;radioVoice.spatialBlend=0;
+    var city=FindAnyObjectByType<CityAudio>();
+    var group=city&&city.steps&&city.steps.outputAudioMixerGroup?city.steps.outputAudioMixerGroup:city&&city.confirmation?city.confirmation.outputAudioMixerGroup:null;
+    if(group)radioVoice.outputAudioMixerGroup=group;
+   }
+   voiceQueue.Add((clip,Time.unscaledTime+Mathf.Max(0,delay)));
+  }
+  readonly List<(AudioClip clip,float at)> voiceQueue=new List<(AudioClip,float)>();
+  /// One take at a time, in order, each no earlier than its time (the radio paces its captions the same way).
+  void PlayVoices()
+  {
+   if(voiceQueue.Count==0||!radioVoice||radioVoice.isPlaying||Time.unscaledTime<voiceQueue[0].at)return;
+   radioVoice.clip=voiceQueue[0].clip;voiceQueue.RemoveAt(0);radioVoice.Play();
+  }
   /// Speaking to the current order's report-to colonist (Brann for the first order) moves it on to fabrication.
   /// 20 Nov 2026: not while the salvage is still unidentified (Brann sends the player to Ossa first; that is not the report).
   void OnTalked(NpcAgent npc){if(Ready&&npc&&npc.definition&&Progress.Stage(crafting.Model,session.Shop)!=OrderStage.Identify&&Progress.NoteReport(npc.definition.id))dirty=true;}
@@ -74,6 +143,8 @@ namespace AthenHill
    if(!Ready)return;
    if(!Progress.Started&&tutorial&&tutorial.Step==BermsStep.Complete){BeginOrder(Progress.Begin(),true);dirty=true;}
    if(dirty){dirty=false;Evaluate();}
+   RangeArrival();
+   PlayVoices();
    EngageWarning();
   }
   /// Radio tags: "order:INDEX:brief", "order:INDEX:done", "order:INDEX:engage".
@@ -105,7 +176,7 @@ namespace AthenHill
    {
     var reward=Reward(order);
     // Ossa's words go on the radio; the reward (credits, schematics) is a notice.
-    if(order==done[done.Count-1]){session.Radio(order.completeLine,order.speaker,0,RadioTag(Array.IndexOf(data.orders,order),"done"));if(!string.IsNullOrEmpty(reward))session.Notify(reward,"Field Orders");}
+    if(order==done[done.Count-1]){session.Radio(order.completeLine,order.speaker,0,RadioTag(Array.IndexOf(data.orders,order),"done"));Voice(order.completeVoice,Progress.Benched(order.id)?2.5f:0);if(!string.IsNullOrEmpty(reward))session.Notify(reward,"Field Orders");}
     Completed?.Invoke(order);
    }
    // Lines queued while the player was busy (the radio clock stops in the fabricator) must not replay late.
@@ -169,6 +240,9 @@ namespace AthenHill
   void ResolveGuidance(out Transform point,out string label)
   {
    point=null;label=null;
+   // 20 Nov 2026 (Steady Hands bench): a bench-built part's test fire points to the Warden range's firing line
+   var current=Progress?.Current;
+   if(current!=null&&Stage==OrderStage.TestFire&&Progress.RangeTest(current)){point=RangeMarker(current);label=string.IsNullOrEmpty(current.testFireLabel)?"FIRING LINE":current.testFireLabel;return;}
    if(guidance==null)return;
    point=guidance.point;label=guidance.label;
    var enc=GuidanceEncounter;if(!enc)return;

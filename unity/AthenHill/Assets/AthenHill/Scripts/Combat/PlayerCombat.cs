@@ -100,6 +100,15 @@ namespace AthenHill
   public float LastShotTime {get;private set;}=-99;
   [Header("Camera recoil")]
   public float recoilDegreesPerPoint=.05f,recoilRecoverFraction=.5f,recoilRecoverSeconds=.18f;
+  [Header("Handling sounds (Steady Hands bench, 20 Nov 2026; empty until the audio agent's asm.rattle.* / asm.damper.* land)")]
+  [Tooltip("A loose grip rattling: on draw, every shot and while moving, when the weapon's Side Kick is at least Rattle Above.")]
+  public AudioClip[] rattleClips=new AudioClip[0];
+  [Tooltip("One soft tick of a damper settling, after a shot, when the grip slot holds a mod and the weapon is steadier than Rattle Above.")]
+  public AudioClip[] damperClips=new AudioClip[0];
+  [Min(0)]public float rattleAbove=.5f;
+  [Range(0,1.5f)]public float rattleGain=.45f,rattleMoveGain=.22f,damperGain=.35f;
+  [Tooltip("Seconds between rattles while walking with a rattling weapon drawn (random in this range).")]
+  public Vector2 rattleMoveInterval=new Vector2(.55f,.9f);
   /// Effective weapon stats from the fitted loadout (cached; recomputed only when the loadout changes).
   public WeaponStats Stats {get;private set;}
   /// The unmodified weapon: recoil presentation scales relative to its base recoil.
@@ -136,6 +145,21 @@ namespace AthenHill
   /// Experience awarded for a kill: (amount, tier, levelled up). Easy kills raise it with 0.
   public event Action<int,ThreatTier,bool> ExperienceAwarded;
   float nextFire,faceUntil,tracerOff,emptyNotice,jamNotice;
+  // ---- Handling (Steady Hands bench, 20 Nov 2026): rapid-fire heat, side kick and the rattle/damper cues. See WeaponFeel.
+  float heat,heatShot=-99,nextRattle,damperAt=-1;int lastRattle=-1,lastDamper=-1;
+  /// Rapid-fire heat now (0 = the next shot has the base cone).
+  public float Heat=>WeaponFeel.Decay(heat,Time.time-heatShot);
+  /// The last shot's sideways camera kick (degrees, signed) and its cone multiplier from heat.
+  public float LastSideKick {get;private set;}
+  /// World direction of the last shot's ray (after scatter): the order test fire measures the group from it.
+  public Vector3 LastShotDirection {get;private set;}=Vector3.forward;
+  /// Where the last shot's ray ended (the surface it struck, or its range), before aim assist.
+  public Vector3 LastShotEnd {get;private set;}
+  public float LastHeatScale {get;private set;}=1;
+  /// Seconds the last shot's kick takes to settle (the weapon's recovery stat, or Recoil Recover Seconds).
+  public float RecoverySeconds=>Stats.recovery>0?Stats.recovery:recoilRecoverSeconds;
+  /// The drawn weapon rattles (its side kick is at least Rattle Above).
+  public bool Rattles=>Stats.sideKick>=rattleAbove&&rattleAbove>0;
   void Awake(){Health=GetComponent<Health>();ApplyLoadout();Nano=Stats.nanoMax;Health.Damaged+=OnDamaged;Health.Died+=OnDied;}
   /// CraftingSession binds the pistol's loadout once its model exists. Null returns to the serialized fallback.
   public void BindLoadout(WeaponLoadout loadout)
@@ -241,6 +265,8 @@ namespace AthenHill
    if(!hasPistol){session.Notify("Complete the field primer before drawing a weapon.");return;}
    if(Character!=null&&Character.Equipped(slot)==null){session.Notify(slot=="primary"?"No rifle equipped. Fit one in your loadout first.":"Equip a weapon in your loadout first.");return;}
    if(!Armed&&!InBerms){session.Notify("Wardens keep weapons holstered inside the walls.","Ward");return;}
+   // 20 Nov 2026 (Steady Hands bench): a weapon taken apart on the bench cannot be drawn until the job is finished or abandoned.
+   if(!Armed&&OnBench(slot)){session.Notify(CraftingText.ConditionReason("on_bench",Crafting,Crafting.GetLoadout(Crafting.OpenTicket.weaponId)),"Field Pack");return;}
    if(slot!=ActiveSlot)
    {
     if(!SelectWeapon(slot)){session.Notify(slot=="primary"?"That rifle has no field pattern yet.":"That weapon has no field pattern yet.");return;}
@@ -254,10 +280,22 @@ namespace AthenHill
     var clips=own!=null&&own.Length>0?own:Armed?drawClips:holsterClips;
     var clip=clips!=null&&clips.Length>0?Pick(clips,ref lastFoley):Armed?drawClip:null;
     if(clip)audioSource.PlayOneShot(clip,.8f);
+    if(Armed&&Rattles)PlayRattle(rattleGain);
    }
    string name=RifleActive?"Field rifle":"Scrap pistol";
    session.Notify(Armed?(RifleActive?"Field rifle drawn. Left mouse fires (hold for bursts); hold right mouse to aim.":"Scrap pistol drawn. Left mouse fires; hold right mouse to aim."):name+" holstered.");
   }
+  /// The weapon equipped in this slot is on the bench (an open bench job).
+  public bool OnBench(string slot)
+  {
+   if(Crafting==null||Crafting.OpenTicket==null||Character==null)return false;
+   var weapon=Crafting.FindWeapon(Character.Equipped(slot));
+   return weapon!=null&&Crafting.OnBench(weapon.id);
+  }
+  /// Rapid-fire heat back to 0 (QA: a timed string starts cold).
+  public void CoolDown(){heat=0;heatShot=-99;}
+  /// The bench took the drawn weapon (a job opened on it): holster without the draw/holster notice.
+  public void HolsterForBench(){if(!Armed)return;Armed=false;WeaponHandled?.Invoke();}
   void Update()
   {
    if(tracer&&tracer.enabled&&Time.time>tracerOff){tracer.enabled=false;if(muzzleLight)muzzleLight.enabled=false;}
@@ -273,6 +311,12 @@ namespace AthenHill
    motor.SpeedScale=(Aiming?aimMoveScale:1)*(Character!=null?Character.Stat("movementSpeed"):1);
    motor.FaceView=Aiming||Armed&&Time.time<faceUntil;
    if(view)motor.FaceYaw=view.transform.eulerAngles.y;
+   if(damperAt>0&&Time.time>=damperAt){damperAt=-1;if(Armed)PlayDamper();}
+   if(play&&Armed&&Rattles&&motor&&motor.Speed>WeaponBallistics.MovingSpeed&&Time.time>=nextRattle)
+   {
+    nextRattle=Time.time+UnityEngine.Random.Range(rattleMoveInterval.x,Mathf.Max(rattleMoveInterval.x,rattleMoveInterval.y));
+    PlayRattle(rattleMoveGain);
+   }
    if(!play||!Armed)return;
    if(input.FirePressed||Automatic&&input.FireHeld)Fire();
   }
@@ -317,12 +361,18 @@ namespace AthenHill
    float range=stats.range;
    // Cone: weapon spread narrowed by effective accuracy (weapon + character + skill), halved while aiming, widened on the move.
    bool moving=motor&&motor.Speed>WeaponBallistics.MovingSpeed;
-   float cone=WeaponBallistics.Cone(stats.spread,stats.accuracy,Aiming,moving)*(condition!=null?WeaponCondition.SpreadScale(condition,Loadout.Durability):1);LastCone=cone;
+   float cone=WeaponBallistics.Cone(stats.spread,stats.accuracy,Aiming,moving)*(condition!=null?WeaponCondition.SpreadScale(condition,Loadout.Durability):1);
+   // Rapid fire (20 Nov 2026): the heat left by earlier shots widens this one; the first shot of a string has the base cone.
+   float since=Time.time-heatShot;LastHeatScale=WeaponFeel.ScatterScale(WeaponFeel.Decay(heat,since));cone*=LastHeatScale;
+   heat=WeaponFeel.HeatAfterShot(heat,since,stats.scatterGrowth);heatShot=Time.time;
+   LastCone=cone;
    Vector2 scatter=UnityEngine.Random.insideUnitCircle*cone;
    Vector3 direction=(Quaternion.AngleAxis(scatter.x,cam.up)*Quaternion.AngleAxis(-scatter.y,cam.right)*cam.forward).normalized;
+   LastShotDirection=direction;
    Vector3 end=origin+direction*range;Health target=null;
    if(Physics.Raycast(origin,direction,out var hit,range,shotMask,QueryTriggerInteraction.Ignore))
    {end=hit.point;target=hit.collider.GetComponentInParent<Health>();if(target==Health)target=null;}
+   LastShotEnd=end;
    bool direct=target&&target.Alive;
    if(!target||!target.Alive)
    {
@@ -336,7 +386,12 @@ namespace AthenHill
    bool weakHit=weak&&weak.isActiveAndEnabled&&weak.Test(origin,direction,direct?hit.distance:Vector3.Distance(origin,end),out weakAt);
    // The shot uses the pre-kick view. LateUpdate applies recovery before writing the next view.
    LastKickDegrees=stats.recoil*recoilDegreesPerPoint;
-   if(follow)follow.ApplyShotKick(LastKickDegrees,recoilRecoverFraction,recoilRecoverSeconds);
+   // Handling (20 Nov 2026): a random sideways step, the weapon's own recovery time and one overshoot when that is slow.
+   LastSideKick=WeaponFeel.SideKick(stats.sideKick,UnityEngine.Random.value,UnityEngine.Random.value);
+   float recover=RecoverySeconds;
+   if(follow)follow.ApplyShotKick(LastKickDegrees,LastSideKick,recoilRecoverFraction,recover,WeaponHandlingRules.OvershootFraction(recover));
+   if(Rattles)PlayRattle(rattleGain);
+   else if(Loadout!=null&&Loadout.Fitted("grip")!=null)damperAt=Time.time+recover*.8f;
    ShotFired?.Invoke();
    var vm=RifleActive?rifleViewModel:viewModel;
    bool firstPerson=vm&&vm.Visible&&vm.muzzle;
@@ -392,6 +447,24 @@ namespace AthenHill
    ExperienceAwarded?.Invoke(amount,tier,levelled);
   }
   int lastMech=-1,lastBody=-1,lastTail=-1,lastEmpty=-1,lastFoley=-1;
+  /// Rattle and damper cues (QA reads the counts; the clips may still be empty).
+  public int Rattled {get;private set;}
+  public int DamperTicks {get;private set;}
+  /// The player's own clips, else the crafting catalog's (WardCrafting.asset, bound by the craft data script).
+  AudioClip[] Rattles_=>rattleClips!=null&&rattleClips.Length>0?rattleClips:Crafting?.Data?.rattleClips;
+  AudioClip[] Dampers=>damperClips!=null&&damperClips.Length>0?damperClips:Crafting?.Data?.damperClips;
+  void PlayRattle(float gain)
+  {
+   Rattled++;var clips=Rattles_;
+   if(!audioSource||clips==null||clips.Length==0)return;
+   var clip=Pick(clips,ref lastRattle);if(clip)audioSource.PlayOneShot(clip,gain);
+  }
+  void PlayDamper()
+  {
+   DamperTicks++;var clips=Dampers;
+   if(!audioSource||clips==null||clips.Length==0)return;
+   var clip=Pick(clips,ref lastDamper);if(clip)audioSource.PlayOneShot(clip,damperGain);
+  }
   static AudioClip Pick(AudioClip[] clips,ref int last)=>CombatAudio.Pick(clips,ref last);
   /// The bound weapon's own sound set, or null when it has none (the legacy arrays play).
   public WeaponSoundSet ActiveSoundSet=>CombatAudio.SelectSet(weaponSounds,Loadout!=null?Loadout.WeaponId:null);

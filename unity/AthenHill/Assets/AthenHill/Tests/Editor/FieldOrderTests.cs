@@ -21,7 +21,7 @@ namespace AthenHill.Tests
     pack=new ShopModel(City().items);
     // 2 Oct 2026: the rifle recipe asks for engineering 20, so the run carries a colonist who meets it
     var catalog=ScriptableObject.CreateInstance<CharacterCatalog>();catalog.skills=new[]{new CharacterSkill{id="engineering",initial=20}};
-    model=new CraftingModel(Data(),City().items,pack,()=>true,character:new CharacterModel(catalog,pack));orders=new FieldOrderProgress(Orders());
+    model=new CraftingModel(Data(),City().items,pack,()=>true,character:new CharacterModel(catalog,pack));model.HandsOnAvailable=_=>false; /* 20 Nov 2026: the timer route (Steady Hands bench: made by hand once first) */orders=new FieldOrderProgress(Orders());
    }
    public List<FieldOrder> Advance()=>orders.Advance(model,id=>collected.Contains(id)||pack.Quantity(id)>0);
    public void Craft(string recipe,int n=1){model.Unlock(recipe);for(int i=0;i<n;i++)Assert.That(model.TryCraft(recipe,Station,out var r),r);}

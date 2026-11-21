@@ -172,6 +172,9 @@ namespace AthenHill
    var picture=new VisualElement{name="weapon-picture",pickingMode=PickingMode.Ignore};picture.AddToClassList("weapon-picture");
    picture.AddToClassList(session.Shop.Spec(item)?.icon??"pack-icon");body.Add(picture);
    if(item==null){Copy(body,"Choose a carried weapon and equip it here. Its attachment sockets and statistics appear when fitted.");return;}
+   // 20 Nov 2026 (Steady Hands bench): a weapon taken apart on the bench says so; unequipping, swapping and moving it are refused
+   var onBench=Craft?.FindWeapon(item)!=null?Craft.BenchStateFor(Craft.FindWeapon(item).id):null;
+   if(onBench!=null){cell.tooltip=slot.label+": "+ItemName(item)+" · "+onBench;Copy(body,onBench);}
    if(crafting&&crafting.combat)
    {
     var combat=crafting.combat;
@@ -186,12 +189,13 @@ namespace AthenHill
    {
     string key=socket,mod=loadout.Fitted(key),weaponId=weapon.id;
     var socketCell=EquipmentButton("socket-"+key,Craft.Data.SlotName(key),mod,()=>{selectedSocket=key;selectedSlot=null;selectedWeapon=weaponId;selectedModification=-1;signature=null;Refresh();});
-    socketCell.AddToClassList("weapon-socket");socketCell.userData=new Target{socket=key,weapon=weaponId};BindDrag(socketCell,mod,null,key,weaponId);sockets.Add(socketCell);
+    socketCell.AddToClassList("weapon-socket");socketCell.userData=new Target{socket=key,weapon=weaponId};
+    if(mod!=null)socketCell.tooltip=Craft.Data.SlotName(key)+": "+CraftingText.FittedName(Craft,loadout,key); /* 20 Nov 2026: crafted quality (Steady Hands bench) */BindDrag(socketCell,mod,null,key,weaponId);sockets.Add(socketCell);
    }
    if(selectedSocket!=null)
    {
     var fitted=loadout.Fitted(selectedSocket);
-    Copy(body,fitted!=null?ItemName(fitted)+"\n"+(session.Shop.Spec(fitted)?.description??""):"Select a compatible mod in your pack, then Equip selected.");
+    Copy(body,fitted!=null?CraftingText.FittedName(Craft,loadout,selectedSocket)+"\n"+(session.Shop.Spec(fitted)?.description??""):"Select a compatible mod in your pack, then Equip selected.");
    }
    Heading("WEAPON STATS");
    var effective=loadout.WithCharacter(Character);

@@ -1,0 +1,267 @@
+{
+ "note": "Steady Hands bench voice lines (audio agent, 20 Nov 2026). Triggers are suggestions in the bench system's terms (DESIGN.md step ids); craft/bench bind them. Paths are relative to unity/AthenHill. Caption text = text.",
+ "voices": {
+  "npc_brann": {
+   "name": "Callum",
+   "id": "N2lVS1w4EtoT3dr4eOWO"
+  },
+  "npc_ossa": {
+   "name": "Victoria",
+   "id": "N8SmJJ4vvs5Mz9VaT6u5"
+  }
+ },
+ "lines": [
+  {
+   "id": "take_bench",
+   "speaker": "npc_brann",
+   "text": "Bench is yours. Lay it out.",
+   "trigger": "session.enter.first",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-take_bench.wav"
+  },
+  {
+   "id": "stage1",
+   "speaker": "npc_brann",
+   "text": "Cell's out. Now strip it, grip first.",
+   "trigger": "stage.start:1",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-stage1.wav"
+  },
+  {
+   "id": "stage2",
+   "speaker": "npc_brann",
+   "text": "Frame in the cradle. Servo next. Go gentle, that's the good part.",
+   "trigger": "stage.start:2",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-stage2.wav"
+  },
+  {
+   "id": "stage3",
+   "speaker": "npc_brann",
+   "text": "Clean that gimbal, wire it, then cut your plates.",
+   "trigger": "stage.start:3",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-stage3.wav"
+  },
+  {
+   "id": "stage4",
+   "speaker": "npc_brann",
+   "text": "Core next. The press won't forgive a dirty mould.",
+   "trigger": "stage.start:4",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-stage4.wav"
+  },
+  {
+   "id": "stage5",
+   "speaker": "npc_brann",
+   "text": "Core's sound. Now put the grip together.",
+   "trigger": "stage.start:5",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-stage5.wav"
+  },
+  {
+   "id": "stage6",
+   "speaker": "npc_brann",
+   "text": "Grip's done. Put it on the pistol.",
+   "trigger": "stage.start:6",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-stage6.wav"
+  },
+  {
+   "id": "stage7",
+   "speaker": "npc_brann",
+   "text": "That's it. Shake it, then shoot a fresh card.",
+   "trigger": "stage.start:7",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-stage7.wav"
+  },
+  {
+   "id": "stuck_screw",
+   "speaker": "npc_brann",
+   "text": "Lower one's seized. Oil it, tap it, then turn. Don't force it.",
+   "trigger": "step.fault_first:s1.screw_b",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-stuck_screw.wav"
+  },
+  {
+   "id": "cracked_tang",
+   "speaker": "npc_brann",
+   "text": "See that crack in the tang? That's why it walks off target.",
+   "trigger": "step.done:s1.inspect",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-cracked_tang.wav"
+  },
+  {
+   "id": "fault_camout",
+   "speaker": "npc_brann",
+   "text": "Wrong bit. You'll chew the head.",
+   "trigger": "fault.first:camout",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-fault_camout.wav"
+  },
+  {
+   "id": "fault_stripped",
+   "speaker": "npc_brann",
+   "text": "Head's gone. Pliers. Slow.",
+   "trigger": "fault.first:stripped",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-fault_stripped.wav"
+  },
+  {
+   "id": "fault_short_lead",
+   "speaker": "npc_brann",
+   "text": "Cut it short. You'll be splicing that.",
+   "trigger": "fault.first:short_lead",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-fault_short_lead.wav"
+  },
+  {
+   "id": "fault_cold_joint",
+   "speaker": "npc_brann",
+   "text": "Cold joint. Dull and grey. Heat it again.",
+   "trigger": "fault.first:cold_joint",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-fault_cold_joint.wav"
+  },
+  {
+   "id": "fault_overbend",
+   "speaker": "npc_brann",
+   "text": "Too far. Bend it back once. Only once.",
+   "trigger": "fault.first:over_bend",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-fault_overbend.wav"
+  },
+  {
+   "id": "fault_flew_off",
+   "speaker": "npc_brann",
+   "text": "Little ones fly. Find it before you go on.",
+   "trigger": "fault.first:flew_off",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-fault_flew_off.wav"
+  },
+  {
+   "id": "hint_schematic",
+   "speaker": "npc_brann",
+   "text": "Check the schematic. It shows where you are.",
+   "trigger": "hint.idle25:a",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-hint_schematic.wav"
+  },
+  {
+   "id": "hint_mat",
+   "speaker": "npc_brann",
+   "text": "Empty outline on the mat. Something's still on.",
+   "trigger": "hint.idle25:b",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-hint_mat.wav"
+  },
+  {
+   "id": "hint_tool",
+   "speaker": "npc_brann",
+   "text": "Right tool makes it easy. Wrong one makes a mess.",
+   "trigger": "hint.idle25:c",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-hint_tool.wav"
+  },
+  {
+   "id": "spin_good",
+   "speaker": "npc_brann",
+   "text": "Hear that? Clean. That'll do.",
+   "trigger": "step.done:s3.spin",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-spin_good.wav"
+  },
+  {
+   "id": "spin_bad",
+   "speaker": "npc_brann",
+   "text": "Grinding. There's still grit in it.",
+   "trigger": "step.fault:s3.spin",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-spin_bad.wav"
+  },
+  {
+   "id": "press",
+   "speaker": "npc_brann",
+   "text": "Keep it in the green.",
+   "trigger": "step.start:s4.press",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-press.wav"
+  },
+  {
+   "id": "damper_good",
+   "speaker": "npc_brann",
+   "text": "One tick and still. That's the damper working.",
+   "trigger": "step.done:s5.damp",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-damper_good.wav"
+  },
+  {
+   "id": "damper_bad",
+   "speaker": "npc_brann",
+   "text": "Still swinging. Something's pinched in there.",
+   "trigger": "step.fault:s5.damp",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-damper_bad.wav"
+  },
+  {
+   "id": "card_before",
+   "speaker": "npc_brann",
+   "text": "All over the card. That's what you're fixing.",
+   "trigger": "step.done:s0.card_before",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-card_before.wav"
+  },
+  {
+   "id": "card_after_rough",
+   "speaker": "npc_brann",
+   "text": "Better. Rough, but it holds.",
+   "trigger": "step.done:s7.card_after:Rough",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-card_after_rough.wav"
+  },
+  {
+   "id": "card_after_standard",
+   "speaker": "npc_brann",
+   "text": "Tight group. Honest work.",
+   "trigger": "step.done:s7.card_after:Standard",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-card_after_standard.wav"
+  },
+  {
+   "id": "card_after_fine",
+   "speaker": "npc_brann",
+   "text": "Look at that. I couldn't have done it better.",
+   "trigger": "step.done:s7.card_after:Fine",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-card_after_fine.wav"
+  },
+  {
+   "id": "hand_over",
+   "speaker": "npc_brann",
+   "text": "Range. Go and feel the difference.",
+   "trigger": "step.done:s7.leave",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-hand_over.wav"
+  },
+  {
+   "id": "step_away",
+   "speaker": "npc_brann",
+   "text": "Leave it there. It'll keep.",
+   "trigger": "session.leave.unfinished",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-step_away.wav"
+  },
+  {
+   "id": "come_back",
+   "speaker": "npc_brann",
+   "text": "Pick up where you left off.",
+   "trigger": "session.enter.resume",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-come_back.wav"
+  },
+  {
+   "id": "abandon",
+   "speaker": "npc_brann",
+   "text": "Packing it in? Your parts go back. What's cut stays cut.",
+   "trigger": "session.abandon",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_brann-abandon.wav"
+  },
+  {
+   "id": "range_ready",
+   "speaker": "npc_ossa",
+   "text": "Brann says it's steady. Show me. Three on the plate.",
+   "trigger": "order.testfire.start",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_ossa-range_ready.wav"
+  },
+  {
+   "id": "range_tight",
+   "speaker": "npc_ossa",
+   "text": "Tight. That pistol's finally pulling its weight.",
+   "trigger": "order.testfire.group:tight",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_ossa-range_tight.wav"
+  },
+  {
+   "id": "range_poor",
+   "speaker": "npc_ossa",
+   "text": "Wide. Breathe out, then squeeze. Again.",
+   "trigger": "order.testfire.group:poor",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_ossa-range_poor.wav"
+  },
+  {
+   "id": "range_done",
+   "speaker": "npc_ossa",
+   "text": "Steady. I'll log the order. Keep that grip clean.",
+   "trigger": "order.testfire.complete",
+   "file": "Assets/AthenHill/Audio/ElevenLabs/Bench/Voice/npc_ossa-range_done.wav"
+  }
+ ]
+}

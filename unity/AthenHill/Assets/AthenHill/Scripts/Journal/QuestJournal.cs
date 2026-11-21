@@ -197,11 +197,23 @@ namespace AthenHill
       Step(m,"Gather the parts",at>0);
       if(identify)Step(m,"Show the salvage to Warden Ossa",done||at>1||model.Knows(recipe.id));
       if(report)Step(m,$"Take them to {reportName}",at>1+b);
-      Step(m,$"Fabricate the {item} at the workbench",at>2+b);
-      if(o.goal==FieldOrderGoal.FitMod)
+      // 20 Nov 2026 (Steady Hands bench): a part made by hand is built and fitted in one bench visit, so one step replaces
+      // Fabricate and Fit; its progress is the bench's current stage. A part already made on the timer keeps the Fit step.
+      bool bench=recipe!=null&&o.goal==FieldOrderGoal.FitMod&&model.HasAssembly(recipe.id)&&(done?model.HandMade(recipe.id):stage!=OrderStage.Fit&&(model.NeedsHandMade(recipe.id)||model.OnBenchRecipe(recipe.id)||stage==OrderStage.TestFire&&model.HandMade(recipe.id)));
+      if(bench)
       {
-       Step(m,$"Fit the {item}",at>3+b);
-       if(o.requireTestFire)Step(m,"Test-fire it in the Outer Berms",done);
+       string label=!done&&stage==OrderStage.Fabricate&&model.OnBenchRecipe(recipe.id)&&!string.IsNullOrEmpty(model.AssemblyStageLabel)?" · "+model.AssemblyStageLabel:"";
+       Step(m,FieldOrderProgress.Fill(data.benchStepFormat??"Build and fit the {item} at the bench",("item",item))+label,at>3+b);
+       if(o.requireTestFire)Step(m,o.testFireRadius>0&&!string.IsNullOrEmpty(o.testFireStep)?o.testFireStep:"Test-fire it in the Outer Berms",done);
+      }
+      else
+      {
+       Step(m,$"Fabricate the {item} at the workbench",at>2+b);
+       if(o.goal==FieldOrderGoal.FitMod)
+       {
+        Step(m,$"Fit the {item}",at>3+b);
+        if(o.requireTestFire)Step(m,"Test-fire it in the Outer Berms",done);
+       }
       }
       break;
      }

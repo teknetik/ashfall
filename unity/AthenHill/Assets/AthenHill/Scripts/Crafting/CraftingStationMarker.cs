@@ -13,6 +13,13 @@ namespace AthenHill
   WorldInteractable interaction;
   void OnEnable(){interaction=GetComponent<WorldInteractable>();interaction.Used+=Use;}
   void OnDisable(){if(interaction)interaction.Used-=Use;}
-  void Use(){if(session)session.OpenFabricator(this);}
+  /// 20 Nov 2026 (Steady Hands bench): a hands-on job that is due or open opens the bench directly; otherwise the window.
+  void Use()
+  {
+   if(!session)return;
+   var crafting=session.GetComponent<CraftingSession>();
+   if(crafting&&crafting.UseStation(this))return;
+   session.OpenFabricator(this);
+  }
  }
 }

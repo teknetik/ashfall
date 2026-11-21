@@ -1,0 +1,38 @@
+/* Steady Hands bench (20 Nov 2026, AssemblyHud). No panels for the core work: a key legend on first use, the way out,
+   a hold-to-abandon control, and a stage line for detached QA jobs. Palette from unity/DESIGN.md (bronze structure,
+   warm white text, dark enamel). While the bench is open the play HUD keeps only Field Notes and the caption strip. */
+.assembly-open #quickbar, .assembly-open #key-hints, .assembly-open #chat, .assembly-open #compass, .assembly-open #identity,
+.assembly-open #top-actions, .assembly-open #nametags { display: none; }
+
+/* Brann's captions at the bench: a band at the top centre, under the stage line, where no work is (in play they sit low
+   in the middle of the picture, which at the bench is the work mat). AssemblySightCheck holds the same rectangle. */
+.assembly-open #bark-caption { bottom: auto; top: 68px; }
+
+.assembly-stage { position: absolute; left: 28px; top: 24px; font-size: 20px; color: #eee9dc; letter-spacing: 2px;
+  background-color: rgba(12,20,19,0.78); padding: 6px 16px; border-left-width: 3px; border-left-color: #a48a62; display: none; }
+
+.assembly-legend { position: absolute; left: 28px; bottom: 96px; width: 470px; background-color: rgba(12,20,19,0.84);
+  border-top-width: 2px; border-top-color: #a48a62; padding: 12px 18px 12px; }
+.assembly-legend-title { font-size: 14px; color: #a48a62; letter-spacing: 3px; margin-bottom: 6px; }
+.assembly-legend-row { flex-direction: row; margin-top: 2px; }
+.assembly-legend-keys { width: 232px; font-size: 16px; color: #eee9dc; }
+.assembly-legend-what { font-size: 16px; color: #bca581; flex-grow: 1; white-space: normal; }
+
+.assembly-leave { position: absolute; left: 28px; bottom: 30px; font-size: 16px; color: #bca581; letter-spacing: 1px;
+  background-color: rgba(12,20,19,0.7); padding: 5px 12px; }
+
+.assembly-abandon { position: absolute; right: 28px; bottom: 30px; width: 300px; height: 34px;
+  background-color: rgba(12,20,19,0.7); border-width: 1px; border-color: rgba(164,138,98,0.55); justify-content: center; }
+.assembly-abandon:hover { border-color: #a48a62; }
+.assembly-abandon-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background-color: rgba(198,92,79,0.55); }
+.assembly-abandon-label { font-size: 15px; color: #bca581; -unity-text-align: middle-center; letter-spacing: 1px; }
+.assembly-abandon--held .assembly-abandon-label { color: #eee9dc; }
+
+.small-window .assembly-legend { width: 420px; bottom: 84px; }
+.small-window .assembly-legend-keys { width: 200px; font-size: 15px; }
+.small-window .assembly-legend-what { font-size: 15px; }
+
+/* the action line (21 Nov): what to do now, under the stage line and kept LEFT of Brann's caption band (x 580 on): at most
+   540 px wide, it wraps to a second line instead of running under the caption (they collided at 700 px wide) */
+.assembly-action { position: absolute; left: 28px; top: 70px; max-width: 540px; white-space: normal; font-size: 21px; color: #f2ead6; padding: 6px 14px;
+    background-color: rgba(14, 13, 11, 0.62); border-left-width: 3px; border-left-color: #c98a3e; -unity-font-style: bold; }

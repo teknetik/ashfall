@@ -18,6 +18,12 @@ namespace AthenHill
   bool HasItem(string itemId)=>false;
   /// This schematic is known (default: none).
   bool KnowsRecipe(string recipeId)=>false;
+  /// A hands-on bench job is open (20 Nov 2026, Steady Hands bench). Default: read from the CraftingSession beside the
+  /// implementing component (GameSession), none otherwise.
+  bool BenchOpen=>(this as Component)?Crafting(this)?.OpenTicket!=null:false;
+  /// This schematic has been made by hand at the bench at least once (default as BenchOpen).
+  bool HandMade(string recipeId)=>(this as Component)&&Crafting(this)?.HandMade(recipeId)==true;
+  static CraftingModel Crafting(IQuestState s)=>(s as Component)?.GetComponent<CraftingSession>()?.Model;
  }
  /// Dialogue conditions (NpcDefinition entries and choices): comma-separated terms that must all hold; "!" negates one.
  ///  primer          the Outer Berms primer is complete
@@ -29,10 +35,12 @@ namespace AthenHill
  ///  flag:ID         a story flag set by a dialogue choice (saved)
  ///  carry:ITEM      the pack holds that item (20 Nov 2026)
  ///  recipe:ID       that schematic is known (20 Nov 2026)
+ ///  bench           a hands-on bench job is open (Steady Hands bench, 20 Nov 2026)
+ ///  handmade:ID     that schematic has been made by hand at the bench
  /// e.g. "order:order_steady_hands, !reported" or "primer, !flag:brann_met".
  public static class QuestConditions
  {
-  static readonly HashSet<string> Keys=new HashSet<string>{"primer","pistol","order","stage","reported","freeplay","flag","carry","recipe"};
+  static readonly HashSet<string> Keys=new HashSet<string>{"primer","pistol","order","stage","reported","freeplay","flag","carry","recipe","bench","handmade"};
   public static bool Evaluate(string expression,IQuestState state)
   {
    if(string.IsNullOrWhiteSpace(expression))return true;
@@ -64,6 +72,8 @@ namespace AthenHill
     case "flag":return !string.IsNullOrEmpty(value)&&s.HasFlag(value);
     case "carry":return !string.IsNullOrEmpty(value)&&s.HasItem(value);
     case "recipe":return !string.IsNullOrEmpty(value)&&s.KnowsRecipe(value);
+    case "bench":return s.BenchOpen;
+    case "handmade":return !string.IsNullOrEmpty(value)&&s.HandMade(value);
     default:Debug.LogWarning("Unknown dialogue condition: "+term);return false;
    }
   }
@@ -76,7 +86,7 @@ namespace AthenHill
     var term=raw.Trim().TrimStart('!').Trim();if(term.Length==0)continue;
     Split(term,out var key,out var value);
     if(!Keys.Contains(key))yield return term;
-    else if((key=="order"||key=="flag"||key=="stage"||key=="carry"||key=="recipe")&&string.IsNullOrEmpty(value))yield return term;
+    else if((key=="order"||key=="flag"||key=="stage"||key=="carry"||key=="recipe"||key=="handmade")&&string.IsNullOrEmpty(value))yield return term;
     else if(key=="stage"&&!Enum.TryParse(value,true,out OrderStage _))yield return term;
    }
   }

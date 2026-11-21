@@ -6,7 +6,7 @@ using UnityEngine;
 namespace AthenHill
 {
  [RequireComponent(typeof(GameSession))]
- public class CraftingSession:MonoBehaviour
+ public partial class CraftingSession:MonoBehaviour
  {
   public CraftingCatalog data;
   public PlayerCombat combat;
@@ -37,6 +37,8 @@ namespace AthenHill
    Loot=new LootBook(freshSeedPerNewGame?unchecked((ulong)DateTime.UtcNow.Ticks):unchecked((ulong)lootSeed));
    Model=new CraftingModel(data,Session.catalog.items,Session.Shop,()=>combat&&combat.hasPistol,character:Session.Character);
    // 5 Oct 2026: the leased home's locker feeds the bench (WardHome.lockerFeedsBench); the pack is always used first
+   if(Session.Character!=null)Session.Character.SlotLocked=Model.SlotLockFor(Session.Character); // 20 Nov 2026: the weapon on the bench stays equipped
+   Model.HandsOnAvailable=BenchPresent; // 20 Nov 2026: no bench system, no hand-made gate (AssemblyHost.cs)
    Model.Reserve=Session.Stash;Model.ReserveOpen=()=>Session.Home&&Session.Home.lockerFeedsBench&&Session.HasFlag(WardHome.LeasedFlag);
    if(combat){combat.BindLoadout(Model.Loadout);combat.BindCraftingModel(Model);if(combat.Health)combat.Health.Damaged+=OnDamaged;combat.WeaponHandled+=OnWeaponHandled;}
    Session.PartBought+=OnPartBought;

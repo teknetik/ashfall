@@ -5,7 +5,7 @@ namespace AthenHill
 {
  /// Two deliberate transactions: crafting makes a carried item; fitting consumes it into a weapon slot.
  /// Every change to the pack goes through one ShopModel.TryApply, so a failed step changes nothing.
- public sealed class CraftingModel
+ public sealed partial class CraftingModel
  {
   readonly CraftingCatalog data;
   readonly ItemSpec[] items;
@@ -138,7 +138,9 @@ namespace AthenHill
   public bool BeginCraft(string recipeId,string stationId,float now,out string reason)
   {
    if(Job!=null){reason="busy";return false;}
+   if(OnBenchRecipe(recipeId)){reason="on_bench";return false;}
    if(!ValidateCraft(recipeId,stationId,out _,out reason))return false;
+   if(NeedsHandMade(recipeId)){reason="hand_made_first";return false;}
    float seconds=CraftSeconds(recipeId);
    if(seconds<=0)return TryCraft(recipeId,stationId,out reason);
    Job=new CraftJob(recipeId,stationId,now,seconds);reason="started";return true;
@@ -185,7 +187,10 @@ namespace AthenHill
   }
   public bool TryCraft(string recipeId,string stationId,out string reason)
   {
+   // 20 Nov 2026 (Steady Hands bench): a recipe with a bench job is made by hand once before the timer may make it
+   if(OnBenchRecipe(recipeId)){reason="on_bench";return false;}
    if(!ValidateCraft(recipeId,stationId,out var used,out reason))return false;
+   if(NeedsHandMade(recipeId)){reason="hand_made_first";return false;}
    var recipe=Recipe(recipeId);
    if(Crafts==int.MaxValue||CraftCount(recipeId)==int.MaxValue){reason="overflow";return false;}
    // the pack's units first; whatever it lacks comes out of the reserve (the home locker) after the pack commits
@@ -207,6 +212,7 @@ namespace AthenHill
   {
    var loadout=GetLoadout(weaponId);
    if(loadout==null||!HasWeapon(weaponId)){reason="missing_weapon";return false;}
+   if(OnBench(weaponId)){reason="on_bench";return false;}
    var mod=loadout.Modifier(itemId);
    if(mod==null){reason="not_a_mod";return false;}
    if(!loadout.Accepts(mod)){reason="wrong_slot";return false;}
@@ -221,11 +227,15 @@ namespace AthenHill
   {
    if(!CanFit(weaponId,itemId,out reason,stationId))return false;
    var loadout=GetLoadout(weaponId);var mod=loadout.Modifier(itemId);var previous=loadout.Fitted(mod.slot);
+   var previousQ=loadout.Quality(mod.slot);var q=BestCarried(itemId);
    var delta=new List<KeyValuePair<string,int>>{new KeyValuePair<string,int>(itemId,-1)};
    if(previous!=null)delta.Add(new KeyValuePair<string,int>(previous,1));
    float attachmentDelta=Weight(itemId)-Weight(previous);
    if(!(character!=null?character.TryTransferAttachment(delta,attachmentDelta,out reason):pack.TryApply(delta,0,out reason)))return false;
-   loadout.Set(mod.slot,itemId);Changed?.Invoke();return true;
+   TakeCarried(itemId,q);ReconcileCarried(itemId);
+   loadout.Set(mod.slot,itemId,q);
+   if(previous!=null)AddCarried(previous,previousQ,1);
+   Changed?.Invoke();return true;
   }
   public bool TryRemove(string slot,out string reason)
    =>TryRemove(Loadout.WeaponId,slot,out reason);
@@ -233,12 +243,14 @@ namespace AthenHill
   {
    var loadout=GetLoadout(weaponId);
    if(loadout==null||!HasWeapon(weaponId)){reason="missing_weapon";return false;}
+   if(OnBench(weaponId)){reason="on_bench";return false;}
    if(!loadout.HasSlot(slot)){reason="wrong_slot";return false;}
    var current=loadout.Fitted(slot);
    if(current==null){reason="empty_slot";return false;}
+   var q=loadout.Quality(slot);
    var delta=new[]{new KeyValuePair<string,int>(current,1)};
    if(!(character!=null?character.TryTransferAttachment(delta,-Weight(current),out reason):pack.TryApply(delta,0,out reason)))return false;
-   loadout.Set(slot,null);Changed?.Invoke();return true;
+   loadout.Set(slot,null);AddCarried(current,q,1);Changed?.Invoke();return true;
   }
   /// Have/need for one ingredient line, for display. Tag lines count every carried item with the tag;
   /// the allocator still decides the exact, non-overlapping consumption when crafting.
@@ -312,6 +324,7 @@ namespace AthenHill
   {
    var loadout=GetLoadout(weaponId);
    if(loadout==null||!HasWeapon(weaponId)){reason="missing_weapon";return false;}
+   if(OnBench(weaponId)){reason="on_bench";return false;}
    if(!loadout.HasCondition){reason="no_condition";return false;}
    if(WeaponCondition.IsBroken(loadout,Condition)){reason="broken";return false;}
    if(RepairGain(weaponId)<=.001f){reason="in_good_order";return false;} // at (or within one repair's cap loss of) its best: a fix would gain nothing
@@ -354,6 +367,7 @@ namespace AthenHill
    used=null;
    var loadout=GetLoadout(weaponId);
    if(loadout==null||!HasWeapon(weaponId)){reason="missing_weapon";return false;}
+   if(OnBench(weaponId)){reason="on_bench";return false;}
    if(!loadout.HasCondition){reason="no_condition";return false;}
    if(!string.IsNullOrEmpty(Condition.overhaulStationId)&&Condition.overhaulStationId!=stationId){reason="wrong_station";return false;}
    if(loadout.Repairs==0&&loadout.MaxDurability>=loadout.Base.durability-.001f&&loadout.Durability>=loadout.MaxDurability-.001f){reason="in_good_order";return false;}
@@ -372,8 +386,10 @@ namespace AthenHill
    GetLoadout(weaponId).ResetCondition();
    Changed?.Invoke();reason="ok";return true;
   }
-  static SlotEntry[] CaptureSlots(WeaponLoadout loadout)=>loadout.FittedMods.Select(x=>new SlotEntry{slot=x.Key,itemId=x.Value}).OrderBy(x=>x.slot).ToArray();
-  public CraftingState Capture()=>new CraftingState
+  static SlotEntry[] CaptureSlots(WeaponLoadout loadout)=>loadout.FittedMods.Select(x=>new SlotEntry{slot=x.Key,itemId=x.Value,quality=QualityName(loadout.Quality(x.Key))}).OrderBy(x=>x.slot).ToArray();
+  static Dictionary<string,CraftQuality> SlotQualities(SlotEntry[] slots)=>(slots??Array.Empty<SlotEntry>()).Where(x=>x!=null&&x.slot!=null).GroupBy(x=>x.slot).ToDictionary(g=>g.Key,g=>ParseQuality(g.First().quality));
+  public CraftingState Capture(){var state=CaptureCore();CaptureAssembly(state);return state;}
+  CraftingState CaptureCore()=>new CraftingState
   {
    known=known.OrderBy(x=>x).ToArray(),crafted=crafted.Select(x=>new CountEntry{id=x.Key,count=x.Value}).OrderBy(x=>x.id).ToArray(),crafts=Crafts,
    fitted=CaptureSlots(Loadout),weapons=loadouts.Values.OrderBy(x=>x.WeaponId).Select(x=>new WeaponLoadoutState{weaponId=x.WeaponId,fitted=CaptureSlots(x),conditionVersion=x.HasCondition?1:0,durability=x.Durability,maxDurability=x.MaxDurability,repairs=x.Repairs}).ToArray()
@@ -400,13 +416,14 @@ namespace AthenHill
       if(saved==null)continue;
       var loadout=GetLoadout(saved.weaponId);
       if(loadout==null||!restored.Add(saved.weaponId)){skipped.Add(saved.weaponId);continue;}
-      skipped.AddRange(loadout.Replace(saved.fitted?.Where(x=>x!=null).Select(x=>new KeyValuePair<string,string>(x.slot,x.itemId))));
+      skipped.AddRange(loadout.Replace(saved.fitted?.Where(x=>x!=null).Select(x=>new KeyValuePair<string,string>(x.slot,x.itemId)),SlotQualities(saved.fitted)));
       // saves before Phase 3 carry no condition (conditionVersion 0): the weapon loads at full condition
       if(saved.conditionVersion>=1&&loadout.HasCondition)loadout.SetCondition(saved.durability,saved.maxDurability,saved.repairs);
      }
     }
-    else skipped.AddRange(Loadout.Replace(state.fitted?.Where(x=>x!=null).Select(x=>new KeyValuePair<string,string>(x.slot,x.itemId))));
+    else skipped.AddRange(Loadout.Replace(state.fitted?.Where(x=>x!=null).Select(x=>new KeyValuePair<string,string>(x.slot,x.itemId)),SlotQualities(state.fitted)));
    }
+   RestoreAssembly(state,skipped);
    Changed?.Invoke();
    return skipped;
   }
@@ -433,7 +450,8 @@ namespace AthenHill
   public float Remaining(float now)=>Math.Max(0,EndsAt-now);
  }
  [Serializable] public class CountEntry {public string id;public int count;}
- [Serializable] public class SlotEntry {public string slot,itemId;}
+ /// quality (20 Nov 2026): "Rough" or "Fine"; null (older saves, timed crafts) = Standard.
+ [Serializable] public class SlotEntry {public string slot,itemId,quality;}
  [Serializable] public class WeaponLoadoutState {public string weaponId;public SlotEntry[] fitted;public int conditionVersion;public float durability,maxDurability;public int repairs;}
  [Serializable] public class CraftingState
  {
@@ -442,5 +460,12 @@ namespace AthenHill
   public int crafts;
   public SlotEntry[] fitted;
   public WeaponLoadoutState[] weapons;
+  // Steady Hands bench (20 Nov 2026), additive: recipes made by hand once, carried mods that are not Standard, the open bench job.
+  public string[] handMade;
+  public QualityEntry[] carriedQuality;
+  public BenchTicketState bench;
+  // tutor agent, 21 Nov 2026, additive: recipes whose bench job the player has finished by hand at the bench (null in older
+  // saves = none, so Brann's guidance runs for every player until one job is finished at the bench).
+  public string[] benchFinished;
  }
 }

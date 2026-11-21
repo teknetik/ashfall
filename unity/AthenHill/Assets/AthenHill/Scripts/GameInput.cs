@@ -11,13 +11,18 @@ namespace AthenHill
  {
   public InputActionAsset definition;
   InputActionAsset runtime;
-  InputActionMap gameplay,ui,photo;
+  InputActionMap gameplay,ui,photo,bench;
   bool jumpQueued,locked;
   int settleFrames,photoClosedFrame=-10;
   public System.Func<bool> PointerOverUi;
   public System.Func<bool> MenuPopupOpen;
   public bool GameplayEnabled => gameplay!=null&&gameplay.enabled;
   public bool PhotoEnabled => photo!=null&&photo.enabled;
+  /// The Bench map (Steady Hands bench, 20 Nov 2026): on while the assembly session works. The cursor is free and visible
+  /// at the bench, because neither gameplay nor photo input is enabled.
+  public bool BenchEnabled => bench!=null&&bench.enabled;
+  public InputAction BenchAction(string action) => BenchEnabled?bench.FindAction(action,false):null;
+  public void SetBench(bool enabled){if(bench==null)return;if(enabled){gameplay.Disable();photo?.Disable();bench.Enable();}else bench.Disable();}
   public Vector2 Move => GameplayEnabled?gameplay["Move"].ReadValue<Vector2>():Vector2.zero;
   public bool Run => GameplayEnabled&&gameplay["Run"].IsPressed();
   /// Free Cursor (Left Alt) is held in play or photo mode: the cursor is shown and the camera holds still.
@@ -56,7 +61,7 @@ namespace AthenHill
    if(enabled){gameplay.Disable();photo.Enable();}
    else{photo.Disable();photoClosedFrame=Time.frameCount;if(gameplayAfter)gameplay.Enable();else if(locked)SetLocked(false);}
   }
-  void OnEnable(){runtime=Instantiate(definition);gameplay=runtime.FindActionMap("Gameplay",true);ui=runtime.FindActionMap("UI",true);photo=runtime.FindActionMap("Photo",false);gameplay["Jump"].performed+=QueueJump;ui.Enable();gameplay.Enable();}
+  void OnEnable(){runtime=Instantiate(definition);gameplay=runtime.FindActionMap("Gameplay",true);ui=runtime.FindActionMap("UI",true);photo=runtime.FindActionMap("Photo",false);bench=runtime.FindActionMap("Bench",false);bench?.Disable();gameplay["Jump"].performed+=QueueJump;ui.Enable();gameplay.Enable();}
   void Update()
   {
    if(settleFrames>0)settleFrames--;
@@ -74,7 +79,7 @@ namespace AthenHill
   // Input runs at render cadence; retain a tap until exactly one physics tick consumes it.
   void QueueJump(InputAction.CallbackContext context){jumpQueued=true;}
   public bool ConsumeJump(){bool pressed=GameplayEnabled&&jumpQueued;jumpQueued=false;return pressed;}
-  public void SetGameplay(bool enabled){jumpQueued=false;if(enabled){photo?.Disable();gameplay.Enable();}else gameplay.Disable();if(!enabled&&locked&&!PhotoEnabled)SetLocked(false);}
+  public void SetGameplay(bool enabled){jumpQueued=false;if(enabled){photo?.Disable();bench?.Disable();gameplay.Enable();}else gameplay.Disable();if(!enabled&&locked&&!PhotoEnabled)SetLocked(false);}
   void OnDisable(){jumpQueued=false;if(locked)SetLocked(false);if(runtime){runtime.Disable();Destroy(runtime);}}
  }
 }

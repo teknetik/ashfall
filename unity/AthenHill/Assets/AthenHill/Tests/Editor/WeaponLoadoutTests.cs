@@ -160,7 +160,8 @@ namespace AthenHill.Tests
   {
    var w=Data().weapons.Single(w=>w.id=="weapon_scrap_pistol");
    var after=WeaponLoadout.Compute(w,new[]{Data().modifiers.Single(m=>m.itemId=="grip_stabilised_pistol")});
-   Assert.That(CraftingText.StatChanges(Data(),w.stats,after),Is.EqualTo(CraftingText.NoBreak("Recoil 38 → 31")));
+   // 20 Nov 2026 (Steady Hands bench): the grip also steadies the pistol's handling
+   Assert.That(CraftingText.StatChanges(Data(),w.stats,after),Does.StartWith(CraftingText.NoBreak("Recoil 38 → 31")+" · "+CraftingText.NoBreak("Aim sway 1.20° → 0.45°")));
    var label=Data().Stat("recoil");
    Assert.That(CraftingText.FormatDelta(label,-7),Is.EqualTo("−7"));Assert.That(CraftingText.Improves(label,-7));
    Assert.That(CraftingText.Improves(Data().Stat("damage"),6.8f));Assert.That(CraftingText.FormatDelta(Data().Stat("damage"),6.8f),Is.EqualTo("+6.8"));

@@ -24,7 +24,7 @@ namespace AthenHill.Tests
   static (ShopModel pack,CraftingModel model) Model(CraftingCatalog data=null)
   {
    data=data?data:Data();
-   var pack=new ShopModel(City().items);var model=new CraftingModel(data,City().items,pack,()=>true);
+   var pack=new ShopModel(City().items);var model=new CraftingModel(data,City().items,pack,()=>true);model.HandsOnAvailable=_=>false; /* 20 Nov 2026: the timer route (Steady Hands bench: made by hand once first) */
    foreach(var r in data.recipes)model.Unlock(r.id);
    return (pack,model);
   }
@@ -37,7 +37,7 @@ namespace AthenHill.Tests
     go=new GameObject("timed crafting rig");go.SetActive(false);
     session=go.AddComponent<GameSession>();session.catalog=City();crafting=go.AddComponent<CraftingSession>();crafting.data=Data();
     var player=new GameObject("combat");player.transform.SetParent(go.transform);combat=player.AddComponent<PlayerCombat>();combat.hasPistol=true;crafting.combat=combat;
-    pack=new ShopModel(City().items);model=new CraftingModel(Data(),City().items,pack,()=>combat.hasPistol);
+    pack=new ShopModel(City().items);model=new CraftingModel(Data(),City().items,pack,()=>combat.hasPistol);model.HandsOnAvailable=_=>false; /* 20 Nov 2026: the timer route (Steady Hands bench: made by hand once first) */
     Set(session,"Shop",pack);Set(session,"State",CityState.Fabricator);Set(session,"ActiveStationId",Station);
     Set(crafting,"Model",model);Set(crafting,"Session",session);combat.BindLoadout(model.Loadout);
    }

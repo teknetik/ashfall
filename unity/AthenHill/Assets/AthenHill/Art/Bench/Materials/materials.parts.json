@@ -1,0 +1,2056 @@
+{
+ "family": "materials",
+ "glb": "materials.glb",
+ "blender": "5.2.2",
+ "generated": "2026-11-20T20:56:17Z",
+ "unit_scale_m": 1.0,
+ "parts": [
+  {
+   "id": "materials.bobbin",
+   "node": "materials_bobbin",
+   "label": "Wire bobbin",
+   "kind": "part",
+   "parent": null,
+   "item": "copper_filament",
+   "material": "steel",
+   "mass": "light",
+   "tris": 826,
+   "size_mm": [
+    33.9,
+    34.0,
+    30.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s2.winding"
+   ],
+   "loose": true,
+   "note": "stands on a flange; with materials.bobbin_wire shown it is the Copper Filament"
+  },
+  {
+   "id": "materials.bobbin_wire",
+   "node": "materials_bobbin_wire",
+   "label": "Wound stator copper",
+   "kind": "consumable",
+   "parent": "materials.bobbin",
+   "item": null,
+   "material": "copper",
+   "mass": "light",
+   "tris": 360,
+   "size_mm": [
+    31.6,
+    31.6,
+    27.4
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s2.winding"
+   ],
+   "loose": true,
+   "note": "its own node so that it can grow as the crank turns"
+  },
+  {
+   "id": "materials.resistor",
+   "node": "materials_resistor",
+   "label": "Trim resistor, snipped from the board",
+   "kind": "part",
+   "parent": null,
+   "item": null,
+   "material": "ceramic",
+   "mass": "tiny",
+   "tris": 304,
+   "size_mm": [
+    12.2,
+    2.3,
+    2.4
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s2.board",
+    "s3.tin",
+    "s3.loop"
+   ],
+   "zones": [
+    {
+     "id": "tin",
+     "node": "materials_resistor__zone_tin"
+    }
+   ],
+   "wipes": [
+    {
+     "id": "tin",
+     "zone": "materials_resistor__zone_tin",
+     "label": "Tinning on the legs (clean set = tinned, as-found set = dull); the body is the same in both sets",
+     "color": "tex/materials__dirty_color.png",
+     "normal": "tex/materials__dirty_normal.png",
+     "orm": "tex/materials__dirty_orm.png"
+    }
+   ],
+   "loose": true,
+   "note": "the same resistor as servo.trim_resistor once it is off the board"
+  },
+  {
+   "id": "materials.sheet_a",
+   "node": "materials_sheet_a",
+   "label": "Scrap Alloy sheet A (what is left after cutting)",
+   "kind": "part",
+   "parent": null,
+   "item": "scrap_alloy",
+   "material": "alloy",
+   "mass": "light",
+   "tris": 320,
+   "size_mm": [
+    120.0,
+    54.5,
+    2.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s0.salvage",
+    "s3.scribe",
+    "s3.cut",
+    "s4.charge"
+   ],
+   "paths": [
+    {
+     "id": "cut",
+     "nodes": [
+      "materials_sheet_a__path_cut_00",
+      "materials_sheet_a__path_cut_01",
+      "materials_sheet_a__path_cut_02",
+      "materials_sheet_a__path_cut_03",
+      "materials_sheet_a__path_cut_04",
+      "materials_sheet_a__path_cut_05",
+      "materials_sheet_a__path_cut_06",
+      "materials_sheet_a__path_cut_07",
+      "materials_sheet_a__path_cut_08",
+      "materials_sheet_a__path_cut_09",
+      "materials_sheet_a__path_cut_10",
+      "materials_sheet_a__path_cut_11",
+      "materials_sheet_a__path_cut_12",
+      "materials_sheet_a__path_cut_13",
+      "materials_sheet_a__path_cut_14",
+      "materials_sheet_a__path_cut_15",
+      "materials_sheet_a__path_cut_16",
+      "materials_sheet_a__path_cut_17",
+      "materials_sheet_a__path_cut_18",
+      "materials_sheet_a__path_cut_19",
+      "materials_sheet_a__path_cut_20",
+      "materials_sheet_a__path_cut_21",
+      "materials_sheet_a__path_cut_22",
+      "materials_sheet_a__path_cut_23",
+      "materials_sheet_a__path_cut_24",
+      "materials_sheet_a__path_cut_25",
+      "materials_sheet_a__path_cut_26",
+      "materials_sheet_a__path_cut_27",
+      "materials_sheet_a__path_cut_28",
+      "materials_sheet_a__path_cut_29",
+      "materials_sheet_a__path_cut_30",
+      "materials_sheet_a__path_cut_31",
+      "materials_sheet_a__path_cut_32",
+      "materials_sheet_a__path_cut_33",
+      "materials_sheet_a__path_cut_34",
+      "materials_sheet_a__path_cut_35",
+      "materials_sheet_a__path_cut_36",
+      "materials_sheet_a__path_cut_37",
+      "materials_sheet_a__path_cut_38",
+      "materials_sheet_a__path_cut_39"
+     ]
+    },
+    {
+     "id": "cut_strap",
+     "nodes": [
+      "materials_sheet_a__path_cut_strap_00",
+      "materials_sheet_a__path_cut_strap_01",
+      "materials_sheet_a__path_cut_strap_02",
+      "materials_sheet_a__path_cut_strap_03",
+      "materials_sheet_a__path_cut_strap_04",
+      "materials_sheet_a__path_cut_strap_05",
+      "materials_sheet_a__path_cut_strap_06",
+      "materials_sheet_a__path_cut_strap_07",
+      "materials_sheet_a__path_cut_strap_08",
+      "materials_sheet_a__path_cut_strap_09"
+     ]
+    },
+    {
+     "id": "scribe",
+     "nodes": [
+      "materials_sheet_a__path_scribe_00",
+      "materials_sheet_a__path_scribe_01",
+      "materials_sheet_a__path_scribe_02",
+      "materials_sheet_a__path_scribe_03",
+      "materials_sheet_a__path_scribe_04",
+      "materials_sheet_a__path_scribe_05",
+      "materials_sheet_a__path_scribe_06",
+      "materials_sheet_a__path_scribe_07",
+      "materials_sheet_a__path_scribe_08",
+      "materials_sheet_a__path_scribe_09",
+      "materials_sheet_a__path_scribe_10",
+      "materials_sheet_a__path_scribe_11",
+      "materials_sheet_a__path_scribe_12",
+      "materials_sheet_a__path_scribe_13",
+      "materials_sheet_a__path_scribe_14",
+      "materials_sheet_a__path_scribe_15",
+      "materials_sheet_a__path_scribe_16",
+      "materials_sheet_a__path_scribe_17",
+      "materials_sheet_a__path_scribe_18",
+      "materials_sheet_a__path_scribe_19",
+      "materials_sheet_a__path_scribe_20",
+      "materials_sheet_a__path_scribe_21",
+      "materials_sheet_a__path_scribe_22",
+      "materials_sheet_a__path_scribe_23",
+      "materials_sheet_a__path_scribe_24",
+      "materials_sheet_a__path_scribe_25",
+      "materials_sheet_a__path_scribe_26",
+      "materials_sheet_a__path_scribe_27",
+      "materials_sheet_a__path_scribe_28",
+      "materials_sheet_a__path_scribe_29",
+      "materials_sheet_a__path_scribe_30",
+      "materials_sheet_a__path_scribe_31",
+      "materials_sheet_a__path_scribe_32",
+      "materials_sheet_a__path_scribe_33",
+      "materials_sheet_a__path_scribe_34",
+      "materials_sheet_a__path_scribe_35",
+      "materials_sheet_a__path_scribe_36",
+      "materials_sheet_a__path_scribe_37",
+      "materials_sheet_a__path_scribe_38",
+      "materials_sheet_a__path_scribe_39"
+     ]
+    }
+   ],
+   "loose": true,
+   "note": "paint side up; its children lie in it as the uncut sheet"
+  },
+  {
+   "id": "materials.sheet_a_offcut_1",
+   "node": "materials_sheet_a_offcut_1",
+   "label": "Alloy offcut 1",
+   "kind": "part",
+   "parent": "materials.sheet_a",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 144,
+   "size_mm": [
+    62.0,
+    35.5,
+    2.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.cut",
+    "s4.charge"
+   ],
+   "loose": true
+  },
+  {
+   "id": "materials.sheet_a_offcut_2",
+   "node": "materials_sheet_a_offcut_2",
+   "label": "Alloy offcut 2",
+   "kind": "part",
+   "parent": "materials.sheet_a",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 160,
+   "size_mm": [
+    58.0,
+    35.5,
+    2.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.cut",
+    "s4.charge"
+   ],
+   "loose": true
+  },
+  {
+   "id": "materials.sheet_a_plate",
+   "node": "materials_sheet_a_plate",
+   "label": "Left side plate, cut and finished",
+   "kind": "part",
+   "parent": "materials.sheet_a",
+   "item": null,
+   "material": "alloy",
+   "mass": "light",
+   "tris": 1228,
+   "size_mm": [
+    55.9,
+    108.9,
+    2.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.cut",
+    "s3.file",
+    "s3.punch",
+    "s3.drill",
+    "s5.plates",
+    "s5.torque",
+    "s5.seam"
+   ],
+   "grab": "materials_sheet_a_plate__grab",
+   "marks": [
+    {
+     "id": "punch_1",
+     "node": "materials_sheet_a_plate__mark_punch_1"
+    },
+    {
+     "id": "punch_2",
+     "node": "materials_sheet_a_plate__mark_punch_2"
+    },
+    {
+     "id": "punch_3",
+     "node": "materials_sheet_a_plate__mark_punch_3"
+    },
+    {
+     "id": "punch_4",
+     "node": "materials_sheet_a_plate__mark_punch_4"
+    }
+   ],
+   "loose": true,
+   "note": "node frame = grip/interface.json plate.node_frames (left): seat it at grip.core/seat_plate_l"
+  },
+  {
+   "id": "materials.sheet_a_margin",
+   "node": "materials_sheet_a_margin",
+   "label": "Sliver left outside the line",
+   "kind": "consumable",
+   "parent": "materials.sheet_a_plate",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 529,
+   "size_mm": [
+    110.1,
+    57.1,
+    2.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.cut",
+    "s3.file"
+   ],
+   "loose": true,
+   "note": "hidden when filed; open on the inside (the plate fills it)"
+  },
+  {
+   "id": "materials.sheet_a_plug_1",
+   "node": "materials_sheet_a_plug_1",
+   "label": "Metal in hole A",
+   "kind": "consumable",
+   "parent": "materials.sheet_a_plate",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 28,
+   "size_mm": [
+    6.7,
+    6.7,
+    2.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.punch",
+    "s3.drill"
+   ],
+   "wipes": [
+    {
+     "id": "punch",
+     "zone": null,
+     "label": "Centre-punch dimple (clean set = punched, as-found set = unmarked)",
+     "color": "tex/materials__dirty_color.png",
+     "normal": "tex/materials__dirty_normal.png",
+     "orm": "tex/materials__dirty_orm.png"
+    }
+   ],
+   "loose": true,
+   "note": "hidden when drilled"
+  },
+  {
+   "id": "materials.sheet_a_plug_2",
+   "node": "materials_sheet_a_plug_2",
+   "label": "Metal in hole B",
+   "kind": "consumable",
+   "parent": "materials.sheet_a_plate",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 28,
+   "size_mm": [
+    6.7,
+    6.7,
+    2.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.punch",
+    "s3.drill"
+   ],
+   "wipes": [
+    {
+     "id": "punch",
+     "zone": null,
+     "label": "Centre-punch dimple (clean set = punched, as-found set = unmarked)",
+     "color": "tex/materials__dirty_color.png",
+     "normal": "tex/materials__dirty_normal.png",
+     "orm": "tex/materials__dirty_orm.png"
+    }
+   ],
+   "loose": true,
+   "note": "hidden when drilled"
+  },
+  {
+   "id": "materials.sheet_a_plug_3",
+   "node": "materials_sheet_a_plug_3",
+   "label": "Metal in hole C",
+   "kind": "consumable",
+   "parent": "materials.sheet_a_plate",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 28,
+   "size_mm": [
+    3.9,
+    3.9,
+    2.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.punch",
+    "s3.drill"
+   ],
+   "wipes": [
+    {
+     "id": "punch",
+     "zone": null,
+     "label": "Centre-punch dimple (clean set = punched, as-found set = unmarked)",
+     "color": "tex/materials__dirty_color.png",
+     "normal": "tex/materials__dirty_normal.png",
+     "orm": "tex/materials__dirty_orm.png"
+    }
+   ],
+   "loose": true,
+   "note": "hidden when drilled"
+  },
+  {
+   "id": "materials.sheet_a_plug_4",
+   "node": "materials_sheet_a_plug_4",
+   "label": "Metal in hole D",
+   "kind": "consumable",
+   "parent": "materials.sheet_a_plate",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 28,
+   "size_mm": [
+    3.9,
+    3.9,
+    2.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.punch",
+    "s3.drill"
+   ],
+   "wipes": [
+    {
+     "id": "punch",
+     "zone": null,
+     "label": "Centre-punch dimple (clean set = punched, as-found set = unmarked)",
+     "color": "tex/materials__dirty_color.png",
+     "normal": "tex/materials__dirty_normal.png",
+     "orm": "tex/materials__dirty_orm.png"
+    }
+   ],
+   "loose": true,
+   "note": "hidden when drilled"
+  },
+  {
+   "id": "materials.sheet_a_scribe",
+   "node": "materials_sheet_a_scribe",
+   "label": "Scribed line",
+   "kind": "consumable",
+   "parent": "materials.sheet_a",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 176,
+   "size_mm": [
+    109.2,
+    56.2,
+    0.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.scribe",
+    "s3.file"
+   ],
+   "loose": true,
+   "note": "reveal it along path scribe; it lies 0.02 mm above the paint"
+  },
+  {
+   "id": "materials.sheet_a_strap",
+   "node": "materials_sheet_a_strap",
+   "label": "Strap strip, flat",
+   "kind": "part",
+   "parent": "materials.sheet_a",
+   "item": null,
+   "material": "alloy",
+   "mass": "light",
+   "tris": 24,
+   "size_mm": [
+    2.0,
+    118.2,
+    17.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.cut",
+    "s3.strap"
+   ],
+   "grab": "materials_sheet_a_strap__grab",
+   "marks": [
+    {
+     "id": "bend_1",
+     "node": "materials_sheet_a_strap__mark_bend_1"
+    },
+    {
+     "id": "bend_2",
+     "node": "materials_sheet_a_strap__mark_bend_2"
+    }
+   ],
+   "loose": true,
+   "note": "node frame = the grip frame G (interface strap.node_frame): the strip coincides with the bent strap along its back leg"
+  },
+  {
+   "id": "materials.strap_bent",
+   "node": "materials_strap_bent",
+   "label": "Reinforcement strap, bent",
+   "kind": "part",
+   "parent": "materials.sheet_a",
+   "item": null,
+   "material": "alloy",
+   "mass": "light",
+   "tris": 428,
+   "size_mm": [
+    60.3,
+    47.1,
+    17.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.strap",
+    "s5.strap"
+   ],
+   "grab": "materials_strap_bent__grab",
+   "loose": true,
+   "note": "node frame = the grip frame G: seat it at grip.core/seat_strap"
+  },
+  {
+   "id": "materials.strap_bent_1",
+   "node": "materials_strap_bent_1",
+   "label": "Strap after the first bend",
+   "kind": "part",
+   "parent": "materials.sheet_a",
+   "item": null,
+   "material": "alloy",
+   "mass": "light",
+   "tris": 428,
+   "size_mm": [
+    73.3,
+    47.1,
+    17.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.strap",
+    "s5.strap"
+   ],
+   "grab": "materials_strap_bent_1__grab",
+   "loose": true,
+   "note": "extra state, not in PARTS.md: the heel bend done, the toe lip still flat"
+  },
+  {
+   "id": "materials.sheet_b",
+   "node": "materials_sheet_b",
+   "label": "Scrap Alloy sheet B (what is left after cutting)",
+   "kind": "part",
+   "parent": null,
+   "item": "scrap_alloy",
+   "material": "alloy",
+   "mass": "light",
+   "tris": 320,
+   "size_mm": [
+    120.0,
+    54.5,
+    2.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s0.salvage",
+    "s3.scribe",
+    "s3.cut",
+    "s4.charge"
+   ],
+   "loose": true,
+   "note": "paint side down; its children lie in it as the uncut sheet"
+  },
+  {
+   "id": "materials.sheet_b_offcut_1",
+   "node": "materials_sheet_b_offcut_1",
+   "label": "Alloy offcut 1",
+   "kind": "part",
+   "parent": "materials.sheet_b",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 144,
+   "size_mm": [
+    62.0,
+    35.5,
+    2.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.cut",
+    "s4.charge"
+   ],
+   "loose": true
+  },
+  {
+   "id": "materials.sheet_b_offcut_2",
+   "node": "materials_sheet_b_offcut_2",
+   "label": "Alloy offcut 2",
+   "kind": "part",
+   "parent": "materials.sheet_b",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 160,
+   "size_mm": [
+    58.0,
+    35.5,
+    2.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.cut",
+    "s4.charge"
+   ],
+   "loose": true
+  },
+  {
+   "id": "materials.sheet_b_plate",
+   "node": "materials_sheet_b_plate",
+   "label": "Right side plate, cut and finished",
+   "kind": "part",
+   "parent": "materials.sheet_b",
+   "item": null,
+   "material": "alloy",
+   "mass": "light",
+   "tris": 1228,
+   "size_mm": [
+    55.9,
+    108.9,
+    2.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.cut",
+    "s3.file",
+    "s3.punch",
+    "s3.drill",
+    "s5.plates",
+    "s5.torque",
+    "s5.seam"
+   ],
+   "grab": "materials_sheet_b_plate__grab",
+   "marks": [
+    {
+     "id": "punch_1",
+     "node": "materials_sheet_b_plate__mark_punch_1"
+    },
+    {
+     "id": "punch_2",
+     "node": "materials_sheet_b_plate__mark_punch_2"
+    },
+    {
+     "id": "punch_3",
+     "node": "materials_sheet_b_plate__mark_punch_3"
+    },
+    {
+     "id": "punch_4",
+     "node": "materials_sheet_b_plate__mark_punch_4"
+    }
+   ],
+   "loose": true,
+   "note": "node frame = grip/interface.json plate.node_frames (right): seat it at grip.core/seat_plate_r"
+  },
+  {
+   "id": "materials.sheet_b_margin",
+   "node": "materials_sheet_b_margin",
+   "label": "Sliver left outside the line",
+   "kind": "consumable",
+   "parent": "materials.sheet_b_plate",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 529,
+   "size_mm": [
+    110.1,
+    57.1,
+    2.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.cut",
+    "s3.file"
+   ],
+   "loose": true,
+   "note": "hidden when filed; open on the inside (the plate fills it)"
+  },
+  {
+   "id": "materials.sheet_b_plug_1",
+   "node": "materials_sheet_b_plug_1",
+   "label": "Metal in hole A",
+   "kind": "consumable",
+   "parent": "materials.sheet_b_plate",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 28,
+   "size_mm": [
+    6.7,
+    6.7,
+    2.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.punch",
+    "s3.drill"
+   ],
+   "loose": true,
+   "note": "hidden when drilled"
+  },
+  {
+   "id": "materials.sheet_b_plug_2",
+   "node": "materials_sheet_b_plug_2",
+   "label": "Metal in hole B",
+   "kind": "consumable",
+   "parent": "materials.sheet_b_plate",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 28,
+   "size_mm": [
+    6.7,
+    6.7,
+    2.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.punch",
+    "s3.drill"
+   ],
+   "loose": true,
+   "note": "hidden when drilled"
+  },
+  {
+   "id": "materials.sheet_b_plug_3",
+   "node": "materials_sheet_b_plug_3",
+   "label": "Metal in hole C",
+   "kind": "consumable",
+   "parent": "materials.sheet_b_plate",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 28,
+   "size_mm": [
+    3.9,
+    3.9,
+    2.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.punch",
+    "s3.drill"
+   ],
+   "loose": true,
+   "note": "hidden when drilled"
+  },
+  {
+   "id": "materials.sheet_b_plug_4",
+   "node": "materials_sheet_b_plug_4",
+   "label": "Metal in hole D",
+   "kind": "consumable",
+   "parent": "materials.sheet_b_plate",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 28,
+   "size_mm": [
+    3.9,
+    3.9,
+    2.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.punch",
+    "s3.drill"
+   ],
+   "loose": true,
+   "note": "hidden when drilled"
+  },
+  {
+   "id": "materials.sheet_b_strap",
+   "node": "materials_sheet_b_strap",
+   "label": "Strap strip, flat (the spare)",
+   "kind": "part",
+   "parent": "materials.sheet_b",
+   "item": null,
+   "material": "alloy",
+   "mass": "light",
+   "tris": 24,
+   "size_mm": [
+    2.0,
+    118.2,
+    17.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.cut",
+    "s3.strap"
+   ],
+   "grab": "materials_sheet_b_strap__grab",
+   "marks": [
+    {
+     "id": "bend_1",
+     "node": "materials_sheet_b_strap__mark_bend_1"
+    },
+    {
+     "id": "bend_2",
+     "node": "materials_sheet_b_strap__mark_bend_2"
+    }
+   ],
+   "loose": true,
+   "note": "node frame = the grip frame G (interface strap.node_frame): the strip coincides with the bent strap along its back leg"
+  },
+  {
+   "id": "materials.swarf_1",
+   "node": "materials_swarf_1",
+   "label": "Drill swarf 1",
+   "kind": "consumable",
+   "parent": null,
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 64,
+   "size_mm": [
+    3.5,
+    2.8,
+    2.9
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.drill"
+   ],
+   "loose": true
+  },
+  {
+   "id": "materials.swarf_2",
+   "node": "materials_swarf_2",
+   "label": "Drill swarf 2",
+   "kind": "consumable",
+   "parent": null,
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 72,
+   "size_mm": [
+    3.6,
+    2.9,
+    2.5
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.drill"
+   ],
+   "loose": true
+  },
+  {
+   "id": "materials.swarf_3",
+   "node": "materials_swarf_3",
+   "label": "Drill swarf 3",
+   "kind": "consumable",
+   "parent": null,
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 92,
+   "size_mm": [
+    3.4,
+    4.7,
+    3.4
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.drill"
+   ],
+   "loose": true
+  },
+  {
+   "id": "materials.swarf_4",
+   "node": "materials_swarf_4",
+   "label": "Drill swarf 4",
+   "kind": "consumable",
+   "parent": null,
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 60,
+   "size_mm": [
+    3.7,
+    2.8,
+    2.4
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.drill"
+   ],
+   "loose": true
+  },
+  {
+   "id": "materials.swarf_5",
+   "node": "materials_swarf_5",
+   "label": "Drill swarf 5",
+   "kind": "consumable",
+   "parent": null,
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 60,
+   "size_mm": [
+    3.2,
+    3.3,
+    3.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.drill"
+   ],
+   "loose": true
+  },
+  {
+   "id": "materials.vial",
+   "node": "materials_vial",
+   "label": "Nanite vial",
+   "kind": "part",
+   "parent": null,
+   "item": "nanite_residue",
+   "material": "glass",
+   "mass": "light",
+   "tris": 1070,
+   "size_mm": [
+    24.0,
+    25.6,
+    62.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s0.salvage",
+    "s4.charge"
+   ],
+   "marks": [
+    {
+     "id": "level",
+     "node": "materials_vial__mark_level"
+    }
+   ],
+   "loose": true,
+   "note": "glass is its own unbaked material; the wire round the neck is baked. materials_vial__tip: the lip, +Z out of the mouth"
+  },
+  {
+   "id": "materials.vial_fluid",
+   "node": "materials_vial_fluid",
+   "label": "Nanite residue in the vial",
+   "kind": "consumable",
+   "parent": "materials.vial",
+   "item": null,
+   "material": "glass",
+   "mass": "tiny",
+   "tris": 200,
+   "size_mm": [
+    21.4,
+    21.4,
+    27.7
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s4.charge"
+   ],
+   "loose": true,
+   "note": "origin on the inside of the bottom: lower its top to let the level fall"
+  },
+  {
+   "id": "materials.vial_line",
+   "node": "materials_vial_line",
+   "label": "Scratched level line",
+   "kind": "part",
+   "parent": "materials.vial",
+   "item": null,
+   "material": "glass",
+   "mass": "tiny",
+   "tris": 44,
+   "size_mm": [
+    22.5,
+    24.0,
+    0.5
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s4.charge"
+   ],
+   "loose": true,
+   "fixed": true
+  },
+  {
+   "id": "materials.vial_stopper",
+   "node": "materials_vial_stopper",
+   "label": "Vial stopper and its wire bail",
+   "kind": "part",
+   "parent": "materials.vial",
+   "item": null,
+   "material": "rubber",
+   "mass": "tiny",
+   "tris": 430,
+   "size_mm": [
+    20.3,
+    17.5,
+    13.9
+   ],
+   "seat": {
+    "clear": "materials_vial_stopper__clear",
+    "symmetry": 2,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s4.charge"
+   ]
+  },
+  {
+   "id": "materials.core_flash",
+   "node": "materials_core_flash",
+   "label": "Flash on the pressed core, piece 1",
+   "kind": "consumable",
+   "parent": "grip.core",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 151,
+   "size_mm": [
+    23.9,
+    0.5,
+    79.3
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s4.open",
+    "s4.flash"
+   ],
+   "grab": "materials_core_flash__grab",
+   "paths": [
+    {
+     "id": "file",
+     "nodes": [
+      "materials_core_flash__path_file_00",
+      "materials_core_flash__path_file_01",
+      "materials_core_flash__path_file_02",
+      "materials_core_flash__path_file_03",
+      "materials_core_flash__path_file_04",
+      "materials_core_flash__path_file_05",
+      "materials_core_flash__path_file_06",
+      "materials_core_flash__path_file_07",
+      "materials_core_flash__path_file_08",
+      "materials_core_flash__path_file_09",
+      "materials_core_flash__path_file_10",
+      "materials_core_flash__path_file_11",
+      "materials_core_flash__path_file_12",
+      "materials_core_flash__path_file_13",
+      "materials_core_flash__path_file_14",
+      "materials_core_flash__path_file_15",
+      "materials_core_flash__path_file_16",
+      "materials_core_flash__path_file_17",
+      "materials_core_flash__path_file_18",
+      "materials_core_flash__path_file_19",
+      "materials_core_flash__path_file_20",
+      "materials_core_flash__path_file_21",
+      "materials_core_flash__path_file_22",
+      "materials_core_flash__path_file_23",
+      "materials_core_flash__path_file_24",
+      "materials_core_flash__path_file_25",
+      "materials_core_flash__path_file_26",
+      "materials_core_flash__path_file_27",
+      "materials_core_flash__path_file_28",
+      "materials_core_flash__path_file_29",
+      "materials_core_flash__path_file_30",
+      "materials_core_flash__path_file_31",
+      "materials_core_flash__path_file_32",
+      "materials_core_flash__path_file_33",
+      "materials_core_flash__path_file_34",
+      "materials_core_flash__path_file_35",
+      "materials_core_flash__path_file_36",
+      "materials_core_flash__path_file_37",
+      "materials_core_flash__path_file_38",
+      "materials_core_flash__path_file_39"
+     ]
+    }
+   ],
+   "flex": true,
+   "loose": true,
+   "note": "in the frame of grip.core, identity transform; filed off along path file (on core_flash); parting plane P Y = 0"
+  },
+  {
+   "id": "materials.core_flash_2",
+   "node": "materials_core_flash_2",
+   "label": "Flash on the pressed core, piece 2",
+   "kind": "consumable",
+   "parent": "grip.core",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 151,
+   "size_mm": [
+    69.4,
+    0.5,
+    26.5
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s4.open",
+    "s4.flash"
+   ],
+   "grab": "materials_core_flash_2__grab",
+   "flex": true,
+   "loose": true,
+   "note": "in the frame of grip.core, identity transform; filed off along path file (on core_flash); parting plane P Y = 0"
+  },
+  {
+   "id": "materials.core_flash_3",
+   "node": "materials_core_flash_3",
+   "label": "Flash on the pressed core, piece 3",
+   "kind": "consumable",
+   "parent": "grip.core",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 124,
+   "size_mm": [
+    44.1,
+    0.5,
+    73.3
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s4.open",
+    "s4.flash"
+   ],
+   "grab": "materials_core_flash_3__grab",
+   "flex": true,
+   "loose": true,
+   "note": "in the frame of grip.core, identity transform; filed off along path file (on core_flash); parting plane P Y = 0"
+  },
+  {
+   "id": "materials.core_sprue",
+   "node": "materials_core_sprue",
+   "label": "Sprue stub on the pressed core",
+   "kind": "consumable",
+   "parent": "grip.core",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "tris": 120,
+   "size_mm": [
+    7.2,
+    6.8,
+    8.7
+   ],
+   "seat": {
+    "clear": "materials_core_sprue__clear",
+    "symmetry": 0,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s4.open",
+    "s4.flash"
+   ],
+   "marks": [
+    {
+     "id": "snap",
+     "node": "materials_core_sprue__mark_snap"
+    }
+   ],
+   "note": "in the frame of grip.core, identity transform; snaps off at mark snap"
+  },
+  {
+   "id": "materials.lead_a_offcut",
+   "node": "materials_lead_a_offcut",
+   "label": "Trimmed end of lead A",
+   "kind": "consumable",
+   "parent": "materials.lead_a",
+   "item": null,
+   "material": "rubber",
+   "mass": "tiny",
+   "tris": 128,
+   "size_mm": [
+    4.1,
+    8.2,
+    6.2
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.trim"
+   ],
+   "grab": "materials_lead_a_offcut__grab",
+   "flex": true,
+   "loose": true
+  },
+  {
+   "id": "materials.lead_a_slug",
+   "node": "materials_lead_a_slug",
+   "label": "Stripped insulation of lead A",
+   "kind": "consumable",
+   "parent": "materials.lead_a",
+   "item": null,
+   "material": "rubber",
+   "mass": "tiny",
+   "tris": 64,
+   "size_mm": [
+    3.5,
+    7.3,
+    5.7
+   ],
+   "seat": {
+    "clear": "materials_lead_a_slug__clear",
+    "symmetry": 0,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.strip"
+   ]
+  },
+  {
+   "id": "materials.lead_a_strands",
+   "node": "materials_lead_a_strands",
+   "label": "Bare strands of lead A",
+   "kind": "part",
+   "parent": "materials.lead_a",
+   "item": null,
+   "material": "copper",
+   "mass": "tiny",
+   "tris": 56,
+   "size_mm": [
+    2.8,
+    7.1,
+    5.2
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.strip",
+    "s3.tin",
+    "s3.loop"
+   ],
+   "zones": [
+    {
+     "id": "tin",
+     "node": "materials_lead_a_strands__zone_tin"
+    }
+   ],
+   "wipes": [
+    {
+     "id": "tin",
+     "zone": "materials_lead_a_strands__zone_tin",
+     "label": "Tinning (clean set = tinned bright, as-found set = bare copper)",
+     "color": "tex/materials__dirty_color.png",
+     "normal": "tex/materials__dirty_normal.png",
+     "orm": "tex/materials__dirty_orm.png"
+    }
+   ],
+   "flex": true,
+   "loose": true
+  },
+  {
+   "id": "materials.sleeve_a",
+   "node": "materials_sleeve_a",
+   "label": "Heat-shrink sleeve A (not yet shrunk)",
+   "kind": "part",
+   "parent": "materials.lead_a",
+   "item": null,
+   "material": "plastic",
+   "mass": "tiny",
+   "tris": 192,
+   "size_mm": [
+    4.7,
+    8.7,
+    6.7
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.loop"
+   ],
+   "grab": "materials_sleeve_a__grab",
+   "loose": true
+  },
+  {
+   "id": "materials.lead_b_offcut",
+   "node": "materials_lead_b_offcut",
+   "label": "Trimmed end of lead B",
+   "kind": "consumable",
+   "parent": "materials.lead_b",
+   "item": null,
+   "material": "rubber",
+   "mass": "tiny",
+   "tris": 296,
+   "size_mm": [
+    9.6,
+    31.3,
+    9.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.trim"
+   ],
+   "grab": "materials_lead_b_offcut__grab",
+   "flex": true,
+   "loose": true
+  },
+  {
+   "id": "materials.lead_b_slug",
+   "node": "materials_lead_b_slug",
+   "label": "Stripped insulation of lead B",
+   "kind": "consumable",
+   "parent": "materials.lead_b",
+   "item": null,
+   "material": "rubber",
+   "mass": "tiny",
+   "tris": 64,
+   "size_mm": [
+    3.5,
+    7.3,
+    5.7
+   ],
+   "seat": {
+    "clear": "materials_lead_b_slug__clear",
+    "symmetry": 0,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.strip"
+   ]
+  },
+  {
+   "id": "materials.lead_b_strands",
+   "node": "materials_lead_b_strands",
+   "label": "Bare strands of lead B",
+   "kind": "part",
+   "parent": "materials.lead_b",
+   "item": null,
+   "material": "copper",
+   "mass": "tiny",
+   "tris": 56,
+   "size_mm": [
+    2.8,
+    7.1,
+    5.2
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.strip",
+    "s3.tin",
+    "s3.loop"
+   ],
+   "zones": [
+    {
+     "id": "tin",
+     "node": "materials_lead_b_strands__zone_tin"
+    }
+   ],
+   "wipes": [
+    {
+     "id": "tin",
+     "zone": "materials_lead_b_strands__zone_tin",
+     "label": "Tinning (clean set = tinned bright, as-found set = bare copper)",
+     "color": "tex/materials__dirty_color.png",
+     "normal": "tex/materials__dirty_normal.png",
+     "orm": "tex/materials__dirty_orm.png"
+    }
+   ],
+   "flex": true,
+   "loose": true
+  },
+  {
+   "id": "materials.sleeve_b",
+   "node": "materials_sleeve_b",
+   "label": "Heat-shrink sleeve B (not yet shrunk)",
+   "kind": "part",
+   "parent": "materials.lead_b",
+   "item": null,
+   "material": "plastic",
+   "mass": "tiny",
+   "tris": 192,
+   "size_mm": [
+    4.7,
+    8.7,
+    6.7
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.loop"
+   ],
+   "grab": "materials_sleeve_b__grab",
+   "loose": true
+  },
+  {
+   "id": "materials.lead_a",
+   "node": "materials_lead_a",
+   "label": "Coil lead A on the bench",
+   "kind": "part",
+   "parent": "servo.gimbal_cradle",
+   "item": null,
+   "material": "rubber",
+   "mass": "tiny",
+   "tris": 300,
+   "size_mm": [
+    8.8,
+    16.1,
+    7.3
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.trim",
+    "s3.strip",
+    "s3.tin",
+    "s3.loop"
+   ],
+   "grab": "materials_lead_a__grab",
+   "marks": [
+    {
+     "id": "trim",
+     "node": "materials_lead_a__mark_trim"
+    }
+   ],
+   "flex": true,
+   "loose": true,
+   "note": "in the cradle frame D, identity transform; replaces servo.lead_coil_a once the unit is out"
+  },
+  {
+   "id": "materials.lead_b",
+   "node": "materials_lead_b",
+   "label": "Coil lead B on the bench",
+   "kind": "part",
+   "parent": "servo.gimbal_cradle",
+   "item": null,
+   "material": "rubber",
+   "mass": "tiny",
+   "tris": 300,
+   "size_mm": [
+    8.8,
+    16.1,
+    7.3
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.trim",
+    "s3.strip",
+    "s3.tin",
+    "s3.loop"
+   ],
+   "grab": "materials_lead_b__grab",
+   "marks": [
+    {
+     "id": "trim",
+     "node": "materials_lead_b__mark_trim"
+    }
+   ],
+   "flex": true,
+   "loose": true,
+   "note": "in the cradle frame D, identity transform; replaces servo.lead_coil_b once the unit is out"
+  },
+  {
+   "id": "materials.lead_sense",
+   "node": "materials_lead_sense",
+   "label": "Sense lead on the bench",
+   "kind": "consumable",
+   "parent": "servo.gimbal_cradle",
+   "item": null,
+   "material": "rubber",
+   "mass": "tiny",
+   "tris": 268,
+   "size_mm": [
+    2.1,
+    31.0,
+    19.2
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.trim"
+   ],
+   "grab": "materials_lead_sense__grab",
+   "marks": [
+    {
+     "id": "flush",
+     "node": "materials_lead_sense__mark_flush"
+    }
+   ],
+   "flex": true,
+   "loose": true,
+   "note": "in the cradle frame D; replaces servo.lead_sense once the unit is out; cut off flush at mark flush"
+  },
+  {
+   "id": "materials.loop_lead_a",
+   "node": "materials_loop_lead_a",
+   "label": "Loop: coil lead A (as soldered on the bench)",
+   "kind": "part",
+   "parent": "servo.gimbal_cradle",
+   "item": null,
+   "material": "rubber",
+   "mass": "tiny",
+   "tris": 348,
+   "size_mm": [
+    6.4,
+    15.0,
+    6.1
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.loop",
+    "s3.test",
+    "s5.loop"
+   ],
+   "flex": true,
+   "loose": true,
+   "note": "in the cradle frame D, identity transform"
+  },
+  {
+   "id": "materials.loop_lead_b",
+   "node": "materials_loop_lead_b",
+   "label": "Loop: coil lead B (as soldered on the bench)",
+   "kind": "part",
+   "parent": "servo.gimbal_cradle",
+   "item": null,
+   "material": "rubber",
+   "mass": "tiny",
+   "tris": 348,
+   "size_mm": [
+    6.3,
+    15.0,
+    6.1
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.loop",
+    "s3.test",
+    "s5.loop"
+   ],
+   "flex": true,
+   "loose": true,
+   "note": "in the cradle frame D, identity transform"
+  },
+  {
+   "id": "materials.loop_resistor",
+   "node": "materials_loop_resistor",
+   "label": "Loop: trim resistor (as soldered on the bench)",
+   "kind": "part",
+   "parent": "servo.gimbal_cradle",
+   "item": null,
+   "material": "ceramic",
+   "mass": "tiny",
+   "tris": 192,
+   "size_mm": [
+    6.5,
+    2.2,
+    2.2
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.loop",
+    "s3.test",
+    "s5.loop"
+   ],
+   "grab": "materials_loop_resistor__grab",
+   "marks": [
+    {
+     "id": "probe_a",
+     "node": "materials_loop_resistor__mark_probe_a"
+    },
+    {
+     "id": "probe_b",
+     "node": "materials_loop_resistor__mark_probe_b"
+    }
+   ],
+   "flex": true,
+   "loose": true,
+   "note": "in the cradle frame D, identity transform"
+  },
+  {
+   "id": "materials.loop_sleeve_a",
+   "node": "materials_loop_sleeve_a",
+   "label": "Loop: shrunk sleeve A (as soldered on the bench)",
+   "kind": "part",
+   "parent": "servo.gimbal_cradle",
+   "item": null,
+   "material": "plastic",
+   "mass": "tiny",
+   "tris": 156,
+   "size_mm": [
+    7.2,
+    2.9,
+    2.9
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.loop",
+    "s3.test",
+    "s5.loop"
+   ],
+   "flex": true,
+   "loose": true,
+   "note": "in the cradle frame D, identity transform"
+  },
+  {
+   "id": "materials.loop_sleeve_b",
+   "node": "materials_loop_sleeve_b",
+   "label": "Loop: shrunk sleeve B (as soldered on the bench)",
+   "kind": "part",
+   "parent": "servo.gimbal_cradle",
+   "item": null,
+   "material": "plastic",
+   "mass": "tiny",
+   "tris": 156,
+   "size_mm": [
+    7.2,
+    2.9,
+    2.9
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.loop",
+    "s3.test",
+    "s5.loop"
+   ],
+   "flex": true,
+   "loose": true,
+   "note": "in the cradle frame D, identity transform"
+  },
+  {
+   "id": "materials.loop_tucked",
+   "node": "materials_loop_tucked",
+   "label": "Damper loop, tucked in the core channel",
+   "kind": "part",
+   "parent": "servo.gimbal_cradle",
+   "item": null,
+   "material": "rubber",
+   "mass": "tiny",
+   "tris": 928,
+   "size_mm": [
+    28.2,
+    16.6,
+    2.9
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s5.loop",
+    "s5.damp"
+   ],
+   "grab": "materials_loop_tucked__grab",
+   "paths": [
+    {
+     "id": "tuck",
+     "nodes": [
+      "materials_loop_tucked__path_tuck_00",
+      "materials_loop_tucked__path_tuck_01",
+      "materials_loop_tucked__path_tuck_02",
+      "materials_loop_tucked__path_tuck_03",
+      "materials_loop_tucked__path_tuck_04",
+      "materials_loop_tucked__path_tuck_05",
+      "materials_loop_tucked__path_tuck_06",
+      "materials_loop_tucked__path_tuck_07",
+      "materials_loop_tucked__path_tuck_08",
+      "materials_loop_tucked__path_tuck_09",
+      "materials_loop_tucked__path_tuck_10",
+      "materials_loop_tucked__path_tuck_11",
+      "materials_loop_tucked__path_tuck_12",
+      "materials_loop_tucked__path_tuck_13"
+     ]
+    }
+   ],
+   "flex": true,
+   "loose": true,
+   "note": "in the cradle frame D on the interface line (z = -1.7): one node"
+  }
+ ],
+ "params": [],
+ "sequence": [
+  {
+   "op": "insert",
+   "part": "materials.lead_a",
+   "step": "s2.trunnion"
+  },
+  {
+   "op": "insert",
+   "part": "materials.lead_a_strands",
+   "step": "s2.trunnion"
+  },
+  {
+   "op": "insert",
+   "part": "materials.lead_a_slug",
+   "step": "s2.trunnion"
+  },
+  {
+   "op": "remove",
+   "part": "materials.lead_a_slug",
+   "step": "s3.strip"
+  },
+  {
+   "op": "insert",
+   "part": "materials.lead_b",
+   "step": "s2.trunnion"
+  },
+  {
+   "op": "insert",
+   "part": "materials.lead_b_strands",
+   "step": "s2.trunnion"
+  },
+  {
+   "op": "insert",
+   "part": "materials.lead_b_slug",
+   "step": "s2.trunnion"
+  },
+  {
+   "op": "remove",
+   "part": "materials.lead_b_slug",
+   "step": "s3.strip"
+  },
+  {
+   "op": "remove",
+   "part": "materials.vial_stopper",
+   "step": "s4.charge"
+  },
+  {
+   "op": "insert",
+   "part": "materials.vial_stopper",
+   "step": "s4.charge"
+  }
+ ],
+ "absent_at_start": [
+  "materials.core_flash",
+  "materials.core_flash_2",
+  "materials.core_flash_3",
+  "materials.core_sprue",
+  "materials.strap_bent",
+  "materials.strap_bent_1",
+  "materials.sheet_a_scribe",
+  "materials.swarf_1",
+  "materials.swarf_2",
+  "materials.swarf_3",
+  "materials.swarf_4",
+  "materials.swarf_5",
+  "materials.bobbin_wire",
+  "materials.resistor",
+  "materials.lead_sense",
+  "materials.loop_tucked",
+  "materials.loop_lead_a",
+  "materials.loop_lead_b",
+  "materials.loop_resistor",
+  "materials.loop_sleeve_a",
+  "materials.loop_sleeve_b",
+  "materials.lead_a",
+  "materials.lead_a_strands",
+  "materials.lead_a_slug",
+  "materials.lead_a_offcut",
+  "materials.sleeve_a",
+  "materials.lead_b",
+  "materials.lead_b_strands",
+  "materials.lead_b_slug",
+  "materials.lead_b_offcut",
+  "materials.sleeve_b"
+ ],
+ "pending": [],
+ "dropped": [
+  "materials.core_raw (SEAM.md section 10: the pressed core is grip.core)",
+  "materials.charge (SEAM.md section 10: fixtures.mould_charge)"
+ ],
+ "notes": {
+  "wipes": "one as-found set for the family (SEAM.md section 7): tinning on strands and resistor legs, punch dimples on sheet A plugs",
+  "absent_at_start_also": "the bench leads and the loose resistor are absent at the start: they appear when the unit is lifted out and the resistor is snipped off"
+ }
+}

@@ -1,0 +1,1302 @@
+{
+ "family": "pistol",
+ "glb": null,
+ "greybox": true,
+ "blender": null,
+ "generated": "2026-11-20",
+ "parts": [
+  {
+   "id": "pistol.frame",
+   "node": "pistol_frame",
+   "label": "Scrap pistol",
+   "kind": "part",
+   "parent": null,
+   "item": "scrap_pistol",
+   "material": "steel",
+   "mass": "medium",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 16,
+    "tol_deg": 30
+   },
+   "grey": {
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0.05,
+       0.035,
+       0,
+       0.2,
+       0.05,
+       0.036
+      ]
+     },
+     {
+      "box": [
+       -0.045,
+       -0.0475,
+       0,
+       0.03,
+       0.115,
+       0.016
+      ]
+     },
+     {
+      "box": [
+       0.0,
+       -0.022,
+       0,
+       0.05,
+       0.012,
+       0.012
+      ]
+     }
+    ],
+    "grab": [
+     0.115,
+     0.03,
+     0
+    ],
+    "tip": [
+     0.21,
+     0.045,
+     0,
+     1,
+     0,
+     0
+    ],
+    "marks": {
+     "crack": [
+      -0.0605,
+      -0.06,
+      0,
+      -1,
+      0,
+      0,
+      0.012
+     ],
+     "tang_end": [
+      -0.045,
+      -0.105,
+      0,
+      0,
+      -1,
+      0,
+      0.008
+     ]
+    },
+    "color": [
+     0.3,
+     0.31,
+     0.33
+    ]
+   }
+  },
+  {
+   "id": "pistol.barrel",
+   "node": "pistol_barrel",
+   "label": "Barrel",
+   "kind": "fixture",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.17,
+     0.045,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0,
+       0,
+       0.012,
+       0.08,
+       "x"
+      ]
+     }
+    ],
+    "color": [
+     0.22,
+     0.23,
+     0.25
+    ]
+   }
+  },
+  {
+   "id": "pistol.cell_bus",
+   "node": "pistol_cell_bus",
+   "label": "Cell bus",
+   "kind": "fixture",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "copper",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.03,
+     0.012,
+     0.021
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.05,
+       0.004,
+       0.006
+      ]
+     }
+    ],
+    "color": [
+     0.66,
+     0.42,
+     0.22
+    ]
+   }
+  },
+  {
+   "id": "pistol.cell",
+   "node": "pistol_cell",
+   "label": "Charge cell",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "glass",
+   "mass": "light",
+   "held_by": [
+    "pistol.cell_latch"
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 12,
+    "tol_deg": 30,
+    "clear": "pistol_cell__clear"
+   },
+   "grey": {
+    "pos": [
+     0.07,
+     0.03,
+     0.029
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.055,
+       0.028,
+       0.022
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0,
+     0.06
+    ],
+    "color": [
+     0.25,
+     0.55,
+     0.58
+    ]
+   }
+  },
+  {
+   "id": "pistol.cell_latch",
+   "node": "pistol_cell_latch",
+   "label": "Cell latch",
+   "kind": "fixture",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "pistol_cell_latch__clear"
+   },
+   "grey": {
+    "pos": [
+     0.035,
+     0.052,
+     0.029
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.012,
+       0.008,
+       0.022
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0.02,
+     0
+    ],
+    "color": [
+     0.7,
+     0.55,
+     0.2
+    ]
+   }
+  },
+  {
+   "id": "pistol.status_lamp",
+   "node": "pistol_status_lamp",
+   "label": "Status lamp",
+   "kind": "fixture",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "glass",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     -0.01,
+     0.0625,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.012,
+       0.005,
+       0.012
+      ]
+     }
+    ],
+    "color": [
+     0.05,
+     0.12,
+     0.13
+    ],
+    "emissive": true
+   }
+  },
+  {
+   "id": "pistol.scale_l",
+   "node": "pistol_scale_l",
+   "label": "Left grip scale",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "wood",
+   "mass": "light",
+   "held_by": [
+    "pistol.screw_grip_a",
+    "pistol.screw_grip_b",
+    "pistol.wrap"
+   ],
+   "seat": {
+    "symmetry": 2,
+    "tol_mm": 12,
+    "tol_deg": 25,
+    "clear": "pistol_scale_l__clear"
+   },
+   "grey": {
+    "pos": [
+     -0.045,
+     -0.05,
+     0.0125
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.036,
+       0.1,
+       0.009
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0,
+     0.045
+    ],
+    "color": [
+     0.34,
+     0.22,
+     0.13
+    ]
+   }
+  },
+  {
+   "id": "pistol.scale_r",
+   "node": "pistol_scale_r",
+   "label": "Right grip scale",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "wood",
+   "mass": "light",
+   "held_by": [
+    "pistol.screw_grip_a",
+    "pistol.screw_grip_b",
+    "pistol.wrap"
+   ],
+   "seat": {
+    "symmetry": 2,
+    "tol_mm": 12,
+    "tol_deg": 25,
+    "clear": "pistol_scale_r__clear"
+   },
+   "grey": {
+    "pos": [
+     -0.045,
+     -0.05,
+     -0.0125
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.036,
+       0.1,
+       0.009
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0,
+     -0.045
+    ],
+    "color": [
+     0.34,
+     0.22,
+     0.13
+    ]
+   }
+  },
+  {
+   "id": "pistol.screw_grip_a",
+   "node": "pistol_screw_grip_a",
+   "label": "Upper grip screw",
+   "kind": "fastener",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "pistol_screw_grip_a__clear"
+   },
+   "grey": {
+    "pos": [
+     -0.045,
+     -0.022,
+     0.019
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0,
+       0,
+       0.0045,
+       0.012,
+       "z"
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0,
+     0.022
+    ],
+    "grab": [
+     0,
+     0,
+     0.006
+    ],
+    "marks": {},
+    "color": [
+     0.6,
+     0.6,
+     0.58
+    ]
+   },
+   "fastener": {
+    "bit": "slot",
+    "turns": 6,
+    "holds": [
+     "pistol.scale_l",
+     "pistol.scale_r"
+    ]
+   }
+  },
+  {
+   "id": "pistol.screw_grip_b",
+   "node": "pistol_screw_grip_b",
+   "label": "Lower grip screw",
+   "kind": "fastener",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "pistol_screw_grip_b__clear"
+   },
+   "grey": {
+    "pos": [
+     -0.045,
+     -0.078,
+     0.019
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0,
+       0,
+       0.0045,
+       0.012,
+       "z"
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0,
+     0.022
+    ],
+    "grab": [
+     0,
+     0,
+     0.006
+    ],
+    "marks": {
+     "oil": [
+      0,
+      0,
+      0.0065,
+      0,
+      0,
+      1,
+      0.007
+     ]
+    },
+    "color": [
+     0.55,
+     0.4,
+     0.22
+    ]
+   },
+   "fastener": {
+    "bit": "slot",
+    "turns": 6,
+    "holds": [
+     "pistol.scale_l",
+     "pistol.scale_r"
+    ]
+   }
+  },
+  {
+   "id": "pistol.wrap",
+   "node": "pistol_wrap",
+   "label": "Leather and tape wrap",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "canvas",
+   "mass": "light",
+   "held_by": [
+    "pistol.bind_wire_a",
+    "pistol.bind_wire_b"
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "pistol_wrap__clear"
+   },
+   "grey": {
+    "pos": [
+     -0.045,
+     -0.05,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.05,
+       0.088,
+       0.052
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0,
+     0.06
+    ],
+    "color": [
+     0.28,
+     0.2,
+     0.14
+    ],
+    "paths": {
+     "peel": [
+      [
+       -0.026,
+       0.04,
+       0.0265
+      ],
+      [
+       -0.018,
+       0.0312,
+       0.0265
+      ],
+      [
+       -0.026,
+       0.0224,
+       0.0265
+      ],
+      [
+       -0.018,
+       0.013600000000000001,
+       0.0265
+      ],
+      [
+       -0.026,
+       0.004799999999999999,
+       0.0265
+      ],
+      [
+       -0.018,
+       -0.0040000000000000036,
+       0.0265
+      ],
+      [
+       -0.026,
+       -0.012799999999999999,
+       0.0265
+      ],
+      [
+       -0.018,
+       -0.0216,
+       0.0265
+      ],
+      [
+       -0.026,
+       -0.030400000000000003,
+       0.0265
+      ],
+      [
+       -0.018,
+       -0.039200000000000006,
+       0.0265
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "id": "pistol.bind_wire_a",
+   "node": "pistol_bind_wire_a",
+   "label": "Binding wire",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "copper",
+   "mass": "tiny",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "pistol_bind_wire_a__clear"
+   },
+   "grey": {
+    "pos": [
+     -0.045,
+     -0.03,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.054,
+       0.004,
+       0.056
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0,
+     0.05
+    ],
+    "marks": {
+     "snip": [
+      0.012,
+      0,
+      0.0285,
+      0,
+      0,
+      1,
+      0.009
+     ]
+    },
+    "color": [
+     0.6,
+     0.42,
+     0.22
+    ]
+   }
+  },
+  {
+   "id": "pistol.bind_wire_b",
+   "node": "pistol_bind_wire_b",
+   "label": "Binding wire",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "copper",
+   "mass": "tiny",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "pistol_bind_wire_b__clear"
+   },
+   "grey": {
+    "pos": [
+     -0.045,
+     -0.07,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.054,
+       0.004,
+       0.056
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0,
+     0.05
+    ],
+    "marks": {
+     "snip": [
+      0.012,
+      0,
+      0.0285,
+      0,
+      0,
+      1,
+      0.009
+     ]
+    },
+    "color": [
+     0.6,
+     0.42,
+     0.22
+    ]
+   }
+  },
+  {
+   "id": "pistol.lead",
+   "node": "pistol_lead",
+   "label": "Trigger lead",
+   "kind": "fixture",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "rubber",
+   "mass": "tiny",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.012,
+     0.004,
+     0.022
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       -0.01,
+       0,
+       0.004,
+       0.03,
+       0.004
+      ]
+     }
+    ],
+    "color": [
+     0.1,
+     0.1,
+     0.1
+    ],
+    "paths": {
+     "route": [
+      [
+       -0.07,
+       -0.004,
+       -0.006
+      ],
+      [
+       -0.07,
+       -0.0125,
+       -0.006
+      ],
+      [
+       -0.07,
+       -0.021,
+       -0.006
+      ],
+      [
+       -0.07,
+       -0.029500000000000002,
+       -0.006
+      ],
+      [
+       -0.07,
+       -0.038000000000000006,
+       -0.006
+      ],
+      [
+       -0.07,
+       -0.0465,
+       -0.006
+      ],
+      [
+       -0.07,
+       -0.05500000000000001,
+       -0.006
+      ],
+      [
+       -0.07,
+       -0.0635,
+       -0.006
+      ],
+      [
+       -0.07,
+       -0.07200000000000001,
+       -0.006
+      ],
+      [
+       -0.07,
+       -0.08050000000000002,
+       -0.006
+      ],
+      [
+       -0.07,
+       -0.08900000000000001,
+       -0.006
+      ],
+      [
+       -0.07,
+       -0.0975,
+       -0.006
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "id": "pistol.lead_plug",
+   "node": "pistol_lead_plug",
+   "label": "Trigger lead plug",
+   "kind": "part",
+   "parent": "pistol.cell_bus",
+   "item": null,
+   "material": "plastic",
+   "mass": "tiny",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 20,
+    "clear": "pistol_lead_plug__clear"
+   },
+   "grey": {
+    "pos": [
+     -0.01,
+     -0.006,
+     0.006
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.012,
+       0.008,
+       0.008
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     -0.03,
+     0.012
+    ],
+    "color": [
+     0.7,
+     0.68,
+     0.3
+    ]
+   }
+  },
+  {
+   "id": "pistol.housing",
+   "node": "pistol_housing",
+   "label": "Backstrap housing",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [
+    "pistol.housing_pin"
+   ],
+   "seat": {
+    "symmetry": 2,
+    "tol_mm": 12,
+    "tol_deg": 25,
+    "clear": "pistol_housing__clear"
+   },
+   "grey": {
+    "pos": [
+     -0.066,
+     -0.0475,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.012,
+       0.115,
+       0.03
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     -0.13,
+     0
+    ],
+    "color": [
+     0.2,
+     0.21,
+     0.23
+    ]
+   }
+  },
+  {
+   "id": "pistol.housing_spring",
+   "node": "pistol_housing_spring",
+   "label": "Housing spring",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "held_by": [
+    "pistol.housing"
+   ],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 14,
+    "tol_deg": 25,
+    "clear": "pistol_housing_spring__clear"
+   },
+   "grey": {
+    "pos": [
+     -0.058,
+     -0.08,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0,
+       0,
+       0.004,
+       0.03,
+       "y"
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     -0.05,
+     0
+    ],
+    "color": [
+     0.75,
+     0.75,
+     0.72
+    ]
+   }
+  },
+  {
+   "id": "pistol.housing_pin",
+   "node": "pistol_housing_pin",
+   "label": "Housing pin",
+   "kind": "fastener",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "pistol_housing_pin__clear"
+   },
+   "grey": {
+    "pos": [
+     -0.066,
+     -0.005,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0,
+       0,
+       0.003,
+       0.04,
+       "z"
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0,
+     -0.045
+    ],
+    "color": [
+     0.72,
+     0.72,
+     0.7
+    ],
+    "marks": {
+     "punch": [
+      0,
+      0,
+      0.075,
+      0,
+      0,
+      1,
+      0.02
+     ]
+    }
+   },
+   "fastener": {
+    "bit": "pin",
+    "turns": 0,
+    "holds": [
+     "pistol.housing"
+    ]
+   }
+  },
+  {
+   "id": "pistol.card_a",
+   "node": "pistol_card_a",
+   "label": "Test card",
+   "kind": "consumable",
+   "parent": null,
+   "item": null,
+   "material": "paper",
+   "mass": "tiny",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.105,
+       0.148,
+       0.0012
+      ]
+     }
+    ],
+    "color": [
+     0.86,
+     0.84,
+     0.76
+    ],
+    "marks": {
+     "centre": [
+      0,
+      0,
+      0.001,
+      0,
+      0,
+      1,
+      0.05
+     ]
+    }
+   }
+  },
+  {
+   "id": "pistol.card_b",
+   "node": "pistol_card_b",
+   "label": "Test card",
+   "kind": "consumable",
+   "parent": null,
+   "item": null,
+   "material": "paper",
+   "mass": "tiny",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.105,
+       0.148,
+       0.0012
+      ]
+     }
+    ],
+    "color": [
+     0.86,
+     0.84,
+     0.76
+    ],
+    "marks": {
+     "centre": [
+      0,
+      0,
+      0.001,
+      0,
+      0,
+      1,
+      0.05
+     ]
+    }
+   }
+  }
+ ],
+ "params": [
+  {
+   "id": "pistol.cell_latch",
+   "node": "pistol_rig",
+   "action": "cell_latch_param",
+   "type": "slide",
+   "min": 0,
+   "max": 1,
+   "unit": "",
+   "continuous": false,
+   "grey": {
+    "target": "pistol.cell_latch",
+    "move": [
+     0,
+     0.008,
+     0
+    ],
+    "turn": [
+     0,
+     0,
+     0
+    ],
+    "as_found": 0
+   }
+  }
+ ]
+}

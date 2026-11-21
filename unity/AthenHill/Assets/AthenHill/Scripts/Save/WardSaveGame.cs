@@ -63,7 +63,7 @@ namespace AthenHill
   void Subscribe()
   {
    if(subscribed||!Ready)return;subscribed=true;
-   crafting.Model.Changed+=MarkDirty;crafting.Collected+=OnCollected;Session.Traded+=MarkDirty;
+   crafting.Model.Changed+=MarkDirty;crafting.Collected+=OnCollected;Session.Traded+=MarkDirty;crafting.AssemblyChanged+=MarkDirty;
    Session.FlagSet+=OnFlag;Session.Talked+=OnTalked;Session.ItemUsed+=OnItemUsed;
    if(Session.Character!=null)Session.Character.Changed+=MarkDirty;
    if(orders)orders.Completed+=OnOrderCompleted;
@@ -78,7 +78,7 @@ namespace AthenHill
   void OnDestroy()
   {
    if(!subscribed)return;
-   if(crafting){if(crafting.Model!=null)crafting.Model.Changed-=MarkDirty;crafting.Collected-=OnCollected;}
+   if(crafting){if(crafting.Model!=null)crafting.Model.Changed-=MarkDirty;crafting.Collected-=OnCollected;crafting.AssemblyChanged-=MarkDirty;}
    if(Session){Session.Traded-=MarkDirty;Session.FlagSet-=OnFlag;Session.Talked-=OnTalked;Session.ItemUsed-=OnItemUsed;}
    if(Session&&Session.Character!=null)Session.Character.Changed-=MarkDirty;
    if(orders)orders.Completed-=OnOrderCompleted;
@@ -109,7 +109,8 @@ namespace AthenHill
     bermsStep=tutorial?tutorial.Step.ToString():BermsStep.Approach.ToString(),hasPistol=combat&&combat.hasPistol,
     orders=orders?orders.Capture():null,city=Session.CaptureCityVisit(),character=Session.Character?.Capture(),
     hotbar=Session.Quickbar?.Capture(),stash=Session.Stash?.Capture(),journal=Session.Journal?Session.Journal.Capture():null,
-    map=Session.Map?Session.Map.Capture():null
+    map=Session.Map?Session.Map.Capture():null,
+    benchJob=crafting.Model.OpenTicket!=null&&!string.IsNullOrEmpty(crafting.Model.AssemblyBlob)?crafting.Model.AssemblyBlob:null
    };
   }
   public bool SaveNow(string reason)
@@ -131,6 +132,8 @@ namespace AthenHill
     Session.Shop.Restore(data.credits,data.purchases,data.sales,data.items?.Where(x=>x!=null).Select(x=>new KeyValuePair<string,int>(x.itemId,x.quantity)));
     if(Session.Character!=null)skipped.AddRange(Session.Character.Restore(data.character));
     skipped.AddRange(crafting.Model.Restore(data.crafting));
+    // 20 Nov 2026: the bench job's own record goes with its ticket (a blob without a ticket is dropped)
+    crafting.Model.AssemblyBlob=crafting.Model.OpenTicket!=null?data.benchJob:null;
     if(data.loot!=null&&!crafting.Loot.Restore(data.loot))skipped.Add("loot generator state");
     var step=Enum.TryParse(data.bermsStep,out BermsStep parsed)?parsed:BermsStep.Approach;
     // The pistol is carried exactly from the Draw step on; the save flag cannot contradict the primer.

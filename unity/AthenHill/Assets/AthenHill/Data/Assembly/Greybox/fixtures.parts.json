@@ -1,0 +1,2084 @@
+{
+ "family": "fixtures",
+ "glb": null,
+ "greybox": true,
+ "blender": null,
+ "generated": "2026-11-20",
+ "parts": [
+  {
+   "id": "fixtures.worksurface",
+   "node": "fixtures_worksurface",
+   "label": "Work surface",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "rubber",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0,
+     0.8717,
+     0.303
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       -0.004,
+       0,
+       0.9,
+       0.008,
+       0.55
+      ]
+     }
+    ],
+    "color": [
+     0.11,
+     0.12,
+     0.12
+    ],
+    "marks": {
+     "lead_zero": [
+      0.1,
+      0,
+      0.26,
+      0,
+      1,
+      0,
+      0.006
+     ],
+     "lead_length": [
+      0.02,
+      0,
+      0.26,
+      0,
+      1,
+      0,
+      0.006
+     ]
+    }
+   }
+  },
+  {
+   "id": "fixtures.workmat",
+   "node": "fixtures_workmat",
+   "label": "Work mat",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "canvas",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     -0.03,
+     0.8777,
+     0.195
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       -0.003,
+       0,
+       0.36,
+       0.006,
+       0.26
+      ]
+     }
+    ],
+    "color": [
+     0.07,
+     0.07,
+     0.07
+    ]
+   }
+  },
+  {
+   "id": "fixtures.partsmat",
+   "node": "fixtures_partsmat",
+   "label": "Parts mat",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "rubber",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     -0.03,
+     0.8747,
+     0.44
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       -0.0015,
+       0,
+       0.44,
+       0.003,
+       0.2
+      ]
+     }
+    ],
+    "color": [
+     0.2,
+     0.22,
+     0.2
+    ]
+   }
+  },
+  {
+   "id": "fixtures.vise",
+   "node": "fixtures_vise",
+   "label": "Bench vise",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "heavy",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.325,
+     0.8717,
+     0.33
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0.02,
+       0,
+       0.15,
+       0.04,
+       0.26
+      ]
+     },
+     {
+      "box": [
+       0,
+       0.09,
+       -0.065,
+       0.12,
+       0.09,
+       0.03
+      ]
+     },
+     {
+      "cyl": [
+       0,
+       0.07,
+       0.05,
+       0.01,
+       0.16,
+       "z"
+      ]
+     }
+    ],
+    "color": [
+     0.23,
+     0.27,
+     0.3
+    ]
+   }
+  },
+  {
+   "id": "fixtures.vise_slide",
+   "node": "fixtures_vise_slide",
+   "label": "Vise jaw",
+   "kind": "fixture",
+   "parent": "fixtures.vise",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0,
+     0.09,
+     0.055
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.12,
+       0.09,
+       0.03
+      ]
+     }
+    ],
+    "color": [
+     0.26,
+     0.3,
+     0.33
+    ]
+   }
+  },
+  {
+   "id": "fixtures.vise_screw",
+   "node": "fixtures_vise_screw",
+   "label": "Vise handle",
+   "kind": "fixture",
+   "parent": "fixtures.vise",
+   "item": null,
+   "material": "steel",
+   "mass": "heavy",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "fixtures_vise_screw__clear"
+   },
+   "grey": {
+    "pos": [
+     0,
+     0.07,
+     0.152
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0,
+       0,
+       0.006,
+       0.13,
+       "x"
+      ]
+     },
+     {
+      "cyl": [
+       0,
+       0,
+       -0.012,
+       0.012,
+       0.024,
+       "z"
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0,
+     0.03
+    ],
+    "color": [
+     0.62,
+     0.6,
+     0.55
+    ]
+   }
+  },
+  {
+   "id": "fixtures.cradle",
+   "node": "fixtures_cradle",
+   "label": "Cradle stand",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "wood",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     -0.335,
+     0.8717,
+     0.3
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0.01,
+       0,
+       0.18,
+       0.02,
+       0.09
+      ]
+     },
+     {
+      "box": [
+       -0.02,
+       0.0775,
+       0,
+       0.012,
+       0.115,
+       0.06
+      ]
+     },
+     {
+      "box": [
+       0.075,
+       0.0775,
+       0,
+       0.012,
+       0.115,
+       0.06
+      ]
+     }
+    ],
+    "color": [
+     0.38,
+     0.27,
+     0.17
+    ]
+   }
+  },
+  {
+   "id": "fixtures.dish",
+   "node": "fixtures_dish",
+   "label": "Magnetic dish",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     -0.36,
+     0.8717,
+     0.455
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0.008,
+       0,
+       0.054,
+       0.016,
+       "y"
+      ]
+     }
+    ],
+    "color": [
+     0.55,
+     0.56,
+     0.57
+    ]
+   }
+  },
+  {
+   "id": "fixtures.pad",
+   "node": "fixtures_pad",
+   "label": "Insulated pad",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "ceramic",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     -0.36,
+     0.8717,
+     0.125
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0.012,
+       0,
+       0.13,
+       0.024,
+       0.104
+      ]
+     }
+    ],
+    "color": [
+     0.62,
+     0.3,
+     0.1
+    ]
+   }
+  },
+  {
+   "id": "fixtures.board",
+   "node": "fixtures_board",
+   "label": "Card board",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "wood",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.76,
+     0.8637,
+     -0.29
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0.18,
+       -0.01,
+       0.6,
+       0.36,
+       0.02
+      ]
+     },
+     {
+      "box": [
+       0,
+       0.01,
+       0.03,
+       0.6,
+       0.02,
+       0.13
+      ]
+     }
+    ],
+    "color": [
+     0.4,
+     0.3,
+     0.2
+    ]
+   }
+  },
+  {
+   "id": "fixtures.schematic",
+   "node": "fixtures_schematic",
+   "label": "Schematic",
+   "kind": "fixture",
+   "parent": "fixtures.board",
+   "item": null,
+   "material": "paper",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     -0.13,
+     0.22,
+     0.004
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.26,
+       0.2,
+       0.004
+      ]
+     }
+    ],
+    "color": [
+     0.72,
+     0.68,
+     0.56
+    ]
+   }
+  },
+  {
+   "id": "fixtures.schematic_r0",
+   "node": "fixtures_schematic_r0",
+   "label": "Schematic region 0",
+   "kind": "fixture",
+   "parent": "fixtures.schematic",
+   "item": null,
+   "material": "paper",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     -0.093,
+     0.045,
+     0.003
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.054,
+       0.08,
+       0.002
+      ]
+     }
+    ],
+    "color": [
+     0.5,
+     0.47,
+     0.38
+    ],
+    "emissive": true
+   }
+  },
+  {
+   "id": "fixtures.schematic_r1",
+   "node": "fixtures_schematic_r1",
+   "label": "Schematic region 1",
+   "kind": "fixture",
+   "parent": "fixtures.schematic",
+   "item": null,
+   "material": "paper",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     -0.031,
+     0.045,
+     0.003
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.054,
+       0.08,
+       0.002
+      ]
+     }
+    ],
+    "color": [
+     0.5,
+     0.47,
+     0.38
+    ],
+    "emissive": true
+   }
+  },
+  {
+   "id": "fixtures.schematic_r2",
+   "node": "fixtures_schematic_r2",
+   "label": "Schematic region 2",
+   "kind": "fixture",
+   "parent": "fixtures.schematic",
+   "item": null,
+   "material": "paper",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.031,
+     0.045,
+     0.003
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.054,
+       0.08,
+       0.002
+      ]
+     }
+    ],
+    "color": [
+     0.5,
+     0.47,
+     0.38
+    ],
+    "emissive": true
+   }
+  },
+  {
+   "id": "fixtures.schematic_r3",
+   "node": "fixtures_schematic_r3",
+   "label": "Schematic region 3",
+   "kind": "fixture",
+   "parent": "fixtures.schematic",
+   "item": null,
+   "material": "paper",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.093,
+     0.045,
+     0.003
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.054,
+       0.08,
+       0.002
+      ]
+     }
+    ],
+    "color": [
+     0.5,
+     0.47,
+     0.38
+    ],
+    "emissive": true
+   }
+  },
+  {
+   "id": "fixtures.schematic_r4",
+   "node": "fixtures_schematic_r4",
+   "label": "Schematic region 4",
+   "kind": "fixture",
+   "parent": "fixtures.schematic",
+   "item": null,
+   "material": "paper",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     -0.093,
+     -0.045,
+     0.003
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.054,
+       0.08,
+       0.002
+      ]
+     }
+    ],
+    "color": [
+     0.5,
+     0.47,
+     0.38
+    ],
+    "emissive": true
+   }
+  },
+  {
+   "id": "fixtures.schematic_r5",
+   "node": "fixtures_schematic_r5",
+   "label": "Schematic region 5",
+   "kind": "fixture",
+   "parent": "fixtures.schematic",
+   "item": null,
+   "material": "paper",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     -0.031,
+     -0.045,
+     0.003
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.054,
+       0.08,
+       0.002
+      ]
+     }
+    ],
+    "color": [
+     0.5,
+     0.47,
+     0.38
+    ],
+    "emissive": true
+   }
+  },
+  {
+   "id": "fixtures.schematic_r6",
+   "node": "fixtures_schematic_r6",
+   "label": "Schematic region 6",
+   "kind": "fixture",
+   "parent": "fixtures.schematic",
+   "item": null,
+   "material": "paper",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.031,
+     -0.045,
+     0.003
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.054,
+       0.08,
+       0.002
+      ]
+     }
+    ],
+    "color": [
+     0.5,
+     0.47,
+     0.38
+    ],
+    "emissive": true
+   }
+  },
+  {
+   "id": "fixtures.schematic_r7",
+   "node": "fixtures_schematic_r7",
+   "label": "Schematic region 7",
+   "kind": "fixture",
+   "parent": "fixtures.schematic",
+   "item": null,
+   "material": "paper",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.093,
+     -0.045,
+     0.003
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.054,
+       0.08,
+       0.002
+      ]
+     }
+    ],
+    "color": [
+     0.5,
+     0.47,
+     0.38
+    ],
+    "emissive": true
+   }
+  },
+  {
+   "id": "fixtures.tray",
+   "node": "fixtures_tray",
+   "label": "Salvage tray",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     -0.64,
+     0.8637,
+     0.06
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0.004,
+       0,
+       0.3,
+       0.008,
+       0.2
+      ]
+     },
+     {
+      "box": [
+       0,
+       0.018,
+       -0.096,
+       0.3,
+       0.03,
+       0.008
+      ]
+     },
+     {
+      "box": [
+       0,
+       0.018,
+       0.096,
+       0.3,
+       0.03,
+       0.008
+      ]
+     }
+    ],
+    "color": [
+     0.36,
+     0.4,
+     0.36
+    ]
+   }
+  },
+  {
+   "id": "fixtures.bin",
+   "node": "fixtures_bin",
+   "label": "Scrap bin",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.95,
+     0.8637,
+     -0.07
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0.07,
+       0,
+       0.1,
+       0.14,
+       "y"
+      ]
+     }
+    ],
+    "color": [
+     0.25,
+     0.2,
+     0.16
+    ]
+   }
+  },
+  {
+   "id": "fixtures.jar",
+   "node": "fixtures_jar",
+   "label": "Solvent jar",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "glass",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.76,
+     0.8637,
+     -0.03
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0.06,
+       0,
+       0.045,
+       0.12,
+       "y"
+      ]
+     }
+    ],
+    "color": [
+     0.45,
+     0.58,
+     0.6
+    ]
+   }
+  },
+  {
+   "id": "fixtures.tester",
+   "node": "fixtures_tester",
+   "label": "Bench tester",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.58,
+     0.8637,
+     -0.035
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0.055,
+       0,
+       0.16,
+       0.11,
+       0.075
+      ]
+     }
+    ],
+    "color": [
+     0.3,
+     0.33,
+     0.3
+    ]
+   }
+  },
+  {
+   "id": "fixtures.tester_probes",
+   "node": "fixtures_tester_probes",
+   "label": "Tester probes",
+   "kind": "tool",
+   "parent": "fixtures.tester",
+   "item": null,
+   "material": "copper",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "fixtures_tester_probes__clear"
+   },
+   "grey": {
+    "pos": [
+     0,
+     0.118,
+     0.01
+    ],
+    "rot": [
+     0,
+     180,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0,
+       0.02,
+       0.003,
+       0.09,
+       "z"
+      ]
+     },
+     {
+      "cyl": [
+       0.012,
+       0,
+       0.02,
+       0.003,
+       0.09,
+       "z"
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0.03,
+     0
+    ],
+    "tip": [
+     0,
+     0,
+     0.065,
+     0,
+     0,
+     1
+    ],
+    "grab": [
+     0,
+     0,
+     -0.0325
+    ]
+   },
+   "tool": {
+    "verbs": [],
+    "tip": "fixtures_tester_probes__tip",
+    "tags": [
+     "tool:probe"
+    ]
+   }
+  },
+  {
+   "id": "fixtures.tester_lamp",
+   "node": "fixtures_tester_lamp",
+   "label": "Tester lamp",
+   "kind": "fixture",
+   "parent": "fixtures.tester",
+   "item": null,
+   "material": "glass",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.05,
+     0.08,
+     0.04
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0,
+       0,
+       0.012,
+       0.01,
+       "z"
+      ]
+     }
+    ],
+    "color": [
+     0.1,
+     0.08,
+     0.03
+    ],
+    "emissive": true
+   }
+  },
+  {
+   "id": "fixtures.press",
+   "node": "fixtures_press",
+   "label": "Nanite press",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "heavy",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     -0.56,
+     0.8637,
+     -0.22
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0.03,
+       0,
+       0.26,
+       0.06,
+       0.22
+      ]
+     },
+     {
+      "box": [
+       0,
+       0.24,
+       -0.08,
+       0.1,
+       0.36,
+       0.06
+      ]
+     },
+     {
+      "box": [
+       0,
+       0.4,
+       -0.01,
+       0.12,
+       0.05,
+       0.16
+      ]
+     }
+    ],
+    "color": [
+     0.72,
+     0.58,
+     0.12
+    ]
+   }
+  },
+  {
+   "id": "fixtures.press_lever",
+   "node": "fixtures_press_lever",
+   "label": "Press lever",
+   "kind": "fixture",
+   "parent": "fixtures.press",
+   "item": null,
+   "material": "steel",
+   "mass": "heavy",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "fixtures_press_lever__clear"
+   },
+   "grey": {
+    "pos": [
+     -0.09,
+     0.3,
+     0.02
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0.1,
+       0,
+       0.012,
+       0.22,
+       "y"
+      ]
+     }
+    ],
+    "clear": [
+     0.03,
+     0,
+     0
+    ],
+    "color": [
+     0.2,
+     0.2,
+     0.2
+    ]
+   }
+  },
+  {
+   "id": "fixtures.press_vents",
+   "node": "fixtures_press_vents",
+   "label": "Press vents",
+   "kind": "fixture",
+   "parent": "fixtures.press",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0,
+     0.032,
+     0.112
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.08,
+       0.02,
+       0.004
+      ]
+     }
+    ],
+    "color": [
+     0.06,
+     0.1,
+     0.1
+    ],
+    "emissive": true
+   }
+  },
+  {
+   "id": "fixtures.mouldrack",
+   "node": "fixtures_mouldrack",
+   "label": "Mould rack",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     -0.8,
+     0.8637,
+     -0.19
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0.075,
+       0,
+       0.11,
+       0.15,
+       0.13
+      ]
+     }
+    ],
+    "color": [
+     0.3,
+     0.3,
+     0.28
+    ]
+   }
+  },
+  {
+   "id": "fixtures.mould_tang",
+   "node": "fixtures_mould_tang",
+   "label": "Pistol-tang mould",
+   "kind": "part",
+   "parent": "fixtures.mouldrack",
+   "item": null,
+   "material": "steel",
+   "mass": "medium",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 14,
+    "tol_deg": 25,
+    "clear": "fixtures_mould_tang__clear"
+   },
+   "grey": {
+    "pos": [
+     0,
+     0.165,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0.015,
+       0,
+       0.13,
+       0.03,
+       0.07
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0.05,
+     0
+    ],
+    "color": [
+     0.42,
+     0.42,
+     0.4
+    ],
+    "grab": [
+     0,
+     0.015,
+     0
+    ],
+    "zones": {
+     "cavity": [
+      0,
+      0.031,
+      0,
+      0.11,
+      0.004,
+      0.05
+     ]
+    }
+   }
+  },
+  {
+   "id": "fixtures.mould_charge",
+   "node": "fixtures_mould_charge",
+   "label": "Charge",
+   "kind": "consumable",
+   "parent": "fixtures.mould_tang",
+   "item": null,
+   "material": "alloy",
+   "mass": "tiny",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0,
+     0.034,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0,
+       0.1,
+       0.008,
+       0.044
+      ]
+     },
+     {
+      "box": [
+       0.012,
+       0.005,
+       0.004,
+       0.05,
+       0.004,
+       0.02
+      ]
+     }
+    ],
+    "color": [
+     0.46,
+     0.47,
+     0.48
+    ]
+   }
+  },
+  {
+   "id": "fixtures.lamp",
+   "node": "fixtures_lamp",
+   "label": "Cure lamp",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     -0.3,
+     0.8637,
+     -0.03
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0.01,
+       0,
+       0.055,
+       0.02,
+       "y"
+      ]
+     },
+     {
+      "cyl": [
+       0,
+       0.13,
+       0,
+       0.008,
+       0.24,
+       "y"
+      ]
+     }
+    ],
+    "color": [
+     0.25,
+     0.25,
+     0.27
+    ]
+   }
+  },
+  {
+   "id": "fixtures.lamp_head",
+   "node": "fixtures_lamp_head",
+   "label": "Cure lamp head",
+   "kind": "fixture",
+   "parent": "fixtures.lamp",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "fixtures_lamp_head__clear"
+   },
+   "grey": {
+    "pos": [
+     0,
+     0.25,
+     0
+    ],
+    "rot": [
+     0,
+     46.3,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0.1,
+       0,
+       0,
+       0.008,
+       0.2,
+       "x"
+      ]
+     },
+     {
+      "cyl": [
+       0.2,
+       -0.02,
+       0,
+       0.045,
+       0.04,
+       "y"
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0.03,
+     0
+    ],
+    "color": [
+     0.3,
+     0.3,
+     0.34
+    ],
+    "emissive": true
+   }
+  },
+  {
+   "id": "fixtures.holster",
+   "node": "fixtures_holster",
+   "label": "Holster hook",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.22,
+     0.8637,
+     0.565
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0.02,
+       0,
+       0.05,
+       0.04,
+       0.12
+      ]
+     }
+    ],
+    "color": [
+     0.3,
+     0.22,
+     0.15
+    ]
+   }
+  }
+ ],
+ "params": [
+  {
+   "id": "fixtures.vise_jaw",
+   "node": "fixtures_rig",
+   "action": "vise_jaw_param",
+   "type": "slide",
+   "min": 0,
+   "max": 1,
+   "unit": "",
+   "continuous": false,
+   "grey": {
+    "target": "fixtures.vise_slide",
+    "move": [
+     0,
+     0,
+     -0.09
+    ],
+    "turn": [
+     0,
+     0,
+     0
+    ],
+    "as_found": 0
+   }
+  },
+  {
+   "id": "fixtures.schematic_s0",
+   "node": "fixtures_rig",
+   "action": "schematic_s0_param",
+   "type": "slide",
+   "min": 0,
+   "max": 1,
+   "unit": "",
+   "continuous": false,
+   "grey": {
+    "target": null,
+    "move": [
+     0,
+     0,
+     0
+    ],
+    "turn": [
+     0,
+     0,
+     0
+    ],
+    "as_found": 0,
+    "glow": "fixtures.schematic_r0",
+    "glow_color": [
+     0.9,
+     0.75,
+     0.35
+    ]
+   }
+  },
+  {
+   "id": "fixtures.schematic_s1",
+   "node": "fixtures_rig",
+   "action": "schematic_s1_param",
+   "type": "slide",
+   "min": 0,
+   "max": 1,
+   "unit": "",
+   "continuous": false,
+   "grey": {
+    "target": null,
+    "move": [
+     0,
+     0,
+     0
+    ],
+    "turn": [
+     0,
+     0,
+     0
+    ],
+    "as_found": 0,
+    "glow": "fixtures.schematic_r1",
+    "glow_color": [
+     0.9,
+     0.75,
+     0.35
+    ]
+   }
+  },
+  {
+   "id": "fixtures.schematic_s2",
+   "node": "fixtures_rig",
+   "action": "schematic_s2_param",
+   "type": "slide",
+   "min": 0,
+   "max": 1,
+   "unit": "",
+   "continuous": false,
+   "grey": {
+    "target": null,
+    "move": [
+     0,
+     0,
+     0
+    ],
+    "turn": [
+     0,
+     0,
+     0
+    ],
+    "as_found": 0,
+    "glow": "fixtures.schematic_r2",
+    "glow_color": [
+     0.9,
+     0.75,
+     0.35
+    ]
+   }
+  },
+  {
+   "id": "fixtures.schematic_s3",
+   "node": "fixtures_rig",
+   "action": "schematic_s3_param",
+   "type": "slide",
+   "min": 0,
+   "max": 1,
+   "unit": "",
+   "continuous": false,
+   "grey": {
+    "target": null,
+    "move": [
+     0,
+     0,
+     0
+    ],
+    "turn": [
+     0,
+     0,
+     0
+    ],
+    "as_found": 0,
+    "glow": "fixtures.schematic_r3",
+    "glow_color": [
+     0.9,
+     0.75,
+     0.35
+    ]
+   }
+  },
+  {
+   "id": "fixtures.schematic_s4",
+   "node": "fixtures_rig",
+   "action": "schematic_s4_param",
+   "type": "slide",
+   "min": 0,
+   "max": 1,
+   "unit": "",
+   "continuous": false,
+   "grey": {
+    "target": null,
+    "move": [
+     0,
+     0,
+     0
+    ],
+    "turn": [
+     0,
+     0,
+     0
+    ],
+    "as_found": 0,
+    "glow": "fixtures.schematic_r4",
+    "glow_color": [
+     0.9,
+     0.75,
+     0.35
+    ]
+   }
+  },
+  {
+   "id": "fixtures.schematic_s5",
+   "node": "fixtures_rig",
+   "action": "schematic_s5_param",
+   "type": "slide",
+   "min": 0,
+   "max": 1,
+   "unit": "",
+   "continuous": false,
+   "grey": {
+    "target": null,
+    "move": [
+     0,
+     0,
+     0
+    ],
+    "turn": [
+     0,
+     0,
+     0
+    ],
+    "as_found": 0,
+    "glow": "fixtures.schematic_r5",
+    "glow_color": [
+     0.9,
+     0.75,
+     0.35
+    ]
+   }
+  },
+  {
+   "id": "fixtures.schematic_s6",
+   "node": "fixtures_rig",
+   "action": "schematic_s6_param",
+   "type": "slide",
+   "min": 0,
+   "max": 1,
+   "unit": "",
+   "continuous": false,
+   "grey": {
+    "target": null,
+    "move": [
+     0,
+     0,
+     0
+    ],
+    "turn": [
+     0,
+     0,
+     0
+    ],
+    "as_found": 0,
+    "glow": "fixtures.schematic_r6",
+    "glow_color": [
+     0.9,
+     0.75,
+     0.35
+    ]
+   }
+  },
+  {
+   "id": "fixtures.schematic_s7",
+   "node": "fixtures_rig",
+   "action": "schematic_s7_param",
+   "type": "slide",
+   "min": 0,
+   "max": 1,
+   "unit": "",
+   "continuous": false,
+   "grey": {
+    "target": null,
+    "move": [
+     0,
+     0,
+     0
+    ],
+    "turn": [
+     0,
+     0,
+     0
+    ],
+    "as_found": 0,
+    "glow": "fixtures.schematic_r7",
+    "glow_color": [
+     0.9,
+     0.75,
+     0.35
+    ]
+   }
+  },
+  {
+   "id": "fixtures.press_lever",
+   "node": "fixtures_rig",
+   "action": "press_lever_param",
+   "type": "slide",
+   "min": 0,
+   "max": 1,
+   "unit": "",
+   "continuous": false,
+   "grey": {
+    "target": "fixtures.press_lever",
+    "move": [
+     0,
+     0,
+     0
+    ],
+    "turn": [
+     70,
+     0,
+     0
+    ],
+    "as_found": 0
+   }
+  },
+  {
+   "id": "fixtures.lamp_arm",
+   "node": "fixtures_rig",
+   "action": "lamp_arm_param",
+   "type": "slide",
+   "min": 0,
+   "max": 1,
+   "unit": "",
+   "continuous": false,
+   "grey": {
+    "target": "fixtures.lamp_head",
+    "move": [
+     0,
+     0,
+     0
+    ],
+    "turn": [
+     0,
+     -80,
+     0
+    ],
+    "as_found": 0
+   }
+  }
+ ]
+}

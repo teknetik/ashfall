@@ -1,0 +1,782 @@
+{
+ "family": "fixtures",
+ "generated": "2026-11-21T20:14:39Z",
+ "blender": "5.2.2 LTS",
+ "shrink_mm": 0.030000000000000002,
+ "contact_mm": 0.3,
+ "contract": {
+  "ok": true,
+  "problems": [],
+  "parts": 43,
+  "tris": 60516,
+  "budget": 70000
+ },
+ "params": {
+  "ok": true,
+  "params": {
+   "vise_jaw": {
+    "ok": true,
+    "type": "slide",
+    "min": 0.0,
+    "max": 0.09,
+    "unit": "m",
+    "moving": [
+     "fixtures.vise_pad_m",
+     "fixtures.vise_plate_m",
+     "fixtures.vise_screw",
+     "fixtures.vise_slide"
+    ],
+    "with": {},
+    "steps": 51,
+    "overlap_at_rest": {},
+    "steps_with_new_overlap": [],
+    "first_new_overlap": null,
+    "min_clearance_mm": 0.12,
+    "clamp_error_mm": [
+     0.0,
+     0.0
+    ],
+    "rig": "fixtures_vise_rig",
+    "against": "bench"
+   },
+   "vise_handle": {
+    "type": "continuous",
+    "note": "code-driven, not swept",
+    "rig": "fixtures_vise_rig",
+    "against": "bench"
+   },
+   "vise_swivel": {
+    "type": "continuous",
+    "note": "code-driven, not swept",
+    "rig": "fixtures_vise_swivel_rig",
+    "against": "bench"
+   },
+   "press_pressure": {
+    "ok": true,
+    "type": "slide",
+    "min": 0.0,
+    "max": 0.052999999999999964,
+    "unit": "m",
+    "moving": [
+     "fixtures.press_slug"
+    ],
+    "with": {},
+    "steps": 51,
+    "overlap_at_rest": {},
+    "steps_with_new_overlap": [],
+    "first_new_overlap": null,
+    "min_clearance_mm": 0.23,
+    "clamp_error_mm": [
+     0.0,
+     0.0
+    ],
+    "rig": "fixtures_press_rig",
+    "against": "bench"
+   }
+  },
+  "rigs": [
+   "fixtures_press_rig",
+   "fixtures_vise_rig",
+   "fixtures_vise_swivel_rig"
+  ]
+ },
+ "custom": {
+  "ok": true,
+  "rigs": {
+   "fixtures_press_lever_rig": {
+    "clips": {
+     "press_lever_param": {
+      "seconds": 1.0,
+      "steps": 25,
+      "lowest_z_mm": 70.2,
+      "size_at_0_mm": [
+       142.2,
+       160.9,
+       362.3
+      ],
+      "size_at_1_mm": [
+       142.2,
+       238.0,
+       279.9
+      ]
+     }
+    },
+    "problems": [],
+    "ok": true
+   },
+   "fixtures_lamp_rig": {
+    "clips": {
+     "lamp_arm_param": {
+      "seconds": 1.0,
+      "steps": 25,
+      "lowest_z_mm": 30.2,
+      "size_at_0_mm": [
+       186.6,
+       239.3,
+       382.8
+      ],
+      "size_at_1_mm": [
+       339.2,
+       265.3,
+       264.2
+      ]
+     }
+    },
+    "problems": [],
+    "ok": true
+   },
+   "fixtures_schematic_rig": {
+    "clips": {
+     "schematic_s0_param": {
+      "seconds": 1.0,
+      "steps": 25,
+      "lowest_z_mm": 69.8,
+      "size_at_0_mm": [
+       227.2,
+       44.8,
+       236.3
+      ],
+      "size_at_1_mm": [
+       227.2,
+       44.8,
+       236.3
+      ]
+     },
+     "schematic_s1_param": {
+      "seconds": 1.0,
+      "steps": 25,
+      "lowest_z_mm": 69.8,
+      "size_at_0_mm": [
+       227.2,
+       44.8,
+       236.0
+      ],
+      "size_at_1_mm": [
+       227.2,
+       44.8,
+       236.3
+      ]
+     },
+     "schematic_s2_param": {
+      "seconds": 1.0,
+      "steps": 25,
+      "lowest_z_mm": 69.8,
+      "size_at_0_mm": [
+       227.2,
+       44.8,
+       236.3
+      ],
+      "size_at_1_mm": [
+       227.2,
+       44.8,
+       236.3
+      ]
+     },
+     "schematic_s3_param": {
+      "seconds": 1.0,
+      "steps": 25,
+      "lowest_z_mm": 69.8,
+      "size_at_0_mm": [
+       227.2,
+       44.8,
+       236.3
+      ],
+      "size_at_1_mm": [
+       227.2,
+       44.8,
+       236.3
+      ]
+     },
+     "schematic_s4_param": {
+      "seconds": 1.0,
+      "steps": 25,
+      "lowest_z_mm": 69.8,
+      "size_at_0_mm": [
+       227.2,
+       44.8,
+       236.3
+      ],
+      "size_at_1_mm": [
+       227.2,
+       44.8,
+       236.3
+      ]
+     },
+     "schematic_s5_param": {
+      "seconds": 1.0,
+      "steps": 25,
+      "lowest_z_mm": 69.8,
+      "size_at_0_mm": [
+       227.2,
+       44.8,
+       236.3
+      ],
+      "size_at_1_mm": [
+       227.2,
+       44.8,
+       236.3
+      ]
+     },
+     "schematic_s6_param": {
+      "seconds": 1.0,
+      "steps": 25,
+      "lowest_z_mm": 69.8,
+      "size_at_0_mm": [
+       227.1,
+       44.8,
+       236.2
+      ],
+      "size_at_1_mm": [
+       227.2,
+       44.8,
+       236.3
+      ]
+     },
+     "schematic_s7_param": {
+      "seconds": 1.0,
+      "steps": 25,
+      "lowest_z_mm": 69.8,
+      "size_at_0_mm": [
+       227.2,
+       44.6,
+       236.3
+      ],
+      "size_at_1_mm": [
+       227.2,
+       44.8,
+       236.3
+      ]
+     }
+    },
+    "problems": [],
+    "ok": true
+   }
+  }
+ },
+ "seats": {
+  "ok": true,
+  "seats": {
+   "fixtures.mould_tang": {
+    "ok": true,
+    "against": [
+     "fixtures_mouldrack",
+     "fixtures_mould_c",
+     "fixtures_mould_b"
+    ],
+    "steps": 41,
+    "overlaps": [],
+    "min_clearance_mm": 1.4,
+    "contact_when_seated": [],
+    "travel_mm": 45.0
+   },
+   "fixtures.tester_probes": {
+    "ok": true,
+    "against": [
+     "fixtures_tester_lamp",
+     "fixtures_tester"
+    ],
+    "steps": 41,
+    "overlaps": [],
+    "min_clearance_mm": 0.2,
+    "contact_when_seated": [
+     "fixtures_tester"
+    ],
+    "travel_mm": 60.0
+   }
+  }
+ },
+ "custom_sweep": {
+  "ok": true,
+  "clips": {
+   "press_lever_param": {
+    "ok": true,
+    "steps": 41,
+    "riding": [
+     "fixtures.press_lever",
+     "fixtures.press_ram"
+    ],
+    "overlap_at_0": {},
+    "bad_steps": []
+   },
+   "lamp_arm_param": {
+    "ok": true,
+    "steps": 41,
+    "riding": [
+     "fixtures.lamp_arm1",
+     "fixtures.lamp_arm2",
+     "fixtures.lamp_head",
+     "fixtures.lamp_turret"
+    ],
+    "overlap_at_0": {},
+    "bad_steps": []
+   }
+  }
+ },
+ "press_mould": {
+  "ok": true,
+  "steps": [
+   {
+    "v": 1.0,
+    "overlaps": {},
+    "die_gap_mm": 0.05
+   }
+  ],
+  "on_bed_mm": 0.1,
+  "closed_gap_mm": 0.05
+ },
+ "vise": {
+  "ok": true,
+  "holds": [
+   {
+    "thing": "two stacked alloy sheets",
+    "thickness_mm": 4.0,
+    "depth_mm": 20.0,
+    "jaw": 0.9556,
+    "gap_mm": 4.12,
+    "overlaps": {},
+    "ok": true,
+    "size_source": "thickness from grip/INTERFACE.md (2 x 2.0); a block, not the materials export"
+   },
+   {
+    "thing": "strap blank",
+    "thickness_mm": 2.0,
+    "depth_mm": 17.0,
+    "jaw": 0.9778,
+    "gap_mm": 2.12,
+    "overlaps": {},
+    "ok": true,
+    "size_source": "section from grip/INTERFACE.md (17 x 2); a block 90 long between the jaws, not the materials export"
+   },
+   {
+    "thing": "grip core with gimbal cradle (press fit)",
+    "thickness_mm": 58.0,
+    "depth_mm": 30.0,
+    "jaw": 0.3556,
+    "gap_mm": 58.12,
+    "overlaps": {},
+    "ok": true,
+    "size_source": "placeholder"
+   }
+  ],
+  "gap": [
+   {
+    "jaw": 0.0,
+    "gap_mm": 90.12,
+    "expected_mm": 90.0
+   },
+   {
+    "jaw": 0.25,
+    "gap_mm": 67.62,
+    "expected_mm": 67.5
+   },
+   {
+    "jaw": 0.5,
+    "gap_mm": 45.12,
+    "expected_mm": 45.0
+   },
+   {
+    "jaw": 0.75,
+    "gap_mm": 22.62,
+    "expected_mm": 22.5
+   },
+   {
+    "jaw": 1.0,
+    "gap_mm": 0.12,
+    "expected_mm": 0.0
+   }
+  ],
+  "opening_mm": 90.0,
+  "throat_mm": 43.0,
+  "note": "placeholder sizes for what has not exported; a block deeper than the throat (43 mm) would sit on the screw"
+ },
+ "fasteners": {
+  "ok": true,
+  "note": "no part of this family is a fastener the player removes (bolts, rivets and screws here are fixed)"
+ },
+ "nobake": false,
+ "rests": {
+  "ok": true,
+  "rests": [
+   {
+    "owner": "fixtures.workmat",
+    "mark": "seat_pistol",
+    "part": "pistol.frame",
+    "parts": 20,
+    "overlaps": {},
+    "nearest_to_owner_mm": 0.262,
+    "lowest_z_mm": 13.99,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.vise",
+    "mark": "seat_work",
+    "part": "pistol.frame",
+    "parts": 19,
+    "jaw": 0.6022,
+    "gap_mm": 35.8,
+    "fixed_side_gap_mm": 0.098,
+    "overlaps": {},
+    "nearest_to_owner_mm": 0.098,
+    "lowest_z_mm": 113.7,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.cradle",
+    "mark": "seat_frame",
+    "part": "pistol.frame",
+    "parts": 7,
+    "overlaps": {},
+    "nearest_to_owner_mm": 0.111,
+    "lowest_z_mm": 30.71,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.pad",
+    "mark": "seat_cell",
+    "part": "pistol.cell",
+    "parts": 1,
+    "overlaps": {},
+    "nearest_to_owner_mm": 0.248,
+    "lowest_z_mm": 29.58,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.board",
+    "mark": "seat_card_before",
+    "part": "pistol.card_a",
+    "parts": 1,
+    "overlaps": {},
+    "nearest_to_owner_mm": 0.4,
+    "lowest_z_mm": 253.92,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.board",
+    "mark": "seat_card_after",
+    "part": "pistol.card_b",
+    "parts": 1,
+    "overlaps": {},
+    "nearest_to_owner_mm": 0.4,
+    "lowest_z_mm": 253.92,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.vise",
+    "mark": "seat_servo",
+    "part": "servo.case_body",
+    "parts": 33,
+    "jaw": 0.2784,
+    "gap_mm": 64.94,
+    "fixed_side_gap_mm": 5.06,
+    "overlaps": {},
+    "nearest_to_owner_mm": 0.3,
+    "lowest_z_mm": 125.0,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.tray",
+    "mark": "seat_servo",
+    "part": "servo.case_body",
+    "parts": 33,
+    "overlaps": {},
+    "nearest_to_owner_mm": 0.1,
+    "lowest_z_mm": 1.0,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.tray",
+    "mark": "seat_alloy",
+    "part": "materials.sheet_a",
+    "parts": 10,
+    "overlaps": {},
+    "nearest_to_owner_mm": 0.1,
+    "lowest_z_mm": 1.0,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.tray",
+    "mark": "seat_vial",
+    "part": "materials.vial",
+    "parts": 4,
+    "overlaps": {},
+    "nearest_to_owner_mm": 0.2,
+    "lowest_z_mm": 1.1,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.mould_tang",
+    "mark": "seat_core",
+    "part": "grip.core",
+    "parts": 1,
+    "where_mm": {
+     "grip.core x fixtures_mould_tang": [
+      28,
+      [
+       -46.5,
+       -57.3,
+       14.8
+      ],
+      [
+       46.5,
+       57.3,
+       53.3
+      ]
+     ]
+    },
+    "penetration": {
+     "vertices_inside": 836,
+     "max_depth_mm": 0.0
+    },
+    "tolerated": "triangle contact 28 pairs, deepest vertex 0.000 mm <= 0.30 mm allowed",
+    "overlaps": {},
+    "nearest_to_owner_mm": 0.0,
+    "lowest_z_mm": 129.85,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.mould_tang",
+    "mark": "seat_charge",
+    "part": "materials.sheet_a",
+    "parts": 3,
+    "overlaps": {},
+    "nearest_to_owner_mm": 0.1,
+    "lowest_z_mm": 149.2,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.workmat",
+    "mark": "seat_sheet",
+    "part": "materials.sheet_a",
+    "parts": 3,
+    "overlaps": {},
+    "nearest_to_owner_mm": 0.1,
+    "lowest_z_mm": 14.1,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.workmat",
+    "mark": "seat_plate_l",
+    "part": "materials.sheet_a_plate",
+    "parts": 1,
+    "overlaps": {},
+    "nearest_to_owner_mm": 0.1,
+    "lowest_z_mm": 14.1,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.workmat",
+    "mark": "seat_plate_r",
+    "part": "materials.sheet_b_plate",
+    "parts": 1,
+    "overlaps": {},
+    "nearest_to_owner_mm": 0.1,
+    "lowest_z_mm": 14.1,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.workmat",
+    "mark": "seat_strap",
+    "part": "materials.sheet_a_strap",
+    "parts": 1,
+    "overlaps": {},
+    "nearest_to_owner_mm": 0.1,
+    "lowest_z_mm": 14.1,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.workmat",
+    "mark": "seat_spare",
+    "part": "materials.sheet_b_strap",
+    "parts": 1,
+    "overlaps": {},
+    "nearest_to_owner_mm": 0.1,
+    "lowest_z_mm": 14.1,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.holster",
+    "mark": "seat_pistol",
+    "part": "pistol.frame",
+    "parts": 20,
+    "overlaps": {},
+    "nearest_to_owner_mm": 3.742,
+    "lowest_z_mm": -198.1,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.press",
+    "mark": "seat_pour",
+    "part": "materials.vial",
+    "parts": 4,
+    "overlaps": {},
+    "nearest_to_owner_mm": null,
+    "lowest_z_mm": 145.5,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.worksurface",
+    "mark": "entry_pistol",
+    "part": "pistol.frame",
+    "parts": 20,
+    "overlaps": {},
+    "nearest_to_owner_mm": null,
+    "lowest_z_mm": -0.01,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.worksurface",
+    "mark": "entry_servo",
+    "part": "servo.case_body",
+    "parts": 33,
+    "overlaps": {},
+    "nearest_to_owner_mm": null,
+    "lowest_z_mm": 0.1,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.worksurface",
+    "mark": "entry_sheet_a",
+    "part": "materials.sheet_a",
+    "parts": 10,
+    "overlaps": {},
+    "nearest_to_owner_mm": null,
+    "lowest_z_mm": 0.1,
+    "ok": true
+   },
+   {
+    "owner": "fixtures.worksurface",
+    "mark": "entry_vial",
+    "part": "materials.vial",
+    "parts": 4,
+    "overlaps": {},
+    "nearest_to_owner_mm": null,
+    "lowest_z_mm": 0.08,
+    "ok": true
+   }
+  ]
+ },
+ "export": {
+  "ok": true,
+  "problems": [],
+  "glb": {
+   "bytes": 95480656,
+   "nodes": 185,
+   "meshes": 43,
+   "materials": [
+    "M_fixtures_d",
+    "M_fixtures_b",
+    "M_fixtures_c",
+    "glass",
+    "M_fixtures_d_emissive",
+    "M_fixtures_a"
+   ],
+   "images": 13,
+   "skins": 6,
+   "animations": {
+    "schematic_s0_param": {
+     "channels": 2,
+     "seconds": 1
+    },
+    "schematic_s1_param": {
+     "channels": 2,
+     "seconds": 1
+    },
+    "schematic_s2_param": {
+     "channels": 2,
+     "seconds": 1
+    },
+    "schematic_s3_param": {
+     "channels": 2,
+     "seconds": 1
+    },
+    "schematic_s4_param": {
+     "channels": 2,
+     "seconds": 1
+    },
+    "schematic_s5_param": {
+     "channels": 2,
+     "seconds": 1
+    },
+    "schematic_s6_param": {
+     "channels": 2,
+     "seconds": 1
+    },
+    "schematic_s7_param": {
+     "channels": 2,
+     "seconds": 1
+    },
+    "lamp_arm_param": {
+     "channels": 4,
+     "seconds": 1
+    },
+    "press_lever_param": {
+     "channels": 2,
+     "seconds": 1
+    },
+    "press_pressure_param": {
+     "channels": 1,
+     "seconds": 1
+    },
+    "vise_jaw_param": {
+     "channels": 1,
+     "seconds": 1
+    }
+   }
+  },
+  "tris_total": 60516,
+  "max_bounds_dev_mm": 0.0002,
+  "helpers_in_glb": 104,
+  "clip_ends": {
+   "fixtures.vise_jaw": {
+    "travel_mm": 90.0,
+    "expected_mm": 90.0
+   },
+   "fixtures.press_pressure": {
+    "travel_mm": 53.0,
+    "expected_mm": 53.0
+   },
+   "fixtures.press_lever": {
+    "channels": 2,
+    "nodes": 2
+   },
+   "fixtures.lamp_arm": {
+    "channels": 4,
+    "nodes": 4
+   },
+   "fixtures.schematic_s0": {
+    "channels": 2,
+    "nodes": 2
+   },
+   "fixtures.schematic_s1": {
+    "channels": 2,
+    "nodes": 2
+   },
+   "fixtures.schematic_s2": {
+    "channels": 2,
+    "nodes": 2
+   },
+   "fixtures.schematic_s3": {
+    "channels": 2,
+    "nodes": 2
+   },
+   "fixtures.schematic_s4": {
+    "channels": 2,
+    "nodes": 2
+   },
+   "fixtures.schematic_s5": {
+    "channels": 2,
+    "nodes": 2
+   },
+   "fixtures.schematic_s6": {
+    "channels": 2,
+    "nodes": 2
+   },
+   "fixtures.schematic_s7": {
+    "channels": 2,
+    "nodes": 2
+   }
+  }
+ },
+ "ok": true,
+ "seconds": 16.9
+}

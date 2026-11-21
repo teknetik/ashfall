@@ -1,0 +1,1619 @@
+{
+ "family": "tools",
+ "glb": null,
+ "greybox": true,
+ "blender": null,
+ "generated": "2026-11-20",
+ "parts": [
+  {
+   "id": "tools.roll",
+   "node": "tools_roll",
+   "label": "Field Toolkit",
+   "kind": "part",
+   "parent": null,
+   "item": "field_toolkit",
+   "material": "canvas",
+   "mass": "medium",
+   "held_by": [],
+   "seat": {
+    "symmetry": 2,
+    "tol_mm": 30,
+    "tol_deg": 30,
+    "clear": "tools_roll__clear"
+   },
+   "grey": {
+    "pos": [
+     -0.78,
+     0.8637,
+     0.36
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0.04,
+       0,
+       0.04,
+       0.3,
+       "z"
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0,
+     0.05
+    ],
+    "color": [
+     0.42,
+     0.37,
+     0.26
+    ],
+    "grab": [
+     0,
+     0.04,
+     0
+    ]
+   }
+  },
+  {
+   "id": "tools.roll_flat",
+   "node": "tools_roll_flat",
+   "label": "Toolkit roll, open",
+   "kind": "fixture",
+   "parent": "tools.roll",
+   "item": null,
+   "material": "canvas",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0.003,
+       0,
+       0.56,
+       0.006,
+       0.3
+      ]
+     }
+    ],
+    "color": [
+     0.45,
+     0.4,
+     0.28
+    ],
+    "helper": true
+   }
+  },
+  {
+   "id": "tools.roll_tie",
+   "node": "tools_roll_tie",
+   "label": "Toolkit strap",
+   "kind": "fixture",
+   "parent": "tools.roll",
+   "item": null,
+   "material": "canvas",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0.082,
+       0,
+       0.02,
+       0.004,
+       0.1
+      ]
+     }
+    ],
+    "color": [
+     0.25,
+     0.2,
+     0.14
+    ],
+    "helper": true
+   }
+  },
+  {
+   "id": "tools.screwdriver",
+   "node": "tools_screwdriver",
+   "label": "Screwdriver",
+   "kind": "tool",
+   "parent": "tools.roll",
+   "item": null,
+   "material": "wood",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "tools_screwdriver__clear"
+   },
+   "grey": {
+    "pos": [
+     0.22,
+     0.016,
+     0.02
+    ],
+    "rot": [
+     0,
+     180,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0,
+       0.02,
+       0.004,
+       0.11,
+       "z"
+      ]
+     },
+     {
+      "cyl": [
+       0,
+       0,
+       -0.06,
+       0.011,
+       0.07,
+       "z"
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0.015,
+     0.095
+    ],
+    "tip": [
+     0,
+     0,
+     0.095,
+     0,
+     0,
+     1
+    ],
+    "grab": [
+     0,
+     0,
+     -0.0475
+    ]
+   },
+   "tool": {
+    "verbs": [],
+    "tip": "tools_screwdriver__tip",
+    "tags": [
+     "tool:screwdriver"
+    ]
+   }
+  },
+  {
+   "id": "tools.pliers",
+   "node": "tools_pliers",
+   "label": "Pliers",
+   "kind": "tool",
+   "parent": "tools.roll",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "tools_pliers__clear"
+   },
+   "grey": {
+    "pos": [
+     0.165,
+     0.016,
+     0.02
+    ],
+    "rot": [
+     0,
+     180,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0.04,
+       0.012,
+       0.008,
+       0.07
+      ]
+     },
+     {
+      "box": [
+       0,
+       0,
+       -0.04,
+       0.026,
+       0.01,
+       0.09
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0.015,
+     0.095
+    ],
+    "tip": [
+     0,
+     0,
+     0.08,
+     0,
+     0,
+     1
+    ],
+    "grab": [
+     0,
+     0,
+     -0.04
+    ]
+   },
+   "tool": {
+    "verbs": [],
+    "tip": "tools_pliers__tip",
+    "tags": [
+     "tool:pliers"
+    ]
+   }
+  },
+  {
+   "id": "tools.cutters",
+   "node": "tools_cutters",
+   "label": "Wire cutters",
+   "kind": "tool",
+   "parent": "tools.roll",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "tools_cutters__clear"
+   },
+   "grey": {
+    "pos": [
+     0.11,
+     0.016,
+     0.02
+    ],
+    "rot": [
+     0,
+     180,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0.045,
+       0.014,
+       0.008,
+       0.05
+      ]
+     },
+     {
+      "box": [
+       0,
+       0,
+       -0.03,
+       0.028,
+       0.01,
+       0.09
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0.015,
+     0.095
+    ],
+    "tip": [
+     0,
+     0,
+     0.07,
+     0,
+     0,
+     1
+    ],
+    "grab": [
+     0,
+     0,
+     -0.035
+    ]
+   },
+   "tool": {
+    "verbs": [],
+    "tip": "tools_cutters__tip",
+    "tags": [
+     "tool:cutters"
+    ]
+   }
+  },
+  {
+   "id": "tools.strippers",
+   "node": "tools_strippers",
+   "label": "Wire strippers",
+   "kind": "tool",
+   "parent": "tools.roll",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "tools_strippers__clear"
+   },
+   "grey": {
+    "pos": [
+     0.05499999999999999,
+     0.016,
+     0.02
+    ],
+    "rot": [
+     0,
+     180,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0.04,
+       0.016,
+       0.006,
+       0.06
+      ]
+     },
+     {
+      "box": [
+       0,
+       0,
+       -0.035,
+       0.03,
+       0.008,
+       0.09
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0.015,
+     0.095
+    ],
+    "tip": [
+     0,
+     0,
+     0.075,
+     0,
+     0,
+     1
+    ],
+    "grab": [
+     0,
+     0,
+     -0.0375
+    ]
+   },
+   "tool": {
+    "verbs": [],
+    "tip": "tools_strippers__tip",
+    "tags": [
+     "tool:strippers"
+    ]
+   }
+  },
+  {
+   "id": "tools.wirebrush",
+   "node": "tools_wirebrush",
+   "label": "Wire brush",
+   "kind": "tool",
+   "parent": "tools.roll",
+   "item": null,
+   "material": "wood",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "tools_wirebrush__clear"
+   },
+   "grey": {
+    "pos": [
+     0.0,
+     0.016,
+     0.02
+    ],
+    "rot": [
+     0,
+     180,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0.055,
+       0.02,
+       0.014,
+       0.06
+      ]
+     },
+     {
+      "box": [
+       0,
+       0,
+       -0.03,
+       0.014,
+       0.01,
+       0.11
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0.015,
+     0.095
+    ],
+    "tip": [
+     0,
+     0,
+     0.085,
+     0,
+     0,
+     1
+    ],
+    "grab": [
+     0,
+     0,
+     -0.0425
+    ]
+   },
+   "tool": {
+    "verbs": [],
+    "tip": "tools_wirebrush__tip",
+    "tags": [
+     "tool:brush"
+    ]
+   }
+  },
+  {
+   "id": "tools.pick",
+   "node": "tools_pick",
+   "label": "Pick",
+   "kind": "tool",
+   "parent": "tools.roll",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "tools_pick__clear"
+   },
+   "grey": {
+    "pos": [
+     -0.05500000000000002,
+     0.016,
+     0.02
+    ],
+    "rot": [
+     0,
+     180,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0,
+       0.02,
+       0.0025,
+       0.1,
+       "z"
+      ]
+     },
+     {
+      "cyl": [
+       0,
+       0,
+       -0.05,
+       0.007,
+       0.05,
+       "z"
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0.015,
+     0.095
+    ],
+    "tip": [
+     0,
+     0,
+     0.07,
+     0,
+     0,
+     1
+    ],
+    "grab": [
+     0,
+     0,
+     -0.035
+    ]
+   },
+   "tool": {
+    "verbs": [],
+    "tip": "tools_pick__tip",
+    "tags": [
+     "tool:pick"
+    ]
+   }
+  },
+  {
+   "id": "tools.punch",
+   "node": "tools_punch",
+   "label": "Pin punch",
+   "kind": "tool",
+   "parent": "tools.roll",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "tools_punch__clear"
+   },
+   "grey": {
+    "pos": [
+     -0.11000000000000001,
+     0.016,
+     0.02
+    ],
+    "rot": [
+     0,
+     180,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0,
+       0,
+       0.005,
+       0.11,
+       "z"
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0.015,
+     0.095
+    ],
+    "tip": [
+     0,
+     0,
+     0.055,
+     0,
+     0,
+     1
+    ],
+    "grab": [
+     0,
+     0,
+     -0.0275
+    ]
+   },
+   "tool": {
+    "verbs": [],
+    "tip": "tools_punch__tip",
+    "tags": [
+     "tool:punch"
+    ]
+   }
+  },
+  {
+   "id": "tools.scribe",
+   "node": "tools_scribe",
+   "label": "Scribe",
+   "kind": "tool",
+   "parent": "tools.roll",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "tools_scribe__clear"
+   },
+   "grey": {
+    "pos": [
+     -0.165,
+     0.016,
+     0.02
+    ],
+    "rot": [
+     0,
+     180,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0,
+       0,
+       0.003,
+       0.13,
+       "z"
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0.015,
+     0.095
+    ],
+    "tip": [
+     0,
+     0,
+     0.065,
+     0,
+     0,
+     1
+    ],
+    "grab": [
+     0,
+     0,
+     -0.0325
+    ]
+   },
+   "tool": {
+    "verbs": [],
+    "tip": "tools_scribe__tip",
+    "tags": [
+     "tool:scribe"
+    ]
+   }
+  },
+  {
+   "id": "tools.bitblock",
+   "node": "tools_bitblock",
+   "label": "Bit block",
+   "kind": "fixture",
+   "parent": "tools.roll",
+   "item": null,
+   "material": "wood",
+   "mass": "tiny",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     -0.235,
+     0.008,
+     0.06
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0.006,
+       0,
+       0.03,
+       0.012,
+       0.02
+      ]
+     }
+    ],
+    "color": [
+     0.36,
+     0.26,
+     0.16
+    ]
+   }
+  },
+  {
+   "id": "tools.bit_slot",
+   "node": "tools_bit_slot",
+   "label": "Slotted bit",
+   "kind": "tool",
+   "parent": "tools.screwdriver",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "held_by": [],
+   "seat": {
+    "symmetry": 6,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "tools_bit_slot__clear"
+   },
+   "grey": {
+    "pos": [
+     0,
+     0,
+     0.085
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0,
+       0,
+       0.003,
+       0.022,
+       "z"
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0,
+     0.02
+    ],
+    "color": [
+     0.8,
+     0.8,
+     0.78
+    ]
+   },
+   "tool": {
+    "verbs": [],
+    "tags": [
+     "bit:slot"
+    ]
+   }
+  },
+  {
+   "id": "tools.bit_cross",
+   "node": "tools_bit_cross",
+   "label": "Cross bit",
+   "kind": "tool",
+   "parent": "tools.bitblock",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "held_by": [],
+   "seat": {
+    "symmetry": 6,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "tools_bit_cross__clear"
+   },
+   "grey": {
+    "pos": [
+     0,
+     0.022,
+     0
+    ],
+    "rot": [
+     -90,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0,
+       0,
+       0.003,
+       0.022,
+       "z"
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0.02,
+     0
+    ],
+    "color": [
+     0.85,
+     0.7,
+     0.3
+    ]
+   },
+   "tool": {
+    "verbs": [],
+    "tags": [
+     "bit:cross"
+    ]
+   }
+  },
+  {
+   "id": "tools.mallet",
+   "node": "tools_mallet",
+   "label": "Mallet",
+   "kind": "tool",
+   "parent": null,
+   "item": null,
+   "material": "wood",
+   "mass": "medium",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.56,
+     0.8837,
+     0.14
+    ],
+    "rot": [
+     0,
+     180,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0.1,
+       0.08,
+       0.04,
+       0.04
+      ]
+     },
+     {
+      "cyl": [
+       0,
+       0,
+       -0.03,
+       0.009,
+       0.22,
+       "z"
+      ]
+     }
+    ],
+    "tip": [
+     0,
+     -0.021,
+     0.1,
+     0,
+     -1,
+     0
+    ],
+    "grab": [
+     0,
+     0,
+     -0.07
+    ]
+   },
+   "tool": {
+    "verbs": [],
+    "tip": "tools_mallet__tip",
+    "tags": [
+     "tool:mallet"
+    ]
+   }
+  },
+  {
+   "id": "tools.file_flat",
+   "node": "tools_file_flat",
+   "label": "Flat file",
+   "kind": "tool",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.64,
+     0.8757,
+     0.14
+    ],
+    "rot": [
+     0,
+     180,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0.03,
+       0.02,
+       0.004,
+       0.16
+      ]
+     },
+     {
+      "cyl": [
+       0,
+       0,
+       -0.09,
+       0.011,
+       0.08,
+       "z"
+      ]
+     }
+    ],
+    "tip": [
+     0,
+     0,
+     0.13,
+     0,
+     0,
+     1
+    ],
+    "grab": [
+     0,
+     0,
+     -0.065
+    ]
+   },
+   "tool": {
+    "verbs": [],
+    "tip": "tools_file_flat__tip",
+    "tags": [
+     "tool:file"
+    ]
+   }
+  },
+  {
+   "id": "tools.file_round",
+   "node": "tools_file_round",
+   "label": "Round file",
+   "kind": "tool",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.69,
+     0.8757,
+     0.14
+    ],
+    "rot": [
+     0,
+     180,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0,
+       0.03,
+       0.004,
+       0.16,
+       "z"
+      ]
+     },
+     {
+      "cyl": [
+       0,
+       0,
+       -0.09,
+       0.011,
+       0.08,
+       "z"
+      ]
+     }
+    ],
+    "tip": [
+     0,
+     0,
+     0.13,
+     0,
+     0,
+     1
+    ],
+    "grab": [
+     0,
+     0,
+     -0.065
+    ]
+   },
+   "tool": {
+    "verbs": [],
+    "tip": "tools_file_round__tip",
+    "tags": [
+     "tool:file_round"
+    ]
+   }
+  },
+  {
+   "id": "tools.snips",
+   "node": "tools_snips",
+   "label": "Tin snips",
+   "kind": "tool",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.76,
+     0.8757,
+     0.14
+    ],
+    "rot": [
+     0,
+     180,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0,
+       0.06,
+       0.03,
+       0.01,
+       0.08
+      ]
+     },
+     {
+      "box": [
+       0,
+       0,
+       -0.05,
+       0.05,
+       0.012,
+       0.14
+      ]
+     }
+    ],
+    "tip": [
+     0,
+     0,
+     0.12,
+     0,
+     0,
+     1
+    ],
+    "grab": [
+     0,
+     0,
+     -0.06
+    ]
+   },
+   "tool": {
+    "verbs": [],
+    "tip": "tools_snips__tip",
+    "tags": [
+     "tool:snips"
+    ]
+   }
+  },
+  {
+   "id": "tools.drill",
+   "node": "tools_drill",
+   "label": "Hand drill",
+   "kind": "tool",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "medium",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.84,
+     0.8937,
+     0.14
+    ],
+    "rot": [
+     0,
+     180,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0,
+       0.06,
+       0.003,
+       0.08,
+       "z"
+      ]
+     },
+     {
+      "box": [
+       0,
+       0,
+       -0.03,
+       0.04,
+       0.05,
+       0.12
+      ]
+     }
+    ],
+    "tip": [
+     0,
+     0,
+     0.11,
+     0,
+     0,
+     1
+    ],
+    "grab": [
+     0,
+     0,
+     -0.055
+    ]
+   },
+   "tool": {
+    "verbs": [],
+    "tip": "tools_drill__tip",
+    "tags": [
+     "tool:drill"
+    ]
+   }
+  },
+  {
+   "id": "tools.iron",
+   "node": "tools_iron",
+   "label": "Soldering iron",
+   "kind": "tool",
+   "parent": null,
+   "item": null,
+   "material": "wood",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.92,
+     0.8837,
+     0.14
+    ],
+    "rot": [
+     0,
+     180,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0,
+       0.05,
+       0.004,
+       0.07,
+       "z"
+      ]
+     },
+     {
+      "cyl": [
+       0,
+       0,
+       -0.04,
+       0.01,
+       0.11,
+       "z"
+      ]
+     }
+    ],
+    "tip": [
+     0,
+     0,
+     0.1,
+     0,
+     0,
+     1
+    ],
+    "grab": [
+     0,
+     0,
+     -0.05
+    ]
+   },
+   "tool": {
+    "verbs": [],
+    "tip": "tools_iron__tip",
+    "tags": [
+     "tool:solder"
+    ]
+   }
+  },
+  {
+   "id": "tools.applicator",
+   "node": "tools_applicator",
+   "label": "Nanite applicator",
+   "kind": "tool",
+   "parent": null,
+   "item": null,
+   "material": "plastic",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.99,
+     0.8757,
+     0.14
+    ],
+    "rot": [
+     0,
+     180,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0,
+       0,
+       0.006,
+       0.14,
+       "z"
+      ]
+     }
+    ],
+    "tip": [
+     0,
+     0,
+     0.07,
+     0,
+     0,
+     1
+    ],
+    "grab": [
+     0,
+     0,
+     -0.035
+    ]
+   },
+   "tool": {
+    "verbs": [],
+    "tip": "tools_applicator__tip",
+    "tags": [
+     "tool:applicator"
+    ]
+   }
+  },
+  {
+   "id": "tools.oil_bottle",
+   "node": "tools_oil_bottle",
+   "label": "Oil bottle",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "glass",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.33,
+     0.8717,
+     0.1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0.031,
+       0,
+       0.016,
+       0.062,
+       "y"
+      ]
+     }
+    ],
+    "color": [
+     0.55,
+     0.35,
+     0.1
+    ]
+   }
+  },
+  {
+   "id": "tools.oil_dropper",
+   "node": "tools_oil_dropper",
+   "label": "Oil dropper",
+   "kind": "tool",
+   "parent": "tools.oil_bottle",
+   "item": null,
+   "material": "glass",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 0,
+    "tol_mm": 8,
+    "tol_deg": 25,
+    "clear": "tools_oil_dropper__clear"
+   },
+   "grey": {
+    "pos": [
+     0,
+     0.075,
+     0
+    ],
+    "rot": [
+     90,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "cyl": [
+       0,
+       0,
+       0.01,
+       0.004,
+       0.06,
+       "z"
+      ]
+     },
+     {
+      "cyl": [
+       0,
+       0,
+       -0.03,
+       0.01,
+       0.03,
+       "z"
+      ]
+     }
+    ],
+    "clear": [
+     0,
+     0.04,
+     0
+    ],
+    "tip": [
+     0,
+     0,
+     0.05,
+     0,
+     0,
+     1
+    ],
+    "grab": [
+     0,
+     0,
+     -0.025
+    ]
+   },
+   "tool": {
+    "verbs": [],
+    "tip": "tools_oil_dropper__tip",
+    "tags": [
+     "tool:oil"
+    ]
+   }
+  },
+  {
+   "id": "tools.thirdhand",
+   "node": "tools_thirdhand",
+   "label": "Third hand",
+   "kind": "fixture",
+   "parent": null,
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "held_by": [],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 8,
+    "tol_deg": 25
+   },
+   "grey": {
+    "pos": [
+     0.1,
+     0.8777,
+     0.07
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "shapes": [
+     {
+      "box": [
+       0,
+       0.01,
+       0,
+       0.07,
+       0.02,
+       0.05
+      ]
+     },
+     {
+      "cyl": [
+       0,
+       0.05,
+       0,
+       0.003,
+       0.08,
+       "y"
+      ]
+     }
+    ],
+    "color": [
+     0.3,
+     0.3,
+     0.32
+    ]
+   }
+  }
+ ],
+ "params": [
+  {
+   "id": "tools.roll_strap",
+   "node": "tools_rig",
+   "action": "roll_strap_param",
+   "type": "slide",
+   "min": 0,
+   "max": 1,
+   "unit": "",
+   "continuous": false,
+   "grey": {
+    "target": null,
+    "move": [
+     0,
+     0,
+     0
+    ],
+    "turn": [
+     0,
+     0,
+     0
+    ],
+    "as_found": 0,
+    "show_low": [
+     "tools.roll_tie"
+    ]
+   }
+  },
+  {
+   "id": "tools.roll_unroll",
+   "node": "tools_rig",
+   "action": "roll_unroll_param",
+   "type": "slide",
+   "min": 0,
+   "max": 1,
+   "unit": "",
+   "continuous": false,
+   "grey": {
+    "target": null,
+    "move": [
+     0,
+     0,
+     0
+    ],
+    "turn": [
+     0,
+     0,
+     0
+    ],
+    "as_found": 0,
+    "show_high": [
+     "tools.roll_flat"
+    ],
+    "mesh_low": [
+     "tools.roll"
+    ]
+   }
+  }
+ ]
+}

@@ -102,7 +102,8 @@ namespace AthenHill
         {
             if (!player) return;
             float t = player.Automatic ? automaticShotTrauma : shotTrauma;
-            Add(t * Mathf.Clamp(player.RecoilScale, .25f, 2f));
+            // 20 Nov 2026 (Steady Hands bench): a weapon that kicks sideways shakes more (bare scrap pistol about x1.3).
+            Add(t * Mathf.Clamp(player.RecoilScale * (1 + .35f * player.Stats.sideKick), .25f, 2f));
         }
 
         void OnHurt(float amount)

@@ -175,8 +175,13 @@ namespace AthenHill
    {reason="This installation requires access to "+(string.IsNullOrEmpty(item.installationFacility)?"a specialist facility.":item.installationFacility+".");return false;}
    reason="ok";return true;
   }
+  /// Equipment slots that may not change right now: slot id to a player-facing reason, or null when free (20 Nov 2026, Steady
+  /// Hands bench: the weapon taken apart on Brann's bench cannot be unequipped, swapped or moved). Set by CraftingSession.
+  public Func<string,string> SlotLocked;
+  bool Locked(string slot,out string reason){reason=slot!=null?SlotLocked?.Invoke(slot):null;return reason!=null;}
   public bool TryEquip(string itemId,string slot,out string reason)
   {
+   if(Locked(slot,out reason))return false;
    if(!CanEquip(itemId,slot,out reason))return false;
    var next=new Dictionary<string,string>(equipped);var delta=new List<KeyValuePair<string,int>>{new KeyValuePair<string,int>(itemId,-1)};
    if(next.TryGetValue(slot,out var old))delta.Add(new KeyValuePair<string,int>(old,1));next[slot]=itemId;
@@ -196,6 +201,7 @@ namespace AthenHill
   }
   public bool TryUnequip(string slot,out string reason)
   {
+   if(Locked(slot,out reason))return false;
    var id=Equipped(slot);if(id==null){reason="That slot is empty.";return false;}
    var next=new Dictionary<string,string>(equipped);next.Remove(slot);
    var changes=new List<KeyValuePair<string,int>>{new KeyValuePair<string,int>(id,1)};
@@ -204,6 +210,7 @@ namespace AthenHill
   }
   public bool TryMove(string source,string destination,out string reason)
   {
+   if(Locked(source,out reason)||Locked(destination,out reason))return false;
    var id=Equipped(source);var previous=Equipped(destination);
    if(source==destination||id==null||!Accepts(id,destination)||(previous!=null&&!Accepts(previous,source)))
    {reason="These equipment slots are incompatible.";return false;}

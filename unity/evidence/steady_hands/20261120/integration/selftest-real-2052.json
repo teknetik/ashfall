@@ -1,0 +1,185 @@
+{
+  "pass": false,
+  "failed": 15,
+  "only": null,
+  "scenarios": [
+    {
+      "name": "whole job, mouse",
+      "frames": 1653,
+      "actions": 22,
+      "log": [
+        "s0.shake_before:shake Flick mouse 26 frames, pistol.frame at held, precision 1.00 for the step",
+        "s0.cell:latch Turn mouse 9 frames, pistol.cell_latch at seat, precision 1.00 for the step",
+        "s0.cell:cell Seat mouse 103 frames, pistol.cell at fixtures.pad/seat_cell, precision 0.91 for the step",
+        "s1.clamp:set Seat mouse 114 frames, pistol.frame at fixtures.vise/seat_work, precision 0.75 for the step",
+        "s1.clamp:snug Turn mouse 99 frames, fixtures.vise_screw at seat, precision 0.83 for the step",
+        "s1.bind:snip Point mouse 9 frames, precision 1.00 for the step",
+        "s1.tape:peel Path mouse 425 frames, pistol.wrap at fixtures.partsmat/seat_pistol_wrap, precision 0.90 for the step",
+        "s1.screw_a:turn Turn mouse 127 frames, pistol.screw_grip_a at held, precision 1.00 for the step",
+        "s1.screw_a:dish Seat mouse 19 frames, pistol.screw_grip_a at fixtures.dish/slot_00, precision 1.00 for the step",
+        "s1.screw_b:oil Point mouse 6 frames, pistol.screw_grip_b at seat, precision 1.00 for the step",
+        "s1.screw_b:tap Window mouse 62 frames, pistol.screw_grip_b at seat, precision 1.00 for the step",
+        "s1.screw_b:turn Turn mouse 222 frames, pistol.screw_grip_b at held, precision 1.00 for the step",
+        "s1.screw_b:dish Seat mouse 19 frames, pistol.screw_grip_b at fixtures.dish/slot_01, precision 1.00 for the step",
+        "FAIL could not pick up pistol.scale_l at seat (refusals 1): pointed at (0.436, 1.088, 0.360) from (0.313, 1.340, 0.743) (shot vise), part origin (0.433, 1.088, 0.352), focus before the press pistol.housing [held part -, tool -, focus pistol.housing, next s1.scales:left]"
+      ],
+      "events": 28,
+      "lines": [
+        "take_bench",
+        "card_before",
+        "stage1"
+      ],
+      "asked": [
+        "stage.start:1"
+      ],
+      "stepsDoneBelow085": [
+        "s1.clamp 0.83"
+      ],
+      "faultLog": [],
+      "ok": false,
+      "error": "could not pick up pistol.scale_l at seat (refusals 1): pointed at (0.436, 1.088, 0.360) from (0.313, 1.340, 0.743) (shot vise), part origin (0.433, 1.088, 0.352), focus before the press pistol.housing [held part -, tool -, focus pistol.housing, next s1.scales:left]"
+    },
+    {
+      "name": "whole job, keyboard",
+      "frames": 1135,
+      "actions": 4,
+      "log": [
+        "s0.pistol:lay Seat keys 47 frames, pistol.frame at fixtures.workmat/seat_pistol, precision 1.00 for the step",
+        "s0.roll:untie Turn keys 81 frames, tools.roll at place.entry.roll, precision 1.00 for the step",
+        "s0.roll:unroll Seat keys 103 frames, tools.roll at place.roll, precision 0.99 for the step",
+        "FAIL servo.case_body never seated at fixtures.tray/seat_servo: 28.8 mm off, 0.0 degrees out [held part servo.case_body, tool -, focus fixtures.tray/seat_servo, next s0.salvage:servo]"
+      ],
+      "events": 7,
+      "lines": [
+        "take_bench"
+      ],
+      "asked": [],
+      "stepsDoneBelow085": [],
+      "faultLog": [],
+      "ok": false,
+      "error": "servo.case_body never seated at fixtures.tray/seat_servo: 28.8 mm off, 0.0 degrees out [held part servo.case_body, tool -, focus fixtures.tray/seat_servo, next s0.salvage:servo]"
+    },
+    {
+      "name": "slice, mouse",
+      "frames": 1653,
+      "actions": 22,
+      "log": [
+        "s0.pistol:lay Seat mouse 48 frames, pistol.frame at fixtures.workmat/seat_pistol, precision 1.00 for the step",
+        "s0.roll:untie Turn mouse 34 frames, tools.roll at place.entry.roll, precision 1.00 for the step",
+        "s0.roll:unroll Seat mouse 98 frames, tools.roll at place.roll, precision 0.99 for the step",
+        "s0.salvage:servo Seat mouse 82 frames, servo.case_body at fixtures.tray/seat_servo, precision 0.77 for the step",
+        "s0.salvage:sheet_a Seat mouse 27 frames, materials.sheet_a at fixtures.tray/seat_alloy, precision 0.88 for the step",
+        "s0.salvage:sheet_b Seat mouse 27 frames, materials.sheet_b at fixtures.tray/seat_alloy#b, precision 0.92 for the step",
+        "s0.salvage:vial Seat mouse 27 frames, materials.vial at fixtures.tray/seat_vial, precision 0.94 for the step",
+        "s0.card_before:pulses Point mouse 66 frames, pistol.frame at held, precision 1.00 for the step",
+        "s0.shake_before:shake Flick mouse 26 frames, pistol.frame at held, precision 1.00 for the step",
+        "s0.cell:latch Turn mouse 9 frames, pistol.cell_latch at seat, precision 1.00 for the step",
+        "s0.cell:cell Seat mouse 103 frames, pistol.cell at fixtures.pad/seat_cell, precision 0.91 for the step",
+        "s1.clamp:set Seat mouse 114 frames, pistol.frame at fixtures.vise/seat_work, precision 0.75 for the step",
+        "s1.clamp:snug Turn mouse 99 frames, fixtures.vise_screw at seat, precision 0.83 for the step",
+        "s1.bind:snip Point mouse 9 frames, precision 1.00 for the step",
+        "s1.tape:peel Path mouse 425 frames, pistol.wrap at fixtures.partsmat/seat_pistol_wrap, precision 0.90 for the step",
+        "s1.screw_a:turn Turn mouse 127 frames, pistol.screw_grip_a at held, precision 1.00 for the step",
+        "s1.screw_a:dish Seat mouse 19 frames, pistol.screw_grip_a at fixtures.dish/slot_00, precision 1.00 for the step",
+        "s1.screw_b:oil Point mouse 6 frames, pistol.screw_grip_b at seat, precision 1.00 for the step",
+        "s1.screw_b:tap Window mouse 62 frames, pistol.screw_grip_b at seat, precision 1.00 for the step",
+        "s1.screw_b:turn Turn mouse 222 frames, pistol.screw_grip_b at held, precision 1.00 for the step",
+        "s1.screw_b:dish Seat mouse 19 frames, pistol.screw_grip_b at fixtures.dish/slot_01, precision 1.00 for the step",
+        "FAIL could not pick up pistol.scale_l at seat (refusals 1): pointed at (0.436, 1.088, 0.360) from (0.313, 1.340, 0.743) (shot vise), part origin (0.433, 1.088, 0.352), focus before the press pistol.housing [held part -, tool -, focus pistol.housing, next s1.scales:left]"
+      ],
+      "events": 28,
+      "lines": [
+        "take_bench",
+        "card_before",
+        "stage1"
+      ],
+      "ok": false,
+      "error": "could not pick up pistol.scale_l at seat (refusals 1): pointed at (0.436, 1.088, 0.360) from (0.313, 1.340, 0.743) (shot vise), part origin (0.433, 1.088, 0.352), focus before the press pistol.housing [held part -, tool -, focus pistol.housing, next s1.scales:left]"
+    },
+    {
+      "name": "slice, keyboard",
+      "frames": 1135,
+      "actions": 4,
+      "log": [
+        "s0.pistol:lay Seat keys 47 frames, pistol.frame at fixtures.workmat/seat_pistol, precision 1.00 for the step",
+        "s0.roll:untie Turn keys 81 frames, tools.roll at place.entry.roll, precision 1.00 for the step",
+        "s0.roll:unroll Seat keys 103 frames, tools.roll at place.roll, precision 0.99 for the step",
+        "FAIL servo.case_body never seated at fixtures.tray/seat_servo: 28.8 mm off, 0.0 degrees out [held part servo.case_body, tool -, focus fixtures.tray/seat_servo, next s0.salvage:servo]"
+      ],
+      "events": 7,
+      "lines": [
+        "take_bench"
+      ],
+      "ok": false,
+      "error": "servo.case_body never seated at fixtures.tray/seat_servo: 28.8 mm off, 0.0 degrees out [held part servo.case_body, tool -, focus fixtures.tray/seat_servo, next s0.salvage:servo]"
+    },
+    {
+      "name": "leave and return",
+      "doneSteps": 9,
+      "ok": false,
+      "error": "could not pick up pistol.scale_l at seat (refusals 1): pointed at (0.436, 1.088, 0.360) from (0.313, 1.340, 0.743) (shot vise), part origin (0.433, 1.088, 0.352), focus before the press pistol.housing [held part -, tool -, focus pistol.housing, next s1.scales:left]"
+    },
+    {
+      "name": "leave and return after the grant",
+      "ok": false,
+      "error": "could not pick up pistol.scale_l at seat (refusals 1): pointed at (0.436, 1.088, 0.360) from (0.313, 1.340, 0.743) (shot vise), part origin (0.433, 1.088, 0.352), focus before the press pistol.housing [held part -, tool -, focus pistol.housing, next s1.scales:left]"
+    },
+    {
+      "name": "wrong bit cams out",
+      "ok": false,
+      "error": "could not pick up pistol.scale_l at seat (refusals 1): pointed at (0.436, 1.088, 0.360) from (0.313, 1.340, 0.743) (shot vise), part origin (0.433, 1.088, 0.352), focus before the press pistol.housing [held part -, tool -, focus pistol.housing, next s1.scales:left]"
+    },
+    {
+      "name": "forcing the seized screw",
+      "ok": false,
+      "error": "could not pick up pistol.scale_l at seat (refusals 1): pointed at (0.436, 1.088, 0.360) from (0.313, 1.340, 0.743) (shot vise), part origin (0.433, 1.088, 0.352), focus before the press pistol.housing [held part -, tool -, focus pistol.housing, next s1.scales:left]"
+    },
+    {
+      "name": "letting go of the housing",
+      "ok": false,
+      "error": "could not pick up pistol.scale_l at seat (refusals 1): pointed at (0.436, 1.088, 0.360) from (0.313, 1.340, 0.743) (shot vise), part origin (0.433, 1.088, 0.352), focus before the press pistol.housing [held part -, tool -, focus pistol.housing, next s1.scales:left]"
+    },
+    {
+      "name": "a part rolls off",
+      "ok": false,
+      "error": "could not pick up pistol.scale_l at seat (refusals 1): pointed at (0.436, 1.088, 0.360) from (0.313, 1.340, 0.743) (shot vise), part origin (0.433, 1.088, 0.352), focus before the press pistol.housing [held part -, tool -, focus pistol.housing, next s1.scales:left]"
+    },
+    {
+      "name": "stage 2: the circlip flies, a lead is cut short",
+      "ok": false,
+      "error": "pressing on fixtures.vise_screw did not start a turn [held part -, tool -, focus pistol.frame, next s2.swap:open]"
+    },
+    {
+      "name": "stage 3: a careless brush grinds, a cold joint shows at the tester",
+      "ok": true
+    },
+    {
+      "name": "stage 3: the strip cracks on the second over-bend",
+      "ok": false,
+      "error": "could not pick up materials.sheet_a at fixtures.tray/seat_alloy (refusals 0): pointed at (-0.712, 0.875, 0.048) from (0.000, 1.605, 0.758) (shot work), part origin (-0.710, 0.874, 0.030), focus before the press materials.sheet_b, took materials.sheet_b whose origin is (-0.715, 0.877, 0.040) [held part materials.sheet_b, tool -, focus fixtures.tray/seat_alloy#b, next s3.scribe:sheet]"
+    },
+    {
+      "name": "stage 5: a stripped head, a soft seam, a pinched lead",
+      "ok": false,
+      "error": "could not pick up pistol.lead_plug at clear (refusals 0): pointed at (0.466, 1.081, 0.348) from (0.313, 1.340, 0.743) (shot vise), part origin (0.461, 1.084, 0.348), focus before the press pistol.cell_bus [held part -, tool -, focus pistol.cell_bus, next s6.plug:plug]"
+    },
+    {
+      "name": "stage 1: the lead pulled by its wire, a bent pin",
+      "ok": false,
+      "error": "could not pick up pistol.scale_l at seat (refusals 1): pointed at (0.436, 1.088, 0.360) from (0.313, 1.340, 0.743) (shot vise), part origin (0.433, 1.088, 0.352), focus before the press pistol.housing [held part -, tool -, focus pistol.housing, next s1.scales:left]"
+    },
+    {
+      "name": "stage 6: the plug upside down, a proud pin",
+      "ok": false,
+      "error": "the plug did not come to the hand the wrong way up (held -)"
+    },
+    {
+      "name": "hints",
+      "feedback": [
+        "glint:pistol.frame",
+        "ghost:pistol.frame"
+      ],
+      "ok": true
+    }
+  ]
+}

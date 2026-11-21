@@ -1,0 +1,1461 @@
+{
+ "family": "servo",
+ "glb": "servo.glb",
+ "blender": "5.2.2",
+ "generated": "2026-11-21T08:38:47Z",
+ "unit_scale_m": 1.0,
+ "parts": [
+  {
+   "id": "servo.case_body",
+   "node": "servo_case_body",
+   "label": "Servo case body",
+   "kind": "part",
+   "parent": null,
+   "item": "droid_servo_damaged",
+   "material": "alloy",
+   "mass": "medium",
+   "tris": 10594,
+   "size_mm": [
+    100.6,
+    70.0,
+    55.4
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s0.salvage",
+    "s2.swap",
+    "s2.dust"
+   ],
+   "marks": [
+    {
+     "id": "pry_1",
+     "node": "servo_case_body__mark_pry_1"
+    },
+    {
+     "id": "pry_2",
+     "node": "servo_case_body__mark_pry_2"
+    },
+    {
+     "id": "pry_3",
+     "node": "servo_case_body__mark_pry_3"
+    }
+   ],
+   "zones": [
+    {
+     "id": "dust_front",
+     "node": "servo_case_body__zone_dust_front"
+    },
+    {
+     "id": "dust_l",
+     "node": "servo_case_body__zone_dust_l"
+    },
+    {
+     "id": "dust_r",
+     "node": "servo_case_body__zone_dust_r"
+    },
+    {
+     "id": "dust_rear",
+     "node": "servo_case_body__zone_dust_rear"
+    }
+   ],
+   "wipes": [
+    {
+     "id": "dust",
+     "zone": "servo_case_body__zone_dust_l",
+     "label": "Caked Berms dust",
+     "color": "tex/servo__dirty_color.png",
+     "normal": "tex/servo__dirty_normal.png",
+     "orm": "tex/servo__dirty_orm.png"
+    }
+   ],
+   "loose": true
+  },
+  {
+   "id": "servo.board",
+   "node": "servo_board",
+   "label": "Burnt control board",
+   "kind": "part",
+   "parent": "servo.case_body",
+   "item": null,
+   "material": "plastic",
+   "mass": "light",
+   "tris": 2296,
+   "size_mm": [
+    60.0,
+    26.0,
+    10.7
+   ],
+   "seat": {
+    "clear": "servo_board__clear",
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [
+    "servo.case_lid"
+   ],
+   "steps": [
+    "s2.board"
+   ],
+   "marks": [
+    {
+     "id": "snip_r1",
+     "node": "servo_board__mark_snip_r1"
+    },
+    {
+     "id": "snip_r2",
+     "node": "servo_board__mark_snip_r2"
+    }
+   ]
+  },
+  {
+   "id": "servo.lead_plug",
+   "node": "servo_lead_plug",
+   "label": "Lead plug and burnt lead ends",
+   "kind": "part",
+   "parent": "servo.board",
+   "item": null,
+   "material": "plastic",
+   "mass": "tiny",
+   "tris": 776,
+   "size_mm": [
+    12.1,
+    15.7,
+    5.4
+   ],
+   "seat": {
+    "clear": "servo_lead_plug__clear",
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s2.board",
+    "s2.leads"
+   ]
+  },
+  {
+   "id": "servo.trim_resistor",
+   "node": "servo_trim_resistor",
+   "label": "Trim resistor",
+   "kind": "part",
+   "parent": "servo.board",
+   "item": null,
+   "material": "ceramic",
+   "mass": "tiny",
+   "tris": 792,
+   "size_mm": [
+    11.0,
+    2.5,
+    2.5
+   ],
+   "seat": {
+    "clear": "servo_trim_resistor__clear",
+    "symmetry": 2,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s2.board",
+    "s3.tin",
+    "s3.loop"
+   ]
+  },
+  {
+   "id": "servo.case_lid",
+   "node": "servo_case_lid",
+   "label": "Servo case lid",
+   "kind": "part",
+   "parent": "servo.case_body",
+   "item": null,
+   "material": "plastic",
+   "mass": "light",
+   "tris": 3534,
+   "size_mm": [
+    60.7,
+    70.0,
+    24.4
+   ],
+   "seat": {
+    "clear": "servo_case_lid__clear",
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [
+    "servo.screw_case_a",
+    "servo.screw_case_b",
+    "servo.screw_case_c",
+    "servo.screw_case_d",
+    "servo.clip_1",
+    "servo.clip_2",
+    "servo.clip_3"
+   ],
+   "steps": [
+    "s2.dust",
+    "s2.pry"
+   ],
+   "zones": [
+    {
+     "id": "dust",
+     "node": "servo_case_lid__zone_dust"
+    }
+   ],
+   "wipes": [
+    {
+     "id": "dust",
+     "zone": "servo_case_lid__zone_dust",
+     "label": "Caked Berms dust",
+     "color": "tex/servo__dirty_color.png",
+     "normal": "tex/servo__dirty_normal.png",
+     "orm": "tex/servo__dirty_orm.png"
+    }
+   ]
+  },
+  {
+   "id": "servo.circlip",
+   "node": "servo_circlip",
+   "label": "Gear post circlip",
+   "kind": "part",
+   "parent": "servo.case_body",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 292,
+   "size_mm": [
+    5.5,
+    4.9,
+    0.5
+   ],
+   "seat": {
+    "clear": "servo_circlip__clear",
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s2.circlip"
+   ],
+   "flex": true,
+   "note": "sprung open with pliers: not a rigid removal"
+  },
+  {
+   "id": "servo.clip_1",
+   "node": "servo_clip_1",
+   "label": "Case spring clip 1",
+   "kind": "part",
+   "parent": "servo.case_body",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 232,
+   "size_mm": [
+    7.0,
+    5.9,
+    12.8
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s2.pry"
+   ],
+   "grab": "servo_clip_1__grab",
+   "wipes": [
+    {
+     "id": "dust",
+     "zone": null,
+     "label": "Dust",
+     "color": "tex/servo__dirty_color.png",
+     "normal": "tex/servo__dirty_normal.png",
+     "orm": "tex/servo__dirty_orm.png"
+    }
+   ],
+   "loose": true,
+   "rides": "clip_1"
+  },
+  {
+   "id": "servo.clip_2",
+   "node": "servo_clip_2",
+   "label": "Case spring clip 2",
+   "kind": "part",
+   "parent": "servo.case_body",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 232,
+   "size_mm": [
+    7.0,
+    5.9,
+    12.8
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s2.pry"
+   ],
+   "grab": "servo_clip_2__grab",
+   "wipes": [
+    {
+     "id": "dust",
+     "zone": null,
+     "label": "Dust",
+     "color": "tex/servo__dirty_color.png",
+     "normal": "tex/servo__dirty_normal.png",
+     "orm": "tex/servo__dirty_orm.png"
+    }
+   ],
+   "loose": true,
+   "rides": "clip_2"
+  },
+  {
+   "id": "servo.clip_3",
+   "node": "servo_clip_3",
+   "label": "Case spring clip 3",
+   "kind": "part",
+   "parent": "servo.case_body",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 232,
+   "size_mm": [
+    7.0,
+    5.9,
+    12.8
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s2.pry"
+   ],
+   "grab": "servo_clip_3__grab",
+   "wipes": [
+    {
+     "id": "dust",
+     "zone": null,
+     "label": "Dust",
+     "color": "tex/servo__dirty_color.png",
+     "normal": "tex/servo__dirty_normal.png",
+     "orm": "tex/servo__dirty_orm.png"
+    }
+   ],
+   "loose": true,
+   "rides": "clip_3"
+  },
+  {
+   "id": "servo.gear_low",
+   "node": "servo_gear_low",
+   "label": "Crown gear (low)",
+   "kind": "part",
+   "parent": "servo.case_body",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 448,
+   "size_mm": [
+    14.4,
+    14.4,
+    2.3
+   ],
+   "seat": {
+    "clear": "servo_gear_low__clear",
+    "symmetry": 0,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [
+    "servo.gear_mid"
+   ],
+   "steps": [
+    "s2.gears"
+   ]
+  },
+  {
+   "id": "servo.gear_mid",
+   "node": "servo_gear_mid",
+   "label": "Reduction gear (stripped teeth)",
+   "kind": "part",
+   "parent": "servo.case_body",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 1036,
+   "size_mm": [
+    17.8,
+    17.8,
+    3.2
+   ],
+   "seat": {
+    "clear": "servo_gear_mid__clear",
+    "symmetry": 0,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [
+    "servo.gear_top"
+   ],
+   "steps": [
+    "s2.gears"
+   ]
+  },
+  {
+   "id": "servo.gear_top",
+   "node": "servo_gear_top",
+   "label": "Feedback gear (top)",
+   "kind": "part",
+   "parent": "servo.case_body",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 248,
+   "size_mm": [
+    7.8,
+    8.3,
+    2.8
+   ],
+   "seat": {
+    "clear": "servo_gear_top__clear",
+    "symmetry": 0,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [
+    "servo.circlip"
+   ],
+   "steps": [
+    "s2.gears"
+   ]
+  },
+  {
+   "id": "servo.gimbal_cradle",
+   "node": "servo_gimbal_cradle",
+   "label": "Gimbal cradle",
+   "kind": "part",
+   "parent": "servo.case_body",
+   "item": null,
+   "material": "alloy",
+   "mass": "light",
+   "tris": 2560,
+   "size_mm": [
+    29.9,
+    30.0,
+    20.0
+   ],
+   "seat": {
+    "clear": "servo_gimbal_cradle__clear",
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [
+    "servo.screw_trunnion_a",
+    "servo.screw_trunnion_b"
+   ],
+   "steps": [
+    "s2.trunnion",
+    "s3.bath",
+    "s3.oil",
+    "s4.flash",
+    "s4.pressfit"
+   ],
+   "marks": [
+    {
+     "id": "oil_a",
+     "node": "servo_gimbal_cradle__mark_oil_a"
+    },
+    {
+     "id": "oil_b",
+     "node": "servo_gimbal_cradle__mark_oil_b"
+    },
+    {
+     "id": "probe_a",
+     "node": "servo_gimbal_cradle__mark_probe_a"
+    },
+    {
+     "id": "probe_b",
+     "node": "servo_gimbal_cradle__mark_probe_b"
+    }
+   ],
+   "zones": [
+    {
+     "id": "trunnion_a",
+     "node": "servo_gimbal_cradle__zone_trunnion_a"
+    },
+    {
+     "id": "trunnion_b",
+     "node": "servo_gimbal_cradle__zone_trunnion_b"
+    }
+   ],
+   "wipes": [
+    {
+     "id": "corrosion",
+     "zone": "servo_gimbal_cradle__zone_trunnion_a",
+     "label": "Corrosion at the trunnions",
+     "color": "tex/servo__dirty_color.png",
+     "normal": "tex/servo__dirty_normal.png",
+     "orm": "tex/servo__dirty_orm.png"
+    }
+   ]
+  },
+  {
+   "id": "servo.gimbal_coil",
+   "node": "servo_gimbal_coil",
+   "label": "Damping coil",
+   "kind": "part",
+   "parent": "servo.gimbal_cradle",
+   "item": null,
+   "material": "copper",
+   "mass": "tiny",
+   "tris": 2048,
+   "size_mm": [
+    21.8,
+    21.8,
+    4.9
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.test"
+   ],
+   "loose": true
+  },
+  {
+   "id": "servo.gimbal_grit_1",
+   "node": "servo_gimbal_grit_1",
+   "label": "Grit in detent 1",
+   "kind": "consumable",
+   "parent": "servo.gimbal_cradle",
+   "item": null,
+   "material": "ceramic",
+   "mass": "tiny",
+   "tris": 36,
+   "size_mm": [
+    1.0,
+    0.9,
+    0.8
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.pick"
+   ],
+   "loose": true,
+   "rides": "gimbal_roll"
+  },
+  {
+   "id": "servo.gimbal_grit_2",
+   "node": "servo_gimbal_grit_2",
+   "label": "Grit in detent 2",
+   "kind": "consumable",
+   "parent": "servo.gimbal_cradle",
+   "item": null,
+   "material": "ceramic",
+   "mass": "tiny",
+   "tris": 36,
+   "size_mm": [
+    0.9,
+    1.0,
+    0.8
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.pick"
+   ],
+   "loose": true,
+   "rides": "gimbal_roll"
+  },
+  {
+   "id": "servo.gimbal_grit_3",
+   "node": "servo_gimbal_grit_3",
+   "label": "Grit in detent 3",
+   "kind": "consumable",
+   "parent": "servo.gimbal_cradle",
+   "item": null,
+   "material": "ceramic",
+   "mass": "tiny",
+   "tris": 36,
+   "size_mm": [
+    1.0,
+    1.0,
+    0.8
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.pick"
+   ],
+   "loose": true,
+   "rides": "gimbal_roll"
+  },
+  {
+   "id": "servo.gimbal_race",
+   "node": "servo_gimbal_race",
+   "label": "Bearing race",
+   "kind": "part",
+   "parent": "servo.gimbal_cradle",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 1642,
+   "size_mm": [
+    16.6,
+    17.7,
+    4.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.brush",
+    "s3.pick"
+   ],
+   "marks": [
+    {
+     "id": "detent_1",
+     "node": "servo_gimbal_race__mark_detent_1"
+    },
+    {
+     "id": "detent_2",
+     "node": "servo_gimbal_race__mark_detent_2"
+    },
+    {
+     "id": "detent_3",
+     "node": "servo_gimbal_race__mark_detent_3"
+    }
+   ],
+   "zones": [
+    {
+     "id": "race",
+     "node": "servo_gimbal_race__zone_race"
+    }
+   ],
+   "wipes": [
+    {
+     "id": "corrosion",
+     "zone": "servo_gimbal_race__zone_race",
+     "label": "Corrosion on the race",
+     "color": "tex/servo__dirty_color.png",
+     "normal": "tex/servo__dirty_normal.png",
+     "orm": "tex/servo__dirty_orm.png"
+    }
+   ],
+   "loose": true,
+   "rides": "gimbal_roll"
+  },
+  {
+   "id": "servo.gimbal_retainer",
+   "node": "servo_gimbal_retainer",
+   "label": "Rotor retaining ring",
+   "kind": "part",
+   "parent": "servo.gimbal_cradle",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 356,
+   "size_mm": [
+    12.5,
+    13.1,
+    0.5
+   ],
+   "seat": {
+    "clear": "servo_gimbal_retainer__clear",
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s5.rotor"
+   ],
+   "flex": true,
+   "rides": "gimbal_roll",
+   "note": "sprung in with pliers: not a rigid removal"
+  },
+  {
+   "id": "servo.gimbal_ring",
+   "node": "servo_gimbal_ring",
+   "label": "Gimbal ring",
+   "kind": "part",
+   "parent": "servo.gimbal_cradle",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 1172,
+   "size_mm": [
+    21.7,
+    21.6,
+    3.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s3.brush",
+    "s3.oil"
+   ],
+   "wipes": [
+    {
+     "id": "corrosion",
+     "zone": null,
+     "label": "Corrosion on the ring and trunnions",
+     "color": "tex/servo__dirty_color.png",
+     "normal": "tex/servo__dirty_normal.png",
+     "orm": "tex/servo__dirty_orm.png"
+    }
+   ],
+   "loose": true,
+   "rides": "gimbal_pitch"
+  },
+  {
+   "id": "servo.gimbal_rotor",
+   "node": "servo_gimbal_rotor",
+   "label": "Rotor (the swinging mass)",
+   "kind": "part",
+   "parent": "servo.gimbal_cradle",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "tris": 1684,
+   "size_mm": [
+    12.6,
+    12.6,
+    16.8
+   ],
+   "seat": {
+    "clear": "servo_gimbal_rotor__clear",
+    "symmetry": 0,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [
+    "servo.gimbal_retainer"
+   ],
+   "steps": [
+    "s3.spin",
+    "s5.rotor",
+    "s5.damp"
+   ],
+   "rides": "rotor"
+  },
+  {
+   "id": "servo.lead_coil_a",
+   "node": "servo_lead_coil_a",
+   "label": "Coil lead A",
+   "kind": "part",
+   "parent": "servo.gimbal_cradle",
+   "item": null,
+   "material": "rubber",
+   "mass": "tiny",
+   "tris": 920,
+   "size_mm": [
+    21.5,
+    14.7,
+    16.5
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s2.leads",
+    "s3.trim",
+    "s3.strip",
+    "s3.tin",
+    "s3.loop"
+   ],
+   "marks": [
+    {
+     "id": "snip",
+     "node": "servo_lead_coil_a__mark_snip"
+    }
+   ],
+   "flex": true,
+   "loose": true
+  },
+  {
+   "id": "servo.lead_coil_b",
+   "node": "servo_lead_coil_b",
+   "label": "Coil lead B",
+   "kind": "part",
+   "parent": "servo.gimbal_cradle",
+   "item": null,
+   "material": "rubber",
+   "mass": "tiny",
+   "tris": 936,
+   "size_mm": [
+    42.4,
+    15.4,
+    16.8
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s2.leads",
+    "s3.trim",
+    "s3.strip",
+    "s3.tin",
+    "s3.loop"
+   ],
+   "marks": [
+    {
+     "id": "snip",
+     "node": "servo_lead_coil_b__mark_snip"
+    }
+   ],
+   "flex": true,
+   "loose": true
+  },
+  {
+   "id": "servo.lead_sense",
+   "node": "servo_lead_sense",
+   "label": "Sense lead",
+   "kind": "part",
+   "parent": "servo.gimbal_cradle",
+   "item": null,
+   "material": "rubber",
+   "mass": "tiny",
+   "tris": 728,
+   "size_mm": [
+    25.8,
+    8.4,
+    15.6
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s2.leads",
+    "s3.trim"
+   ],
+   "marks": [
+    {
+     "id": "snip",
+     "node": "servo_lead_sense__mark_snip"
+    }
+   ],
+   "flex": true,
+   "loose": true
+  },
+  {
+   "id": "servo.output_shaft",
+   "node": "servo_output_shaft",
+   "label": "Output shaft and pinion",
+   "kind": "part",
+   "parent": "servo.case_body",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "tris": 1250,
+   "size_mm": [
+    37.3,
+    15.8,
+    15.2
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "loose": true
+  },
+  {
+   "id": "servo.screw_case_a",
+   "node": "servo_screw_case_a",
+   "label": "Case screw A",
+   "kind": "fastener",
+   "parent": "servo.case_body",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 566,
+   "size_mm": [
+    5.6,
+    5.5,
+    12.2
+   ],
+   "seat": {
+    "clear": "servo_screw_case_a__clear",
+    "symmetry": 0,
+    "tol_mm": 3.0,
+    "tol_deg": 25.0
+   },
+   "held_by": [],
+   "fastener": {
+    "bit": "cross",
+    "turns": 10,
+    "holds": [
+     "servo.case_lid"
+    ],
+    "into": "servo.case_body",
+    "shank_mm": 3.0
+   },
+   "steps": [
+    "s2.screws",
+    "s5.start",
+    "s5.torque"
+   ],
+   "wipes": [
+    {
+     "id": "dust",
+     "zone": null,
+     "label": "Dust in the recess",
+     "color": "tex/servo__dirty_color.png",
+     "normal": "tex/servo__dirty_normal.png",
+     "orm": "tex/servo__dirty_orm.png"
+    }
+   ]
+  },
+  {
+   "id": "servo.screw_case_b",
+   "node": "servo_screw_case_b",
+   "label": "Case screw B",
+   "kind": "fastener",
+   "parent": "servo.case_body",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 566,
+   "size_mm": [
+    5.6,
+    5.6,
+    12.2
+   ],
+   "seat": {
+    "clear": "servo_screw_case_b__clear",
+    "symmetry": 0,
+    "tol_mm": 3.0,
+    "tol_deg": 25.0
+   },
+   "held_by": [],
+   "fastener": {
+    "bit": "cross",
+    "turns": 10,
+    "holds": [
+     "servo.case_lid"
+    ],
+    "into": "servo.case_body",
+    "shank_mm": 3.0
+   },
+   "steps": [
+    "s2.screws",
+    "s5.start",
+    "s5.torque"
+   ],
+   "wipes": [
+    {
+     "id": "dust",
+     "zone": null,
+     "label": "Dust in the recess",
+     "color": "tex/servo__dirty_color.png",
+     "normal": "tex/servo__dirty_normal.png",
+     "orm": "tex/servo__dirty_orm.png"
+    }
+   ]
+  },
+  {
+   "id": "servo.screw_case_c",
+   "node": "servo_screw_case_c",
+   "label": "Case screw C",
+   "kind": "fastener",
+   "parent": "servo.case_body",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 566,
+   "size_mm": [
+    5.5,
+    5.6,
+    12.2
+   ],
+   "seat": {
+    "clear": "servo_screw_case_c__clear",
+    "symmetry": 0,
+    "tol_mm": 3.0,
+    "tol_deg": 25.0
+   },
+   "held_by": [],
+   "fastener": {
+    "bit": "cross",
+    "turns": 10,
+    "holds": [
+     "servo.case_lid"
+    ],
+    "into": "servo.case_body",
+    "shank_mm": 3.0
+   },
+   "steps": [
+    "s2.screws",
+    "s5.start",
+    "s5.torque"
+   ],
+   "wipes": [
+    {
+     "id": "dust",
+     "zone": null,
+     "label": "Dust in the recess",
+     "color": "tex/servo__dirty_color.png",
+     "normal": "tex/servo__dirty_normal.png",
+     "orm": "tex/servo__dirty_orm.png"
+    }
+   ]
+  },
+  {
+   "id": "servo.screw_case_d",
+   "node": "servo_screw_case_d",
+   "label": "Case screw D (chewed head)",
+   "kind": "fastener",
+   "parent": "servo.case_body",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 598,
+   "size_mm": [
+    5.6,
+    5.5,
+    12.2
+   ],
+   "seat": {
+    "clear": "servo_screw_case_d__clear",
+    "symmetry": 0,
+    "tol_mm": 3.0,
+    "tol_deg": 25.0
+   },
+   "held_by": [],
+   "fastener": {
+    "bit": "pliers",
+    "turns": 10,
+    "holds": [
+     "servo.case_lid"
+    ],
+    "into": "servo.case_body",
+    "shank_mm": 3.0
+   },
+   "steps": [
+    "s2.stripped",
+    "s5.start",
+    "s5.torque"
+   ],
+   "wipes": [
+    {
+     "id": "dust",
+     "zone": null,
+     "label": "Dust in the recess",
+     "color": "tex/servo__dirty_color.png",
+     "normal": "tex/servo__dirty_normal.png",
+     "orm": "tex/servo__dirty_orm.png"
+    }
+   ]
+  },
+  {
+   "id": "servo.screw_trunnion_a",
+   "node": "servo_screw_trunnion_a",
+   "label": "Trunnion screw A",
+   "kind": "fastener",
+   "parent": "servo.case_body",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 582,
+   "size_mm": [
+    6.0,
+    5.9,
+    11.5
+   ],
+   "seat": {
+    "clear": "servo_screw_trunnion_a__clear",
+    "symmetry": 0,
+    "tol_mm": 3.0,
+    "tol_deg": 25.0
+   },
+   "held_by": [],
+   "fastener": {
+    "bit": "cross",
+    "turns": 8,
+    "holds": [
+     "servo.gimbal_cradle"
+    ],
+    "into": "servo.stator",
+    "shank_mm": 2.5
+   },
+   "steps": [
+    "s2.trunnion"
+   ]
+  },
+  {
+   "id": "servo.screw_trunnion_b",
+   "node": "servo_screw_trunnion_b",
+   "label": "Trunnion screw B",
+   "kind": "fastener",
+   "parent": "servo.case_body",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 582,
+   "size_mm": [
+    5.9,
+    6.0,
+    11.5
+   ],
+   "seat": {
+    "clear": "servo_screw_trunnion_b__clear",
+    "symmetry": 0,
+    "tol_mm": 3.0,
+    "tol_deg": 25.0
+   },
+   "held_by": [],
+   "fastener": {
+    "bit": "cross",
+    "turns": 8,
+    "holds": [
+     "servo.gimbal_cradle"
+    ],
+    "into": "servo.stator",
+    "shank_mm": 2.5
+   },
+   "steps": [
+    "s2.trunnion"
+   ]
+  },
+  {
+   "id": "servo.stator",
+   "node": "servo_stator",
+   "label": "Stator",
+   "kind": "part",
+   "parent": "servo.case_body",
+   "item": null,
+   "material": "steel",
+   "mass": "light",
+   "tris": 972,
+   "size_mm": [
+    37.8,
+    36.6,
+    12.3
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s2.winding"
+   ],
+   "loose": true
+  },
+  {
+   "id": "servo.stator_winding",
+   "node": "servo_stator_winding",
+   "label": "Stator winding (copper)",
+   "kind": "part",
+   "parent": "servo.stator",
+   "item": null,
+   "material": "copper",
+   "mass": "light",
+   "tris": 2920,
+   "size_mm": [
+    36.5,
+    38.6,
+    8.1
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s2.winding"
+   ],
+   "marks": [
+    {
+     "id": "end",
+     "node": "servo_stator_winding__mark_end"
+    }
+   ],
+   "flex": true,
+   "loose": true
+  }
+ ],
+ "params": [
+  {
+   "id": "servo.clip_1",
+   "node": "servo_rig",
+   "bone": "clip_1",
+   "action": "clip_1_param",
+   "type": "hinge",
+   "min": 0.0,
+   "max": 40.0,
+   "unit": "deg",
+   "continuous": false,
+   "rest": 0.0,
+   "parent_bone": "root",
+   "requires": {},
+   "parts": [
+    "servo.clip_1"
+   ]
+  },
+  {
+   "id": "servo.clip_2",
+   "node": "servo_rig",
+   "bone": "clip_2",
+   "action": "clip_2_param",
+   "type": "hinge",
+   "min": 0.0,
+   "max": 40.0,
+   "unit": "deg",
+   "continuous": false,
+   "rest": 0.0,
+   "parent_bone": "root",
+   "requires": {},
+   "parts": [
+    "servo.clip_2"
+   ]
+  },
+  {
+   "id": "servo.clip_3",
+   "node": "servo_rig",
+   "bone": "clip_3",
+   "action": "clip_3_param",
+   "type": "hinge",
+   "min": 0.0,
+   "max": 40.0,
+   "unit": "deg",
+   "continuous": false,
+   "rest": 0.0,
+   "parent_bone": "root",
+   "requires": {},
+   "parts": [
+    "servo.clip_3"
+   ]
+  },
+  {
+   "id": "servo.gimbal_pitch",
+   "node": "servo_gimbal_rig",
+   "bone": "gimbal_pitch",
+   "action": "gimbal_pitch_param",
+   "type": "hinge",
+   "min": -12.0,
+   "max": 12.0,
+   "unit": "deg",
+   "continuous": false,
+   "rest": 0.5,
+   "parent_bone": "root",
+   "requires": {
+    "gimbal_roll": 0.5
+   },
+   "parts": [
+    "servo.gimbal_ring"
+   ]
+  },
+  {
+   "id": "servo.gimbal_roll",
+   "node": "servo_gimbal_rig",
+   "bone": "gimbal_roll",
+   "action": "gimbal_roll_param",
+   "type": "hinge",
+   "min": -12.0,
+   "max": 12.0,
+   "unit": "deg",
+   "continuous": false,
+   "rest": 0.5,
+   "parent_bone": "gimbal_pitch",
+   "requires": {
+    "gimbal_pitch": 0.5
+   },
+   "parts": [
+    "servo.gimbal_race",
+    "servo.gimbal_retainer",
+    "servo.gimbal_grit_1",
+    "servo.gimbal_grit_2",
+    "servo.gimbal_grit_3"
+   ]
+  },
+  {
+   "id": "servo.rotor",
+   "node": "servo_gimbal_rig",
+   "bone": "rotor",
+   "action": null,
+   "type": "continuous",
+   "min": 0.0,
+   "max": 360.0,
+   "unit": "deg",
+   "continuous": true,
+   "rest": 0.0,
+   "parent_bone": "gimbal_roll",
+   "requires": {},
+   "parts": [
+    "servo.gimbal_rotor"
+   ]
+  }
+ ],
+ "sequence": [
+  {
+   "op": "remove",
+   "part": "servo.screw_case_a",
+   "step": "s2.screws",
+   "group": "case_screws"
+  },
+  {
+   "op": "remove",
+   "part": "servo.screw_case_b",
+   "step": "s2.screws",
+   "group": "case_screws"
+  },
+  {
+   "op": "remove",
+   "part": "servo.screw_case_c",
+   "step": "s2.screws",
+   "group": "case_screws"
+  },
+  {
+   "op": "remove",
+   "part": "servo.screw_case_d",
+   "step": "s2.stripped",
+   "group": "case_screws"
+  },
+  {
+   "op": "remove",
+   "part": "servo.case_lid",
+   "step": "s2.pry",
+   "params": {
+    "clip_1": 1.0,
+    "clip_2": 1.0,
+    "clip_3": 1.0
+   }
+  },
+  {
+   "op": "remove",
+   "part": "servo.lead_plug",
+   "step": "s2.board"
+  },
+  {
+   "op": "remove",
+   "part": "servo.trim_resistor",
+   "step": "s2.board"
+  },
+  {
+   "op": "remove",
+   "part": "servo.board",
+   "step": "s2.board"
+  },
+  {
+   "op": "remove",
+   "part": "servo.circlip",
+   "step": "s2.circlip"
+  },
+  {
+   "op": "remove",
+   "part": "servo.gear_top",
+   "step": "s2.gears"
+  },
+  {
+   "op": "remove",
+   "part": "servo.gear_mid",
+   "step": "s2.gears"
+  },
+  {
+   "op": "remove",
+   "part": "servo.gear_low",
+   "step": "s2.gears"
+  },
+  {
+   "op": "remove",
+   "part": "servo.gimbal_retainer",
+   "step": "s5.rotor"
+  },
+  {
+   "op": "remove",
+   "part": "servo.gimbal_rotor",
+   "step": "s5.rotor"
+  },
+  {
+   "op": "insert",
+   "part": "servo.gimbal_rotor",
+   "step": "s5.rotor"
+  },
+  {
+   "op": "insert",
+   "part": "servo.gimbal_retainer",
+   "step": "s5.rotor"
+  },
+  {
+   "op": "remove",
+   "part": "servo.screw_trunnion_a",
+   "step": "s2.trunnion",
+   "group": "trunnion"
+  },
+  {
+   "op": "remove",
+   "part": "servo.screw_trunnion_b",
+   "step": "s2.trunnion",
+   "group": "trunnion"
+  },
+  {
+   "op": "remove",
+   "part": "servo.gimbal_cradle",
+   "step": "s2.trunnion"
+  }
+ ],
+ "absent_at_start": [],
+ "param_rest": {
+  "servo.gimbal_pitch": 0.5,
+  "servo.gimbal_roll": 0.5
+ },
+ "rigs": {
+  "servo_rig": "servo_case_body",
+  "servo_gimbal_rig": "servo_gimbal_cradle"
+ }
+}

@@ -1,0 +1,931 @@
+{
+ "family": "pistol",
+ "glb": "pistol.glb",
+ "blender": "5.2.2",
+ "generated": "2026-11-21T11:56:11Z",
+ "unit_scale_m": 1.0,
+ "parts": [
+  {
+   "id": "pistol.card_a",
+   "node": "pistol_card_a",
+   "label": "Test card",
+   "kind": "consumable",
+   "parent": null,
+   "item": null,
+   "material": "paper",
+   "mass": "tiny",
+   "tris": 112,
+   "size_mm": [
+    148.0,
+    105.0,
+    0.4
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s0.card_before",
+    "s7.card_after"
+   ],
+   "marks": [
+    {
+     "id": "centre",
+     "node": "pistol_card_a__mark_centre"
+    },
+    {
+     "id": "clip",
+     "node": "pistol_card_a__mark_clip"
+    }
+   ],
+   "loose": true,
+   "note": "blank card, 148 x 105; the game places the hole decals. Mark centre is the aim point, mark clip the hole for the board clip"
+  },
+  {
+   "id": "pistol.card_b",
+   "node": "pistol_card_b",
+   "label": "Test card",
+   "kind": "consumable",
+   "parent": null,
+   "item": null,
+   "material": "paper",
+   "mass": "tiny",
+   "tris": 112,
+   "size_mm": [
+    148.0,
+    105.0,
+    0.4
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s0.card_before",
+    "s7.card_after"
+   ],
+   "marks": [
+    {
+     "id": "centre",
+     "node": "pistol_card_b__mark_centre"
+    },
+    {
+     "id": "clip",
+     "node": "pistol_card_b__mark_clip"
+    }
+   ],
+   "loose": true,
+   "note": "blank card, 148 x 105; the game places the hole decals. Mark centre is the aim point, mark clip the hole for the board clip"
+  },
+  {
+   "id": "pistol.frame",
+   "node": "pistol_frame",
+   "label": "Frame and receiver",
+   "kind": "part",
+   "parent": null,
+   "item": "scrap_pistol",
+   "material": "steel",
+   "mass": "heavy",
+   "tris": 11267,
+   "size_mm": [
+    188.7,
+    40.3,
+    114.6
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s0.pistol",
+    "s1.clamp",
+    "s1.inspect",
+    "s2.swap",
+    "s6.slide"
+   ],
+   "marks": [
+    {
+     "id": "crack",
+     "node": "pistol_frame__mark_crack"
+    },
+    {
+     "id": "tang_end",
+     "node": "pistol_frame__mark_tang_end"
+    }
+   ],
+   "loose": true,
+   "note": "root of the pistol; the tang stub with its crack is part of it"
+  },
+  {
+   "id": "pistol.barrel",
+   "node": "pistol_barrel",
+   "label": "Barrel assembly",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "steel",
+   "mass": "medium",
+   "tris": 1540,
+   "size_mm": [
+    36.4,
+    39.9,
+    45.3
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "marks": [
+    {
+     "id": "bore_mouth",
+     "node": "pistol_barrel__mark_bore_mouth"
+    }
+   ],
+   "fixed": true,
+   "note": "muzzle ring, ribbed collar, flange, front sight, emitter cup; the barrel mods sleeve over the muzzle ring"
+  },
+  {
+   "id": "pistol.bind_wire_a",
+   "node": "pistol_bind_wire_a",
+   "label": "Binding wire twist",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "copper",
+   "mass": "tiny",
+   "tris": 1648,
+   "size_mm": [
+    60.5,
+    45.7,
+    31.1
+   ],
+   "seat": {
+    "clear": "pistol_bind_wire_a__clear",
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s1.bind"
+   ],
+   "marks": [
+    {
+     "id": "snip",
+     "node": "pistol_bind_wire_a__mark_snip"
+    }
+   ],
+   "flex": true,
+   "note": "one turn of copper wire round the grip, twisted shut; snip at mark snip"
+  },
+  {
+   "id": "pistol.bind_wire_b",
+   "node": "pistol_bind_wire_b",
+   "label": "Binding wire twist",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "copper",
+   "mass": "tiny",
+   "tris": 1648,
+   "size_mm": [
+    62.6,
+    45.7,
+    31.3
+   ],
+   "seat": {
+    "clear": "pistol_bind_wire_b__clear",
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s1.bind"
+   ],
+   "marks": [
+    {
+     "id": "snip",
+     "node": "pistol_bind_wire_b__mark_snip"
+    }
+   ],
+   "flex": true,
+   "note": "one turn of copper wire round the grip, twisted shut; snip at mark snip"
+  },
+  {
+   "id": "pistol.cell",
+   "node": "pistol_cell",
+   "label": "Charge cell",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "glass",
+   "mass": "light",
+   "tris": 1192,
+   "size_mm": [
+    59.1,
+    14.2,
+    14.2
+   ],
+   "seat": {
+    "clear": "pistol_cell__clear",
+    "symmetry": 1,
+    "tol_mm": 4,
+    "tol_deg": 20
+   },
+   "held_by": [
+    "pistol.cell_latch"
+   ],
+   "steps": [
+    "s0.cell",
+    "s6.cell"
+   ],
+   "marks": [
+    {
+     "id": "stud",
+     "node": "pistol_cell__mark_stud"
+    }
+   ],
+   "rides": "cell_seat",
+   "note": "glass tube, two brass caps, retaining stud on the rear cap, glowing fluid; lifts straight up out of two saddle clips"
+  },
+  {
+   "id": "pistol.cell_bus",
+   "node": "pistol_cell_bus",
+   "label": "Cell bus",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "copper",
+   "mass": "light",
+   "tris": 2402,
+   "size_mm": [
+    134.2,
+    32.4,
+    105.1
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "marks": [
+    {
+     "id": "socket",
+     "node": "pistol_cell_bus__mark_socket"
+    }
+   ],
+   "fixed": true,
+   "note": "rear cell clip, copper rod with two stand-offs, brass terminal plate and nut, strip down the tang, keyed socket at its lower end"
+  },
+  {
+   "id": "pistol.lead_plug",
+   "node": "pistol_lead_plug",
+   "label": "Keyed plug of the trigger lead",
+   "kind": "part",
+   "parent": "pistol.cell_bus",
+   "item": null,
+   "material": "plastic",
+   "mass": "tiny",
+   "tris": 298,
+   "size_mm": [
+    11.7,
+    5.9,
+    7.7
+   ],
+   "seat": {
+    "clear": "pistol_lead_plug__clear",
+    "symmetry": 1,
+    "tol_mm": 3,
+    "tol_deg": 15
+   },
+   "held_by": [],
+   "steps": [
+    "s1.lead",
+    "s6.plug"
+   ],
+   "grab": "pistol_lead_plug__grab"
+  },
+  {
+   "id": "pistol.cell_latch",
+   "node": "pistol_cell_latch",
+   "label": "Cell latch",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 372,
+   "size_mm": [
+    5.4,
+    7.4,
+    19.7
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s0.cell",
+    "s6.cell"
+   ],
+   "grab": "pistol_cell_latch__grab",
+   "fixed": true,
+   "rides": "cell_latch",
+   "note": "upright pawl; thumb the pad back 22 degrees and the beak clears the cell stud"
+  },
+  {
+   "id": "pistol.dust_cover",
+   "node": "pistol_dust_cover",
+   "label": "Dust cover with rail",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "steel",
+   "mass": "medium",
+   "tris": 812,
+   "size_mm": [
+    56.9,
+    22.6,
+    16.5
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "fixed": true,
+   "note": "its left face is the front of the rail the cell mods sit on (held to the skin within 0.1 mm): nothing stands proud of it"
+  },
+  {
+   "id": "pistol.housing",
+   "node": "pistol_housing",
+   "label": "Backstrap housing",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "steel",
+   "mass": "medium",
+   "tris": 1711,
+   "size_mm": [
+    57.6,
+    37.9,
+    102.2
+   ],
+   "seat": {
+    "clear": "pistol_housing__clear",
+    "symmetry": 1,
+    "tol_mm": 5,
+    "tol_deg": 15
+   },
+   "held_by": [
+    "pistol.housing_pin"
+   ],
+   "steps": [
+    "s1.housing"
+   ],
+   "note": "backstrap, pin ears, heel and orange butt plate in one piece; rides the T-rail of the tang and slides off downward"
+  },
+  {
+   "id": "pistol.housing_pin",
+   "node": "pistol_housing_pin",
+   "label": "Housing pin",
+   "kind": "fastener",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 96,
+   "size_mm": [
+    3.0,
+    3.0,
+    30.0
+   ],
+   "seat": {
+    "clear": "pistol_housing_pin__clear",
+    "symmetry": 0,
+    "tol_mm": 3.0,
+    "tol_deg": 25.0
+   },
+   "held_by": [],
+   "fastener": {
+    "bit": "pin",
+    "turns": 0,
+    "holds": [
+     "pistol.housing"
+    ],
+    "into": "pistol.frame",
+    "shank_mm": 3.0
+   },
+   "steps": [
+    "s1.pin",
+    "s6.pin"
+   ],
+   "marks": [
+    {
+     "id": "punch",
+     "node": "pistol_housing_pin__mark_punch"
+    }
+   ]
+  },
+  {
+   "id": "pistol.housing_spring",
+   "node": "pistol_housing_spring",
+   "label": "Housing spring",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 726,
+   "size_mm": [
+    4.2,
+    4.2,
+    10.2
+   ],
+   "seat": {
+    "clear": "pistol_housing_spring__clear",
+    "symmetry": 0,
+    "tol_mm": 4,
+    "tol_deg": 30
+   },
+   "held_by": [
+    "pistol.housing"
+   ],
+   "steps": [
+    "s1.housing"
+   ],
+   "flex": true,
+   "note": "sits in a blind hole in the back of the T-rail; it jumps when the housing slides off"
+  },
+  {
+   "id": "pistol.lead",
+   "node": "pistol_lead",
+   "label": "Trigger lead",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "rubber",
+   "mass": "tiny",
+   "tris": 492,
+   "size_mm": [
+    24.2,
+    6.8,
+    46.2
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s1.lead",
+    "s6.plug"
+   ],
+   "paths": [
+    {
+     "id": "route",
+     "nodes": [
+      "pistol_lead__path_route_00",
+      "pistol_lead__path_route_01",
+      "pistol_lead__path_route_02",
+      "pistol_lead__path_route_03",
+      "pistol_lead__path_route_04",
+      "pistol_lead__path_route_05",
+      "pistol_lead__path_route_06",
+      "pistol_lead__path_route_07",
+      "pistol_lead__path_route_08",
+      "pistol_lead__path_route_09",
+      "pistol_lead__path_route_10",
+      "pistol_lead__path_route_11"
+     ]
+    }
+   ],
+   "flex": true,
+   "fixed": true,
+   "note": "fixed in the frame at its top end; the free end carries pistol.lead_plug. Its as-found route is path route"
+  },
+  {
+   "id": "pistol.scale_l",
+   "node": "pistol_scale_l",
+   "label": "Left grip scale",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "wood",
+   "mass": "light",
+   "tris": 3234,
+   "size_mm": [
+    86.2,
+    15.9,
+    107.1
+   ],
+   "seat": {
+    "clear": "pistol_scale_l__clear",
+    "symmetry": 1,
+    "tol_mm": 5,
+    "tol_deg": 20
+   },
+   "held_by": [
+    "pistol.screw_grip_a",
+    "pistol.screw_grip_b",
+    "pistol.wrap"
+   ],
+   "steps": [
+    "s1.scales",
+    "s3.scribe",
+    "s3.punch"
+   ],
+   "note": "cracked through hole A, chipped at the toe; its outline and four holes are the template for the side plates"
+  },
+  {
+   "id": "pistol.scale_r",
+   "node": "pistol_scale_r",
+   "label": "Right grip scale",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "wood",
+   "mass": "light",
+   "tris": 4130,
+   "size_mm": [
+    86.2,
+    15.9,
+    107.3
+   ],
+   "seat": {
+    "clear": "pistol_scale_r__clear",
+    "symmetry": 1,
+    "tol_mm": 5,
+    "tol_deg": 20
+   },
+   "held_by": [
+    "pistol.screw_grip_a",
+    "pistol.screw_grip_b",
+    "pistol.wrap"
+   ],
+   "steps": [
+    "s1.scales"
+   ],
+   "note": "carries the two brass nuts the grip screws thread into; cracked through hole D"
+  },
+  {
+   "id": "pistol.screw_grip_a",
+   "node": "pistol_screw_grip_a",
+   "label": "Upper grip screw",
+   "kind": "fastener",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 686,
+   "size_mm": [
+    8.4,
+    8.3,
+    30.1
+   ],
+   "seat": {
+    "clear": "pistol_screw_grip_a__clear",
+    "symmetry": 0,
+    "tol_mm": 3.0,
+    "tol_deg": 25.0
+   },
+   "held_by": [],
+   "fastener": {
+    "bit": "slot",
+    "turns": 6,
+    "holds": [
+     "pistol.scale_l",
+     "pistol.scale_r"
+    ],
+    "into": null,
+    "shank_mm": 3.8
+   },
+   "steps": [
+    "s1.screw_a"
+   ]
+  },
+  {
+   "id": "pistol.screw_grip_b",
+   "node": "pistol_screw_grip_b",
+   "label": "Lower grip screw (rusted)",
+   "kind": "fastener",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 686,
+   "size_mm": [
+    8.2,
+    8.4,
+    30.1
+   ],
+   "seat": {
+    "clear": "pistol_screw_grip_b__clear",
+    "symmetry": 0,
+    "tol_mm": 3.0,
+    "tol_deg": 25.0
+   },
+   "held_by": [],
+   "fastener": {
+    "bit": "slot",
+    "turns": 6,
+    "holds": [
+     "pistol.scale_l",
+     "pistol.scale_r"
+    ],
+    "into": null,
+    "shank_mm": 3.8
+   },
+   "steps": [
+    "s1.screw_b"
+   ],
+   "marks": [
+    {
+     "id": "oil",
+     "node": "pistol_screw_grip_b__mark_oil"
+    }
+   ]
+  },
+  {
+   "id": "pistol.status_lamp",
+   "node": "pistol_status_lamp",
+   "label": "Status lamp",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "glass",
+   "mass": "tiny",
+   "tris": 84,
+   "size_mm": [
+    2.0,
+    4.8,
+    4.9
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [
+    "s0.cell",
+    "s6.cell"
+   ],
+   "fixed": true,
+   "note": "own emissive material (lamp_pistol): off with the cell out, amber then cyan when it goes back"
+  },
+  {
+   "id": "pistol.trigger",
+   "node": "pistol_trigger",
+   "label": "Trigger",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "steel",
+   "mass": "tiny",
+   "tris": 718,
+   "size_mm": [
+    17.0,
+    5.2,
+    35.0
+   ],
+   "seat": {
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [],
+   "steps": [],
+   "fixed": true,
+   "rides": "trigger"
+  },
+  {
+   "id": "pistol.wrap",
+   "node": "pistol_wrap",
+   "label": "Leather strips and tape",
+   "kind": "part",
+   "parent": "pistol.frame",
+   "item": null,
+   "material": "canvas",
+   "mass": "light",
+   "tris": 8352,
+   "size_mm": [
+    85.4,
+    50.3,
+    95.8
+   ],
+   "seat": {
+    "clear": "pistol_wrap__clear",
+    "symmetry": 1,
+    "tol_mm": 5.0,
+    "tol_deg": 20.0
+   },
+   "held_by": [
+    "pistol.bind_wire_a",
+    "pistol.bind_wire_b"
+   ],
+   "steps": [
+    "s1.tape"
+   ],
+   "paths": [
+    {
+     "id": "peel",
+     "nodes": [
+      "pistol_wrap__path_peel_00",
+      "pistol_wrap__path_peel_01",
+      "pistol_wrap__path_peel_02",
+      "pistol_wrap__path_peel_03",
+      "pistol_wrap__path_peel_04",
+      "pistol_wrap__path_peel_05",
+      "pistol_wrap__path_peel_06",
+      "pistol_wrap__path_peel_07",
+      "pistol_wrap__path_peel_08",
+      "pistol_wrap__path_peel_09",
+      "pistol_wrap__path_peel_10",
+      "pistol_wrap__path_peel_11",
+      "pistol_wrap__path_peel_12",
+      "pistol_wrap__path_peel_13",
+      "pistol_wrap__path_peel_14",
+      "pistol_wrap__path_peel_15",
+      "pistol_wrap__path_peel_16",
+      "pistol_wrap__path_peel_17",
+      "pistol_wrap__path_peel_18",
+      "pistol_wrap__path_peel_19",
+      "pistol_wrap__path_peel_20",
+      "pistol_wrap__path_peel_21",
+      "pistol_wrap__path_peel_22",
+      "pistol_wrap__path_peel_23",
+      "pistol_wrap__path_peel_24",
+      "pistol_wrap__path_peel_25",
+      "pistol_wrap__path_peel_26",
+      "pistol_wrap__path_peel_27",
+      "pistol_wrap__path_peel_28",
+      "pistol_wrap__path_peel_29",
+      "pistol_wrap__path_peel_30",
+      "pistol_wrap__path_peel_31",
+      "pistol_wrap__path_peel_32",
+      "pistol_wrap__path_peel_33",
+      "pistol_wrap__path_peel_34",
+      "pistol_wrap__path_peel_35"
+     ]
+    }
+   ],
+   "flex": true,
+   "note": "three leather straps, two bands of cloth tape and four studs whose posts sit in holes C and D; peeled along path peel"
+  }
+ ],
+ "params": [
+  {
+   "id": "pistol.cell_latch",
+   "node": "pistol_rig",
+   "bone": "cell_latch",
+   "action": "cell_latch_param",
+   "type": "hinge",
+   "min": 0.0,
+   "max": 22.0,
+   "unit": "deg",
+   "continuous": false,
+   "rest": 0.0,
+   "parent_bone": "root",
+   "requires": {},
+   "parts": [
+    "pistol.cell_latch"
+   ]
+  },
+  {
+   "id": "pistol.cell_seat",
+   "node": "pistol_rig",
+   "bone": "cell_seat",
+   "action": "cell_seat_param",
+   "type": "slide",
+   "min": 0.0,
+   "max": 16.0,
+   "unit": "mm",
+   "continuous": false,
+   "rest": 0.0,
+   "parent_bone": "root",
+   "requires": {
+    "cell_latch": 1.0
+   },
+   "parts": [
+    "pistol.cell"
+   ]
+  },
+  {
+   "id": "pistol.trigger",
+   "node": "pistol_rig",
+   "bone": "trigger",
+   "action": "trigger_param",
+   "type": "hinge",
+   "min": 0.0,
+   "max": 12.0,
+   "unit": "deg",
+   "continuous": false,
+   "rest": 0.0,
+   "parent_bone": "root",
+   "requires": {},
+   "parts": [
+    "pistol.trigger"
+   ]
+  }
+ ],
+ "sequence": [
+  {
+   "op": "remove",
+   "part": "pistol.cell",
+   "step": "s0.cell",
+   "params": {
+    "cell_latch": 1.0
+   }
+  },
+  {
+   "op": "remove",
+   "part": "pistol.bind_wire_a",
+   "step": "s1.bind",
+   "group": "bind"
+  },
+  {
+   "op": "remove",
+   "part": "pistol.bind_wire_b",
+   "step": "s1.bind",
+   "group": "bind"
+  },
+  {
+   "op": "remove",
+   "part": "pistol.wrap",
+   "step": "s1.tape"
+  },
+  {
+   "op": "remove",
+   "part": "pistol.screw_grip_a",
+   "step": "s1.screw_a",
+   "group": "screws"
+  },
+  {
+   "op": "remove",
+   "part": "pistol.screw_grip_b",
+   "step": "s1.screw_b",
+   "group": "screws"
+  },
+  {
+   "op": "remove",
+   "part": "pistol.scale_l",
+   "step": "s1.scales",
+   "group": "scales"
+  },
+  {
+   "op": "remove",
+   "part": "pistol.scale_r",
+   "step": "s1.scales",
+   "group": "scales"
+  },
+  {
+   "op": "remove",
+   "part": "pistol.lead_plug",
+   "step": "s1.lead"
+  },
+  {
+   "op": "remove",
+   "part": "pistol.housing_pin",
+   "step": "s1.pin"
+  },
+  {
+   "op": "remove",
+   "part": "pistol.housing",
+   "step": "s1.housing"
+  },
+  {
+   "op": "remove",
+   "part": "pistol.housing_spring",
+   "step": "s1.housing"
+  },
+  {
+   "op": "insert",
+   "part": "pistol.cell",
+   "step": "s6.cell",
+   "params": {
+    "cell_latch": 1.0
+   }
+  }
+ ],
+ "absent_at_start": [],
+ "frame": "P: metres, muzzle -X, up +Z, right +Y in Blender (glTF: muzzle -X, up +Y, right -Z); origin = ScrapPistol.glb origin",
+ "in_hand": "pistol_hand.glb: merged nodes in ScrapPistol.glb units (x 1 / 0.13674), written after a bake"
+}

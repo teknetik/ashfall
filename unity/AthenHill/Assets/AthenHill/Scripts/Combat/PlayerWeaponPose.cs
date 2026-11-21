@@ -27,6 +27,8 @@ namespace AthenHill
   [Range(0,1)]public float pitchShare=.85f;
   [Range(0,1)]public float barrelAlign=.8f;
   [Range(0,15)]public float recoilPitch=7;
+  [Tooltip("20 Nov 2026 (Steady Hands bench): share of the weapon's Aim Sway (degrees) shown on the raised hand in third person; visual only.")]
+  [Range(0,2)]public float handlingSwayScale=.7f;
   [Min(.01f)]public float recoilReturn=.14f;
   [Header("Carry (drawn, not raised)")]
   [Tooltip("Degrees below the colonist's forward that the barrel points while the pistol is drawn but not raised: the pistol turns in the hand into a muzzle-down carry beside the thigh (the hand keeps its locomotion pose).")]
@@ -106,8 +108,9 @@ namespace AthenHill
   public void PreviewPose(float raise,Vector3 aimDir)
   {
    Weight=raise;recoil=0;
-   Pose(aimDir,0);
+   previewing=true;try{Pose(aimDir,0);}finally{previewing=false;}
   }
+  bool previewing;
   void Pose(Vector3 aimDir,float dt)
   {
    var held=combat?combat.HeldWeapon:null;
@@ -153,6 +156,11 @@ namespace AthenHill
      var fix=Quaternion.FromToRotation(weapon.forward,aimDir);
      rightHand.rotation=Quaternion.Slerp(Quaternion.identity,fix,aimAlign*Weight)*rightHand.rotation;
      rightHand.rotation=Quaternion.AngleAxis(-recoilPitch*combat.RecoilScale*r*Weight,body.right)*rightHand.rotation;
+     // handling sway and the shot's side kick (rifle: 0), smaller under Reduced Motion
+     bool reduced=combat.session&&combat.session.reducedMotion;
+     var hold=previewing?Vector2.zero:WeaponFeel.Sway(Time.time+.37f,combat.Stats.sway*handlingSwayScale*(reduced?.3f:1)*Weight);
+     float side=previewing?0:combat.LastSideKick*r*Weight;
+     if(hold!=Vector2.zero||side!=0)rightHand.rotation=Quaternion.AngleAxis(hold.x+side,Vector3.up)*Quaternion.AngleAxis(-hold.y,body.right)*rightHand.rotation;
     }
    }
   }

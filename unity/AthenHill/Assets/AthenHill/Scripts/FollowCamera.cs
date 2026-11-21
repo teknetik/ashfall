@@ -41,6 +41,24 @@ namespace AthenHill
    recoilRecovery+=degrees*Mathf.Clamp01(recoverFraction);
    recoilTime=Mathf.Max(.01f,recoverSeconds);
   }
+  // 20 Nov 2026 (Steady Hands bench, craft agent): the weapon's handling adds a sideways step (part recovered like the
+  // pitch kick) and, when recovery is slow, one overshoot past the rest point that settles back. Additive to the kick above.
+  float sideRecovery,sideTime,settleBack,settleTime,settleAfter;
+  public void ApplyShotKick(float degrees,float sideDegrees,float recoverFraction,float recoverSeconds,float overshoot)
+  {
+   if(FixedView)return;
+   ApplyShotKick(degrees,recoverFraction,recoverSeconds);
+   float keep=Mathf.Clamp01(recoverFraction);
+   if(sideDegrees!=0){yaw+=sideDegrees;sideRecovery+=sideDegrees*keep;sideTime=Mathf.Max(.01f,recoverSeconds);}
+   float past=degrees*keep*Mathf.Clamp(overshoot,0,.5f);
+   if(past>0){recoilRecovery+=past;settleBack=past;settleAfter=recoilTime;settleTime=Mathf.Max(.01f,recoverSeconds*.6f);}
+   else{settleBack=0;}
+  }
+  void RecoverHandling(float dt)
+  {
+   if(sideRecovery!=0){float step=sideRecovery*Mathf.Min(1,dt/Mathf.Max(.0001f,sideTime));yaw-=step;sideRecovery-=step;sideTime=Mathf.Max(0,sideTime-dt);if(Mathf.Abs(sideRecovery)<1e-4f)sideRecovery=0;}
+   if(settleBack>0){if(settleAfter>0){settleAfter-=dt;return;}float step=Mathf.Min(settleBack,dt*settleBack/Mathf.Max(.0001f,settleTime));pitch=Mathf.Clamp(pitch-step,aimMode?-70:-80,aimMode?70:80);settleBack-=step;settleTime=Mathf.Max(0,settleTime-dt);}
+  }
   PlayerMotor targetMotor;
   Renderer[] playerRenderers;
   ShadowCastingMode[] shadowModes;
@@ -58,6 +76,8 @@ namespace AthenHill
   void LateUpdate()
   {
    if(photo&&photo.IsOpen)return;
+   // The bench camera (AssemblyCameraRig, 20 Nov 2026) owns this transform and lens; the colonist stands where the lens is, so only its shadow is drawn.
+   if(CinematicCamera.BenchActive){HidePlayer(true);if(conversation)conversation.Suspend();return;}
    if(FixedView||!target){HidePlayer(false);if(conversation)conversation.Suspend();return;}
    aimBlend=Mathf.MoveTowards(aimBlend,aimMode?1:0,aimBlendSpeed*Time.unscaledDeltaTime);
    // Mouse look is always on in play (GameInput locks the cursor and drops the lock's recentring jump).
@@ -68,6 +88,7 @@ namespace AthenHill
     yaw+=delta.x*scale;pitch=Mathf.Clamp(pitch-delta.y*scale*(settings&&settings.Controls.invertY?-1:1),-limit,limit);
    }
    if(recoilRecovery>0){float step=Mathf.Min(recoilRecovery,Time.deltaTime*recoilRecovery/Mathf.Max(.0001f,recoilTime));pitch=Mathf.Clamp(pitch+step,aimMode?-70:-80,aimMode?70:80);recoilRecovery-=step;recoilTime=Mathf.Max(0,recoilTime-Time.deltaTime);}
+   RecoverHandling(Time.deltaTime);
    // A tight interior (CameraConfineZone: the container home) holds the view in first person and gives the player's
    // own zoom back at the door.
    if(confined!=wasConfined){wasConfined=confined;if(confined){confinedBoom=boom;boom=0;}else boom=confinedBoom;}
