@@ -104,7 +104,7 @@ Shader "Athen Hill/Berms Ground V2"
         _HazeBaseHeight("Height falloff base (m)", Range(-5, 40)) = 6
         _HazeNoonTint("High-sun haze tint (linear multiplier)", Vector) = (.88, .93, 1.03, 0)
 
-        [Header(Wasteland micro-detail and weathering)]
+        [Header(Wasteland microdetail and weathering)]
         _MicroGritStrength("Micro-grit and hardpan fracture strength", Range(0, 1.5)) = .55
         _CavityStrength("Crevice and relief cavity occlusion", Range(0, 1.5)) = .65
         _GrazingDustSheen("Grazing dust sheen and mineral breakup", Range(0, 1)) = .22
