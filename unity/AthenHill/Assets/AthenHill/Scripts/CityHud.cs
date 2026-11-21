@@ -313,7 +313,7 @@ namespace AthenHill
    bool settingsOpen=session.State==CityState.Settings;
    Show("settings-panel",settingsOpen);Show("modal-scroll",!settingsOpen);root.Q("modal").EnableInClassList("settings-modal",settingsOpen);
    root.Q<Button>("close").text=settingsOpen?session.Settings.Previewing?"Revert · Esc":"Back · Esc":session.State==CityState.Inventory?"Close · Tab / Esc":"Close · Esc";
-   if(footerLeft!=null)footerLeft.text="FREE COLUMN  /  ATHEN HILL";
+   if(footerLeft!=null)footerLeft.text="WARD  /  TIR";
    if(footerRight!=null)footerRight.text="Tab · Select     Enter · Confirm";
    Text("modal-title",session.State.ToString());Text("modal-subtitle","");
    if(session.State==CityState.Fabricator)

@@ -30,20 +30,43 @@ namespace AthenHill
   [Tooltip("Metres before and after a stop over which the walker eases between Slow Factor and full speed (walk playback follows, so feet do not slide).")]
   [Min(0)]public float easeDistance=.9f;
   [Range(.1f,1)]public float slowFactor=.45f;
+  [Tooltip("Phase 4 Living Ward (21 Nov 2026): react to dust fronts (hurry between stops, shelter longer) and night (slower evening pace).")]
+  public bool reactToWeatherAndTime=true;
   /// Standing at a work stop (BarkDirector lets a working walker make idle remarks).
   public bool AtWork{get;private set;}
   public WorkStop CurrentStop{get;private set;}
   public float StopSecondsLeft{get;private set;}
+  public bool SeekingShelter{get;private set;}
   float distance,total;float[] lengths;float[] cumulative;int lastWaypoint=-1;
-  void Start(){lengths=new float[waypoints.Length];cumulative=new float[waypoints.Length];for(int i=0;i<lengths.Length;i++){cumulative[i]=total;lengths[i]=Vector3.Distance(waypoints[i].position,waypoints[(i+1)%lengths.Length].position);total+=lengths[i];}distance=phase*total;Place(true);}
+  CityTimeOfDay clock;
+  /// Pure Living Ward pacing rule: dust fronts make walkers hurry between stops and linger at shelter;
+  /// night softens walking speed and extends work-stop pauses. Calm daylight returns exact 1.0x authored pacing.
+  public static void AmbientPacing(float windStrength,float visibility,float sunVisibility,out float speedScale,out float stopScale,out bool seekingShelter)
+  {
+   // A dust front is read from visibility only: gusts in clear weather (wind strength with gust swell above 1.8) are not a front.
+   bool front=visibility<.75f;
+   bool night=sunVisibility<.15f;
+   seekingShelter=front;
+   if(front){speedScale=Mathf.Lerp(1.25f,1.4f,Mathf.Clamp01((.75f-visibility)/.45f));stopScale=1.5f;}
+   else if(night){speedScale=.82f;stopScale=1.35f;}
+   else{speedScale=1f;stopScale=1f;}
+  }
+  void Start(){clock=FindAnyObjectByType<CityTimeOfDay>();lengths=new float[waypoints.Length];cumulative=new float[waypoints.Length];for(int i=0;i<lengths.Length;i++){cumulative[i]=total;lengths[i]=Vector3.Distance(waypoints[i].position,waypoints[(i+1)%lengths.Length].position);total+=lengths[i];}distance=phase*total;Place(true);}
   bool HasStops=>stops!=null&&stops.Length>0;
   void Update()
   {
    if(total<=0)return;
-   if(!HasStops){distance=(distance+speed*Time.deltaTime)%total;Place(false);actor.SetMotion(speed,false,false);return;}
-   UpdateWithStops(Time.deltaTime);
+   float speedScale=1f,stopScale=1f;bool shelter=false;
+   if(reactToWeatherAndTime)
+   {
+    float sun=clock?clock.SunVisibility:1f;
+    AmbientPacing(WeatherConditions.WindStrength,WeatherConditions.Visibility,sun,out speedScale,out stopScale,out shelter);
+   }
+   SeekingShelter=shelter;
+   if(!HasStops){float v=speed*speedScale;distance=(distance+v*Time.deltaTime)%total;Place(false);if(actor)actor.SetMotion(v,false,false);return;}
+   UpdateWithStops(Time.deltaTime,speedScale,stopScale);
   }
-  void UpdateWithStops(float dt)
+  void UpdateWithStops(float dt,float speedScale,float stopScale)
   {
    if(AtWork)
    {
@@ -51,7 +74,7 @@ namespace AthenHill
     transform.position=Point(distance);
     var face=Quaternion.Euler(0,CurrentStop.facingYaw,0);
     transform.rotation=Quaternion.Slerp(transform.rotation,face,1-Mathf.Exp(-turnSharpness*.5f*dt));
-    if(actor)actor.SetMotion(0,false,CurrentStop.talkClip);
+    if(actor)actor.SetMotion(0,false,CurrentStop.talkClip&&!SeekingShelter);
     if(StopSecondsLeft>0)return;
     AtWork=false;CurrentStop=null;
    }
@@ -68,13 +91,13 @@ namespace AthenHill
     if(b<behind)behind=b;
    }
    float ease=easeDistance>0?Mathf.Clamp01(Mathf.Min(ahead,behind)/easeDistance):1;
-   float v=speed*Mathf.Lerp(slowFactor,1,ease*ease*(3-2*ease));
+   float v=speed*speedScale*Mathf.Lerp(slowFactor,1,ease*ease*(3-2*ease));
    float step=v*dt;
    if(next!=null&&ahead<=step)
    {
-    distance=cumulative[next.waypoint];AtWork=true;CurrentStop=next;StopSecondsLeft=next.seconds;lastWaypoint=next.waypoint;
+    distance=cumulative[next.waypoint];AtWork=true;CurrentStop=next;StopSecondsLeft=next.seconds*stopScale;lastWaypoint=next.waypoint;
     transform.position=Point(distance);
-    if(actor)actor.SetMotion(0,false,next.talkClip);
+    if(actor)actor.SetMotion(0,false,next.talkClip&&!SeekingShelter);
     return;
    }
    distance=(distance+step)%total;Place(false);if(actor)actor.SetMotion(v,false,false);
