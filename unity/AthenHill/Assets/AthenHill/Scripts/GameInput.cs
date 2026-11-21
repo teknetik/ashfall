@@ -12,7 +12,7 @@ namespace AthenHill
   public InputActionAsset definition;
   InputActionAsset runtime;
   InputActionMap gameplay,ui,photo,bench;
-  bool jumpQueued,locked;
+  bool jumpQueued,dodgeQueued,locked;
   int settleFrames,photoClosedFrame=-10;
   public System.Func<bool> PointerOverUi;
   public System.Func<bool> MenuPopupOpen;
@@ -57,11 +57,11 @@ namespace AthenHill
   public void SetPhoto(bool enabled,bool gameplayAfter=true)
   {
    if(photo==null)return;
-   jumpQueued=false;
+   jumpQueued=false;dodgeQueued=false;
    if(enabled){gameplay.Disable();photo.Enable();}
    else{photo.Disable();photoClosedFrame=Time.frameCount;if(gameplayAfter)gameplay.Enable();else if(locked)SetLocked(false);}
   }
-  void OnEnable(){runtime=Instantiate(definition);gameplay=runtime.FindActionMap("Gameplay",true);ui=runtime.FindActionMap("UI",true);photo=runtime.FindActionMap("Photo",false);bench=runtime.FindActionMap("Bench",false);bench?.Disable();gameplay["Jump"].performed+=QueueJump;ui.Enable();gameplay.Enable();}
+  void OnEnable(){runtime=Instantiate(definition);gameplay=runtime.FindActionMap("Gameplay",true);ui=runtime.FindActionMap("UI",true);photo=runtime.FindActionMap("Photo",false);bench=runtime.FindActionMap("Bench",false);bench?.Disable();gameplay["Jump"].performed+=QueueJump;var dodge=gameplay.FindAction("Dodge",false);if(dodge!=null)dodge.performed+=QueueDodge;ui.Enable();gameplay.Enable();}
   void Update()
   {
    if(settleFrames>0)settleFrames--;
@@ -78,8 +78,10 @@ namespace AthenHill
   }
   // Input runs at render cadence; retain a tap until exactly one physics tick consumes it.
   void QueueJump(InputAction.CallbackContext context){jumpQueued=true;}
+  void QueueDodge(InputAction.CallbackContext context){dodgeQueued=true;}
   public bool ConsumeJump(){bool pressed=GameplayEnabled&&jumpQueued;jumpQueued=false;return pressed;}
-  public void SetGameplay(bool enabled){jumpQueued=false;if(enabled){photo?.Disable();bench?.Disable();gameplay.Enable();}else gameplay.Disable();if(!enabled&&locked&&!PhotoEnabled)SetLocked(false);}
-  void OnDisable(){jumpQueued=false;if(locked)SetLocked(false);if(runtime){runtime.Disable();Destroy(runtime);}}
+  public bool ConsumeDodge(){bool pressed=GameplayEnabled&&dodgeQueued;dodgeQueued=false;return pressed;}
+  public void SetGameplay(bool enabled){jumpQueued=false;dodgeQueued=false;if(enabled){photo?.Disable();bench?.Disable();gameplay.Enable();}else gameplay.Disable();if(!enabled&&locked&&!PhotoEnabled)SetLocked(false);}
+  void OnDisable(){jumpQueued=false;dodgeQueued=false;if(locked)SetLocked(false);if(runtime){runtime.Disable();Destroy(runtime);}}
  }
 }

@@ -60,6 +60,10 @@ See [terrain evidence](evidence/terrain/20260908/acceptance.md) and the
 | 3–9, 0 | Use the item on that hotbar slot (medkit on 3 and nano recharge cell on 4 by default) |
 | Left mouse · F | Fire a drawn weapon (aiming or not) |
 | Hold right mouse | Aim over the shoulder |
+| C | Directional dodge / sidestep dash (brief evasion i-frames; costs 12 nano while armed in the Berms) |
+| V | Close-quarters shove (knocks back and staggers nearby droids while armed) |
+| Q | Nano EMP Disruptor pulse (30 nano; stuns nearby droids and strips 50 % flat armour for 8 s) |
+| X | Nano Overcharge (25 nano; boosts fire rate, damage and armour penetration; extended by an Eye implant) |
 | Tab | Field pack |
 | J | Journal (missions, tracking, Ward notes); T tracks the selected mission |
 | M | World map (Ward and the Outer Berms, north up; Berms sites appear once you have been near them). M or Escape closes it |

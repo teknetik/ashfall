@@ -144,7 +144,16 @@ namespace AthenHill
   public event Action Downed;
   /// Experience awarded for a kill: (amount, tier, levelled up). Easy kills raise it with 0.
   public event Action<int,ThreatTier,bool> ExperienceAwarded;
-  float nextFire,faceUntil,tracerOff,emptyNotice,jamNotice;
+  /// Phase 2 combat verbs (21 Nov 2026): dodge, shove, EMP disruptor, nano overcharge.
+  public event Action Dodged,Shoved,EmpTriggered,OverchargeTriggered;
+  public bool HasEyeImplant=>Character!=null&&!string.IsNullOrEmpty(Character.Equipped("implant_eye"));
+  public bool OverchargeActive=>Time.time<overchargeUntil;
+  public float OverchargeRemaining=>Mathf.Max(0,overchargeUntil-Time.time);
+  public float OverchargeCooldownRemaining=>Mathf.Max(0,overchargeReadyAt-Time.time);
+  public float EmpCooldownRemaining=>Mathf.Max(0,empReadyAt-Time.time);
+  public float ShoveCooldownRemaining=>Mathf.Max(0,shoveReadyAt-Time.time);
+  public float EffectiveArmourPenetration=>Stats.armourPenetration+(OverchargeActive?CombatVerbs.OverchargeArmourPenBonus:0);
+  float nextFire,faceUntil,tracerOff,emptyNotice,jamNotice,shoveReadyAt=-99,empReadyAt=-99,overchargeReadyAt=-99,overchargeUntil=-99;
   // ---- Handling (Steady Hands bench, 20 Nov 2026): rapid-fire heat, side kick and the rattle/damper cues. See WeaponFeel.
   float heat,heatShot=-99,nextRattle,damperAt=-1;int lastRattle=-1,lastDamper=-1;
   /// Rapid-fire heat now (0 = the next shot has the base cone).
@@ -160,7 +169,7 @@ namespace AthenHill
   public float RecoverySeconds=>Stats.recovery>0?Stats.recovery:recoilRecoverSeconds;
   /// The drawn weapon rattles (its side kick is at least Rattle Above).
   public bool Rattles=>Stats.sideKick>=rattleAbove&&rattleAbove>0;
-  void Awake(){Health=GetComponent<Health>();ApplyLoadout();Nano=Stats.nanoMax;Health.Damaged+=OnDamaged;Health.Died+=OnDied;}
+  void Awake(){Health=GetComponent<Health>();ApplyLoadout();Nano=Stats.nanoMax;Health.AdjustIncomingDamage=MitigateDamage;Health.Damaged+=OnDamaged;Health.Died+=OnDied;}
   /// CraftingSession binds the pistol's loadout once its model exists. Null returns to the serialized fallback.
   public void BindLoadout(WeaponLoadout loadout)
   {
@@ -174,11 +183,11 @@ namespace AthenHill
    if(Character!=null)Character.Changed-=OnCharacterChanged;
    Character=character;
    if(Character!=null)Character.Changed+=OnCharacterChanged;
-   if(Health)Health.AdjustIncomingDamage=Character!=null?MitigateDamage:null;
+   if(Health)Health.AdjustIncomingDamage=MitigateDamage;
    OnCharacterChanged();
   }
   float MitigateDamage(float incoming)
-   =>ComputePhysicalDamage(Character,incoming);
+   =>motor&&motor.DodgeInvulnerable?0:ComputePhysicalDamage(Character,incoming);
   public static float ComputePhysicalDamage(CharacterModel character,float incoming)
   {
    if(character==null)return incoming;
@@ -317,8 +326,90 @@ namespace AthenHill
     nextRattle=Time.time+UnityEngine.Random.Range(rattleMoveInterval.x,Mathf.Max(rattleMoveInterval.x,rattleMoveInterval.y));
     PlayRattle(rattleMoveGain);
    }
-   if(!play||!Armed)return;
+   if(!play)return;
+   if(input.ConsumeDodge())TryDodge();
+   if(!Armed)return;
+   if(input.Pressed("Shove"))TryShove();
+   if(input.Pressed("NanoEmp"))TryNanoEmp();
+   if(input.Pressed("NanoOvercharge"))TryNanoOvercharge();
    if(input.FirePressed||Automatic&&input.FireHeld)Fire();
+  }
+  public bool TryDodge()
+  {
+   if(!motor||!Health.Alive||session.State!=CityState.Play)return false;
+   if(InBerms&&Armed&&Nano<CombatVerbs.DodgeNanoCost)
+   {
+    if(Time.time>emptyNotice){emptyNotice=Time.time+2;session.Notify("Not enough nano charge to dodge.");}
+    return false;
+   }
+   var dir=CombatVerbs.DodgeDirection(input?input.Move:Vector2.zero,view?view.transform.forward:transform.forward);
+   if(!motor.TryDodge(dir))return false;
+   if(InBerms&&Armed){Nano=Mathf.Max(0,Nano-CombatVerbs.DodgeNanoCost);LastShotTime=Time.time;}
+   if(audioSource&&drawClip)audioSource.PlayOneShot(drawClip,.45f);
+   Dodged?.Invoke();
+   return true;
+  }
+  public bool TryShove()
+  {
+   if(!Armed||!InBerms||!Health.Alive||Time.time<shoveReadyAt)return false;
+   WeaponHandled?.Invoke();
+   shoveReadyAt=Time.time+CombatVerbs.ShoveCooldown;faceUntil=Time.time+.55f;
+   var fwd=view?view.transform.forward:transform.forward;
+   int hitCount=0;
+   foreach(var d in FeralDroid.Active)
+   {
+    if(!d||!d.Health||!d.Health.Alive||d.State==DroidState.Dead)continue;
+    if(!CombatVerbs.InShoveCone(transform.position,fwd,d.transform.position))continue;
+    d.ApplyShove(d.transform.position-transform.position,CombatVerbs.ShoveKnockback,CombatVerbs.ShoveStaggerSeconds,CombatVerbs.ShoveDamage);
+    hitCount++;
+   }
+   if(follow)follow.ApplyShotKick(hitCount>0?3.5f:1.8f,.55f,.16f);
+   if(audioSource&&drawClip)audioSource.PlayOneShot(drawClip,hitCount>0?.85f:.55f);
+   Shoved?.Invoke();
+   return true;
+  }
+  public bool TryNanoEmp()
+  {
+   if(!Armed||!InBerms||!Health.Alive||Time.time<empReadyAt)return false;
+   if(Nano<CombatVerbs.EmpNanoCost)
+   {
+    if(Time.time>emptyNotice){emptyNotice=Time.time+2;session.Notify("Need 30 nano charge for EMP Disruptor.");}
+    return false;
+   }
+   WeaponHandled?.Invoke();
+   Nano-=CombatVerbs.EmpNanoCost;LastShotTime=Time.time;empReadyAt=Time.time+CombatVerbs.EmpCooldown;
+   int affected=0;
+   foreach(var d in FeralDroid.Active)
+   {
+    if(!d||!d.Health||!d.Health.Alive||d.State==DroidState.Dead)continue;
+    if(!CombatVerbs.InEmpRadius(transform.position,d.transform.position))continue;
+    d.ApplyEmp(CombatVerbs.EmpStunSeconds,CombatVerbs.EmpArmourStripFraction,CombatVerbs.EmpArmourStripSeconds);
+    affected++;
+   }
+   if(impactSparks){impactSparks.transform.position=transform.position+Vector3.up*1.1f;impactSparks.Emit(28);}
+   if(follow)follow.ApplyShotKick(2.8f,.5f,.22f);
+   if(audioSource&&shotClip)audioSource.PlayOneShot(shotClip,.65f);
+   session.Notify(affected>0?$"EMP Disruptor pulsed — {affected} droid{(affected==1?"":"s")} stunned and armour stripped.":"EMP Disruptor pulsed (no droids in range).");
+   EmpTriggered?.Invoke();
+   return true;
+  }
+  public bool TryNanoOvercharge()
+  {
+   if(!Armed||!InBerms||!Health.Alive||Time.time<overchargeReadyAt)return false;
+   if(Nano<CombatVerbs.OverchargeNanoCost)
+   {
+    if(Time.time>emptyNotice){emptyNotice=Time.time+2;session.Notify("Need 25 nano charge for Nano Overcharge.");}
+    return false;
+   }
+   WeaponHandled?.Invoke();
+   Nano-=CombatVerbs.OverchargeNanoCost;LastShotTime=Time.time;
+   float dur=CombatVerbs.OverchargeSeconds(HasEyeImplant);
+   overchargeUntil=Time.time+dur;
+   overchargeReadyAt=Time.time+CombatVerbs.OverchargeCooldown;
+   if(audioSource&&drawClip)audioSource.PlayOneShot(drawClip,.75f);
+   session.Notify(HasEyeImplant?$"Nano Overcharge + Optic Suite active ({dur:0} s): +armour pen, +fire rate, wider optic lock.":"Nano Overcharge active (6 s): +armour pen, +fire rate, +20% damage.");
+   OverchargeTriggered?.Invoke();
+   return true;
   }
   public void Fire()
   {
@@ -352,7 +443,9 @@ namespace AthenHill
     if(Time.time>emptyNotice){emptyNotice=Time.time+3;session.Notify("Nano charge depleted. Hold fire to let it refill.");}
     nextFire=Time.time+stats.fireInterval;return;
    }
-   nextFire=Time.time+stats.fireInterval;Nano-=stats.nanoPerShot;ShotsFired++;LastShotTime=Time.time;faceUntil=Time.time+.7f;
+   bool overcharged=OverchargeActive;
+   float interval=stats.fireInterval*(overcharged?CombatVerbs.OverchargeFireIntervalScale:1f);
+   nextFire=Time.time+interval;Nano-=stats.nanoPerShot;ShotsFired++;LastShotTime=Time.time;faceUntil=Time.time+.7f;
    if(condition!=null)Loadout.Wear(Loadout.WearPerShot);
    var cam=view.transform;
    // Start past the boom so geometry behind the player cannot block a shot.
@@ -383,7 +476,8 @@ namespace AthenHill
    // crossed the optic (it can stand proud of the body collider); assist alone never makes a critical.
    var weak=target&&target.Alive?target.GetComponent<DroidWeakPoint>():null;
    float weakAt=-1;
-   bool weakHit=weak&&weak.isActiveAndEnabled&&weak.Test(origin,direction,direct?hit.distance:Vector3.Distance(origin,end),out weakAt);
+   float weakScale=CombatVerbs.WeakPointRadiusScale(overcharged,HasEyeImplant);
+   bool weakHit=weak&&weak.isActiveAndEnabled&&weak.Test(origin,direction,direct?hit.distance:Vector3.Distance(origin,end),out weakAt,weakScale);
    // The shot uses the pre-kick view. LateUpdate applies recovery before writing the next view.
    LastKickDegrees=stats.recoil*recoilDegreesPerPoint;
    // Handling (20 Nov 2026): a random sideways step, the weapon's own recovery time and one overshoot when that is slow.
@@ -406,14 +500,18 @@ namespace AthenHill
    {
     Hits++;
     bool critical=stats.criticalChance>0&&UnityEngine.Random.value<Mathf.Clamp01(stats.criticalChance/100);
-    float hitDamage=stats.damage*(critical?Mathf.Max(1,stats.criticalMultiplier):1);
+    float hitDamage=stats.damage*(critical?Mathf.Max(1,stats.criticalMultiplier):1)*(overcharged?CombatVerbs.OverchargeDamageScale:1f);
     // Range falloff from the colonist to the hit, then the droid's flat armour against the weapon's penetration.
     float distance=Vector3.Distance(transform.position,end);
     hitDamage*=WeaponBallistics.Falloff(distance,range);
     var threat=target.GetComponent<DroidThreat>();
-    if(threat)hitDamage=WeaponBallistics.ArmourReduced(hitDamage,threat.armour,stats.armourPenetration);
-    LastHitDamage=hitDamage;LastHitDistance=distance;
     var droid=target.GetComponent<FeralDroid>();
+    if(threat)
+    {
+     float effectiveArmour=droid?CombatVerbs.StrippedArmour(threat.armour,droid.ActiveArmourStrip):threat.armour;
+     hitDamage=WeaponBallistics.ArmourReduced(hitDamage,effectiveArmour,EffectiveArmourPenetration);
+    }
+    LastHitDamage=hitDamage;LastHitDistance=distance;
     var point=weakHit?origin+direction*weakAt:end;
     if(weakHit){WeakPointHits++;weak.NoteHit();if(droid)droid.MarkCriticalHit();}
     float before=target.Current;

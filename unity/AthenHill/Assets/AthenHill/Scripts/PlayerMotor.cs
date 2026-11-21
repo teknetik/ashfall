@@ -26,6 +26,12 @@ namespace AthenHill
   public bool TalkYawSnap {get;set;}
   [Min(.1f)] public float talkTurnRate=10;
   public float FaceYaw {get;set;}
+  /// Phase 2 combat verbs (21 Nov 2026): directional dodge/dash with evasion i-frames.
+  readonly DodgeState dodge=new DodgeState();
+  public bool Dodging=>dodge.Active(Time.time);
+  public bool DodgeInvulnerable=>dodge.Invulnerable(Time.time);
+  public float DodgeCooldownRemaining=>dodge.CooldownRemaining(Time.time);
+  public bool TryDodge(Vector3 worldDirection)=>!Blocked&&dodge.TryStart(Time.time,worldDirection);
   CharacterController body;
   float vertical;
   readonly PlayerRenderPose renderPose=new PlayerRenderPose();
@@ -56,9 +62,11 @@ namespace AthenHill
    bool jump=input.ConsumeJump();
    if(wasGrounded&&vertical<=0)vertical=-2;
    else vertical=Mathf.Max(vertical-gravity*dt,-35);
-   JumpStarted=jump&&!Blocked&&wasGrounded&&vertical<=0;
+   bool dodging=dodge.Active(Time.time);
+   JumpStarted=jump&&!Blocked&&!dodging&&wasGrounded&&vertical<=0;
    if(JumpStarted)vertical=Mathf.Sqrt(2*gravity*jumpHeight);
-   var collisions=body.Move((direction*(input.Run&&SpeedScale>=1?runSpeed:walkSpeed*SpeedScale)+Vector3.up*vertical)*dt);
+   Vector3 horizontal=dodging?dodge.Direction*CombatVerbs.DodgeSpeed:direction*(input.Run&&SpeedScale>=1?runSpeed:walkSpeed*SpeedScale);
+   var collisions=body.Move((horizontal+Vector3.up*vertical)*dt);
    if((collisions&CollisionFlags.Above)!=0&&vertical>0)vertical=0;
    Grounded=body.isGrounded;
    if(wasGrounded&&!Grounded&&vertical<=0 && Physics.SphereCast(transform.position+Vector3.up*.55f,.28f,Vector3.down,out var hit,.55f+groundSnap,worldMask,QueryTriggerInteraction.Ignore)&&hit.normal.y>.7f)
@@ -89,7 +97,7 @@ namespace AthenHill
    presentationVisual.rotation=renderPose.SimulationRotation;
   }
   void OnDisable(){RestoreSimulationVisual();}
-  public void Teleport(Vector3 feet){if(!body)body=GetComponent<CharacterController>();RestoreSimulationVisual();body.enabled=false;transform.position=feet+Vector3.up*.015f;body.enabled=true;vertical=0;Speed=0;Grounded=false;JumpStarted=false;renderPose.Reset(transform.position,visual?visual.rotation:transform.rotation);if(actor)actor.ResetGroundMotion();Physics.SyncTransforms();}
+  public void Teleport(Vector3 feet){if(!body)body=GetComponent<CharacterController>();RestoreSimulationVisual();body.enabled=false;transform.position=feet+Vector3.up*.015f;body.enabled=true;vertical=0;Speed=0;Grounded=false;JumpStarted=false;dodge.Reset();renderPose.Reset(transform.position,visual?visual.rotation:transform.rotation);if(actor)actor.ResetGroundMotion();Physics.SyncTransforms();}
   public void ReturnToGate(){Teleport(spawn.position);}
  }
 }

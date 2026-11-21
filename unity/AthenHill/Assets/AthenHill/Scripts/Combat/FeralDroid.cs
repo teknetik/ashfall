@@ -204,7 +204,11 @@ namespace AthenHill
   public bool FarIdle {get;private set;}
   /// A hover wreck has stopped tumbling (walkers: immediately). Loot drops once it has.
   public bool WreckSettled {get;private set;}
-  float poise,windupNow=.6f,farClock,settleClock,baseLinearDamping,baseAngularDamping;
+  float poise,windupNow=.6f,staggerNow,empUntil=-99,empStripFraction,farClock,settleClock,baseLinearDamping,baseAngularDamping;
+  /// Phase 2 combat verbs (21 Nov 2026): EMP armour-strip state.
+  public bool EmpDisrupted=>Time.time<empUntil&&empStripFraction>0;
+  public float ActiveArmourStrip=>EmpDisrupted?empStripFraction:0;
+  public float EffectiveArmour=>CombatVerbs.StrippedArmour(armour,ActiveArmourStrip);
   bool wreckGrounded;
   Vector3 deathPoint;
   Renderer mainRenderer;
@@ -259,9 +263,9 @@ namespace AthenHill
    if(animationSource.cullingType!=want)animationSource.cullingType=want;
   }
   bool Visible=>!mainRenderer||mainRenderer.isVisible;
-  /// Flat armour after the attacker's penetration, never below the minimum fraction of the hit.
+  /// Flat armour after the attacker's penetration (and any active EMP strip), never below the minimum fraction of the hit.
   public static float MitigatedDamage(float incoming,float armour,float penetration,float minFraction)=>Mathf.Max(incoming*Mathf.Clamp01(minFraction),incoming-Mathf.Max(0,armour-Mathf.Max(0,penetration)));
-  float Mitigate(float incoming)=>MitigatedDamage(incoming,armour,Player?Player.Stats.armourPenetration:0,armourMinFraction);
+  float Mitigate(float incoming)=>MitigatedDamage(incoming,EffectiveArmour,Player?Player.EffectiveArmourPenetration:0,armourMinFraction);
   void Loop(AnimationClip c){if(animationSource&&c&&animationSource[c.name]!=null)animationSource[c.name].wrapMode=WrapMode.Loop;}
   void OnEnable(){Active.Add(this);}
   void OnDisable(){Active.Remove(this);}
@@ -297,7 +301,7 @@ namespace AthenHill
    foreach(var c in GetComponentsInChildren<Collider>())c.enabled=true;
    if(smoke)smoke.Stop();
    Health.Restore();SetState(DroidState.Idle);Play(idle,1);SnapToGround(1);
-   poise=0;Strikes=0;Slamming=false;WreckSettled=false;wreckGrounded=false;joinAt=-1;shotsThisBurst=0;
+   poise=0;Strikes=0;Slamming=false;WreckSettled=false;wreckGrounded=false;joinAt=-1;shotsThisBurst=0;staggerNow=staggerSeconds;empUntil=-99;empStripFraction=0;
    if(aimLaser)aimLaser.enabled=false;
    if(body){body.linearDamping=baseLinearDamping;body.angularDamping=baseAngularDamping;}
    if(revive&&wasDead){var loot=GetComponent<LootSource>();if(loot)loot.Revived();}
@@ -366,7 +370,7 @@ namespace AthenHill
      if(timer>=(Slamming?slamRecoverSeconds:recoverSeconds))SetState(DroidState.Chase);
      break;
     case DroidState.Stagger:
-     if(timer>=staggerSeconds)SetState(DroidState.Chase);
+     if(timer>=Mathf.Max(staggerSeconds,staggerNow))SetState(DroidState.Chase);
      break;
     case DroidState.Returning:
      Steer(Home,wanderSpeed*1.6f,dt);Play(walk,Mathf.Max(.6f,velocity.magnitude/walkStrideSpeed));
@@ -394,7 +398,42 @@ namespace AthenHill
   void SetState(DroidState s)
   {
    if(State==DroidState.Windup&&s!=DroidState.Windup&&aimLaser)aimLaser.enabled=false;
+   if(s!=DroidState.Stagger)staggerNow=staggerSeconds;
    State=s;timer=0;UpdateAnimationCulling();
+  }
+  /// Close-quarters shove (Phase 2): pushes the droid back along the ground, interrupts non-slam windups and staggers it.
+  public void ApplyShove(Vector3 awayDir,float knockback,float staggerFor,float damage)
+  {
+   if(!Health||!Health.Alive||State==DroidState.Dead)return;
+   var dir=Flat(awayDir);if(dir.sqrMagnitude<1e-4f)dir=-Flat(transform.forward);
+   dir=dir.sqrMagnitude>1e-4f?dir.normalized:Vector3.forward;
+   float step=Mathf.Max(0,knockback);
+   if(step>0&&!Blocked(dir))
+   {
+    transform.position+=dir*step;
+    SnapToGround(1);
+   }
+   if(damage>0)Health.Damage(damage,transform.position+Vector3.up);
+   if(!Health.Alive)return;
+   if(!(State==DroidState.Windup&&Slamming))
+   {
+    poise=0;lastStaggerAt=Time.time;staggerNow=Mathf.Max(staggerSeconds,staggerFor);
+    SetState(DroidState.Stagger);Play(hit,1.3f);
+   }
+  }
+  /// Nano EMP Disruptor (Phase 2): interrupts any active attack/laser, stuns the droid and strips flat armour for a duration.
+  public void ApplyEmp(float stunFor,float stripFraction,float stripSeconds)
+  {
+   if(!Health||!Health.Alive||State==DroidState.Dead)return;
+   if(State==DroidState.Idle||State==DroidState.Returning||State==DroidState.Alert){bool wasCalm=State!=DroidState.Alert;SetState(DroidState.Chase);if(wasCalm)Alerted?.Invoke(this);}
+   if(aimLaser)aimLaser.enabled=false;
+   empStripFraction=Mathf.Max(empStripFraction,Mathf.Clamp01(stripFraction));
+   empUntil=Mathf.Max(empUntil,Time.time+Mathf.Max(0,stripSeconds));
+   poise=0;lastStaggerAt=Time.time;staggerNow=Mathf.Max(staggerSeconds,stunFor);
+   SetState(DroidState.Stagger);Play(hit,1.1f);
+   flash=1.8f;
+   if(sparks){sparks.transform.position=transform.position+Vector3.up*1.1f;sparks.Emit(24);}
+   Say(CombatAudio.Choose(hitVariants,hitClip,ref lastHitV),.95f,true);
   }
 
   // ------------------------------------------------------------------ melee approach
@@ -718,6 +757,10 @@ namespace AthenHill
     float p=State==DroidState.Firing?1:Mathf.Clamp01(timer/Mathf.Max(.05f,windupNow));rate=30;
     target=Color.Lerp(glowHostile,glowWindup,p*p)*(Slamming?1.35f:1);
     if(!reduced)target*=1+.3f*Mathf.Sin(Time.time*38);
+   }
+   else if(EmpDisrupted)
+   {
+    target=new Color(.35f,2.6f,3.2f)*(reduced?1f:.8f+.35f*Mathf.Sin(Time.time*32));rate=24;
    }
    else target=Hostile?glowHostile:glowCalm;
    glowNow=Color.Lerp(glowNow,target,1-Mathf.Exp(-rate*dt));

@@ -39,8 +39,8 @@ namespace AthenHill
   public int TicksPlayed {get;private set;}
   readonly HitMarkerState markers=new HitMarkerState();
   VisualElement lowVitality;GameSettings settings;float lastTick=-99;
-  VisualElement root,hud,vitalBar,nanoBar,crosshair,hitMarker,flash,aimHint;
-  Label vitalValue,nanoValue,guidance;
+  VisualElement root,hud,vitalBar,nanoBar,crosshair,hitMarker,flash,aimHint,verbsHint;
+  Label vitalValue,nanoValue,guidance,verbsLabel;
   readonly Dictionary<FeralDroid,VisualElement> bars=new Dictionary<FeralDroid,VisualElement>();
   float flashAlpha,toastUntil;
   /// Damage direction indicators (ranged droids): pooled, each tracks its attacker's position and fades.
@@ -83,6 +83,9 @@ namespace AthenHill
     aimHint=Element("hint panel aim-hint",hints);aimHint.SendToBack();
     aimHint.Add(new Label("RMB"){pickingMode=PickingMode.Ignore});aimHint[0].AddToClassList("hint-key");
     aimHint.Add(new Label("Aim · LMB Fire"){pickingMode=PickingMode.Ignore});
+    verbsHint=Element("hint panel aim-hint",hints);verbsHint.SendToBack();
+    verbsLabel=new Label("C Dodge · V Shove · Q EMP · X Overcharge"){pickingMode=PickingMode.Ignore};
+    verbsHint.Add(verbsLabel);
    }
    guidance=new Label{pickingMode=PickingMode.Ignore};guidance.AddToClassList("checkpoint-guidance");hud.Add(guidance);
    // Salvage pickup toast (rarity-coloured lines) and the scrap-heap search progress.
@@ -126,6 +129,17 @@ namespace AthenHill
    Show(crosshair,play&&combat.Armed);crosshair.EnableInClassList("aiming",combat.Aiming);
    UpdateHitFeedback(play);
    if(aimHint!=null)Show(aimHint,play&&combat.Armed);
+   if(verbsHint!=null)
+   {
+    bool showVerbs=play&&combat.Armed;
+    Show(verbsHint,showVerbs);
+    if(showVerbs&&verbsLabel!=null)
+    {
+     string emp=combat.EmpCooldownRemaining>.1f?$"Q EMP ({Mathf.CeilToInt(combat.EmpCooldownRemaining)}s)":"Q EMP";
+     string ov=combat.OverchargeActive?$"X OVER ({Mathf.CeilToInt(combat.OverchargeRemaining)}s)":combat.OverchargeCooldownRemaining>.1f?$"X Over ({Mathf.CeilToInt(combat.OverchargeCooldownRemaining)}s)":"X Overcharge";
+     verbsLabel.text=$"C Dodge · V Shove · {emp} · {ov}";
+    }
+   }
    flashAlpha=Mathf.MoveTowards(flashAlpha,0,Time.unscaledDeltaTime*(session.reducedMotion?3:1.6f));
    flash.style.opacity=flashAlpha*(session.reducedMotion?.5f:.85f);
    if(toast!=null&&toast.style.display==DisplayStyle.Flex&&Time.unscaledTime>toastUntil)Show(toast,false);
@@ -345,8 +359,10 @@ namespace AthenHill
     Show(bar,visible);
     if(!visible)continue;
     var p=RuntimePanelUtils.CameraTransformWorldToPanel(root.panel,world,worldCamera);
-    bar.style.left=p.x-50;bar.style.top=p.y-14;
+    bar.style.left=p.x-56;bar.style.top=p.y-14;
     bar[0].style.width=Length.Percent(d.Health.Fraction*100);
+    var nameLabel=bar.Q<Label>(className:"enemy-bar-name");
+    if(nameLabel!=null)nameLabel.text=d.EmpDisrupted?d.displayName+" · EMP":d.displayName;
    }
    if(gone!=null)foreach(var d in gone){bars[d].RemoveFromHierarchy();bars.Remove(d);tiers.Remove(d);}
   }

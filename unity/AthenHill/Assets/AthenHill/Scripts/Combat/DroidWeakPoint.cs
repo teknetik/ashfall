@@ -44,8 +44,8 @@ namespace AthenHill
 
         /// True when a shot along this ray enters the zone before reachDistance (the struck surface or aim point) plus
         /// the depth tolerance. distance is where along the ray it enters.
-        public bool Test(Vector3 origin, Vector3 direction, float reachDistance, out float distance)
-            => WeakPointMath.RayHitsSphere(origin, direction, Centre, WorldRadius, Mathf.Max(0, reachDistance) + depthTolerance * RootScale, out distance);
+        public bool Test(Vector3 origin, Vector3 direction, float reachDistance, out float distance, float radiusScale = 1f)
+            => WeakPointMath.RayHitsSphere(origin, direction, Centre, WorldRadius * Mathf.Max(.1f, radiusScale), Mathf.Max(0, reachDistance) + depthTolerance * RootScale, out distance);
 
         public void NoteHit() => Hits++;
 
