@@ -295,9 +295,10 @@ namespace AthenHill.Tests
    Assert.That(character.TryEquip("optic_suite_mk1","implant_eye",out var reason),reason);
    Assert.That(character.Equipped("implant_eye"),Is.EqualTo("optic_suite_mk1"));
    Assert.That(character.Attribute("perception"),Is.EqualTo(basePerception+3).Within(.001f));
-   // Merge review (21 Nov 2026): accuracy also follows perception (a derived stat), so the optic's +6 is a floor.
+   // Merge review (21 Nov 2026): accuracy and critical chance also follow perception (derived stats), so the optic's
+   // own +6 and +0.03 are floors; the round trip below checks the exact values.
    Assert.That(character.Stat("accuracy"),Is.GreaterThanOrEqualTo(baseAccuracy+6-.001f));
-   Assert.That(character.Stat("criticalChance"),Is.EqualTo(baseCrit+.03f).Within(.0001f));
+   Assert.That(character.Stat("criticalChance"),Is.GreaterThanOrEqualTo(baseCrit+.03f-.0001f));
    Assert.That(character.ModificationSockets("implant_eye").Count,Is.EqualTo(3));
    Assert.That(character.TryInstallModification("implant_eye",0,"aug_cognition",out reason),reason);
    float equippedMass=character.CarryWeight;
