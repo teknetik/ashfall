@@ -146,23 +146,23 @@ namespace AthenHill.Tests
   [Test]public void InterfaceDefaultsAreTodaysBehaviour()
   {
    var o=new InterfaceOptions();
-   Assert.That(o.conversationCamera,Is.True);Assert.That(o.Mode,Is.EqualTo(InterfaceMode.Full));
+   Assert.That(o.conversationCamera,Is.True);Assert.That(o.Mode,Is.EqualTo(InterfaceMode.Adaptive));
    var old=JsonUtility.FromJson<InterfaceOptions>("{}");
-   Assert.That(old.conversationCamera,Is.True,"a save without the field keeps the camera on");Assert.That(old.Mode,Is.EqualTo(InterfaceMode.Full));
-   Assert.That(JsonUtility.FromJson<InterfaceOptions>("{\"mode\":7}").Mode,Is.EqualTo(InterfaceMode.Full),"an unknown mode reads as Full");
+   Assert.That(old.conversationCamera,Is.True,"a save without the field keeps the camera on");Assert.That(old.Mode,Is.EqualTo(InterfaceMode.Adaptive));
+   Assert.That(JsonUtility.FromJson<InterfaceOptions>("{\"mode\":7}").Mode,Is.EqualTo(InterfaceMode.Adaptive),"an unknown mode reads as Adaptive");
   }
   [Test]public void InterfaceSettingsRoundTripAndDriveTheConversationCamera()
   {
    var s=Settings();int changed=0;s.Changed+=()=>changed++;
-   s.Interface.conversationCamera=false;s.Interface.mode=(int)InterfaceMode.Adaptive;s.SaveInterface();
+   s.Interface.conversationCamera=false;s.Interface.mode=(int)InterfaceMode.Full;s.SaveInterface();
    Assert.That(changed,Is.EqualTo(1));
    Assert.That(ConversationCamera.Enabled,Is.False);
    var read=ReadInterface(Settings());
-   Assert.That(read.conversationCamera,Is.False);Assert.That(read.Mode,Is.EqualTo(InterfaceMode.Adaptive));
+   Assert.That(read.conversationCamera,Is.False);Assert.That(read.Mode,Is.EqualTo(InterfaceMode.Full));
    s.ResetInterface();
    Assert.That(ConversationCamera.Enabled,Is.True);
    read=ReadInterface(Settings());
-   Assert.That(read.conversationCamera,Is.True);Assert.That(read.Mode,Is.EqualTo(InterfaceMode.Full));
+   Assert.That(read.conversationCamera,Is.True);Assert.That(read.Mode,Is.EqualTo(InterfaceMode.Adaptive));
   }
   [Test]public void SettingsPanelShowsTheNewRowsWithTheirValues()
   {

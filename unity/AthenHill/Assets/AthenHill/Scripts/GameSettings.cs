@@ -30,15 +30,15 @@ namespace AthenHill
         public float CameraShake => Mathf.Clamp(cameraShake, 0, 100) / 100f;
     }
 
-    /// Interface (19 Nov 2026): the conversation camera switch and the HUD mode. Saved like the controls; a missing key
-    /// keeps these defaults, which are the behaviour before the options existed.
+    /// Interface (19 Nov 2026; Adaptive default since 21 Nov 2026): the conversation camera switch and the HUD mode.
+    /// Saved like the controls; a missing key keeps these defaults.
     [Serializable]
     public sealed class InterfaceOptions
     {
         public bool conversationCamera = true;
-        /// <see cref="InterfaceMode"/>: 0 Full, 1 Adaptive.
-        public int mode;
-        public InterfaceMode Mode => mode == (int)InterfaceMode.Adaptive ? InterfaceMode.Adaptive : InterfaceMode.Full;
+        /// <see cref="InterfaceMode"/>: 0 Full, 1 Adaptive (default).
+        public int mode = (int)InterfaceMode.Adaptive;
+        public InterfaceMode Mode => mode == (int)InterfaceMode.Full ? InterfaceMode.Full : InterfaceMode.Adaptive;
     }
 
     [Serializable]

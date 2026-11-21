@@ -49,7 +49,7 @@ namespace AthenHill
   [Tooltip("Seconds after the last hit taken that the HUD counts as in combat (Adaptive keeps every panel up).")]
   [Min(0)]public float hurtHoldSeconds=6;
   public DialogueLayout Layout {get;private set;}
-  public InterfaceMode Mode=>session&&session.Settings?session.Settings.Interface.Mode:InterfaceMode.Full;
+  public InterfaceMode Mode=>session&&session.Settings?session.Settings.Interface.Mode:InterfaceMode.Adaptive;
   VisualElement shade,modal;
   readonly VisualElement[][] panelElements=new VisualElement[AdaptiveHudModel.Panels.Length][];
   Label[] noteLabels;readonly string[] noteTexts=new string[4];

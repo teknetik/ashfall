@@ -15,11 +15,11 @@ namespace AthenHill
         [Tooltip("Offset from the anchor in the anchor's rotation, metres at droid scale 1.")]
         public Vector3 offset;
         [Tooltip("Zone radius, metres at droid scale 1.")]
-        [Min(.02f)] public float radius = .15f;
+        [Min(.02f)] public float radius = .19f;
         [Tooltip("Multiplier on the damage left after armour. Level-3 droids use a smaller one so the starter pistol still cannot take them.")]
         [Range(1, 3)] public float damageMultiplier = 1.5f;
         [Tooltip("How far behind the struck collider surface the zone may sit and still count (the optic is often inside the body collider).")]
-        [Min(0)] public float depthTolerance = .35f;
+        [Min(0)] public float depthTolerance = .42f;
         [Tooltip("Shown in QA state and logs: optic, core, sensor …")]
         public string label = "optic";
 
@@ -28,7 +28,7 @@ namespace AthenHill
         /// the same bar the next-level enemy test holds the pistol to without weak points.
         public const float DefaultMultiplier = 1.5f, Level3Multiplier = 1.25f, ExpectedWeakShare = .25f;
         public static float MultiplierFor(int level) => level >= 3 ? Level3Multiplier : DefaultMultiplier;
-        public static float RadiusFor(DroidKind kind) => kind == DroidKind.Hover ? .13f : kind == DroidKind.Wheeled ? .17f : .15f;
+        public static float RadiusFor(DroidKind kind) => kind == DroidKind.Hover ? .16f : kind == DroidKind.Wheeled ? .21f : .19f;
 
         public int Hits { get; private set; }
         float RootScale => Mathf.Max(.01f, Mathf.Abs(transform.lossyScale.x));
