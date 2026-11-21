@@ -173,11 +173,13 @@ namespace AthenHill.Tests
    Assert.That(model.TrainedSkill("rifle"),Is.EqualTo(12));
    Assert.That(model.SkillUseProgress("rifle"),Is.EqualTo(0f),"maxed skill clears lingering fractional progress");
    // Also cleared when reaching max via TryRaiseSkill
-   data.skills[0].maximum=17;model.Restore(null);
+   // (merge review: the skill starts at 0 and trains 5 a point, so two points reach a cap of 10; 17 was unreachable)
+   data.skills[0].maximum=10;model.Restore(null);
    Assert.That(model.GrantSkillUse("rifle",0.4f,out _),Is.True);
    Assert.That(model.TryRaiseSkill("rifle",out _),Is.True);
+   Assert.That(model.SkillUseProgress("rifle"),Is.EqualTo(0.4f).Within(.001f),"progress stays below the cap");
    Assert.That(model.TryRaiseSkill("rifle",out _),Is.True);
-   Assert.That(model.TrainedSkill("rifle"),Is.EqualTo(17));
+   Assert.That(model.TrainedSkill("rifle"),Is.EqualTo(10));
    Assert.That(model.SkillUseProgress("rifle"),Is.EqualTo(0f));
   }
   [Test]public void NullCatalogArraysDoNotThrowOnInitOrRecalculate()

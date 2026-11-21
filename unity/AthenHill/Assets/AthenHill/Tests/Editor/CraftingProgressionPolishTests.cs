@@ -44,9 +44,11 @@ namespace AthenHill.Tests
    var pack=new ShopModel(City().items);
    var character=new CharacterModel(Chars(),pack);
    var model=new CraftingModel(Data(),City().items,pack,()=>true,character:character);
-   model.Identify("npc_ossa:servo_look");
-   Assert.That(pack.TryApply(new[]{Delta("droid_servo_damaged",1),Delta("scrap_alloy",2),Delta("nanite_residue",5)},0,out _));
-   Assert.That(model.TryCraft("recipe_grip_stabilised_pistol",Station,out var reason),reason);
+   // Merge review (21 Nov 2026): Gemini used the stabilised grip here, which is built by hand at the bench every time
+   // (no timed or instant route: hand_made_first). A schematic with no bench job tests the same thing.
+   Assert.That(model.Unlock("recipe_wound_coil"),Is.True);
+   Assert.That(pack.TryApply(new[]{Delta("copper_filament",3)},0,out _));
+   Assert.That(model.TryCraft("recipe_wound_coil",Station,out var reason),reason);
    Assert.That(model.LastAward,Is.Not.Null);
    model.Restore(null);
    Assert.That(model.LastAward,Is.Null,"restore clears stale craft award");

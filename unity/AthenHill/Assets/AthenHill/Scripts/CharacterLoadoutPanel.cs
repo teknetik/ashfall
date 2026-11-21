@@ -323,7 +323,7 @@ namespace AthenHill
    Copy(inspector,session.Shop.Spec(equipped)?.description??"");Copy(inspector,DescribeItem(equipped));
    if(!Character.IsOperating(selectedSlot,out string reason))Copy(inspector,reason,"character-result rejected");
    var sockets=Character.ModificationSockets(selectedSlot);
-   if(sockets.Count==0){Copy(inspector,selectedSlot=="implant_eye"?"Sealed optic unit · no augmentation sockets.":implants?"This implant has no augmentation sockets.":"This component has no augmentation sockets.");return;}
+   if(sockets.Count==0){Copy(inspector,implants?"This implant has no augmentation sockets.":"This component has no augmentation sockets.");return;}
    Copy(inspector,implants?$"AUGMENTATION SLOTS  {sockets.Count}":$"COMPONENT SLOTS  {sockets.Count}","character-heading");
    var strip=new VisualElement{name="modification-sockets"};strip.AddToClassList("modification-sockets");inspector.Add(strip);
    for(int i=0;i<sockets.Count;i++)

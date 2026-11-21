@@ -56,7 +56,7 @@ namespace AthenHill
   void Update()
   {
    if(total<=0)return;
-   float speedScale=1f,stopScale=1f;bool shelter=false;
+   speedScale=1f;stopScale=1f;bool shelter=false;
    if(reactToWeatherAndTime)
    {
     float sun=clock?clock.SunVisibility:1f;
@@ -64,9 +64,11 @@ namespace AthenHill
    }
    SeekingShelter=shelter;
    if(!HasStops){float v=speed*speedScale;distance=(distance+v*Time.deltaTime)%total;Place(false);if(actor)actor.SetMotion(v,false,false);return;}
-   UpdateWithStops(Time.deltaTime,speedScale,stopScale);
+   UpdateWithStops(Time.deltaTime);
   }
-  void UpdateWithStops(float dt,float speedScale,float stopScale)
+  /// Pacing from the last Update (1 = authored); fields so UpdateWithStops keeps its one-argument signature (tests step it).
+  float speedScale=1f,stopScale=1f;
+  void UpdateWithStops(float dt)
   {
    if(AtWork)
    {

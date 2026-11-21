@@ -123,13 +123,13 @@ namespace AthenHill.Tests
    Assert.That(rig.pack.Grant("optic_suite_mk1",1,0,out var grantErr),grantErr);
    // Ensure intellect meets the requirement before equipping.
    while(character.Stat("intellect")<10&&character.AttributePoints>0)character.TryRaiseAttribute("intellect",out _);
-   if(character.TryEquip("optic_suite_mk1","implant_eye",out _))
-   {
-    typeof(CharacterLoadoutPanel).GetField("signature",Any).SetValue(panel,null);
-    panel.Refresh();
-    var equippedCopy=string.Join("\n",root.Q("equipment-inspector").Query<Label>().ToList().Select(l=>l.text));
-    Assert.That(equippedCopy,Does.Contain("Warden Optic Suite Mk I").And.Contain("Sealed optic unit"));
-   }
+   // Merge review (21 Nov 2026): the equip must succeed (it was optional), and the optic has the three augmentation
+   // sockets every implant slot gives (SaveGameTests asserts the same), not a "sealed" unit.
+   Assert.That(character.TryEquip("optic_suite_mk1","implant_eye",out var equipReason),equipReason);
+   typeof(CharacterLoadoutPanel).GetField("signature",Any).SetValue(panel,null);
+   panel.Refresh();
+   var equippedCopy=string.Join("\n",root.Q("equipment-inspector").Query<Label>().ToList().Select(l=>l.text));
+   Assert.That(equippedCopy,Does.Contain("Warden Optic Suite Mk I").And.Contain("AUGMENTATION SLOTS  3"));
   }
 
   [Test] public void JournalPanelHandlesNullPlayerAndEmptyNotesCleanly()
