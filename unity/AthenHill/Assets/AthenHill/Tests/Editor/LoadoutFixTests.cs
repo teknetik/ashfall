@@ -25,7 +25,7 @@ namespace AthenHill.Tests
    Assert.That(ids.Count(i=>i=="implant_eye"),Is.EqualTo(1),"one eye slot (LoadoutFixPass20261120 install)");
    Assert.That(ids.IndexOf("implant_eye"),Is.EqualTo(ids.IndexOf("implant_head")+1));
    var eye=c.slots.First(s=>s.id=="implant_eye");Assert.That(eye.label,Is.EqualTo("Eye"));Assert.That(eye.section,Is.EqualTo("IMPLANTS"));
-   Assert.That(c.equipment.Where(e=>e.slots.Contains("implant_eye")),Is.Empty,"no eye implant exists in the catalog yet");
+   Assert.That(c.equipment.Where(e=>e.slots.Contains("implant_eye")).Select(e=>e.itemId),Contains.Item("optic_suite_mk1"),"Warden Optic Suite Mk I fits the eye slot");
    Assert.That(c.Equipment("targeting_implant_mk1").slots,Is.EqualTo(new[]{"implant_head"}),"the neural targeting implant stays in the head");
   }
 

@@ -158,7 +158,7 @@ namespace AthenHill
    Step(m,"Report to Warden Ossa at the West Gate post",step>BermsStep.Approach);
    Step(m,"Take the scrap pistol from the arms locker",step>BermsStep.TakePistol);
    Step(m,"Draw the pistol (2)",step>BermsStep.Draw);
-   Step(m,$"Knock down the range plates · {Math.Min(tutorial.TargetsDown,tutorial.targets.Length)}/{tutorial.targets.Length}",step>BermsStep.Targets);
+   Step(m,$"Knock down the range plates · {Math.Min(tutorial.TargetsDown,tutorial.targets?.Length??0)}/{tutorial.targets?.Length??0}",step>BermsStep.Targets);
    Step(m,"Put down the loose scrap drone",step>BermsStep.FirstContact);
    Step(m,"Clear the machine depot",step>BermsStep.Depot);
    MarkCurrent(m);
@@ -170,6 +170,7 @@ namespace AthenHill
   {
    if(!orders||!orders.Ready||!orders.Progress.Started||crafting==null||crafting.Model==null)return;
    var progress=orders.Progress;var model=crafting.Model;var data=progress.Data;
+   if(data?.orders==null)return;
    for(int i=0;i<data.orders.Length&&i<=progress.Index;i++)
    {
     var o=data.orders[i];if(o==null)continue;

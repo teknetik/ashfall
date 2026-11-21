@@ -59,10 +59,11 @@ namespace AthenHill
   /// "2 × Micro Capacitor, 3 × Any tier-one nanites" — only the lines still short.
   public static string Shortfall(CraftingModel model,CraftRecipe recipe)
   {
-   if(recipe?.inputs==null)return "";
+   if(model==null||recipe?.inputs==null)return "";
    var parts=new List<string>();
    foreach(var input in recipe.inputs)
    {
+    if(input==null)continue;
     int missing=input.quantity-model.Available(input);
     if(missing>0)parts.Add($"{missing} × {InputName(model,input)}");
    }
@@ -97,7 +98,7 @@ namespace AthenHill
   public static string Condition(WeaponLoadout loadout,CraftingModel model)=>WeaponCondition.Label(loadout,model?.Condition);
   /// "3 × Scrap Alloy, 4 × Any tier-one nanites".
   public static string OverhaulCost(CraftingModel model)
-   =>string.Join(", ",(model?.Condition.overhaulInputs??new CraftIngredient[0]).Select(i=>$"{i.quantity} × {InputName(model,i)}"));
+   =>string.Join(", ",(model?.Condition?.overhaulInputs??Array.Empty<CraftIngredient>()).Where(i=>i!=null).Select(i=>$"{i.quantity} × {InputName(model,i)}"));
   public static string Reason(string code,CraftingModel model,CraftRecipe recipe=null,string itemId=null)
   {
    if(!string.IsNullOrEmpty(code)&&code.Contains(" "))return code;
@@ -107,10 +108,14 @@ namespace AthenHill
     case "recipe_locked":return "Schematic not yet known."+(string.IsNullOrEmpty(recipe?.lockedHint)?"":" "+recipe.lockedHint);
     case "wrong_station":
     {
-     var station=model?.Data.stations?.FirstOrDefault(x=>x.id==recipe?.stationId);
+     var station=model?.Data.stations?.FirstOrDefault(x=>x!=null&&x.id==recipe?.stationId);
      return station!=null?$"This schematic needs {station.name}.":"Use the station specified by this schematic.";
     }
-    case "missing_weapon":return "You need to carry or equip the required weapon first.";
+    case "missing_weapon":
+    {
+     var weapon=model!=null&&!string.IsNullOrEmpty(recipe?.requiresWeaponId)?model.GetLoadout(recipe.requiresWeaponId):null;
+     return weapon!=null?$"You need to carry or equip the {weapon.WeaponName} first.":"You need to carry or equip the required weapon first.";
+    }
     case "unmet_requirements":
     {
      var unmet=model?.UnmetRequirement(recipe);
@@ -118,10 +123,15 @@ namespace AthenHill
     }
     case "missing_tool":
     {
-     var missing=model!=null&&recipe!=null?model.MissingTools(recipe.requiredTools,recipe.stationId):null;
+     string[] reqTools=recipe?.requiredTools??(itemId!=null?model?.Loadout?.Modifier(itemId)?.requiredTools:null);
+     var missing=model!=null&&reqTools!=null?model.MissingTools(reqTools,recipe?.stationId):null;
      return missing!=null&&missing.Count>0?"Missing tool: "+string.Join(", ",missing.Select(x=>ToolName(model,x)))+". "+ToolHint(model,missing):"A required reusable tool is missing from your pack.";
     }
-    case "missing_schematic":return "Learn the prerequisite schematic first.";
+    case "missing_schematic":
+    {
+     var missing=model!=null&&recipe?.requiredSchematics!=null?recipe.requiredSchematics.Where(id=>!string.IsNullOrEmpty(id)&&!model.Knows(id)).Select(id=>model.Recipe(id)?.name??id).Distinct().ToList():null;
+     return missing!=null&&missing.Count>0?"Learn the prerequisite schematic first: "+string.Join(", ",missing)+".":"Learn the prerequisite schematic first.";
+    }
     case "missing_ingredients":
     {
      var shortfall=model!=null&&recipe!=null?Shortfall(model,recipe):"";

@@ -283,5 +283,52 @@ namespace AthenHill.Tests
    Assert.That(rig.save.SaveCount,Is.EqualTo(3));
    Assert.That(WardSaveFile.TryRead(rig.save.SavePath,out var data,out _));Assert.That(data.credits,Is.EqualTo(City().startingCredits+2));
   }
+
+  [Test] public void EyeImplantOpticSuiteEquipsSocketsSavesAndRestoresCleanly()
+  {
+   using var rig=new Rig(folder);
+   var catalog=AssetDatabase.LoadAssetAtPath<CharacterCatalog>("Assets/AthenHill/Resources/CharacterCatalog.asset");
+   var character=new CharacterModel(catalog,rig.pack);Set(rig.session,"Character",character);rig.pack.CapacityFailure=character.CapacityFailure;
+   float basePerception=character.Attribute("perception"),baseAccuracy=character.Stat("accuracy"),baseCrit=character.Stat("criticalChance");
+   Assert.That(rig.pack.Grant("optic_suite_mk1",1,0,out var give),give);
+   Assert.That(rig.pack.Grant("aug_cognition",1,0,out give),give);
+   Assert.That(character.TryEquip("optic_suite_mk1","implant_eye",out var reason),reason);
+   Assert.That(character.Equipped("implant_eye"),Is.EqualTo("optic_suite_mk1"));
+   Assert.That(character.Attribute("perception"),Is.EqualTo(basePerception+3).Within(.001f));
+   Assert.That(character.Stat("accuracy"),Is.EqualTo(baseAccuracy+6).Within(.001f));
+   Assert.That(character.Stat("criticalChance"),Is.EqualTo(baseCrit+.03f).Within(.0001f));
+   Assert.That(character.ModificationSockets("implant_eye").Count,Is.EqualTo(3));
+   Assert.That(character.TryInstallModification("implant_eye",0,"aug_cognition",out reason),reason);
+   float equippedMass=character.CarryWeight;
+   var data=rig.save.Capture();
+   Assert.That(WardSaveFile.TryParse(WardSaveFile.Serialize(data),out var parsed,out reason),reason);
+   character.Restore(null);
+   Assert.That(character.Equipped("implant_eye"),Is.Null);
+   Assert.That(rig.save.Apply(parsed),Is.Empty);
+   Assert.That(character.Equipped("implant_eye"),Is.EqualTo("optic_suite_mk1"));
+   Assert.That(character.InstalledModification("implant_eye",0),Is.EqualTo("aug_cognition"));
+   Assert.That(character.Attribute("perception"),Is.EqualTo(basePerception+3).Within(.001f));
+   Assert.That(character.Stat("accuracy"),Is.EqualTo(baseAccuracy+6).Within(.001f));
+   Assert.That(character.Stat("criticalChance"),Is.EqualTo(baseCrit+.03f).Within(.0001f));
+   Assert.That(character.CarryWeight,Is.EqualTo(equippedMass).Within(.0001f));
+   Assert.That(rig.pack.Quantity("optic_suite_mk1"),Is.Zero);
+   Assert.That(rig.pack.Quantity("aug_cognition"),Is.Zero);
+   Assert.That(character.TryUnequip("implant_eye",out reason),reason);
+   Assert.That(character.Equipped("implant_eye"),Is.Null);
+   Assert.That(rig.pack.Quantity("optic_suite_mk1"),Is.EqualTo(1));
+   Assert.That(rig.pack.Quantity("aug_cognition"),Is.EqualTo(1));
+  }
+
+  [Test] public void ApplyNullSaveIsSafeAndLegacyFieldRifleWithdrawsViaTryApply()
+  {
+   using var rig=new Rig(folder);
+   Assert.That(rig.save.Apply(null),Is.Empty);
+   var data=rig.save.Capture();
+   data.items=data.items.Append(new ItemStack("field_rifle",1)).ToArray();
+   rig.orders.Restore(new FieldOrderState{index=0});
+   var skipped=rig.save.Apply(data);
+   Assert.That(rig.pack.Quantity("field_rifle"),Is.Zero);
+   Assert.That(skipped.Any(s=>s.Contains("field rifle")),Is.True);
+  }
  }
 }

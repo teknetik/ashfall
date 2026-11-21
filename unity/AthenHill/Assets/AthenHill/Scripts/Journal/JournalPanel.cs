@@ -19,6 +19,7 @@ namespace AthenHill
   public JournalPanel(VisualElement panel,GameSession session,QuestJournal journal)
   {
    this.panel=panel;this.session=session;this.journal=journal;
+   if(panel==null)return;
    var tabs=new VisualElement{name="journal-tabs"};tabs.AddToClassList("journal-tabs");panel.Add(tabs);
    tabMissions=new Button(()=>ShowNotes(false)){name="journal-tab-missions",text="MISSIONS"};tabMissions.AddToClassList("journal-tab");tabs.Add(tabMissions);
    tabNotes=new Button(()=>ShowNotes(true)){name="journal-tab-notes",text="WARD NOTES"};tabNotes.AddToClassList("journal-tab");tabs.Add(tabNotes);
@@ -42,6 +43,43 @@ namespace AthenHill
    notesPage=new VisualElement{name="journal-notes"};notesPage.AddToClassList("journal-notes");panel.Add(notesPage);
    notesText=Text(notesPage,"journal-notes-text","body-copy");
    panel.RegisterCallback<KeyDownEvent>(e=>{if(e.keyCode==KeyCode.T&&!notes){Track();e.StopPropagation();}},TrickleDown.TrickleDown);
+   panel.RegisterCallback<NavigationMoveEvent>(Navigate,TrickleDown.TrickleDown);
+  }
+  void Navigate(NavigationMoveEvent e)
+  {
+   if(panel==null||!UiNavigation.IsArrow(e.direction))return;
+   var focused=panel.focusController?.focusedElement as VisualElement;
+   if(focused==null||!panel.Contains(focused))return;
+   var dir=e.direction;
+   if(focused==tabMissions||focused==tabNotes)
+   {
+    if(dir==NavigationMoveEvent.Direction.Right&&focused==tabMissions){tabNotes.Focus();UiNavigation.Consume(e,panel);return;}
+    if(dir==NavigationMoveEvent.Direction.Left&&focused==tabNotes){tabMissions.Focus();UiNavigation.Consume(e,panel);return;}
+    if(dir==NavigationMoveEvent.Direction.Down&&!notes){FocusSelected();UiNavigation.Consume(e,panel);return;}
+    return;
+   }
+   if(notes)return;
+   var rows=list.Query<Button>(className:"journal-mission").ToList();
+   int idx=rows.IndexOf(focused as Button);
+   if(idx>=0)
+   {
+    if(dir==NavigationMoveEvent.Direction.Up)
+    {
+     if(idx==0)tabMissions.Focus();else rows[idx-1].Focus();
+     UiNavigation.Consume(e,panel);return;
+    }
+    if(dir==NavigationMoveEvent.Direction.Down)
+    {
+     int next=UiNavigation.ListStep(idx,rows.Count,1);
+     rows[next].Focus();
+     UiNavigation.Consume(e,panel);return;
+    }
+    if(dir==NavigationMoveEvent.Direction.Right&&track.style.display!=DisplayStyle.None&&track.enabledInHierarchy)
+    {
+     track.Focus();UiNavigation.Consume(e,panel);return;
+    }
+   }
+   if(focused==track&&dir==NavigationMoveEvent.Direction.Left){FocusSelected();UiNavigation.Consume(e,panel);}
   }
   static Label Text(VisualElement parent,string name,string cls){var l=new Label{name=name};l.AddToClassList(cls);parent.Add(l);return l;}
   static Label Heading(VisualElement parent,string text){var l=new Label(text);l.AddToClassList("small");l.AddToClassList("journal-heading");parent.Add(l);return l;}
@@ -60,10 +98,10 @@ namespace AthenHill
   public void Track(){if(journal!=null&&selected!=null&&journal.Track(selected))Refresh();}
   public void Refresh()
   {
-   if(journal==null)return;
+   if(panel==null||journal==null)return;
    tabMissions.EnableInClassList("active-tab",!notes);tabNotes.EnableInClassList("active-tab",notes);
    missionsPage.style.display=notes?DisplayStyle.None:DisplayStyle.Flex;notesPage.style.display=notes?DisplayStyle.Flex:DisplayStyle.None;
-   notesText.text=session.catalog.notes;
+   notesText.text=session?.catalog!=null&&!string.IsNullOrWhiteSpace(session.catalog.notes)?session.catalog.notes:"No Ward notes recorded yet.";
    var missions=journal.Missions;
    if(selected==null||journal.Find(selected)==null)selected=missions.FirstOrDefault(m=>m.Active)?.id??missions.FirstOrDefault()?.id;
    string sig=string.Join(";",missions.Select(m=>m.id+":"+m.status+":"+m.title))+"|"+journal.TrackedId;
@@ -119,7 +157,7 @@ namespace AthenHill
     steps.Add(row);
    }
    bool showNow=m.Active&&!string.IsNullOrEmpty(m.objective);
-   now.text=showNow?m.objective+(m.target?$"\n{(m.targetLabel??"Marker")} · {Mathf.RoundToInt(Vector3.Distance(m.target.position,session.player.transform.position))} m · on your compass{(tracked?"":" once tracked")}":""):"";
+   now.text=showNow?m.objective+(m.target&&session!=null&&session.player?$"\n{(m.targetLabel??"Marker")} · {Mathf.RoundToInt(Vector3.Distance(m.target.position,session.player.transform.position))} m · on your compass{(tracked?"":" once tracked")}":""):"";
    now.style.display=nowHeading.style.display=showNow?DisplayStyle.Flex:DisplayStyle.None;
    reward.text=m.reward??"";reward.style.display=rewardHeading.style.display=string.IsNullOrEmpty(m.reward)?DisplayStyle.None:DisplayStyle.Flex;
    track.style.display=m.Active?DisplayStyle.Flex:DisplayStyle.None;

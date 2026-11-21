@@ -58,6 +58,8 @@ namespace AthenHill
   public bool altHeld;
   /// An interaction prompt is offered (the key hints carry E · Interact).
   public bool prompt;
+  /// Vitals need attention (low vitality, nano overclock, or nano overcharge): keeps Identity awake in Adaptive mode.
+  public bool vitalsActive;
   public bool reducedMotion;
  }
 
@@ -90,6 +92,7 @@ namespace AthenHill
    if(!Adaptive(p)||f.mode!=InterfaceMode.Adaptive)return 1;
    if(f.windowOpen||f.combat||f.altHeld)return 1;
    if(p==HudPanel.KeyHints&&f.prompt)return 1;
+   if(p==HudPanel.Identity&&f.vitalsActive)return 1;
    return now-lastWake[(int)p]<quietSeconds?1:0;
   }
   /// Advances every panel's opacity toward its target. Returns true when any opacity changed.
@@ -98,6 +101,7 @@ namespace AthenHill
    // Holding conditions count as activity, so a panel waits the full quiet time after a window closes or Alt is let go.
    if(f.mode==InterfaceMode.Adaptive&&(f.windowOpen||f.combat||f.altHeld))WakeAll(now);
    if(f.prompt)Wake(HudPanel.KeyHints,now);
+   if(f.vitalsActive)Wake(HudPanel.Identity,now);
    bool changed=false;
    foreach(var p in Panels)
    {

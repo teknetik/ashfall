@@ -32,8 +32,16 @@ namespace AthenHill
         [Range(0, 3)] public float hurtPerVitality = 1.1f;
         [Tooltip("Default radius for AddAt events (droid wrecks).")]
         [Min(1)] public float eventRadius = 16;
+        [Header("Combat verbs (Phase 2)")]
+        [Tooltip("Camera trauma for Dodge, Shove, EMP Disruptor and Nano Overcharge (off under Reduced Motion).")]
+        [Range(0, 1)] public float dodgeTrauma = .14f, shoveTrauma = .28f, empTrauma = .42f, overchargeTrauma = .22f;
+        [Tooltip("Optional 2D audio source and clips for Phase 2 combat verb cues; empty clips fall back to a light synthesized cue.")]
+        public AudioSource verbAudio;
+        public AudioClip dodgeClip, shoveClip, empClip, overchargeClip;
+        [Range(0, 1)] public float verbAudioVolume = .55f;
 
         public int Impulses { get; private set; }
+        public int VerbCuesPlayed { get; private set; }
         public float Trauma => state.Trauma;
         /// Rotation applied in the last rendered frame (degrees, largest axis), for QA.
         public float LastAngle { get; private set; }
@@ -42,8 +50,9 @@ namespace AthenHill
         public bool Suppressed => ReducedMotion || SettingScale <= 0 || CinematicCamera.UnderControl;
 
         readonly ImpulseState state = new ImpulseState();
+        readonly AudioClip[] generatedVerbClips = new AudioClip[4];
         GameSettings settings;
-        bool applied;
+        bool applied, subscribed;
         Vector3 savedPosition;
         Quaternion savedRotation;
         float seed;
@@ -61,15 +70,24 @@ namespace AthenHill
         {
             RenderPipelineManager.beginCameraRendering += Begin;
             RenderPipelineManager.endCameraRendering += End;
-            if (player) { player.ShotFired += OnShot; player.Hurt += OnHurt; }
+            BindPlayer(true);
         }
 
         void OnDisable()
         {
             RenderPipelineManager.beginCameraRendering -= Begin;
             RenderPipelineManager.endCameraRendering -= End;
-            if (player) { player.ShotFired -= OnShot; player.Hurt -= OnHurt; }
+            BindPlayer(false);
             Restore();
+        }
+
+        void OnDestroy()
+        {
+            BindPlayer(false);
+            for (int i = 0; i < generatedVerbClips.Length; i++)
+            {
+                if (generatedVerbClips[i]) { Destroy(generatedVerbClips[i]); generatedVerbClips[i] = null; }
+            }
         }
 
         void Start()
@@ -79,8 +97,32 @@ namespace AthenHill
             if (!player)
             {
                 player = FindAnyObjectByType<PlayerCombat>();
-                if (player && isActiveAndEnabled) { player.ShotFired += OnShot; player.Hurt += OnHurt; }
+                if (isActiveAndEnabled) BindPlayer(true);
             }
+        }
+
+        void BindPlayer(bool on)
+        {
+            if (!player || subscribed == on) return;
+            if (on)
+            {
+                player.ShotFired += OnShot;
+                player.Hurt += OnHurt;
+                player.Dodged += OnDodged;
+                player.Shoved += OnShoved;
+                player.EmpTriggered += OnEmpTriggered;
+                player.OverchargeTriggered += OnOverchargeTriggered;
+            }
+            else
+            {
+                player.ShotFired -= OnShot;
+                player.Hurt -= OnHurt;
+                player.Dodged -= OnDodged;
+                player.Shoved -= OnShoved;
+                player.EmpTriggered -= OnEmpTriggered;
+                player.OverchargeTriggered -= OnOverchargeTriggered;
+            }
+            subscribed = on;
         }
 
         public void Add(float trauma)
@@ -110,6 +152,55 @@ namespace AthenHill
         {
             if (!player || !player.Health) return;
             Add(ImpulseState.ForDamage(amount, player.Health.max, hurtFloor, hurtPerVitality));
+        }
+
+        void OnDodged() => TriggerVerb(CombatVerbKind.Dodge);
+        void OnShoved() => TriggerVerb(CombatVerbKind.Shove);
+        void OnEmpTriggered() => TriggerVerb(CombatVerbKind.Emp);
+        void OnOverchargeTriggered() => TriggerVerb(CombatVerbKind.Overcharge);
+
+        public void TriggerVerb(CombatVerbKind kind)
+        {
+            Add(ImpulseState.ForVerb(kind, dodgeTrauma, shoveTrauma, empTrauma, overchargeTrauma));
+            PlayVerbCue(kind);
+        }
+
+        void PlayVerbCue(CombatVerbKind kind)
+        {
+            if (verbAudioVolume <= 0) return;
+            var clip = VerbClipFor(kind);
+            if (!clip) return;
+            var source = EnsureVerbAudio();
+            if (!source) return;
+            source.pitch = Random.Range(.97f, 1.03f);
+            source.PlayOneShot(clip, verbAudioVolume);
+            VerbCuesPlayed++;
+        }
+
+        AudioClip VerbClipFor(CombatVerbKind kind)
+        {
+            AudioClip authored = kind == CombatVerbKind.Dodge ? dodgeClip
+                : kind == CombatVerbKind.Shove ? shoveClip
+                : kind == CombatVerbKind.Emp ? empClip
+                : overchargeClip;
+            if (authored) return authored;
+            int idx = (int)kind;
+            if (idx < 0 || idx >= generatedVerbClips.Length) return null;
+            if (!generatedVerbClips[idx]) generatedVerbClips[idx] = CombatAudio.CreateVerbClip(kind);
+            return generatedVerbClips[idx];
+        }
+
+        AudioSource EnsureVerbAudio()
+        {
+            if (!verbAudio)
+            {
+                verbAudio = gameObject.AddComponent<AudioSource>();
+                verbAudio.playOnAwake = false;
+                verbAudio.spatialBlend = 0;
+            }
+            if (!verbAudio.outputAudioMixerGroup && player && player.audioSource && player.audioSource.outputAudioMixerGroup)
+                verbAudio.outputAudioMixerGroup = player.audioSource.outputAudioMixerGroup;
+            return verbAudio;
         }
 
         void Update()

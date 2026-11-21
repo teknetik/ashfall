@@ -17,7 +17,7 @@ namespace AthenHill
   /// World x/z (metres) to panel pixels (y grows downwards, so north is up).
   public Vector2 WorldToPanel(Vector2 world)=>new Vector2(size.x*.5f+(world.x-centre.x)*scale,size.y*.5f-(world.y-centre.y)*scale);
   public Vector2 WorldToPanel(Vector3 world)=>WorldToPanel(new Vector2(world.x,world.z));
-  public Vector2 PanelToWorld(Vector2 panel)=>new Vector2(centre.x+(panel.x-size.x*.5f)/scale,centre.y-(panel.y-size.y*.5f)/scale);
+  public Vector2 PanelToWorld(Vector2 panel){float s=scale>1e-5f?scale:1f;return new Vector2(centre.x+(panel.x-size.x*.5f)/s,centre.y-(panel.y-size.y*.5f)/s);}
   /// A world rectangle (x/z) as a panel rectangle (for the survey pictures).
   public Rect WorldRectToPanel(Rect world)
   {
@@ -25,10 +25,12 @@ namespace AthenHill
    return Rect.MinMaxRect(a.x,a.y,b.x,b.y);
   }
   /// Moves the view by a panel-pixel drag (the sheet follows the pointer).
-  public MapView Pan(Vector2 panelDelta){var v=this;v.centre+=new Vector2(-panelDelta.x/scale,panelDelta.y/scale);return v;}
+  public MapView Pan(Vector2 panelDelta){if(scale<=1e-5f)return this;var v=this;v.centre+=new Vector2(-panelDelta.x/scale,panelDelta.y/scale);return v;}
   /// Zooms by factor, keeping the world point under the panel point still.
   public MapView ZoomAt(Vector2 panelPoint,float factor,float minScale,float maxScale)
   {
+   if(scale<=1e-5f||!ClockMath.Finite(factor)||factor<=0)return this;
+   minScale=Mathf.Max(1e-4f,minScale);maxScale=Mathf.Max(minScale,maxScale);
    var v=this;var anchor=PanelToWorld(panelPoint);
    v.scale=Mathf.Clamp(scale*factor,minScale,maxScale);
    v.centre=anchor-new Vector2((panelPoint.x-size.x*.5f)/v.scale,-(panelPoint.y-size.y*.5f)/v.scale);
@@ -75,9 +77,11 @@ namespace AthenHill
   public static Vector2 LabelSize(string text,float fontSize)=>new Vector2((text?.Length??0)*fontSize*.56f+4,fontSize+4);
   public static HashSet<string> Declutter(IEnumerable<LabelBox> boxes,string selected=null)
   {
+   var hidden=new HashSet<string>(StringComparer.Ordinal);
+   if(boxes==null)return hidden;
    var list=new List<LabelBox>(boxes);
    list.Sort((a,b)=>{int pa=a.id==selected?int.MaxValue:a.priority,pb=b.id==selected?int.MaxValue:b.priority;return pa!=pb?pb.CompareTo(pa):string.CompareOrdinal(a.id,b.id);});
-   var kept=new List<Rect>();var hidden=new HashSet<string>(StringComparer.Ordinal);
+   var kept=new List<Rect>();
    foreach(var b in list){bool clash=false;foreach(var k in kept)if(k.Overlaps(b.rect)){clash=true;break;}if(clash)hidden.Add(b.id);else kept.Add(b.rect);}
    return hidden;
   }
@@ -122,12 +126,21 @@ namespace AthenHill
   {
    if(!target.HasValue)return MapMarker.None;
    var p=new Vector2(target.Value.x,target.Value.z);
-   if(float.IsNaN(p.x)||float.IsNaN(p.y))return MapMarker.None;
+   if(!ClockMath.Finite(p.x)||!ClockMath.Finite(p.y))return MapMarker.None;
    if(!machine)return new MapMarker{shown=true,position=p};
    Vector2? best=null;float bestD=snapRadius*snapRadius;
    if(sites!=null)foreach(var s in sites){float d=(s-p).sqrMagnitude;if(d<=bestD){bestD=d;best=s;}}
    var centre=best??new Vector2(Mathf.Round(p.x/25)*25,Mathf.Round(p.y/25)*25);
    return new MapMarker{shown=true,area=true,position=centre,radius=areaRadius};
+  }
+
+  /// Proportional wheel zoom factor: fine trackpad scrolls ease smoothly while a standard mouse detent (~3 units)
+  /// zooms by about 1.25x / 0.8x and extreme spikes stay clamped.
+  public static float WheelZoomFactor(float deltaY)
+  {
+   if(!ClockMath.Finite(deltaY)||Mathf.Abs(deltaY)<.001f)return 1f;
+   float notches=Mathf.Clamp(-deltaY/3f,-2f,2f);
+   return Mathf.Pow(1.25f,notches);
   }
 
   /// Angle for the player arrow: compass heading in degrees (0 = north, clockwise) to a panel rotation.

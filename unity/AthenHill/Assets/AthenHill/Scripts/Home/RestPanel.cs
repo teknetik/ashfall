@@ -25,8 +25,8 @@ namespace AthenHill
   {
    var clock=Object.FindAnyObjectByType<CityTimeOfDay>();
    string time=clock?$"{Mathf.FloorToInt(clock.Hour):00}:{Mathf.FloorToInt(clock.Hour%1*60):00}":"";
-   var combat=session.player?session.player.GetComponent<PlayerCombat>():null;
-   string health=combat?$" Vitality {Mathf.CeilToInt(combat.Health.Current)} / {Mathf.RoundToInt(combat.Health.max)}.":"";
+   var combat=session&&session.player?session.player.GetComponent<PlayerCombat>():null;
+   string health=combat&&combat.Health?$" Vitality {Mathf.CeilToInt(combat.Health.Current)} / {Mathf.RoundToInt(combat.Health.max)}.":"";
    text.text=$"A thin mattress on a welded frame, a blanket that still smells of caravan dust.{(time.Length>0?" It is "+time+".":"")}{health}\n\nResting restores your vitality and nano charge and saves your progress. From now on, Continue wakes you here.";
    panel.schedule.Execute(()=>morning.Focus());
   }

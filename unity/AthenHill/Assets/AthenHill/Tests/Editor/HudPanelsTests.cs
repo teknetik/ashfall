@@ -98,5 +98,48 @@ namespace AthenHill.Tests
    Assert.That(rig.pack.Credits,Is.EqualTo(28));
    Assert.That(rig.pack.Quantity("lattice_shard"),Is.EqualTo(1));
   }
+
+  [Test] public void EyeImplantEmptyAndEquippedInspectorCopyMentionsOpticSuite()
+  {
+   var (guidance,fits)=CharacterLoadoutPanel.EmptySlotCopy("implant_eye","Eye",true,new[]{"Warden Optic Suite Mk I"},false);
+   Assert.That(guidance,Does.Contain("optic").And.Not.Contain("three augmentations"));
+   Assert.That(fits,Does.Contain("Warden Optic Suite Mk I").And.Contain("fits the eye slot"));
+   var (fallback,_)=CharacterLoadoutPanel.EmptySlotCopy("implant_eye","Eye",true,System.Array.Empty<string>(),false);
+   Assert.That(fallback,Does.Contain("Warden Optic Suite Mk I").And.Not.Contain("Nothing made or sold in Ward"));
+
+   using var rig=new Rig(CityState.Inventory);
+   var catalog=AssetDatabase.LoadAssetAtPath<CharacterCatalog>("Assets/AthenHill/Resources/CharacterCatalog.asset");
+   var character=new CharacterModel(catalog,rig.pack);
+   Set(rig.session,"Character",character);
+   var root=Hud();
+   CharacterLoadoutPanel panel=null;panel=new CharacterLoadoutPanel(root,rig.session,rig.crafting,()=>null,()=>panel.Refresh());
+   typeof(CharacterLoadoutPanel).GetField("section",Any).SetValue(panel,"IMPLANTS");
+   typeof(CharacterLoadoutPanel).GetField("selectedSlot",Any).SetValue(panel,"implant_eye");
+   panel.Refresh();
+   var emptyCopy=string.Join("\n",root.Q("equipment-inspector").Query<Label>().ToList().Select(l=>l.text));
+   Assert.That(emptyCopy,Does.Contain("EYE").And.Contain("Warden Optic Suite Mk I").And.Not.Contain("Nothing made or sold in Ward"));
+
+   // Equip Warden Optic Suite Mk I and confirm the equipped inspector copy is clean.
+   Assert.That(rig.pack.Grant("optic_suite_mk1",1,0,out var grantErr),grantErr);
+   // Ensure intellect meets the requirement before equipping.
+   while(character.Stat("intellect")<10&&character.AttributePoints>0)character.TryRaiseAttribute("intellect",out _);
+   if(character.TryEquip("optic_suite_mk1","implant_eye",out _))
+   {
+    typeof(CharacterLoadoutPanel).GetField("signature",Any).SetValue(panel,null);
+    panel.Refresh();
+    var equippedCopy=string.Join("\n",root.Q("equipment-inspector").Query<Label>().ToList().Select(l=>l.text));
+    Assert.That(equippedCopy,Does.Contain("Warden Optic Suite Mk I").And.Contain("Sealed optic unit"));
+   }
+  }
+
+  [Test] public void JournalPanelHandlesNullPlayerAndEmptyNotesCleanly()
+  {
+   using var rig=new Rig(CityState.Journal);
+   var journal=rig.go.AddComponent<QuestJournal>();
+   typeof(QuestJournal).GetMethod("Awake",Any).Invoke(journal,null);
+   var root=Hud();
+   var panel=new JournalPanel(root.Q("journal-panel"),rig.session,journal);
+   Assert.DoesNotThrow(()=>{panel.Opened();panel.ShowNotes(true);panel.ShowNotes(false);});
+  }
  }
 }

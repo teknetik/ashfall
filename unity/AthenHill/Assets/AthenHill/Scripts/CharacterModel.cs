@@ -55,9 +55,9 @@ namespace AthenHill
   {
    attributes.Clear();skills.Clear();useProgress.Clear();equipped.Clear();modifications.Clear();effects.Clear();Level=1;Experience=0;
    AttributePoints=Math.Max(0,Data.initialAttributePoints);SkillPoints=Math.Max(0,Data.initialSkillPoints);
-   foreach(var a in Data.attributes)attributes[a.id]=Math.Max(0,a.initial);
-   foreach(var s in Data.skills)skills[s.id]=Math.Max(0,s.initial);
-   foreach(var e in Data.initialEquipment)if(e!=null&&Accepts(e.itemId,e.slot)&&pack.Spec(e.itemId)!=null)equipped[e.slot]=e.itemId;
+   foreach(var a in Data.attributes??Array.Empty<CharacterAttribute>())if(a!=null&&!string.IsNullOrEmpty(a.id))attributes[a.id]=Math.Max(0,a.initial);
+   foreach(var s in Data.skills??Array.Empty<CharacterSkill>())if(s!=null&&!string.IsNullOrEmpty(s.id))skills[s.id]=Math.Max(0,s.initial);
+   foreach(var e in Data.initialEquipment??Array.Empty<SlotEntry>())if(e!=null&&Accepts(e.itemId,e.slot)&&pack.Spec(e.itemId)!=null)equipped[e.slot]=e.itemId;
   }
   public CharacterEquipment Equipment(string itemId)=>Data.Equipment(itemId);
   public CharacterModification Modification(string itemId)=>Data.Modification(itemId);
@@ -90,8 +90,9 @@ namespace AthenHill
    if(InstalledModification(equipmentSlot,socketIndex)==itemId){reason="That component is already installed.";return false;}
    if(pack.Quantity(itemId)<1){reason="This component is not in your inventory.";return false;}
    var next=new Dictionary<string,string>(modifications);next.Remove(ModificationKey(equipmentSlot,socketIndex));
-   if(!CanInstall(Equipment(Equipped(equipmentSlot)),equipmentSlot,Calculate(equipped,true,next),out reason))return false;
-   return Meets(Modification(itemId).requirements,Calculate(equipped,true,next),out reason);
+   var values=Calculate(equipped,true,next);
+   if(!CanInstall(Equipment(Equipped(equipmentSlot)),equipmentSlot,values,out reason))return false;
+   return Meets(Modification(itemId).requirements,values,out reason);
   }
   public bool TryInstallModification(string equipmentSlot,int socketIndex,string itemId,out string reason)
   {
@@ -143,7 +144,7 @@ namespace AthenHill
    try{return pack.TryApply(changes,0,out reason);}
    finally{pendingAttachmentDelta=0;}
   }
-  public bool Accepts(string itemId,string slot)=>slot!=null&&Data.slots.Any(x=>x.id==slot)&&Equipment(itemId)?.slots?.Contains(slot)==true;
+  public bool Accepts(string itemId,string slot)=>slot!=null&&Data.slots!=null&&Data.slots.Any(x=>x!=null&&x.id==slot)&&Equipment(itemId)?.slots?.Contains(slot)==true;
   public bool Meets(CharacterRequirement[] requirements,out string reason)=>Meets(requirements,calculated,out reason);
   bool Meets(CharacterRequirement[] requirements,Dictionary<string,CharacterStatBreakdown> values,out string reason)
   {
@@ -282,24 +283,26 @@ namespace AthenHill
   bool CanStore(IEnumerable<KeyValuePair<string,int>> changes,Dictionary<string,CharacterStatBreakdown> values,IReadOnlyDictionary<string,string> loadout,out string reason,IReadOnlyDictionary<string,string> installed=null)
   {
    var future=pack.Carried.ToDictionary(x=>x.Key,x=>(long)x.Value);
-   foreach(var c in changes)if(c.Key!=null)future[c.Key]=(future.TryGetValue(c.Key,out var quantity)?quantity:0)+c.Value;
+   if(changes!=null)foreach(var c in changes)if(c.Key!=null)future[c.Key]=(future.TryGetValue(c.Key,out var quantity)?quantity:0)+c.Value;
    double weight=future.Sum(x=>(double)Weight(x.Key)*x.Value);
    reason=CapacityReason(weight,future.Count(x=>x.Value>0),values,loadout,installed??modifications)??"ok";
    return reason=="ok";
   }
   public bool TryRaiseAttribute(string id,out string reason)
   {
-   var a=Data.attributes.FirstOrDefault(x=>x.id==id);
+   var a=(Data.attributes??Array.Empty<CharacterAttribute>()).FirstOrDefault(x=>x!=null&&x.id==id);
    if(a==null||a.cost<1||BaseAttribute(id)>=a.maximum){reason="This attribute cannot be increased.";return false;}
    if(AttributePoints<a.cost){reason="Not enough attribute points.";return false;}
    AttributePoints-=a.cost;attributes[id]++;Recalculate();reason="ok";return true;
   }
   public bool TryRaiseSkill(string id,out string reason)
   {
-   var s=Data.skills.FirstOrDefault(x=>x.id==id);
+   var s=(Data.skills??Array.Empty<CharacterSkill>()).FirstOrDefault(x=>x!=null&&x.id==id);
    if(s==null||s.cost<1||s.trainingStep<1||TrainedSkill(id)>=s.maximum){reason="This skill cannot be trained further.";return false;}
    if(SkillPoints<s.cost){reason="Not enough skill points.";return false;}
-   SkillPoints-=s.cost;skills[id]=(int)Math.Min(s.maximum,(long)skills[id]+s.trainingStep);Recalculate();reason="ok";return true;
+   SkillPoints-=s.cost;skills[id]=(int)Math.Min(s.maximum,(long)skills[id]+s.trainingStep);
+   if(skills[id]>=s.maximum)useProgress.Remove(id);
+   Recalculate();reason="ok";return true;
   }
   /// Skill progress from use (crafting, 20 Nov 2026): fractional points accumulate and each whole point raises the trained
   /// skill by one, the same unit a spent skill point adds trainingStep of. Skill points from levelling stay the main route.
@@ -307,14 +310,18 @@ namespace AthenHill
   public bool GrantSkillUse(string id,float amount,out int whole)
   {
    whole=0;
-   var s=Data.skills.FirstOrDefault(x=>x.id==id);
+   var s=(Data.skills??Array.Empty<CharacterSkill>()).FirstOrDefault(x=>x!=null&&x.id==id);
    if(s==null||!(amount>0)||float.IsNaN(amount)||float.IsInfinity(amount))return false;
-   if(TrainedSkill(id)>=s.maximum)return true;
-   long milli=(long)(useProgress.TryGetValue(id,out var have)?have:0)+(long)Math.Round(amount*1000f);
-   whole=(int)Math.Min(s.maximum-TrainedSkill(id),milli/1000);
+   int current=TrainedSkill(id);
+   if(current>=s.maximum){useProgress.Remove(id);return true;}
+   double clamped=Math.Min((double)amount,(double)(s.maximum-current));
+   long milli=(long)(useProgress.TryGetValue(id,out var have)?have:0)+(long)Math.Round(clamped*1000.0);
+   whole=(int)Math.Min(s.maximum-current,milli/1000);
    milli-=whole*1000L;
-   useProgress[id]=(int)Math.Min(999,Math.Max(0,milli));
-   if(whole>0){skills[id]=skills[id]+whole;Recalculate();}
+   int nextSkill=current+whole;
+   if(nextSkill>=s.maximum)useProgress.Remove(id);
+   else useProgress[id]=(int)Math.Min(999,Math.Max(0,milli));
+   if(whole>0){skills[id]=nextSkill;Recalculate();}
    else Changed?.Invoke();
    return true;
   }
@@ -356,7 +363,7 @@ namespace AthenHill
       }
     }
     var effectiveAttributes=new Dictionary<string,CharacterStatBreakdown>();
-    foreach(var a in Data.attributes)AddStat(effectiveAttributes,mods,a.id,a.initial,BaseAttribute(a.id)-a.initial,null,0,100000);
+    foreach(var a in Data.attributes??Array.Empty<CharacterAttribute>())if(a!=null&&!string.IsNullOrEmpty(a.id))AddStat(effectiveAttributes,mods,a.id,a.initial,BaseAttribute(a.id)-a.initial,null,0,100000);
     foreach(var item in active)
     {
      if((effectiveAttributes.TryGetValue("strength",out var str)&&str.finalValue<item.comfortableStrength)||(effectiveAttributes.TryGetValue("endurance",out var end)&&end.finalValue<item.comfortableEndurance))
@@ -367,9 +374,9 @@ namespace AthenHill
     }
    }
    var result=new Dictionary<string,CharacterStatBreakdown>();
-   foreach(var a in Data.attributes)AddStat(result,mods,a.id,a.initial,BaseAttribute(a.id)-a.initial,null,0,100000);
-   foreach(var s in Data.skills)AddStat(result,mods,s.id,s.initial,TrainedSkill(s.id)-s.initial,s.dependencies,0,100000);
-   foreach(var d in Data.derivedStats)AddStat(result,mods,d.id,d.initial,d.perLevel*(Level-1),d.dependencies,d.minimum,d.maximum);
+   foreach(var a in Data.attributes??Array.Empty<CharacterAttribute>())if(a!=null&&!string.IsNullOrEmpty(a.id))AddStat(result,mods,a.id,a.initial,BaseAttribute(a.id)-a.initial,null,0,100000);
+   foreach(var s in Data.skills??Array.Empty<CharacterSkill>())if(s!=null&&!string.IsNullOrEmpty(s.id))AddStat(result,mods,s.id,s.initial,TrainedSkill(s.id)-s.initial,s.dependencies,0,100000);
+   foreach(var d in Data.derivedStats??Array.Empty<CharacterDerivedStat>())if(d!=null&&!string.IsNullOrEmpty(d.id))AddStat(result,mods,d.id,d.initial,d.perLevel*(Level-1),d.dependencies,d.minimum,d.maximum);
    return result;
   }
   static void AddStat(Dictionary<string,CharacterStatBreakdown> result,List<CharacterModifier> mods,string id,float basis,float progression,CharacterDependency[] dependencies,float minimum,float maximum)
@@ -387,16 +394,18 @@ namespace AthenHill
    if(state!=null)
    {
     Level=Math.Max(1,state.level);Experience=Mathf.Clamp(state.experience,0,Math.Max(0,Data.experiencePerLevel-1));AttributePoints=Math.Max(0,state.attributePoints);SkillPoints=Math.Max(0,state.skillPoints);
-    foreach(var a in state.attributes??Array.Empty<CountEntry>())if(a!=null){var spec=Data.attributes.FirstOrDefault(x=>x.id==a.id);if(spec!=null)attributes[a.id]=Mathf.Clamp(a.count,0,spec.maximum);else skipped.Add(a.id);}
-    foreach(var s in state.skills??Array.Empty<CountEntry>())if(s!=null){var spec=Data.skills.FirstOrDefault(x=>x.id==s.id);if(spec!=null)skills[s.id]=Mathf.Clamp(s.count,0,spec.maximum);else skipped.Add(s.id);}
-    foreach(var u in state.useProgress??Array.Empty<CountEntry>())if(u!=null&&Data.skills.Any(x=>x.id==u.id))useProgress[u.id]=Mathf.Clamp(u.count,0,999);
+    var attrSpecs=Data.attributes??Array.Empty<CharacterAttribute>();
+    var skillSpecs=Data.skills??Array.Empty<CharacterSkill>();
+    foreach(var a in state.attributes??Array.Empty<CountEntry>())if(a!=null){var spec=attrSpecs.FirstOrDefault(x=>x!=null&&x.id==a.id);if(spec!=null)attributes[a.id]=Mathf.Clamp(a.count,0,spec.maximum);else if(!string.IsNullOrEmpty(a.id))skipped.Add(a.id);}
+    foreach(var s in state.skills??Array.Empty<CountEntry>())if(s!=null){var spec=skillSpecs.FirstOrDefault(x=>x!=null&&x.id==s.id);if(spec!=null)skills[s.id]=Mathf.Clamp(s.count,0,spec.maximum);else if(!string.IsNullOrEmpty(s.id))skipped.Add(s.id);}
+    foreach(var u in state.useProgress??Array.Empty<CountEntry>())if(u!=null){var spec=skillSpecs.FirstOrDefault(x=>x!=null&&x.id==u.id);if(spec!=null&&TrainedSkill(u.id)<spec.maximum)useProgress[u.id]=Mathf.Clamp(u.count,0,999);}
     equipped.Clear();
-    foreach(var e in state.equipped??Array.Empty<SlotEntry>())if(e!=null){if(Accepts(e.itemId,e.slot)&&pack.Spec(e.itemId)!=null&&!equipped.ContainsKey(e.slot))equipped[e.slot]=e.itemId;else skipped.Add(e.itemId);}
+    foreach(var e in state.equipped??Array.Empty<SlotEntry>())if(e!=null){if(Accepts(e.itemId,e.slot)&&pack.Spec(e.itemId)!=null&&!equipped.ContainsKey(e.slot))equipped[e.slot]=e.itemId;else if(!string.IsNullOrEmpty(e.itemId))skipped.Add(e.itemId);}
     foreach(var entry in state.modifications??Array.Empty<CharacterModificationEntry>())if(entry!=null)
     {
      var key=ModificationKey(entry.slot,entry.socketIndex);
      if(AcceptsModification(Equipped(entry.slot),entry.slot,entry.socketIndex,entry.itemId)&&!modifications.ContainsKey(key))modifications[key]=entry.itemId;
-     else skipped.Add(entry.itemId);
+     else if(!string.IsNullOrEmpty(entry.itemId))skipped.Add(entry.itemId);
     }
    }
    Recalculate();return skipped;

@@ -12,8 +12,9 @@ namespace AthenHill
   public int Sales {get;private set;}
   public ShopModel(IEnumerable<ItemSpec> definitions,int credits=25)
   {
+   if(definitions==null)throw new ArgumentNullException(nameof(definitions));
    if(credits<0)throw new ArgumentOutOfRangeException(nameof(credits));
-   items=definitions.ToDictionary(x=>x.id,x=>new ItemSpec{id=x.id,name=x.name,description=x.description,buyPrice=x.buyPrice,sellPrice=x.sellPrice,startingQuantity=x.startingQuantity,tags=x.tags==null?null:(string[])x.tags.Clone(),maxStack=x.maxStack,excludeFromTrade=x.excludeFromTrade,rarity=x.rarity,sellOnly=x.sellOnly,icon=x.icon,partsPrice=x.partsPrice,weightKg=x.weightKg});
+   items=definitions.Where(x=>x!=null&&!string.IsNullOrEmpty(x.id)).ToDictionary(x=>x.id,x=>new ItemSpec{id=x.id,name=x.name,description=x.description,buyPrice=x.buyPrice,sellPrice=x.sellPrice,startingQuantity=x.startingQuantity,tags=x.tags==null?null:(string[])x.tags.Clone(),maxStack=x.maxStack,excludeFromTrade=x.excludeFromTrade,rarity=x.rarity,sellOnly=x.sellOnly,icon=x.icon,partsPrice=x.partsPrice,weightKg=x.weightKg});
    if(items.Values.Any(x=>x.buyPrice<0||x.sellPrice<0||x.partsPrice<0||x.startingQuantity<0||x.maxStack<0||x.weightKg<0||x.maxStack>0&&x.startingQuantity>x.maxStack))throw new ArgumentException("Prices, quantities and caps must be valid.");
    quantities=items.ToDictionary(x=>x.Key,x=>x.Value.startingQuantity);Credits=credits;
   }
@@ -67,7 +68,7 @@ namespace AthenHill
    {
     credits=checked(Credits+creditDelta);
     if(credits<0){reason="insufficient_credits";return false;}
-    foreach(var change in changes)
+    if(changes!=null)foreach(var change in changes)
     {
      if(change.Key==null||!items.ContainsKey(change.Key)){reason="unknown_item";return false;}
      deltas[change.Key]=checked((deltas.TryGetValue(change.Key,out var previous)?previous:0)+change.Value);
@@ -128,8 +129,9 @@ namespace AthenHill
    if(item.sellOnly){message=$"{vendor} buys {item.name} but does not stock it.";return false;}
    int price=item.buyPrice;
    if(Credits<price){message=$"You need {price-Credits} more credits for {item.name}.";return false;}
+   if(Room(id)<1){message=item.maxStack>0?$"Your pack cannot hold more {item.name} (limit {item.maxStack}).":"Your pack cannot hold that many.";return false;}
    if(Purchases==int.MaxValue){message="This trade cannot be completed.";return false;}
-   if(!TryApply(new[]{new KeyValuePair<string,int>(id,1)},-price,out var reason)){message=reason.Contains("capacity")?reason:"This trade cannot be completed.";return false;}
+   if(!TryApply(new[]{new KeyValuePair<string,int>(id,1)},-price,out var reason)){message=reason.Contains("capacity")?reason:reason=="stack_full"&&item.maxStack>0?$"Your pack cannot hold more {item.name} (limit {item.maxStack}).":"This trade cannot be completed.";return false;}
    Purchases++;
    message=$"Bought {item.name} for {price} credit{(price==1?"":"s")}.";return true;
   }

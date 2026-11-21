@@ -278,8 +278,9 @@ namespace AthenHill
    if(craftSeconds>0)conditions.Add($"Bench time: {CraftingText.Duration(craftSeconds)}");
    if(!string.IsNullOrEmpty(recipe.skill)&&(recipe.craftXp>0||recipe.skillUse>0))conditions.Add($"Exercises {session.Character?.Data.Label(recipe.skill)??recipe.skill}"+(recipe.craftXp>0?$" · +{recipe.craftXp} XP":""));
    if(conditions.Count>0)description.text+="\n"+string.Join("\n",conditions);
-   foreach(var input in recipe.inputs)
+   foreach(var input in recipe.inputs??Array.Empty<CraftIngredient>())
    {
+    if(input==null)continue;
     int have=model.Available(input);bool ok=have>=input.quantity;
     var row=new VisualElement{pickingMode=PickingMode.Ignore};row.AddToClassList("fab-input");row.EnableInClassList("short",!ok);
     var name=new Label(CraftingText.InputName(model,input)){pickingMode=PickingMode.Ignore};name.AddToClassList("fab-input-name");

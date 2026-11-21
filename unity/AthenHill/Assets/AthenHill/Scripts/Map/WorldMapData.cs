@@ -66,7 +66,7 @@ namespace AthenHill
    if(state?.discovered!=null)foreach(var id in state.discovered)Add(id);
    if(implied!=null)foreach(var id in implied)Add(id);
   }
-  public static Vector2? Downed(MapState state)=>state!=null&&state.downed&&!float.IsNaN(state.downedX)&&!float.IsNaN(state.downedZ)?new Vector2(state.downedX,state.downedZ):(Vector2?)null;
+  public static Vector2? Downed(MapState state)=>state!=null&&state.downed&&ClockMath.Finite(state.downedX)&&ClockMath.Finite(state.downedZ)?new Vector2(state.downedX,state.downedZ):(Vector2?)null;
  }
 
  /// The drawn sheet's data (19 Nov 2026), from the dated layout records rather than the scene, so the map draws

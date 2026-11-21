@@ -39,10 +39,20 @@ namespace AthenHill
   readonly RaycastHit[] hits=new RaycastHit[8];
   static readonly Dictionary<DroidBolt,Stack<DroidBolt>> pools=new Dictionary<DroidBolt,Stack<DroidBolt>>();
   static Transform poolRoot;
+  /// Prevents dead, inactive, staggered or EMP-stunned droids from launching stale bolts.
+  public static bool CanOwnerFire(bool hasOwner,bool activeInHierarchy,bool alive,DroidState state)
+   =>!hasOwner||activeInHierarchy&&alive&&state!=DroidState.Dead&&state!=DroidState.Stagger;
+  /// Splash damage at distance from the burst centre (linear taper to 40 % at the edge, 0 outside).
+  public static float SplashDamageAt(float distance,float splashRadius,float splashDamage)
+  {
+   if(splashRadius<=0||splashDamage<=0||float.IsNaN(distance)||distance<0||distance>=splashRadius)return 0;
+   return splashDamage*(1-distance/splashRadius*.6f);
+  }
   /// Takes a pooled bolt (or makes one) and fires it from origin along direction.
   public static DroidBolt Fire(DroidBolt prefab,FeralDroid owner,Vector3 from,Vector3 direction,float speed,float damage)
   {
-   if(!prefab)return null;
+   if(!prefab||direction.sqrMagnitude<1e-6f||speed<=0)return null;
+   if(owner&&!CanOwnerFire(true,owner.gameObject.activeInHierarchy,owner.Health&&owner.Health.Alive,owner.State))return null;
    if(!pools.TryGetValue(prefab,out var pool))pools[prefab]=pool=new Stack<DroidBolt>();
    DroidBolt b=null;
    while(pool.Count>0&&!b)b=pool.Pop();
@@ -74,19 +84,7 @@ namespace AthenHill
    float dt=Time.deltaTime;var step=velocity*dt;float len=step.magnitude;
    if(len<1e-5f)return;
    var from=transform.position;var dir=step/len;
-   // the player's body: a capsule from the feet to the head
-   if(target&&target.Health.Alive)
-   {
-    var feet=target.transform.position;
-    float d=SegmentToSegment(from,from+step,feet+Vector3.up*.35f,feet+Vector3.up*1.55f,out var hitPoint);
-    if(d<=hitRadius+.38f){HitPlayer(hitPoint);return;}
-    if(!flybyDone&&flybyClips.Length>0&&d<flybyDistance)
-    {
-     flybyDone=true;var c=CombatAudio.Pick(flybyClips,ref lastFlyby);
-     // the near miss is the player's cue to move: it always plays (only an identical clip on the same frame is dropped)
-     if(c&&impactAudio&&VoiceLimiter.Droids.TryAcquire(Time.time,c.GetHashCode(),c.length,true)){impactAudio.PlayOneShot(c,flybyVolume);Flybys++;}
-    }
-   }
+   // Check solid world geometry first so a bolt cannot clip through cover to hit a player standing just behind it.
    int n=Physics.SphereCastNonAlloc(from,.05f,dir,hits,len,worldMask,QueryTriggerInteraction.Ignore);
    float best=float.MaxValue;int bi=-1;
    for(int i=0;i<n;i++)
@@ -95,23 +93,40 @@ namespace AthenHill
     if(c.GetComponentInParent<FeralDroid>()||c.GetComponentInParent<PlayerMotor>())continue;
     if(hits[i].distance<best){best=hits[i].distance;bi=i;}
    }
-   if(bi>=0){transform.position=hits[bi].point;Burst(hits[bi].point,hits[bi].normal);return;}
+   var segmentEnd=bi>=0?hits[bi].point:from+step;
+   // the player's body: a capsule from the feet to the head
+   if(target&&target.Health&&target.Health.Alive)
+   {
+    var feet=target.transform.position;
+    float d=SegmentToSegment(from,segmentEnd,feet+Vector3.up*.35f,feet+Vector3.up*1.55f,out var hitPoint);
+    bool invulnerable=target.motor&&target.motor.DodgeInvulnerable;
+    if(!invulnerable&&d<=hitRadius+.38f){HitPlayer(hitPoint);return;}
+    if(!flybyDone&&flybyClips.Length>0&&d<flybyDistance)
+    {
+     flybyDone=true;var c=CombatAudio.Pick(flybyClips,ref lastFlyby);
+     // the near miss is the player's cue to move: it always plays (only an identical clip on the same frame is dropped)
+     if(c&&impactAudio&&VoiceLimiter.Droids.TryAcquire(Time.time,c.GetHashCode(),c.length,true)){impactAudio.PlayOneShot(c,flybyVolume);Flybys++;}
+    }
+   }
+   if(bi>=0){transform.position=hits[bi].point;Burst(hits[bi].point,hits[bi].normal,false);return;}
    transform.position=from+step;travelled+=len;
    if(travelled>=maxDistance)Recycle();
   }
   void HitPlayer(Vector3 at)
   {
    target.Health.Damage(damage,origin);
-   transform.position=at;Burst(at,-velocity.normalized);
+   transform.position=at;Burst(at,-velocity.normalized,true);
   }
-  void Burst(Vector3 at,Vector3 normal)
+  void Burst(Vector3 at,Vector3 normal,bool directHit)
   {
    Flying=false;
-   if(splashRadius>0&&splashDamage>0&&target&&target.Health.Alive)
+   bool invulnerable=target&&target.motor&&target.motor.DodgeInvulnerable;
+   if(!directHit&&!invulnerable&&splashRadius>0&&splashDamage>0&&target&&target.Health&&target.Health.Alive)
    {
     float d=Vector3.Distance(at,target.transform.position+Vector3.up*.9f);
-    if(d<splashRadius&&!Physics.Linecast(at+normal*.1f,target.transform.position+Vector3.up*.9f,worldMask,QueryTriggerInteraction.Ignore))
-     target.Health.Damage(splashDamage*(1-d/splashRadius*.6f),origin);
+    float splash=SplashDamageAt(d,splashRadius,splashDamage);
+    if(splash>0&&!Physics.Linecast(at+normal*.1f,target.transform.position+Vector3.up*.9f,worldMask,QueryTriggerInteraction.Ignore))
+     target.Health.Damage(splash,origin);
    }
    if(core)core.gameObject.SetActive(false);
    if(trail)trail.emitting=false;
@@ -124,7 +139,8 @@ namespace AthenHill
    }
    if(impact)
    {
-    impact.transform.SetParent(null,true);impact.transform.position=at;impact.transform.rotation=Quaternion.LookRotation(normal);
+    impact.transform.SetParent(null,true);impact.transform.position=at;
+    impact.transform.rotation=normal.sqrMagnitude>1e-6f?Quaternion.LookRotation(normal):Quaternion.identity;
     impact.Emit(reduced?6:18);
    }
    if(impactAudio&&impactClips.Length>0)

@@ -27,15 +27,15 @@ namespace AthenHill
   /// −1 before the primer is complete; orders.Length once every order is done (free play).
   public int Index {get;private set;}=-1;
   public bool Started=>Index>=0;
-  public bool FreePlay=>Index>=Data.orders.Length;
+  public bool FreePlay=>Data.orders==null||Index>=Data.orders.Length;
   public FieldOrder Current=>Started&&!FreePlay?Data.orders[Index]:null;
   public FieldOrderProgress(FieldOrderSet data){Data=data??throw new ArgumentNullException(nameof(data));}
   /// The primer is complete: the first order becomes current. Null if orders had already begun.
   public FieldOrder Begin(){if(Started)return null;Index=0;return Current;}
-  static bool Fitted(CraftingModel model,string itemId)=>model.Loadout.FittedMods.Any(x=>x.Value==itemId);
+  static bool Fitted(CraftingModel model,string itemId)=>model!=null&&!string.IsNullOrEmpty(itemId)&&model.Loadouts.Any(l=>l.FittedMods.Any(x=>x.Value==itemId));
   public bool TestFired(string orderId)=>testFired.Contains(orderId);
   /// The order with this id has been completed (the index has moved past it).
-  public bool Completed(string orderId){int i=Array.FindIndex(Data.orders,o=>o!=null&&o.id==orderId);return i>=0&&Index>i;}
+  public bool Completed(string orderId){if(Data.orders==null)return false;int i=Array.FindIndex(Data.orders,o=>o!=null&&o.id==orderId);return i>=0&&Index>i;}
   public bool Reported(string orderId)=>reported.Contains(orderId);
   /// The current order names a report-to colonist and the player has spoken to them during it.
   public bool CurrentReported=>Current!=null&&reported.Contains(Current.id);
@@ -89,11 +89,12 @@ namespace AthenHill
   }
   public bool IsComplete(FieldOrder o,CraftingModel model,Func<string,bool> collected)
   {
+   if(o==null||model==null)return false;
    switch(o.goal)
    {
     case FieldOrderGoal.FitMod:return Fitted(model,o.targetItemId)&&(!o.requireTestFire||testFired.Contains(o.id));
     case FieldOrderGoal.CollectItem:return collected!=null&&collected(o.targetItemId);
-    case FieldOrderGoal.CraftFromGroup:return model.Data.recipes.Any(r=>r.group==o.targetGroup&&model.CraftCount(r.id)>0);
+    case FieldOrderGoal.CraftFromGroup:return (model.Data?.recipes??Array.Empty<CraftRecipe>()).Any(r=>r!=null&&r.group==o.targetGroup&&model.CraftCount(r.id)>0);
     case FieldOrderGoal.CraftItem:{var r=RecipeFor(model,o);return r!=null&&model.CraftCount(r.id)>0;}
     default:return false;
    }
@@ -105,10 +106,10 @@ namespace AthenHill
    while(Current!=null&&IsComplete(Current,model,collected)){done.Add(Current);Index++;}
    return done;
   }
-  public CraftRecipe RecipeFor(CraftingModel model,FieldOrder o)=>o==null||string.IsNullOrEmpty(o.targetItemId)?null:model.Data.recipes.FirstOrDefault(r=>r.outputItemId==o.targetItemId);
+  public CraftRecipe RecipeFor(CraftingModel model,FieldOrder o)=>model==null||o==null||string.IsNullOrEmpty(o.targetItemId)?null:(model.Data?.recipes??Array.Empty<CraftRecipe>()).FirstOrDefault(r=>r!=null&&r.outputItemId==o.targetItemId);
   public OrderStage Stage(CraftingModel model,ShopModel pack)
   {
-   if(!Started)return OrderStage.NotStarted;
+   if(!Started||model==null||pack==null)return OrderStage.NotStarted;
    var o=Current;if(o==null)return OrderStage.FreePlay;
    switch(o.goal)
    {
@@ -170,8 +171,8 @@ namespace AthenHill
     _=>Data.craftGroupFormat
    };
    string inputs="";
-   if(recipe?.inputs!=null)inputs=string.Join(Data.inputSeparator,recipe.inputs.Select(i=>Fill(Data.inputFormat,("name",CraftingText.InputName(model,i)),("have",Math.Min(i.quantity,model.Available(i)).ToString()),("need",i.quantity.ToString()))));
-   int count=o.goal==FieldOrderGoal.CraftFromGroup?model.Data.recipes.Count(r=>r.group==o.targetGroup&&model.Knows(r.id)):0;
+   if(recipe?.inputs!=null)inputs=string.Join(Data.inputSeparator,recipe.inputs.Where(i=>i!=null).Select(i=>Fill(Data.inputFormat,("name",CraftingText.InputName(model,i)),("have",Math.Min(i.quantity,model.Available(i)).ToString()),("need",i.quantity.ToString()))));
+   int count=o.goal==FieldOrderGoal.CraftFromGroup?(model.Data?.recipes??Array.Empty<CraftRecipe>()).Count(r=>r!=null&&r.group==o.targetGroup&&model.Knows(r.id)):0;
    string brief=Fill(o.brief??"",("item",item));
    string stageLabel=stage==OrderStage.Fabricate&&model.OnBenchRecipe(recipe?.id)&&!string.IsNullOrEmpty(model.AssemblyStageLabel)?model.AssemblyStageLabel:"";
    return Fill(template,("brief",brief),("stage",stageLabel),("item",item),("weapon",model.Loadout.WeaponName),("recipe",recipe!=null?recipe.name:item),("inputs",inputs),("count",count.ToString())).Trim();
@@ -187,10 +188,11 @@ namespace AthenHill
   {
    testFired.Clear();reported.Clear();benched.Clear();testShots.Clear();testStrings=0;
    if(state==null){Index=-1;return;}
-   Index=Math.Max(-1,Math.Min(Data.orders.Length,state.index));
+   var list=Data.orders??Array.Empty<FieldOrder>();
+   Index=Math.Max(-1,Math.Min(list.Length,state.index));
    // 3 Oct 2026: orders can be inserted (the Warden kit chain), so a saved order id wins over its numeric index
-   if(state.id==FieldOrderState.FreePlayId)Index=Data.orders.Length;
-   else if(!string.IsNullOrEmpty(state.id)){int byId=Array.FindIndex(Data.orders,o=>o!=null&&o.id==state.id);if(byId>=0)Index=byId;}
+   if(state.id==FieldOrderState.FreePlayId)Index=list.Length;
+   else if(!string.IsNullOrEmpty(state.id)){int byId=Array.FindIndex(list,o=>o!=null&&o.id==state.id);if(byId>=0)Index=byId;}
    if(state.testFired!=null)foreach(var id in state.testFired)if(!string.IsNullOrEmpty(id))testFired.Add(id);
    if(state.reported!=null)foreach(var id in state.reported)if(!string.IsNullOrEmpty(id))reported.Add(id);
    if(state.benched!=null)foreach(var id in state.benched)if(!string.IsNullOrEmpty(id))benched.Add(id);

@@ -10,5 +10,16 @@ namespace AthenHill.Tests
   [Test]public void GrantAddsItemsAndCreditsTogether(){var s=new ShopModel(Items());Assert.That(s.Grant("scrap_coil",2,15,out _));Assert.That(s.Credits,Is.EqualTo(40));Assert.That(s.Quantity("scrap_coil"),Is.EqualTo(3));Assert.That(s.Purchases+s.Sales,Is.Zero);}
   [Test]public void FailedGrantChangesNothing(){var s=new ShopModel(Items(),int.MaxValue);Assert.That(s.Grant("scrap_coil",1,1,out _),Is.False);Assert.That(s.Grant("unknown",1,0,out _),Is.False);Assert.That(s.Grant("scrap_coil",-1,0,out _),Is.False);Assert.That(s.Credits,Is.EqualTo(int.MaxValue));Assert.That(s.Quantity("scrap_coil"),Is.EqualTo(1));}
   [Test]public void CatalogEditsCannotMutateAnExistingSession(){var data=Items();var s=new ShopModel(data);data[0].buyPrice=100;Assert.That(s.Trade("water_flask",true,out _));Assert.That(s.Credits,Is.EqualTo(21));}
+  [Test]public void TradeBuyAtMaxStackReportsLimitAndNullChangesAreSafe()
+  {
+   var defs=new[]{new ItemSpec{id="optic",name="Optic Suite",buyPrice=10,sellPrice=4,maxStack=1}};
+   var s=new ShopModel(defs,50);
+   Assert.That(s.Trade("optic",true,out _),Is.True);
+   Assert.That(s.Trade("optic",true,out var msg),Is.False);
+   Assert.That(msg,Does.Contain("limit 1"));
+   Assert.That(s.Credits,Is.EqualTo(40));
+   Assert.That(s.CanApply(null,0,out var reason),Is.True);Assert.That(reason,Is.EqualTo("ok"));
+   Assert.That(s.TryApply(null,5,out reason),Is.True);Assert.That(s.Credits,Is.EqualTo(45));
+  }
  }
 }

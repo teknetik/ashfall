@@ -76,7 +76,7 @@ namespace AthenHill
   public string LastClip {get;private set;}
   readonly int[] lastIndex=new int[64];
   bool leftUp=true,rightUp=true,wasGrounded=true;
-  float lastStep,airTime,distance;
+  float lastStep=-10f,airTime,distance;
   void Awake(){for(int i=0;i<lastIndex.Length;i++)lastIndex[i]=-1;}
   void LateUpdate()
   {
@@ -137,28 +137,30 @@ namespace AthenHill
    source.PlayOneShot(clip,level);
    LastSurface=surface;LastClip=clip.name;
   }
-  FootstepSet Find(FootSurface s){foreach(var x in sets)if(x!=null&&x.surface==s)return x;return null;}
+  FootstepSet Find(FootSurface s){if(sets==null)return null;foreach(var x in sets)if(x!=null&&x.surface==s)return x;return null;}
   /// The surface under the player's feet.
   public FootSurface Surface()
   {
+   if(!motor)return defaultSurface;
    var origin=motor.transform.position+Vector3.up*.4f;
    if(!Physics.Raycast(origin,Vector3.down,out var hit,1.2f,groundMask,QueryTriggerInteraction.Ignore))return defaultSurface;
    return SurfaceAt(hit.collider.transform,hit.point);
   }
   public FootSurface SurfaceAt(Transform collider,Vector3 point)
   {
+   if(!collider)return defaultSurface;
    for(var t=collider;t;t=t.parent)
    {
     string n=t.name.ToLowerInvariant();
     if(!string.IsNullOrEmpty(bermsGroundName)&&n.Contains(bermsGroundName))return BermsSurface(point);
     if(VarietyCollider(t,n))return VarietySurface(point);
-    foreach(var r in colliderRules)if(r!=null&&!string.IsNullOrEmpty(r.nameContains)&&n.Contains(r.nameContains))return r.surface;
+    if(colliderRules!=null)foreach(var r in colliderRules)if(r!=null&&!string.IsNullOrEmpty(r.nameContains)&&n.Contains(r.nameContains))return r.surface;
    }
    return defaultSurface;
   }
   bool VarietyCollider(Transform t,string n)
   {
-   if(varietyWidth<=0||varietySurfaces==null||varietySurfaces.Length!=varietyWidth*varietyHeight||varietyColliders==null||!t.parent)return false;
+   if(varietyWidth<=0||varietyHeight<=0||varietySurfaces==null||varietySurfaces.Length!=varietyWidth*varietyHeight||varietyColliders==null||!t.parent)return false;
    string key=t.parent.name.ToLowerInvariant()+"/"+n;
    foreach(var c in varietyColliders)if(!string.IsNullOrEmpty(c)&&key==c)return true;
    return false;
@@ -166,13 +168,14 @@ namespace AthenHill
   /// Surface from the Berms variety map (sand, gravel or stone over the expansion bowl).
   public FootSurface VarietySurface(Vector3 point)
   {
+   if(varietyWidth<=0||varietyHeight<=0||varietySurfaces==null||varietySurfaces.Length!=varietyWidth*varietyHeight)return defaultSurface;
    float u=(point.x-varietyRect.x)*varietyRect.z,v=(point.z-varietyRect.y)*varietyRect.w;
    int x=Mathf.Clamp((int)(u*varietyWidth),0,varietyWidth-1),y=Mathf.Clamp((int)(v*varietyHeight),0,varietyHeight-1);
    return (FootSurface)varietySurfaces[y*varietyWidth+x];
   }
   public FootSurface BermsSurface(Vector3 point)
   {
-   if(bermsWidth<=0||bermsSurfaces==null||bermsSurfaces.Length!=bermsWidth*bermsHeight)return FootSurface.Sand;
+   if(bermsWidth<=0||bermsHeight<=0||bermsSurfaces==null||bermsSurfaces.Length!=bermsWidth*bermsHeight)return FootSurface.Sand;
    float u=(point.x-bermsRect.x)*bermsRect.z,v=(point.z-bermsRect.y)*bermsRect.w;
    int x=Mathf.Clamp((int)(u*bermsWidth),0,bermsWidth-1),y=Mathf.Clamp((int)(v*bermsHeight),0,bermsHeight-1);
    return (FootSurface)bermsSurfaces[y*bermsWidth+x];

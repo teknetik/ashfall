@@ -99,7 +99,11 @@ namespace AthenHill
   public void Refresh()
   {
    bool open=session&&session.State==CityState.Map;
-   if(open!=shown){shown=open;panel.style.display=open?DisplayStyle.Flex:DisplayStyle.None;modal?.EnableInClassList("map-modal",open);if(!open)dragging=false;}
+   if(open!=shown)
+   {
+    shown=open;panel.style.display=open?DisplayStyle.Flex:DisplayStyle.None;modal?.EnableInClassList("map-modal",open);
+    if(!open){if(dragPointer>=0&&viewport.HasPointerCapture(dragPointer))viewport.ReleasePointer(dragPointer);dragging=false;dragPointer=-1;}
+   }
    if(!open)return;
    if(modalScroll!=null)modalScroll.style.display=DisplayStyle.None;
    SetText("modal-title","World map");
@@ -165,7 +169,7 @@ namespace AthenHill
   void OnWheel(WheelEvent e)
   {
    if(Mathf.Abs(e.delta.y)<.001f)return;
-   Zoom(e.localMousePosition,e.delta.y<0?1.25f:.8f);e.StopPropagation();
+   Zoom(e.localMousePosition,WorldMapMath.WheelZoomFactor(e.delta.y));e.StopPropagation();
   }
   /// Every frame while the map is open (WorldMap.Update): keys, the player arrow and the column.
   public void Tick(float dt)
@@ -375,7 +379,8 @@ namespace AthenHill
   void EdgeArrow(Painter2D g,Vector2 target,Color c)
   {
    var mid=view.size*.5f;var d=target-mid;if(d.sqrMagnitude<1)return;
-   float t=Mathf.Min(Mathf.Abs((mid.x-16)/(Mathf.Abs(d.x)<.001f?.001f:d.x)),Mathf.Abs((mid.y-16)/(Mathf.Abs(d.y)<.001f?.001f:d.y)));
+   float insetX=Mathf.Max(4,mid.x-16),insetY=Mathf.Max(4,mid.y-16);
+   float t=Mathf.Min(Mathf.Abs(insetX/(Mathf.Abs(d.x)<.001f?.001f:d.x)),Mathf.Abs(insetY/(Mathf.Abs(d.y)<.001f?.001f:d.y)));
    var at=mid+d*Mathf.Min(1,t);var f=d.normalized;var r=new Vector2(-f.y,f.x);
    g.fillColor=c;g.strokeColor=Ink;g.lineWidth=1.5f;
    g.BeginPath();g.MoveTo(at+f*9);g.LineTo(at-f*6+r*7);g.LineTo(at-f*6-r*7);g.ClosePath();g.Fill();g.Stroke();
@@ -440,7 +445,7 @@ namespace AthenHill
    string region=map.InBerms?"Outer Berms":"Ward";
    whereText.text=nearest!=null?$"{region} · {Mathf.RoundToInt((nearest.Position-new Vector2(p.x,p.z)).magnitude)} m from {nearest.name}":region;
    var marker=map.Tracked(out var mission);
-   trackedTitle.text=mission!=null?mission.title.ToUpperInvariant():"NO MISSION TRACKED";
+   trackedTitle.text=mission!=null?(mission.title??"").ToUpperInvariant():"NO MISSION TRACKED";
    if(mission==null)trackedText.text="Pick one in your journal (J).";
    else if(!marker.shown)trackedText.text=string.IsNullOrEmpty(mission.objective)?"No marker for this step.":mission.objective;
    else
@@ -453,7 +458,7 @@ namespace AthenHill
    // Native QA (19 Nov 2026): no offer to show a target the tracked mission does not have on the sheet.
    trackedButton.style.display=marker.shown?DisplayStyle.Flex:DisplayStyle.None;
    var station=map.RespawnStation;
-   respawnText.text=(station?$"The Wardens bring you back to the {station.displayName.ToLowerInvariant()} (cyan ring).":"The Wardens bring you back to the West Gate post (cyan ring).")+(map.LastDowned.HasValue?"\nThe red cross marks where you last went down.":"");
+   respawnText.text=(station?$"The Wardens bring you back to the {(station.displayName??"waystation").ToLowerInvariant()} (cyan ring).":"The Wardens bring you back to the West Gate post (cyan ring).")+(map.LastDowned.HasValue?"\nThe red cross marks where you last went down.":"");
    string sig=string.Join(";",map.Places.Where(map.Shown).Select(x=>x.id));
    if(rebuildList&&listSignature==null||sig!=listSignature)
    {

@@ -18,6 +18,7 @@ namespace AthenHill
   }
   void LateUpdate()
   {
+   if(!player&&follow&&follow.target)player=follow.target;
    if(!player||!follow)return;
    var local=transform.InverseTransformPoint(player.position+Vector3.up*chestHeight)-center;
    bool now=Mathf.Abs(local.x)<=size.x*.5f&&Mathf.Abs(local.y)<=size.y*.5f&&Mathf.Abs(local.z)<=size.z*.5f&&!follow.FixedView;

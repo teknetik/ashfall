@@ -159,9 +159,40 @@ namespace AthenHill.Tests
   [Test]public void RestoreRebuildsStatsAndReportsUnknownContent()
   {
    Assert.That(model.TryEquip("implant1","implant_head",out _));var state=model.Capture();
-   state.equipped=new[]{new SlotEntry{slot="implant_head",itemId="implant1"},new SlotEntry{slot="primary",itemId="removed-content"}};
+   state.equipped=new[]{new SlotEntry{slot="implant_head",itemId="implant1"},new SlotEntry{slot="primary",itemId="removed-content"},new SlotEntry{slot="secondary",itemId=null}};
    model.SetEffects("temporary",new[]{new CharacterModifier{stat="perception",flat=99}});
-   var skipped=model.Restore(state);Assert.That(skipped,Contains.Item("removed-content"));Assert.That(model.Attribute("perception"),Is.EqualTo(12));
+   var skipped=model.Restore(state);Assert.That(skipped,Contains.Item("removed-content"));Assert.That(skipped,Does.Not.Contain(null));Assert.That(model.Attribute("perception"),Is.EqualTo(12));
+  }
+  [Test]public void SkillUseProgressClearsAtCapAndHandlesLargeAmounts()
+  {
+   data.skills[0].maximum=12;
+   model.Recalculate();
+   Assert.That(model.GrantSkillUse("rifle",0.6f,out int whole),Is.True);
+   Assert.That(whole,Is.Zero);Assert.That(model.SkillUseProgress("rifle"),Is.EqualTo(0.6f).Within(.001f));
+   Assert.That(model.GrantSkillUse("rifle",float.MaxValue,out whole),Is.True);
+   Assert.That(model.TrainedSkill("rifle"),Is.EqualTo(12));
+   Assert.That(model.SkillUseProgress("rifle"),Is.EqualTo(0f),"maxed skill clears lingering fractional progress");
+   // Also cleared when reaching max via TryRaiseSkill
+   data.skills[0].maximum=17;model.Restore(null);
+   Assert.That(model.GrantSkillUse("rifle",0.4f,out _),Is.True);
+   Assert.That(model.TryRaiseSkill("rifle",out _),Is.True);
+   Assert.That(model.TryRaiseSkill("rifle",out _),Is.True);
+   Assert.That(model.TrainedSkill("rifle"),Is.EqualTo(17));
+   Assert.That(model.SkillUseProgress("rifle"),Is.EqualTo(0f));
+  }
+  [Test]public void NullCatalogArraysDoNotThrowOnInitOrRecalculate()
+  {
+   var minimal=ScriptableObject.CreateInstance<CharacterCatalog>();
+   try
+   {
+    minimal.attributes=null;minimal.skills=null;minimal.derivedStats=null;minimal.slots=null;minimal.initialEquipment=null;
+    var empty=new CharacterModel(minimal,pack);
+    Assert.That(empty.Accepts("implant1","implant_head"),Is.False);
+    Assert.That(empty.TryRaiseAttribute("strength",out _),Is.False);
+    Assert.That(empty.TryRaiseSkill("rifle",out _),Is.False);
+    Assert.That(empty.CanApplyInventory(null,out _),Is.True);
+   }
+   finally{UnityEngine.Object.DestroyImmediate(minimal);}
   }
  }
 }

@@ -204,11 +204,16 @@ namespace AthenHill
   string Reward(FieldOrder order)
   {
    var pack=session.Shop;var parts=new List<string>();
+   int credits=Math.Max(0,order.rewardCredits);
    var items=(order.rewardItems??new ItemStack[0]).Where(x=>x!=null&&x.quantity>0&&pack.Spec(x.itemId)!=null).Select(x=>new ItemStack(x.itemId,Math.Min(x.quantity,pack.Room(x.itemId)))).Where(x=>x.quantity>0).ToList();
-   if(pack.TryApply(items.Select(x=>new KeyValuePair<string,int>(x.itemId,x.quantity)),Math.Max(0,order.rewardCredits),out _))
+   if(pack.TryApply(items.Select(x=>new KeyValuePair<string,int>(x.itemId,x.quantity)),credits,out _))
    {
-    if(order.rewardCredits>0)parts.Add($"{order.rewardCredits} credits");
+    if(credits>0)parts.Add($"{credits} credits");
     parts.AddRange(items.Select(x=>$"{CraftingText.ItemName(crafting.Model,x.itemId)} ×{x.quantity}"));
+   }
+   else if(credits>0&&pack.TryApply(Array.Empty<KeyValuePair<string,int>>(),credits,out _))
+   {
+    parts.Add($"{credits} credits");
    }
    var unlocked=(order.rewardRecipes??new string[0]).Where(crafting.Model.Unlock).Select(id=>crafting.Model.Recipe(id)).ToList();
    var text=parts.Count>0?"Reward: "+string.Join(", ",parts)+".":"";
@@ -221,7 +226,7 @@ namespace AthenHill
    Stage=Progress.Stage(model,pack);
    Objective=Progress.Objective(model,pack);
    var o=Progress.Current;
-   Heading=o!=null?$"FIELD ORDER {Progress.Index+1}/{data.orders.Length} · {o.title.ToUpperInvariant()}":Progress.FreePlay?"OUTER BERMS · FREE HUNTING":null;
+   Heading=o!=null?$"FIELD ORDER {Progress.Index+1}/{data.orders.Length} · {(o.title??"").ToUpperInvariant()}":Progress.FreePlay?"OUTER BERMS · FREE HUNTING":null;
    var key=Progress.GuidanceKey(model,pack);
    guidance=string.IsNullOrEmpty(key)?null:guidanceTargets.FirstOrDefault(t=>t!=null&&t.key==key&&t.point);
    Changed?.Invoke();
@@ -258,9 +263,10 @@ namespace AthenHill
   public void Restore(FieldOrderState state)
   {
    if(!data)return;
+   engageSpoken.Clear();
    Progress??=new FieldOrderProgress(data);
    Progress.Restore(state);
-   if(crafting&&crafting.Model!=null)for(int i=0;i<=Math.Min(Progress.Index,data.orders.Length-1);i++)BeginOrder(data.orders[i],true,false);
+   if(crafting&&crafting.Model!=null&&data.orders!=null)for(int i=0;i<=Math.Min(Progress.Index,data.orders.Length-1);i++)BeginOrder(data.orders[i],true,false);
    dirty=true;
   }
   public FieldOrderState Capture()=>Progress?.Capture()??new FieldOrderState();

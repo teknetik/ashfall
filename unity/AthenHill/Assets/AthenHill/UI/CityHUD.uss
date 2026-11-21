@@ -155,7 +155,8 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .character-tabs { flex-direction: row; flex-wrap: wrap; flex-shrink: 0; border-bottom-width: 1px; border-bottom-color: #2c5a5f; padding-bottom: 5px; }
 .character-tab { flex-grow: 1; font-size: 14px; height: 30px; min-width: 74px; margin: 0 3px 3px 0; padding: 2px 5px; background-image: none; background-color: #10292e; border-width: 1px; border-color: #426166; color: #c4d1ca; letter-spacing: 0; }
 .character-tab.active-tab { border-color: #58d5d7; color: #eee9dc; background-color: #1a434a; }
-.character-tab:focus, .character-action:focus, .character-slot:focus, .character-stat-increase:focus { border-color: #58d5d7; }
+.character-tab:focus, .character-action:focus, .character-slot:focus, .character-stat-increase:focus { border-color: #8be6df; }
+.anatomy-slot:focus { border-width: 2px; border-color: #8be6df; }
 .character-capacity { font-size: 14px; white-space: normal; padding: 8px 0; color: #c4d1ca; }
 .character-capacity.overburdened { color: #f0b99e; }
 .character-vitals { font-size: 15px; white-space: normal; padding-bottom: 8px; color: #c4d1ca; }
@@ -474,7 +475,7 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .settings-tabs Button { width: 150px; margin-right: 10px; min-height: 46px; font-size: 21px; }
 .settings-tabs .active-tab { color: #8be6df; border-bottom-width: 2px; border-bottom-color: #58d5d7; }
 #settings-scroll { flex-grow: 1; flex-shrink: 1; min-height: 0; }
-#sound-page, #video-page { padding: 0 12px 8px 0; }
+#sound-page, #video-page, #controls-page { padding: 0 12px 8px 0; }
 .settings-heading { font-size: 23px; color: #daca9e; margin: 16px 0 10px; }
 .settings-note { white-space: normal; color: #bcbcad; font-size: 18px; margin: 8px 0; flex-shrink: 0; }
 .settings-row { flex-direction: row; align-items: center; min-height: 48px; flex-shrink: 0; }
@@ -716,6 +717,7 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .packbar-slot.packbar-fixed { -unity-background-image-tint-color: #9c9a8c; }
 .packbar-slot.packbar-fixed-last { margin-right: 9px; }
 .packbar-slot.drop-target { background-image: url("Art/button-focus.png"); }
+.packbar-slot:focus { border-width: 2px; border-color: #8be6df; }
 .drag-source { opacity: 0.55; }
 .small-window .pack-hotbar-title { font-size: 16px; }
 .small-window .pack-hotbar-help { font-size: 14px; }
@@ -745,6 +747,7 @@ Button:disabled { color: #8c958b; -unity-background-image-tint-color: #7b8880; o
 .journal-mission.tracked .journal-mission-area { color: #8be6df; }
 .journal-mission.complete { opacity: 0.68; }
 .journal-mission.selected { background-image: url("Art/button-focus.png"); }
+.journal-mission:focus { border-left-width: 3px; border-left-color: #8be6df; }
 .journal-detail { flex-grow: 1; flex-shrink: 1; min-height: 430px; padding: 4px 6px 12px 22px; border-left-width: 1px; border-left-color: #2c5a5f; }
 .journal-title { font-size: 30px; white-space: normal; }
 .journal-meta-row { flex-direction: row; align-items: center; justify-content: space-between; margin: 2px 0 4px; }

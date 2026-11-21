@@ -68,6 +68,7 @@ namespace AthenHill
    root.RegisterCallback<PointerCancelEvent>(_=>CancelDrag());
    scroll.RegisterCallback<FocusInEvent>(e=>{if(!AnatomySection&&e.target is VisualElement v)scroll.ScrollTo(v);});
    scroll.contentViewport.RegisterCallback<GeometryChangedEvent>(_=>FitAnatomyViewport());
+   host.RegisterCallback<NavigationMoveEvent>(NavigateHost,TrickleDown.TrickleDown);
    // A release the panel never reported (pointer let go outside the window, focus lost mid-drag) still ends the drag:
    // two quiet ticks with the left button up drop it where the pointer last was.
    root.schedule.Execute(()=>
@@ -153,12 +154,12 @@ namespace AthenHill
     return description;
    }
    string text=$"{def.weight:0.#} kg";
-   if(def.slots.Any(s=>s.StartsWith("implant_")))text+=$"  |  {def.tier}  |  Upgrade {def.upgradeLevel}";
-   if(def.requirements.Length>0)text+="\nRequires: "+string.Join(", ",def.requirements.Select(r=>$"{Character.Data.Label(r.stat)} {Character.Stat(r.stat):0.#}/{r.minimum:0.#}"));
-   if(def.operatingRequirements.Length>0)text+="\nTo operate: "+string.Join(", ",def.operatingRequirements.Select(r=>$"{Character.Data.Label(r.stat)} {Character.Stat(r.stat):0.#}/{r.minimum:0.#}"));
+   if(def.slots!=null&&def.slots.Any(s=>s.StartsWith("implant_")))text+=$"  |  Tier {def.tier}  |  Upgrade {def.upgradeLevel}";
+   if(def.requirements!=null&&def.requirements.Length>0)text+="\nRequires: "+string.Join(", ",def.requirements.Select(r=>$"{Character.Data.Label(r.stat)} {Character.Stat(r.stat):0.#}/{r.minimum:0.#}"));
+   if(def.operatingRequirements!=null&&def.operatingRequirements.Length>0)text+="\nTo operate: "+string.Join(", ",def.operatingRequirements.Select(r=>$"{Character.Data.Label(r.stat)} {Character.Stat(r.stat):0.#}/{r.minimum:0.#}"));
    if(!string.IsNullOrEmpty(def.installationFacility))text+="\nInstall at: "+def.installationFacility;
-   if(def.modifiers.Length>0)text+="\n"+string.Join(", ",def.modifiers.Select(m=>Character.Data.Label(m.stat)+" "+(m.flat!=0?m.flat.ToString("+0.##;-0.##;0"):"")+(m.percent!=0?$" {m.percent*100:+0.##;-0.##;0}%":"")));
-   if(!string.IsNullOrEmpty(def.upgradeToItemId))text+="\nUpgrade: "+ItemName(def.upgradeToItemId)+$" ({def.upgradeCredits} cr"+string.Concat(def.upgradeIngredients.Select(i=>$", {i.count} {ItemName(i.id)}"))+")";
+   if(def.modifiers!=null&&def.modifiers.Length>0)text+="\n"+string.Join(", ",def.modifiers.Select(m=>Character.Data.Label(m.stat)+" "+(m.flat!=0?m.flat.ToString("+0.##;-0.##;0"):"")+(m.percent!=0?$" {m.percent*100:+0.##;-0.##;0}%":"")));
+   if(!string.IsNullOrEmpty(def.upgradeToItemId))text+="\nUpgrade: "+ItemName(def.upgradeToItemId)+$" ({def.upgradeCredits} cr"+string.Concat((def.upgradeIngredients??Array.Empty<CountEntry>()).Select(i=>$", {i.count} {ItemName(i.id)}"))+")";
    return text;
   }
   void BuildEquipment()
@@ -309,17 +310,20 @@ namespace AthenHill
    Copy(inspector,ItemName(equipped),"equipment-inspector-title");
    if(equipped==null)
    {
-    var fits=Character.Data.equipment.Where(e=>e!=null&&e.slots!=null&&e.slots.Contains(selectedSlot)).Select(e=>ItemName(e.itemId)).Distinct().ToArray();
-    if(fits.Length==0){Copy(inspector,$"Nothing made or sold in Ward fits the {SlotName(selectedSlot).ToLowerInvariant()} slot yet.");return;}
-    Copy(inspector,implants?"No implant installed. Select a compatible implant from your pack and choose Equip selected. Each implant supports three augmentations.":"No armour fitted. Select a compatible component from your pack and choose Equip selected.");
-    Copy(inspector,"Fits here: "+string.Join(", ",fits)+".");
-    CompatibleEquipment(inspector,selectedSlot);return;
+    var matching=Character.Data.equipment.Where(e=>e!=null&&e.slots!=null&&e.slots.Contains(selectedSlot)).ToArray();
+    var fits=matching.Select(e=>ItemName(e.itemId)).Distinct().ToArray();
+    bool anySockets=matching.Any(e=>(e.modificationSockets?.Length??0)>0);
+    var (guidance,fitsLine)=EmptySlotCopy(selectedSlot,SlotName(selectedSlot),implants,fits,anySockets);
+    Copy(inspector,guidance);
+    if(!string.IsNullOrEmpty(fitsLine))Copy(inspector,fitsLine);
+    if(fits.Length>0)CompatibleEquipment(inspector,selectedSlot);
+    return;
    }
    var illustration=new VisualElement{pickingMode=PickingMode.Ignore};illustration.AddToClassList("equipment-inspector-icon");illustration.AddToClassList(session.Shop.Spec(equipped)?.icon??"pack-icon");inspector.Add(illustration);
    Copy(inspector,session.Shop.Spec(equipped)?.description??"");Copy(inspector,DescribeItem(equipped));
    if(!Character.IsOperating(selectedSlot,out string reason))Copy(inspector,reason,"character-result rejected");
    var sockets=Character.ModificationSockets(selectedSlot);
-   if(sockets.Count==0){Copy(inspector,"This component has no augmentation sockets.");return;}
+   if(sockets.Count==0){Copy(inspector,selectedSlot=="implant_eye"?"Sealed optic unit · no augmentation sockets.":implants?"This implant has no augmentation sockets.":"This component has no augmentation sockets.");return;}
    Copy(inspector,implants?$"AUGMENTATION SLOTS  {sockets.Count}":$"COMPONENT SLOTS  {sockets.Count}","character-heading");
    var strip=new VisualElement{name="modification-sockets"};strip.AddToClassList("modification-sockets");inspector.Add(strip);
    for(int i=0;i<sockets.Count;i++)
@@ -332,9 +336,76 @@ namespace AthenHill
    if(selectedModification>=0)BuildModificationPanel(inspector,selectedSlot,selectedModification);
    else Copy(inspector,"Select a socket to inspect, install or remove its augmentation.");
   }
+  /// Pure copy rule for an empty body-map slot (IMPLANTS / ARMOUR).
+  public static (string guidance,string fitsLine) EmptySlotCopy(string slotId,string slotLabel,bool isImplant,string[] fittingItemNames,bool anySockets)
+  {
+   string lower=(slotLabel??slotId??"equipment").ToLowerInvariant();
+   if(fittingItemNames==null||fittingItemNames.Length==0)
+   {
+    if(slotId=="implant_eye")return ("No optic implant installed. Warden Optic Suite Mk I and other optic implants fit the eye slot when available at Field Supply.","");
+    return ($"Nothing made or sold in Ward fits the {lower} slot yet.","");
+   }
+   string guidance=slotId=="implant_eye"
+    ?"No optic implant installed. Select a compatible optic from your pack and choose Equip selected, or trade at Field Supply."+(anySockets?" Installed optics support augmentations.":"")
+    :isImplant
+     ?"No implant installed. Select a compatible implant from your pack and choose Equip selected."+(anySockets?" Compatible implants support augmentations.":"")
+     :"No armour fitted. Select a compatible component from your pack and choose Equip selected.";
+   string fitsLine=fittingItemNames.Length==1
+    ?$"{fittingItemNames[0]} fits the {lower} slot."
+    :$"Fits the {lower} slot: {string.Join(", ",fittingItemNames)}.";
+   return (guidance,fitsLine);
+  }
+  void NavigateHost(NavigationMoveEvent e)
+  {
+   if(session.State!=CityState.Inventory||!UiNavigation.IsArrow(e.direction))return;
+   var focused=root.focusController?.focusedElement as VisualElement;
+   if(focused==null||!host.Contains(focused))return;
+   var dir=e.direction;
+   var tabButtons=tabs.Children().OfType<Button>().ToList();
+   int tabIndex=tabButtons.IndexOf(focused as Button);
+   if(tabIndex>=0)
+   {
+    if(dir==NavigationMoveEvent.Direction.Left||dir==NavigationMoveEvent.Direction.Right)
+    {
+     int next=UiNavigation.ListStep(tabIndex,tabButtons.Count,dir==NavigationMoveEvent.Direction.Right?1:-1);
+     if(next!=tabIndex)tabButtons[next].Focus();
+     UiNavigation.Consume(e,root);return;
+    }
+    if(dir==NavigationMoveEvent.Direction.Down)
+    {
+     var first=body.Query<Button>().ToList().FirstOrDefault(b=>b.focusable&&b.enabledInHierarchy);
+     if(first!=null){first.Focus();UiNavigation.Consume(e,root);}
+    }
+    return;
+   }
+   if(!AnatomySection||anatomySlots.Count==0)return;
+   int slotIndex=anatomySlots.FindIndex(s=>s.cell==focused);
+   if(slotIndex>=0)
+   {
+    if(dir==NavigationMoveEvent.Direction.Up||dir==NavigationMoveEvent.Direction.Down)
+    {
+     if(dir==NavigationMoveEvent.Direction.Up&&slotIndex==0){tabs.Q<Button>("character-tab-"+section.ToLowerInvariant())?.Focus();UiNavigation.Consume(e,root);return;}
+     int next=UiNavigation.ListStep(slotIndex,anatomySlots.Count,dir==NavigationMoveEvent.Direction.Down?1:-1);
+     if(next!=slotIndex)anatomySlots[next].cell.Focus();
+     UiNavigation.Consume(e,root);return;
+    }
+    if(dir==NavigationMoveEvent.Direction.Right)
+    {
+     var inspectorBtn=body.Q("equipment-inspector")?.Query<Button>().ToList().FirstOrDefault(b=>b.focusable&&b.enabledInHierarchy);
+     if(inspectorBtn!=null){inspectorBtn.Focus();UiNavigation.Consume(e,root);}
+     return;
+    }
+   }
+   var inspectorRoot=body.Q("equipment-inspector");
+   if(inspectorRoot!=null&&inspectorRoot.Contains(focused)&&dir==NavigationMoveEvent.Direction.Left)
+   {
+    var chosen=anatomySlots.FirstOrDefault(s=>s.id==selectedSlot).cell??anatomySlots[0].cell;
+    chosen?.Focus();UiNavigation.Consume(e,root);
+   }
+  }
   void CompatibleEquipment(VisualElement target,string slot)
   {
-   var candidates=session.Shop.Carried.Where(x=>Character.Equipment(x.Key)?.slots.Contains(slot)==true).ToArray();
+   var candidates=session.Shop.Carried.Where(x=>Character.Equipment(x.Key)?.slots?.Contains(slot)==true).ToArray();
    foreach(var candidate in candidates)
    {
     string item=candidate.Key;AddAction(target,"Equip "+ItemName(item),()=>{bool ok=Character.TryEquip(item,slot,out string reason);Result(ok,reason,"Equipment updated.");},"equip-carried-"+item);
@@ -552,7 +623,7 @@ namespace AthenHill
    else if(destination!=null)Place(item,slot,socket,weapon,destination.slot,destination.socket,destination.weapon);
    else if(pack&&(slot!=null||socket!=null))
    {
-    string reason;bool ok=socket!=null?Craft.TryRemove(weapon,socket,out reason):Character.TryUnequip(slot,out reason);Result(ok,reason,"Returned to pack.");
+    string reason="Unable to return item to pack.";bool ok=socket!=null?(Craft!=null&&Craft.TryRemove(weapon,socket,out reason)):Character.TryUnequip(slot,out reason);Result(ok,reason,"Returned to pack.");
    }
    else Result(false,"Drop onto an equipment slot, a compatible socket, or the pack.",null);
   }

@@ -24,11 +24,21 @@ namespace AthenHill
   /// A hit always keeps at least this fraction of its damage against armour.
   public const float MinArmourFraction=.2f;
 
-  public static float EffectiveRange(float range)=>Mathf.Max(0,range)*EffectiveFraction;
+  static readonly (string needle,string skill)[] SkillPatterns=
+  {
+   ("pistol","pistol"),
+   ("rifle","rifle"),
+   ("shotgun","shotgun"),
+   ("smg","smg"),
+   ("heavyweapons","heavyWeapons"),
+   ("energyweapons","energyWeapons"),
+  };
+
+  public static float EffectiveRange(float range)=>float.IsNaN(range)?0:Mathf.Max(0,range)*EffectiveFraction;
   /// Damage multiplier at this distance: 1 inside the effective range, FalloffFloor at the range stat.
   public static float Falloff(float distance,float range)
   {
-   if(range<=0)return 0;
+   if(range<=0||float.IsNaN(range)||float.IsNaN(distance))return 0;
    float effective=range*EffectiveFraction;
    if(distance<=effective)return 1;
    if(distance>=range)return FalloffFloor;
@@ -36,28 +46,40 @@ namespace AthenHill
   }
   /// Effective accuracy 0..100 from the weapon's stat, the character's accuracy derived stat and the weapon skill.
   public static float Accuracy(float weaponAccuracy,float characterAccuracy,float skill)
-   =>Mathf.Clamp(weaponAccuracy+characterAccuracy+Mathf.Max(0,skill)*SkillAccuracyPerPoint,0,100);
+  {
+   float w=float.IsNaN(weaponAccuracy)?0:weaponAccuracy;
+   float c=float.IsNaN(characterAccuracy)?0:characterAccuracy;
+   float s=float.IsNaN(skill)?0:Mathf.Max(0,skill);
+   return Mathf.Clamp(w+c+s*SkillAccuracyPerPoint,0,100);
+  }
   /// Shot cone in degrees (half-angle: shots scatter inside a disc of this radius).
   public static float Cone(float spread,float accuracy,bool aiming,bool moving)
-   =>Mathf.Max(0,spread)*(1-Mathf.Clamp01(accuracy/100))*(aiming?AimSpreadScale:HipSpreadScale)*(moving?MovingSpreadScale:1);
+   =>float.IsNaN(spread)||float.IsNaN(accuracy)?0:Mathf.Max(0,spread)*(1-Mathf.Clamp01(accuracy/100))*(aiming?AimSpreadScale:HipSpreadScale)*(moving?MovingSpreadScale:1);
   /// Chance that a shot with this cone lands on a target of the given half-width at this distance (1 inside the cone).
   public static float HitChance(float coneDegrees,float distance,float targetRadius)
   {
+   if(float.IsNaN(coneDegrees)||float.IsNaN(distance)||float.IsNaN(targetRadius))return 0;
    if(coneDegrees<=0||distance<=0)return 1;
-   float scatter=distance*Mathf.Tan(coneDegrees*Mathf.Deg2Rad);
+   if(targetRadius<=0)return 0;
+   float scatter=distance*Mathf.Tan(Mathf.Min(coneDegrees,89.9f)*Mathf.Deg2Rad);
    return scatter<=targetRadius?1:Mathf.Clamp01(targetRadius/scatter);
   }
   /// Flat armour: each point not covered by the weapon's armour penetration removes one point of damage, never
   /// below MinArmourFraction of the hit.
   public static float ArmourReduced(float damage,float armour,float penetration)
-   =>Mathf.Max(damage*MinArmourFraction,damage-Mathf.Max(0,Mathf.Max(0,armour)-Mathf.Max(0,penetration)));
+  {
+   if(damage<=0||float.IsNaN(damage))return 0;
+   float a=float.IsNaN(armour)?0:Mathf.Max(0,armour);
+   float p=float.IsNaN(penetration)?0:Mathf.Max(0,penetration);
+   return Mathf.Max(damage*MinArmourFraction,damage-Mathf.Max(0,a-p));
+  }
   /// The character skill a weapon definition trains: the catalog skill id contained in the weapon id
   /// (weapon_scrap_pistol → pistol, weapon_field_rifle → rifle). Null when none matches.
   public static string SkillFor(string weaponId)
   {
    if(string.IsNullOrEmpty(weaponId))return null;
    var id=weaponId.ToLowerInvariant();
-   foreach(var skill in new[]{"pistol","rifle","shotgun","smg","heavyWeapons","energyWeapons"})if(id.Contains(skill.ToLowerInvariant()))return skill;
+   for(int i=0;i<SkillPatterns.Length;i++)if(id.Contains(SkillPatterns[i].needle))return SkillPatterns[i].skill;
    return null;
   }
  }

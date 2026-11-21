@@ -92,15 +92,17 @@ namespace AthenHill
     if(a!=null)p.position=new Vector2(a.position.x,a.position.z);
     places.Add(p);
    }
-   if(session.hillPoint)places.First(p=>p.id=="city:hill").anchor=session.hillPoint;
-   if(session.latticePoint)places.First(p=>p.id=="city:lattice_jack").anchor=session.latticePoint;
+   var hill=session.hillPoint?places.FirstOrDefault(p=>p.id=="city:hill"):null;
+   if(hill!=null)hill.anchor=session.hillPoint;
+   var jack=session.latticePoint?places.FirstOrDefault(p=>p.id=="city:lattice_jack"):null;
+   if(jack!=null)jack.anchor=session.latticePoint;
    var home=session.Home;
    if(home)places.Add(new MapPlace("city:home","Home",MapPlaceKind.Home,0,0){anchor=home.lockerPoint?home.lockerPoint:home.transform});
    foreach(var p in WorldMapSchematic.BermsPlaces())places.Add(p);
    foreach(var c in BermsCompassPoint.All)
    {
     if(!c)continue;
-    if(c.kind==BermsCompassPoint.Kind.Gate){var g=places.First(p=>p.id=="berms:west_gate");g.anchor=c.transform;if(!string.IsNullOrEmpty(c.displayName))g.name=c.displayName;continue;}
+    if(c.kind==BermsCompassPoint.Kind.Gate){var g=places.FirstOrDefault(p=>p.id=="berms:west_gate");if(g!=null){g.anchor=c.transform;if(!string.IsNullOrEmpty(c.displayName))g.name=c.displayName;}continue;}
     if(c.kind==BermsCompassPoint.Kind.Waystation)continue; // the WardenWaystation itself is listed below
     var id="site:"+WorldMapMath.Slug(c.displayName);
     if(sitePoints.ContainsKey(id))continue;
@@ -145,7 +147,7 @@ namespace AthenHill
   {
    get
    {
-    Bind();if(!session.player)return null;
+    Bind();if(!session||!session.player)return null;
     var post=combat&&combat.respawnPoint?combat.respawnPoint.position:session.player.transform.position;
     return WardenWaystation.NearestFound(session.player.transform.position,post);
    }
@@ -169,7 +171,7 @@ namespace AthenHill
   {
    Bind();
    bool primer=tutorial&&tutorial.Step==BermsStep.Complete;
-   discovery.Restore(state,WorldMapDiscovery.Implied(Session.Flags,primer));
+   discovery.Restore(state,WorldMapDiscovery.Implied(Session?Session.Flags:null,primer));
    LastDowned=WorldMapDiscovery.Downed(state);
   }
  }

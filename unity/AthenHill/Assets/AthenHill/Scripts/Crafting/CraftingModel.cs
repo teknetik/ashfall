@@ -33,14 +33,20 @@ namespace AthenHill
   public event Action Changed;
   public CraftingModel(CraftingCatalog data,IEnumerable<ItemSpec> items,ShopModel pack,Func<bool> hasWeapon,string weaponId=null,CharacterModel character=null)
   {
-   this.data=data;this.items=items.ToArray();this.pack=pack;this.hasWeapon=hasWeapon;this.character=character;
-   foreach(var weapon in data.weapons)
+   this.data=data??throw new ArgumentNullException(nameof(data));
+   this.items=(items??throw new ArgumentNullException(nameof(items))).Where(x=>x!=null).ToArray();
+   this.pack=pack??throw new ArgumentNullException(nameof(pack));
+   this.hasWeapon=hasWeapon??(()=>false);
+   this.character=character;
+   var recipes=data.recipes??Array.Empty<CraftRecipe>();
+   foreach(var weapon in data.weapons??Array.Empty<CraftWeapon>())
    {
-    var recipe=string.IsNullOrEmpty(weapon.recipeId)?data.recipes.FirstOrDefault(r=>r.outputWeaponId==weapon.id):data.recipes.FirstOrDefault(r=>r.id==weapon.recipeId&&r.outputWeaponId==weapon.id);
+    if(weapon==null||string.IsNullOrEmpty(weapon.id))continue;
+    var recipe=string.IsNullOrEmpty(weapon.recipeId)?recipes.FirstOrDefault(r=>r!=null&&r.outputWeaponId==weapon.id):recipes.FirstOrDefault(r=>r!=null&&r.id==weapon.recipeId&&r.outputWeaponId==weapon.id);
     loadouts.Add(weapon.id,new WeaponLoadout(weapon,data.modifiers,recipe?.outputSlots));
    }
    Loadout=GetLoadout(weaponId??"weapon_scrap_pistol")??loadouts.Values.First();
-   foreach(var recipe in data.recipes)if(recipe.knownByDefault)known.Add(recipe.id);
+   foreach(var recipe in recipes)if(recipe!=null&&recipe.knownByDefault)known.Add(recipe.id);
    character?.BindAttachmentWeight(()=>FittedWeightKg);
   }
   float Weight(string id)=>Math.Max(0,pack.Spec(id)?.weightKg??0);
@@ -127,6 +133,10 @@ namespace AthenHill
    if(!IngredientAllocator.TryAllocate(requirements,items,Pool,out used)){reason="missing_ingredients";return false;}
    used=used.Select(x=>new KeyValuePair<string,int>(x.Key,x.Value-(tools.Contains(x.Key)?1:0))).Where(x=>x.Value>0).ToList();
    if(output.maxStack>0&&(long)pack.Quantity(output.id)+recipe.outputQuantity>output.maxStack){reason="output_stack_full";return false;}
+   // Validate projected pack capacity (weight/slots) upfront so timed crafts never fail after finishing.
+   var delta=used.Select(x=>new KeyValuePair<string,int>(x.Key,-Math.Min(x.Value,pack.Quantity(x.Key)))).Where(x=>x.Value!=0).ToList();
+   delta.Add(new KeyValuePair<string,int>(recipe.outputItemId,recipe.outputQuantity));
+   if(!pack.CanApply(delta,0,out var packReason)){reason=packReason=="stack_full"?"output_stack_full":packReason;return false;}
    reason="ok";return true;
   }
   /// The timed fabrication in progress (one at a time), or null. Nothing is reserved or consumed while it runs.
@@ -137,7 +147,7 @@ namespace AthenHill
   /// null; a timed one only validates and starts the timer: the parts stay in the pack until TickCraft completes it.
   public bool BeginCraft(string recipeId,string stationId,float now,out string reason)
   {
-   if(Job!=null){reason="busy";return false;}
+   if(Job!=null||RepairJob!=null){reason="busy";return false;}
    if(OnBenchRecipe(recipeId)){reason="on_bench";return false;}
    if(!ValidateCraft(recipeId,stationId,out _,out reason))return false;
    if(NeedsHandMade(recipeId)){reason="hand_made_first";return false;}
@@ -371,7 +381,7 @@ namespace AthenHill
    if(!loadout.HasCondition){reason="no_condition";return false;}
    if(!string.IsNullOrEmpty(Condition.overhaulStationId)&&Condition.overhaulStationId!=stationId){reason="wrong_station";return false;}
    if(loadout.Repairs==0&&loadout.MaxDurability>=loadout.Base.durability-.001f&&loadout.Durability>=loadout.MaxDurability-.001f){reason="in_good_order";return false;}
-   if(Job!=null){reason="busy";return false;}
+   if(Job!=null||RepairJob!=null){reason="busy";return false;}
    if(!IngredientAllocator.TryAllocate(Condition.overhaulInputs??Array.Empty<CraftIngredient>(),items,Pool,out used)){reason="missing_ingredients";return false;}
    reason="ok";return true;
   }
@@ -399,13 +409,14 @@ namespace AthenHill
   {
    var skipped=new List<string>();
    Job=null; // a fabrication in progress is never saved: nothing was consumed, so nothing is lost
+   LastAward=null;
    known.Clear();crafted.Clear();Crafts=0;
    RepairJob=null;
    foreach(var loadout in loadouts.Values){loadout.Replace(null);loadout.ResetCondition();}
-   foreach(var recipe in data.recipes)if(recipe.knownByDefault)known.Add(recipe.id);
+   foreach(var recipe in data.recipes??Array.Empty<CraftRecipe>())if(recipe!=null&&recipe.knownByDefault)known.Add(recipe.id);
    if(state!=null)
    {
-    if(state.known!=null)foreach(var id in state.known){if(Recipe(id)!=null)known.Add(id);else skipped.Add(id);}
+    if(state.known!=null)foreach(var id in state.known){if(Recipe(id)!=null)known.Add(id);else if(!string.IsNullOrEmpty(id))skipped.Add(id);}
     if(state.crafted!=null)foreach(var c in state.crafted)if(c!=null&&Recipe(c.id)!=null&&c.count>0)crafted[c.id]=c.count;
     Crafts=(int)Math.Min(int.MaxValue,Math.Max(Math.Max(0,state.crafts),crafted.Values.Sum(x=>(long)x)));
     if(state.weapons!=null&&state.weapons.Length>0)
@@ -415,7 +426,7 @@ namespace AthenHill
      {
       if(saved==null)continue;
       var loadout=GetLoadout(saved.weaponId);
-      if(loadout==null||!restored.Add(saved.weaponId)){skipped.Add(saved.weaponId);continue;}
+      if(loadout==null||!restored.Add(saved.weaponId)){if(!string.IsNullOrEmpty(saved.weaponId))skipped.Add(saved.weaponId);continue;}
       skipped.AddRange(loadout.Replace(saved.fitted?.Where(x=>x!=null).Select(x=>new KeyValuePair<string,string>(x.slot,x.itemId)),SlotQualities(saved.fitted)));
       // saves before Phase 3 carry no condition (conditionVersion 0): the weapon loads at full condition
       if(saved.conditionVersion>=1&&loadout.HasCondition)loadout.SetCondition(saved.durability,saved.maxDurability,saved.repairs);

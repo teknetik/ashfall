@@ -37,7 +37,9 @@ namespace AthenHill
             videoTab = Button(tabs, "video-tab", "Video", () => SelectTab(true));
             controlsTab = Button(tabs, "controls-tab", "Controls", () => SelectTab(false, true));
             scroll = new ScrollView { name = "settings-scroll", horizontalScrollerVisibility = ScrollerVisibility.Hidden };
+            UiNavigation.KeepFocusVisible(scroll);
             panel.Add(scroll);
+            tabs.RegisterCallback<NavigationMoveEvent>(NavigateTabs, TrickleDown.TrickleDown);
             soundPage = new VisualElement { name = "sound-page" }; scroll.Add(soundPage);
             videoPage = new VisualElement { name = "video-page" }; scroll.Add(videoPage);
             controlsPage = new VisualElement { name = "controls-page" }; scroll.Add(controlsPage);
@@ -142,9 +144,29 @@ namespace AthenHill
             if (settings.Previewing) return;
             video = showVideo && !showControls; controls = showControls; scroll.scrollOffset = Vector2.zero; Refresh();
         }
+        void NavigateTabs(NavigationMoveEvent e)
+        {
+            if (settings.Previewing || !UiNavigation.IsArrow(e.direction)) return;
+            var focused = panel.focusController?.focusedElement as Button;
+            var order = new[] { soundTab, videoTab, controlsTab };
+            int i = Array.IndexOf(order, focused);
+            if (i < 0) return;
+            if (e.direction == NavigationMoveEvent.Direction.Left || e.direction == NavigationMoveEvent.Direction.Right)
+            {
+                int next = UiNavigation.ListStep(i, order.Length, e.direction == NavigationMoveEvent.Direction.Right ? 1 : -1);
+                order[next].Focus();
+                UiNavigation.Consume(e, panel);
+            }
+            else if (e.direction == NavigationMoveEvent.Direction.Down)
+            {
+                var page = controls ? controlsPage : video ? videoPage : soundPage;
+                var first = UiNavigation.TabStops(page).FirstOrDefault();
+                if (first != null) { first.Focus(); UiNavigation.Consume(e, panel); }
+            }
+        }
         static void Show(VisualElement element, bool value) => element.style.display = value ? DisplayStyle.Flex : DisplayStyle.None;
         void Value(string name, float value) { int n = Mathf.RoundToInt(value); sliders[name].SetValueWithoutNotify(n); percentages[name].text = n + "%"; }
-        void ChoiceValue(string name, int index) => choices[name].SetValueWithoutNotify(choices[name].choices[Mathf.Clamp(index, 0, choices[name].choices.Count - 1)]);
+        void ChoiceValue(string name, int index) { var c = choices[name].choices; if (c == null || c.Count == 0) return; choices[name].SetValueWithoutNotify(c[Mathf.Clamp(index, 0, c.Count - 1)]); }
         public void Refresh()
         {
             updating = true;
@@ -178,10 +200,10 @@ namespace AthenHill
         }
         void Tick()
         {
-            if (panel.resolvedStyle.display == DisplayStyle.None) return;
+            if (panel == null || settings == null || panel.resolvedStyle.display == DisplayStyle.None) return;
             if (settings.Previewing) countdown.text = "Keep these video settings? Reverting in " + settings.SecondsRemaining + " seconds.";
             if (!video) track.text = "Now playing · " + (Audio ? Audio.CurrentTrack : "Music unavailable");
         }
-        public void Dispose() { ticker.Pause(); settings.Changed -= Refresh; }
+        public void Dispose() { ticker?.Pause(); if (settings != null) settings.Changed -= Refresh; }
     }
 }

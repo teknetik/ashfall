@@ -34,7 +34,7 @@ namespace AthenHill
   [Min(0)]public float parkBeyond;
   public bool Parked {get;private set;}
   public bool Spawned {get;private set;}
-  public int Total=>spawns.Length;
+  public int Total=>spawns!=null?spawns.Length:0;
   public int Remaining=>live.Count(d=>d&&d.Health.Alive);
   public bool Cleared=>Spawned&&Remaining==0;
   public IReadOnlyList<FeralDroid> Droids=>live;
@@ -42,16 +42,22 @@ namespace AthenHill
   public FeralDroid Leader=>live.Count>0?live[0]:null;
   public event Action<DroidEncounter> WasCleared;
   readonly List<FeralDroid> live=new List<FeralDroid>();
+  readonly RaycastHit[] sightHits=new RaycastHit[8];
   float clearedAt,awayFor;
   void Start(){if(player)player.Downed+=OnPlayerDowned;}
-  void OnDestroy(){if(player)player.Downed-=OnPlayerDowned;}
+  void OnDestroy()
+  {
+   if(player)player.Downed-=OnPlayerDowned;
+   foreach(var d in live)if(d){d.Killed-=OnKilled;d.Alerted-=CallPack;}
+  }
   public void Activate()
   {
    if(Spawned)return;
    Spawned=true;
+   if(spawns==null)return;
    foreach(var s in spawns)
    {
-    if(!s.prefab||!s.point)continue;
+    if(s==null||!s.prefab||!s.point)continue;
     var d=Instantiate(s.prefab,s.point.position,s.point.rotation,transform);
     d.name=s.prefab.name;d.Bind(player,session,s.point.position);
     var loot=d.GetComponent<LootSource>();if(loot&&session)loot.Bind(session.GetComponent<CraftingSession>());
@@ -60,13 +66,40 @@ namespace AthenHill
   }
   void CallPack(FeralDroid caller)
   {
-   if(packRadius<=0)return;
+   if(!caller||packRadius<=0)return;
    foreach(var d in live)
    {
-    if(!d||d==caller||!d.Health.Alive)continue;
-    if((d.transform.position-caller.transform.position).sqrMagnitude<=packRadius*packRadius)d.JoinFight(Random.Range(packDelay.x,Mathf.Max(packDelay.x,packDelay.y)));
+    if(!d||d==caller||!d.gameObject.activeInHierarchy||!d.Health||!d.Health.Alive||d.Engaged)continue;
+    float dist=Vector3.Distance(d.transform.position,caller.transform.position);
+    if(dist>packRadius)continue;
+    bool clear=HasPackSightline(caller,d);
+    d.JoinFight(PackCallDelay(dist,packRadius,packDelay,Random.value,clear));
    }
   }
+  bool HasPackSightline(FeralDroid caller,FeralDroid other)
+  {
+   var from=caller.transform.position+Vector3.up*1.2f;
+   var to=other.transform.position+Vector3.up*1.2f;
+   var delta=to-from;float len=delta.magnitude;
+   if(len<.05f)return true;
+   int n=Physics.RaycastNonAlloc(from,delta/len,sightHits,len,caller.groundMask,QueryTriggerInteraction.Ignore);
+   for(int i=0;i<n;i++)
+   {
+    var c=sightHits[i].collider;
+    if(!c.GetComponentInParent<FeralDroid>()&&!c.GetComponentInParent<PlayerMotor>())return false;
+   }
+   return true;
+  }
+  /// Distance-scaled staggered delay so nearby packmates react first and occluded ones lag slightly behind cover.
+  public static float PackCallDelay(float distance,float packRadius,Vector2 packDelay,float jitter01,bool hasLineOfSight)
+  {
+   float lo=Mathf.Max(0,packDelay.x),hi=Mathf.Max(lo,packDelay.y);
+   float frac=packRadius>0?Mathf.Clamp01(Mathf.Max(0,distance)/packRadius):0;
+   float j=float.IsNaN(jitter01)?.5f:Mathf.Clamp01(jitter01);
+   float baseDelay=Mathf.Lerp(lo,hi,Mathf.Clamp01(frac*.65f+j*.35f));
+   return baseDelay+(hasLineOfSight?0:.25f);
+  }
+  public static float UnparkDistance(float parkBeyond,float hysteresis=15f)=>Mathf.Max(0,parkBeyond-Mathf.Max(0,hysteresis));
   /// Parking: the 500 m Berms keeps far clusters switched off (no thinking, skinning or draw calls) while the player is
   /// beyond Park Beyond and none of the droids is fighting; they come back as they were. 15 m hysteresis.
   void Park(bool far)
@@ -78,7 +111,11 @@ namespace AthenHill
     return;
    }
    if(far){foreach(var d in live)if(d&&d.Health.Alive&&d.Engaged)return;}
-   else if((player.transform.position-transform.position).sqrMagnitude>(parkBeyond-15)*(parkBeyond-15))return;
+   else
+   {
+    float unpark=UnparkDistance(parkBeyond,15f);
+    if((player.transform.position-transform.position).sqrMagnitude>unpark*unpark)return;
+   }
    Parked=far;
    if(far){foreach(var d in live)if(d&&d.gameObject.activeSelf&&d.Health.Alive){d.gameObject.SetActive(false);parked.Add(d);}}
    else{foreach(var d in parked)if(d)d.gameObject.SetActive(true);parked.Clear();}

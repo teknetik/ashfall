@@ -64,8 +64,8 @@ namespace AthenHill.Tests
   }
 
   // ---- Adaptive HUD
-  static HudFrame Frame(InterfaceMode mode=InterfaceMode.Adaptive,bool lowerThird=false,bool window=false,bool combat=false,bool alt=false,bool prompt=false,bool reduced=false)
-   =>new HudFrame{mode=mode,lowerThird=lowerThird,windowOpen=window,combat=combat,altHeld=alt,prompt=prompt,reducedMotion=reduced};
+  static HudFrame Frame(InterfaceMode mode=InterfaceMode.Adaptive,bool lowerThird=false,bool window=false,bool combat=false,bool alt=false,bool prompt=false,bool vitalsActive=false,bool reduced=false)
+   =>new HudFrame{mode=mode,lowerThird=lowerThird,windowOpen=window,combat=combat,altHeld=alt,prompt=prompt,vitalsActive=vitalsActive,reducedMotion=reduced};
   static AdaptiveHudModel Model(){var m=new AdaptiveHudModel{quietSeconds=5,fadeInSeconds=.2f,fadeOutSeconds=.5f};m.WakeAll(0);return m;}
   /// Steps the model from t0 to t1 in 50 ms frames; returns the time reached.
   static float Run(AdaptiveHudModel m,HudFrame f,float t0,float t1){float t=t0;while(t<t1-1e-5f){t=Mathf.Min(t1,t+.05f);m.Step(f,t,.05f);}return t;}
@@ -123,6 +123,26 @@ namespace AthenHill.Tests
    var m=Model();float t=Run(m,Frame(),0,8);
    Run(m,Frame(prompt:true),t,t+10);
    Assert.That(m.Alpha(HudPanel.KeyHints),Is.EqualTo(1));Assert.That(m.Hidden(HudPanel.FieldNotes));
+  }
+  [Test]public void VitalsActiveHoldsIdentityOnlyAndRestartsQuietTime()
+  {
+   var m=Model();float t=Run(m,Frame(),0,8);
+   t=Run(m,Frame(vitalsActive:true),t,t+4);
+   Assert.That(m.Alpha(HudPanel.Identity),Is.EqualTo(1),"low vitality / overclock / overcharge keeps Identity up");
+   Assert.That(m.Hidden(HudPanel.FieldNotes));Assert.That(m.Hidden(HudPanel.Log));
+   t=Run(m,Frame(),t,t+4.5f);
+   Assert.That(m.Alpha(HudPanel.Identity),Is.EqualTo(1),"quiet timer starts after vitals settle");
+   Run(m,Frame(),t,t+1.5f);
+   Assert.That(m.Hidden(HudPanel.Identity));
+   // Lower-third dialogue still takes precedence over vitalsActive.
+   Run(m,Frame(lowerThird:true,vitalsActive:true),t+2,t+3);
+   Assert.That(m.Hidden(HudPanel.Identity));
+  }
+  [Test]public void IsDisplayedInRejectsDetachedAndHiddenAncestors()
+  {
+   var parent=new VisualElement();var child=new Button();parent.Add(child);
+   Assert.That(CityHud.IsDisplayedIn(child),Is.False,"detached elements have no panel");
+   Assert.That(CityHud.IsDisplayedIn(null),Is.False);
   }
   [Test]public void ReducedMotionCutsInsteadOfFading()
   {

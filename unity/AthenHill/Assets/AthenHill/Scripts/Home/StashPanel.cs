@@ -66,8 +66,9 @@ namespace AthenHill
   /// consumables, wearable gear or the tools schematics need.
   public static bool IsSalvage(GameSession session,CraftingModel model,ItemSpec item)
   {
-   if(item==null||session.catalog.Consumable(item.id)!=null||session.Character?.Equipment(item.id)!=null)return false;
-   if(model!=null)
+   if(item==null||!session)return false;
+   if((session.catalog&&session.catalog.Consumable(item.id)!=null)||session.Character?.Equipment(item.id)!=null)return false;
+   if(model?.Data?.recipes!=null)
    {
     var recipes=model.Data.recipes.Where(r=>r!=null).ToList();
     if(recipes.Any(r=>r.requiredTools!=null&&Array.IndexOf(r.requiredTools,item.id)>=0))return false;
@@ -77,6 +78,7 @@ namespace AthenHill
   }
   public void StoreAllSalvage()
   {
+   if(!session||session.Shop==null||session.Stash==null)return;
    var model=crafting?crafting.Model:null;
    var moving=session.Shop.Carried.Where(x=>IsSalvage(session,model,session.Shop.Spec(x.Key))).ToList();
    if(moving.Count==0){session.Notify("No salvage or crafting parts in your pack.","Home locker");return;}

@@ -207,10 +207,17 @@ namespace AthenHill
             else if (to == WeatherKind.FrontClearing && from != WeatherKind.FrontClearing)
             {
                 // A warning still queued (the player was in a menu or conversation) is stale once the front clears.
-                if (pendingFrontTag != null) { var tag = pendingFrontTag; session.RadioLine.Drop(t => t == tag); }
+                if (pendingFrontTag != null) { var tag = pendingFrontTag; session.RadioLine?.Drop(t => t == tag); }
                 if (!string.IsNullOrWhiteSpace(clearLine)) session.Radio(clearLine, radioSpeaker, radioGap, "weather:clear:" + sched.Fronts);
                 pendingFrontTag = null;
             }
+        }
+
+        void EnsureSchedule()
+        {
+            if (sched != null) return;
+            schedule ??= new WeatherScheduleSettings();
+            sched = new WeatherSchedule(schedule, NewSeed());
         }
 
         public void ResetToCalm(bool snap)
@@ -226,6 +233,7 @@ namespace AthenHill
         {
             error = null;
             if (!WeatherRules.TryParse(name, out var kind, out bool front)) { error = "State must be calm, breezy, gusting, buildup, peak, clearing or front."; return false; }
+            EnsureSchedule();
             var before = State;
             sched.Force(kind, !front);
             if (front) Transition(before, kind);
@@ -235,8 +243,8 @@ namespace AthenHill
 
         public object DevState() => new
         {
-            available = true, state = WeatherRules.Name(State), held = sched.Held, forcedRun = sched.ForcedRun, remaining = sched.Remaining,
-            elapsed = sched.Elapsed, grace = sched.InGrace, fronts = sched.Fronts, sinceFront = sched.SinceFront, frontAllowed = FrontAllowed(),
+            available = true, state = WeatherRules.Name(State), held = sched != null && sched.Held, forcedRun = sched != null && sched.ForcedRun, remaining = sched != null ? sched.Remaining : 0f,
+            elapsed = sched != null ? sched.Elapsed : 0f, grace = sched != null && sched.InGrace, fronts = sched != null ? sched.Fronts : 0, sinceFront = sched != null ? sched.SinceFront : 0f, frontAllowed = FrontAllowed(),
             windStrength = WeatherConditions.WindStrength, windRate = mix.windRate, gust = mix.gust, gustEnvelope = envelope,
             visibility = WeatherConditions.Visibility, wind = new[] { WeatherConditions.Wind.x, WeatherConditions.Wind.y, WeatherConditions.Wind.z },
             haze = mix.haze, dust = mix.dust, sand = mix.sand, sunDim = mix.sunDim, warmth = mix.warmth, reducedMotion = reduced,

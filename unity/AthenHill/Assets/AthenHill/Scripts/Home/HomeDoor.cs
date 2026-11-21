@@ -34,6 +34,7 @@ namespace AthenHill
   void Knock(){if(session&&Locked)session.Notify(lockedNotice,"Ward");}
   void Update()
   {
+   if(!player&&session&&session.player)player=session.player.transform;
    bool near=player&&(player.position-transform.position).sqrMagnitude<openDistance*openDistance;
    bool open=!Locked&&near;
    if(open!=wantOpen)

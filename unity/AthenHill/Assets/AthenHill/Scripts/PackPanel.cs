@@ -200,7 +200,7 @@ namespace AthenHill
   {
    open=false;hoverKey=null;live?.Pause();
    characterPanel.CancelDrag();
-   if(dragPointer>=0&&previewView.HasPointerCapture(dragPointer))previewView.ReleasePointer(dragPointer);
+   if(dragPointer>=0&&previewView!=null&&previewView.HasPointerCapture(dragPointer))previewView.ReleasePointer(dragPointer);
    dragPointer=-1;
    if(preview)preview.SetActive(false);
   }
@@ -321,7 +321,7 @@ namespace AthenHill
    }
    return list;
   }
-  IEnumerable<CraftRecipe> KnownSchematics()=>Model==null?Enumerable.Empty<CraftRecipe>():Model.Data.recipes.Where(r=>r!=null&&Model.Knows(r.id)).OrderBy(r=>r.group);
+  IEnumerable<CraftRecipe> KnownSchematics()=>Model?.Data?.recipes==null?Enumerable.Empty<CraftRecipe>():Model.Data.recipes.Where(r=>r!=null&&Model.Knows(r.id)).OrderBy(r=>r.group);
   bool Ready(CraftRecipe r)=>r.inputs==null||r.inputs.All(i=>Model.Available(i)>=i.quantity);
 
   void RebuildGrid()
@@ -427,7 +427,18 @@ namespace AthenHill
     // WASD type into the box; only the arrow keys leave it (Left/Right stay with the text cursor).
     var k=Keyboard.current;
     if(k!=null&&k.upArrowKey.isPressed&&dir==NavigationMoveEvent.Direction.Up)Focus(ActiveTabButton());
-    else if(k!=null&&k.downArrowKey.isPressed&&dir==NavigationMoveEvent.Direction.Down)FocusGrid();
+    else if(k!=null&&k.downArrowKey.isPressed&&dir==NavigationMoveEvent.Direction.Down){if(keys.Count>0)FocusGrid();else Focus(ActiveChip());}
+    UiNavigation.Consume(e,root);return;
+   }
+   int barIndex=barCells.IndexOf(focused as Button);
+   if(barIndex>=0)
+   {
+    if(dir==NavigationMoveEvent.Direction.Left||dir==NavigationMoveEvent.Direction.Right)
+    {
+     int next=UiNavigation.ListStep(barIndex,barCells.Count,dir==NavigationMoveEvent.Direction.Right?1:-1);
+     Focus(barCells[next]);
+    }
+    else if(dir==NavigationMoveEvent.Direction.Up){if(keys.Count>0)FocusGrid();else Focus(ActiveChip());}
     UiNavigation.Consume(e,root);return;
    }
    int chip=chips.IndexOf(focused as Button);
@@ -436,7 +447,8 @@ namespace AthenHill
     if(dir==NavigationMoveEvent.Direction.Left){if(chip>0)Focus(chips[chip-1]);else Focus(search);}
     else if(dir==NavigationMoveEvent.Direction.Right){if(chip<chips.Count-1)Focus(chips[chip+1]);}
     else if(dir==NavigationMoveEvent.Direction.Up)Focus(ActiveTabButton());
-    else FocusGrid();
+    else if(keys.Count>0)FocusGrid();
+    else if(barCells.Count>0)Focus(barCells[0]);
     UiNavigation.Consume(e,root);return;
    }
    if(focused==tabItems||focused==tabSchematics)
@@ -451,6 +463,7 @@ namespace AthenHill
    int columns=Columns();
    if(dir==NavigationMoveEvent.Direction.Up&&index<columns){Focus(ActiveChip());UiNavigation.Consume(e,root);return;}
    int target=UiNavigation.GridStep(index,keys.Count,columns,dir);
+   if(dir==NavigationMoveEvent.Direction.Down&&target==index&&barCells.Count>0){Focus(barCells[0]);UiNavigation.Consume(e,root);return;}
    if(target>=0)Focus(tiles[keys[target]]);
    UiNavigation.Consume(e,root);
   }

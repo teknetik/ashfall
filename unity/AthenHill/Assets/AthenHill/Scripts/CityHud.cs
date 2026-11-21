@@ -55,12 +55,12 @@ namespace AthenHill
   Label[] noteLabels;readonly string[] noteTexts=new string[4];
   ConversationCamera conversation;PlayerCombat playerCombat;
   float dialogueSince=-1,lastHurt=float.NegativeInfinity;
-  int lastHp=int.MinValue,lastNano=int.MinValue,adaptiveLogRevision=-1;
+  int lastHp=int.MinValue,lastNano=int.MinValue,lastMaxHp=int.MinValue,lastMaxNano=int.MinValue,adaptiveLogRevision=-1;
   bool panelsApplied;
   void Start()
   {
    root=GetComponent<UIDocument>().rootVisualElement;
-   gameplayCullingMask=worldCamera.cullingMask;gameplayClearFlags=worldCamera.clearFlags;
+   if(worldCamera){gameplayCullingMask=worldCamera.cullingMask;gameplayClearFlags=worldCamera.clearFlags;}
    windowLayout=new HudWindowLayout(root);
    settingsPanel=new SettingsPanel(root.Q("settings-panel"),session.Settings,session);
    crafting=session.GetComponent<CraftingSession>();
@@ -68,7 +68,8 @@ namespace AthenHill
    foreach(string name in new[]{"quickbar","top-actions","interaction","key-hints"})windowLayout.Add(root.Q(name),name,true);
    root.RegisterCallback<GeometryChangedEvent>(_=>UpdateWindowSize());
    UpdateWindowSize();
-   root.Q("objective-box").RegisterCallback<GeometryChangedEvent>(e=>root.Q("top-actions").style.top=e.newRect.yMax+7);
+   var objectiveBox=root.Q("objective-box");var topActions=root.Q("top-actions");
+   if(objectiveBox!=null&&topActions!=null)objectiveBox.RegisterCallback<GeometryChangedEvent>(e=>topActions.style.top=e.newRect.yMax+7);
    shade=root.Q("shade");modal=root.Q("modal");
    panelElements[(int)HudPanel.Identity]=new[]{root.Q("identity")};
    panelElements[(int)HudPanel.FieldNotes]=new[]{root.Q("objective-box"),root.Q("top-actions")};
@@ -92,10 +93,11 @@ namespace AthenHill
    // HUD controls are mouse and hotkey only (1–7, Tab/5, 6, Esc, E), so nothing in the HUD can hold keyboard focus —
    // including scroll views' scrollers, which UI Toolkit may make focusable again when they re-layout.
    HudUnfocusable();
-   foreach(var scroll in root.Q("hud").Query<ScrollView>().ToList())scroll.RegisterCallback<GeometryChangedEvent>(_=>HudUnfocusable(scroll));
-   root.Q("modal").RegisterCallback<FocusInEvent>(e=>modalFocus=e.target as VisualElement);
+   var hudRoot=root.Q("hud");
+   if(hudRoot!=null)foreach(var scroll in hudRoot.Query<ScrollView>().ToList())scroll.RegisterCallback<GeometryChangedEvent>(_=>HudUnfocusable(scroll));
+   modal?.RegisterCallback<FocusInEvent>(e=>modalFocus=e.target as VisualElement);
    radio=root.Q("radio");notice=root.Q("notice");
-   radio.RegisterCallback<GeometryChangedEvent>(_=>PlaceNotice());
+   radio?.RegisterCallback<GeometryChangedEvent>(_=>PlaceNotice());
    foreach(var item in session.catalog.items)if(item!=null&&!string.IsNullOrEmpty(item.icon))iconClasses.Add(item.icon);
    pack=new PackPanel(root,session,crafting,characterPreview?characterPreview:FindAnyObjectByType<CharacterPreview>(),iconClasses);
 
@@ -117,20 +119,22 @@ namespace AthenHill
    Bind("start-game",StartNewGame);Bind("startup-settings",()=>session.Open(CityState.Settings));
    Bind("continue-game",()=>{if(saveGame)saveGame.Continue();});
    Bind("confirm-new-game",()=>{ShowNewGameConfirm(false);if(saveGame)saveGame.NewGame();else session.StartGame();});
-   Bind("cancel-new-game",()=>{ShowNewGameConfirm(false);root.Q<Button>("start-game").Focus();});
-   root.Q("new-game-confirm").RegisterCallback<KeyDownEvent>(e=>{if(e.keyCode==KeyCode.Escape){ShowNewGameConfirm(false);root.Q<Button>("start-game").Focus();e.StopPropagation();}},TrickleDown.TrickleDown);
+   Bind("cancel-new-game",()=>{ShowNewGameConfirm(false);root.Q<Button>("start-game")?.Focus();});
+   root.Q("new-game-confirm")?.RegisterCallback<KeyDownEvent>(e=>{if(e.keyCode==KeyCode.Escape){ShowNewGameConfirm(false);root.Q<Button>("start-game")?.Focus();e.StopPropagation();}},TrickleDown.TrickleDown);
    Bind("mute",session.ToggleMute);Bind("reduced-motion",session.ToggleReducedMotion);
    Bind("reset-ui",()=>{windowLayout.Reset();session.Notify("UI positions reset.");});
    for(int i=0;i<GameSession.MaxChoices;i++){int index=i;Bind("choice"+i,()=>session.Choose(index));}
    for(int i=0;i<3;i++){int index=i;Bind("node"+i,()=>session.SelectDestination(index));}
    // The hotbar (5 Oct 2026): 1 primary weapon, 2 sidearm, 3–0 items assigned in the field pack.
    hotbar=new HotbarView(root,session,()=>session.player?session.player.GetComponent<PlayerCombat>():null);
-   foreach(var npc in session.npcs)
+   var nametagHost=root.Q("nametags");
+   if(session.npcs!=null&&nametagHost!=null)foreach(var npc in session.npcs)
    {
+    if(!npc||npc.definition==null)continue;
     var tag=new VisualElement{pickingMode=PickingMode.Ignore,usageHints=UsageHints.DynamicTransform};tag.AddToClassList("nametag");
     var marker=new VisualElement{pickingMode=PickingMode.Ignore};marker.AddToClassList("diamond");marker.AddToClassList("nametag-marker");tag.Add(marker);
     var label=new Label(npc.definition.displayName+"\n"+npc.definition.role){pickingMode=PickingMode.Ignore};label.AddToClassList("nametag-copy");tag.Add(label);
-    root.Q("nametags").Add(tag);tags.Add(npc,tag);windowLayout.Add(tag,"nametag-"+npc.definition.id,false,true);
+    nametagHost.Add(tag);tags.Add(npc,tag);windowLayout.Add(tag,"nametag-"+npc.definition.id,false,true);
    }
    // Keep compass geometry and lettering stable; move it through GPU transforms.
    // Reassigning labels at every 15-degree boundary fragmented the UI vertex pages.
@@ -152,24 +156,26 @@ namespace AthenHill
   /// The confirmation takes the place of the start actions (it never stacks below them over the footer).
   void ShowNewGameConfirm(bool show)
   {
-   Show("new-game-confirm",show);Show("startup-actions",!show);root.Q("startup-actions").SetEnabled(!show);
-   if(show)root.schedule.Execute(()=>root.Q<Button>("cancel-new-game").Focus());
+   Show("new-game-confirm",show);Show("startup-actions",!show);root.Q("startup-actions")?.SetEnabled(!show);
+   if(show)root.schedule.Execute(()=>root.Q<Button>("cancel-new-game")?.Focus());
   }
   /// Continue appears (and takes focus) only when a save exists; its line summarises the saved progress.
   void RefreshStartupSave()
   {
    hasSave=saveGame&&saveGame.HasSave;
    Show("continue-game",hasSave);
-   root.Q<Label>("start-game-label").text=hasSave?"New Game":"Start Game";
-   root.Q<Button>("start-game").EnableInClassList("arrival-primary",!hasSave);
-   if(hasSave)root.Q<Label>("continue-summary").text=saveGame.Summary()??"";
+   Text("start-game-label",hasSave?"New Game":"Start Game");
+   root.Q<Button>("start-game")?.EnableInClassList("arrival-primary",!hasSave);
+   if(hasSave)Text("continue-summary",saveGame.Summary()??"");
    ShowNewGameConfirm(false);
   }
   public int InventoryColumns()=>pack!=null?pack.Columns():1;
   /// Makes every element under the HUD (or one HUD scroll view) non-focusable and outside the Tab order.
   void HudUnfocusable(VisualElement scope=null)
   {
-   foreach(var v in (scope??root.Q("hud")).Query<VisualElement>().ToList()){if(v.focusable)v.focusable=false;if(v.tabIndex>=0)v.tabIndex=-1;}
+   var target=scope??root?.Q("hud");
+   if(target==null)return;
+   foreach(var v in target.Query<VisualElement>().ToList()){if(v.focusable)v.focusable=false;if(v.tabIndex>=0)v.tabIndex=-1;}
   }
   /// Navigation: in play nothing moves; in a modal, Tab / Shift+Tab cycle only through the modal's own controls.
   void GuardNavigation(NavigationMoveEvent e)
@@ -207,29 +213,38 @@ namespace AthenHill
    (root.focusController?.focusedElement as VisualElement)?.Blur();
   }
   /// Keeps keyboard focus on something usable in a modal: when the focused control disabled itself (e.g. the last
-  /// scrap coil sold) or disappeared, focus its nearest enabled neighbour (same row first), else Close.
+  /// scrap coil sold) or disappeared (or sits inside a hidden sibling panel), focus its nearest enabled neighbour
+  /// (same row first), else Close.
   void EnsureModalFocus()
   {
    var state=session.State;
    if(state==CityState.Play||state==CityState.MainMenu||state==CityState.Boot||state==CityState.Settings||state==CityState.Inventory)return;
-   if(root.Q("shade").resolvedStyle.display==DisplayStyle.None)return; // e.g. the developer time overlay owns focus
+   if(shade==null||modal==null||shade.resolvedStyle.display==DisplayStyle.None)return; // e.g. the developer time overlay owns focus
    var focused=root.focusController?.focusedElement as VisualElement;
-   if(focused!=null&&focused.panel!=null&&focused.enabledInHierarchy&&focused.visible&&focused.resolvedStyle.display!=DisplayStyle.None)return;
+   if(focused!=null&&modal.Contains(focused)&&IsDisplayedIn(focused,modal.parent))return;
    if(state==CityState.Fabricator&&fabricator!=null){var f=fabricator.ActionFocus;if(f!=null){(f as VisualElement).focusable=true;f.Focus();return;}}
    var last=modalFocus;var close=root.Q<Button>("close");
    Button pick=null;
-   if(last!=null&&last.panel!=null)
+   if(last!=null&&last.panel!=null&&modal.Contains(last))
    {
-    pick=last.parent?.Query<Button>().Where(Usable).ToList().FirstOrDefault(b=>b!=last);
+    pick=last.parent?.Query<Button>().Where(b=>Usable(b,modal.parent)).ToList().FirstOrDefault(b=>b!=last);
     if(pick==null)
     {
-     var all=root.Q("modal").Query<Button>().ToList();int i=all.IndexOf(last as Button);
-     if(i>=0)pick=all.Skip(i+1).FirstOrDefault(Usable)??all.Take(i).Reverse().FirstOrDefault(b=>Usable(b)&&b!=close);
+     var all=modal.Query<Button>().ToList();int i=all.IndexOf(last as Button);
+     if(i>=0)pick=all.Skip(i+1).FirstOrDefault(b=>Usable(b,modal.parent))??all.Take(i).Reverse().FirstOrDefault(b=>Usable(b,modal.parent)&&b!=close);
     }
    }
    (pick??close)?.Focus();
   }
-  static bool Usable(Button b)=>b!=null&&b.focusable&&b.enabledInHierarchy&&b.visible&&b.resolvedStyle.display!=DisplayStyle.None&&b.panel!=null;
+  /// True when v and every ancestor up to stopAt are displayed, visible and enabled (guards against hidden panels).
+  public static bool IsDisplayedIn(VisualElement v,VisualElement stopAt=null)
+  {
+   if(v==null||v.panel==null||!v.enabledInHierarchy)return false;
+   for(var e=v;e!=null&&e!=stopAt;e=e.parent)
+    if(!e.visible||e.resolvedStyle.display==DisplayStyle.None)return false;
+   return true;
+  }
+  static bool Usable(Button b,VisualElement stopAt=null)=>b!=null&&b.focusable&&IsDisplayedIn(b,stopAt);
   /// Notices sit under the radio panel while a radio line is up, so both stay readable.
   void PlaceNotice()
   {
@@ -257,9 +272,9 @@ namespace AthenHill
    for(;element!=null;element=element.parent)if(element is Button||element is ScrollView||element.ClassListContains("movable-window"))return true;
    return false;
   }
-  void Bind(string name,Action action){root.Q<Button>(name).clicked+=action;}
-  void Show(string name,bool show){root.Q(name).style.display=show?DisplayStyle.Flex:DisplayStyle.None;}
-  void Text(string name,string value){root.Q<Label>(name).text=value;}
+  void Bind(string name,Action action){var b=root.Q<Button>(name);if(b!=null)b.clicked+=action;}
+  void Show(string name,bool show){var e=root.Q(name);if(e!=null)e.style.display=show?DisplayStyle.Flex:DisplayStyle.None;}
+  void Text(string name,string value){var l=root.Q<Label>(name);if(l!=null)l.text=value;}
   /// Field Notes (upper right) shows the tracked mission (5 Oct 2026): its title, current instruction and a mark per
   /// objective step.
   void UpdateObjective()
@@ -284,35 +299,36 @@ namespace AthenHill
   }
   public void Refresh()
   {
-   if(root==null||session.Shop==null)return;
-   bool modal=session.State!=CityState.Play;
+   if(root==null||session==null||session.Shop==null)return;
+   bool isModal=session.State!=CityState.Play;
    if(previous!=session.State)windowLayout.CancelDrag();
    bool startup=!session.HasStarted;
    SetMenuCamera(startup);
    bool atBench=session.State==CityState.Assembly; // no window: AssemblyHud draws what little the bench shows
-   root.Q("hud").SetEnabled(!modal||atBench);Show("hud",!startup);
+   root.Q("hud")?.SetEnabled(!isModal||atBench);Show("hud",!startup);
    Show("startup-screen",startup);Show("startup-content",session.State==CityState.MainMenu);
-   root.Q("startup-content").SetEnabled(session.State==CityState.MainMenu);
+   root.Q("startup-content")?.SetEnabled(session.State==CityState.MainMenu);
    root.EnableInClassList("startup-settings",startup&&session.State==CityState.Settings);
-   Show("shade",modal&&session.State!=CityState.MainMenu&&!atBench);Show("notice",!modal&&!string.IsNullOrEmpty(session.notice));Text("notice",session.notice);Text("modal-notice",session.notice);
+   Show("shade",isModal&&session.State!=CityState.MainMenu&&!atBench);Show("notice",!isModal&&!string.IsNullOrEmpty(session.notice));Text("notice",session.notice);Text("modal-notice",session.notice);
    bool radioUp=session.HasStarted&&session.RadioLine.Showing;
    Show("radio",radioUp);
    if(radioUp){Text("radio-text",session.RadioLine.Text);Text("radio-speaker",(session.RadioLine.Speaker??"Radio").ToUpperInvariant()+" · RADIO");}
    PlaceNotice();
-   root.Q("modal").EnableInClassList("wide-modal",session.State==CityState.Fabricator||session.State==CityState.Shop||session.State==CityState.Journal||session.State==CityState.Stash);
-   root.Q("modal").EnableInClassList("merchant-modal",session.State==CityState.Shop);
-   root.Q("modal").EnableInClassList("pack-modal",session.State==CityState.Inventory);
+   modal?.EnableInClassList("wide-modal",session.State==CityState.Fabricator||session.State==CityState.Shop||session.State==CityState.Journal||session.State==CityState.Stash);
+   modal?.EnableInClassList("merchant-modal",session.State==CityState.Shop);
+   modal?.EnableInClassList("pack-modal",session.State==CityState.Inventory);
    UpdateObjective();
    Text("credits",$"{session.Shop.Credits} cr");
    hotbar.Refresh();
-   if(logRevision!=session.LogRevision){logRevision=session.LogRevision;Text("log",string.Join("\n",session.Log));root.schedule.Execute(()=>{var scroll=root.Q<ScrollView>("log-scroll");scroll.scrollOffset=new Vector2(0,Mathf.Max(0,scroll.verticalScroller.highValue));});}
+   if(logRevision!=session.LogRevision){logRevision=session.LogRevision;Text("log",string.Join("\n",session.Log));root.schedule.Execute(()=>{var scroll=root.Q<ScrollView>("log-scroll");if(scroll!=null)scroll.scrollOffset=new Vector2(0,Mathf.Max(0,scroll.verticalScroller.highValue));});}
    Show("dialogue-panel",session.State==CityState.Dialogue);Show("shop-panel",session.State==CityState.Shop);Show("fabricator-panel",session.State==CityState.Fabricator);Show("inventory-panel",session.State==CityState.Inventory);Show("grid-panel",session.State==CityState.Grid);Show("pause-panel",session.State==CityState.Paused);Show("text-panel",session.State==CityState.Credits);
    Show("journal-panel",session.State==CityState.Journal);Show("stash-panel",session.State==CityState.Stash);Show("rest-panel",session.State==CityState.Rest);
    if(session.State==CityState.Fabricator)fabricator?.Refresh();
    Show("modal-notice",session.State!=CityState.Settings&&!string.IsNullOrEmpty(session.notice));
    bool settingsOpen=session.State==CityState.Settings;
-   Show("settings-panel",settingsOpen);Show("modal-scroll",!settingsOpen);root.Q("modal").EnableInClassList("settings-modal",settingsOpen);
-   root.Q<Button>("close").text=settingsOpen?session.Settings.Previewing?"Revert · Esc":"Back · Esc":session.State==CityState.Inventory?"Close · Tab / Esc":"Close · Esc";
+   Show("settings-panel",settingsOpen);Show("modal-scroll",!settingsOpen);modal?.EnableInClassList("settings-modal",settingsOpen);
+   var closeBtn=root.Q<Button>("close");
+   if(closeBtn!=null)closeBtn.text=settingsOpen?session.Settings.Previewing?"Revert · Esc":"Back · Esc":session.State==CityState.Inventory?"Close · Tab / Esc":"Close · Esc";
    if(footerLeft!=null)footerLeft.text="WARD  /  TIR";
    if(footerRight!=null)footerRight.text="Tab · Select     Enter · Confirm";
    Text("modal-title",session.State.ToString());Text("modal-subtitle","");
@@ -332,8 +348,8 @@ namespace AthenHill
    if(session.State==CityState.Shop)
    {
     var shop=session.ActiveShop;
-    Text("modal-title",shop.title);Text("modal-subtitle",shop.subtitle);
-    merchant.Refresh();
+    if(shop!=null){Text("modal-title",shop.title);Text("modal-subtitle",shop.subtitle);}
+    merchant?.Refresh();
     if(footerRight!=null)footerRight.text="Select · Inspect     Buy / Sell · Trade     Esc · Close";
    }
    if(session.State==CityState.Grid)
@@ -368,8 +384,8 @@ namespace AthenHill
    {
     if(previous==CityState.Inventory)pack.Closed();
     previous=session.State;HudUnfocusable();
-    root.Q<ScrollView>("modal-scroll").scrollOffset=Vector2.zero;
-    if(modal)
+    var modalScroll=root.Q<ScrollView>("modal-scroll");if(modalScroll!=null)modalScroll.scrollOffset=Vector2.zero;
+    if(isModal)
     {
      // Default modal focus goes to the close/primary button, except Inventory.
      // The pack manages its own focus (the selected cell, or Close when the pack is empty) so Enter inspects items
@@ -387,30 +403,36 @@ namespace AthenHill
       else
       {
        if(session.State==CityState.MainMenu)RefreshStartupSave();
-       root.schedule.Execute(()=>root.Q<Button>(session.State==CityState.MainMenu?hasSave?"continue-game":"start-game":session.State==CityState.Dialogue?"choice0":session.State==CityState.Fabricator?"fabricator-craft":"close").Focus());
+       root.schedule.Execute(()=>
+       {
+        string target=session.State==CityState.MainMenu?hasSave?"continue-game":"start-game":session.State==CityState.Dialogue?"choice0":session.State==CityState.Fabricator?"fabricator-craft":"close";
+        var btn=root.Q<Button>(target);
+        if(btn!=null&&Usable(btn))btn.Focus();else root.Q<Button>(session.State==CityState.MainMenu?"start-game":"close")?.Focus();
+       });
       }
      }
     }
     else root.focusController?.focusedElement?.Blur();
    }
-   if(modal)root.schedule.Execute(EnsureModalFocus);
+   if(isModal)root.schedule.Execute(EnsureModalFocus);
   }
   void LateUpdate()
   {
-   if(root==null||root.panel==null)return;
+   if(root==null||root.panel==null||session==null)return;
    if(PopupOpen())lastPopupFrame=Time.frameCount;
-   if(hasSave&&session.State==CityState.MainMenu){var c=root.Q<Button>("continue-game");bool ready=saveGame&&saveGame.Ready;if(c.enabledSelf!=ready)c.SetEnabled(ready);}
+   if(hasSave&&session.State==CityState.MainMenu){var c=root.Q<Button>("continue-game");bool ready=saveGame&&saveGame.Ready;if(c!=null&&c.enabledSelf!=ready)c.SetEnabled(ready);}
    if(windowWidth!=Screen.width||windowHeight!=Screen.height)UpdateWindowSize();
    UpdateCompass();
    bool tunnel=session.State==CityState.Grid&&session.GridProgress<1&&!session.reducedMotion;
    Show("tunnel",tunnel);
-   if(tunnel)for(int i=0;i<4;i++){var ring=root.Q("tunnel-ring"+i);float phase=Mathf.Repeat(session.GridProgress*tunnelSpeed+i*.25f,1);float size=20+phase*480;ring.style.width=Length.Percent(size);ring.style.height=Length.Percent(size);ring.style.left=Length.Percent(50-size/2);ring.style.top=Length.Percent(50-size/2);ring.style.opacity=1-phase;}
-   string prompt=session.Prompt;Show("interaction",!string.IsNullOrEmpty(prompt));root.Q<Button>("interaction").text=prompt;
+   if(tunnel)for(int i=0;i<4;i++){var ring=root.Q("tunnel-ring"+i);if(ring==null)continue;float phase=Mathf.Repeat(session.GridProgress*tunnelSpeed+i*.25f,1);float size=20+phase*480;ring.style.width=Length.Percent(size);ring.style.height=Length.Percent(size);ring.style.left=Length.Percent(50-size/2);ring.style.top=Length.Percent(50-size/2);ring.style.opacity=1-phase;}
+   string prompt=session.Prompt;Show("interaction",!string.IsNullOrEmpty(prompt));var interactBtn=root.Q<Button>("interaction");if(interactBtn!=null)interactBtn.text=prompt;
    UpdateDialogueLayout();UpdatePanels(!string.IsNullOrEmpty(prompt));
    // Declutter: the colonist named by the interaction prompt needs no nametag (it would sit over shop signs).
    var prompted=!string.IsNullOrEmpty(prompt)?session.Nearest:null;
-   foreach(var pair in tags)
+   if(worldCamera&&session.player)foreach(var pair in tags)
    {
+    if(!pair.Key)continue;
     var world=pair.Key.transform.position+Vector3.up*2.15f;var p=worldCamera.WorldToViewportPoint(world);
     bool visible=session.State==CityState.Play&&pair.Key!=prompted&&p.z>0&&p.x>0&&p.x<1&&p.y>0&&p.y<1&&Vector3.Distance(world,session.player.transform.position)<34&&InSight(world);
     pair.Value.style.display=visible?DisplayStyle.Flex:DisplayStyle.None;
@@ -454,13 +476,17 @@ namespace AthenHill
   {
    float now=Time.unscaledTime;
    var combat=Combat();
+   bool overcharge=combat&&combat.OverchargeActive;
+   bool overclock=combat&&combat.Overclocked;
+   bool lowVitality=combat&&combat.Health&&combat.Health.Fraction<=.35f;
    if(combat&&combat.Health)
    {
     int hp=Mathf.CeilToInt(combat.Health.Current),nano=Mathf.FloorToInt(combat.Nano);
-    if(hp!=lastHp||nano!=lastNano)
+    int maxHp=Mathf.RoundToInt(combat.Health.max),maxNano=Mathf.RoundToInt(combat.Stats.nanoMax);
+    if(hp!=lastHp||nano!=lastNano||maxHp!=lastMaxHp||maxNano!=lastMaxNano)
     {
      if(lastHp!=int.MinValue){if(hp<lastHp)lastHurt=now;adaptive.Wake(HudPanel.Identity,now);}
-     lastHp=hp;lastNano=nano;
+     lastHp=hp;lastNano=nano;lastMaxHp=maxHp;lastMaxNano=maxNano;
     }
    }
    if(noteLabels!=null)for(int i=0;i<noteLabels.Length;i++)
@@ -472,8 +498,8 @@ namespace AthenHill
    var frame=new HudFrame
    {
     mode=Mode,lowerThird=Layout==DialogueLayout.LowerThird,windowOpen=session.State!=CityState.Play,
-    combat=combat&&combat.Armed||now-lastHurt<hurtHoldSeconds,altHeld=session.input&&session.input.CursorFreed,
-    prompt=prompt,reducedMotion=session.reducedMotion
+    combat=(combat&&(combat.Armed||overcharge))||now-lastHurt<hurtHoldSeconds,altHeld=session.input&&session.input.CursorFreed,
+    prompt=prompt,vitalsActive=overclock||overcharge||lowVitality,reducedMotion=session.reducedMotion
    };
    if(!adaptive.Step(frame,now,Time.unscaledDeltaTime)&&panelsApplied)return;
    panelsApplied=true;
@@ -522,9 +548,10 @@ namespace AthenHill
   }
   void UpdateCompass()
   {
+   if(!worldCamera)return;
    // North is world +Z; use the rendered camera so fixed review views agree too.
    float heading=worldCamera.transform.eulerAngles.y;
-   var track=root.Q("compass-track");float width=track.resolvedStyle.width;
+   var track=root.Q("compass-track");if(track==null)return;float width=track.resolvedStyle.width;
    if(float.IsNaN(width))return;
    for(int i=0;i<compassTicks.Count;i++)
    {

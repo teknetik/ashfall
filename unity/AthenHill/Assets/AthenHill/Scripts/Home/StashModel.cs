@@ -12,24 +12,26 @@ namespace AthenHill
   public int SlotCapacity {get;}
   public StashModel(int slotCapacity=60){SlotCapacity=Math.Max(1,slotCapacity);}
   public event Action Changed;
-  public int Quantity(string id)=>id!=null&&items.TryGetValue(id,out var q)?q:0;
+  public int Quantity(string id)=>!string.IsNullOrEmpty(id)&&items.TryGetValue(id,out var q)?q:0;
   public IEnumerable<KeyValuePair<string,int>> Stored=>items.Where(x=>x.Value>0).OrderBy(x=>x.Key,StringComparer.Ordinal);
   public int SlotsUsed=>items.Count(x=>x.Value>0);
   public int TotalItems=>items.Values.Sum();
   /// Moves count units from the pack into the locker. Reasons: "bad_count", "not_carried", "locker_full", or the pack's.
   public bool Store(ShopModel pack,string id,int count,out string reason)
   {
-   if(pack==null||id==null||count<1){reason="bad_count";return false;}
+   if(pack==null||string.IsNullOrEmpty(id)||count<1){reason="bad_count";return false;}
+   int current=Quantity(id);
+   if(count>int.MaxValue-current){reason="bad_count";return false;}
    if(pack.Quantity(id)<count){reason="not_carried";return false;}
-   if(Quantity(id)==0&&SlotsUsed>=SlotCapacity){reason="locker_full";return false;}
+   if(current==0&&SlotsUsed>=SlotCapacity){reason="locker_full";return false;}
    if(!pack.TryApply(new[]{new KeyValuePair<string,int>(id,-count)},0,out reason))return false;
-   items[id]=Quantity(id)+count;reason="ok";Changed?.Invoke();return true;
+   items[id]=current+count;reason="ok";Changed?.Invoke();return true;
   }
   /// Moves count units from the locker into the pack. Reasons: "bad_count", "not_stored", or the pack's (stack_full,
   /// capacity), in which case nothing moves.
   public bool Take(ShopModel pack,string id,int count,out string reason)
   {
-   if(pack==null||id==null||count<1){reason="bad_count";return false;}
+   if(pack==null||string.IsNullOrEmpty(id)||count<1){reason="bad_count";return false;}
    if(Quantity(id)<count){reason="not_stored";return false;}
    if(!pack.TryApply(new[]{new KeyValuePair<string,int>(id,count)},0,out reason))return false;
    int left=Quantity(id)-count;if(left>0)items[id]=left;else items.Remove(id);
@@ -38,7 +40,7 @@ namespace AthenHill
   /// Uses stored units directly (the bench drawing parts from the locker, after its own pack transaction committed).
   public bool Consume(string id,int count)
   {
-   if(id==null||count<1||Quantity(id)<count)return false;
+   if(string.IsNullOrEmpty(id)||count<1||Quantity(id)<count)return false;
    int left=Quantity(id)-count;if(left>0)items[id]=left;else items.Remove(id);
    Changed?.Invoke();return true;
   }
@@ -65,7 +67,8 @@ namespace AthenHill
    {
     if(s==null||string.IsNullOrEmpty(s.itemId)||s.quantity<1)continue;
     if(known!=null&&!known(s.itemId)){skipped.Add(s.itemId);continue;}
-    items[s.itemId]=Quantity(s.itemId)+s.quantity;
+    long sum=(long)Quantity(s.itemId)+s.quantity;
+    items[s.itemId]=sum>int.MaxValue?int.MaxValue:(int)sum;
    }
    Changed?.Invoke();return skipped;
   }

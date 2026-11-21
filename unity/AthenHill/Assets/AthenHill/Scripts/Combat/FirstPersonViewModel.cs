@@ -49,21 +49,36 @@ namespace AthenHill
   [Range(0,5)]public float sideKickYaw=1.6f;
   [Tooltip("Reduced Motion keeps this share of the idle sway.")]
   [Range(0,1)]public float reducedSwayShare=.3f;
+  [Range(0,6)]public float strafeRollDegrees=1.6f;
   [Tooltip("Shown with the field rifle instead of the pistol (3 Oct 2026: one view model per weapon, sharing the overlay camera).")]
   public bool rifle;
   public bool Visible {get;private set;}
   static readonly System.Collections.Generic.List<FirstPersonViewModel> all=new System.Collections.Generic.List<FirstPersonViewModel>();
-  void OnEnable(){if(!all.Contains(this))all.Add(this);}
-  void OnDisable(){all.Remove(this);}
+  void OnEnable(){if(!all.Contains(this))all.Add(this);BindCombat(true);}
+  void OnDisable(){all.Remove(this);BindCombat(false);}
+  void OnDestroy(){BindCombat(false);}
   bool OverlayWanted(){foreach(var v in all)if(v&&v.overlayCamera==overlayCamera&&v.Visible)return true;return false;}
   public float AimBlend=>aim;
   /// Draw/holster slide, 0 (holstered) to 1 (drawn) (20 Nov 2026, rifle_hands_20261120: read by ViewModelArmsRig).
   public float DrawBlend=>draw;
-  float draw,aim,aimVelocity,recoil,bobPhase,lastShot=-99,shotSide,shotRecover=.18f,shotOvershoot;
+  float draw,aim,aimVelocity,recoil,bobPhase,lastShot=-99,shotSide,shotRecover=.18f,shotOvershoot,dodgeBlend,shoveImpulse,empImpulse,overchargeSurge,strafeRoll;
+  int lastShotsFired=-1;
   Vector2 sway,lastLook;
-  bool looked;
+  Vector3 lastMotorPos;
+  bool looked,hasMotorPos,combatSubscribed;
+  void BindCombat(bool on)
+  {
+   if(!combat||combatSubscribed==on)return;
+   if(on){combat.Shoved+=OnShoved;combat.EmpTriggered+=OnEmpTriggered;combat.OverchargeTriggered+=OnOverchargeTriggered;}
+   else{combat.Shoved-=OnShoved;combat.EmpTriggered-=OnEmpTriggered;combat.OverchargeTriggered-=OnOverchargeTriggered;}
+   combatSubscribed=on;
+  }
+  void OnShoved(){if(Visible)shoveImpulse=1;}
+  void OnEmpTriggered(){if(Visible)empImpulse=1;}
+  void OnOverchargeTriggered(){if(Visible)overchargeSurge=1;}
   void Start()
   {
+   BindCombat(true);
    if(animationSource&&holdClip)
    {
     if(animationSource.GetClip(holdClip.name)==null)animationSource.AddClip(holdClip,holdClip.name);
@@ -76,34 +91,57 @@ namespace AthenHill
   void LateUpdate()
   {
    if(!viewCamera||!rig||!pistol)return;
+   if(combat&&!combatSubscribed)BindCombat(true);
    // One view model per weapon (pistol / field rifle); each shows only with its own weapon drawn.
-   bool want=follow&&follow.FirstPerson&&combat&&combat.Armed&&combat.RifleActive==rifle&&(!session||session.State==CityState.Play);
+   bool want=follow&&follow.FirstPerson&&combat&&combat.Armed&&(!combat.Health||combat.Health.Alive)&&combat.RifleActive==rifle&&(!session||session.State==CityState.Play);
    float dt=Time.deltaTime;
-   draw=Mathf.MoveTowards(draw,want?1:0,dt/drawSeconds);
+   if(dt>1e-6f)draw=Mathf.MoveTowards(draw,want?1:0,dt/drawSeconds);
    Visible=draw>0;
    if(visuals&&visuals.activeSelf!=Visible)visuals.SetActive(Visible);
    // The overlay camera costs a URP camera pass every frame, so it only runs while there is something to draw.
    if(overlayCamera){bool o=OverlayWanted();if(overlayCamera.enabled!=o)overlayCamera.enabled=o;}
-   if(!Visible){looked=false;return;}
+   if(!Visible){looked=false;hasMotorPos=false;lastShotsFired=combat?combat.ShotsFired:-1;dodgeBlend=shoveImpulse=empImpulse=overchargeSurge=strafeRoll=0;return;}
    if(animationSource&&holdClip&&!animationSource.IsPlaying(holdClip.name))animationSource.Play(holdClip.name);
-   if(combat.LastShotTime!=lastShot)
+   // Track ShotsFired rather than LastShotTime: Dodge/EMP/Overcharge also stamp LastShotTime to pause nano regen.
+   if(lastShotsFired<0)lastShotsFired=combat.ShotsFired;
+   else if(combat.ShotsFired>lastShotsFired)
    {
-    lastShot=combat.LastShotTime;
-    if(Time.time-lastShot<.1f){Kick();shotSide=combat.LastSideKick;shotRecover=combat.RecoverySeconds;shotOvershoot=WeaponHandlingRules.OvershootFraction(shotRecover);}
+    lastShotsFired=combat.ShotsFired;lastShot=combat.LastShotTime;
+    Kick();shotSide=combat.LastSideKick;shotRecover=combat.RecoverySeconds;shotOvershoot=WeaponHandlingRules.OvershootFraction(shotRecover);
    }
+   else if(combat.ShotsFired<lastShotsFired)lastShotsFired=combat.ShotsFired;
    bool reduced=session&&session.reducedMotion;
-   aim=Mathf.SmoothDamp(aim,combat.Aiming?1:0,ref aimVelocity,aimSeconds*.5f,Mathf.Infinity,dt);
-   // look sway: lag behind camera rotation
-   var look=new Vector2(follow.yaw,follow.pitch);
-   if(!looked){lastLook=look;looked=true;}
-   var delta=new Vector2(Mathf.DeltaAngle(lastLook.x,look.x),look.y-lastLook.y);lastLook=look;
-   var swayTarget=reduced?Vector2.zero:Vector2.ClampMagnitude(-delta*.08f,1)*(1-aim*.7f);
-   sway=Vector2.Lerp(sway,swayTarget,1-Mathf.Exp(-swaySmoothing*dt));
-   // walk bob
-   float speed=motor?motor.Speed:0;
-   bobPhase+=dt*Mathf.Lerp(0,9,Mathf.Clamp01(speed/4));
-   float bob=reduced?0:bobAmount*Mathf.Clamp01(speed/3)*(1-aim*.75f);
+   if(dt>1e-6f)
+   {
+    aim=Mathf.SmoothDamp(aim,combat.Aiming?1:0,ref aimVelocity,aimSeconds*.5f,Mathf.Infinity,dt);
+    // look sway: lag behind camera rotation
+    var look=new Vector2(follow.yaw,follow.pitch);
+    if(!looked){lastLook=look;looked=true;}
+    var delta=new Vector2(Mathf.DeltaAngle(lastLook.x,look.x),look.y-lastLook.y);lastLook=look;
+    var swayTarget=reduced?Vector2.zero:Vector2.ClampMagnitude(-delta*.08f,1)*(1-aim*.7f);
+    sway=Vector2.Lerp(sway,swayTarget,1-Mathf.Exp(-swaySmoothing*dt));
+    // lateral strafe tilt
+    float lateralSpeed=0;
+    if(motor)
+    {
+     var pos=motor.transform.position;
+     if(hasMotorPos)lateralSpeed=Vector3.Dot((pos-lastMotorPos)/dt,viewCamera.transform.right);
+     lastMotorPos=pos;hasMotorPos=true;
+    }
+    float targetRoll=ViewModelMotion.StrafeRoll(lateralSpeed,motor?motor.runSpeed:6f,strafeRollDegrees,aim,reduced);
+    strafeRoll=Mathf.Lerp(strafeRoll,targetRoll,1-Mathf.Exp(-10f*dt));
+    // walk bob
+    float speed=motor?motor.Speed:0;
+    bobPhase+=dt*Mathf.Lerp(0,9,Mathf.Clamp01(speed/4));
+    dodgeBlend=Mathf.MoveTowards(dodgeBlend,motor&&motor.Dodging?1:0,dt/.09f);
+    shoveImpulse=Mathf.MoveTowards(shoveImpulse,0,dt/.22f);
+    empImpulse=Mathf.MoveTowards(empImpulse,0,dt/.28f);
+    overchargeSurge=Mathf.MoveTowards(overchargeSurge,0,dt/.24f);
+   }
+   float curSpeed=motor?motor.Speed:0;
+   float bob=reduced?0:bobAmount*Mathf.Clamp01(curSpeed/3)*(1-aim*.75f);
    var bobOffset=new Vector3(Mathf.Cos(bobPhase)*bob,Mathf.Abs(Mathf.Sin(bobPhase))*-bob,0);
+   ViewModelMotion.VerbPose(dodgeBlend,shoveImpulse,empImpulse,overchargeSurge,combat.OverchargeActive,Time.time,aim,reduced,out var verbOffset,out var verbEuler);
    // 20 Nov 2026: the return time follows the weapon's recovery (recoilReturn at the default 0.18 s); a slow one swings
    // once past rest (negative r) before it settles.
    float returnSeconds=recoilReturn*Mathf.Max(.25f,shotRecover/WeaponHandlingRules.DefaultRecoverySeconds);
@@ -113,8 +151,8 @@ namespace AthenHill
    if(recoil<=0&&shotOvershoot>0&&sinceShot<returnSeconds*1.8f)r=-shotOvershoot*Mathf.Sin(Mathf.PI*Mathf.Clamp01((sinceShot-returnSeconds)/(returnSeconds*.8f)));
    // idle handling sway: figure of eight and tremor, degrees (WeaponFeel.Sway)
    var hold=WeaponFeel.Sway(Time.time,combat.Stats.sway*handlingSwayScale*(reduced?reducedSwayShare:1)*Mathf.Lerp(1,aimSwayShare,aim));
-   var offset=Vector3.Lerp(hipOffset,aimOffset,aim)+bobOffset+new Vector3(sway.x*swayAmount,sway.y*swayAmount,0)+Vector3.back*recoilBack*r;
-   var euler=Vector3.Lerp(hipEuler,aimEuler,aim)+new Vector3(-recoilPitch*combat.RecoilScale*r+sway.y*swayRotation-hold.y,sway.x*swayRotation+hold.x+shotSide*sideKickYaw*Mathf.Max(0,r),sway.x*swayRotation*.5f);
+   var offset=Vector3.Lerp(hipOffset,aimOffset,aim)+bobOffset+verbOffset+new Vector3(sway.x*swayAmount,sway.y*swayAmount,0)+Vector3.back*recoilBack*r;
+   var euler=Vector3.Lerp(hipEuler,aimEuler,aim)+verbEuler+new Vector3(-recoilPitch*combat.RecoilScale*r+sway.y*swayRotation-hold.y,sway.x*swayRotation+hold.x+shotSide*sideKickYaw*Mathf.Max(0,r),sway.x*swayRotation*.5f+strafeRoll);
    float d=draw*draw*(3-2*draw);
    offset=Vector3.Lerp(holsterOffset,offset,d);euler=Vector3.Lerp(holsterEuler,euler,d);
    var cam=viewCamera.transform;

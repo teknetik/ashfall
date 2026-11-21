@@ -67,7 +67,8 @@ namespace AthenHill
   /// Writes beside the target, then swaps it in, so a crash mid-write never leaves a half-written save.
   public static void Write(string path,WardSaveData data)
   {
-   Directory.CreateDirectory(Path.GetDirectoryName(path));
+   var dir=Path.GetDirectoryName(path);
+   if(!string.IsNullOrEmpty(dir))Directory.CreateDirectory(dir);
    string temp=path+".tmp";
    File.WriteAllText(temp,Serialize(data));
    if(File.Exists(path))

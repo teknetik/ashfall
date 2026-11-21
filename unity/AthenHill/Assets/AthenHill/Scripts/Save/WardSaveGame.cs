@@ -124,11 +124,12 @@ namespace AthenHill
   public List<string> Apply(WardSaveData data)
   {
    Bind();var skipped=new List<string>();
+   if(data==null)return skipped;
    applying=true;
    try
    {
-    var known=new HashSet<string>(Session.catalog.items.Select(x=>x.id));
-    if(data.items!=null)skipped.AddRange(data.items.Where(x=>x!=null&&!known.Contains(x.itemId)).Select(x=>x.itemId));
+    var known=new HashSet<string>((Session.catalog?.items??Array.Empty<ItemSpec>()).Where(x=>x!=null&&!string.IsNullOrEmpty(x.id)).Select(x=>x.id));
+    if(data.items!=null)skipped.AddRange(data.items.Where(x=>x!=null&&!string.IsNullOrEmpty(x.itemId)&&!known.Contains(x.itemId)).Select(x=>x.itemId));
     Session.Shop.Restore(data.credits,data.purchases,data.sales,data.items?.Where(x=>x!=null).Select(x=>new KeyValuePair<string,int>(x.itemId,x.quantity)));
     if(Session.Character!=null)skipped.AddRange(Session.Character.Restore(data.character));
     skipped.AddRange(crafting.Model.Restore(data.crafting));
@@ -144,7 +145,7 @@ namespace AthenHill
     // pack (never equipped) is withdrawn from saves that have not completed that order.
     if(orders&&orders.Progress!=null&&!orders.Progress.Completed("order_long_arm")&&Session.Shop.Quantity("field_rifle")>0&&(Session.Character==null||Session.Character.Equipped("primary")!="field_rifle"))
     {
-     if(Session.Shop.Remove("field_rifle",Session.Shop.Quantity("field_rifle"),out _))skipped.Add("a test-issue field rifle (Ossa's Long Arm order builds yours)");
+     if(Session.Shop.TryApply(new[]{new KeyValuePair<string,int>("field_rifle",-Session.Shop.Quantity("field_rifle"))},0,out _))skipped.Add("a test-issue field rifle (Ossa's Long Arm order builds yours)");
     }
     Session.RestoreCityVisit(data.city);
     // 5 Oct 2026 (v4): hotbar (null in older saves = the defaults), home locker, tracked mission
@@ -207,8 +208,8 @@ namespace AthenHill
    if(!WardSaveFile.TryRead(SavePath,out var data,out _))return "The saved game cannot be read; Continue starts a new game.";
    var set=orders?orders.data:null;string progress;
    int index=data.orders?.index??-1;
-   if(set!=null&&index>=0&&index<set.orders.Length)progress=$"Field order {index+1}/{set.orders.Length} · {set.orders[index].title}";
-   else if(set!=null&&index>=set.orders.Length)progress="Free hunting in the Outer Berms";
+   if(set!=null&&set.orders!=null&&index>=0&&index<set.orders.Length&&set.orders[index]!=null)progress=$"Field order {index+1}/{set.orders.Length} · {set.orders[index].title}";
+   else if(set!=null&&set.orders!=null&&index>=set.orders.Length)progress="Free hunting in the Outer Berms";
    else progress=Enum.TryParse(data.bermsStep,out BermsStep s)&&s>BermsStep.Approach?"Outer Berms primer":"Arrived at East Gate";
    string when=DateTime.TryParse(data.savedUtc,null,System.Globalization.DateTimeStyles.RoundtripKind,out var t)?" · saved "+t.ToLocalTime().ToString("d MMM HH:mm"):"";
    return progress+$" · {data.credits} cr"+when;

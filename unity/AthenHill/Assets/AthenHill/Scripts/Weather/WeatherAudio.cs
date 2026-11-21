@@ -20,14 +20,17 @@ namespace AthenHill
         public Vector2 bedPitch = new Vector2(.94f, 1.06f);
         [Tooltip("Seconds to follow a volume change (smooths gust swells and avoids zipper noise).")]
         [Min(.05f)] public float smoothing = .6f;
+        [Tooltip("Wind/front volume multiplier while in dialogue, shops, home menus, or the map.")]
+        [Range(0, 1)] public float menuDuckLevel = .65f;
         float bed, front;
 
         public void Drive(float windStrength, float frontLevel, bool playing)
         {
-            float ambience = session && session.Settings != null ? session.Settings.Sound.ambience : 1;
+            float ambience = session && session.Settings ? session.Settings.Sound.ambience : 1;
+            float stateDuck = session ? CityAudioMix.TargetMusicDuck(session.State, menuDuckLevel, menuDuckLevel) : 1;
             float level = Mathf.Clamp01(Mathf.InverseLerp(silentStrength, fullStrength, windStrength));
-            float bedTarget = playing ? windBedVolume * level * ambience : 0;
-            float frontTarget = playing ? frontVolume * Mathf.Clamp01(frontLevel) * ambience : 0;
+            float bedTarget = playing ? windBedVolume * level * ambience * stateDuck : 0;
+            float frontTarget = playing ? frontVolume * Mathf.Clamp01(frontLevel) * ambience * stateDuck : 0;
             // Unscaled: a fade to silence must still finish while the game is frozen (menus run at timeScale 0).
             float k = WeatherMix.EaseFactor(Time.unscaledDeltaTime, smoothing);
             bed = Mathf.Lerp(bed, bedTarget, k); front = Mathf.Lerp(front, frontTarget, k);
