@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Generate purposeful, collision-checked Outer Berms density placements (21 Nov 2026).
+"""Generate purposeful, collision-checked Outer Berms density & wasteland danger placements (21 Nov 2026).
 
 Reads art/berms_variety_20261120/survey.json so every placement stays clear of all 206
 encounters, spawns, waystations, landmarks, and existing colliders in the Outer Berms bowl.
+Verifies every referenced prefab exists on disk under unity/AthenHill/Assets/AthenHill/Prefabs/.
 """
 import json
 import math
@@ -10,6 +11,8 @@ import random
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
+REPO_ROOT = ROOT.parent.parent
+PREFAB_ROOT = REPO_ROOT / "unity" / "AthenHill" / "Assets" / "AthenHill" / "Prefabs"
 SURVEY = ROOT.parent / "berms_variety_20261120" / "survey.json"
 OUT = ROOT / "placements.json"
 
@@ -52,7 +55,8 @@ placed_xy = []
 def add_prop(group: str, cluster: str, prefab: str, x: float, z: float,
              yaw: float = None, scale: float = 1.0, sink: float = 0.08,
              shadows: bool = True, collider: str = "keep", cull: float = 0.012,
-             min_self_sep: float = 1.6, check_scene: bool = True) -> bool:
+             min_self_sep: float = 1.6, check_scene: bool = True,
+             hazard: str = None) -> bool:
     if check_scene and not clear_of_scene(x, z):
         return False
     for px, pz in placed_xy:
@@ -60,7 +64,7 @@ def add_prop(group: str, cluster: str, prefab: str, x: float, z: float,
             return False
     if yaw is None:
         yaw = round(rng.uniform(0, 360), 1)
-    placements.append({
+    entry = {
         "group": group,
         "cluster": cluster,
         "prefab": prefab,
@@ -72,23 +76,32 @@ def add_prop(group: str, cluster: str, prefab: str, x: float, z: float,
         "shadows": shadows,
         "collider": collider,
         "cull": cull,
-    })
+    }
+    if hazard:
+        entry["hazard"] = hazard
+    placements.append(entry)
     placed_xy.append((x, z))
     return True
 
 
-def add_vignette(group: str, name: str, cx: float, cz: float, yaw: float, items: list) -> int:
+def add_vignette(group: str, name: str, cx: float, cz: float, yaw: float, items: list,
+                 pad_marker: float = 18.0, pad_col: float = 6.0) -> int:
     """Place a multi-prop vignette rotated around (cx, cz). Only places if anchor is clear."""
-    if not clear_of_scene(cx, cz, pad_marker=18.0, pad_col=6.0):
+    if not clear_of_scene(cx, cz, pad_marker=pad_marker, pad_col=pad_col):
         return 0
     rad = math.radians(yaw)
     ca, sa = math.cos(rad), math.sin(rad)
     added = 0
-    for prefab, lx, lz, dyaw, sc, sink, sh, col in items:
+    for item in items:
+        if len(item) == 8:
+            prefab, lx, lz, dyaw, sc, sink, sh, col = item
+            hazard = None
+        else:
+            prefab, lx, lz, dyaw, sc, sink, sh, col, hazard = item
         wx = cx + lx * ca - lz * sa
         wz = cz + lx * sa + lz * ca
         if add_prop(group, name, prefab, wx, wz, (yaw + dyaw) % 360, sc, sink, sh, col,
-                    min_self_sep=1.1, check_scene=True):
+                    min_self_sep=1.1, check_scene=True, hazard=hazard):
             added += 1
     return added
 
@@ -103,7 +116,7 @@ CONVEYOR_VIGNETTES = [
 ]
 for name, cx, cz, yaw in CONVEYOR_VIGNETTES:
     add_vignette("IndustrialRuins", name, cx, cz, yaw, [
-        ("OuterBermsDepot/DP_Conveyor", 0.0, 0.0, 0.0, 1.0, 0.12, True, "keep"),
+        ("OuterBermsDepot/DP_Conveyor", 0.0, 0.0, 0.0, 1.0, 0.12, True, "keep", "arc"),
         ("OuterBermsDepot/DP_Plinth", -4.8, 0.4, 5.0, 1.0, 0.15, True, "keep"),
         ("OuterBermsDepot/DP_WallA", 4.6, -2.6, 12.0, 1.0, 0.12, True, "keep"),
         ("OuterBermsDepot/DP_WallB", -3.2, 3.8, -80.0, 1.0, 0.12, True, "keep"),
@@ -124,7 +137,7 @@ TUBE_VIGNETTES = [
 ]
 for name, cx, cz, yaw in TUBE_VIGNETTES:
     add_vignette("QuantumTubeRuins", name, cx, cz, yaw, [
-        ("BermsExpanse/Landmarks/TubePylonFall", 0.0, 0.0, 0.0, 0.88, 0.25, True, "keep"),
+        ("BermsExpanse/Landmarks/TubePylonFall", 0.0, 0.0, 0.0, 0.88, 0.25, True, "keep", "arc"),
         ("OuterBermsDepot/DP_Plinth", -5.5, 2.2, 15.0, 1.05, 0.15, True, "keep"),
         ("OuterBermsDepot/DP_CradleBroken", 4.8, -2.4, 105.0, 1.0, 0.12, True, "keep"),
         ("OuterBermsDepot/DP_WallC", -2.5, -5.2, 42.0, 1.0, 0.14, True, "keep"),
@@ -166,8 +179,8 @@ SKIRMISH_WRECKS = [
 ]
 for name, cx, cz, yaw in SKIRMISH_WRECKS:
     add_vignette("SkirmishWrecks", name, cx, cz, yaw, [
-        ("BermsExpanse/Landmarks/CaravanHaulerWreck", 0.0, 0.0, 0.0, 0.78, 0.22, True, "keep"),
-        ("OuterBermsDepot/DP_CrashedDrone", 4.6, 2.4, 55.0, 1.0, 0.1, True, "keep"),
+        ("BermsExpanse/Landmarks/CaravanHaulerWreck", 0.0, 0.0, 0.0, 0.78, 0.22, True, "keep", "smoke"),
+        ("OuterBermsDepot/DP_CrashedDrone", 4.6, 2.4, 55.0, 1.0, 0.1, True, "keep", "arc"),
         ("OuterBermsDepot/DP_DeadWorker", -4.2, 3.1, 140.0, 1.0, 0.08, True, "keep"),
         ("TrainingRange/TR_WorkerDroidShell", 3.5, -3.4, 220.0, 1.0, 0.08, True, "keep"),
         ("StreetDressing/SD_crate_wood", -2.6, -3.2, 25.0, 1.0, 0.04, True, "keep"),
@@ -221,17 +234,81 @@ for idx, (cx, cz) in enumerate(cluster_centers, start=1):
                  scale=rng.uniform(0.85, 1.35), sink=0.08,
                  shadows=False, collider="remove", cull=0.008, min_self_sep=1.2)
 
+# 6. Rusted Perimeter Hazard Fencing & Broken Warning Posts (dead zones, blast craters, Tier-3 approaches)
+HAZARD_PERIMETERS = [
+    ("Hazard line · reaper den south", -212.0, 118.0, 28.0),
+    ("Hazard line · reaper den west", -278.0, 134.0, 112.0),
+    ("Hazard line · post relay east", -396.0, 42.0, -18.0),
+    ("Hazard line · post relay south", -418.0, -14.0, 74.0),
+    ("Hazard line · fans camp north", -468.0, -76.0, 35.0),
+    ("Hazard line · fans camp east", -454.0, -124.0, 102.0),
+    ("Hazard line · southern cache rim", -222.0, -126.0, 52.0),
+    ("Hazard line · central blast crater", -186.0, -48.0, 145.0),
+    ("Hazard line · western dead zone", -352.0, -16.0, 88.0),
+    ("Hazard line · north haul breach", -196.0, 44.0, -32.0),
+]
+for name, cx, cz, yaw in HAZARD_PERIMETERS:
+    add_vignette("HazardPerimeters", name, cx, cz, yaw, [
+        ("OuterBermsDepot/PHD_FencePost", -4.6, 0.2, 6.0, 1.0, 0.12, True, "keep"),
+        ("OuterBermsDepot/PHD_FencePanel", -2.2, 0.1, 4.0, 1.0, 0.14, True, "keep"),
+        ("OuterBermsDepot/PHD_FencePost", 0.2, -0.2, -12.0, 1.0, 0.12, True, "keep"),
+        ("OuterBermsDepot/PHD_FencePanel", 2.8, 0.6, 19.0, 1.0, 0.16, True, "keep"),
+        ("OuterBermsDepot/PHD_FencePost", 5.2, 1.4, 24.0, 1.0, 0.12, True, "keep"),
+        ("OuterBermsDepot/DP_SignVoltagePost", -0.8, 2.1, -18.0, 1.0, 0.08, True, "keep", "arc"),
+        ("WestGate/PH_JerseyBarrierA", 1.8, -2.3, 14.0, 1.0, 0.1, True, "keep"),
+        ("StreetDressing/SD_fire_barrel", -3.2, -2.0, 40.0, 1.0, 0.05, True, "keep", "smoke"),
+        ("OuterBermsDepot/DP_Cables", 0.4, -1.6, 75.0, 1.0, 0.04, False, "remove"),
+    ], pad_marker=16.5, pad_col=5.0)
+
+# 7. Industrial Ruin Silhouettes & Ambush Choke Points (dramatic cranes, walls, drone racks, scrap skips)
+AMBUSH_CHOKE_POINTS = [
+    ("Ambush choke · east haulway", -158.0, -6.0, 26.0),
+    ("Ambush choke · central crane yard", -262.0, -52.0, 118.0),
+    ("Ambush choke · relay corridor", -312.0, -24.0, 52.0),
+    ("Ambush choke · northern gantry", -298.0, 88.0, 164.0),
+    ("Ambush choke · west basin gate", -398.0, -62.0, 32.0),
+    ("Ambush choke · derrick south cut", -358.0, 112.0, 205.0),
+    ("Ambush choke · fans approach", -464.0, -18.0, 84.0),
+    ("Ambush choke · south wash trench", -216.0, -96.0, 140.0),
+]
+for name, cx, cz, yaw in AMBUSH_CHOKE_POINTS:
+    add_vignette("AmbushChokePoints", name, cx, cz, yaw, [
+        ("OuterBermsDepot/PHD_Crane", 0.0, 0.0, 0.0, 0.96, 0.18, True, "keep", "arc"),
+        ("OuterBermsDepot/DP_WallC", -5.2, 2.4, 15.0, 1.0, 0.14, True, "keep"),
+        ("OuterBermsDepot/DP_WallD", 5.4, -2.2, -165.0, 1.0, 0.14, True, "keep"),
+        ("OuterBermsDepot/DP_DroneRack", -3.4, -3.6, 62.0, 1.0, 0.1, True, "keep"),
+        ("OuterBermsDepot/MX_ScrapHeapB", 3.6, 3.8, 128.0, 1.0, 0.16, True, "keep"),
+        ("OuterBermsDepot/PHD_StorageCart", -1.6, 4.4, 210.0, 1.0, 0.08, True, "keep"),
+        ("StreetDressing/SD_scrap_skip", 4.4, 0.8, 84.0, 1.0, 0.08, True, "keep"),
+        ("StreetDressing/SD_fire_barrel", -4.8, -0.8, 20.0, 1.0, 0.05, True, "keep", "smoke"),
+        ("OuterBermsDepot/DP_SignVoltagePost", 6.2, 2.8, -30.0, 1.0, 0.08, True, "keep"),
+    ], pad_marker=17.5, pad_col=5.5)
+
+# Verify every referenced prefab exists on disk
+missing_prefabs = sorted({
+    p["prefab"] for p in placements
+    if not (PREFAB_ROOT / f"{p['prefab']}.prefab").is_file()
+})
+if missing_prefabs:
+    raise FileNotFoundError(f"Missing prefabs on disk: {missing_prefabs}")
+
 doc = {
-    "version": 1,
+    "version": 2,
     "created": "2026-11-21",
-    "description": "Additive Outer Berms density pass: industrial conveyor spines, fallen Quantum Tube branch ruins, Warden cover posts, skirmish wrecks and desert boulder/scrub clusters.",
+    "description": "Additive Outer Berms density & wasteland danger pass: industrial conveyor spines, fallen Quantum Tube branch ruins, Warden cover posts, skirmish wrecks, rusted hazard perimeters, industrial ambush choke points and desert boulder/scrub clusters with arc/smoke hazard FX tags.",
     "prefabs": placements,
 }
 OUT.write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
 
 by_group = {}
+by_hazard = {}
 for p in placements:
     by_group[p["group"]] = by_group.get(p["group"], 0) + 1
-print(f"Wrote {len(placements)} collision-checked Outer Berms placements to {OUT}")
+    h = p.get("hazard")
+    if h:
+        by_hazard[h] = by_hazard.get(h, 0) + 1
+
+print(f"Wrote {len(placements)} collision-checked Outer Berms placements to {OUT} (0 missing prefabs)")
 for g, n in sorted(by_group.items()):
     print(f"  {g:20s}: {n}")
+print(f"Hazard FX tags: {by_hazard}")
