@@ -87,6 +87,11 @@ Shader "Athen Hill/Ward Desert Terrain V2"
         _HazeHeightFalloff("Haze height falloff (m, 0 = off)", Range(0, 300)) = 0
         _HazeBaseHeight("Height falloff base (m)", Range(-5, 40)) = 6
         _HazeNoonTint("High-sun haze tint (linear multiplier)", Vector) = (1, 1, 1, 0)
+
+        [Header(Wasteland rock contrast and crevice AO)]
+        _RockContrast("Sun-baked rock contrast", Range(0.5, 2)) = 1.3
+        _RockCreviceAO("Rock-face and strata crevice AO", Range(0, 1.5)) = .65
+        _MicroGritStrength("Near-field micro-grit strength", Range(0, 1.5)) = .45
     }
 
     SubShader
@@ -115,6 +120,7 @@ Shader "Athen Hill/Ward Desert Terrain V2"
             float _DetailFadeStart, _DetailFadeEnd, _SkyOcclusion, _FogBlend;
             float _HazeFarStart, _HazeFarScale, _HazeHeightFalloff, _HazeBaseHeight;
             float4 _HazeNoonTint;
+            float _RockContrast, _RockCreviceAO, _MicroGritStrength;
         CBUFFER_END
 
         TEXTURE2D(_RockTex); SAMPLER(sampler_RockTex);
@@ -206,6 +212,30 @@ Shader "Athen Hill/Ward Desert Terrain V2"
                 float3 p3 = frac(float3(n, n, n) * float3(0.1031, 0.1030, 0.0973));
                 p3 += dot(p3, p3.yzx + 33.33);
                 return frac((p3.xx + p3.yz) * p3.zy);
+            }
+            float Hash21(float2 p)
+            {
+                p = frac(p * float2(123.34, 456.21));
+                p += dot(p, p + 45.32);
+                return frac(p.x * p.y);
+            }
+            float3 ValueNoise2DGrad(float2 p)
+            {
+                float2 i = floor(p);
+                float2 f = frac(p);
+                float2 u = f * f * (3.0 - 2.0 * f);
+                float2 du = 6.0 * f * (1.0 - f);
+                float a = Hash21(i);
+                float b = Hash21(i + float2(1.0, 0.0));
+                float c = Hash21(i + float2(0.0, 1.0));
+                float d = Hash21(i + float2(1.0, 1.0));
+                float k0 = a;
+                float k1 = b - a;
+                float k2 = c - a;
+                float k3 = a - b - c + d;
+                float val = k0 + k1 * u.x + k2 * u.y + k3 * u.x * u.y;
+                float2 grad = du * float2(k1 + k3 * u.y, k2 + k3 * u.x);
+                return float3(val, grad);
             }
             float3 GroundNormalWS(float3 n, float3 normalTS)
             {
@@ -334,6 +364,7 @@ Shader "Athen Hill/Ward Desert Terrain V2"
                 float detailFade = 1.0 - smoothstep(_DetailFadeStart, max(_DetailFadeEnd, _DetailFadeStart + 1.0), dist);
                 float slope = 1.0 - saturate(Ng.y);
                 float3 dPdx = ddx(P), dPdy = ddy(P);                          // for explicit-gradient sampling
+                float pxFootprint = length(fwidth(P.xz));
 
                 // ---- Macro variation: two octaves of the geology map (111 m and ~410 m periods) ------------
                 float4 macro = SAMPLE_TEXTURE2D(_Geology, sampler_Geology, P.xz * _MacroScale);
@@ -404,8 +435,8 @@ Shader "Athen Hill/Ward Desert Terrain V2"
                     streak = streak / max(tw.x + tw.z, 1e-4);
                 }
 
-                // Sedimentary strata: gently folded horizontal beds (world Y) with finer laminations, antialiased
-                // by their own footprint so distant bands do not shimmer.
+                // Sedimentary strata: gently folded horizontal beds (world Y) with sharper bedding seams and finer laminations,
+                // antialiased by their own footprint so distant ridges stay crisp and jagged without shimmering.
                 float warpY = P.y + (macro.r - 0.5) * 6.0 + sin(P.x * 0.024 + P.z * 0.018) * 2.0;
                 float strataCoord = warpY / _StrataThickness;
                 float bandId = floor(strataCoord), bandF = frac(strataCoord);
@@ -415,14 +446,20 @@ Shader "Athen Hill/Ward Desert Terrain V2"
                 float fineRnd = Hash11(floor(fineCoord) + 3.1);
                 float fineFade = saturate(1.0 - fwidth(fineCoord) * 1.5);
                 float strataAmt = _StrataStrength * smoothstep(0.1, 0.45, slope);      // beds read on faces, not as contour rings on gentle slopes
-                float3 strataTint = lerp(_StrataDark.rgb, _StrataLight.rgb, saturate(bandRnd * 0.5 + macro.r * 0.5));
-                strataTint = lerp(float3(1, 1, 1), strataTint * lerp(1.0, lerp(0.96, 1.04, fineRnd), fineFade), strataAmt);
-                // Desert varnish: dark streaks hanging from each ledge on steep faces.
-                float varnish = smoothstep(0.45, 0.8, streak) * smoothstep(0.2, 1.0, bandF) * smoothstep(0.15, 0.4, slope) * _StreakStrength;
+                float bedSeam = (1.0 - smoothstep(0.0, 0.16, bandF)) * saturate(1.0 - bandAA * 2.5);
+                float fineSeam = (1.0 - smoothstep(0.0, 0.18, frac(fineCoord))) * fineFade;
+                float strataMix = smoothstep(0.12, 0.88, bandRnd * 0.72 + macro.r * 0.28);
+                float3 strataTint = lerp(_StrataDark.rgb, _StrataLight.rgb, strataMix);
+                strataTint = lerp(float3(1, 1, 1), strataTint * lerp(1.0, lerp(0.86, 1.12, fineRnd), fineFade), strataAmt);
+                // Desert varnish: dark manganese-iron oxide streaks hanging from each ledge on steep faces.
+                float varnish = smoothstep(0.40, 0.78, streak) * smoothstep(0.15, 1.0, bandF) * smoothstep(0.14, 0.38, slope) * _StreakStrength;
 
-                float3 rockAlbedo = rockMid * _RockTint.rgb * strataTint
+                float rockMidLuma = dot(rockMid, float3(0.2126, 0.7152, 0.0722));
+                float rockContrastGain = lerp(1.0, clamp(rockMidLuma / 0.32, 0.55, 1.45), saturate(_RockContrast - 1.0));
+                float3 rockAlbedo = rockMid * rockContrastGain * _RockTint.rgb * strataTint
                                   * lerp(1.0, rockDetail / max(_RockDetailMean.rgb, 1e-3), _RockDetailStrength * detailFade)
-                                  * (1.0 - varnish * float3(0.55, 0.6, 0.65));
+                                  * (1.0 - (bedSeam * 0.28 + fineSeam * 0.10) * strataAmt * _RockCreviceAO)
+                                  * (1.0 - varnish * float3(0.58, 0.64, 0.70));
                 float rockDetailLuma = dot(rockDetail / max(_RockDetailMean.rgb, 1e-3), float3(0.2126, 0.7152, 0.0722));
 
                 // ---- Scree and sand from the ground arrays ------------------------------------------------
@@ -474,9 +511,24 @@ Shader "Athen Hill/Ward Desert Terrain V2"
                 sandAlbedo *= 1.0 + 0.06 * sin(phase) * rippleFade + 0.04 * sin(phase2) * rippleFade2;
 
                 // ---- Combine ------------------------------------------------------------------------------
+                float nearFade = 1.0 - smoothstep(4.0, 28.0, dist);
+                float3 gritCoarse = float3(0.5, 0.0, 0.0);
+                float3 gritFine = float3(0.5, 0.0, 0.0);
+                float aaCoarse = 0.0, aaFine = 0.0;
+                UNITY_BRANCH
+                if (nearFade > 0.001 && _MicroGritStrength > 0.001)
+                {
+                    aaCoarse = saturate(1.5 - pxFootprint * 5.6) * nearFade;
+                    aaFine = saturate(1.5 - pxFootprint * 23.0) * nearFade;
+                    gritCoarse = ValueNoise2DGrad(P.xz * 2.8);
+                    gritFine = ValueNoise2DGrad(P.xz * 11.5 + float2(17.3, 9.1));
+                }
+                float gritMix = gritCoarse.x * 0.45 + gritFine.x * 0.55;
+
                 float groundStrength = _GroundNormalStrength * detailFade;
-                float2 gXY = (gravel.nra.rg * 2.0 - 1.0) * groundStrength;
-                float2 sXY = (sand.nra.rg * 2.0 - 1.0) * groundStrength;
+                float2 gritNxy = (gritCoarse.yz * 0.24 * aaCoarse + gritFine.yz * 0.14 * aaFine) * _MicroGritStrength;
+                float2 gXY = (gravel.nra.rg * 2.0 - 1.0) * groundStrength + gritNxy;
+                float2 sXY = (sand.nra.rg * 2.0 - 1.0) * groundStrength + gritNxy * 0.55;
                 float3 gravelN = GroundNormalWS(Ng, float3(gXY, sqrt(saturate(1.0 - dot(gXY, gXY))) + 1e-4));
                 float3 sandN = GroundNormalWS(Ng, float3(sXY, sqrt(saturate(1.0 - dot(sXY, sXY))) + 1e-4));
                 sandN = normalize(sandN - float3(wind.x, 0.0, wind.y) * rippleSlope);
@@ -484,19 +536,29 @@ Shader "Athen Hill/Ward Desert Terrain V2"
                 float3 albedo = rockAlbedo * bw.x + gravelAlbedo * bw.y + sandAlbedo * bw.z;
                 albedo *= lerp(1.0, lerp(0.82, 1.14, macro2.r), _MacroStrength);
                 albedo *= lerp(0.88, 1.1, mid.a);                                  // ~11 m variation that survives the detail fade
+                albedo *= lerp(1.0, lerp(0.91, 1.08, gritMix), aaFine * _MicroGritStrength * (1.0 - bw.x * 0.5));
                 float3 N = normalize(rockN * bw.x + gravelN * bw.y + sandN * bw.z);
-                float smoothness = _RockSmoothness * bw.x + saturate(1.0 - gravel.nra.b) * 0.85 * bw.y + saturate(1.0 - sand.nra.b) * 0.85 * bw.z;
-                float ao = lerp(1.0, lerp(0.72, 1.0, saturate(rockDetailLuma)), detailFade) * bw.x + gravel.nra.a * bw.y + sand.nra.a * bw.z;
-                ao *= lerp(0.8, 1.0, macro.r);                                    // old macro cavity
+                float rockSmooth = saturate(_RockSmoothness + (rockDetailLuma - 0.85) * 0.12 * detailFade + varnish * 0.16);
+                float smoothness = rockSmooth * bw.x
+                                 + saturate(1.0 - gravel.nra.b + (gritFine.x - 0.5) * 0.14 * aaFine * _MicroGritStrength) * 0.82 * bw.y
+                                 + saturate(1.0 - sand.nra.b + (gritFine.x - 0.5) * 0.10 * aaFine * _MicroGritStrength) * 0.82 * bw.z;
+                // Rock-face crevice AO: bedding undercuts + mid-scale rock crevices survive past _DetailFadeEnd.
+                float strataCreviceAO = 1.0 - saturate(bedSeam * 0.50 + fineSeam * 0.18) * strataAmt * _RockCreviceAO;
+                float midRockCreviceAO = lerp(1.0 - 0.36 * _RockCreviceAO, 1.0, smoothstep(0.18, 0.62, rockMidLuma));
+                float rockAO = lerp(1.0, lerp(0.56, 1.0, saturate(rockDetailLuma)), detailFade) * strataCreviceAO * midRockCreviceAO;
+                float ao = rockAO * bw.x + gravel.nra.a * bw.y + sand.nra.a * bw.z;
+                ao *= lerp(0.76, 1.0, macro.r);                                    // macro cavity
+                ao = saturate(ao);
 
-                // Mid-scale relief (the old _Relief bump from the sandstone luminance) plus bed ledges, via
-                // screen-space height derivatives; fades out by 210 m exactly as before.
-                float ledge = _StrataRelief * 0.3 * bandF * bandF * strataAmt * saturate(1.0 - bandAA * 4.0);
-                float h = (dot(rockMid, float3(0.21, 0.72, 0.07)) * _Relief + ledge) * bw.x * saturate(1.0 - dist / 210.0);
+                // Mid-scale relief (the old _Relief bump from the sandstone luminance) plus stepped caprock ledges, via
+                // screen-space height derivatives; extended smoothly to 520 m so far basin ridges stay jagged.
+                float ledgeProfile = bandF * bandF + smoothstep(0.72, 0.96, bandF) * 0.55;
+                float ledge = _StrataRelief * 0.34 * ledgeProfile * strataAmt * saturate(1.0 - bandAA * 3.0);
+                float h = (dot(rockMid, float3(0.21, 0.72, 0.07)) * _Relief + ledge) * bw.x * saturate(1.0 - dist / 520.0);
                 float3 r1 = cross(dPdy, N), r2 = cross(N, dPdx);
                 float det = dot(dPdx, r1);
                 float3 grad = (ddx(h) * r1 + ddy(h) * r2) * sign(det) / max(abs(det), 1e-5);
-                N = normalize(N - clamp(grad, -0.4, 0.4));
+                N = normalize(N - clamp(grad, -0.55, 0.55));
 
                 // ---- Lighting -----------------------------------------------------------------------------
                 InputData inputData = (InputData)0;

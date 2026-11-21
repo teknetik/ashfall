@@ -33,8 +33,15 @@ namespace AthenHill
         [Tooltip("Actors further than this from the camera keep the plain sky ambient.")]
         [Min(1)] public float maxDistance = 60;
         [Min(.25f)] public float rescanSeconds = 3;
+        [Header("Conversation face fill (Phase 3, zero real-time lights)")]
+        [Tooltip("Warm SH bounce fill added while the conversation camera frames an actor, lifting shaded faces by day or night.")]
+        public Color conversationFillColor = new Color(1f, .93f, .82f);
+        [Min(0)] public float conversationFillIntensity = .22f;
+        [Range(-30, 75)] public float conversationFillElevation = 18;
+        [Min(0)] public float conversationAmbientGain = .25f;
 
         public float NightWeight { get; private set; }
+        public float ConversationWeight { get; private set; }
         public int ActorsLit { get; private set; }
 
         sealed class Actor
@@ -49,6 +56,7 @@ namespace AthenHill
         readonly SphericalHarmonicsL2[] one = new SphericalHarmonicsL2[1];
         MaterialPropertyBlock block;
         InteriorLighting[] interiors = new InteriorLighting[0];
+        ConversationCamera conversationCamera;
         float nextScan, authoredShadow = 1;
         Light key;
 
@@ -63,6 +71,7 @@ namespace AthenHill
         {
             nextScan = Time.unscaledTime + rescanSeconds;
             interiors = FindObjectsByType<InteriorLighting>(FindObjectsSortMode.None);
+            if (!conversationCamera) conversationCamera = FindAnyObjectByType<ConversationCamera>();
             actors.RemoveAll(a => !a.root);
             var roots = new List<(Transform root, bool player)>();
             foreach (var p in FindObjectsByType<PlayerMotor>(FindObjectsSortMode.None)) roots.Add((p.transform, true));
@@ -109,12 +118,16 @@ namespace AthenHill
             if (Time.unscaledTime >= nextScan) Scan();
             float night = Mathf.Clamp01(1 - clock.SunVisibility);
             NightWeight = night;
+            float conv = conversationCamera && conversationCamera.isActiveAndEnabled ? Mathf.Clamp01(conversationCamera.Weight) : 0;
+            ConversationWeight = conv;
             if (clock.keyLight)
             {
                 if (key != clock.keyLight) { key = clock.keyLight; authoredShadow = key.shadowStrength; }
                 key.shadowStrength = Mathf.Lerp(authoredShadow, nightKeyShadowStrength, night);
             }
-            bool active = night > .001f && (actorAmbientGain > 0 || viewerFillIntensity > 0);
+            bool nightActive = night > .001f && (actorAmbientGain > 0 || viewerFillIntensity > 0);
+            bool convActive = conv > .001f && (conversationAmbientGain > 0 || conversationFillIntensity > 0);
+            bool active = nightActive || convActive;
             var cam = Camera.main;
             bool playerInside = PlayerInsideRoom();
             var sky = SkyProbe();
@@ -125,14 +138,23 @@ namespace AthenHill
                 bool want = active && actor.root.gameObject.activeInHierarchy && !(actor.player && playerInside);
                 if (want && cam && !actor.player && (actor.root.position - cam.transform.position).sqrMagnitude > maxDistance * maxDistance) want = false;
                 if (!want) { if (actor.applied) Restore(actor, !(actor.player && playerInside)); continue; }
-                var sh = sky * (1 + actorAmbientGain * night);
-                if (viewerFillIntensity > 0 && cam)
+                var sh = sky * (1 + actorAmbientGain * night + conversationAmbientGain * conv);
+                if (cam)
                 {
                     var flat = cam.transform.position - actor.root.position; flat.y = 0;
                     if (flat.sqrMagnitude < 1e-4f) flat = -cam.transform.forward;
                     flat.Normalize();
-                    var dir = Quaternion.AngleAxis(-viewerFillElevation, Vector3.Cross(Vector3.up, flat).normalized) * flat;
-                    sh.AddDirectionalLight(dir.normalized, viewerFillColor.linear, viewerFillIntensity * night);
+                    var right = Vector3.Cross(Vector3.up, flat).normalized;
+                    if (nightActive && viewerFillIntensity > 0)
+                    {
+                        var dir = Quaternion.AngleAxis(-viewerFillElevation, right) * flat;
+                        sh.AddDirectionalLight(dir.normalized, viewerFillColor.linear, viewerFillIntensity * night);
+                    }
+                    if (convActive && conversationFillIntensity > 0)
+                    {
+                        var dir = Quaternion.AngleAxis(-conversationFillElevation, right) * flat;
+                        sh.AddDirectionalLight(dir.normalized, conversationFillColor.linear, conversationFillIntensity * conv);
+                    }
                 }
                 one[0] = sh;
                 foreach (var r in actor.renderers)

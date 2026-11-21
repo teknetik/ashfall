@@ -103,6 +103,11 @@ Shader "Athen Hill/Berms Ground V2"
         _HazeHeightFalloff("Haze height falloff (m, 0 = off)", Range(0, 300)) = 32
         _HazeBaseHeight("Height falloff base (m)", Range(-5, 40)) = 6
         _HazeNoonTint("High-sun haze tint (linear multiplier)", Vector) = (.88, .93, 1.03, 0)
+
+        [Header(Wasteland micro-detail and weathering)]
+        _MicroGritStrength("Micro-grit and hardpan fracture strength", Range(0, 1.5)) = .55
+        _CavityStrength("Crevice and relief cavity occlusion", Range(0, 1.5)) = .65
+        _GrazingDustSheen("Grazing dust sheen and mineral breakup", Range(0, 1)) = .22
     }
     SubShader
     {
@@ -133,6 +138,7 @@ Shader "Athen Hill/Berms Ground V2"
         float _DetailFadeStart, _DetailFadeEnd, _SkyOcclusion, _FogBlend, _EdgeFogBlend;
         float4 _Haze, _HazeNoonTint;
         float _HazeDensity, _HazeFarStart, _HazeFarScale, _HazeHeightFalloff, _HazeBaseHeight;
+        float _MicroGritStrength, _CavityStrength, _GrazingDustSheen;
         CBUFFER_END
         float4 _AthenTerrainTime;
         float4 _AthenTerrainHazeScale;
@@ -144,6 +150,31 @@ Shader "Athen Hill/Berms Ground V2"
             float3 p3 = frac(float3(n, n, n) * float3(0.1031, 0.1030, 0.0973));
             p3 += dot(p3, p3.yzx + 33.33);
             return frac((p3.xx + p3.yz) * p3.zy);
+        }
+        float Hash21(float2 p)
+        {
+            p = frac(p * float2(123.34, 456.21));
+            p += dot(p, p + 45.32);
+            return frac(p.x * p.y);
+        }
+        // Smooth 2D value noise with analytic XZ derivatives (zero texture taps, tile-free close-range grit).
+        float3 ValueNoise2DGrad(float2 p)
+        {
+            float2 i = floor(p);
+            float2 f = frac(p);
+            float2 u = f * f * (3.0 - 2.0 * f);
+            float2 du = 6.0 * f * (1.0 - f);
+            float a = Hash21(i);
+            float b = Hash21(i + float2(1.0, 0.0));
+            float c = Hash21(i + float2(0.0, 1.0));
+            float d = Hash21(i + float2(1.0, 1.0));
+            float k0 = a;
+            float k1 = b - a;
+            float k2 = c - a;
+            float k3 = a - b - c + d;
+            float val = k0 + k1 * u.x + k2 * u.y + k3 * u.x * u.y;
+            float2 grad = du * float2(k1 + k3 * u.y, k2 + k3 * u.x);
+            return float3(val, grad);
         }
         float3 TangentToWorldUp(float3 n, float3 ts)
         {
@@ -243,6 +274,7 @@ Shader "Athen Hill/Berms Ground V2"
             float dist = distance(GetCameraPositionWS(), P);
             float detailFade = 1.0 - smoothstep(_DetailFadeStart, max(_DetailFadeEnd, _DetailFadeStart + 1.0), dist);
             float3 dPdx = ddx(P), dPdy = ddy(P);
+            float pxFootprint = length(fwidth(P.xz));
 
             // ---- splats -------------------------------------------------------------------------------
             float2 uv = SplatUV(P);
@@ -318,15 +350,19 @@ Shader "Athen Hill/Berms Ground V2"
                 tsZ = float3(tsZ.xy + Ng.xy, tsZ.z * an.z);
                 rockN = normalize(tsX.zyx * tw.x + tsY.xzy * tw.y + tsZ.xyz * tw.z);
             }
-            // strata (V2 beds on faces; antialiased by their own footprint)
+            // strata (V2 beds on faces; antialiased by their own footprint, with sharper bed seams)
             float warpY = P.y + (macro.r - 0.5) * 6.0 + sin(P.x * 0.024 + P.z * 0.018) * 2.0;
             float strataCoord = warpY / _StrataThickness;
             float bandId = floor(strataCoord), bandF = frac(strataCoord);
             float bandAA = max(fwidth(strataCoord), 1e-4);
             float bandRnd = lerp(Hash11(bandId - 1.0 + 17.0), Hash11(bandId + 17.0), saturate(bandF / (bandAA * 1.5)));
             float strataAmt = _StrataStrength * smoothstep(0.1, 0.45, slope);
-            float3 strataTint = lerp(float3(1, 1, 1), lerp(_StrataDark.rgb, _StrataLight.rgb, saturate(bandRnd * 0.5 + macro.r * 0.5)), strataAmt);
-            float3 rockAlbedo = rockMid * _RockTint.rgb * strataTint * lerp(1.0, rockDetail / max(_RockDetailMean.rgb, 1e-3), _RockDetailStrength * detailFade);
+            float bedSeam = (1.0 - smoothstep(0.0, 0.16, bandF)) * saturate(1.0 - bandAA * 2.5) * strataAmt;
+            float strataMix = smoothstep(0.14, 0.86, bandRnd * 0.7 + macro.r * 0.3);
+            float3 strataTint = lerp(float3(1, 1, 1), lerp(_StrataDark.rgb, _StrataLight.rgb, strataMix), strataAmt);
+            float3 rockAlbedo = rockMid * _RockTint.rgb * strataTint
+                              * lerp(1.0, rockDetail / max(_RockDetailMean.rgb, 1e-3), _RockDetailStrength * detailFade)
+                              * (1.0 - bedSeam * 0.22 * _CavityStrength);
             float rockDetailLuma = dot(rockDetail / max(_RockDetailMean.rgb, 1e-3), float3(0.2126, 0.7152, 0.0722));
 
             // ---- ground layers --------------------------------------------------------------------------
@@ -371,6 +407,30 @@ Shader "Athen Hill/Berms Ground V2"
             rippleSlope += 0.05 * (6.2831853 / lambda2) * (cos(phase2) + 0.5 * cos(2.0 * phase2)) * rippleFade2;
             sandAlb *= 1.0 + 0.06 * sin(phase) * rippleFade + 0.04 * sin(phase2) * rippleFade2;
 
+            // ---- close-range micro-grit & fractured hardpan (0 texture taps, AA-gated) ---------------------
+            float nearFade = 1.0 - smoothstep(4.0, 28.0, dist);
+            float3 gritCoarse = float3(0.5, 0.0, 0.0);
+            float3 gritFine = float3(0.5, 0.0, 0.0);
+            float aaCoarse = 0.0, aaFine = 0.0;
+            UNITY_BRANCH
+            if (nearFade > 0.001 && _MicroGritStrength > 0.001)
+            {
+                aaCoarse = saturate(1.5 - pxFootprint * 5.6) * nearFade;
+                aaFine = saturate(1.5 - pxFootprint * 23.0) * nearFade;
+                gritCoarse = ValueNoise2DGrad(P.xz * 2.8);
+                gritFine = ValueNoise2DGrad(P.xz * 11.5 + float2(17.3, 9.1));
+            }
+            float gritMix = gritCoarse.x * 0.45 + gritFine.x * 0.55;
+            float crackMask = saturate(bB.y + packed * 0.65) * aaCoarse * _MicroGritStrength;
+            float hardpanCrack = (1.0 - smoothstep(0.0, 0.14, abs(gritCoarse.x * 2.0 - 1.0) + (gritFine.x - 0.5) * 0.22)) * crackMask;
+
+            // ---- crevice & relief depression cavity (road ruts, potholes, steep rock) ----------------------
+            float groundShare = 1.0 - bA.x;
+            float reliefCavity = saturate((0.5 - s2.g) * 3.2) * inner;
+            float layerHeight = scree.ah.a * bA.y + sand.ah.a * bA.z + roadT.ah.a * bB.x + crustT.ah.a * bB.y + looseT.ah.a * bB.z;
+            float microCavity = saturate(1.0 - layerHeight) * groundShare * detailFade;
+            float slopeCrevice = smoothstep(0.08, 0.42, slope) * saturate(1.0 - rockDetailLuma * 0.85) * bA.x;
+
             // ---- combine ------------------------------------------------------------------------------------
             float3 albedo = rockAlbedo * bA.x + screeAlb * bA.y + sandAlb * bA.z + roadAlb * bB.x + crustAlb * bB.y + looseAlb * bB.z;
             albedo *= lerp(1.0, lerp(0.82, 1.14, macro2.r), _MacroStrength);
@@ -378,6 +438,10 @@ Shader "Athen Hill/Berms Ground V2"
             float luma = dot(albedo, float3(0.2126, 0.7152, 0.0722));
             albedo = lerp(luma.xxx, albedo, _Saturation);
             albedo *= 1.0 - packed * _Compaction;
+            float gritWeight = 0.55 + 0.45 * (1.0 - bA.z);
+            albedo *= lerp(1.0, lerp(0.90, 1.09, gritMix), aaFine * _MicroGritStrength * gritWeight);
+            albedo *= 1.0 - hardpanCrack * 0.24;
+            albedo *= 1.0 - reliefCavity * 0.20 * _CavityStrength;
 
             // relief from splat 2 (ruts, windrows, potholes) under the layer detail
             float3 Nr = ReliefNormal(Ng, uv, _ReliefStrength * inner);
@@ -386,7 +450,7 @@ Shader "Athen Hill/Berms Ground V2"
             float2 nCrust = (crustT.nra.rg * 2.0 - 1.0) * gs, nLoose = (looseT.nra.rg * 2.0 - 1.0) * gs;
             float2 nxy = nScree * bA.y + nSand * bA.z + nRoad * bB.x + nCrust * bB.y + nLoose * bB.z;
             nxy *= 1.0 - packed * 0.45;                                    // packed ground: flatter
-            float groundShare = 1.0 - bA.x;
+            nxy += (gritCoarse.yz * 0.26 * aaCoarse + gritFine.yz * 0.16 * aaFine) * _MicroGritStrength * gritWeight * groundShare;
             float3 groundN = TangentToWorldUp(Nr, float3(nxy / max(groundShare, 1e-3), 1.0));
             groundN = normalize(groundN - float3(wind.x, 0.0, wind.y) * rippleSlope * bA.z / max(groundShare, 1e-3));
             float3 N = normalize(rockN * bA.x + groundN * groundShare);
@@ -397,11 +461,27 @@ Shader "Athen Hill/Berms Ground V2"
             float3 grad = (ddx(hRock) * r1 + ddy(hRock) * r2) * sign(det) / max(abs(det), 1e-5);
             N = normalize(N - clamp(grad, -0.4, 0.4));
 
+            // grazing-angle wind-blown dust/mineral sheen & specular breakup (lag gravel, pebbles, rock)
+            float3 V = normalize(GetCameraPositionWS() - P);
+            float NdotV = saturate(dot(N, V));
+            float fresnel = pow(max(1.0 - NdotV, 0.0), 4.0);
+            float dustSheen = fresnel * _GrazingDustSheen * groundShare * (0.45 + 0.55 * (1.0 - packed));
+            albedo = lerp(albedo, max(albedo, float3(0.56, 0.47, 0.35)), dustSheen * 0.55);
+
             float rough = scree.nra.b * bA.y + sand.nra.b * bA.z + roadT.nra.b * bB.x + crustT.nra.b * bB.y + looseT.nra.b * bB.z;
-            float smoothV = _RockSmoothness * bA.x + saturate(1.0 - rough * (1.0 - packed * 0.15)) * 0.85 * groundShare;
-            float ao = lerp(1.0, lerp(0.72, 1.0, saturate(rockDetailLuma)), detailFade) * bA.x
+            float pebbleGlint = (gritFine.x - 0.5) * 0.18 * aaFine * _MicroGritStrength + (layerHeight - 0.5) * 0.12 * detailFade;
+            float rockSmooth = saturate(_RockSmoothness + (rockDetailLuma - 0.85) * 0.12 * detailFade + (gritFine.x - 0.5) * 0.08 * aaFine);
+            float smoothV = rockSmooth * bA.x + saturate(1.0 - rough * (1.0 - packed * 0.15) + pebbleGlint) * 0.82 * groundShare;
+            smoothV += lagness * bB.z * lerp(0.06, 0.22, saturate(mid.g * 0.55 + gritFine.x * 0.45)) * (0.7 + 0.6 * fresnel);
+            smoothV += fresnel * 0.06 * _GrazingDustSheen;
+            smoothV = saturate(smoothV);
+
+            float ao = lerp(1.0, lerp(0.62, 1.0, saturate(rockDetailLuma)), detailFade) * bA.x
                      + scree.nra.a * bA.y + sand.nra.a * bA.z + roadT.nra.a * bB.x + crustT.nra.a * bB.y + looseT.nra.a * bB.z;
-            ao *= lerp(0.8, 1.0, macro.r);
+            ao *= lerp(0.76, 1.0, macro.r);
+            ao *= 1.0 - saturate(reliefCavity * 0.42 + microCavity * 0.22 + slopeCrevice * 0.38 + bedSeam * bA.x * 0.35) * _CavityStrength;
+            ao *= 1.0 - hardpanCrack * 0.30;
+            ao = saturate(ao);
 
             GroundSurface o;
             o.albedo = albedo; o.normalWS = N; o.smoothness = smoothV; o.ao = ao; o.edge = edge;
