@@ -1,0 +1,683 @@
+{
+ "name": "combat_audio",
+ "exe": "/home/teknetik/code/ao2/unity/AthenHill/Builds/batch-sh-gemini1/AthenHill.x86_64",
+ "exeMtime": "Thu Nov 19 14:08:38 2026",
+ "started": "2026-11-21 23:57:50",
+ "checks": [
+  {
+   "check": "pistol drawn (2)",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "pistol shot plays the legacy pistol arrays (no set)",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "rifle drawn (1)",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "rifle single shot uses the weapon_field_rifle set",
+   "passed": true,
+   "detail": "weapon_field_rifle"
+  },
+  {
+   "check": "rifle burst (hold F 2.4 s) fires a burst on the rifle set",
+   "passed": true,
+   "detail": {
+    "shots": 12,
+    "set": "weapon_field_rifle"
+   }
+  },
+  {
+   "check": "sentinel: own voice lines played (sentinel-*)",
+   "passed": true,
+   "detail": {
+    "played": 54,
+    "dropped": 0,
+    "clips": [
+     "droid-hit",
+     "sentinel-aim",
+     "sentinel-death",
+     "sentinel-fire-1",
+     "sentinel-fire-2"
+    ]
+   }
+  },
+  {
+   "check": "sentinel: roll loop plays near a Sentinel",
+   "passed": true,
+   "detail": [
+    [
+     0.34,
+     true
+    ],
+    [
+     0.0,
+     false
+    ]
+   ]
+  },
+  {
+   "check": "sentinel: roll loop stops far away (city)",
+   "passed": true,
+   "detail": [
+    [
+     0.0,
+     false
+    ]
+   ]
+  },
+  {
+   "check": "reaper: own voice lines played (reaper-*)",
+   "passed": true,
+   "detail": {
+    "played": 171,
+    "dropped": 22,
+    "clips": [
+     "droid-hit",
+     "reaper-death",
+     "reaper-step-1",
+     "reaper-step-2",
+     "reaper-strike-1",
+     "reaper-strike-2",
+     "reaper-windup"
+    ]
+   }
+  },
+  {
+   "check": "gunner: own voice lines played (gunner-*)",
+   "passed": true,
+   "detail": {
+    "played": 113,
+    "dropped": 5,
+    "clips": [
+     "droid-hit",
+     "droid-step-1",
+     "droid-step-2",
+     "gunner-death",
+     "gunner-shot-1",
+     "gunner-shot-2",
+     "gunner-tell"
+    ]
+   }
+  },
+  {
+   "check": "lancer: own voice lines played (lancer-*)",
+   "passed": true,
+   "detail": {
+    "played": 46,
+    "dropped": 3,
+    "clips": [
+     "lancer-launch-1",
+     "lancer-launch-2",
+     "lancer-tell"
+    ]
+   }
+  },
+  {
+   "check": "bolts: fly-by / impact sounds played during the gunner and lancer fights",
+   "passed": true,
+   "detail": {
+    "before": [
+     19,
+     20
+    ],
+    "after": [
+     56,
+     70
+    ]
+   }
+  },
+  {
+   "check": "no droid voice/roll source left on the UI group",
+   "passed": true,
+   "detail": []
+  },
+  {
+   "check": "no runtime exceptions in Player.log",
+   "passed": true,
+   "detail": []
+  }
+ ],
+ "captures": [],
+ "notes": [
+  {
+   "note": "audio source groups at start",
+   "detail": {
+    "UI": 33,
+    "SFX": 9,
+    "Music": 2,
+    "Ambience": 6
+   }
+  },
+  {
+   "note": "sources playing right after a pistol shot",
+   "detail": [
+    "Berms pistol audio",
+    "City soundtrack",
+    "Cradle hum",
+    "Desert wind",
+    "Lattice hum",
+    "Market murmur",
+    "Pistol tail",
+    "Ring hum",
+    "Rotor hum",
+    "Rotor hum",
+    "Rotor hum",
+    "Weather wind bed"
+   ]
+  },
+  {
+   "note": "nano after a long burst",
+   "detail": 0.08642483
+  },
+  {
+   "note": "grant refused",
+   "detail": "bridge rejected dev.item.grant: {'code': 'overflow', 'message': 'Not enough carrying capacity.'}"
+  },
+  {
+   "note": "mixer groups in use at the end",
+   "detail": {
+    "UI": 32,
+    "SFX": 12,
+    "Music": 2,
+    "Ambience": 6
+   }
+  },
+  {
+   "note": "NOT VERIFIED BY EAR: loudness, timbre, the tail build-up in a burst and the mix need a listening test (README \"Listening test\")",
+   "detail": null
+  }
+ ],
+ "sites": {
+  "sentinel": {
+   "landmark": "nextlevel_post_relay",
+   "droids": 2,
+   "start": [
+    {
+     "droid": "Post Sentinel",
+     "played": 0,
+     "dropped": 0,
+     "last": null,
+     "roll": 0.662552238,
+     "rollPlaying": true
+    },
+    {
+     "droid": "Post Sentinel",
+     "played": 5,
+     "dropped": 0,
+     "last": "sentinel-fire-2",
+     "roll": 0.340369642,
+     "rollPlaying": true
+    }
+   ],
+   "end": [
+    {
+     "droid": "Post Sentinel",
+     "played": 0,
+     "dropped": 0,
+     "last": null,
+     "roll": 0.34,
+     "rollPlaying": true
+    },
+    {
+     "droid": "Post Sentinel",
+     "played": 54,
+     "dropped": 0,
+     "last": "sentinel-death",
+     "roll": 0.0,
+     "rollPlaying": false
+    }
+   ],
+   "clips": [
+    "droid-hit",
+    "sentinel-aim",
+    "sentinel-death",
+    "sentinel-fire-1",
+    "sentinel-fire-2"
+   ]
+  },
+  "reaper": {
+   "landmark": "nextlevel_reaper_den",
+   "droids": 3,
+   "start": [
+    {
+     "droid": "Scrap Reaper",
+     "played": 6,
+     "dropped": 0,
+     "last": "reaper-step-1",
+     "roll": 0.0,
+     "rollPlaying": false
+    },
+    {
+     "droid": "Scrap Reaper",
+     "played": 6,
+     "dropped": 1,
+     "last": "reaper-step-2",
+     "roll": 0.0,
+     "rollPlaying": false
+    },
+    {
+     "droid": "Scrap Reaper",
+     "played": 4,
+     "dropped": 3,
+     "last": "reaper-step-1",
+     "roll": 0.0,
+     "rollPlaying": false
+    }
+   ],
+   "end": [
+    {
+     "droid": "Scrap Reaper",
+     "played": 66,
+     "dropped": 6,
+     "last": "reaper-death",
+     "roll": 0.0,
+     "rollPlaying": false
+    },
+    {
+     "droid": "Scrap Reaper",
+     "played": 57,
+     "dropped": 2,
+     "last": "reaper-strike-2",
+     "roll": 0.0,
+     "rollPlaying": false
+    },
+    {
+     "droid": "Scrap Reaper",
+     "played": 48,
+     "dropped": 14,
+     "last": "reaper-windup",
+     "roll": 0.0,
+     "rollPlaying": false
+    }
+   ],
+   "clips": [
+    "droid-hit",
+    "reaper-death",
+    "reaper-step-1",
+    "reaper-step-2",
+    "reaper-strike-1",
+    "reaper-strike-2",
+    "reaper-windup"
+   ]
+  },
+  "gunner": {
+   "landmark": "berms_relay_knoll",
+   "droids": 2,
+   "start": [
+    {
+     "droid": "Feral gunner droid",
+     "played": 8,
+     "dropped": 0,
+     "last": "gunner-shot-1",
+     "roll": 0.0,
+     "rollPlaying": false
+    },
+    {
+     "droid": "Feral gunner droid",
+     "played": 5,
+     "dropped": 1,
+     "last": "droid-step-2",
+     "roll": 0.0,
+     "rollPlaying": false
+    }
+   ],
+   "end": [
+    {
+     "droid": "Feral gunner droid",
+     "played": 63,
+     "dropped": 2,
+     "last": "gunner-death",
+     "roll": 0.0,
+     "rollPlaying": false
+    },
+    {
+     "droid": "Feral gunner droid",
+     "played": 50,
+     "dropped": 3,
+     "last": "gunner-shot-1",
+     "roll": 0.0,
+     "rollPlaying": false
+    }
+   ],
+   "clips": [
+    "droid-hit",
+    "droid-step-1",
+    "droid-step-2",
+    "gunner-death",
+    "gunner-shot-1",
+    "gunner-shot-2",
+    "gunner-tell"
+   ]
+  },
+  "lancer": {
+   "landmark": "berms_tube_pylon",
+   "droids": 2,
+   "start": [
+    {
+     "droid": "Feral lancer drone",
+     "played": 0,
+     "dropped": 3,
+     "last": null,
+     "roll": 0.0,
+     "rollPlaying": false
+    },
+    {
+     "droid": "Feral lancer drone",
+     "played": 3,
+     "dropped": 0,
+     "last": "lancer-launch-1",
+     "roll": 0.0,
+     "rollPlaying": false
+    }
+   ],
+   "end": [
+    {
+     "droid": "Feral lancer drone",
+     "played": 21,
+     "dropped": 3,
+     "last": "lancer-tell",
+     "roll": 0.0,
+     "rollPlaying": false
+    },
+    {
+     "droid": "Feral lancer drone",
+     "played": 25,
+     "dropped": 0,
+     "last": "lancer-launch-2",
+     "roll": 0.0,
+     "rollPlaying": false
+    }
+   ],
+   "clips": [
+    "lancer-launch-1",
+    "lancer-launch-2",
+    "lancer-tell"
+   ]
+  }
+ },
+ "groups": {
+  "UI": [
+   "ArcHazard_01",
+   "ArcHazard_02",
+   "ArcHazard_03",
+   "ArcHazard_04",
+   "ArcHazard_05",
+   "ArcHazard_06",
+   "ArcHazard_07",
+   "ArcHazard_08",
+   "ArcHazard_09",
+   "ArcHazard_10",
+   "ArcHazard_11",
+   "ArcHazard_12",
+   "ArcHazard_13",
+   "ArcHazard_14",
+   "ArcHazard_15",
+   "ArcHazard_16",
+   "ArcHazard_17",
+   "ArcHazard_18",
+   "ArcHazard_19",
+   "ArcHazard_20",
+   "ArcHazard_21",
+   "ArcHazard_22",
+   "BermsDangerAtmosphere",
+   "Cradle arc",
+   "Cradle hum",
+   "Hall lamp sparks",
+   "Hit feedback audio",
+   "Range plate 1",
+   "Range plate 2",
+   "Range plate 3",
+   "Rotor hum",
+   "Terminal feedback"
+  ],
+  "SFX": [
+   "Bark voice",
+   "Berms pistol audio",
+   "FeralGunnerDroid",
+   "FeralLancerDrone",
+   "FeralScrapDrone",
+   "FeralWorkerDroid",
+   "Impact audio",
+   "Lattice activation and link",
+   "Pistol tail",
+   "Roll loop audio",
+   "Stone footsteps",
+   "Voice"
+  ],
+  "Music": [
+   "City music crossfade",
+   "City soundtrack"
+  ],
+  "Ambience": [
+   "Desert wind",
+   "Lattice hum",
+   "Market murmur",
+   "Ring hum",
+   "Weather dust front",
+   "Weather wind bed"
+  ]
+ },
+ "final": {
+  "available": true,
+  "hits": 57,
+  "criticalHits": 9,
+  "weakPointHits": 5,
+  "kills": 5,
+  "lastHit": {
+   "critical": false,
+   "weakPoint": false,
+   "killed": true,
+   "dealt": 2.70750046,
+   "zone": null
+  },
+  "marker": {
+   "shown": "None",
+   "hits": 45,
+   "criticals": 7,
+   "kills": 5,
+   "ticks": 57,
+   "lowVitality": 0.0
+  },
+  "shake": {
+   "impulses": 351,
+   "trauma": 0.0,
+   "lastAngle": 0.0,
+   "peakAngle": 1.12505829,
+   "suppressed": false
+  },
+  "criticalFlashes": 9,
+  "fxLights": 0,
+  "fxLightCap": 2,
+  "weatherVisibility": 1.0,
+  "weakPoints": 9,
+  "criticalStaggers": 0,
+  "weakPointZones": [
+   {
+    "droid": "Feral worker droid",
+    "centre": [
+     -82.02671,
+     1.7427187,
+     -42.237072
+    ],
+    "radius": 0.19,
+    "hits": 0,
+    "state": "Idle"
+   },
+   {
+    "droid": "Feral worker droid",
+    "centre": [
+     -75.38449,
+     1.51023221,
+     -38.5224876
+    ],
+    "radius": 0.190000027,
+    "hits": 0,
+    "state": "Idle"
+   },
+   {
+    "droid": "Feral scrap drone",
+    "centre": [
+     -85.1257,
+     1.67398238,
+     -36.66594
+    ],
+    "radius": 0.16,
+    "hits": 0,
+    "state": "Idle"
+   },
+   {
+    "droid": "Feral worker droid",
+    "centre": [
+     -89.92795,
+     2.0461576,
+     -26.77594
+    ],
+    "radius": 0.19,
+    "hits": 0,
+    "state": "Idle"
+   },
+   {
+    "droid": "Feral scrap drone",
+    "centre": [
+     -71.31905,
+     1.20557284,
+     -32.8347969
+    ],
+    "radius": 0.159999982,
+    "hits": 0,
+    "state": "Idle"
+   },
+   {
+    "droid": "Post Sentinel",
+    "centre": [
+     -442.894348,
+     5.707306,
+     15.72566
+    ],
+    "radius": 0.210000023,
+    "hits": 0,
+    "state": "Idle"
+   },
+   {
+    "droid": "Feral gunner droid",
+    "centre": [
+     -339.6029,
+     3.55809879,
+     1.45997477
+    ],
+    "radius": 0.19,
+    "hits": 0,
+    "state": "Idle"
+   },
+   {
+    "droid": "Feral lancer drone",
+    "centre": [
+     -411.125458,
+     6.2828927,
+     -76.37064
+    ],
+    "radius": 0.160000071,
+    "hits": 0,
+    "state": "Windup"
+   },
+   {
+    "droid": "Feral lancer drone",
+    "centre": [
+     -391.956543,
+     5.872698,
+     -76.3540649
+    ],
+    "radius": 0.16,
+    "hits": 0,
+    "state": "Recover"
+   }
+  ],
+  "lastShotSoundSet": "weapon_field_rifle",
+  "lastCone": 0.73575,
+  "droidAudio": [
+   {
+    "droid": "Feral worker droid",
+    "played": 0,
+    "dropped": 0,
+    "last": null,
+    "roll": 0.0,
+    "rollPlaying": false
+   },
+   {
+    "droid": "Feral worker droid",
+    "played": 0,
+    "dropped": 0,
+    "last": null,
+    "roll": 0.0,
+    "rollPlaying": false
+   },
+   {
+    "droid": "Feral scrap drone",
+    "played": 0,
+    "dropped": 0,
+    "last": null,
+    "roll": 0.0,
+    "rollPlaying": false
+   },
+   {
+    "droid": "Feral worker droid",
+    "played": 0,
+    "dropped": 0,
+    "last": null,
+    "roll": 0.0,
+    "rollPlaying": false
+   },
+   {
+    "droid": "Feral scrap drone",
+    "played": 0,
+    "dropped": 0,
+    "last": null,
+    "roll": 0.0,
+    "rollPlaying": false
+   },
+   {
+    "droid": "Post Sentinel",
+    "played": 0,
+    "dropped": 0,
+    "last": null,
+    "roll": 0.34,
+    "rollPlaying": true
+   },
+   {
+    "droid": "Feral gunner droid",
+    "played": 81,
+    "dropped": 4,
+    "last": "droid-step-2",
+    "roll": 0.0,
+    "rollPlaying": false
+   },
+   {
+    "droid": "Feral lancer drone",
+    "played": 21,
+    "dropped": 3,
+    "last": "lancer-tell",
+    "roll": 0.0,
+    "rollPlaying": false
+   },
+   {
+    "droid": "Feral lancer drone",
+    "played": 25,
+    "dropped": 0,
+    "last": "lancer-launch-2",
+    "roll": 0.0,
+    "rollPlaying": false
+   }
+  ],
+  "boltFlybys": 56,
+  "boltImpacts": 70
+ },
+ "passed": true,
+ "summary": "14/14 passed",
+ "finished": "2026-11-22 00:00:57"
+}

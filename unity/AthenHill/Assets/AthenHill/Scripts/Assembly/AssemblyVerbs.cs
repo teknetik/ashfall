@@ -18,6 +18,8 @@ namespace AthenHill
         /// Where the keyboard focus ring wants the hand (the mouse form uses the frame's ray).
         public Vector3 focusPoint; public bool hasFocusPoint;
         public WeaponHandling handling;
+        /// The session's vise: the crack step turns the same one, so the session sees how far it has gone round.
+        public AssemblyViseSwivel vise;
         public float clock;
         public System.Random random = new System.Random(20261120);
     }
@@ -115,14 +117,6 @@ namespace AthenHill
             if (tool.grab && tool.tip) { var d = tool.tip.position - tool.grab.position; if (d.magnitude > .02f) return d.normalized; }
             return tip.forward;
         }
-        public static void PlaceTool(AssemblyPart tool, Vector3 tipAt, Vector3 direction, float spinDegrees = 0, bool alongLength = false)
-        {
-            if (!tool) return;
-            var t = tool.transform; var tip = tool.tip ? tool.tip : t;
-            if (direction.sqrMagnitude > 1e-8f) t.rotation = Quaternion.FromToRotation(alongLength ? LengthAxis(tool) : tip.forward, direction.normalized) * t.rotation;
-            if (spinDegrees != 0) t.rotation = Quaternion.AngleAxis(spinDegrees, direction.normalized) * t.rotation;
-            t.position += tipAt - tip.position;
-        }
         /// Right and up as the eye sees them when it looks along `forward` with `worldUp` upright (Unity: right = up x forward).
         public static void ScreenAxes(Vector3 forward, Vector3 worldUp, out Vector3 right, out Vector3 up)
         {
@@ -168,6 +162,29 @@ namespace AthenHill
         public bool Leaving => phase == Phase.Leaving;
         public string OriginPlace => originPlace;
         public float HandSpeed => speed;
+        /// On its way into its place: letting go now must not stop it.
+        public bool Seating => phase == Phase.PullIn;
+        bool canCapture, fromKnown; Vector3 handFrom; float approachFor;
+        void PullIn(float precision)
+        {
+            capturePrecision = precision; pullFrom = new Pose(c.part.transform.position, c.part.transform.rotation);
+            approachFor = Mathf.Clamp(Vector3.Distance(pullFrom.position, approach.position) / 1.5f, c.settings.approachSeconds, .22f);
+            pullT = 0; phase = Phase.PullIn; misalignedFor = 0;
+        }
+        /// Let go on its socket while the part is still catching the pointer up: it goes in.
+        /// Clicked onto its place with the part in the hand (the punch on the pin): it goes straight there.
+        public void SeatNow()
+        {
+            if (phase != Phase.Free || !c.bench.TargetPose(c.part, Target, out _, out seated, out approach, out _)) return;
+            speed = 0; PullIn(1);
+        }
+        public bool CaptureOnRelease()
+        {
+            if (phase != Phase.Free || !canCapture) return false;
+            speed = 0; PullIn(Mathf.Clamp(1 - .35f * nearness, .4f, 1)); return true;
+        }
+        /// The target has moved (the vise was turned): find the key again.
+        public void Rekey() { keyKnown = false; canCapture = false; }
         string Target => c.action != null && c.action.mode != "inspect" ? c.action.target : "";
         public override Vector3 ActPoint
         {
@@ -182,7 +199,7 @@ namespace AthenHill
         {
             var p = c.part; originPlace = p.place; originPose = new Pose(p.transform.position, p.transform.rotation);
             pos = p.GrabPoint; vel = Vector3.zero; baseRotation = p.transform.rotation; yaw = yawTarget = 0; flipped = false; keyKnown = false;
-            c.fx?.Settle(p);
+            c.fx?.Settle(p); fromKnown = false;
             if (p.place == "seat" && p.hasClear && p.Travel > 1e-4f) { phase = Phase.Leaving; slide = 0; pressSet = false; }
             else Free();
         }
@@ -191,7 +208,7 @@ namespace AthenHill
         {
             var p = c.part; phase = Phase.Free;
             if (p.transform.parent != (c.bench.loose ? c.bench.loose : c.bench.transform)) p.transform.SetParent(c.bench.loose ? c.bench.loose : c.bench.transform, true);
-            p.place = "held"; baseRotation = p.transform.rotation; pos = p.GrabPoint; yaw = yawTarget = 0; keyKnown = false;
+            p.place = "held"; baseRotation = p.transform.rotation; pos = p.GrabPoint; yaw = yawTarget = 0; keyKnown = false; canCapture = false;
             // a keyed part on a lead hangs as it likes: it comes to the hand the wrong way up and has to be turned over
             if (c.action != null && c.action.mode == "keyed") flipped = true;
         }
@@ -210,6 +227,7 @@ namespace AthenHill
             if (phase == Phase.Leaving)
             {
                 // off its parent along its own axis; any drag away from where it was taken pulls it
+                if (usePointer && !fromKnown) { handFrom = bench.OnSurface(f.ray, s.carryLift); fromKnown = true; }
                 var plane = usePointer ? bench.OnSurface(f.ray, bench.HeightAbove(p.RestWorld.position)) : c.focusPoint;
                 if (!pressSet) { pressPoint = plane; pressSet = true; }
                 float want = usePointer ? Mathf.Clamp01(Vector3.Distance(plane, pressPoint) / Mathf.Max(.035f, p.Travel)) : Mathf.Clamp01(slide + dt / .35f);
@@ -236,7 +254,7 @@ namespace AthenHill
             if (phase == Phase.PullIn)
             {
                 pullT += dt;
-                float a = s.approachSeconds, b = s.pullInSeconds;
+                float a = approachFor, b = s.pullInSeconds;
                 if (pullT < a) { float k = pullT / a; k = k * k * (3 - 2 * k); p.transform.SetPositionAndRotation(Vector3.Lerp(pullFrom.position, approach.position, k), Quaternion.Slerp(pullFrom.rotation, approach.rotation, k)); }
                 else if (pullT < a + b) { float k = (pullT - a) / b; k *= k; p.transform.SetPositionAndRotation(Vector3.Lerp(approach.position, seated.position, k), Quaternion.Slerp(approach.rotation, seated.rotation, k)); }
                 else
@@ -267,6 +285,17 @@ namespace AthenHill
                 tolMm = c.action.tolMm > 0 ? c.action.tolMm : place && place.tolMm > 0 ? place.tolMm : p.tolMm;
                 tolDeg = c.action.tolDeg > 0 ? c.action.tolDeg : place && place.tolDeg > 0 ? place.tolDeg : p.tolDeg;
                 symmetry = place && place.symmetry >= 0 ? place.symmetry : p.symmetry;
+                if (usePointer && place && c.action.mode != "keyed")
+                {
+                    // over the mat, the pad or the tray it drops into place: no aiming, and it squares itself up (22 Nov, Carl)
+                    var hand = bench.OnSurface(f.ray, s.carryLift);
+                    if (!fromKnown) { handFrom = hand; fromKnown = true; }
+                    if (Vector3.Distance(hand, handFrom) > s.snapAfterMove && bench.OverDropArea(place, f.ray, seated.position))
+                    {
+                        flipped = false; speed = 0; DistanceMm = 0; YawError = 0;
+                        PullIn(1); st.value = 1; st.progress = .6f; return st;
+                    }
+                }
                 if (!keyKnown) { keyYaw = TwistAbout(approach.rotation * Quaternion.Inverse(baseRotation), up, out swing); keyKnown = true; }
                 // the socket draws the part in when the pointer is over it or over the way into it
                 var approachGrab = approach.position + GrabOffset(approach.rotation); var seatedGrab = seated.position + GrabOffset(seated.rotation);
@@ -307,10 +336,10 @@ namespace AthenHill
             float off = Vector3.Distance(pos, approach.position + GrabOffset(approach.rotation));
             DistanceMm = off * 1000; st.value = w; st.progress = .5f + .1f * w;
             bool square = Mathf.Abs(err) <= tolDeg && !flipped;
+            canCapture = usePointer && square && w >= .95f;
             if (off <= tolMm * .001f && square)
             {
-                capturePrecision = Mathf.Clamp(1 - .35f * nearness - .25f * (Mathf.Abs(err) / Mathf.Max(1, tolDeg)), .4f, 1);
-                pullFrom = new Pose(p.transform.position, p.transform.rotation); pullT = 0; phase = Phase.PullIn; misalignedFor = 0;
+                PullIn(Mathf.Clamp(1 - .35f * nearness - .25f * (Mathf.Abs(err) / Mathf.Max(1, tolDeg)), .4f, 1));
             }
             else if (off <= tolMm * .003f && !square)
             {
@@ -336,16 +365,10 @@ namespace AthenHill
             if (phase != Phase.Free) return;
             if (!string.IsNullOrEmpty(originPlace) && originPlace != "held" && originPlace != "loose" && originPlace != "gone" && Vector3.Distance(Vector3.ProjectOnPlane(p.transform.position - originPose.position, bench.Up), Vector3.zero) < .05f)
             { bench.Put(p, originPlace); c.audio?.Contact(p.material, bench.ContactMaterial(p, originPlace), p.GrabPoint, .7f); return; }
-            // lower it until its box rests on the surface
+            // lower it until it rests on whatever is under it, in sight
             var rot = Quaternion.AngleAxis(yaw, bench.Up) * baseRotation; if (flipped) rot = rot * Quaternion.Euler(0, 0, 180);
             p.transform.rotation = rot;
-            float lowest = float.MaxValue; var b = p.localBounds;
-            for (int i = 0; i < 8; i++)
-            {
-                var corner = b.center + Vector3.Scale(b.extents, new Vector3((i & 1) == 0 ? -1 : 1, (i & 2) == 0 ? -1 : 1, (i & 4) == 0 ? -1 : 1));
-                lowest = Mathf.Min(lowest, bench.HeightAbove(p.transform.TransformPoint(corner)));
-            }
-            p.transform.position -= bench.Up * (lowest - .001f);
+            bench.Support.Rest(p);
             bench.Drop(p, new Pose(p.transform.position, p.transform.rotation));
             c.audio?.Contact(p.material, "rubber", p.GrabPoint, .7f);
         }
@@ -366,8 +389,8 @@ namespace AthenHill
     public sealed class TurnVerb : AssemblyVerb
     {
         public override AssemblyVerbKind Kind => AssemblyVerbKind.Turn;
-        Pose startPose; AssemblyPart swivelled;
-        float turned, lastAngle, settle, spin, revealYaw, faced, handTurns; bool angleSet, over, returning, slipped, onParent; readonly RateWindow hand = new RateWindow(); Quaternion startRotation; Vector3 pivot, axis, centre;
+        AssemblyViseSwivel swivel;
+        float turned, lastAngle, settle, spin, handTurns, netTurns, wayRound; bool angleSet, over, slipped, onParent; readonly RateWindow hand = new RateWindow(); Quaternion startRotation; Vector3 pivot, axis, centre;
         float Need => Mathf.Max(.01f, Mathf.Abs(c.action.turns));
         float Sign => c.action.turns < 0 ? -1 : 1;
         public float Turned => turned;
@@ -375,8 +398,8 @@ namespace AthenHill
 
         public override void Begin()
         {
-            turned = c.carried; angleSet = false; over = false; settle = 0; returning = false; slipped = false;
-            var p = c.part; onParent = p.OnParent; pivot = centre = p.GrabPoint; axis = p.hasClear ? (p.OnParent ? p.RemovalAxis : p.transform.rotation * p.LocalRemovalAxis) : p.transform.up; startRotation = p.transform.localRotation; startPose = new Pose(p.transform.position, p.transform.rotation);
+            turned = c.carried; angleSet = false; over = false; settle = 0; slipped = false; netTurns = wayRound = 0;
+            var p = c.part; onParent = p.OnParent; pivot = centre = p.GrabPoint; axis = AssemblyToolPose.TurnAxis(p); startRotation = p.transform.localRotation;
             if (!string.IsNullOrEmpty(c.action.loop)) c.audio?.Loop(LoopKey, c.action.loop, pivot);
         }
 
@@ -413,8 +436,22 @@ namespace AthenHill
             }
             handTurns += Mathf.Abs(input); float rate = Mathf.Abs(hand.Push(dt, handTurns));   // turns of the hand per second, over a quarter of a second
             float along = input * Sign * a.gain;
-            float before = turned;
-            turned = Mathf.Max(0, turned + along);
+            if (a.mode != "stop" && (a.noSpin || !string.IsNullOrEmpty(a.drive) && a.turns < 0))
+            {
+                // a latch, a strap, a vise being opened: either way round works it (22 Nov: the wrong way silently did nothing)
+                netTurns += input;
+                if (wayRound != 0)
+                {
+                    along = input * wayRound * a.gain;
+                    if (turned + along <= 0) { wayRound = netTurns = 0; }   // taken all the way back: either way starts it again
+                }
+                else if (Mathf.Abs(netTurns) > .03f) { wayRound = Mathf.Sign(netTurns); along = Mathf.Abs(netTurns) * a.gain; }
+                else along = 0;
+            }
+            float before = turned, raw = Mathf.Max(0, turned + along);
+            // a stop is a stop: turns past the band do not pile up out of sight (22 Nov: the step could then never finish)
+            bool pastStop = a.mode == "stop" && raw > Need + a.hi + .12f;
+            turned = a.mode == "stop" ? Mathf.Min(raw, Need + a.hi + .12f) : raw;
             float progress = Mathf.Clamp01(turned / Need);
             // resistance: stiff threads, and the load coming on at the end of a stop turn
             float resistance = Mathf.Clamp01(1 - a.gain);
@@ -444,7 +481,7 @@ namespace AthenHill
             {
                 var buzz = c.reducedMotion ? Vector3.zero : UnityEngine.Random.insideUnitSphere * (s.buzzMm * .001f * resistance * Mathf.Clamp01(rate));
                 // a screwdriver turns as a whole; a drill stands and turns its crank (its spinParam) instead
-                PlaceTool(c.tool, pivot + buzz, -axis, string.IsNullOrEmpty(c.tool.spinParam) ? deg : 0, true);
+                AssemblyToolPose.Place(c.bench, c.tool, pivot + buzz, -axis, default, string.IsNullOrEmpty(c.tool.spinParam) ? spin : 0);
             }
             c.audio?.SetLoop(LoopKey, resistance, Mathf.Clamp01(rate * 1.2f));
 
@@ -461,8 +498,13 @@ namespace AthenHill
             if (a.mode == "stop")
             {
                 float lo = Need + a.lo, hi = Need + a.hi;
-                if (turned > hi + .12f && !over) { over = true; st.fault = FaultKind() ?? "overtight"; }
-                bool inBand = turned >= lo && turned <= hi;
+                if (pastStop)
+                {
+                    // too tight costs quality once, and it is tight: the action is over
+                    over = true; turned = hi; st.carry = turned; st.fault = FaultKind() ?? "overtight";
+                    st.done = true; st.precision = .55f; return st;
+                }
+                bool inBand = turned >= lo;
                 settle = inBand && Mathf.Abs(along) < 1e-4f ? settle + dt : 0;
                 if (inBand && (!f.primaryHeld || settle >= s.stopSettleSeconds))
                 {
@@ -475,28 +517,20 @@ namespace AthenHill
             return st;
         }
 
-        /// Turn the thing round until the mark faces you (the cracked tang): drag sideways, or A / D.
+        /// Turning the vise to look for a mark: it follows the hand and stays where it is left. The session decides when the
+        /// mark has been found (AssemblySession.WatchReveal), so turning it any other way counts as well.
         AssemblyVerbStatus Reveal(float dt, in AssemblyInputFrame f)
         {
-            var st = new AssemblyVerbStatus(); var p = c.part; var up = c.bench.Up;
-            float input = f.pointer && !f.keyboard ? f.delta.x * .45f : (Mathf.Abs(f.navigate.x) > .5f ? Mathf.Sign(f.navigate.x) : 1) * 80 * dt;
-            if (returning) { revealYaw = Mathf.MoveTowards(revealYaw, 0, 260 * dt); }
-            else if (f.primaryHeld) revealYaw -= input;   // a yaw of +1 about the bench normal takes the near face to the eye's left: the face follows the hand
-            if (!swivelled) { swivelled = SwivelOf(c.bench, p); if (swivelled != p) startPose = new Pose(swivelled.transform.position, swivelled.transform.rotation); swivelPivot = SwivelPivot(swivelled); }
-            Swivel(swivelled.transform, startPose, swivelPivot, up, revealYaw);
-            float facing = c.marker ? Vector3.Dot(c.marker.transform.forward, (c.eye - c.marker.transform.position).normalized) : 1;
-            st.value = Mathf.Clamp01((facing + 1) * .5f); st.progress = returning ? 1 : Mathf.Clamp01(st.value);
-            if (!returning)
-            {
-                faced = facing > .5f ? faced + dt : 0;
-                if (faced > .4f) { returning = true; if (c.marker) c.fx?.Glint(c.bench.Part(c.marker.ownerPart)); }
-                else if (!f.primaryHeld) { st.ended = true; swivelled.transform.SetPositionAndRotation(startPose.position, startPose.rotation); }
-            }
-            else if (Mathf.Abs(revealYaw) < .5f) { swivelled.transform.SetPositionAndRotation(startPose.position, startPose.rotation); st.done = true; st.precision = 1; }
+            var st = new AssemblyVerbStatus();
+            if (swivel == null) { swivel = c.vise ?? new AssemblyViseSwivel(c.bench); swivel.Grab(f.ray); }
+            if (!f.primaryHeld) { st.ended = true; return st; }
+            if (f.pointer && !f.keyboard) swivel.Drag(f);
+            else swivel.Turn(-(Mathf.Abs(f.navigate.x) > .5f ? Mathf.Sign(f.navigate.x) : 1) * 80 * dt);
+            if (c.marker) st.value = Mathf.Clamp01((Vector3.Dot(c.bench.Out(c.marker.transform), (c.eye - c.marker.transform.position).normalized) + 1) * .5f);
+            st.progress = st.value;
             return st;
         }
-        Vector3 swivelPivot;
-        public override void End() { c.audio?.StopLoop(LoopKey); if (c.action != null && c.action.mode == "reveal" && swivelled) swivelled.transform.SetPositionAndRotation(startPose.position, startPose.rotation); }
+        public override void End() { c.audio?.StopLoop(LoopKey); swivel?.Release(); }
     }
 
     // =====================================================================================================  Window
@@ -532,10 +566,25 @@ namespace AthenHill
                 wasHeld = true; held += dt;
                 value = strike ? Mathf.Clamp01(held / s.strikeRaiseSeconds) : Mathf.Clamp(value + a.rate * dt, 0, 1.2f);
                 st.value = value;
-                if (strike) { if (c.tool) PlaceTool(c.tool, strikePoint + c.bench.Up * (s.strikeLift * value), -c.bench.Up); return st; }
+                if (strike)
+                {
+                    if (c.tool)
+                    {
+                        var blow = AssemblyToolPose.Work(c.bench, a, p, c.marker, c.tool);
+                        AssemblyToolPose.Place(c.bench, c.tool, blow.at, blow.into);
+                        AssemblyToolPose.DrawBack(c.tool, blow.into, value, s.strikeLift);
+                    }
+                    return st;
+                }
                 if (!string.IsNullOrEmpty(a.drive)) { var m = c.bench.Param(a.drive); if (m) m.Set(Mathf.Lerp(a.from, a.to, Mathf.Clamp01(value / Mathf.Max(.01f, a.hi)))); }
                 c.audio?.SetLoop(LoopKey, Mathf.InverseLerp(0, Mathf.Max(.01f, a.hi), value), .8f);
-                if (c.tool && p) PlaceTool(c.tool, p.GrabPoint, p.hasClear ? -p.RemovalAxis : -c.bench.Up, 25 * dt);
+                if (c.tool)
+                {
+                    var work = AssemblyToolPose.Work(c.bench, a, p, c.marker, c.tool);
+                    bool filing = c.tool.HasTag("tool:file") || c.tool.HasTag("tool:file_round"), driving = c.tool.HasTag("tool:screwdriver");
+                    AssemblyToolPose.Place(c.bench, c.tool, work.at, work.into, default, driving ? 25 * held : 0);
+                    if (filing && !c.reducedMotion) c.tool.transform.position += (c.tool.TipPoint - c.tool.GrabPoint).normalized * (Mathf.Sin(held * 10) * .015f);
+                }
                 st.progress = (count + Mathf.Clamp01(value / Mathf.Max(.01f, a.lo)) * .9f) / Mathf.Max(1, a.count);
                 if (value > a.hi + s.overMargin) { st.fault = FaultKind() ?? "over"; value = 0; held = 0; wasHeld = false; mustRelease = true; c.audio?.SetLoop(LoopKey, 0, 0); }
                 return st;
@@ -545,14 +594,15 @@ namespace AthenHill
             st.value = value; bool inWindow = value >= a.lo && value <= a.hi;
             if (strike)
             {
-                if (c.tool) PlaceTool(c.tool, strikePoint, -c.bench.Up);
+                var landed = AssemblyToolPose.Work(c.bench, a, p, c.marker, c.tool);
+                if (c.tool) AssemblyToolPose.Place(c.bench, c.tool, landed.at, landed.into);
                 if (value < a.lo) c.audio?.Play(a.audio + ".strike", strikePoint, .3f, 0);
                 else
                 {
                     count++; counted++; precisionSum += inWindow ? Score(value) : .35f;
                     c.audio?.Play(a.audio + ".strike", strikePoint, 1, value);
                     if (p && p.hasClear && p.OnParent) { float k = Mathf.Lerp(a.from, a.to, (float)count / Mathf.Max(1, a.count)); var rest = p.RestWorld; var clear = p.ClearWorld; p.transform.SetPositionAndRotation(Vector3.Lerp(rest.position, clear.position, k), Quaternion.Slerp(rest.rotation, clear.rotation, k)); }
-                    if (!c.reducedMotion) c.camera?.Nudge(-c.bench.Up, s.cameraNudgeMm * .0006f);
+                    if (!c.reducedMotion) c.camera?.Nudge(landed.into, s.cameraNudgeMm * .0006f);
                     if (value > a.hi) { st.fault = FaultKind() ?? "miss"; c.audio?.Play(a.audio + ".miss", strikePoint); }
                 }
             }
@@ -604,7 +654,7 @@ namespace AthenHill
             if (!mark) { st.ended = true; return st; }
             float tol = (a.tolMm > 0 ? a.tolMm : s.pointTolMm) * .001f;
             float d = f.pointer && !f.keyboard ? DistanceToRay(f.ray, mark.transform.position, out _) : tol * .2f;
-            if (c.tool) PlaceTool(c.tool, mark.transform.position, -mark.transform.forward);
+            if (c.tool) AssemblyToolPose.Place(c.bench, c.tool, mark.transform.position, -c.bench.Out(mark.transform));
             if (d > tol * 3) { st.ended = true; return st; }
             st.count = 1; st.done = true; st.progress = 1;
             st.precision = d <= tol ? 1 - .4f * d / tol : .4f;
@@ -785,7 +835,12 @@ namespace AthenHill
             st.progress = along / length; st.carry = st.progress; st.value = Mathf.Clamp01(error / tol);
             var at = PointAt(along);
             if (f.keyboard || !f.pointer) { var tangent = PointAt(Mathf.Min(length, along + .004f)) - at; if (tangent.sqrMagnitude > 1e-10f) at += Vector3.Cross(c.bench.Up, tangent.normalized) * drift; }
-            if (c.tool) PlaceTool(c.tool, at, -c.bench.Up);
+            if (c.tool)
+            {
+                var into = AssemblyToolPose.Work(c.bench, a, c.part, c.marker, c.tool).into;
+                var run = PointAt(Mathf.Min(length, along + .006f)) - PointAt(Mathf.Max(0, along - .006f));
+                AssemblyToolPose.Place(c.bench, c.tool, at, into, run);
+            }
             c.audio?.SetLoop(LoopKey, a.hi > 0 ? Mathf.Clamp01(pace / a.hi) : .5f, pace > 0 ? .9f : .15f);
             if (a.mode != "drag" && a.hi > 0 && pace > a.hi && HasFault("tear")) { along = before; st.carry = along / length; st.fault = "tear"; st.ended = true; return st; }
             // the last 3 cm of a line that runs round the back (a swivel line) finish by themselves: the tape comes off, the lead drops in
@@ -852,7 +907,7 @@ namespace AthenHill
             if (c.tool)
             {
                 var at = Vector3.zero; at[iu] = Mathf.Clamp(pu, -su * .5f, su * .5f); at[iv] = Mathf.Clamp(pv, -sv * .5f, sv * .5f);
-                PlaceTool(c.tool, zone.transform.TransformPoint(at) + normal * (size[inn] * .5f), -normal);
+                AssemblyToolPose.Place(c.bench, c.tool, zone.transform.TransformPoint(at) + normal * (size[inn] * .5f), -normal);
             }
             c.audio?.SetLoop(LoopKey, .5f, f.primaryHeld && moving ? .9f : 0);
             float cover = Coverage, need = a.lo > 0 ? a.lo : s.wipeDone;

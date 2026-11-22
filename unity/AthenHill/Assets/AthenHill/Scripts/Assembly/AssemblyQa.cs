@@ -75,7 +75,7 @@ namespace AthenHill
                 },
                 focus = s.Focus.Valid ? new { id = s.Focus.Id, kind = s.Focus.part ? "part" : s.Focus.marker.kind.ToString(), at = Screen(cam, s.Focus.Position) } : null,
                 verb = verb != null && verbRef.HasValue ? new { id = verbRef.Value.Id, kind = verb.Kind.ToString(), s.VerbStatus.progress, s.VerbStatus.value, s.VerbStatus.count, s.VerbStatus.waiting, at = Screen(cam, verb.ActPoint) } : null,
-                camera = s.Rig != null ? new { shot = s.ShotNow, pinned = s.PinnedShot, shots = s.ShotNames.ToArray(), zoom = s.Rig.Zoom, yaw = s.Rig.Yaw, pitch = s.Rig.Pitch, blending = s.Rig.Blending, active = s.Rig.Active } : null,
+                camera = s.Rig != null ? new { shot = s.ShotNow, pinned = s.PinnedShot, shots = s.ShotNames.ToArray(), zoom = s.Rig.Zoom, side = s.Rig.Side, squaring = s.Squaring, viseYaw = s.Vise != null ? s.Vise.Yaw : 0, yaw = s.Rig.Yaw, pitch = s.Rig.Pitch, blending = s.Rig.Blending, active = s.Rig.Active } : null,
                 wipes = bench.Wipes.OrderBy(w => w.zone).Select(w => new { w.zone, coverage = w.Coverage }).ToArray(),
                 hint = new { level = s.HintLevel, idle = s.Idle },
                 refusals = s.Refusals,

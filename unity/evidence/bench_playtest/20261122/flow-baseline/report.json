@@ -1,0 +1,202 @@
+{
+ "name": "check_crafting_flow_native",
+ "exe": "/home/teknetik/code/ao2/unity/AthenHill/Builds/batch-sh-gemini2/AthenHill.x86_64",
+ "exeMtime": "Thu Nov 19 14:08:38 2026",
+ "started": "2026-11-22 09:33:43",
+ "checks": [
+  {
+   "check": "fresh save: the grip recipe is not known",
+   "passed": true,
+   "detail": [
+    "recipe_field_rifle",
+    "recipe_rifle_precision_barrel"
+   ]
+  },
+  {
+   "check": "Steady Hands is at the Identify stage with the servo carried",
+   "passed": true,
+   "detail": {
+    "stage": "Identify",
+    "objective": "Show the servo to Warden Ossa at the West Gate post. She knows what salvage can become."
+   }
+  },
+  {
+   "check": "Brann's dialogue is steady_identify (shows the servo to Ossa)",
+   "passed": true,
+   "detail": {
+    "npc": "Brann",
+    "node": "steady_identify",
+    "choices": [
+     "Show me what you trade.",
+     "I'll go and see her."
+    ]
+   }
+  },
+  {
+   "check": "Brann's line names Ossa",
+   "passed": true,
+   "detail": "That's a worker servo. Good. Before I touch it, show it to Ossa. She reads salvage better than I do, and she'll tell you what it's good for. Then come back with alloy and nanites."
+  },
+  {
+   "check": "talking to Brann does not teach the grip",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "Ossa opens with the servo node",
+   "passed": true,
+   "detail": {
+    "npc": "Warden Ossa",
+    "node": "servo",
+    "choices": [
+     "Go on.",
+     "Another time."
+    ]
+   }
+  },
+  {
+   "check": "Go on leads to servo_look",
+   "passed": true,
+   "detail": {
+    "node": "servo_look"
+   }
+  },
+  {
+   "check": "servo_look teaches the grip recipe",
+   "passed": true,
+   "detail": [
+    "recipe_field_rifle",
+    "recipe_rifle_precision_barrel",
+    "recipe_grip_stabilised_pistol"
+   ]
+  },
+  {
+   "check": "the order moved Identify -> Report",
+   "passed": true,
+   "detail": {
+    "before": "Identify",
+    "after": "Report",
+    "objective": "Take the servo to Brann at Salvage, on the north avenue inside the walls. His workbench can make the Stabilised Pistol Grip."
+   }
+  },
+  {
+   "check": "Brann now opens report_ready",
+   "passed": true,
+   "detail": {
+    "node": "report_ready"
+   }
+  },
+  {
+   "check": "talking to Brann moves the order to Fabricate",
+   "passed": true,
+   "detail": "Fabricate"
+  },
+  {
+   "check": "toolkit removed from the pack for the refusal check",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "the bench refuses with the missing-tool reason",
+   "passed": true,
+   "detail": "Missing tool: Screwdriver. Carry a Field Toolkit."
+  },
+  {
+   "check": "the grip has no timer (Fabricate / Auto-assemble) button",
+   "passed": true,
+   "detail": {
+    "name": "fabricator-craft",
+    "type": "Button",
+    "visible": false,
+    "enabled": false,
+    "focusable": false,
+    "tabIndex": 0,
+    "delegatesFocus": false,
+    "text": "Fabricate",
+    "value": null,
+    "choices": null,
+    "bounds": [
+     625.0,
+     452.0,
+     0.0,
+     0.0
+    ],
+    "fontSize": 17.0,
+    "classes": [
+     "unity-button",
+     "unity-disabled",
+     "unity-text-element"
+    ],
+    "hasBackground": true
+   }
+  },
+  {
+   "check": "Build by hand without the toolkit starts nothing",
+   "passed": true,
+   "detail": {
+    "state": "Fabricator",
+    "build": {
+     "name": "fabricator-build",
+     "type": "Button",
+     "visible": true,
+     "enabled": false,
+     "focusable": false,
+     "tabIndex": 0,
+     "delegatesFocus": false,
+     "text": "Build by hand",
+     "value": null,
+     "choices": null,
+     "bounds": [
+      625.0,
+      456.0,
+      117.0,
+      44.0
+     ],
+     "fontSize": 17.0,
+     "classes": [
+      "unity-button",
+      "unity-disabled",
+      "unity-text-element"
+     ],
+     "hasBackground": true
+    },
+    "job": null,
+    "crafts": 0,
+    "notice": ""
+   }
+  },
+  {
+   "check": "toolkit returned",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "script completed without error",
+   "passed": false,
+   "detail": "TimeoutError('timed out waiting for fabricator')"
+  },
+  {
+   "check": "no runtime exceptions in Player.log",
+   "passed": true,
+   "detail": []
+  }
+ ],
+ "captures": [
+  "/home/teknetik/code/ao2/unity/evidence/bench_playtest/20261122/flow-baseline/run/01-brann-identify.png",
+  "/home/teknetik/code/ao2/unity/evidence/bench_playtest/20261122/flow-baseline/run/02-ossa-servo.png",
+  "/home/teknetik/code/ao2/unity/evidence/bench_playtest/20261122/flow-baseline/run/03-ossa-servo-look.png",
+  "/home/teknetik/code/ao2/unity/evidence/bench_playtest/20261122/flow-baseline/run/04-brann-report.png",
+  "/home/teknetik/code/ao2/unity/evidence/bench_playtest/20261122/flow-baseline/run/05-bench-no-toolkit.png",
+  "/home/teknetik/code/ao2/unity/evidence/bench_playtest/20261122/flow-baseline/run/error-state.png"
+ ],
+ "notes": [
+  {
+   "note": "stage before Ossa (the brief said Gather; the code reports the Identify stage once salvage is carried)",
+   "detail": "Identify"
+  }
+ ],
+ "error": "Traceback (most recent call last):\n  File \"/home/teknetik/code/ao2/unity/tools/showcase_qa.py\", line 124, in run\n    body()\n    ~~~~^^\n  File \"/home/teknetik/code/ao2/unity/tools/check_crafting_flow_native.py\", line 207, in body\n    open_bench()\n    ~~~~~~~~~~^^\n  File \"/home/teknetik/code/ao2/unity/tools/check_crafting_flow_native.py\", line 130, in open_bench\n    qa.wait(lambda: qa.state() == 'Fabricator', 6, what='fabricator')\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/teknetik/code/ao2/unity/evidence/gameplay-v2/20260930-reqa2/qa.py\", line 227, in wait\n    raise TimeoutError('timed out waiting for ' + what)\nTimeoutError: timed out waiting for fabricator\n",
+ "passed": false,
+ "summary": "17/18 passed",
+ "finished": "2026-11-22 09:34:27"
+}

@@ -3,8 +3,8 @@ using UnityEngine;
 namespace AthenHill
 {
  /// Visible armour on the player colonist (2 Oct 2026): each entry names an equipment item and the model shown while it
- /// is equipped in its slot (the Warden plate carrier on the chest). The field vest the colonist starts with has no
- /// model; the suit is the vest. Driven by the character model's Changed event, so the inventory's equip/unequip shows
+ /// is equipped in its slot (the Warden plate carrier on the chest). A new colonist starts with no armour at
+ /// all (22 Nov 2026: it is bought or crafted). Driven by the character model's Changed event, so the inventory's equip/unequip shows
  /// and hides the piece at once.
  [DisallowMultipleComponent]
  public class PlayerArmourVisuals:MonoBehaviour

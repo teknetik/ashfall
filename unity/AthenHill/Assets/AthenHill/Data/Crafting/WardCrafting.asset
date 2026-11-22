@@ -698,6 +698,12 @@ MonoBehaviour:
     - kind: item
       id: rivet_stock
       quantity: 2
+    - kind: item
+      id: armoured_shell_casing
+      quantity: 1
+    - kind: item
+      id: optic_visor_lens
+      quantity: 1
     outputQuantity: 1
     knownByDefault: 0
     unlocks:
@@ -1179,6 +1185,284 @@ MonoBehaviour:
     skill: engineering
     craftXp: 8
     skillUse: 0.5
+  - id: recipe_field_vest
+    name: Field Vest
+    stationId: station_field_fabricator
+    requiresWeaponId: 
+    outputItemId: field_vest
+    outputWeaponId: 
+    outputSlots: []
+    inputs:
+    - kind: item
+      id: salvaged_chest_plate
+      quantity: 3
+    - kind: item
+      id: chest_rig_harness
+      quantity: 2
+    - kind: item
+      id: alloy_plate
+      quantity: 2
+    outputQuantity: 1
+    knownByDefault: 0
+    unlocks:
+    - type: acquireItem
+      id: salvaged_chest_plate
+    - type: acquireItem
+      id: chest_rig_harness
+    requirements: []
+    requiredTools: []
+    requiredSchematics: []
+    group: 5
+    lockedHint: Recover salvaged ballistic plates from inner-Berms droids or crates and a canvas harness from wrecks.
+    craftSeconds: 16
+    skill: engineering
+    craftXp: 12
+    skillUse: 0.75
+  - id: recipe_warden_plate_carrier
+    name: Warden Plate Carrier
+    stationId: station_field_fabricator
+    requiresWeaponId: 
+    outputItemId: warden_plate_carrier
+    outputWeaponId: 
+    outputSlots: []
+    inputs:
+    - kind: item
+      id: ceramic_ballistic_plate
+      quantity: 3
+    - kind: item
+      id: nanoweave_backing
+      quantity: 2
+    - kind: item
+      id: rig_harness_frame
+      quantity: 1
+    - kind: item
+      id: alloy_plate
+      quantity: 2
+    outputQuantity: 1
+    knownByDefault: 0
+    unlocks:
+    - type: acquireItem
+      id: ceramic_ballistic_plate
+    - type: acquireItem
+      id: nanoweave_backing
+    - type: acquireItem
+      id: rig_harness_frame
+    requirements: []
+    requiredTools: []
+    requiredSchematics: []
+    group: 5
+    lockedHint: Recover ceramic plates, nanoweave backing, and a tensioned clasp from Band 2 Gunners and strongboxes.
+    craftSeconds: 22
+    skill: engineering
+    craftXp: 16
+    skillUse: 0.75
+  - id: recipe_field_boots
+    name: Field Boots
+    stationId: station_field_fabricator
+    requiresWeaponId: 
+    outputItemId: field_boots
+    outputWeaponId: 
+    outputSlots: []
+    inputs:
+    - kind: item
+      id: tread_strut
+      quantity: 2
+    - kind: item
+      id: reinforced_sole
+      quantity: 2
+    - kind: item
+      id: alloy_plate
+      quantity: 1
+    - kind: item
+      id: strap_webbing
+      quantity: 2
+    outputQuantity: 1
+    knownByDefault: 0
+    unlocks:
+    - type: acquireItem
+      id: tread_strut
+    - type: acquireItem
+      id: reinforced_sole
+    requirements: []
+    requiredTools: []
+    requiredSchematics: []
+    group: 5
+    lockedHint: Recover shock-absorbing tread struts and reinforced sole plates from mid-to-outer Berms wrecks and droids.
+    craftSeconds: 18
+    skill: engineering
+    craftXp: 12
+    skillUse: 0.75
+  - id: recipe_field_bandage
+    name: Field Bandage
+    stationId: station_field_fabricator
+    requiresWeaponId: 
+    outputItemId: field_bandage
+    outputWeaponId: 
+    outputSlots: []
+    inputs:
+    - kind: item
+      id: med_dressing
+      quantity: 2
+    outputQuantity: 1
+    knownByDefault: 0
+    unlocks:
+    - type: acquireItem
+      id: med_dressing
+    requirements: []
+    requiredTools: []
+    requiredSchematics: []
+    group: 6
+    lockedHint: Scavenge field dressings from Karaveen wrecks or Warden crates to learn this.
+    craftSeconds: 3
+    skill: engineering
+    craftXp: 3
+    skillUse: 0.25
+  - id: recipe_medkit
+    name: Medkit
+    stationId: station_field_fabricator
+    requiresWeaponId: 
+    outputItemId: medkit
+    outputWeaponId: 
+    outputSlots: []
+    inputs:
+    - kind: item
+      id: med_dressing
+      quantity: 2
+    - kind: item
+      id: med_biogel
+      quantity: 1
+    outputQuantity: 1
+    knownByDefault: 0
+    unlocks:
+    - type: acquireItem
+      id: med_biogel
+    requirements: []
+    requiredTools: []
+    requiredSchematics: []
+    group: 6
+    lockedHint: Scavenge a biogel ampoule from drone service bays or outpost lockers to learn this.
+    craftSeconds: 6
+    skill: nanotechnology
+    craftXp: 5
+    skillUse: 0.5
+  - id: recipe_trauma_kit
+    name: Trauma Kit
+    stationId: station_field_fabricator
+    requiresWeaponId: 
+    outputItemId: trauma_kit
+    outputWeaponId: 
+    outputSlots: []
+    inputs:
+    - kind: item
+      id: medkit
+      quantity: 1
+    - kind: item
+      id: med_nanosuture
+      quantity: 1
+    - kind: item
+      id: med_biogel
+      quantity: 1
+    outputQuantity: 1
+    knownByDefault: 0
+    unlocks:
+    - type: acquireItem
+      id: med_nanosuture
+    requirements: []
+    requiredTools: []
+    requiredSchematics: []
+    group: 6
+    lockedHint: Recover a nano-suture cartridge from Band 2-3 strongboxes to learn this.
+    craftSeconds: 10
+    skill: nanotechnology
+    craftXp: 10
+    skillUse: 0.75
+  - id: recipe_ammo_rifle_standard
+    name: Standard Ballistic Slugs
+    stationId: station_field_fabricator
+    requiresWeaponId: 
+    outputItemId: ammo_rifle_standard
+    outputWeaponId: 
+    outputSlots: []
+    inputs:
+    - kind: item
+      id: scrap_alloy
+      quantity: 1
+    - kind: item
+      id: propellant_tin
+      quantity: 1
+    outputQuantity: 12
+    knownByDefault: 0
+    unlocks:
+    - type: acquireItem
+      id: propellant_tin
+    requirements: []
+    requiredTools: []
+    requiredSchematics: []
+    group: 6
+    lockedHint: Scavenge a propellant tin from inner-Berms droids or crates to press rifle slugs.
+    craftSeconds: 4
+    skill: engineering
+    craftXp: 4
+    skillUse: 0.25
+  - id: recipe_ammo_rifle_ap
+    name: Armour-Piercing Rounds
+    stationId: station_field_fabricator
+    requiresWeaponId: 
+    outputItemId: ammo_rifle_ap
+    outputWeaponId: 
+    outputSlots: []
+    inputs:
+    - kind: item
+      id: alloy_plate
+      quantity: 1
+    - kind: item
+      id: hardened_slug_core
+      quantity: 2
+    outputQuantity: 12
+    knownByDefault: 0
+    unlocks:
+    - type: acquireItem
+      id: hardened_slug_core
+    requirements: []
+    requiredTools: []
+    requiredSchematics: []
+    group: 6
+    lockedHint: Recover hardened slug cores from Band 2-3 plated droids to fabricate AP rounds.
+    craftSeconds: 6
+    skill: engineering
+    craftXp: 6
+    skillUse: 0.5
+  - id: recipe_ammo_rifle_emp
+    name: Disruptor Shock Rounds
+    stationId: station_field_fabricator
+    requiresWeaponId: 
+    outputItemId: ammo_rifle_emp
+    outputWeaponId: 
+    outputSlots: []
+    inputs:
+    - kind: item
+      id: capacitor_filament
+      quantity: 2
+    - kind: item
+      id: copper_filament
+      quantity: 1
+    - kind: item
+      id: charge_cell_core
+      quantity: 1
+    outputQuantity: 10
+    knownByDefault: 0
+    unlocks:
+    - type: acquireItem
+      id: capacitor_filament
+    requirements: []
+    requiredTools: []
+    requiredSchematics: []
+    group: 6
+    lockedHint: Recover capacitor filaments from Lancer drones or Post Sentinels to fabricate EMP rounds.
+    craftSeconds: 8
+    skill: electronics
+    craftXp: 8
+    skillUse: 0.5
   lootTables:
   - id: loot_feral_scrap_drone
     entries:
@@ -1256,6 +1540,18 @@ MonoBehaviour:
       chance: 0.35
       pityAfter: 3
       guaranteeUntilCollected: 0
+    - itemId: salvaged_chest_plate
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.2
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: propellant_tin
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.4
+      pityAfter: 3
+      guaranteeUntilCollected: 0
   - id: loot_depot_foreman
     entries:
     - itemId: foreman_control_core
@@ -1300,6 +1596,18 @@ MonoBehaviour:
       chance: 0.5
       pityAfter: 0
       guaranteeUntilCollected: 0
+    - itemId: berms_relay_key
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0
+      pityAfter: 0
+      guaranteeUntilCollected: 1
+    - itemId: salvaged_chest_plate
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.3
+      pityAfter: 4
+      guaranteeUntilCollected: 0
   - id: loot_scrap_heap
     entries:
     - itemId: scrap_alloy
@@ -1342,6 +1650,24 @@ MonoBehaviour:
       minQuantity: 1
       maxQuantity: 1
       chance: 0.35
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: salvaged_chest_plate
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.2
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: med_dressing
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.45
+      pityAfter: 2
+      guaranteeUntilCollected: 0
+    - itemId: propellant_tin
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.4
       pityAfter: 3
       guaranteeUntilCollected: 0
   - id: loot_wreck_carcass
@@ -1394,6 +1720,24 @@ MonoBehaviour:
       chance: 0.45
       pityAfter: 2
       guaranteeUntilCollected: 0
+    - itemId: chest_rig_harness
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.22
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: reinforced_sole
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.2
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: med_dressing
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.5
+      pityAfter: 2
+      guaranteeUntilCollected: 0
   - id: loot_drone_wreck
     entries:
     - itemId: scrap_alloy
@@ -1430,6 +1774,18 @@ MonoBehaviour:
       minQuantity: 1
       maxQuantity: 1
       chance: 0.35
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: chest_rig_harness
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.22
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: med_biogel
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.3
       pityAfter: 3
       guaranteeUntilCollected: 0
   - id: loot_feral_gunner
@@ -1488,6 +1844,42 @@ MonoBehaviour:
       chance: 0.5
       pityAfter: 2
       guaranteeUntilCollected: 0
+    - itemId: salvaged_chest_plate
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.25
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: ceramic_ballistic_plate
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.25
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: rig_harness_frame
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.25
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: propellant_tin
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.55
+      pityAfter: 2
+      guaranteeUntilCollected: 0
+    - itemId: hardened_slug_core
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.35
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: ammo_rifle_standard
+      minQuantity: 4
+      maxQuantity: 8
+      chance: 0.5
+      pityAfter: 2
+      guaranteeUntilCollected: 0
   - id: loot_feral_lancer
     entries:
     - itemId: scrap_alloy
@@ -1531,6 +1923,36 @@ MonoBehaviour:
       maxQuantity: 2
       chance: 0.45
       pityAfter: 2
+      guaranteeUntilCollected: 0
+    - itemId: rig_harness_frame
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.25
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: armoured_shell_casing
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.3
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: optic_visor_lens
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.3
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: hardened_slug_core
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.35
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: capacitor_filament
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.4
+      pityAfter: 3
       guaranteeUntilCollected: 0
   - id: loot_berms_outer
     entries:
@@ -1588,6 +2010,36 @@ MonoBehaviour:
       chance: 0.5
       pityAfter: 2
       guaranteeUntilCollected: 0
+    - itemId: salvaged_chest_plate
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.3
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: nanoweave_backing
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.2
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: tread_strut
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.25
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: med_dressing
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.55
+      pityAfter: 2
+      guaranteeUntilCollected: 0
+    - itemId: propellant_tin
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.5
+      pityAfter: 2
+      guaranteeUntilCollected: 0
   - id: loot_caravan_strongbox
     entries:
     - itemId: warden_plate_carrier
@@ -1619,6 +2071,36 @@ MonoBehaviour:
       maxQuantity: 2
       chance: 1
       pityAfter: 0
+      guaranteeUntilCollected: 0
+    - itemId: berms_relay_key
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0
+      pityAfter: 0
+      guaranteeUntilCollected: 1
+    - itemId: ceramic_ballistic_plate
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.3
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: nanoweave_backing
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.25
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: med_biogel
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.5
+      pityAfter: 2
+      guaranteeUntilCollected: 0
+    - itemId: ammo_rifle_standard
+      minQuantity: 6
+      maxQuantity: 12
+      chance: 0.8
+      pityAfter: 2
       guaranteeUntilCollected: 0
   - id: loot_berms_outpost
     entries:
@@ -1670,6 +2152,72 @@ MonoBehaviour:
       chance: 0.5
       pityAfter: 2
       guaranteeUntilCollected: 0
+    - itemId: chest_rig_harness
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.25
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: ceramic_ballistic_plate
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.3
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: nanoweave_backing
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.2
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: rig_harness_frame
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.25
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: reinforced_sole
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.3
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: armoured_shell_casing
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.25
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: med_dressing
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.6
+      pityAfter: 2
+      guaranteeUntilCollected: 0
+    - itemId: med_biogel
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.4
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: med_nanosuture
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.2
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: capacitor_filament
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.35
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: ammo_rifle_standard
+      minQuantity: 4
+      maxQuantity: 8
+      chance: 0.6
+      pityAfter: 2
+      guaranteeUntilCollected: 0
   - id: loot_scrap_reaper
     entries:
     - itemId: reaper_blade
@@ -1713,6 +2261,36 @@ MonoBehaviour:
       maxQuantity: 1
       chance: 0.15
       pityAfter: 6
+      guaranteeUntilCollected: 0
+    - itemId: tread_strut
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.35
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: reinforced_sole
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.35
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: hardened_slug_core
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.5
+      pityAfter: 2
+      guaranteeUntilCollected: 0
+    - itemId: nano_resonator_shard
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.25
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: nano_targeting_core
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.2
+      pityAfter: 4
       guaranteeUntilCollected: 0
   - id: loot_post_sentinel
     entries:
@@ -1758,6 +2336,36 @@ MonoBehaviour:
       chance: 1
       pityAfter: 0
       guaranteeUntilCollected: 0
+    - itemId: armoured_shell_casing
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.4
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: optic_visor_lens
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.45
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: capacitor_filament
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.5
+      pityAfter: 2
+      guaranteeUntilCollected: 0
+    - itemId: nano_dormant_matrix
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.25
+      pityAfter: 4
+      guaranteeUntilCollected: 0
+    - itemId: nano_targeting_core
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.2
+      pityAfter: 4
+      guaranteeUntilCollected: 0
   - id: loot_nextlevel_crate
     entries:
     - itemId: scrap_alloy
@@ -1802,6 +2410,42 @@ MonoBehaviour:
       chance: 0.4
       pityAfter: 3
       guaranteeUntilCollected: 0
+    - itemId: tread_strut
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.35
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: optic_visor_lens
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.35
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: med_biogel
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.5
+      pityAfter: 2
+      guaranteeUntilCollected: 0
+    - itemId: med_nanosuture
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.45
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: hardened_slug_core
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.55
+      pityAfter: 2
+      guaranteeUntilCollected: 0
+    - itemId: capacitor_filament
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.5
+      pityAfter: 2
+      guaranteeUntilCollected: 0
   - id: loot_nextlevel_strongbox
     entries:
     - itemId: reaper_blade
@@ -1845,6 +2489,30 @@ MonoBehaviour:
       maxQuantity: 3
       chance: 1
       pityAfter: 0
+      guaranteeUntilCollected: 0
+    - itemId: med_nanosuture
+      minQuantity: 1
+      maxQuantity: 2
+      chance: 0.65
+      pityAfter: 2
+      guaranteeUntilCollected: 0
+    - itemId: nano_dormant_matrix
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.4
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: nano_resonator_shard
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.4
+      pityAfter: 3
+      guaranteeUntilCollected: 0
+    - itemId: nano_targeting_core
+      minQuantity: 1
+      maxQuantity: 1
+      chance: 0.35
+      pityAfter: 3
       guaranteeUntilCollected: 0
   nodeGifts:
   - topic: npc_brann:toolkit

@@ -249,7 +249,7 @@ namespace AthenHill
         {
             switch (teach)
             {
-                case "seat": return ("<b>Drag</b> it with the left button to where it goes  ·  <b>wheel</b> turns it", "<b>Space</b> takes  ·  <b>arrows</b> or <b>Tab</b> to its place  ·  <b>Space</b> sets  ·  <b>Q E</b> turn");
+                case "seat": return ("<b>Drag</b> it with the left button to where it goes  ·  <b>wheel</b> turns it", "<b>Space</b> takes  ·  <b>arrows</b> or <b>Tab</b> to its place  ·  <b>Space</b> sets  ·  <b>Q</b>, <b>Shift+Q</b> turn");
                 case "turn": return ("<b>Hold left</b> on it and <b>circle</b> the mouse slowly (or roll the <b>wheel</b>)", "<b>Hold Space</b>");
                 case "point_aim": return ("Hold the pistol on the card  ·  <b>left click</b> fires", "<b>Space</b> fires");
                 case "point": return ("With the tool in hand, <b>click</b> the lit mark", "<b>Arrows</b> or <b>Tab</b> to the mark  ·  <b>Space</b>");

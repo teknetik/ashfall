@@ -8,13 +8,19 @@ namespace AthenHill
     /// follow camera must write nothing meanwhile (FollowCamera returns early while CinematicCamera.BenchActive). An
     /// overlay like the conversation camera would have to be recomposed over a pose that has no meaning at the bench.
     /// Shots are the cam_bench_* review cameras; the right button orbits a little about the point the shot looks at,
-    /// and the wheel moves in on the active part.
+    /// and the wheel moves in on the active part. A and E step sideways along the bench, and G puts the view back.
+    /// Whatever the player does with it, the work stays in the picture (22 Nov 2026).
     public sealed class AssemblyCameraRig
     {
         readonly AssemblyBench bench; readonly AssemblySettings settings;
         Camera lens; readonly RestoreLedger ledger = new RestoreLedger(); TransientVolume volume;
         Transform shot; Pose from; float fromFov, blend = 1, blendSeconds = .6f;
-        float yaw, pitch, zoomTarget; Vector3 focus, focusSmooth, nudge; bool hasFocus;
+        float yaw, pitch, zoomTarget, side, sideTarget; Vector3 focus, focusSmooth, nudge; bool hasFocus;
+        /// Where the player stood at each shot: a trip to the toolkit and back does not lose a better view.
+        readonly System.Collections.Generic.Dictionary<string, float> stoodAt = new System.Collections.Generic.Dictionary<string, float>();
+        public float Side => side;
+        /// How far the player has moved their eye about, in degrees or the like of them.
+        public float LookedRound => Mathf.Abs(yaw) + Mathf.Abs(pitch) + Mathf.Abs(side) * 90 + Zoom * 25;
         public bool Active { get; private set; }
         public string Shot { get; private set; } = "";
         public float Zoom { get; private set; }
@@ -48,7 +54,7 @@ namespace AthenHill
             lens.nearClipPlane = Mathf.Min(near, .03f);
             volume = new TransientVolume("Bench camera volume", 1000, TransientVolume.LayerFor(lens), false);
             ledger.Add("volume", () => { volume?.Dispose(); volume = null; });
-            yaw = pitch = 0; Zoom = zoomTarget = 0; nudge = Vector3.zero; hasFocus = false;
+            yaw = pitch = 0; Zoom = zoomTarget = 0; side = sideTarget = 0; stoodAt.Clear(); nudge = Vector3.zero; hasFocus = false;
             shot = null; Shot = "";
             from = new Pose(start.position, start.rotation); fromFov = start.fieldOfView;
             SetShot(firstShot, reducedMotion, settings ? settings.enterSeconds : .8f);
@@ -72,7 +78,11 @@ namespace AthenHill
             if (!t) return false;
             if (t == shot) return true;
             if (lens && shot) { from = new Pose(lens.transform.position, lens.transform.rotation); fromFov = lens.fieldOfView; }
+            if (shot) stoodAt[Shot] = sideTarget;
             shot = t; Shot = name; yaw = pitch = 0;
+            // a new shot is never entered zoomed in or looking at what the last one worked on
+            Zoom = zoomTarget = 0; hasFocus = false;
+            stoodAt.TryGetValue(name, out sideTarget); side = sideTarget;
             blendSeconds = Mathf.Max(.01f, seconds > 0 ? seconds : settings ? settings.shotSeconds : .6f);
             blend = cut ? 1 : 0;
             return true;
@@ -80,13 +90,43 @@ namespace AthenHill
 
         /// The point the close view follows and the lens focuses on.
         public void Focus(Vector3 world) { if (!hasFocus) focusSmooth = world; focus = world; hasFocus = true; }
+        public void ClearFocus() { hasFocus = false; }
+        /// The view as the shot has it.
+        public void ResetView(bool cut)
+        {
+            if (!Active || !lens || !shot) return;
+            from = new Pose(lens.transform.position, lens.transform.rotation); fromFov = lens.fieldOfView;
+            yaw = pitch = 0; Zoom = zoomTarget = 0; side = sideTarget = 0; stoodAt.Clear();
+            blendSeconds = .35f; blend = cut ? 1 : 0;
+        }
         public void Nudge(Vector3 direction, float metres) { nudge += direction.normalized * metres; }
         public void ZoomTo(float value) { zoomTarget = Mathf.Clamp01(value); }
+
+        /// The least turn of the eye that has `point` inside the picture's margins.
+        public static Quaternion KeepInView(Vector3 eye, Quaternion view, Vector3 point, float fov, float aspect, Vector3 up, float shareX, float shareY)
+        {
+            var to = point - eye; if (to.sqrMagnitude < 1e-6f) return view;
+            // twice: turning level again after the first turn moves the point a little
+            for (int i = 0; i < 3; i++)
+            {
+                var local = Quaternion.Inverse(view) * to;
+                if (local.z <= .01f) { view = Quaternion.LookRotation(to, up); continue; }
+                float tan = Mathf.Tan(fov * .5f * Mathf.Deg2Rad), limitX = tan * aspect * shareX, limitY = tan * shareY;
+                float x = local.x / local.z, y = local.y / local.z;
+                if (Mathf.Abs(x) <= limitX + 1e-4f && Mathf.Abs(y) <= limitY + 1e-4f) break;
+                var allowed = view * new Vector3(Mathf.Clamp(x, -limitX, limitX), Mathf.Clamp(y, -limitY, limitY), 1);
+                view = Quaternion.LookRotation(Quaternion.FromToRotation(allowed, to) * (view * Vector3.forward), up);
+            }
+            return view;
+        }
 
         public void Tick(float dt, in AssemblyInputFrame f, bool wheelZooms, bool reducedMotion)
         {
             if (!Active || !lens || !shot) return;
             var s = settings;
+            if (f.resetView) ResetView(reducedMotion);
+            sideTarget = Mathf.Clamp(sideTarget + f.shimmy * s.shimmySpeed * dt, -s.shimmyReach, s.shimmyReach);
+            side = reducedMotion ? sideTarget : Mathf.Lerp(side, sideTarget, 1 - Mathf.Exp(-10 * dt));
             // look around: right button drag, or Left Shift with the arrows
             if (f.lookHeld) { yaw += f.delta.x * s.orbitPerPixel; pitch -= f.delta.y * s.orbitPerPixel; }
             // the drag takes hold of the bench (it follows the hand); the keys move the eye (Right goes round to the right, Up goes higher)
@@ -104,7 +144,9 @@ namespace AthenHill
             var arm = basePos - pivot;
             var right = Vector3.Cross(up, -arm).normalized; if (right.sqrMagnitude < 1e-6f) right = shot.right;
             arm = Quaternion.AngleAxis(yaw, up) * (Quaternion.AngleAxis(pitch, right) * arm);
-            var position = pivot + arm; var look = pivot;
+            // the step sideways is along the player's side of the bench; the eye stays on the work, so it comes round it
+            var sideways = Vector3.ProjectOnPlane(shot.right, up).normalized;
+            var position = pivot + arm + sideways * side; var look = pivot;
             if (hasFocus && Zoom > .001f)
             {
                 var toFocus = focusSmooth - position; float d = toFocus.magnitude;
@@ -113,6 +155,7 @@ namespace AthenHill
             }
             var rotation = Quaternion.LookRotation((look - position).normalized, up);
             var shotLens = shot.GetComponent<Camera>(); float fov = shotLens ? shotLens.fieldOfView : 55;
+            if (hasFocus) rotation = KeepInView(position, rotation, focusSmooth, fov, lens.aspect, up, s.keepInViewX, s.keepInViewY);
 
             if (blend < 1)
             {

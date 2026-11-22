@@ -14,77 +14,228 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AthenHill.NpcDefinition
   id: npc_linn
   displayName: Linn
-  role: Hill regular
-  entries: []
+  role: Elder of the hill
+  entries:
+  - node: again
+    requires: "flag:linn_met"
   nodes:
   - id: greeting
-    title: Hill regular
-    text: Looking for someone? Try the shade. Sooner or later everyone comes up here, even the people who swear they are too busy.
+    title: "Elder of the hill"
+    text: "Sit, before the sun finishes you. New people always stare at the walls. Look at the tree instead. Everything Ward has ever bled for is down under those roots."
     voice: {fileID: 8300000, guid: cf75b54e0d214dd6ad778263acc75723, type: 3}
     choices:
     - id: tree
-      label: Why does everyone meet here?
-      next: hill
+      label: "What's under the tree?"
+      next: "hill"
+      action: 
+      requires: 
+      setFlag: "linn_met"
+    - id: housing
+      label: "Is there anywhere in Ward I could stay?"
+      next: "housing"
+      action: 
+      requires: "primer, !flag:home_leased"
+      setFlag: "home_asked"
+    - id: leave
+      label: "Another time, Linn."
+      next: 
+      action: "close"
+      requires: 
+      setFlag: "linn_met"
+  - id: again
+    title: "Elder of the hill"
+    text: "Still breathing? Good. Sit. Old women and old cities both like to be asked about themselves."
+    voice: {fileID: 8300000, guid: 890b4ba214044ab58477463e95b666fc, type: 3}
+    choices:
+    - id: tree
+      label: "Tell me about Ward."
+      next: "hill"
       action: 
       requires: 
       setFlag: 
     - id: housing
-      label: Is there anywhere in Ward I could stay?
-      next: housing
+      label: "Is there anywhere in Ward I could stay?"
+      next: "housing"
       action: 
-      requires: primer, !flag:home_leased
-      setFlag: home_asked
+      requires: "primer, !flag:home_leased"
+      setFlag: "home_asked"
     - id: leave
-      label: I will stay for a moment.
+      label: "Just passing, Linn."
       next: 
-      action: close
+      action: "close"
       requires: 
-      setFlag: 
+      setFlag: "linn_met"
   - id: hill
-    title: Hill regular
-    text: You can see the gate, hear the market, and get out of the dust. No terminal needs to explain that. If we get separated, meet me on the hill.
+    title: "The oasis"
+    text: "Water. The only sure well for hundreds of kilometres. The company built here for the ore, back when Tir was a line in somebody's accounts. They dug it, shaped it, shipped it off-world. Then one season, the ships didn't come."
     voice: {fileID: 8300000, guid: 4a0d8d8ea8974efb9f56c5a66b1bf62e, type: 3}
     choices:
-    - id: back
-      label: Who comes up here?
-      next: greeting
+    - id: fall
+      label: "What happened when they stopped?"
+      next: "fall"
       action: 
       requires: 
       setFlag: 
-    - id: leave
-      label: On the hill. Got it.
+    - id: wardens
+      label: "Who guards the water now?"
+      next: "wardens"
+      action: 
+      requires: 
+      setFlag: 
+    - id: back
+      label: "Let me ask you something else."
+      next: "again"
+      action: 
+      requires: 
+      setFlag: 
+  - id: fall
+    title: "The Fall"
+    text: "Nobody told the machines. Some kept digging for masters long dead. Others decided we were in the way, or that we were ore. The cities went dark, one, then the next, then all of them. That's what we call the Fall."
+    voice: {fileID: 8300000, guid: 755a67f5bdb44bcda589f2745e9fe8ec, type: 3}
+    choices:
+    - id: silence
+      label: "Why did no one come back for you?"
+      next: "silence"
+      action: 
+      requires: 
+      setFlag: 
+    - id: rebuild
+      label: "How did Ward survive?"
+      next: "rebuild"
+      action: 
+      requires: 
+      setFlag: 
+    - id: back
+      label: "Let me ask you something else."
+      next: "again"
+      action: 
+      requires: 
+      setFlag: 
+  - id: silence
+    title: "The silence"
+    text: "They forgot us. They fenced us off for fear of the machines. Or they had it worse. I've heard all three sworn as truth, and never by anyone who'd know. The women of my family set out a cup for the supply pilot. It has been dry for centuries, and I still wash it."
+    voice: {fileID: 8300000, guid: 59798b3c6fe74ff4ba78577be903e330, type: 3}
+    choices:
+    - id: rebuild
+      label: "And Ward carried on without them."
+      next: "rebuild"
+      action: 
+      requires: 
+      setFlag: 
+    - id: back
+      label: "Let me ask you something else."
+      next: "again"
+      action: 
+      requires: 
+      setFlag: 
+  - id: rebuild
+    title: "The Great Rebuild"
+    text: "Out of spite, mostly. One greenhouse, one nanofab, a few machines that stayed loyal. Then we woke the Quantum Tubes. Goods pulled to dust here and knitted whole at the far end. After that, dead nodes began waking on their own. Ask an engineer why, and watch them change the subject."
+    voice: {fileID: 8300000, guid: d7a27b54f3744ce997dde858d8a1c401, type: 3}
+    choices:
+    - id: karaveen
+      label: "What carried goods before the Tubes?"
+      next: "karaveen"
+      action: 
+      requires: 
+      setFlag: 
+    - id: wardens
+      label: "Who held the walls?"
+      next: "wardens"
+      action: 
+      requires: 
+      setFlag: 
+    - id: back
+      label: "Let me ask you something else."
+      next: "again"
+      action: 
+      requires: 
+      setFlag: 
+  - id: karaveen
+    title: "The Karaveen"
+    text: "The Karaveen. When the cities fell they took to the sand, and for a lifetime they were the only thread between one well and the next. The Tubes made them needless. Still they go. There are people out there no Tube will ever reach, and the Karaveen know their children's names."
+    voice: {fileID: 8300000, guid: 04bec88749fb49d2955bd48d064ccdaf, type: 3}
+    choices:
+    - id: berms
+      label: "What's out there?"
+      next: "berms"
+      action: 
+      requires: 
+      setFlag: 
+    - id: back
+      label: "Let me ask you something else."
+      next: "again"
+      action: 
+      requires: 
+      setFlag: 
+  - id: wardens
+    title: "The Wardens"
+    text: "The Wardens. They began as neighbours taking turns on the wall. Now some have more lattice in them than bone, and scraps of old machine minds to steady the gun. I've washed three of them for burial. They are the wall that has never been allowed to fall."
+    voice: {fileID: 8300000, guid: d69ebc3f850e402fb17902dc8e46d9e0, type: 3}
+    choices:
+    - id: berms
+      label: "What are they holding back?"
+      next: "berms"
+      action: 
+      requires: 
+      setFlag: 
+    - id: rebuild
+      label: "How did it all start again?"
+      next: "rebuild"
+      action: 
+      requires: 
+      setFlag: 
+    - id: back
+      label: "Let me ask you something else."
+      next: "again"
+      action: 
+      requires: 
+      setFlag: 
+  - id: berms
+    title: "The Outer Berms"
+    text: "The Outer Berms. Factories to the horizon, once. Now it's their bones, and whatever still walks about inside them. There are secrets under that scrap. Few go looking, and fewer come home. So don't go out in just a shirt. Mira sells a vest and boots. Better plate, you build."
+    voice: {fileID: 8300000, guid: 615ac114409f4984bd2c38288a6937f1, type: 3}
+    choices:
+    - id: ready
+      label: "I'll remember that."
       next: 
-      action: close
+      action: "close"
+      requires: 
+      setFlag: "linn_met"
+    - id: back
+      label: "Let me ask you something else."
+      next: "again"
+      action: 
       requires: 
       setFlag: 
   - id: housing
-    title: The housing roll
-    text: There is a rust-red container against the south wall, behind the Nanofab yard. The family who fitted it out went with a Karaveen caravan last season. Bunk, a steel locker, shelves, a window that shuts. Forty credits takes the lease off the roll and the key is yours. Keep the locker for your salvage; the Berms will fill your pack faster than you think.
+    title: "The housing roll"
+    text: "There's a red container on the south wall, behind the Nanofab yard. The family left with a Karaveen caravan and made the bunk before they went. That's how you know they won't be back. Forty credits, and I write your name on the roll. In Ward that's worth more than the key. It means somebody counts you."
     voice: {fileID: 8300000, guid: d57531eb858c2da049d2d2c03bae580e, type: 3}
     choices:
     - id: lease
-      label: I'll take the lease (40 credits).
-      next: housing_leased
-      action: lease_home
+      label: "I'll take the lease (40 credits)."
+      next: "housing_leased"
+      action: "lease_home"
       requires: 
       setFlag: 
     - id: later
-      label: Not yet. I'll come back.
+      label: "Not yet. I'll come back."
       next: 
-      action: close
+      action: "close"
       requires: 
-      setFlag: 
+      setFlag: "linn_met"
   - id: housing_leased
-    title: The housing roll
-    text: Then it is yours. The door knows you now. Rest on the bunk when the Berms wear you down, and come back up the hill when you need someone to talk to.
+    title: "The housing roll"
+    text: "There. Written. The door knows you now, and so does the city. If some night you don't come home, someone will notice. Out here, that's most of what a home is."
     voice: {fileID: 8300000, guid: 140e804c09064085985a22d3ca00d32f, type: 3}
     choices:
     - id: leave
-      label: Thank you, Linn.
+      label: "Thank you, Linn."
       next: 
-      action: close
+      action: "close"
       requires: 
-      setFlag: 
+      setFlag: "linn_met"
   shop:
     title: Basic General
     subtitle: "Mira \xB7 Supplies, parts and salvage"

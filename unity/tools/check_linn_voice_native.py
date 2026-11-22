@@ -3,8 +3,8 @@
 Continues a fixture save past Ossa's primer (200 credits, no home lease) and, with real input at Linn on the hill:
   1. E opens her dialogue; the clip on her dialogue voice source is npc_linn-greeting and it plays longer than the old
      Amelia take (so the new take is in the build).
-  2. "Why does everyone meet here?" -> npc_linn-hill plays (same length test).
-  3. "Who comes up here?" -> greeting, then "Is there anywhere in Ward I could stay?" -> npc_linn-housing; after 2 s
+  2. "What's under the tree?" -> npc_linn-hill plays (same length test).
+  3. "Let me ask you something else." -> again (the returning greeting), then "Is there anywhere in Ward I could stay?" -> npc_linn-housing; after 2 s
      "Not yet. I'll come back." closes early: state back to Play, her voice stops, no Linn clip left playing.
   4. Again to housing, and it plays to its end (time reaches length - 0.6 s) with the node still `housing`.
   5. "I'll take the lease (40 credits)." -> npc_linn-housing_leased plays; 40 credits taken.
@@ -82,11 +82,11 @@ def body():
     ok(qa.state() == 'Dialogue' and S.snap()['interaction']['npc'] == 'Linn', 'E opens Linn\'s dialogue')
     node_take('greeting')
     cap('linn-greeting')
-    choose('Why does everyone meet here?')
+    choose("What's under the tree?")
     node_take('hill')
 
     # 3 housing, left early
-    choose('Who comes up here?')
+    choose('Let me ask you something else.')
     choose('Is there anywhere in Ward I could stay?')
     playing = [s['clip'] for s in linn_dialogue_sources() if s['playing']]
     ok(S.snap()['interaction']['node'] == 'housing' and playing == ['npc_linn-housing'], 'housing: npc_linn-housing plays', playing)

@@ -359,6 +359,7 @@ namespace AthenHill
    if(combat){combat.Health.Restore();combat.Recharge(combat.Stats.nanoMax,0,0);}
    bool slept=hour>=0;
    SetFlag(WardHome.RestedFlag);
+   LastTerminalId=null;
    Close();
    if(at&&at.wakePoint)WakeAt(at.wakePoint);
    Notify(slept?$"You sleep until {(hour<12?"morning":"evening")}. Rested; your progress is saved, and Continue starts here.":"You rest a while. Rested; your progress is saved, and Continue starts here.","Home");
@@ -371,10 +372,109 @@ namespace AthenHill
    player.Teleport(point.position);if(player.visual)player.visual.rotation=Quaternion.Euler(0,point.eulerAngles.y,0);
    if(follow){follow.yaw=point.eulerAngles.y;follow.pitch=8;}
   }
+  // ---- Field Lattice Terminals (22 Nov 2026): key-gated Outer Berms relays & two-way Lattice Jack fast travel.
+  public readonly HashSet<string> UnlockedTerminals=new HashSet<string>(StringComparer.Ordinal);
+  public string LastTerminalId {get;private set;}
+  /// Raised when a Field Lattice Terminal is unlocked or the active wake terminal changes (autosave hook).
+  public event Action TerminalsChanged;
+  public bool IsTerminalUnlocked(string terminalId)=>!string.IsNullOrEmpty(terminalId)&&UnlockedTerminals.Contains(terminalId);
+  public bool UnlockTerminal(string terminalId)
+  {
+   if(string.IsNullOrEmpty(terminalId)||!UnlockedTerminals.Add(terminalId))return false;
+   TerminalsChanged?.Invoke();Changed?.Invoke();
+   return true;
+  }
+  public void SetLastTerminal(string terminalId)
+  {
+   string next=string.IsNullOrEmpty(terminalId)?null:terminalId;
+   if(string.Equals(LastTerminalId,next,StringComparison.Ordinal))return;
+   LastTerminalId=next;
+   TerminalsChanged?.Invoke();Changed?.Invoke();
+  }
+  public string[] CaptureUnlockedTerminals()=>UnlockedTerminals.OrderBy(x=>x,StringComparer.Ordinal).ToArray();
+  public void RestoreTerminals(string[] unlocked,string lastId)
+  {
+   UnlockedTerminals.Clear();
+   if(unlocked!=null)foreach(var id in unlocked)if(!string.IsNullOrEmpty(id))UnlockedTerminals.Add(id);
+   LastTerminalId=LatticeTerminalLogic.ResolveWakeTerminalId(lastId,UnlockedTerminals);
+   Changed?.Invoke();
+  }
+  public LatticeTerminal ResolveWakeTerminal()
+  {
+   string id=LatticeTerminalLogic.ResolveWakeTerminalId(LastTerminalId,UnlockedTerminals);
+   return string.IsNullOrEmpty(id)?null:LatticeTerminal.FindById(id);
+  }
+  /// Destinations available from Ward's Lattice Jack (CityState.Grid): catalog sector nodes plus unlocked Berms relays.
+  public List<LatticeTerminalLogic.TravelTarget> GridDestinations
+   =>LatticeTerminalLogic.ResolveWardJackDestinations(catalog?catalog.destinations:null,UnlockedTerminals,LatticeTerminal.All);
   public void SelectDestination(int index)
   {
-   if(State!=CityState.Grid||GridProgress<1||index<0||index>=catalog.destinations.Length)return;
-   var node=catalog.destinations[index];selectedDestination=node.id;linked=true;Notify("Link established to "+node.name+".","Lattice Jack");SoundRequested?.Invoke(CitySoundCue.LatticeLink);
+   if(State!=CityState.Grid||GridProgress<1||index<0)return;
+   if(catalog&&catalog.destinations!=null&&index<catalog.destinations.Length)
+   {
+    var node=catalog.destinations[index];selectedDestination=node.id;linked=true;Notify("Link established to "+node.name+".","Lattice Jack");SoundRequested?.Invoke(CitySoundCue.LatticeLink);
+    return;
+   }
+   var targets=GridDestinations;
+   if(index<targets.Count&&targets[index].isFastTravel&&!string.IsNullOrEmpty(targets[index].terminalId))
+    SelectTerminalDestination(targets[index].terminalId);
+  }
+  /// Selects a Lattice Jack destination by ID (either a catalog sector node ID or a "terminal:<id>" fast-travel relay).
+  public bool SelectDestinationById(string destinationId)
+  {
+   if(State!=CityState.Grid||GridProgress<1||string.IsNullOrEmpty(destinationId))return false;
+   string tid=LatticeTerminalLogic.ParseTerminalDestinationId(destinationId);
+   if(!string.IsNullOrEmpty(tid))return SelectTerminalDestination(tid);
+   if(IsTerminalUnlocked(destinationId))return SelectTerminalDestination(destinationId);
+   if(catalog&&catalog.destinations!=null)
+   {
+    for(int i=0;i<catalog.destinations.Length;i++)
+     if(catalog.destinations[i]!=null&&string.Equals(catalog.destinations[i].id,destinationId,StringComparison.Ordinal))
+     {SelectDestination(i);return true;}
+   }
+   return false;
+  }
+  /// From Ward's Lattice Jack (CityState.Grid), fast-travels to an unlocked Outer Berms LatticeTerminal.
+  public bool SelectTerminalDestination(string terminalId)
+  {
+   if(State!=CityState.Grid||GridProgress<1)return false;
+   if(!FastTravelToTerminal(terminalId))return false;
+   Close();
+   return true;
+  }
+  /// Teleports the player to an unlocked Outer Berms Field Lattice Terminal via the Lattice network.
+  public bool FastTravelToTerminal(string terminalId)
+  {
+   if(!LatticeTerminalLogic.CanUseTerminal(LatticeTerminalLogic.AnyDroidEngaged(),out var blocked))
+   {Notify(blocked,"Lattice Jack");SoundRequested?.Invoke(CitySoundCue.Unavailable);return false;}
+   if(!IsTerminalUnlocked(terminalId))
+   {Notify("That Outer Berms relay is offline.","Lattice Jack");SoundRequested?.Invoke(CitySoundCue.Unavailable);return false;}
+   var term=LatticeTerminal.FindById(terminalId);
+   var station=term?term.waystation:WardenWaystation.FindById(terminalId);
+   Transform dest=term?term.WakePoint:(station&&station.respawnPoint?station.respawnPoint:(station?station.transform:null));
+   if(!dest){Notify("Relay coordinates unavailable.","Lattice Jack");SoundRequested?.Invoke(CitySoundCue.Unavailable);return false;}
+   WakeAt(dest);
+   selectedDestination=LatticeTerminalLogic.DestinationId(terminalId);
+   linked=true;
+   SetLastTerminal(terminalId);
+   string label=LatticeTerminalLogic.GridLabelForTerminal(terminalId,term?term.displayName:null);
+   Notify("Lattice link complete — arrived at "+label+".","Lattice Jack");
+   SoundRequested?.Invoke(CitySoundCue.LatticeLink);
+   return true;
+  }
+  /// Teleports the player from an Outer Berms Field Lattice Terminal back to Ward's Lattice Jack.
+  public bool FastTravelToWard(LatticeTerminal fromTerminal=null)
+  {
+   if(!LatticeTerminalLogic.CanUseTerminal(LatticeTerminalLogic.AnyDroidEngaged(),out var blocked))
+   {Notify(blocked,"Lattice Terminal");SoundRequested?.Invoke(CitySoundCue.Unavailable);return false;}
+   if(!latticePoint){Notify("Ward's Lattice Jack coordinates are unavailable.","Lattice Terminal");SoundRequested?.Invoke(CitySoundCue.Unavailable);return false;}
+   WakeAt(latticePoint);
+   selectedDestination=LatticeTerminalLogic.WardJackDestinationId;
+   linked=true;
+   if(fromTerminal&&!string.IsNullOrEmpty(fromTerminal.terminalId))SetLastTerminal(fromTerminal.terminalId);
+   Notify("Lattice link complete — arrived at Ward's Lattice Jack.","Lattice Jack");
+   SoundRequested?.Invoke(CitySoundCue.LatticeLink);
+   return true;
   }
   /// The ten-slot hotbar (5 Oct 2026). Assignments live in the HotbarModel and are saved with the game.
   public HotbarModel Quickbar=>quickbar??=new HotbarModel(id=>catalog&&catalog.Consumable(id)!=null&&Shop?.Spec(id)!=null);

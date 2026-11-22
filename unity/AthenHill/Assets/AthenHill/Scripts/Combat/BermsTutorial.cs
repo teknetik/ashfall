@@ -35,7 +35,7 @@ namespace AthenHill
   [TextArea]public string lineTargets="Left mouse fires, and so does F; hold right mouse to steady your aim. Knock down those three plates.";
   [TextArea]public string lineFirstContact="Movement on the service road. A scrap drone's slipped its cluster. They back off before they dart in, so shoot on the tell.";
   [TextArea]public string lineDepot="The rest of its cluster is nested at the old machine depot, south along the road. Clear it out. Break contact if you're hurt; vitality comes back, and nano refills when you stop firing.";
-  [TextArea]public string lineComplete="Clean work. Take that salvage to Brann at Salvage, on the north avenue inside the walls. His bench can turn a worker servo into a steadier grip for that pistol. The depot always fills up again.";
+  [TextArea]public string lineComplete="Clean work. Bring that salvage back to me at the post and we'll see what it's good for. The depot always fills up again.";
   public BermsStep Step {get;private set;}=BermsStep.Approach;
   public int TargetsDown=>targets.Count(t=>t&&t.Down);
   public bool ShowObjective=>Step!=BermsStep.Approach||(combat&&combat.transform.position.x<showObjectiveWestOf);
@@ -47,7 +47,7 @@ namespace AthenHill
    BermsStep.Targets=>$"Fire with left mouse (hold right mouse to aim) · plates {TargetsDown}/{targets.Length}",
    BermsStep.FirstContact=>"Put down the scrap drone on the service road.",
    BermsStep.Depot=>$"Clear the machine depot · {(depot?depot.Remaining:0)} droids left",
-   _=>"Outer Berms primer complete. Take the salvage to Brann at Salvage, north avenue."
+   _=>"Outer Berms primer complete. Take the salvage back to Warden Ossa at the West Gate post."
   };
   public Transform GuidanceTarget=>Step switch
   {

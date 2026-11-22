@@ -1308,6 +1308,36 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "Shimmy",
+                    "type": "Value",
+                    "id": "a313c75c-be48-52d7-81c4-ea2781404801",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true,
+                    "priority": 0
+                },
+                {
+                    "name": "Swivel",
+                    "type": "Button",
+                    "id": "8ab5fab6-a3b7-53a9-8af9-f6e8f4029575",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "ResetView",
+                    "type": "Button",
+                    "id": "00a83c2c-33ca-5557-a8f7-133fd98eaa6f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -1359,28 +1389,6 @@
                     "name": "Down",
                     "id": "51eb3b88-ec8e-5fe1-beaa-52e78a5b261b",
                     "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Navigate",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "Left",
-                    "id": "5b932032-11f2-5fa4-9732-a36506308a56",
-                    "path": "<Keyboard>/a",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Navigate",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "Right",
-                    "id": "29f41899-b92b-53c5-b219-1ca584732f0d",
-                    "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -1532,17 +1540,6 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "positive",
-                    "id": "661df76b-c510-50d1-b71f-fa6fcd0ecb58",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Rotate",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "",
                     "id": "e37c25b1-14ac-584f-992b-a456f00e1aec",
                     "path": "<Mouse>/middleButton",
@@ -1649,6 +1646,83 @@
                     "processors": "",
                     "groups": "",
                     "action": "Abandon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Sideways",
+                    "id": "dcd07247-5052-5803-8eda-d06542968261",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shimmy",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "841dc2f5-4139-5ddf-a921-46020d7928d8",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shimmy",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "6be55c00-e6ef-57fb-ada9-def0db6ec911",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shimmy",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "3015d1e3-36eb-5f14-bba1-dad745fced62",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shimmy",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "4a8e9f52-a7d4-5c3f-b8ba-adac66516d16",
+                    "path": "<Keyboard>/v",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Swivel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "282667eb-6ce7-5ebf-ad64-77c41767b191",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ResetView",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b1bcdfc6-2955-5a77-8dd1-5c10ebaebc32",
+                    "path": "<Keyboard>/home",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ResetView",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

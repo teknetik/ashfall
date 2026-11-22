@@ -141,19 +141,38 @@ namespace AthenHill
   public event Action<float> Hurt;
   /// Damage with where it came from (the attacker's position), for the HUD's direction indicator.
   public event Action<float,Vector3> HurtFrom;
+  /// Ranged ballistic hit while unarmoured in the torso (Milestone 1: stronger HUD flash & exposed indicator).
+  public event Action<float,Vector3> ExposedHit;
   public event Action Downed;
   /// Experience awarded for a kill: (amount, tier, levelled up). Easy kills raise it with 0.
   public event Action<int,ThreatTier,bool> ExperienceAwarded;
   /// Phase 2 combat verbs (21 Nov 2026): dodge, shove, EMP disruptor, nano overcharge.
   public event Action Dodged,Shoved,EmpTriggered,OverchargeTriggered;
+  /// Field Rifle ammunition selection changed (Milestone 4).
+  public event Action<RifleAmmoKind> AmmoChanged;
   public bool HasEyeImplant=>Character!=null&&!string.IsNullOrEmpty(Character.Equipped("implant_eye"));
   public bool OverchargeActive=>Time.time<overchargeUntil;
   public float OverchargeRemaining=>Mathf.Max(0,overchargeUntil-Time.time);
   public float OverchargeCooldownRemaining=>Mathf.Max(0,overchargeReadyAt-Time.time);
   public float EmpCooldownRemaining=>Mathf.Max(0,empReadyAt-Time.time);
   public float ShoveCooldownRemaining=>Mathf.Max(0,shoveReadyAt-Time.time);
-  public float EffectiveArmourPenetration=>Stats.armourPenetration+(OverchargeActive?CombatVerbs.OverchargeArmourPenBonus:0);
+  /// Torso armour exposure & ranged ballistic hit tracking (Milestone 1).
+  public bool IsExposedToRanged=>BermsBallistics.IsExposedToRanged(Character);
+  public bool LastHitWasRanged {get;private set;}
+  public bool LastHitWasExposed {get;private set;}
+  public int ExposedHits {get;private set;}
+  public bool Band2UnarmouredWarned=>band2UnarmouredWarned;
+  /// Field Rifle ammo runtime (Milestone 4): Scrap Pistol stays nano-only; rifle cycles Standard / AP / EMP.
+  public RifleAmmoKind ActiveAmmo {get;private set;}=RifleAmmoKind.Standard;
+  public bool ActiveWeaponUsesAmmo=>Loadout!=null?BermsBallistics.UsesBallisticAmmo(Loadout.WeaponId):RifleActive;
+  public string ActiveAmmoItemId=>BermsBallistics.ItemIdFor(ActiveAmmo);
+  public int ActiveAmmoCount=>AmmoCount(ActiveAmmo);
+  public RifleAmmoKind LastFiredAmmo {get;private set;}=RifleAmmoKind.Standard;
+  public bool LastShotConsumedAmmo {get;private set;}
+  public int AmmoCount(RifleAmmoKind kind)=>session!=null&&session.Shop!=null?session.Shop.Quantity(BermsBallistics.ItemIdFor(kind)):0;
+  public float EffectiveArmourPenetration=>Stats.armourPenetration+(OverchargeActive?CombatVerbs.OverchargeArmourPenBonus:0)+(ActiveWeaponUsesAmmo&&ActiveAmmoCount>0?BermsBallistics.ArmourPenBonusFor(ActiveAmmo):0);
   float nextFire,faceUntil,tracerOff,emptyNotice,jamNotice,shoveReadyAt=-99,empReadyAt=-99,overchargeReadyAt=-99,overchargeUntil=-99;
+  bool incomingRangedBallistic,band2UnarmouredWarned;
   // ---- Handling (Steady Hands bench, 20 Nov 2026): rapid-fire heat, side kick and the rattle/damper cues. See WeaponFeel.
   float heat,heatShot=-99,nextRattle,damperAt=-1;int lastRattle=-1,lastDamper=-1;
   /// Rapid-fire heat now (0 = the next shot has the base cone).
@@ -187,7 +206,11 @@ namespace AthenHill
    OnCharacterChanged();
   }
   float MitigateDamage(float incoming)
-   =>motor&&motor.DodgeInvulnerable?0:ComputePhysicalDamage(Character,incoming);
+  {
+   if(motor&&motor.DodgeInvulnerable)return 0;
+   if(incomingRangedBallistic)return BermsBallistics.ComputeRangedPhysicalDamage(Character,incoming);
+   return ComputePhysicalDamage(Character,incoming);
+  }
   public static float ComputePhysicalDamage(CharacterModel character,float incoming)
   {
    if(character==null)return incoming;
@@ -195,6 +218,41 @@ namespace AthenHill
    float absorbed=armour*Mathf.Max(0,character.Data.armourAbsorptionPerPoint);
    float resistance=Mathf.Clamp01(character.Stat("physicalResistance"));
    return Mathf.Max(0,incoming*(1-resistance)-absorbed);
+  }
+  /// Ranged ballistic mitigation (Milestone 1): unarmoured torso takes 1.35x before physical mitigation.
+  public static float ComputeRangedDamage(CharacterModel character,float incoming)
+   =>BermsBallistics.ComputeRangedPhysicalDamage(character,incoming);
+  /// Entry point used by DroidBolt for direct ranged hits so the unarmoured torso exposure rule applies
+  /// specifically to ranged ballistic fire while melee and splash hits keep standard physical mitigation.
+  public bool TakeRangedBallisticHit(float incomingDamage,Vector3 from)
+  {
+   if(!Health)return false;
+   incomingRangedBallistic=true;
+   try{return Health.Damage(incomingDamage,from);}
+   finally{incomingRangedBallistic=false;}
+  }
+  /// Cycles Field Rifle ammunition between Standard, AP and EMP (Scrap Pistol stays nano-only).
+  public RifleAmmoKind CycleAmmo()
+  {
+   if(!ActiveWeaponUsesAmmo)return RifleAmmoKind.Standard;
+   var next=BermsBallistics.NextAmmo(ActiveAmmo,id=>session!=null&&session.Shop!=null?session.Shop.Quantity(id):0);
+   ActiveAmmo=next;
+   AmmoChanged?.Invoke(ActiveAmmo);
+   if(session)
+   {
+    int count=AmmoCount(ActiveAmmo);
+    session.Notify(count>0
+     ?$"Rifle ammo: {BermsBallistics.DisplayName(ActiveAmmo)} ({count})."
+     :$"Rifle ammo: {BermsBallistics.DisplayName(ActiveAmmo)} (0 in pack — standard fallback).");
+   }
+   return ActiveAmmo;
+  }
+  public bool SelectAmmo(RifleAmmoKind kind)
+  {
+   if(!ActiveWeaponUsesAmmo)return false;
+   ActiveAmmo=kind;
+   AmmoChanged?.Invoke(ActiveAmmo);
+   return true;
   }
   public void BindCraftingModel(CraftingModel model)
   {
@@ -327,8 +385,14 @@ namespace AthenHill
     PlayRattle(rattleMoveGain);
    }
    if(!play)return;
+   if(Health.Alive&&session&&BermsBallistics.ShouldWarnUnarmouredBand2(transform.position.x,Character,band2UnarmouredWarned))
+   {
+    band2UnarmouredWarned=true;
+    session.Notify("Ossa [Radio]: You're pushing past the Depot with no chest armour — Gunner bolts will drop you fast. Craft a Field Vest at Brann's bench.","Warden Ossa");
+   }
    if(input.ConsumeDodge())TryDodge();
    if(!Armed)return;
+   if(ActiveWeaponUsesAmmo&&((input&&input.Pressed("CycleAmmo"))||(UnityEngine.InputSystem.Keyboard.current!=null&&UnityEngine.InputSystem.Keyboard.current.tKey.wasPressedThisFrame)))CycleAmmo();
    if(input.Pressed("Shove"))TryShove();
    if(input.Pressed("NanoEmp"))TryNanoEmp();
    if(input.Pressed("NanoOvercharge"))TryNanoOvercharge();
@@ -444,6 +508,24 @@ namespace AthenHill
     nextFire=Time.time+stats.fireInterval;return;
    }
    bool overcharged=OverchargeActive;
+   RifleAmmoKind shotAmmo=RifleAmmoKind.Standard;
+   bool consumedAmmo=false;
+   if(ActiveWeaponUsesAmmo)
+   {
+    Func<string,int> qty=session!=null&&session.Shop!=null?(Func<string,int>)(id=>session.Shop.Quantity(id)):null;
+    shotAmmo=BermsBallistics.ResolveActiveAmmo(ActiveAmmo,qty,out bool usingStock);
+    if(usingStock&&session!=null&&session.Shop!=null)
+    {
+     string ammoId=BermsBallistics.ItemIdFor(shotAmmo);
+     if(session.Shop.TryApply(new[]{new System.Collections.Generic.KeyValuePair<string,int>(ammoId,-1)},0,out _))
+     {
+      consumedAmmo=true;
+      if(shotAmmo!=ActiveAmmo){ActiveAmmo=shotAmmo;AmmoChanged?.Invoke(ActiveAmmo);}
+     }
+    }
+   }
+   LastFiredAmmo=shotAmmo;
+   LastShotConsumedAmmo=consumedAmmo;
    float interval=stats.fireInterval*(overcharged?CombatVerbs.OverchargeFireIntervalScale:1f);
    nextFire=Time.time+interval;Nano-=stats.nanoPerShot;ShotsFired++;LastShotTime=Time.time;faceUntil=Time.time+.7f;
    if(condition!=null)Loadout.Wear(Loadout.WearPerShot);
@@ -500,16 +582,20 @@ namespace AthenHill
    {
     Hits++;
     bool critical=stats.criticalChance>0&&UnityEngine.Random.value<Mathf.Clamp01(stats.criticalChance/100);
-    float hitDamage=stats.damage*(critical?Mathf.Max(1,stats.criticalMultiplier):1)*(overcharged?CombatVerbs.OverchargeDamageScale:1f);
+    float ammoDamageScale=consumedAmmo?BermsBallistics.DamageScaleFor(shotAmmo):1f;
+    float hitDamage=stats.damage*(critical?Mathf.Max(1,stats.criticalMultiplier):1)*(overcharged?CombatVerbs.OverchargeDamageScale:1f)*ammoDamageScale;
     // Range falloff from the colonist to the hit, then the droid's flat armour against the weapon's penetration.
     float distance=Vector3.Distance(transform.position,end);
     hitDamage*=WeaponBallistics.Falloff(distance,range);
     var threat=target.GetComponent<DroidThreat>();
     var droid=target.GetComponent<FeralDroid>();
+    if(droid&&consumedAmmo&&BermsBallistics.AppliesEmpStrip(shotAmmo))
+     droid.ApplyEmp(BermsBallistics.EmpRoundStunSeconds,BermsBallistics.EmpRoundStripFraction,BermsBallistics.EmpRoundStripSeconds);
     if(threat)
     {
      float effectiveArmour=droid?CombatVerbs.StrippedArmour(threat.armour,droid.ActiveArmourStrip):threat.armour;
-     hitDamage=WeaponBallistics.ArmourReduced(hitDamage,effectiveArmour,EffectiveArmourPenetration);
+     float shotArmourPen=stats.armourPenetration+(overcharged?CombatVerbs.OverchargeArmourPenBonus:0)+(consumedAmmo?BermsBallistics.ArmourPenBonusFor(shotAmmo):0);
+     hitDamage=WeaponBallistics.ArmourReduced(hitDamage,effectiveArmour,shotArmourPen);
     }
     LastHitDamage=hitDamage;LastHitDistance=distance;
     var point=weakHit?origin+direction*weakAt:end;
@@ -622,8 +708,26 @@ namespace AthenHill
   }
   void OnDamaged(float amount,Vector3 from)
   {
-   if(audioSource&&hurtClip)audioSource.PlayOneShot(hurtClip,.9f);
+   bool ranged=incomingRangedBallistic;
+   bool exposed=ranged&&BermsBallistics.IsExposedToRanged(Character);
+   LastHitWasRanged=ranged;
+   LastHitWasExposed=exposed;
+   if(exposed)ExposedHits++;
+   if(audioSource&&hurtClip)
+   {
+    float prevPitch=audioSource.pitch;
+    audioSource.pitch=ranged?(exposed?.88f:1.18f):1f;
+    audioSource.PlayOneShot(hurtClip,exposed?1f:.9f);
+    audioSource.pitch=prevPitch;
+   }
+   if(ranged&&follow&&!(session&&session.reducedMotion))
+   {
+    float sideSign=UnityEngine.Random.value<.5f?-1f:1f;
+    if(exposed)follow.ApplyShotKick(BermsBallistics.ExposedHitKickDegrees,sideSign*BermsBallistics.ExposedHitSideKickDegrees,.65f,BermsBallistics.ExposedHitRecoverSeconds,.15f);
+    else follow.ApplyShotKick(BermsBallistics.ArmouredHitKickDegrees,sideSign*BermsBallistics.ArmouredHitSideKickDegrees,.8f,BermsBallistics.ArmouredHitRecoverSeconds,0f);
+   }
    Hurt?.Invoke(amount);HurtFrom?.Invoke(amount,from);
+   if(exposed)ExposedHit?.Invoke(amount,from);
   }
   void OnDied()
   {

@@ -42,7 +42,7 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(200, code)
         self.assertEqual('npc-database', response['source'])
         self.assertEqual(8, len(response['npcs']))  # + Tamsin (19 Nov 2026)
-        self.assertEqual(38, sum(n['lineCount'] for n in response['npcs']))  # + Tamsin's 5; Ossa 6 -> 7 voiced nodes; Linn 2 -> 4 (20 Nov)
+        self.assertEqual(45, sum(n['lineCount'] for n in response['npcs']))  # + Tamsin's 5; Ossa 6 -> 7 voiced nodes; Linn 2 -> 4 (20 Nov), 4 -> 11 (22 Nov lore)
         vex = next(n for n in response['npcs'] if n['id'] == 'npc_vex')
         self.assertEqual(('Ward / West Gate', 'Australian', 'IKne3meq5aSn9XLyUdCD'),
                          (vex['area'], vex['accent'], vex['voiceId']))

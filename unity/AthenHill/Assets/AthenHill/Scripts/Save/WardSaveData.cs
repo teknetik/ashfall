@@ -37,6 +37,10 @@ namespace AthenHill
   /// hands-on job (CraftingSession.AssemblyBlob); null = no job. The reserved inputs and the weapon on the bench are in
   /// crafting.bench. Older saves have neither and load with an empty bench.
   public string benchJob;
+  /// Field Lattice Terminals (22 Nov 2026, additive, still version 4): permanently unlocked Outer Berms
+  /// LatticeTerminal IDs and the last terminal saved/travelled at. Older saves omit both (empty / null).
+  public string[] unlockedTerminals;
+  public string lastTerminalId;
  }
  /// Reads and writes save files. Nothing here throws on bad input: unreadable files produce an error message.
  public static class WardSaveFile

@@ -29,6 +29,12 @@ namespace AthenHill
  public sealed class WorldMapDiscovery
  {
   public const string DepotId="site:machine_depot";
+  public const string LatticePrefix="lattice:";
+  public static string LatticeRelayId(string terminalId)=>string.IsNullOrEmpty(terminalId)?null:LatticePrefix+terminalId;
+  public static IEnumerable<string> ImpliedTerminals(IEnumerable<string> unlockedTerminals)
+  {
+   if(unlockedTerminals!=null)foreach(var id in unlockedTerminals)if(!string.IsNullOrEmpty(id))yield return LatticeRelayId(id);
+  }
   readonly HashSet<string> found=new HashSet<string>(StringComparer.Ordinal);
   public IReadOnlyCollection<string> Found=>found;
   public bool Has(string id)=>!string.IsNullOrEmpty(id)&&found.Contains(id);

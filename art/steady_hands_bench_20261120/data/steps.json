@@ -52,8 +52,8 @@
    {"id": "s1.lead", "label": "Pinch the tab and pull the trigger lead off the cell bus", "requires": ["s1.scales"], "actions": [
     {"key": "unplug", "verb": "Seat", "part": "pistol.lead_plug", "target": "clear", "done": "asm.part.connector", "weight": 0.5, "faults": [{"kind": "frayed", "when": "wrong:pistol.lead", "penalty": 0.02, "recovery": "s3.lead.r"}]}]},
    {"id": "s1.pin", "label": "Drive the housing pin out with punch and mallet, pull it with pliers", "requires": ["s1.scales"], "actions": [
-    {"key": "punch", "verb": "Seat", "part": "tools.punch", "target": "pistol.housing_pin/punch", "weight": 0.25},
-    {"key": "taps", "verb": "Window", "mode": "strike", "part": "pistol.housing_pin", "tool": "tool:mallet", "target": "tools.punch", "count": 3, "lo": 0.3, "hi": 0.7, "from": 0, "to": 0.6, "audio": "asm.tap", "effects": ["tools.punch>seat"], "faults": [{"kind": "miss", "penalty": 0.03, "after": 2, "recovery": "s1.pin.r"}]},
+    {"key": "punch", "verb": "Seat", "part": "tools.punch", "target": "pistol.housing_pin/punch", "shot": "pin", "weight": 0.25},
+    {"key": "taps", "verb": "Window", "mode": "strike", "part": "pistol.housing_pin", "tool": "tool:mallet", "target": "tools.punch", "count": 3, "lo": 0.3, "hi": 0.7, "from": 0, "to": 0.6, "shot": "vise_l", "audio": "asm.tap", "effects": ["tools.punch>seat"], "faults": [{"kind": "miss", "penalty": 0.03, "after": 2, "recovery": "s1.pin.r"}]},
     {"key": "pull", "verb": "Seat", "part": "pistol.housing_pin", "tool": "tool:pliers", "target": "fixtures.partsmat/seat_pistol_pin", "done": "asm.tap.pin_out", "weight": 0.5}]},
    {"id": "s1.pin.r", "label": "The pin is bent: tap it straight on the vise's anvil", "recovery": true, "requires": ["s1.pin"], "actions": [
     {"key": "anvil", "verb": "Seat", "part": "pistol.housing_pin", "tool": "*", "target": "fixtures.vise/anvil", "weight": 0.25},
@@ -289,9 +289,9 @@
     {"key": "plug", "verb": "Seat", "mode": "keyed", "part": "pistol.lead_plug", "target": "seat", "tolDeg": 15, "done": "asm.part.connector", "faults": [{"kind": "upside_down", "when": "misaligned", "penalty": 0.01}], "shot": "vise_r"}]},
    {"id": "s6.pin", "label": "Tap the housing pin back in", "requires": ["s6.slide"], "actions": [
     {"key": "start", "verb": "Seat", "part": "pistol.housing_pin", "target": "start", "weight": 0.5, "shot": "work"},
-    {"key": "taps", "verb": "Window", "mode": "strike", "part": "pistol.housing_pin", "tool": "tool:mallet", "count": 2, "lo": 0.3, "hi": 0.7, "from": 1, "to": 0, "audio": "asm.tap", "done": "asm.tap.pin_flush", "faults": [{"kind": "miss", "penalty": 0.03}], "shot": "work"}]},
+    {"key": "taps", "verb": "Window", "mode": "strike", "part": "pistol.housing_pin", "tool": "tool:mallet", "count": 2, "lo": 0.3, "hi": 0.7, "from": 1, "to": 0, "audio": "asm.tap", "done": "asm.tap.pin_flush", "faults": [{"kind": "miss", "penalty": 0.03}], "shot": "vise_l"}]},
    {"id": "s6.pin.r", "label": "The pin stands proud: tap it flush", "recovery": true, "actions": [
-    {"key": "flush", "verb": "Window", "mode": "strike", "part": "pistol.housing_pin", "tool": "tool:mallet", "count": 1, "lo": 0.3, "hi": 0.7, "from": 0, "to": 0, "audio": "asm.tap", "done": "asm.tap.pin_flush", "weight": 0.5}]},
+    {"key": "flush", "verb": "Window", "mode": "strike", "part": "pistol.housing_pin", "tool": "tool:mallet", "count": 1, "lo": 0.3, "hi": 0.7, "from": 0, "to": 0, "shot": "vise_l", "audio": "asm.tap", "done": "asm.tap.pin_flush", "weight": 0.5}]},
    {"id": "s6.screws", "label": "Two new grip screws from the dish, cross bit, to torque", "requires": ["s6.pin"], "free": true, "actions": [
     {"key": "a_start", "verb": "Seat", "part": "grip.screw_a", "target": "start", "done": "asm.screw.start", "weight": 0.5, "after": [], "faults": [{"kind": "proud", "when": "poor:s6.pin", "penalty": 0.01, "recovery": "s6.pin.r", "blocks": true}]},
     {"key": "a_turn", "verb": "Turn", "part": "grip.screw_a", "tool": "tool:screwdriver", "toolMode": "cross", "turns": 7, "gain": 0.9, "loop": "asm.screw.turn", "after": ["a_start"], "faults": [{"kind": "camout", "when": "mode", "penalty": 0.02}]},

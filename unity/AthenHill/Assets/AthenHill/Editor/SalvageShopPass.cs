@@ -561,8 +561,8 @@ namespace AthenHill.Editor
             targets.Add(new FieldOrders.Target { key = "dealer", label = "BRANN · SALVAGE", point = npcRoot });
             orders.guidanceTargets = targets.ToArray();
             // a later pass (BermsExpanseInstall) extends this line: a re-run keeps one that already sends the player to Brann
-            if (string.IsNullOrEmpty(tutorial.lineComplete) || !tutorial.lineComplete.Contains("Brann at Salvage"))
-                tutorial.lineComplete = "Clean work. Take that salvage to Brann at Salvage, on the north avenue inside the walls. His bench can turn a worker servo into a steadier grip for that pistol. The depot always fills up again.";
+            if (string.IsNullOrEmpty(tutorial.lineComplete) || !tutorial.lineComplete.Contains("back to me at the post"))
+                tutorial.lineComplete = "Clean work. Bring that salvage back to me at the post and we'll see what it's good for. The depot always fills up again.";
 
             // landmarks (QA teleports) and review cameras
             var landmarks = scene.GetRootGameObjects().FirstOrDefault(g => g.name == "Landmarks");

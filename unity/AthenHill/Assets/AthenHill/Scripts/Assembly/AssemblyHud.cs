@@ -20,12 +20,12 @@ namespace AthenHill
             ("the action line", new Rect(28, 66, 552, 88)),   // left of the caption band (x 580 on); two lines of 21 px at most
             ("Field Notes", new Rect(1448, 16, 456, 132)),
             ("Brann's captions", new Rect(580, 68, 760, 84)),
-            ("the way out", new Rect(28, 1010, 300, 44)),
+            ("the way out", new Rect(28, 1010, 760, 44)),
             ("the pack-it-in control", new Rect(1588, 1010, 308, 44)),
         };
         /// The name of the panel a reference-panel point is under, or null.
         public static string CoveredBy(Vector2 panelPoint) { foreach (var c in Covered) if (c.rect.Contains(panelPoint)) return c.name; return null; }
-        readonly VisualElement root, panel, legend, abandon, abandonFill; readonly Label stage, action, leave, abandonLabel;
+        readonly VisualElement root, panel, legend, abandon, abandonFill, bit, target; readonly Label stage, action, leave, abandonLabel, bitState, bitDo, targetLabel;
         float legendLeft; bool shown;
         /// The pointer is holding the on-screen abandon control.
         public bool AbandonPressed { get; private set; }
@@ -46,8 +46,9 @@ namespace AthenHill
             var title = new Label("AT THE BENCH") { pickingMode = PickingMode.Ignore }; title.AddToClassList("assembly-legend-title"); legend.Add(title);
             foreach (var (keys, what) in new[]
             {
-                ("Left button · Space", "pick up, put down, use"), ("Hold, and move", "work a tool"), ("Wheel · Q E", "turn what you hold"),
-                ("Middle button · R", "flip it, or change the bit"), ("Right click · X", "put the tool back"), ("Hold right · Shift + arrows", "look round"),
+                ("Left button · Space", "pick up, put down, use"), ("Hold, and move", "work a tool"), ("Wheel · Q, Shift+Q", "turn what you hold"),
+                ("Middle button · R", "flip it, or change the bit"), ("Right click · X", "put the tool back"), ("Hold right · Shift + arrows", "look round"), ("A · E", "step sideways along the bench"), ("G", "square up the view and the vise"),
+                ("Drag it · V + mouse", "turn the vise, any time"),
                 ("Wheel · Z C", "move in on the work"), ("Arrows · Tab", "move between things"), ("H", "a hint"), ("Esc", "step back, the job keeps"),
             })
             {
@@ -56,15 +57,47 @@ namespace AthenHill
                 var w = new Label(what) { pickingMode = PickingMode.Ignore }; w.AddToClassList("assembly-legend-what"); row.Add(w);
                 legend.Add(row);
             }
-            leave = new Label("Esc · Step back  |  H · Hint") { name = "assembly-leave", pickingMode = PickingMode.Ignore }; leave.AddToClassList("assembly-leave"); panel.Add(leave);
+            leave = new Label("A / E · Side-step  |  V · Turn vise  |  G · Reset view  |  H · Hint  |  Esc · Step back") { name = "assembly-leave", pickingMode = PickingMode.Ignore }; leave.AddToClassList("assembly-leave"); panel.Add(leave);
             abandon = new VisualElement { name = "assembly-abandon" }; abandon.AddToClassList("assembly-abandon"); panel.Add(abandon);
             abandonFill = new VisualElement { name = "assembly-abandon-fill", pickingMode = PickingMode.Ignore }; abandonFill.AddToClassList("assembly-abandon-fill"); abandon.Add(abandonFill);
             abandonLabel = new Label("Hold Backspace · Pack it in") { name = "assembly-abandon-label", pickingMode = PickingMode.Ignore }; abandonLabel.AddToClassList("assembly-abandon-label"); abandon.Add(abandonLabel);
             abandon.RegisterCallback<PointerDownEvent>(e => { AbandonPressed = true; abandon.CapturePointer(e.pointerId); e.StopPropagation(); });
             abandon.RegisterCallback<PointerUpEvent>(e => { AbandonPressed = false; if (abandon.HasPointerCapture(e.pointerId)) abandon.ReleasePointer(e.pointerId); });
             abandon.RegisterCallback<PointerCaptureOutEvent>(_ => AbandonPressed = false);
+            bit = new VisualElement { name = "assembly-bit", pickingMode = PickingMode.Ignore }; bit.AddToClassList("assembly-bit"); bit.style.display = DisplayStyle.None; panel.Add(bit);
+            bitState = new Label { name = "assembly-bit-state", pickingMode = PickingMode.Ignore }; bitState.AddToClassList("assembly-bit-state"); bit.Add(bitState);
+            bitDo = new Label { name = "assembly-bit-do", pickingMode = PickingMode.Ignore }; bitDo.AddToClassList("assembly-bit-do"); bit.Add(bitDo);
+            target = new VisualElement { name = "assembly-target", pickingMode = PickingMode.Ignore }; target.AddToClassList("assembly-target"); target.style.display = DisplayStyle.None; panel.Add(target);
+            targetLabel = new Label { name = "assembly-target-label", pickingMode = PickingMode.Ignore }; targetLabel.AddToClassList("assembly-target-label"); target.Add(targetLabel);
             root.Add(panel);
         }
+
+        /// The bit button: what is fitted and, when it is the wrong one, how to change it. Null state hides it.
+        public void SetBit(string state, string change)
+        {
+            bit.style.display = state == null ? DisplayStyle.None : DisplayStyle.Flex;
+            if (state == null) return;
+            bitState.text = state; bitDo.text = change ?? "";
+            bitDo.style.display = change == null ? DisplayStyle.None : DisplayStyle.Flex;
+            bit.EnableInClassList("assembly-bit--fitted", change == null);
+        }
+        public bool PointerOnBitButton(Vector2 screen)
+        {
+            if (!shown || root.panel == null || bit.resolvedStyle.display != DisplayStyle.Flex || bitDo.resolvedStyle.display != DisplayStyle.Flex) return false;
+            return bit.worldBound.Contains(RuntimePanelUtils.ScreenToPanel(root.panel, new Vector2(screen.x, Screen.height - screen.y)));
+        }
+        /// A ring round a target too small to find, at a screen point (bottom-left origin).
+        public void SetTarget(Vector2 screen, string text, bool still)
+        {
+            if (root.panel == null) return;
+            var at = panel.WorldToLocal(RuntimePanelUtils.ScreenToPanel(root.panel, new Vector2(screen.x, Screen.height - screen.y)));
+            float size = still ? 64 : 64 + 7 * Mathf.Sin(Time.unscaledTime * 5);
+            target.style.width = target.style.height = size;
+            target.style.left = at.x - size * .5f; target.style.top = at.y - size * .5f;
+            targetLabel.text = text;
+            target.style.display = DisplayStyle.Flex;
+        }
+        public void ClearTarget() { target.style.display = DisplayStyle.None; }
 
         public void Show(bool on, bool firstUse = false)
         {

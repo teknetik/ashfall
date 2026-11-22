@@ -44,7 +44,13 @@ namespace AthenHill
         public AssemblyPart HeldPart { get; private set; }
         public AssemblyPart HeldTool { get; private set; }
         SeatVerb carry; AssemblyActionRef carryRef; bool carryHasRef;
-        AssemblyVerb verb; AssemblyActionRef verbRef;
+        AssemblyVerb verb; AssemblyActionRef verbRef; Vector3 verbWork;
+        AssemblyViseSwivel vise; bool swivelling, squaring; float revealFaced, squareWait; string revealId = "";
+        public AssemblyViseSwivel Vise => vise;
+        /// The vise is being turned by hand or by V, outside any verb.
+        public bool Swivelling => swivelling;
+        /// The vise is easing back square and has the input until it is there.
+        public bool Squaring => squaring;
         FlickVerb flick; AssemblyActionRef flickRef; PointVerb aim; AssemblyActionRef aimRef; bool aiming; float aimPose;
         AssemblyActionRef inspectRef; bool inspecting; float inspectFrom;
         public AssemblyHit Focus { get; private set; }
@@ -91,15 +97,17 @@ namespace AthenHill
             if (State != Phase.Working) return;
             var camera = Rig != null && Rig.Lens ? Rig.Lens : Camera.main;
             last = input != null ? input.Read(camera, S.tapSeconds, S.tapPixels) : default;
-            if (Hud != null && last.primaryDown && last.pointer && Hud.PointerOnControl(last.screen)) { last.primaryDown = false; last.primaryHeld = false; }
+            if (Hud != null && last.primaryDown && last.pointer && Hud.PointerOnBitButton(last.screen)) { last.flip = true; last.primaryDown = false; last.primaryHeld = false; }
+            else if (Hud != null && last.primaryDown && last.pointer && Hud.PointerOnControl(last.screen)) { last.primaryDown = false; last.primaryHeld = false; }
             last.abandonHeld |= Hud != null && Hud.AbandonPressed;
             Step(Time.deltaTime, last, camera ? camera.transform.position : (Vector3?)null);
         }
         void LateUpdate()
         {
             if (State == Phase.Closed || Rig == null) return;
-            Rig.Focus(FocusOfWork());
-            Rig.Tick(Time.deltaTime, last, HeldPart == null && HeldTool == null && verb == null, session && session.reducedMotion);
+            if (FocusOfWork(out var work)) Rig.Focus(work); else Rig.ClearFocus();
+            Rig.Tick(Time.deltaTime, last, HeldPart == null && HeldTool == null && verb == null && !swivelling, session && session.reducedMotion);
+            ShowTarget();
             Hud?.Tick(Time.deltaTime);
         }
 
@@ -125,7 +133,8 @@ namespace AthenHill
             Fx = new AssemblyFeedback(bench); Voice = new BenchVoice(bench, session); Rig = new AssemblyCameraRig(bench, S);
             partial.Clear(); marks.Clear(); marksHit.Clear(); waitDisturbed.Clear(); waitSpoiled.Clear(); HeldPart = HeldTool = null; carry = null; verb = null; flick = null; aim = null; aiming = false; aimPose = 0;
             idle = 0; hintLevel = 0; abandonHeld = 0; Focus = default; shotNow = "";
-            bench.Rebuild(Job); RestoreCards(); UpdateSchematic();
+            bench.Rebuild(Job); RestoreCards(); UpdateSchematic(); bitFittedUntil = -1;
+            vise = new AssemblyViseSwivel(bench); swivelling = squaring = false; revealFaced = 0; revealId = "";
             State = Phase.Working;
             if (session)
             {
@@ -197,14 +206,17 @@ namespace AthenHill
             Voice.Tick(dt);
             if (Abandoning(dt, f)) return;
             UpdateFocus(f);
-            if (verb != null) TickVerb(dt, f, eyePoint);
+            bool turningVise = TurnVise(dt, f);
+            if (!turningVise && verb != null) TickVerb(dt, f, eyePoint);
             if (State == Phase.Working) TickWaits(dt);
-            if (verb == null && State == Phase.Working)
+            if (!turningVise && verb == null && State == Phase.Working)
             {
                 if (carry != null) TickCarry(dt, f, eyePoint);
                 else if (HeldTool) TickTool(dt, f);
                 if (State == Phase.Working) { HandlePrimary(f, eyePoint); HandleOther(f); }
             }
+            if (State != Phase.Working) return;
+            WatchReveal(dt, f, eyePoint);
             if (State != Phase.Working) return;
             var usable = Focus.part && Usable(Focus) ? Focus.part : Focus.marker && Usable(Focus) ? bench.Part(Focus.marker.ownerPart) : null;
             Fx.Hover(usable); Fx.Tick(dt);
@@ -212,7 +224,65 @@ namespace AthenHill
             // (without a live camera, in tests and the selftest, the shot is still tracked: the bot looks through it)
             string shot = pinnedShot ?? WantedShot(); if (shot != shotNow) { float blendFor = aim != null && shot == aimRef.action.shot ? S.shotSeconds * 1.5f : -1; if (Rig == null || !Rig.Active || Rig.SetShot(shot, session && session.reducedMotion, blendFor)) shotNow = shot; }
             if (aimDot) aimDot.gameObject.SetActive(aiming);
-            ClearViewToCard(); UpdateActionLine(); ShowCardPrints();
+            ClearViewToCard(); UpdateActionLine(); ShowBitButton(); ShowCardPrints();
+        }
+
+        // ------------------------------------------------------------------ the vise on its swivel (22 Nov 2026)
+        /// V turns the vise whatever is in the hand; a press on the vise that has no other work drags it round. True while it
+        /// has the input.
+        bool TurnVise(float dt, in AssemblyInputFrame f)
+        {
+            if (vise == null) return false;
+            if (vise.Grabbed && !f.primaryHeld) vise.Release();
+            if (f.resetView && Mathf.Abs(vise.Yaw) > .5f) { squaring = true; squareWait = 0; }
+            if (f.swivelHeld) squaring = false;   // the hand has it again
+            if (squaring) vise.Release();
+            bool now = f.swivelHeld || vise.Grabbed || squaring;
+            if (now && !swivelling && (f.swivelHeld || squaring)) EndVerb();   // what it had got to is kept (partial)
+            if (!now && swivelling) carry?.Rekey();
+            swivelling = now;
+            if (!now) return false;
+            idle = 0;
+            if (f.swivelHeld) vise.TurnByKey(dt, f);
+            else if (!squaring) vise.Drag(f);
+            // back square (G, or the crack found): it has the input for that half second, so nothing is pressed on as it moves
+            else if ((squareWait -= dt) <= 0) squaring = !vise.StepSquare(dt);
+            return true;
+        }
+        bool GrabVise(in AssemblyInputFrame f)
+        {
+            if (vise == null || !f.pointer || f.keyboard) return false;
+            var under = bench.Pick(f.ray, h => h.part && vise.Carries(h.part));
+            if (!under.Valid) return false;
+            vise.Grab(f.ray); return true;
+        }
+
+        /// The crack is found when its face is to the eye after the vise or the view has been moved, however that was done,
+        /// or at once when it is clicked. (22 Nov: the test read the mark's +Z, which points up the pistol.)
+        void WatchReveal(float dt, in AssemblyInputFrame f, Vector3 eye)
+        {
+            var open = FindOpen(a => a.verb == AssemblyVerbKind.Turn && a.mode == "reveal");
+            if (!open.HasValue || vise == null) { revealId = ""; return; }
+            var r = open.Value;
+            if (revealId != r.Id) { revealId = r.Id; revealFaced = 0; vise.ResetTravel(); }
+            var mark = bench.Marker(r.action.target); if (!mark) return;
+            var at = mark.transform.position;
+            bool facing = Vector3.Dot(bench.Out(mark.transform), (eye - at).normalized) >= S.revealFacing;
+            if (facing && Rig != null && Rig.Active && Rig.Lens)
+            {
+                var view = Rig.Lens.WorldToViewportPoint(at);
+                facing = view.z > 0 && view.x > .02f && view.x < .98f && view.y > .02f && view.y < .98f;
+            }
+            float looked = vise.Travel + (Rig != null && Rig.Active ? Rig.LookedRound : 0);
+            revealFaced = facing && looked >= S.revealTravel ? revealFaced + dt : 0;
+            bool clicked = facing && !HeldPart && f.primaryDown && f.pointer && !f.keyboard && AssemblyVerb.DistanceToRay(f.ray, at, out _) <= S.revealClickRadius;
+            if (revealFaced < S.revealSeconds && !clicked) return;
+            revealFaced = 0;
+            if (verb != null && verbRef.Id == r.Id) EndVerb();
+            Fx.Glint(bench.Part(mark.ownerPart)); Audio.Play("asm.ui.glint", at);
+            // shown for a moment, then back square: the steps after it are worked from shots that expect that
+            if (Mathf.Abs(vise.Yaw) > .5f) { squaring = true; squareWait = .35f; }
+            Complete(r, 1);
         }
 
         /// Work that goes on by itself once it is set up (the seam curing under the lamp): time passes while the action is
@@ -290,7 +360,9 @@ namespace AthenHill
         {
             string text = "";
             var next = aim != null ? aimRef : NextAction();
-            if (next.HasValue && (!string.IsNullOrEmpty(next.Value.action.line) || LineFor != null))
+            string bit = BitWanted();
+            if (bit != null) text = $"Wrong bit for this screw: press R or click the middle mouse button to fit the {BitName(bit)} bit";
+            else if (next.HasValue && (!string.IsNullOrEmpty(next.Value.action.line) || LineFor != null))
             {
                 text = !string.IsNullOrEmpty(next.Value.action.line) ? next.Value.action.line : LineFor?.Invoke(next.Value) ?? "";
                 if (text != "" && next.Value.action.count > 1)
@@ -305,6 +377,94 @@ namespace AthenHill
         /// The action line as it stands (QA).
         public string ActionLine => actionLine;
         bool pulsed;
+
+        // ------------------------------------------------------------------ the driver's bit, and small targets (22 Nov 2026)
+        float bitFittedUntil = -1;
+        static string BitName(string kind) => kind == "slot" ? "slotted" : kind;
+        /// The bit to change to for the screw under the pointer, else for the next one; null when the one fitted is right.
+        public string BitWanted()
+        {
+            var tool = HeldTool;
+            if (!tool || HeldPart || Job == null || verb != null && !VerbStatus.waiting) return null;
+            var focus = Focus;
+            bool Needs(AssemblyActionDef a) => !string.IsNullOrEmpty(a.toolMode) && ToolFits(a.tool, tool);
+            var work = focus.Valid ? FindOpen(a => Needs(a) && Matches(a, focus)) : null;
+            if (!work.HasValue)
+            {
+                var next = NextAction();
+                work = next.HasValue && !string.IsNullOrEmpty(next.Value.action.tool) && ToolFits(next.Value.action.tool, tool) ? next : FindOpen(Needs);
+            }
+            if (!work.HasValue) return null;
+            string need = work.Value.action.toolMode;
+            return !string.IsNullOrEmpty(need) && need != tool.Mode ? need : null;
+        }
+        void ShowBitButton()
+        {
+            if (Hud == null) return;
+            string want = BitWanted();
+            if (want != null) Hud.SetBit($"{BitName(HeldTool.Mode).ToUpperInvariant()} BIT FITTED", $"Fit the {BitName(want).ToUpperInvariant()} bit  ·  R, middle button, or click here");
+            else if (HeldTool && clock < bitFittedUntil) Hud.SetBit($"{BitName(HeldTool.Mode).ToUpperInvariant()} BIT FITTED", null);
+            else Hud.SetBit(null, null);
+        }
+        void SwapBit()
+        {
+            var tool = HeldTool; if (!tool) return;
+            var bit = tool.SeatedBit; AssemblyPart other = null;
+            // the quick swap: the bit in the tool changes places with the one in the block (or the tool's own modes cycle)
+            if (bit) foreach (var p in bench.Parts) if (p.IsBit && p != bit && p.gameObject.activeInHierarchy && p.BitKind != bit.BitKind) { other = p; break; }
+            if (bit && other) { bench.Swap(bit, other); Fx.Flash(other, .5f); }
+            else if (tool.modes.Length > 1) tool.modeIndex++;
+            else return;
+            Audio.Play("asm.kit.tool", tool.GrabPoint, .7f);
+            idle = 0; bitFittedUntil = clock + 2;
+        }
+        static AssemblyPart BitIn(AssemblyPart p) => !p || p.IsTool ? null : p.IsBit ? p : p.SeatedBit;
+        /// The driver a press on a spare bit (or its block) fits it to; null for the bit already in a driver.
+        AssemblyPart DriverFor(AssemblyPart pressed)
+        {
+            var bit = BitIn(pressed); if (!bit) return null;
+            var on = bit.transform.parent ? bit.transform.parent.GetComponent<AssemblyPart>() : null;
+            if (on && on.IsTool) return null;
+            var driver = HeldTool ? HeldTool : bench.Tool("tool:screwdriver");
+            return driver && driver.gameObject.activeInHierarchy && driver.SeatedBit ? driver : null;
+        }
+        bool FitBit(AssemblyPart pressed)
+        {
+            var driver = DriverFor(pressed); if (!driver) return false;
+            if (HeldTool != driver) TakeTool(driver);
+            SwapBit(); return true;
+        }
+
+        /// What to ring while the work is on a part too small to find: the tool to take for it, then where that goes.
+        public bool SmallTarget(out Vector3 at, out string label)
+        {
+            at = default; label = "";
+            if (State != Phase.Working || HeldPart || verb != null && !VerbStatus.waiting) return false;
+            var next = NextAction(); if (!next.HasValue) return false;
+            var a = next.Value.action; var place = bench.Marker(a.target);
+            string small = Array.IndexOf(S.ringedParts, a.part) >= 0 ? a.part : place && Array.IndexOf(S.ringedParts, place.ownerPart) >= 0 ? place.ownerPart : null;
+            var target = bench.Part(small); if (!target) return false;
+            var part = bench.Part(a.part);
+            var take = !string.IsNullOrEmpty(a.tool) && a.tool != "*" ? (ToolFits(a.tool, HeldTool) ? null : bench.Tool(a.tool)) : part && part.IsTool && part != HeldTool ? part : null;
+            if (take) { at = take.GrabPoint; label = "TAKE THE " + take.label.ToUpperInvariant(); return true; }
+            at = ActPointFor(next.Value, HeldTool, HeldPart);
+            label = part && part == HeldTool ? "HOUSING PIN  ·  click to set the punch" : a.mode == "strike" ? "STRIKE HERE" : target.label.ToUpperInvariant();
+            return true;
+        }
+        void ShowTarget()
+        {
+            if (Hud == null) return;
+            if (Rig.Lens && SmallTarget(out var at, out var label))
+            {
+                var screen = Rig.Lens.WorldToScreenPoint(at);
+                if (screen.z > 0 && screen.x >= 0 && screen.y >= 0 && screen.x <= Screen.width && screen.y <= Screen.height)
+                {
+                    Hud.SetTarget(new Vector2(screen.x, screen.y), label, session && session.reducedMotion);
+                    return;
+                }
+            }
+            Hud.ClearTarget();
+        }
 
         bool Abandoning(float dt, in AssemblyInputFrame f)
         {
@@ -405,6 +565,7 @@ namespace AthenHill
             }
             var p = hit.part; if (!p || p.Gone || p == HeldPart || p == HeldTool) return false;
             if (HeldPart) return carryHasRef && Matches(carryRef.action, hit) || aim != null && Matches(aimRef.action, hit);
+            if (BitIn(p)) return DriverFor(p);   // bits are fitted, never carried off
             if (FindOpen(a => a.verb != AssemblyVerbKind.Flick && ToolFits(a.tool, HeldTool) && Matches(a, hit)) != null) return true;
             if (p.IsTool) return p.gameObject.activeInHierarchy;   // a tool can always be taken, also in exchange for the one in hand
             if (HeldTool) return FindWaiting(a => ToolFits(a.tool, HeldTool) && Matches(a, hit)) != null || FindOpen(a => Matches(a, hit) && a.verb != AssemblyVerbKind.Flick) != null;
@@ -469,7 +630,7 @@ namespace AthenHill
             if (f.next || f.previous || !Focus.Valid && (f.navStep != Vector2Int.zero || f.primaryDown)) { CycleFocus(f.previous ? -1 : 1); return; }
             if (f.navStep == Vector2Int.zero || f.lookKey) return;
             var frame = bench.surface ? bench.surface : bench.transform;
-            var dir = (frame.right * f.navStep.x - frame.forward * f.navStep.y).normalized; var from = Focus.Position;
+            var dir = (-frame.right * f.navStep.x - frame.forward * f.navStep.y).normalized; var from = Focus.Position;   // the player's right is the surface's -X
             AssemblyHit best = default; float bestScore = float.MaxValue;
             foreach (var hit in Candidates())
             {
@@ -572,7 +733,7 @@ namespace AthenHill
             Feed(carry.c, f, eye);
             var part = HeldPart;
             var st = carry.Tick(dt, f);
-            if (HeldTool && part) AssemblyVerb.PlaceTool(HeldTool, part.GrabPoint, -bench.Up);
+            if (HeldTool && part) AssemblyToolPose.Place(bench, HeldTool, part.GrabPoint, -bench.Up);
             if (st.done)
             {
                 // seated: the action counts first, then a fumble on the way in (the vial rolls off the tray after it was set down)
@@ -653,11 +814,23 @@ namespace AthenHill
 
         void TickTool(float dt, in AssemblyInputFrame f)
         {
-            var tool = HeldTool;
+            var tool = HeldTool; var into = -bench.Up; var along = Vector3.zero;
             Vector3 want = !f.pointer ? FocusPoint() : Focus.Valid && Usable(Focus) ? Focus.Position : bench.OnSurface(f.ray, .03f);
-            toolTip = Vector3.Lerp(toolTip, want + bench.Up * .012f, 1 - Mathf.Exp(-S.Spring(tool.mass) * dt));
-            var frame = bench.surface ? bench.surface : bench.transform;
-            AssemblyVerb.PlaceTool(tool, toolTip, (-bench.Up * .8f - frame.forward * .6f).normalized);
+            if (Focus.Valid)
+            {
+                // over its work the tool is already held as it will be worked
+                var focus = Focus;
+                var next = FindOpen(a => a.verb != AssemblyVerbKind.Flick && a.verb != AssemblyVerbKind.Seat && ToolFits(a.tool, tool) && Matches(a, focus));
+                if (next.HasValue)
+                {
+                    var a = next.Value.action;
+                    var mark = focus.marker && Array.IndexOf(a.targets, focus.marker.id) >= 0 ? focus.marker : bench.Marker(a.targets.Length > 0 ? a.targets[0] : a.target);
+                    var work = AssemblyToolPose.Work(bench, a, bench.Part(a.part), mark, tool);
+                    want = work.at; into = work.into; along = work.along;
+                }
+            }
+            toolTip = Vector3.Lerp(toolTip, want - into.normalized * .015f, 1 - Mathf.Exp(-S.Spring(tool.mass) * dt));
+            AssemblyToolPose.Place(bench, tool, toolTip, into, along);
         }
 
         /// Where a tool lives: its home place, or the pocket on what it is kept in (a place there that takes only it).
@@ -711,7 +884,8 @@ namespace AthenHill
 
         void PutDownOrRefuse(in AssemblyInputFrame f)
         {
-            if (carry == null) return;
+            if (carry == null || carry.Seating) return;   // it is already going in: letting go does not stop it
+            if (carryHasRef && carry.CaptureOnRelease()) return;
             // onto a place that takes this kind of part but is not where this one goes: swapped plates, the wrong outline
             if (Focus.marker && Focus.marker.kind == AssemblyMarkerKind.Place && !(carryHasRef && carryRef.action.target == Focus.marker.id) && !Focus.marker.Accepts(HeldPart.id))
             { Refuse(HeldPart, null, null, "wrong_place"); return; }
@@ -720,7 +894,7 @@ namespace AthenHill
 
         void PickOrEngage(in AssemblyInputFrame f, Vector3 eye)
         {
-            var hit = Focus; if (!hit.Valid) return;
+            var hit = Focus; if (!hit.Valid) { GrabVise(f); return; }
             // the wrong thing to pull on: it does the job, badly (the trigger lead pulled by its wire comes off frayed)
             var wrong = hit.part ? FindOpen(a => WrongFor(a, hit.part) != null) : null;
             if (wrong.HasValue)
@@ -735,13 +909,15 @@ namespace AthenHill
                 // a mark that wants a tool: show which
                 var needs = FindOpen(a => Matches(a, hit) && !string.IsNullOrEmpty(a.tool));
                 if (needs.HasValue) { Fx.Glint(bench.Tool(needs.Value.action.tool)); Audio.Play("asm.ui.glint", hit.Position, .6f); }
+                else GrabVise(f);
                 return;
             }
             var p = hit.part;
+            if (FitBit(p)) return;
             if (p.IsTool) { TakeTool(p); return; }
-            if (p.IsFixture || p.IsConsumable) return;
+            if (p.IsFixture || p.IsConsumable) { GrabVise(f); return; }
             var clamp = bench.ClampOn(p);
-            if (clamp) { Refuse(p, clamp.target ? clamp.target.GetComponentInParent<AssemblyPart>() : null, null, "blocked"); return; }
+            if (clamp) { GrabVise(f); Refuse(p, clamp.target ? clamp.target.GetComponentInParent<AssemblyPart>() : null, null, "blocked"); return; }
             var seat = OpenSeatFor(p, null);
             if (!seat.HasValue)
             {
@@ -795,14 +971,18 @@ namespace AthenHill
 
         void UseTool(in AssemblyInputFrame f, Vector3 eye)
         {
-            var hit = Focus; var tool = HeldTool; if (!hit.Valid) return;
+            var hit = Focus; var tool = HeldTool; if (!hit.Valid) { GrabVise(f); return; }
             if (hit.marker && IsPocket(hit.marker, tool)) { PutToolBack(); return; }
+            if (hit.part && FitBit(hit.part)) return;
             // the tool itself is stood on the work (the punch on the pin)
             var stand = FindOpen(a => a.verb == AssemblyVerbKind.Seat && a.part == tool.id && Matches(a, hit));
-            if (stand.HasValue) { HeldTool = null; StartCarry(tool, stand); pressPicked = false; return; }
+            if (stand.HasValue) { HeldTool = null; StartCarry(tool, stand); pressPicked = false; carry.SeatNow(); return; }
             var act = FindOpen(a => ToolFits(a.tool, tool) && a.verb != AssemblyVerbKind.Flick && a.mode != "wait" && a.mode != "aim" && WrongFor(a, hit.part) == null && Matches(a, hit));
             if (!act.HasValue)
             {
+                // the vise's handle, a latch: bare-hand turns put the tool down by themselves, they do not spin the vise
+                var bare = FindOpen(x => string.IsNullOrEmpty(x.tool) && x.verb == AssemblyVerbKind.Turn && x.mode != "reveal" && Matches(x, hit));
+                if (bare.HasValue) { PutToolBack(); Engage(bare.Value, hit, null, f, eye); return; }
                 // forcing something that is not ready (the seized screw before oil and taps)
                 var waiting = FindWaiting(a => ToolFits(a.tool, tool) && Matches(a, hit) && Array.Exists(a.faults, x => x.when == "blocked")) ?? FindWaiting(a => ToolFits(a.tool, tool) && Matches(a, hit));
                 if (waiting.HasValue)
@@ -815,13 +995,15 @@ namespace AthenHill
                 var other = FindOpen(a => Matches(a, hit) && !string.IsNullOrEmpty(a.tool));
                 if (other.HasValue) { Fx.Glint(bench.Tool(other.Value.action.tool)); Audio.Play("asm.seat.blocked", hit.Position, .5f); try { Refused?.Invoke("wrong_tool", hit.part, HeldTool); } catch (Exception e) { Debug.LogException(e); } }
                 else if (hit.part && hit.part.IsTool) TakeTool(hit.part);
+                else GrabVise(f);
                 return;
             }
             var a = act.Value.action;
             if (!string.IsNullOrEmpty(a.toolMode) && tool.Mode != a.toolMode)
             {
                 var fd = Array.Find(a.faults, x => x.when == "mode");
-                AssemblyVerb.PlaceTool(tool, hit.Position, -bench.Up);
+                var work = AssemblyToolPose.Work(bench, a, bench.Part(a.part), bench.Marker(a.target), tool);
+                AssemblyToolPose.Place(bench, tool, work.at, work.into);
                 if (hit.part) Fx.Shudder(hit.part, S.shudderMm * .0005f, S.shudderSeconds);
                 RaiseFault(act.Value, fd != null ? fd.kind : "camout");
                 return;
@@ -840,17 +1022,10 @@ namespace AthenHill
         {
             if (f.putBack)
             {
-                if (carry != null) { carry.Return(); StopCarry(); }
+                if (carry != null) { carry.Return(); StopCarry(); bench.Support.Uncover(); }
                 else if (HeldTool) PutToolBack();
             }
-            if (f.flip && carry == null && HeldTool)
-            {
-                // the quick swap: the bit in the tool changes places with the one in the block (or the tool's own modes cycle)
-                var bit = HeldTool.SeatedBit; AssemblyPart other = null;
-                if (bit) foreach (var p in bench.Parts) if (p.IsBit && p != bit && p.gameObject.activeInHierarchy && p.BitKind != bit.BitKind) { other = p; break; }
-                if (bit && other) { bench.Swap(bit, other); Audio.Play("asm.kit.tool", HeldTool.GrabPoint, .7f); }
-                else if (HeldTool.modes.Length > 1) { HeldTool.modeIndex++; Audio.Play("asm.kit.tool", HeldTool.GrabPoint, .7f); }
-            }
+            if (f.flip && carry == null && HeldTool) SwapBit();
         }
 
         // ------------------------------------------------------------------ engaged verbs
@@ -861,7 +1036,8 @@ namespace AthenHill
             if (a.verb == AssemblyVerbKind.Point && a.targets.Length > 0 && marksHit.TryGetValue(r.Id, out var hitSet) && marker && hitSet.Contains(marker.id)) return;
             verb = AssemblyVerb.Create(a.verb); verbRef = r;
             verb.c = Context(r, bench.Part(a.part), tool, marker);
-            Feed(verb.c, f, eye); verb.Begin(); idle = Mathf.Min(idle, S.hintGlint * .5f);
+            verb.c.vise = vise;
+            Feed(verb.c, f, eye); verb.Begin(); verbWork = verb.ActPoint; idle = Mathf.Min(idle, S.hintGlint * .5f);
             TickVerb(0, f, eye);
         }
 
@@ -914,7 +1090,7 @@ namespace AthenHill
             }
             var prog = Job.CompleteAction(r.step.id, r.action.key, precision);
             if (!prog.ok) return;
-            bench.ApplyAction(r.action);
+            bench.ApplyAction(r.action); bench.Support.Uncover();
             partial.Remove(r.Id); marks.Remove(r.Id); marksHit.Remove(r.Id); idle = 0; hintLevel = 0; pinnedShot = null; Hud?.HideLegend();
             if (r.action.verb != AssemblyVerbKind.Seat && !string.IsNullOrEmpty(r.action.done)) Audio.Play(r.action.done, bench.Part(r.action.part) ? bench.Part(r.action.part).GrabPoint : bench.SurfacePoint);
             Link.Blob = Job.ToBlob();
@@ -1027,7 +1203,7 @@ namespace AthenHill
             hintLevel = Mathf.Max(hintLevel, level);
             if (level == 1)
             {
-                Fx.Glint(tool && tool != HeldTool ? tool : part && part != HeldPart ? part : bench.Part(bench.Marker(a.target) ? bench.Marker(a.target).ownerPart : a.part));
+                Fx.Glint(tool && tool != HeldTool ? tool : part && part != HeldPart && part != HeldTool ? part : bench.Part(bench.Marker(a.target) ? bench.Marker(a.target).ownerPart : a.part));
                 Audio.Play("asm.ui.glint", part ? part.GrabPoint : bench.SurfacePoint, .6f);
             }
             else if (level == 2) { Voice.Say("hint.idle25:" + "abc"[hintVoice++ % 3]); }
@@ -1055,7 +1231,7 @@ namespace AthenHill
         string WantedShot()
         {
             // work in progress keeps the shot it began in
-            if (verb != null) return !string.IsNullOrEmpty(shotNow) ? shotNow : "work";
+            if (verb != null || swivelling) return !string.IsNullOrEmpty(shotNow) ? shotNow : "work";
             if (aiming && !string.IsNullOrEmpty(aimRef.action.shot)) return aimRef.action.shot;
             var next = NextAction();
             if (!next.HasValue) { var stage = Job != null ? Job.Stage : null; return stage != null && !string.IsNullOrEmpty(stage.shot) ? stage.shot : "work"; }
@@ -1096,13 +1272,27 @@ namespace AthenHill
             if (Mathf.Abs(l.x) > l.z * tv * aspect * .93f || Mathf.Abs(l.y) > l.z * tv * .9f) return false;
             return AssemblyHud.CoveredBy(new Vector2((l.x / (l.z * tv * aspect) * .5f + .5f) * AssemblyHud.Reference.x, (.5f - l.y / (l.z * tv) * .5f) * AssemblyHud.Reference.y)) == null;
         }
-        Vector3 FocusOfWork()
+        /// What the camera keeps in the picture: where the work is, never where the hand is. (22 Nov: it followed the held
+        /// part, which follows the pointer, which follows the camera, and ran off the bench.)
+        bool FocusOfWork(out Vector3 point)
         {
-            if (verb != null) return verb.ActPoint;
-            if (HeldPart) return HeldPart.GrabPoint;
-            if (HeldTool) return HeldTool.TipPoint;
-            var next = NextAction(); if (!next.HasValue) return bench.SurfacePoint;
-            var p = bench.Part(next.Value.action.part); return p && !p.Gone ? p.GrabPoint : bench.SurfacePoint;
+            point = bench.SurfacePoint;
+            if (verb != null) { point = verbWork; return true; }   // held still while working: the lamp swung by a circle took the eye, and the circle, with it
+            var next = NextAction(); if (!next.HasValue) return false;
+            var a = next.Value.action; var p = bench.Part(a.part);
+            if (!string.IsNullOrEmpty(a.tool) && a.tool != "*" && !ToolFits(a.tool, HeldTool))
+            {
+                var tool = bench.Tool(a.tool);
+                if (tool && tool.gameObject.activeInHierarchy) { point = tool.GrabPoint; return true; }
+            }
+            if (p && p == HeldPart)
+            {
+                bool toAPlace = a.verb == AssemblyVerbKind.Seat && a.mode != "inspect", atCard = a.verb == AssemblyVerbKind.Point && a.mode == "aim";
+                if (atCard && !aiming || !toAPlace && !atCard) return false;
+                if (toAPlace && !bench.TargetPose(p, a.target, out _, out _, out _, out _)) return false;
+            }
+            if (p && p == HeldTool && a.verb != AssemblyVerbKind.Seat) return false;
+            point = ActPointFor(next.Value, HeldTool, HeldPart); return true;
         }
 
         /// A pulse through the card: one of the decals on the card's centre mark moves to the hole, and the job remembers where
@@ -1208,7 +1398,7 @@ namespace AthenHill
             var a = r.action; var p = bench.Part(a.part);
             // a carried part: where the hand must be for it to go in (its grab point at the way in); a tool to stand: the place
             if (a.verb == AssemblyVerbKind.Seat && a.mode != "inspect" && p && heldPart == p && bench.TargetPose(p, a.target, out _, out _, out var approach, out _)) return approach.position + p.GrabOffsetAt(approach.rotation);
-            if (a.verb == AssemblyVerbKind.Seat && p && a.part == (heldTool ? heldTool.id : "") && bench.TargetPose(p, a.target, out _, out var stood, out _, out _)) return stood.position;
+            if (a.verb == AssemblyVerbKind.Seat && p && a.part == (heldTool ? heldTool.id : "") && bench.TargetPose(p, a.target, out _, out var stood, out _, out var standsOn)) return standsOn ? standsOn.transform.position : stood.position;
             if (a.verb == AssemblyVerbKind.Seat || a.verb == AssemblyVerbKind.Flick || a.verb == AssemblyVerbKind.Turn) return p ? p.GrabPoint : bench.SurfacePoint;
             if (a.verb == AssemblyVerbKind.Point && a.mode == "aim" && heldPart != p) return p ? p.GrabPoint : bench.SurfacePoint;
             string id = a.target;

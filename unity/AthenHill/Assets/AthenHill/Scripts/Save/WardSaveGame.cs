@@ -69,6 +69,7 @@ namespace AthenHill
    if(orders)orders.Completed+=OnOrderCompleted;
    if(Session.Quickbar!=null)Session.Quickbar.Changed+=MarkDirty;
    Session.HomeChanged+=MarkDirty;
+   Session.TerminalsChanged+=MarkDirty;
    if(Session.Journal)Session.Journal.Changed+=OnJournal;
    if(Session.Map)Session.Map.Changed+=MarkDirty;
   }
@@ -83,7 +84,7 @@ namespace AthenHill
    if(Session&&Session.Character!=null)Session.Character.Changed-=MarkDirty;
    if(orders)orders.Completed-=OnOrderCompleted;
    if(Session&&Session.Quickbar!=null)Session.Quickbar.Changed-=MarkDirty;
-   if(Session){Session.HomeChanged-=MarkDirty;if(Session.Journal)Session.Journal.Changed-=OnJournal;if(Session.Map)Session.Map.Changed-=MarkDirty;}
+   if(Session){Session.HomeChanged-=MarkDirty;Session.TerminalsChanged-=MarkDirty;if(Session.Journal)Session.Journal.Changed-=OnJournal;if(Session.Map)Session.Map.Changed-=MarkDirty;}
   }
   void MarkDirty(){if(!applying)dirty=true;}
   void OnCollected(LootPickup _)=>MarkDirty();
@@ -110,7 +111,9 @@ namespace AthenHill
     orders=orders?orders.Capture():null,city=Session.CaptureCityVisit(),character=Session.Character?.Capture(),
     hotbar=Session.Quickbar?.Capture(),stash=Session.Stash?.Capture(),journal=Session.Journal?Session.Journal.Capture():null,
     map=Session.Map?Session.Map.Capture():null,
-    benchJob=crafting.Model.OpenTicket!=null&&!string.IsNullOrEmpty(crafting.Model.AssemblyBlob)?crafting.Model.AssemblyBlob:null
+    benchJob=crafting.Model.OpenTicket!=null&&!string.IsNullOrEmpty(crafting.Model.AssemblyBlob)?crafting.Model.AssemblyBlob:null,
+    unlockedTerminals=Session.CaptureUnlockedTerminals(),
+    lastTerminalId=Session.LastTerminalId
    };
   }
   public bool SaveNow(string reason)
@@ -152,6 +155,8 @@ namespace AthenHill
     Session.Quickbar?.Restore(data.hotbar);
     if(Session.Stash!=null)skipped.AddRange(Session.Stash.Restore(data.stash,known.Contains));
     if(Session.Journal){Session.Journal.Restore(data.journal);savedTracked=Session.Journal.TrackedId+(Session.Journal.TrackedChosen?"!":"");}
+    // 22 Nov 2026: Field Lattice Terminals (restored before the world map so unlocked relays appear immediately).
+    Session.RestoreTerminals(data.unlockedTerminals,data.lastTerminalId);
     // 19 Nov 2026: the world map (after the flags and the primer, which imply discoveries in older saves)
     if(Session.Map)Session.Map.Restore(data.map);
    }
@@ -172,11 +177,16 @@ namespace AthenHill
    }
    var skipped=Apply(data);
    Session.StartGame();
-   // once the player has rested in their home, Continue wakes them at the bunk
-   var home=Session.Home;bool atHome=home&&home.wakePoint&&Session.HasFlag(WardHome.LeasedFlag)&&Session.HasFlag(WardHome.RestedFlag);
-   if(atHome)Session.WakeAt(home.wakePoint);
+   // 22 Nov 2026: if the player last saved at an unlocked Outer Berms Lattice Terminal, Continue wakes them there;
+   // otherwise once they have rested in their home, Continue wakes them at the bunk.
+   var wakeTerminal=Session.ResolveWakeTerminal();
+   bool atTerminal=wakeTerminal&&wakeTerminal.WakePoint;
+   var home=Session.Home;bool atHome=!atTerminal&&home&&home.wakePoint&&Session.HasFlag(WardHome.LeasedFlag)&&Session.HasFlag(WardHome.RestedFlag);
+   if(atTerminal)Session.WakeAt(wakeTerminal.WakePoint);
+   else if(atHome)Session.WakeAt(home.wakePoint);
    var o=orders&&orders.Progress!=null?orders.Progress.Current:null;
-   Session.Notify((atHome?"You wake in your container home.":"Welcome back to Ward.")+" Progress restored"+(o!=null?$" · field order: {o.title}":"")+"."+(skipped.Count>0?" Some saved entries no longer exist and were skipped: "+string.Join(", ",skipped.Distinct())+".":""),"Ward");
+   string greeting=atTerminal?$"You wake at {wakeTerminal.displayName}.":atHome?"You wake in your container home.":"Welcome back to Ward.";
+   Session.Notify(greeting+" Progress restored"+(o!=null?$" · field order: {o.title}":"")+"."+(skipped.Count>0?" Some saved entries no longer exist and were skipped: "+string.Join(", ",skipped.Distinct())+".":""),"Ward");
    return true;
   }
   /// Start-menu New Game (after the menu's overwrite confirmation). The previous save is kept as a .previous copy.

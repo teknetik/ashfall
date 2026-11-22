@@ -292,7 +292,7 @@ Silent on purpose:
 | `s1.housing:slide` | Drag the backstrap housing to its outline on the parts mat and let go (the wheel turns it to fit) |
 | `s1.housing:spring` | Drag the spring to its outline on the parts mat and let go (the wheel turns it to fit) |
 | `s1.housing.r:spring` | Drag the spring to its outline on the parts mat and let go (the wheel turns it to fit) |
-| `s1.inspect:find` | Hold left on the vise and circle the mouse to turn the frame round until you see the crack |
+| `s1.inspect:find` | Drag the vise round (or hold V and move the mouse) until the crack faces you, or click the crack |
 | `s2.swap:open` | Hold left on the vise handle and circle the mouse the other way to open the jaws |
 | `s2.swap:frame` | Drag the pistol to the cradle stand and let go (the wheel turns it to fit) |
 | `s2.swap:servo` | Drag the servo to the vise jaws and let go (the wheel turns it to fit) |

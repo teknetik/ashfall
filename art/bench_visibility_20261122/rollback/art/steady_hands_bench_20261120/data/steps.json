@@ -1,0 +1,320 @@
+{
+ "id": "assembly_grip_stabilised_pistol",
+ "craftRecipeId": "recipe_grip_stabilised_pistol",
+ "modItemId": "grip_stabilised_pistol",
+ "weaponId": "weapon_scrap_pistol",
+ "quality": {"rough": 0.55, "fine": 0.85, "faultPenalty": 0.02, "maxPenalty": 0.5, "replacedPrecision": 0.35},
+ "byproducts": [{"itemId": "copper_filament", "quantity": 1}],
+ "stages": [
+  {"id": "s0", "label": "Lay out the job", "shot": "work", "steps": [
+   {"id": "s0.pistol", "label": "Lay the pistol on the work mat", "actions": [
+    {"key": "lay", "verb": "Seat", "part": "pistol.frame", "target": "fixtures.workmat/seat_pistol", "weight": 0.5}]},
+   {"id": "s0.roll", "label": "Untie and unroll the toolkit", "actions": [
+    {"key": "untie", "verb": "Turn", "part": "tools.roll", "turns": 1.5, "gain": 1, "drive": "tools.roll_strap", "from": 0, "to": 1, "noSpin": true, "loop": "asm.kit.untie", "weight": 0.25},
+    {"key": "unroll", "verb": "Seat", "part": "tools.roll", "target": "place.roll", "effects": ["tools.roll_unroll=1"], "done": "asm.kit.unroll", "weight": 0.25}]},
+   {"id": "s0.salvage", "label": "Set the servo, the two alloy sheets and the nanite vial in the tray", "free": true, "actions": [
+    {"key": "servo", "verb": "Seat", "part": "servo.case_body", "target": "fixtures.tray/seat_servo", "weight": 0.25},
+    {"key": "sheet_a", "verb": "Seat", "part": "materials.sheet_a", "target": "fixtures.tray/seat_alloy", "weight": 0.25},
+    {"key": "sheet_b", "verb": "Seat", "part": "materials.sheet_b", "target": "fixtures.tray/seat_alloy#b", "weight": 0.25},
+    {"key": "vial", "verb": "Seat", "part": "materials.vial", "target": "fixtures.tray/seat_vial", "weight": 0.25, "faults": [{"kind": "rolled_off", "penalty": 0.01, "recovery": "s0.salvage.r", "effects": ["materials.vial>place.bench.stray"]}]}]},
+   {"id": "s0.salvage.r", "label": "Pick up the vial that rolled off", "recovery": true, "actions": [
+    {"key": "vial", "verb": "Seat", "part": "materials.vial", "target": "fixtures.tray/seat_vial", "weight": 0.25}]},
+   {"id": "s0.card_before", "label": "Three test pulses at the card", "requires": ["s0.pistol"], "actions": [
+    {"key": "pulses", "verb": "Point", "mode": "aim", "part": "pistol.frame", "target": "pistol.card_a/centre", "count": 3, "shot": "card", "weight": 0, "done": "asm.card.clip", "line": "Fire three test pulses at the card: aim at the rings and click"}]},
+   {"id": "s0.shake_before", "label": "Pick the pistol up and shake it", "optional": true, "requires": ["s0.pistol"], "actions": [
+    {"key": "shake", "verb": "Flick", "part": "pistol.frame", "audio": "asm.rattle.shake", "weight": 0}]},
+   {"id": "s0.cell", "label": "Thumb the latch and pull the charge cell", "requires": ["s0.pistol", "s0.card_before"], "shot": "mat", "actions": [
+    {"key": "latch", "verb": "Turn", "part": "pistol.cell_latch", "turns": 0.25, "drive": "pistol.cell_latch", "from": 0, "to": 1, "noSpin": true, "done": "asm.latch.snap", "weight": 0.25},
+    {"key": "cell", "verb": "Seat", "part": "pistol.cell", "target": "fixtures.pad/seat_cell", "effects": ["pistol.status_lamp=0"], "done": "asm.cell.pop", "weight": 0.5}]}
+  ]},
+  {"id": "s1", "label": "Strip the pistol", "shot": "vise", "steps": [
+   {"id": "s1.clamp", "label": "Set the frame in the vise and close it snug", "actions": [
+    {"key": "set", "verb": "Seat", "part": "pistol.frame", "target": "fixtures.vise/seat_work"},
+    {"key": "snug", "verb": "Turn", "mode": "stop", "part": "fixtures.vise_screw", "turns": 3, "gain": 0.8, "lo": 0, "hi": 0.5, "drive": "fixtures.vise_jaw", "from": 0, "to": 0.6, "loop": "asm.vise.thread", "done": "asm.vise.bite", "faults": [{"kind": "overtight", "penalty": 0.03}]}]},
+   {"id": "s1.bind", "label": "Snip the two wire twists holding the old grip", "requires": ["s1.clamp"], "actions": [
+    {"key": "snip_a", "verb": "Point", "tool": "tool:cutters", "targets": ["pistol.bind_wire_a/snip"], "audio": "asm.cut.snip", "effects": ["pistol.bind_wire_a>gone"], "done": "asm.cut.spring"},
+    {"key": "snip_b", "verb": "Point", "tool": "tool:cutters", "targets": ["pistol.bind_wire_b/snip"], "audio": "asm.cut.snip", "effects": ["pistol.bind_wire_b>gone"], "done": "asm.cut.spring", "shot": "vise_r"}]},
+   {"id": "s1.tape", "label": "Peel the tape and leather wrap", "requires": ["s1.bind"], "actions": [
+    {"key": "peel", "verb": "Path", "part": "pistol.wrap", "target": "pistol.wrap/peel", "hi": 0.45, "loop": "asm.peel.tape", "done": "asm.peel.leather", "effects": ["pistol.wrap>fixtures.partsmat/seat_pistol_wrap"], "faults": [{"kind": "tear", "penalty": 0.01}], "swivel": "fixtures.vise", "mode": "drag", "line": "Hold the left button on the wrap and keep moving the mouse: the tape peels off as the vise turns"}]},
+   {"id": "s1.screw_a", "label": "Take out the upper grip screw", "requires": ["s1.tape"], "actions": [
+    {"key": "turn", "verb": "Turn", "part": "pistol.screw_grip_a", "tool": "tool:screwdriver", "toolMode": "slot", "turns": -6, "gain": 1, "loop": "asm.screw.turn", "faults": [{"kind": "camout", "when": "mode", "penalty": 0.02}]},
+    {"key": "dish", "verb": "Seat", "part": "pistol.screw_grip_a", "tool": "*", "target": "fixtures.dish/slot_00", "done": "asm.screw.dish", "weight": 0.25}]},
+   {"id": "s1.screw_b", "label": "The lower screw is seized: oil it, tap it, then take it out", "requires": ["s1.tape"], "actions": [
+    {"key": "oil", "verb": "Point", "part": "pistol.screw_grip_b", "tool": "tool:oil", "target": "pistol.screw_grip_b/oil", "audio": "asm.oil.drop", "weight": 0.5},
+    {"key": "tap", "verb": "Window", "mode": "strike", "part": "pistol.screw_grip_b", "tool": "tool:screwdriver", "count": 2, "lo": 0.3, "hi": 0.75, "from": 0, "to": 0, "audio": "asm.tap", "done": "asm.screw.crack_free", "faults": [{"kind": "miss", "penalty": 0.02}], "weight": 0.5},
+    {"key": "turn", "verb": "Turn", "part": "pistol.screw_grip_b", "tool": "tool:screwdriver", "toolMode": "slot", "turns": -6, "gain": 0.55, "loop": "asm.screw.turn", "faults": [{"kind": "slip", "when": "blocked", "penalty": 0.02, "after": 2, "recovery": "s1.screw_b.r"}, {"kind": "camout", "when": "mode", "penalty": 0.02}, {"kind": "camout", "penalty": 0.02}]},
+    {"key": "dish", "verb": "Seat", "part": "pistol.screw_grip_b", "tool": "*", "target": "fixtures.dish/slot_01", "done": "asm.screw.dish", "weight": 0.25}]},
+   {"id": "s1.screw_b.r", "label": "The slot is rounded: turn it out with pliers", "recovery": true, "replaces": ["s1.screw_b:oil", "s1.screw_b:tap", "s1.screw_b:turn"], "actions": [
+    {"key": "pliers", "verb": "Turn", "part": "pistol.screw_grip_b", "tool": "tool:pliers", "turns": -6, "gain": 0.3, "loop": "asm.screw.pliers", "weight": 0.5}]},
+   {"id": "s1.scales", "label": "Lift off the left and right scales, set them on the parts mat", "requires": ["s1.screw_a", "s1.screw_b"], "free": true, "shot": "vise", "actions": [
+    {"key": "left", "verb": "Seat", "part": "pistol.scale_l", "target": "fixtures.partsmat/seat_pistol_scale_l", "weight": 0.5},
+    {"key": "right", "verb": "Seat", "part": "pistol.scale_r", "target": "fixtures.partsmat/seat_pistol_scale_r", "weight": 0.5}]},
+   {"id": "s1.lead", "label": "Pinch the tab and pull the trigger lead off the cell bus", "requires": ["s1.scales"], "actions": [
+    {"key": "unplug", "verb": "Seat", "part": "pistol.lead_plug", "target": "clear", "done": "asm.part.connector", "weight": 0.5, "faults": [{"kind": "frayed", "when": "wrong:pistol.lead", "penalty": 0.02, "recovery": "s3.lead.r"}]}]},
+   {"id": "s1.pin", "label": "Drive the housing pin out with punch and mallet, pull it with pliers", "requires": ["s1.scales"], "actions": [
+    {"key": "punch", "verb": "Seat", "part": "tools.punch", "target": "pistol.housing_pin/punch", "weight": 0.25},
+    {"key": "taps", "verb": "Window", "mode": "strike", "part": "pistol.housing_pin", "tool": "tool:mallet", "target": "tools.punch", "count": 3, "lo": 0.3, "hi": 0.7, "from": 0, "to": 0.6, "shot": "vise_l", "audio": "asm.tap", "effects": ["tools.punch>seat"], "faults": [{"kind": "miss", "penalty": 0.03, "after": 2, "recovery": "s1.pin.r"}]},
+    {"key": "pull", "verb": "Seat", "part": "pistol.housing_pin", "tool": "tool:pliers", "target": "fixtures.partsmat/seat_pistol_pin", "done": "asm.tap.pin_out", "weight": 0.5}]},
+   {"id": "s1.pin.r", "label": "The pin is bent: tap it straight on the vise's anvil", "recovery": true, "requires": ["s1.pin"], "actions": [
+    {"key": "anvil", "verb": "Seat", "part": "pistol.housing_pin", "tool": "*", "target": "fixtures.vise/anvil", "weight": 0.25},
+    {"key": "straighten", "verb": "Window", "mode": "strike", "part": "pistol.housing_pin", "tool": "tool:mallet", "count": 2, "lo": 0.3, "hi": 0.7, "from": 0, "to": 0, "audio": "asm.tap", "weight": 0.5},
+    {"key": "back", "verb": "Seat", "part": "pistol.housing_pin", "tool": "*", "target": "fixtures.partsmat/seat_pistol_pin", "weight": 0.25}]},
+   {"id": "s1.housing", "label": "Slide the backstrap housing off its rail, keeping a thumb on the spring", "requires": ["s1.pin", "s1.pin.r"], "actions": [
+    {"key": "slide", "verb": "Seat", "part": "pistol.housing", "target": "fixtures.partsmat/seat_pistol_housing", "keepHold": true, "audio": "asm.seat.slide", "faults": [{"kind": "flew_off", "penalty": 0.02, "recovery": "s1.housing.r", "effects": ["pistol.housing_spring>place.bench.stray"]}]},
+    {"key": "spring", "verb": "Seat", "part": "pistol.housing_spring", "target": "fixtures.partsmat/seat_pistol_spring", "weight": 0.25}]},
+   {"id": "s1.housing.r", "label": "The spring jumped: find it on the bench", "recovery": true, "replaces": ["s1.housing:spring"], "actions": [
+    {"key": "spring", "verb": "Seat", "part": "pistol.housing_spring", "target": "fixtures.partsmat/seat_pistol_spring", "weight": 0.25}]},
+   {"id": "s1.inspect", "label": "Turn the bare frame over and find the cracked tang", "requires": ["s1.housing", "s1.lead"], "actions": [
+    {"key": "find", "verb": "Turn", "mode": "reveal", "part": "fixtures.vise", "target": "pistol.frame/crack", "weight": 0}]}
+  ]},
+  {"id": "s2", "label": "Open the servo", "shot": "vise", "steps": [
+   {"id": "s2.swap", "label": "Move the frame to the cradle stand; clamp the servo", "actions": [
+    {"key": "open", "verb": "Turn", "part": "fixtures.vise_screw", "turns": -3, "gain": 1, "drive": "fixtures.vise_jaw", "from": 0.6, "to": 0, "loop": "asm.vise.thread", "done": "asm.vise.release", "weight": 0.25},
+    {"key": "frame", "verb": "Seat", "part": "pistol.frame", "target": "fixtures.cradle/seat_frame", "weight": 0.5},
+    {"key": "servo", "verb": "Seat", "part": "servo.case_body", "target": "fixtures.vise/seat_work#servo", "weight": 0.5},
+    {"key": "snug", "verb": "Turn", "mode": "stop", "part": "fixtures.vise_screw", "turns": 1.2, "gain": 0.8, "lo": 0, "hi": 0.5, "drive": "fixtures.vise_jaw", "from": 0, "to": 0.278, "loop": "asm.vise.thread", "done": "asm.vise.bite", "faults": [{"kind": "overtight", "penalty": 0.03}]}]},
+   {"id": "s2.dust", "label": "Brush the caked dust off the case to find the screws and seam", "requires": ["s2.swap"], "free": true, "actions": [
+    {"key": "lid", "verb": "Wipe", "part": "servo.case_lid", "tool": "tool:brush", "target": "servo.case_lid/dust", "loop": "asm.brush.dust", "weight": 0.5, "after": [], "effects": ["~servo.clip_1/dust", "~servo.clip_2/dust", "~servo.clip_3/dust"]},
+    {"key": "side", "verb": "Wipe", "part": "servo.case_body", "tool": "tool:brush", "target": "servo.case_body/dust_l", "loop": "asm.brush.dust", "weight": 0.25, "after": []}]},
+   {"id": "s2.screws", "label": "Three case screws, cross bit", "requires": ["s2.dust"], "free": true, "shot": "over", "actions": [
+    {"key": "a_turn", "verb": "Turn", "part": "servo.screw_case_a", "tool": "tool:screwdriver", "turns": -10, "gain": 2.5, "loop": "asm.screw.turn", "after": [], "toolMode": "cross", "faults": [{"kind": "camout", "when": "mode", "penalty": 0.03}], "effects": ["~servo.screw_case_a/dust"]},
+    {"key": "a_dish", "verb": "Seat", "part": "servo.screw_case_a", "tool": "*", "target": "fixtures.dish/slot_02", "done": "asm.screw.dish", "weight": 0.25, "after": ["a_turn"]},
+    {"key": "b_turn", "verb": "Turn", "part": "servo.screw_case_b", "tool": "tool:screwdriver", "turns": -10, "gain": 2.5, "loop": "asm.screw.turn", "after": [], "toolMode": "cross", "faults": [{"kind": "camout", "when": "mode", "penalty": 0.03}], "effects": ["~servo.screw_case_b/dust"]},
+    {"key": "b_dish", "verb": "Seat", "part": "servo.screw_case_b", "tool": "*", "target": "fixtures.dish/slot_03", "done": "asm.screw.dish", "weight": 0.25, "after": ["b_turn"]},
+    {"key": "c_turn", "verb": "Turn", "part": "servo.screw_case_c", "tool": "tool:screwdriver", "turns": -10, "gain": 2.5, "loop": "asm.screw.turn", "after": [], "toolMode": "cross", "faults": [{"kind": "camout", "when": "mode", "penalty": 0.03}], "effects": ["~servo.screw_case_c/dust"]},
+    {"key": "c_dish", "verb": "Seat", "part": "servo.screw_case_c", "tool": "*", "target": "fixtures.dish/slot_04", "done": "asm.screw.dish", "weight": 0.25, "after": ["c_turn"]}]},
+   {"id": "s2.stripped", "label": "One head is already chewed: grip it with pliers and turn", "requires": ["s2.dust"], "shot": "over", "actions": [
+    {"key": "grip", "verb": "Window", "mode": "hold", "part": "servo.screw_case_d", "tool": "tool:pliers", "lo": 0.5, "hi": 0.85, "rate": 0.7, "loop": "asm.screw.pliers", "weight": 0.5, "faults": [{"kind": "slip", "penalty": 0.01}]},
+    {"key": "turn", "verb": "Turn", "part": "servo.screw_case_d", "tool": "tool:pliers", "turns": -10, "gain": 1.6, "loop": "asm.screw.pliers", "effects": ["~servo.screw_case_d/dust"]},
+    {"key": "dish", "verb": "Seat", "part": "servo.screw_case_d", "tool": "*", "target": "fixtures.dish/slot_05", "done": "asm.screw.dish", "weight": 0.25}]},
+   {"id": "s2.pry", "label": "Lever the case open at three clips along the seam", "requires": ["s2.screws", "s2.stripped"], "free": true, "spends": ["component:servo"], "actions": [
+    {"key": "clip_3", "verb": "Window", "mode": "hold", "part": "servo.clip_3", "tool": "tool:pick", "target": "servo.case_body/pry_3", "lo": 0.45, "hi": 0.8, "rate": 0.8, "drive": "servo.clip_3", "from": 0, "to": 1, "loop": "asm.pry.creak", "done": "asm.pry.release", "after": [], "weight": 0.5, "faults": [{"kind": "snapped", "penalty": 0.01}]},
+    {"key": "open_turn", "verb": "Turn", "part": "fixtures.vise_screw", "turns": -1.2, "gain": 1, "drive": "fixtures.vise_jaw", "from": 0.278, "to": 0, "loop": "asm.vise.thread", "done": "asm.vise.release", "weight": 0.1, "after": ["clip_3"], "line": "Open the vise a little: hold left on the handle and circle the mouse the other way"},
+    {"key": "turn", "verb": "Seat", "part": "servo.case_body", "target": "fixtures.vise/seat_work#servo_turned", "weight": 0.1, "after": ["open_turn"], "line": "Turn the servo round in the vise: pick it up, turn it with the wheel, set it back in"},
+    {"key": "snug_turned", "verb": "Turn", "mode": "stop", "part": "fixtures.vise_screw", "turns": 1.2, "gain": 0.8, "lo": 0, "hi": 0.5, "drive": "fixtures.vise_jaw", "from": 0, "to": 0.278, "loop": "asm.vise.thread", "done": "asm.vise.bite", "weight": 0.1, "after": ["turn"], "line": "Close the vise snug on the servo again: hold left on the handle and circle the mouse"},
+    {"key": "clip_1", "verb": "Window", "mode": "hold", "part": "servo.clip_1", "tool": "tool:pick", "target": "servo.case_body/pry_1", "lo": 0.45, "hi": 0.8, "rate": 0.8, "drive": "servo.clip_1", "from": 0, "to": 1, "loop": "asm.pry.creak", "done": "asm.pry.release", "after": ["snug_turned"], "weight": 0.5, "faults": [{"kind": "snapped", "penalty": 0.01}]},
+    {"key": "clip_2", "verb": "Window", "mode": "hold", "part": "servo.clip_2", "tool": "tool:pick", "target": "servo.case_body/pry_2", "lo": 0.45, "hi": 0.8, "rate": 0.8, "drive": "servo.clip_2", "from": 0, "to": 1, "loop": "asm.pry.creak", "done": "asm.pry.release", "after": ["snug_turned"], "weight": 0.5, "faults": [{"kind": "snapped", "penalty": 0.01}]},
+    {"key": "lid", "verb": "Seat", "part": "servo.case_lid", "target": "fixtures.partsmat/seat_servo_case_top", "after": ["clip_1", "clip_2", "clip_3"], "weight": 0.5}]},
+   {"id": "s2.leads", "label": "Snip the two coil leads and the sense lead at the board end, at the bands", "requires": ["s2.pry"], "shot": "over", "actions": [
+    {"key": "snip", "verb": "Point", "tool": "tool:cutters", "targets": ["servo.lead_coil_a/snip", "servo.lead_coil_b/snip", "servo.lead_sense/snip"], "audio": "asm.cut.snip", "faults": [{"kind": "short_lead", "penalty": 0.02, "recovery": "s3.loop.r"}]}]},
+   {"id": "s2.board", "label": "Unplug and lift out the burnt control board, snip the trim resistor off it, bin the board", "requires": ["s2.leads"], "shot": "over", "actions": [
+    {"key": "unplug", "verb": "Seat", "part": "servo.lead_plug", "target": "clear", "done": "asm.part.connector", "weight": 0.5},
+    {"key": "lift", "verb": "Seat", "part": "servo.board", "target": "fixtures.partsmat/seat_servo_board", "weight": 0.5},
+    {"key": "snip", "verb": "Point", "tool": "tool:cutters", "targets": ["servo.board/snip_r1", "servo.board/snip_r2"], "audio": "asm.cut.snip", "shot": "parts", "effects": ["servo.trim_resistor>gone", "materials.resistor>fixtures.partsmat/seat_servo_resistor"], "faults": [{"kind": "short_leg", "penalty": 0.02}]},
+    {"key": "bin", "verb": "Seat", "part": "servo.board", "target": "fixtures.bin/seat_scrap", "done": "asm.part.bin", "weight": 0.25}]},
+   {"id": "s2.circlip", "label": "Spring the circlip off the gear post", "requires": ["s2.board"], "shot": "over", "actions": [
+    {"key": "spring", "verb": "Window", "mode": "hold", "part": "servo.circlip", "tool": "tool:pliers", "lo": 0.5, "hi": 0.8, "rate": 0.7, "done": "asm.part.circlip", "effects": ["servo.circlip>clear"], "faults": [{"kind": "flew_off", "penalty": 0.02, "recovery": "s2.circlip.r", "effects": ["servo.circlip>place.bench.stray"]}]},
+    {"key": "set", "verb": "Seat", "part": "servo.circlip", "tool": "*", "target": "fixtures.partsmat/seat_servo_circlip", "weight": 0.25}]},
+   {"id": "s2.circlip.r", "label": "The circlip flew: find it on the bench", "recovery": true, "replaces": ["s2.circlip:spring", "s2.circlip:set"], "actions": [
+    {"key": "find", "verb": "Seat", "part": "servo.circlip", "tool": "*", "target": "fixtures.partsmat/seat_servo_circlip", "weight": 0.25}]},
+   {"id": "s2.gears", "label": "Lift the three gears off, top first, bin them", "requires": ["s2.circlip"], "free": true, "shot": "over", "actions": [
+    {"key": "top", "verb": "Seat", "part": "servo.gear_top", "target": "fixtures.bin/seat_scrap", "done": "asm.part.gear", "weight": 0.25, "after": []},
+    {"key": "mid", "verb": "Seat", "part": "servo.gear_mid", "target": "fixtures.bin/seat_scrap", "done": "asm.part.gear", "weight": 0.25, "after": []},
+    {"key": "low", "verb": "Seat", "part": "servo.gear_low", "target": "fixtures.bin/seat_scrap", "done": "asm.part.gear", "weight": 0.25, "after": []}]},
+   {"id": "s2.trunnion", "label": "Two trunnion screws, then lift the gimbal out with its leads", "requires": ["s2.gears"], "free": true, "shot": "over", "actions": [
+    {"key": "a_turn", "verb": "Turn", "part": "servo.screw_trunnion_a", "tool": "tool:screwdriver", "turns": -8, "gain": 2, "loop": "asm.screw.turn", "after": [], "toolMode": "cross", "faults": [{"kind": "camout", "when": "mode", "penalty": 0.03}]},
+    {"key": "a_dish", "verb": "Seat", "part": "servo.screw_trunnion_a", "tool": "*", "target": "fixtures.dish/slot_06", "done": "asm.screw.dish", "weight": 0.25, "after": ["a_turn"]},
+    {"key": "b_turn", "verb": "Turn", "part": "servo.screw_trunnion_b", "tool": "tool:screwdriver", "turns": -8, "gain": 2, "loop": "asm.screw.turn", "after": [], "toolMode": "cross", "faults": [{"kind": "camout", "when": "mode", "penalty": 0.03}]},
+    {"key": "b_dish", "verb": "Seat", "part": "servo.screw_trunnion_b", "tool": "*", "target": "fixtures.dish/slot_07", "done": "asm.screw.dish", "weight": 0.25, "after": ["b_turn"]},
+    {"key": "lift", "verb": "Seat", "part": "servo.gimbal_cradle", "target": "fixtures.workmat/seat_small", "after": ["a_turn", "b_turn"], "effects": ["servo.lead_coil_a>gone", "servo.lead_coil_b>gone", "servo.lead_sense>gone", "materials.lead_a>seat", "materials.lead_b>seat", "materials.lead_a_offcut>seat", "materials.lead_b_offcut>seat", "materials.lead_a_strands>seat", "materials.lead_b_strands>seat", "materials.lead_a_slug>seat", "materials.lead_b_slug>seat", "materials.lead_sense>seat"]}]},
+   {"id": "s2.winding", "label": "Wind the stator copper onto the bobbin: one Copper Filament to the pack", "requires": ["s2.trunnion"], "actions": [
+    {"key": "bobbin", "verb": "Seat", "part": "materials.bobbin", "target": "place.servo.bobbin", "weight": 0.25},
+    {"key": "wind", "verb": "Turn", "part": "materials.bobbin", "turns": 8, "gain": 1.4, "loop": "asm.wind.crank", "effects": ["servo.stator_winding>gone", "materials.bobbin_wire>seat"], "faults": [{"kind": "wire_snapped", "when": "fast", "penalty": 0.01}]},
+    {"key": "set", "verb": "Seat", "part": "materials.bobbin", "target": "fixtures.partsmat/seat_servo_bobbin", "weight": 0.25},
+    {"key": "open", "verb": "Turn", "part": "fixtures.vise_screw", "turns": -1.2, "gain": 1, "drive": "fixtures.vise_jaw", "from": 0.278, "to": 0, "loop": "asm.vise.thread", "done": "asm.vise.release", "weight": 0.25},
+    {"key": "bin", "verb": "Seat", "part": "servo.case_body", "target": "fixtures.bin/seat_scrap", "done": "asm.part.bin", "weight": 0.25}]}
+  ]},
+  {"id": "s3", "label": "Work the parts", "shot": "mat", "steps": [
+   {"id": "s3.bath", "label": "Swirl the gimbal in the solvent jar", "actions": [
+    {"key": "dip", "verb": "Seat", "part": "servo.gimbal_cradle", "target": "fixtures.jar/seat_swirl", "done": "asm.solvent.dip", "weight": 0.25, "shot": "tester"},
+    {"key": "swirl", "verb": "Turn", "part": "servo.gimbal_cradle", "turns": 4, "gain": 1.2, "loop": "asm.solvent.swirl", "weight": 0.5, "effects": ["~servo.gimbal_ring/corrosion"], "shot": "tester"},
+    {"key": "out", "verb": "Seat", "part": "servo.gimbal_cradle", "target": "fixtures.workmat/seat_small", "done": "asm.solvent.lift", "weight": 0.25, "shot": "tester"}]},
+   {"id": "s3.brush", "label": "Wire-brush the race and trunnions clean", "requires": ["s3.bath"], "free": true, "actions": [
+    {"key": "race", "verb": "Wipe", "part": "servo.gimbal_race", "tool": "tool:brush", "target": "servo.gimbal_race/race", "lo": 0.6, "loop": "asm.brush.wire", "after": []},
+    {"key": "trunnion_a", "verb": "Wipe", "part": "servo.gimbal_cradle", "tool": "tool:brush", "target": "servo.gimbal_cradle/trunnion_a", "lo": 0.6, "loop": "asm.brush.wire", "weight": 0.5, "after": []},
+    {"key": "trunnion_b", "verb": "Wipe", "part": "servo.gimbal_cradle", "tool": "tool:brush", "target": "servo.gimbal_cradle/trunnion_b", "lo": 0.6, "loop": "asm.brush.wire", "weight": 0.5, "after": []}]},
+   {"id": "s3.pick", "label": "Pick the grit out of three detents", "requires": ["s3.brush"], "actions": [
+    {"key": "grit", "verb": "Point", "tool": "tool:pick", "targets": ["servo.gimbal_race/detent_1", "servo.gimbal_race/detent_2", "servo.gimbal_race/detent_3"], "audio": "asm.seat.tiny_steel", "effects": ["@servo.gimbal_race/detent_1:servo.gimbal_grit_1>gone", "@servo.gimbal_race/detent_2:servo.gimbal_grit_2>gone", "@servo.gimbal_race/detent_3:servo.gimbal_grit_3>gone"]}]},
+   {"id": "s3.oil", "label": "One drop of oil on each trunnion", "requires": ["s3.pick"], "actions": [
+    {"key": "drops", "verb": "Point", "tool": "tool:oil", "targets": ["servo.gimbal_cradle/oil_a", "servo.gimbal_cradle/oil_b"], "audio": "asm.oil.drop", "faults": [{"kind": "spill", "penalty": 0.01}]}]},
+   {"id": "s3.spin", "label": "Flick the rotor and listen", "requires": ["s3.oil"], "actions": [
+    {"key": "flick", "verb": "Flick", "part": "servo.gimbal_cradle", "audio": "asm.servo.twitch", "done": "asm.spin.true", "weight": 0, "faults": [{"kind": "grind", "when": "poor:s3.brush", "penalty": 0.02, "recovery": "s3.spin.r", "blocks": true, "effects": ["~servo.gimbal_race/race=0.55"]}]}]},
+   {"id": "s3.spin.r", "label": "It grinds: brush the race again", "recovery": true, "actions": [
+    {"key": "race", "verb": "Wipe", "part": "servo.gimbal_race", "tool": "tool:brush", "target": "servo.gimbal_race/race", "lo": 0.9, "loop": "asm.brush.wire", "weight": 0.5}]},
+   {"id": "s3.trim", "label": "Trim the two coil leads to the mark; cut the sense lead off flush", "requires": ["s3.spin"], "actions": [
+    {"key": "trim", "verb": "Point", "tool": "tool:cutters", "targets": ["materials.lead_a/trim", "materials.lead_b/trim", "materials.lead_sense/flush"], "audio": "asm.cut.snip", "effects": ["@materials.lead_a/trim:materials.lead_a_offcut>gone", "@materials.lead_b/trim:materials.lead_b_offcut>gone", "@materials.lead_sense/flush:materials.lead_sense>gone"], "faults": [{"kind": "short_lead", "penalty": 0.02, "recovery": "s3.loop.r"}]}]},
+   {"id": "s3.lead.r", "label": "The trigger lead is frayed: strip it back and twist the strands", "recovery": true, "actions": [
+    {"key": "strip", "verb": "Window", "mode": "hold", "part": "pistol.lead_plug", "tool": "tool:strippers", "lo": 0.45, "hi": 0.75, "rate": 0.8, "loop": "asm.strip.squeeze", "done": "asm.strip.twist", "weight": 0.5}]},
+   {"id": "s3.strip", "label": "Strip 8 mm off each coil lead and twist the strands", "requires": ["s3.trim"], "free": true, "actions": [
+    {"key": "a_squeeze", "verb": "Window", "mode": "hold", "part": "materials.lead_a_slug", "tool": "tool:strippers", "lo": 0.45, "hi": 0.75, "rate": 0.8, "loop": "asm.strip.squeeze", "after": [], "weight": 0.5, "faults": [{"kind": "nicked", "penalty": 0.02}]},
+    {"key": "a_pull", "verb": "Seat", "part": "materials.lead_a_slug", "tool": "tool:strippers", "target": "clear", "done": "asm.strip.pull", "effects": ["materials.lead_a_slug>gone"], "after": ["a_squeeze"], "weight": 0.5},
+    {"key": "b_squeeze", "verb": "Window", "mode": "hold", "part": "materials.lead_b_slug", "tool": "tool:strippers", "lo": 0.45, "hi": 0.75, "rate": 0.8, "loop": "asm.strip.squeeze", "after": [], "weight": 0.5, "faults": [{"kind": "nicked", "penalty": 0.02}]},
+    {"key": "b_pull", "verb": "Seat", "part": "materials.lead_b_slug", "tool": "tool:strippers", "target": "clear", "done": "asm.strip.pull", "effects": ["materials.lead_b_slug>gone"], "after": ["b_squeeze"], "weight": 0.5}]},
+   {"id": "s3.tin", "label": "Tin both ends and the resistor's legs", "requires": ["s3.strip"], "free": true, "actions": [
+    {"key": "a", "verb": "Window", "mode": "hold", "part": "materials.lead_a_strands", "tool": "tool:solder", "lo": 0.5, "hi": 0.8, "rate": 0.5, "loop": "asm.solder.hiss", "done": "asm.solder.flow", "faults": [{"kind": "scorched", "penalty": 0.02}, {"kind": "cold_joint", "when": "under", "penalty": 0.01}], "after": [], "effects": ["~materials.lead_a_strands/tin"]},
+    {"key": "b", "verb": "Window", "mode": "hold", "part": "materials.lead_b_strands", "tool": "tool:solder", "lo": 0.5, "hi": 0.8, "rate": 0.5, "loop": "asm.solder.hiss", "done": "asm.solder.flow", "faults": [{"kind": "scorched", "penalty": 0.02}, {"kind": "cold_joint", "when": "under", "penalty": 0.01}], "after": [], "effects": ["~materials.lead_b_strands/tin"]},
+    {"key": "legs", "verb": "Window", "mode": "hold", "part": "materials.resistor", "tool": "tool:solder", "lo": 0.5, "hi": 0.8, "rate": 0.5, "loop": "asm.solder.hiss", "done": "asm.solder.flow", "faults": [{"kind": "scorched", "penalty": 0.02}, {"kind": "cold_joint", "when": "under", "penalty": 0.01}], "after": [], "shot": "parts", "effects": ["~materials.resistor/tin"]}]},
+   {"id": "s3.loop.r", "label": "A lead was cut short: splice it with one more joint", "recovery": true, "requires": ["s3.tin"], "actions": [
+    {"key": "splice", "verb": "Window", "mode": "hold", "part": "materials.lead_a_strands", "tool": "tool:solder", "lo": 0.5, "hi": 0.8, "rate": 0.5, "loop": "asm.solder.hiss", "done": "asm.solder.flow", "faults": [{"kind": "scorched", "penalty": 0.02}, {"kind": "cold_joint", "when": "under", "penalty": 0.01}], "weight": 0.5}]},
+   {"id": "s3.loop", "label": "Join the two leads across the trim resistor, sleeve and shrink", "requires": ["s3.tin", "s3.loop.r"], "actions": [
+    {"key": "clip", "verb": "Seat", "part": "materials.resistor", "target": "place.thirdhand", "weight": 0.25},
+    {"key": "joint_a", "verb": "Window", "mode": "hold", "part": "materials.lead_a_strands", "tool": "tool:solder", "lo": 0.5, "hi": 0.8, "rate": 0.5, "loop": "asm.solder.hiss", "done": "asm.solder.flow", "faults": [{"kind": "scorched", "penalty": 0.02}, {"kind": "cold_joint", "when": "under", "penalty": 0.01}]},
+    {"key": "joint_b", "verb": "Window", "mode": "hold", "part": "materials.lead_b_strands", "tool": "tool:solder", "lo": 0.5, "hi": 0.8, "rate": 0.5, "loop": "asm.solder.hiss", "done": "asm.solder.flow", "faults": [{"kind": "scorched", "penalty": 0.02}, {"kind": "cold_joint", "when": "under", "penalty": 0.01}]},
+    {"key": "shrink", "verb": "Window", "mode": "hold", "part": "materials.resistor", "tool": "tool:solder", "count": 2, "lo": 0.35, "hi": 0.7, "rate": 0.6, "loop": "asm.solder.hiss", "done": "asm.solder.shrink", "effects": ["materials.lead_a>gone", "materials.lead_b>gone", "materials.lead_a_strands>gone", "materials.lead_b_strands>gone", "materials.resistor>gone", "materials.loop_lead_a>seat", "materials.loop_lead_b>seat", "materials.loop_resistor>seat", "materials.loop_sleeve_a>seat", "materials.loop_sleeve_b>seat"], "weight": 0.5, "faults": [{"kind": "scorched", "penalty": 0.02}]}]},
+   {"id": "s3.test", "label": "Put the bench tester's probes across the resistor", "requires": ["s3.loop"], "actions": [
+    {"key": "probe", "verb": "Point", "tool": "tool:probe", "targets": ["materials.loop_resistor/probe_a", "materials.loop_resistor/probe_b"], "audio": "asm.tester.probe", "done": "asm.tester.lamp", "effects": ["fixtures.tester_lamp=1"], "faults": [{"kind": "cold_joint", "when": "poor:s3.loop", "penalty": 0.02, "recovery": "s3.test.r", "blocks": true}]}]},
+   {"id": "s3.test.r", "label": "No lamp: reflow the dull joint", "recovery": true, "actions": [
+    {"key": "reflow", "verb": "Window", "mode": "hold", "part": "materials.loop_resistor", "tool": "tool:solder", "lo": 0.5, "hi": 0.8, "rate": 0.5, "loop": "asm.solder.hiss", "done": "asm.solder.flow", "faults": [{"kind": "scorched", "penalty": 0.02}, {"kind": "cold_joint", "when": "under", "penalty": 0.01}], "weight": 0.5}]},
+   {"id": "s3.scribe", "label": "Lay an old scale on the alloy as a template and scribe round it", "actions": [
+    {"key": "sheet", "verb": "Seat", "part": "materials.sheet_a", "target": "place.mat.sheet", "weight": 0.25},
+    {"key": "template", "verb": "Seat", "part": "pistol.scale_l", "target": "place.sheet.template", "weight": 0.25},
+    {"key": "scribe", "verb": "Path", "part": "materials.sheet_a", "tool": "tool:scribe", "target": "materials.sheet_a/scribe", "loop": "asm.scribe.scratch", "effects": ["materials.sheet_a_scribe>seat"], "through": ["pistol.scale_l"]},
+    {"key": "back", "verb": "Seat", "part": "pistol.scale_l", "target": "fixtures.partsmat/seat_pistol_scale_l", "weight": 0.25}]},
+   {"id": "s3.cut", "label": "Clamp both alloy sheets stacked, cut to the line", "requires": ["s3.scribe"], "spends": ["scrap_alloy"], "shot": "over", "actions": [
+    {"key": "stack", "verb": "Seat", "part": "materials.sheet_b", "target": "place.sheet.stack", "weight": 0.25},
+    {"key": "clamp", "verb": "Seat", "part": "materials.sheet_a", "target": "fixtures.vise/seat_work#sheets", "weight": 0.5},
+    {"key": "snug", "verb": "Turn", "mode": "stop", "part": "fixtures.vise_screw", "turns": 3, "gain": 0.8, "lo": 0, "hi": 0.5, "drive": "fixtures.vise_jaw", "from": 0, "to": 0.94, "loop": "asm.vise.thread", "done": "asm.vise.bite", "faults": [{"kind": "overtight", "penalty": 0.03}], "weight": 0.5},
+    {"key": "strap", "verb": "Path", "part": "materials.sheet_a", "tool": "tool:snips", "target": "materials.sheet_a/cut_strap", "loop": "asm.shear.bite", "done": "asm.shear.offcut", "weight": 0.5},
+    {"key": "cut", "verb": "Path", "part": "materials.sheet_a", "tool": "tool:snips", "target": "materials.sheet_a/cut", "loop": "asm.shear.bite", "done": "asm.shear.offcut", "effects": ["materials.sheet_a_scribe>gone", "materials.sheet_a_plate>fixtures.vise/seat_work#plate", "materials.sheet_b_plate>place.plate.stack", "materials.sheet_a_strap>place.mat.strap", "materials.sheet_b_strap>place.mat.spare", "materials.sheet_a>place.mat.sheet"]}]},
+   {"id": "s3.file", "label": "File the stacked edges to the line and break the corners", "requires": ["s3.cut"], "shot": "vise", "actions": [
+    {"key": "strokes", "verb": "Window", "mode": "hold", "part": "materials.sheet_a_plate", "tool": "tool:file", "count": 4, "lo": 0.45, "hi": 0.8, "rate": 1.2, "loop": "asm.file.stroke", "effects": ["materials.sheet_a_margin>gone", "materials.sheet_b_margin>gone"], "faults": [{"kind": "past_line", "penalty": 0.03}]}]},
+   {"id": "s3.punch", "label": "Centre-punch four hole marks through the scale's holes", "requires": ["s3.file"], "shot": "vise", "actions": [
+    {"key": "template", "verb": "Seat", "part": "pistol.scale_l", "target": "place.plate.template", "weight": 0.25},
+    {"key": "marks", "verb": "Point", "tool": "tool:punch", "targets": ["materials.sheet_a_plate/punch_1", "materials.sheet_a_plate/punch_2", "materials.sheet_a_plate/punch_3", "materials.sheet_a_plate/punch_4"], "audio": "asm.punch.dimple", "faults": [{"kind": "off_centre", "penalty": 0.01}], "effects": ["@materials.sheet_a_plate/punch_1:~materials.sheet_a_plug_1/punch", "@materials.sheet_a_plate/punch_2:~materials.sheet_a_plug_2/punch", "@materials.sheet_a_plate/punch_3:~materials.sheet_a_plug_3/punch", "@materials.sheet_a_plate/punch_4:~materials.sheet_a_plug_4/punch"], "through": ["pistol.scale_l"]},
+    {"key": "back", "verb": "Seat", "part": "pistol.scale_l", "target": "fixtures.partsmat/seat_pistol_scale_l", "weight": 0.25}]},
+   {"id": "s3.drill", "label": "Drill the four holes through both plates", "requires": ["s3.punch"], "free": true, "shot": "vise", "actions": [
+    {"key": "hole_1", "verb": "Turn", "part": "materials.sheet_a_plug_1", "tool": "tool:drill", "turns": 5, "gain": 1.4, "loop": "asm.drill.turn", "done": "asm.drill.through", "after": [], "weight": 0.5, "effects": ["materials.sheet_a_plug_1>gone", "materials.sheet_b_plug_1>gone"], "faults": [{"kind": "bind", "when": "fast", "penalty": 0.01}]},
+    {"key": "hole_2", "verb": "Turn", "part": "materials.sheet_a_plug_2", "tool": "tool:drill", "turns": 5, "gain": 1.4, "loop": "asm.drill.turn", "done": "asm.drill.through", "after": [], "weight": 0.5, "effects": ["materials.sheet_a_plug_2>gone", "materials.sheet_b_plug_2>gone"], "faults": [{"kind": "bind", "when": "fast", "penalty": 0.01}]},
+    {"key": "hole_3", "verb": "Turn", "part": "materials.sheet_a_plug_3", "tool": "tool:drill", "turns": 5, "gain": 1.4, "loop": "asm.drill.turn", "done": "asm.drill.through", "after": [], "weight": 0.5, "effects": ["materials.sheet_a_plug_3>gone", "materials.sheet_b_plug_3>gone"], "faults": [{"kind": "bind", "when": "fast", "penalty": 0.01}]},
+    {"key": "hole_4", "verb": "Turn", "part": "materials.sheet_a_plug_4", "tool": "tool:drill", "turns": 5, "gain": 1.4, "loop": "asm.drill.turn", "done": "asm.drill.through", "after": [], "weight": 0.5, "effects": ["materials.sheet_a_plug_4>gone", "materials.sheet_b_plug_4>gone"], "faults": [{"kind": "bind", "when": "fast", "penalty": 0.01}]},
+    {"key": "open", "verb": "Turn", "part": "fixtures.vise_screw", "turns": -3, "gain": 1, "drive": "fixtures.vise_jaw", "from": 0.94, "to": 0, "loop": "asm.vise.thread", "done": "asm.vise.release", "weight": 0.25, "after": ["hole_1", "hole_2", "hole_3", "hole_4"]},
+    {"key": "out", "verb": "Seat", "part": "materials.sheet_a_plate", "target": "place.mat.plate_l", "after": ["open"], "weight": 0.25, "effects": ["materials.sheet_b_plate>place.mat.plate_r"]}]},
+   {"id": "s3.strap", "label": "Bend the alloy strip twice in the vise to make the strap", "requires": ["s3.drill"], "shot": "vise", "actions": [
+    {"key": "clamp", "verb": "Seat", "part": "materials.sheet_a_strap", "target": "fixtures.vise/seat_work#strap", "weight": 0.25},
+    {"key": "snug", "verb": "Turn", "mode": "stop", "part": "fixtures.vise_screw", "turns": 3, "gain": 0.8, "lo": 0, "hi": 0.5, "drive": "fixtures.vise_jaw", "from": 0, "to": 0.97, "loop": "asm.vise.thread", "done": "asm.vise.bite", "faults": [{"kind": "overtight", "penalty": 0.03}], "weight": 0.25},
+    {"key": "bend_1", "verb": "Window", "mode": "hold", "part": "materials.sheet_a_strap", "lo": 0.55, "hi": 0.8, "rate": 0.7, "done": "asm.bend.yield", "faults": [{"kind": "over_bend", "penalty": 0.02, "after": 2, "recovery": "s3.strap.r", "effects": ["materials.sheet_a_strap>fixtures.bin/seat_scrap", "materials.strap_bent_1>gone", "materials.sheet_b_strap>fixtures.vise/seat_work#strap"]}], "effects": ["materials.sheet_a_strap>gone", "materials.strap_bent_1>fixtures.vise/seat_work#strap"]},
+    {"key": "bend_2", "verb": "Window", "mode": "hold", "part": "materials.strap_bent_1", "lo": 0.55, "hi": 0.8, "rate": 0.7, "done": "asm.bend.yield", "faults": [{"kind": "over_bend", "penalty": 0.02, "after": 2, "recovery": "s3.strap.r", "effects": ["materials.sheet_a_strap>fixtures.bin/seat_scrap", "materials.strap_bent_1>gone", "materials.sheet_b_strap>fixtures.vise/seat_work#strap"]}], "effects": ["materials.strap_bent_1>gone", "materials.strap_bent>fixtures.vise/seat_work#strap"]},
+    {"key": "open", "verb": "Turn", "part": "fixtures.vise_screw", "turns": -3, "gain": 1, "drive": "fixtures.vise_jaw", "from": 0.97, "to": 0, "loop": "asm.vise.thread", "done": "asm.vise.release", "weight": 0.25},
+    {"key": "out", "verb": "Seat", "part": "materials.strap_bent", "target": "place.mat.strap", "weight": 0.25}]},
+   {"id": "s3.strap.r", "label": "The strip cracked: bend the spare", "recovery": true, "replaces": ["s3.strap:bend_1", "s3.strap:bend_2", "s3.strap:open", "s3.strap:out"], "shot": "vise", "actions": [
+    {"key": "bend_1", "verb": "Window", "mode": "hold", "part": "materials.sheet_b_strap", "lo": 0.55, "hi": 0.8, "rate": 0.7, "done": "asm.bend.yield", "faults": [{"kind": "over_bend", "penalty": 0.02}], "effects": ["materials.sheet_b_strap>gone", "materials.strap_bent_1>fixtures.vise/seat_work#strap"]},
+    {"key": "bend_2", "verb": "Window", "mode": "hold", "part": "materials.strap_bent_1", "lo": 0.55, "hi": 0.8, "rate": 0.7, "done": "asm.bend.yield", "faults": [{"kind": "over_bend", "penalty": 0.02}], "effects": ["materials.strap_bent_1>gone", "materials.strap_bent>fixtures.vise/seat_work#strap"]},
+    {"key": "open", "verb": "Turn", "part": "fixtures.vise_screw", "turns": -3, "gain": 1, "drive": "fixtures.vise_jaw", "from": 0.97, "to": 0, "loop": "asm.vise.thread", "done": "asm.vise.release", "weight": 0.25},
+    {"key": "out", "verb": "Seat", "part": "materials.strap_bent", "target": "place.mat.strap", "weight": 0.25}]}
+  ]},
+  {"id": "s4", "label": "Fuse the grip core", "shot": "press", "steps": [
+   {"id": "s4.mould", "label": "Pick the pistol-tang mould from the rack, seat it in the press, brush it out", "actions": [
+    {"key": "mould", "verb": "Seat", "part": "fixtures.mould_tang", "target": "fixtures.press/seat_mould"},
+    {"key": "brush", "verb": "Wipe", "part": "fixtures.mould_tang", "tool": "tool:brush", "target": "fixtures.mould_tang/cavity", "loop": "asm.brush.wire", "weight": 0.5}]},
+   {"id": "s4.charge", "label": "Lay the alloy offcuts in the cavity and pour the nanites to the line", "requires": ["s4.mould"], "spends": ["nanite:tier1"], "actions": [
+    {"key": "offcuts", "verb": "Seat", "part": "materials.sheet_a", "target": "place.mould.charge", "weight": 0.25, "shot": "press_low"},
+    {"key": "uncork", "verb": "Seat", "part": "materials.vial_stopper", "target": "clear", "effects": ["materials.vial_stopper>gone"], "shot": "tray", "weight": 0.25},
+    {"key": "raise", "verb": "Seat", "part": "materials.vial", "target": "place.press.pour", "weight": 0.25},
+    {"key": "pour", "verb": "Window", "mode": "hold", "part": "materials.vial", "lo": 0.55, "hi": 0.78, "rate": 0.4, "loop": "asm.press.pour", "effects": ["materials.vial_fluid>gone", "materials.sheet_a>gone", "fixtures.mould_charge>seat"], "faults": [{"kind": "over_pour", "penalty": 0.02}]},
+    {"key": "back", "verb": "Seat", "part": "materials.vial", "target": "fixtures.tray/seat_vial", "weight": 0.25}]},
+   {"id": "s4.press", "label": "Close and lock the press, pump to the green band and hold while the nanites knit", "requires": ["s4.charge"], "actions": [
+    {"key": "close", "verb": "Turn", "part": "fixtures.press_lever", "turns": 0.5, "gain": 0.5, "drive": "fixtures.press_lever", "from": 0, "to": 1, "noSpin": true, "loop": "asm.press.lever", "weight": 0.25},
+    {"key": "knit", "verb": "Window", "mode": "sustain", "part": "fixtures.press_lever", "lo": 0.55, "hi": 0.8, "rate": 0.5, "seconds": 6, "drive": "fixtures.press_vents", "loop": "asm.press.knit", "done": "asm.press.hiss", "effects": ["fixtures.press_vents=0.4"], "faults": [{"kind": "void", "penalty": 0.03}], "weight": 2}]},
+   {"id": "s4.open", "label": "Vent, open, lift the core out with pliers and quench it", "requires": ["s4.press"], "actions": [
+    {"key": "vent", "verb": "Window", "mode": "hold", "part": "fixtures.press_vents", "lo": 0.4, "hi": 0.9, "rate": 0.9, "done": "asm.press.vent", "effects": ["fixtures.press_vents=0"], "weight": 0.25},
+    {"key": "open", "verb": "Turn", "part": "fixtures.press_lever", "turns": -0.5, "gain": 0.6, "drive": "fixtures.press_lever", "from": 1, "to": 0, "noSpin": true, "loop": "asm.press.lever", "weight": 0.25, "effects": ["fixtures.mould_charge>gone", "grip.core>place.mould.core", "materials.core_flash>seat", "materials.core_sprue>seat"]},
+    {"key": "quench", "verb": "Seat", "part": "grip.core", "tool": "tool:pliers", "target": "fixtures.jar/seat_swirl#core", "done": "asm.quench.sizzle", "weight": 0.5, "shot": "press_low", "effects": ["~grip.core/skin"]},
+    {"key": "out", "verb": "Seat", "part": "grip.core", "tool": "*", "target": "fixtures.workmat/seat_grip", "weight": 0.25}]},
+   {"id": "s4.flash", "label": "Knock the sprue off, file the flash off the parting line and ease the bearing pocket with the round file", "requires": ["s4.open"], "shot": "mat", "actions": [
+    {"key": "knock", "verb": "Window", "mode": "strike", "part": "materials.core_sprue", "tool": "tool:mallet", "target": "materials.core_sprue/snap", "count": 1, "lo": 0.3, "hi": 0.75, "from": 0, "to": 0, "audio": "asm.tap", "done": "asm.bend.crack", "effects": ["materials.core_sprue>gone"], "weight": 0.5, "faults": [{"kind": "miss", "penalty": 0.02}]},
+    {"key": "file", "verb": "Path", "part": "materials.core_flash", "tool": "tool:file", "target": "materials.core_flash/file", "loop": "asm.file.stroke", "effects": ["materials.core_flash>gone", "~grip.core/flash"], "weight": 0.5},
+    {"key": "ease", "verb": "Window", "mode": "hold", "part": "grip.core", "tool": "tool:file_round", "target": "grip.core/pocket_shoulder", "count": 3, "lo": 0.45, "hi": 0.78, "rate": 1.1, "loop": "asm.file.round", "faults": [{"kind": "loose_pocket", "penalty": 0.03}], "effects": ["~grip.core/pocket"]}]},
+   {"id": "s4.pressfit", "label": "Press the gimbal cradle home in the vise, stopping at the flush line", "requires": ["s4.flash"], "shot": "vise", "actions": [
+    {"key": "ring", "verb": "Window", "mode": "hold", "part": "servo.gimbal_retainer", "tool": "tool:pliers", "lo": 0.5, "hi": 0.8, "rate": 0.7, "done": "asm.part.circlip", "shot": "mat", "effects": ["servo.gimbal_retainer>place.mat.retainer"], "weight": 0.25},
+    {"key": "rotor", "verb": "Seat", "part": "servo.gimbal_rotor", "target": "fixtures.partsmat/seat_servo_rotor", "weight": 0.25},
+    {"key": "start", "verb": "Seat", "part": "servo.gimbal_cradle", "target": "grip.core/seat_gimbal", "weight": 0.5},
+    {"key": "clamp", "verb": "Seat", "part": "grip.core", "target": "fixtures.vise/seat_work#core", "weight": 0.5},
+    {"key": "press", "verb": "Turn", "mode": "stop", "part": "fixtures.vise_screw", "turns": 2, "gain": 0.6, "lo": 0, "hi": 0.35, "drive": "fixtures.vise_jaw", "from": 0, "to": 0.69, "loop": "asm.vise.thread", "done": "asm.vise.stop", "faults": [{"kind": "cracked_lug", "penalty": 0.03, "recovery": "s4.pressfit.r"}], "weight": 2},
+    {"key": "open", "verb": "Turn", "part": "fixtures.vise_screw", "turns": -2, "gain": 1, "drive": "fixtures.vise_jaw", "from": 0.69, "to": 0, "loop": "asm.vise.thread", "done": "asm.vise.release", "weight": 0.25},
+    {"key": "out", "verb": "Seat", "part": "grip.core", "target": "fixtures.workmat/seat_grip", "weight": 0.25}]},
+   {"id": "s4.pressfit.r", "label": "The lug cracked: mend it with a bead of nanites", "recovery": true, "requires": ["s4.pressfit"], "shot": "mat", "actions": [
+    {"key": "mend", "verb": "Point", "tool": "tool:applicator", "targets": ["grip.core/mend"], "audio": "asm.seam.trace", "weight": 0.5}]}
+  ]},
+  {"id": "s5", "label": "Assemble the grip", "shot": "mat", "steps": [
+   {"id": "s5.loop", "label": "Tuck the damper loop into the core's side channel until its two clips snap", "actions": [
+    {"key": "tuck", "verb": "Path", "part": "materials.loop_resistor", "target": "grip.core/loop", "loop": "asm.wire.slide", "effects": ["materials.loop_lead_a>gone", "materials.loop_lead_b>gone", "materials.loop_resistor>gone", "materials.loop_sleeve_a>gone", "materials.loop_sleeve_b>gone", "materials.loop_tucked>seat"], "done": "asm.seat.spring_click"}]},
+   {"id": "s5.rotor", "label": "Drop the rotor back into the gimbal and fit the retaining ring", "requires": ["s5.loop"], "actions": [
+    {"key": "rotor", "verb": "Seat", "part": "servo.gimbal_rotor", "target": "seat", "weight": 0.5},
+    {"key": "ring", "verb": "Seat", "part": "servo.gimbal_retainer", "tool": "tool:pliers", "target": "seat", "weight": 0.5},
+    {"key": "snap", "verb": "Window", "mode": "hold", "part": "servo.gimbal_retainer", "tool": "tool:pliers", "lo": 0.5, "hi": 0.8, "rate": 0.7, "done": "asm.seat.spring_click", "faults": [{"kind": "flew_off", "penalty": 0.02, "recovery": "s5.rotor.r", "effects": ["servo.gimbal_retainer>place.bench.stray"]}]}]},
+   {"id": "s5.rotor.r", "label": "The ring flew: find it and fit it again", "recovery": true, "replaces": ["s5.rotor:snap"], "actions": [
+    {"key": "find", "verb": "Seat", "part": "servo.gimbal_retainer", "tool": "*", "target": "seat", "weight": 0.25}]},
+   {"id": "s5.strap", "label": "Slide the strap over the spine until it clicks", "requires": ["s5.rotor"], "actions": [
+    {"key": "strap", "verb": "Seat", "part": "materials.strap_bent", "target": "grip.core/seat_strap", "done": "asm.seat.spring_click", "faults": [{"kind": "upside_down", "when": "misaligned", "penalty": 0.0}]}]},
+   {"id": "s5.plates", "label": "Left plate on its pegs, turn the grip over, right plate on its pegs", "requires": ["s5.strap"], "actions": [
+    {"key": "left", "verb": "Seat", "part": "materials.sheet_a_plate", "target": "grip.core/seat_plate_l", "weight": 0.5},
+    {"key": "over", "verb": "Seat", "part": "grip.core", "target": "fixtures.workmat/seat_grip#over", "weight": 0.25},
+    {"key": "right", "verb": "Seat", "part": "materials.sheet_b_plate", "target": "grip.core/seat_plate_r", "weight": 0.5}]},
+   {"id": "s5.start", "label": "Start the four servo screws by hand", "requires": ["s5.plates"], "actions": [
+    {"key": "r_c", "verb": "Seat", "part": "servo.screw_case_c", "target": "grip.core/seat_plate_screw_rc", "done": "asm.screw.start", "weight": 0.25},
+    {"key": "r_d", "verb": "Seat", "part": "servo.screw_case_d", "target": "grip.core/seat_plate_screw_rd", "done": "asm.screw.start", "weight": 0.25},
+    {"key": "back", "verb": "Seat", "part": "grip.core", "target": "fixtures.workmat/seat_grip", "weight": 0.25},
+    {"key": "l_c", "verb": "Seat", "part": "servo.screw_case_a", "target": "grip.core/seat_plate_screw_lc", "done": "asm.screw.start", "weight": 0.25},
+    {"key": "l_d", "verb": "Seat", "part": "servo.screw_case_b", "target": "grip.core/seat_plate_screw_ld", "done": "asm.screw.start", "weight": 0.25}]},
+   {"id": "s5.torque", "label": "Drive them home, then final torque each", "requires": ["s5.start"], "actions": [
+    {"key": "l_c_turn", "verb": "Turn", "part": "servo.screw_case_a", "tool": "tool:screwdriver", "turns": 10, "gain": 2.5, "loop": "asm.screw.turn", "toolMode": "cross", "faults": [{"kind": "camout", "when": "mode", "penalty": 0.03}]},
+    {"key": "l_d_turn", "verb": "Turn", "part": "servo.screw_case_b", "tool": "tool:screwdriver", "turns": 10, "gain": 2.5, "loop": "asm.screw.turn", "toolMode": "cross", "faults": [{"kind": "camout", "when": "mode", "penalty": 0.03}]},
+    {"key": "l_c_torque", "verb": "Window", "mode": "hold", "part": "servo.screw_case_a", "tool": "tool:screwdriver", "lo": 0.55, "hi": 0.8, "rate": 0.6, "audio": "asm.screw", "loop": "asm.screw.turn", "faults": [{"kind": "stripped", "penalty": 0.04}], "weight": 1.5},
+    {"key": "l_d_torque", "verb": "Window", "mode": "hold", "part": "servo.screw_case_b", "tool": "tool:screwdriver", "lo": 0.55, "hi": 0.8, "rate": 0.6, "audio": "asm.screw", "loop": "asm.screw.turn", "faults": [{"kind": "stripped", "penalty": 0.04}], "weight": 1.5},
+    {"key": "over", "verb": "Seat", "part": "grip.core", "target": "fixtures.workmat/seat_grip#over", "weight": 0.25},
+    {"key": "r_c_turn", "verb": "Turn", "part": "servo.screw_case_c", "tool": "tool:screwdriver", "turns": 10, "gain": 2.5, "loop": "asm.screw.turn", "toolMode": "cross", "faults": [{"kind": "camout", "when": "mode", "penalty": 0.03}]},
+    {"key": "r_d_turn", "verb": "Turn", "part": "servo.screw_case_d", "tool": "tool:pliers", "turns": 10, "gain": 1.6, "loop": "asm.screw.pliers"},
+    {"key": "r_c_torque", "verb": "Window", "mode": "hold", "part": "servo.screw_case_c", "tool": "tool:screwdriver", "lo": 0.55, "hi": 0.8, "rate": 0.6, "audio": "asm.screw", "loop": "asm.screw.turn", "faults": [{"kind": "stripped", "penalty": 0.04}], "weight": 1.5},
+    {"key": "r_d_torque", "verb": "Window", "mode": "hold", "part": "servo.screw_case_d", "tool": "tool:pliers", "lo": 0.55, "hi": 0.8, "rate": 0.6, "audio": "asm.screw", "loop": "asm.screw.turn", "faults": [{"kind": "stripped", "penalty": 0.04}], "weight": 1.5}]},
+   {"id": "s5.seam", "label": "Trace both plate seams with the nanite applicator", "requires": ["s5.torque"], "actions": [
+    {"key": "right", "verb": "Path", "part": "grip.core", "tool": "tool:applicator", "target": "grip.core/seam_r", "loop": "asm.seam.trace", "effects": ["grip.seam_r>seat"]},
+    {"key": "back", "verb": "Seat", "part": "grip.core", "target": "fixtures.workmat/seat_grip", "weight": 0.25},
+    {"key": "left", "verb": "Path", "part": "grip.core", "tool": "tool:applicator", "target": "grip.core/seam_l", "loop": "asm.seam.trace", "effects": ["grip.seam_l>seat"]}]},
+   {"id": "s5.cure", "label": "Swing the cure lamp over and wait ten seconds", "requires": ["s5.seam"], "actions": [
+    {"key": "swing", "verb": "Turn", "part": "fixtures.lamp_head", "turns": 0.25, "gain": 0.7, "drive": "fixtures.lamp_arm", "from": 0, "to": 1, "noSpin": true, "loop": "asm.cure.arm", "done": "asm.cure.switch", "effects": ["fixtures.lamp_head=1"], "weight": 0.25},
+    {"key": "wait", "verb": "Window", "mode": "wait", "part": "grip.core", "seconds": 10, "loop": "asm.cure.hum", "effects": ["fixtures.lamp_head=0", "~grip.seam_l/seam", "~grip.seam_r/seam"], "faults": [{"kind": "soft_seam", "penalty": 0.03}], "weight": 0.5},
+    {"key": "away", "verb": "Turn", "part": "fixtures.lamp_head", "turns": -0.25, "gain": 0.7, "drive": "fixtures.lamp_arm", "from": 1, "to": 0, "noSpin": true, "loop": "asm.cure.arm", "weight": 0.25}]},
+   {"id": "s5.damp", "label": "Hold the grip and tilt it sharply", "requires": ["s5.cure"], "actions": [
+    {"key": "tilt", "verb": "Flick", "part": "grip.core", "audio": "asm.damper.tick", "done": "asm.damper.settle", "weight": 0, "faults": [{"kind": "pinched", "when": "poor:s5.loop", "penalty": 0.02, "recovery": "s5.damp.r", "blocks": true}]}]},
+   {"id": "s5.damp.r", "label": "A lead is pinched: ease it back along its channel", "recovery": true, "actions": [
+    {"key": "ease", "verb": "Path", "part": "grip.core", "target": "grip.core/loop", "loop": "asm.wire.slide", "done": "asm.seat.spring_click", "weight": 0.5}]}
+  ]},
+  {"id": "s6", "label": "Fit the grip", "shot": "vise", "steps": [
+   {"id": "s6.slide", "label": "Slide the grip up onto the frame tang", "actions": [
+    {"key": "clamp", "verb": "Seat", "part": "pistol.frame", "target": "fixtures.vise/seat_work", "weight": 0.5},
+    {"key": "snug", "verb": "Turn", "mode": "stop", "part": "fixtures.vise_screw", "turns": 3, "gain": 0.8, "lo": 0, "hi": 0.5, "drive": "fixtures.vise_jaw", "from": 0, "to": 0.6, "loop": "asm.vise.thread", "done": "asm.vise.bite", "faults": [{"kind": "overtight", "penalty": 0.03}], "weight": 0.5},
+    {"key": "grip", "verb": "Seat", "part": "grip.core", "target": "seat", "tolMm": 9, "tolDeg": 10, "done": "asm.seat.dovetail", "weight": 2}]},
+   {"id": "s6.plug", "label": "Feed the trigger lead down the grip's rear channel and plug it back onto the cell bus", "requires": ["s6.slide"], "actions": [
+    {"key": "route", "verb": "Path", "part": "pistol.lead", "target": "grip.core/lead", "loop": "asm.wire.slide", "swivel": "fixtures.vise"},
+    {"key": "plug", "verb": "Seat", "mode": "keyed", "part": "pistol.lead_plug", "target": "seat", "tolDeg": 15, "done": "asm.part.connector", "faults": [{"kind": "upside_down", "when": "misaligned", "penalty": 0.01}], "shot": "vise_r"}]},
+   {"id": "s6.pin", "label": "Tap the housing pin back in", "requires": ["s6.slide"], "actions": [
+    {"key": "start", "verb": "Seat", "part": "pistol.housing_pin", "target": "start", "weight": 0.5, "shot": "work"},
+    {"key": "taps", "verb": "Window", "mode": "strike", "part": "pistol.housing_pin", "tool": "tool:mallet", "count": 2, "lo": 0.3, "hi": 0.7, "from": 1, "to": 0, "audio": "asm.tap", "done": "asm.tap.pin_flush", "faults": [{"kind": "miss", "penalty": 0.03}], "shot": "vise_l"}]},
+   {"id": "s6.pin.r", "label": "The pin stands proud: tap it flush", "recovery": true, "actions": [
+    {"key": "flush", "verb": "Window", "mode": "strike", "part": "pistol.housing_pin", "tool": "tool:mallet", "count": 1, "lo": 0.3, "hi": 0.7, "from": 0, "to": 0, "shot": "vise_l", "audio": "asm.tap", "done": "asm.tap.pin_flush", "weight": 0.5}]},
+   {"id": "s6.screws", "label": "Two new grip screws from the dish, cross bit, to torque", "requires": ["s6.pin"], "free": true, "actions": [
+    {"key": "a_start", "verb": "Seat", "part": "grip.screw_a", "target": "start", "done": "asm.screw.start", "weight": 0.5, "after": [], "faults": [{"kind": "proud", "when": "poor:s6.pin", "penalty": 0.01, "recovery": "s6.pin.r", "blocks": true}]},
+    {"key": "a_turn", "verb": "Turn", "part": "grip.screw_a", "tool": "tool:screwdriver", "toolMode": "cross", "turns": 7, "gain": 0.9, "loop": "asm.screw.turn", "after": ["a_start"], "faults": [{"kind": "camout", "when": "mode", "penalty": 0.02}]},
+    {"key": "a_torque", "verb": "Window", "mode": "hold", "part": "grip.screw_a", "tool": "tool:screwdriver", "lo": 0.55, "hi": 0.8, "rate": 0.6, "audio": "asm.screw", "loop": "asm.screw.turn", "after": ["a_turn"], "faults": [{"kind": "stripped", "penalty": 0.04}], "weight": 1.5},
+    {"key": "b_start", "verb": "Seat", "part": "grip.screw_b", "target": "start", "done": "asm.screw.start", "weight": 0.5, "after": [], "faults": [{"kind": "proud", "when": "poor:s6.pin", "penalty": 0.01, "recovery": "s6.pin.r", "blocks": true}]},
+    {"key": "b_turn", "verb": "Turn", "part": "grip.screw_b", "tool": "tool:screwdriver", "toolMode": "cross", "turns": 7, "gain": 0.9, "loop": "asm.screw.turn", "after": ["b_start"], "faults": [{"kind": "camout", "when": "mode", "penalty": 0.02}]},
+    {"key": "b_torque", "verb": "Window", "mode": "hold", "part": "grip.screw_b", "tool": "tool:screwdriver", "lo": 0.55, "hi": 0.8, "rate": 0.6, "audio": "asm.screw", "loop": "asm.screw.turn", "after": ["b_turn"], "faults": [{"kind": "stripped", "penalty": 0.04}], "weight": 1.5}]},
+   {"id": "s6.cell", "label": "Open the vise, clear the old grip into the scrap bin, lay the pistol on the mat, cell in, latch home", "requires": ["s6.plug", "s6.screws"], "actions": [
+    {"key": "open", "verb": "Turn", "part": "fixtures.vise_screw", "turns": -3, "gain": 1, "drive": "fixtures.vise_jaw", "from": 0.6, "to": 0, "loop": "asm.vise.thread", "done": "asm.vise.release", "weight": 0.25},
+    {"key": "clear", "verb": "Seat", "part": "pistol.housing", "target": "fixtures.bin/seat_scrap", "done": "asm.part.bin", "weight": 0, "effects": ["pistol.housing_spring>fixtures.bin/seat_scrap", "pistol.scale_l>fixtures.bin/seat_scrap", "pistol.scale_r>fixtures.bin/seat_scrap", "pistol.wrap>fixtures.bin/seat_scrap", "materials.sheet_b_strap>fixtures.bin/seat_scrap", "servo.case_lid>fixtures.bin/seat_scrap", "servo.circlip>fixtures.bin/seat_scrap"]},
+    {"key": "mat", "verb": "Seat", "part": "pistol.frame", "target": "fixtures.workmat/seat_pistol", "weight": 0.5},
+    {"key": "cell", "verb": "Seat", "part": "pistol.cell", "target": "seat", "done": "asm.cell.pop"},
+    {"key": "latch", "verb": "Turn", "part": "pistol.cell_latch", "turns": -0.25, "drive": "pistol.cell_latch", "from": 1, "to": 0, "noSpin": true, "shot": "mat", "effects": ["pistol.status_lamp=1"], "done": "asm.cell.power_up", "weight": 0.25}]}
+  ]},
+  {"id": "s7", "label": "Test it", "shot": "mat", "steps": [
+   {"id": "s7.inspect", "label": "Pick the pistol up and look it over", "optional": true, "actions": [
+    {"key": "look", "verb": "Seat", "mode": "inspect", "part": "pistol.frame", "turns": 0.75, "weight": 0}]},
+   {"id": "s7.shake", "label": "Shake it", "actions": [
+    {"key": "shake", "verb": "Flick", "part": "pistol.frame", "done": "asm.damper.settle", "weight": 0}]},
+   {"id": "s7.card_after", "label": "Three test pulses at a fresh card", "actions": [
+    {"key": "pulses", "verb": "Point", "mode": "aim", "part": "pistol.frame", "target": "pistol.card_b/centre", "count": 3, "shot": "card", "weight": 0, "done": "asm.card.clip", "line": "Fire three test pulses at the fresh card: aim at the rings and click"}]},
+   {"id": "s7.leave", "label": "Holster and step back", "requires": ["s7.shake", "s7.card_after"], "onLeave": true, "actions": [
+    {"key": "holster", "verb": "Seat", "part": "pistol.frame", "target": "place.holster", "weight": 0}]}
+  ]}
+ ]
+}

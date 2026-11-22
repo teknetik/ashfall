@@ -25,6 +25,21 @@ namespace AthenHill
         [Tooltip("Tolerance multiplier for the keyboard form (the focus ring brings the part to the place).")] public float keyboardTolerance = 1;
         [Tooltip("Shudder of a blocked part: millimetres and seconds.")] public float shudderMm = 1.6f, shudderSeconds = .28f;
 
+        [Header("Drop areas: a carried part drops into its place from anywhere over these")]
+        [Tooltip("Fixture ids with open surfaces, and place ids that have no fixture of their own.")]
+        public string[] snapSurfaces = { "fixtures.pad", "fixtures.workmat", "fixtures.partsmat", "fixtures.tray", "fixtures.dish", "fixtures.cradle", "fixtures.bin", "fixtures.holster", "place.roll" };
+        [Tooltip("How far beside the surface still counts, metres.")] public float snapMargin = .07f;
+        [Tooltip("The hand must have moved this far since picking up, metres, so a part picked up from a mat does not drop straight back.")] public float snapAfterMove = .025f;
+
+        [Header("Small targets")]
+        [Tooltip("Parts too small to find by their glow: the work on them is ringed on screen.")] public string[] ringedParts = { "pistol.housing_pin" };
+
+        [Header("Finding a mark (the cracked tang)")]
+        [Tooltip("How squarely the mark must face the eye (1 = straight on), and for how long.")] public float revealFacing = .35f;
+        public float revealSeconds = .25f;
+        [Tooltip("Degrees the vise or the view must have turned first. A click on the mark needs none.")] public float revealTravel = 12;
+        [Tooltip("A click within this of the mark finds it, metres.")] public float revealClickRadius = .03f;
+
         [Header("Turn")]
         [Tooltip("Turns per wheel notch, and per second held on the keyboard (before the action's gain).")] public float turnsPerNotch = .125f, keyTurnsPerSecond = 1.15f;
         [Tooltip("The mouse circle only counts beyond this distance from the pivot, millimetres.")] public float circleMinRadiusMm = 7;
@@ -68,6 +83,8 @@ namespace AthenHill
         [Tooltip("Orbit limits with the right button, degrees, and degrees per pixel / per second on the keyboard.")] public float orbitYaw = 25, orbitPitch = 12, orbitPerPixel = .14f, orbitPerSecond = 45;
         [Tooltip("Zoom per wheel notch (0 whole bench, 1 close on the work), per second on Z / C, and how fast it settles.")] public float zoomPerNotch = .14f, zoomPerSecond = .9f, zoomFollow = 9;
         [Tooltip("Distance from the active part at full zoom, metres.")] public float closeDistance = .34f;
+        [Tooltip("Side-step along the bench (A, E): how far each way, and metres per second.")] public float shimmyReach = .5f, shimmySpeed = .65f;
+        [Tooltip("The work is never further towards the edge of the picture than this share of its half width and half height.")] public float keepInViewX = .93f, keepInViewY = .9f;
         [Tooltip("Depth of field aperture (off under Reduced Motion).")] public float aperture = 4.5f;
         public bool depthOfField = true;
 

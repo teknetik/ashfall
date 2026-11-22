@@ -54,8 +54,10 @@ namespace AthenHill.Editor
             /// Meshy record folder holding key/rigged_fixed.glb and key/anim_only (null = meshy/ward-npcs-20261003/). Field Supply's
             /// Tamsin (5 Oct 2026) comes from meshy/field-supply-20261005/ through the same import and prefab steps.
             public string record;
+            /// Prefab to rebuild in place when it is not WardNpcs/WardNpc_<title> (Brann keeps Prefabs/SalvageDealer.prefab; 22 Nov 2026).
+            public string prefabPath;
             public string Instance => "WardNpc " + title;
-            public string Prefab => PrefabRoot + "/WardNpc_" + title + ".prefab";
+            public string Prefab => prefabPath ?? PrefabRoot + "/WardNpc_" + title + ".prefab";
             public string Folder => ArtRoot + "/" + title;
             public string Model => Folder + "/" + title + ".glb";
             public string Material => Folder + "/" + title + ".mat";
@@ -284,7 +286,9 @@ namespace AthenHill.Editor
             int[] Dominant(params string[] names)
             {
                 var idx = names.Select(n => Array.FindIndex(bones, b => b.name == n)).Where(i => i >= 0).ToArray();
-                return Enumerable.Range(0, p.Length).Where(i => idx.Contains(w[i].boneIndex0) && w[i].weight0 >= .5f).ToArray();
+                // the named bones' weights together (22 Nov 2026: the finger rigs share the torso between the spine bones, none >= .5 alone)
+                float Share(BoneWeight b) => (idx.Contains(b.boneIndex0) ? b.weight0 : 0) + (idx.Contains(b.boneIndex1) ? b.weight1 : 0) + (idx.Contains(b.boneIndex2) ? b.weight2 : 0) + (idx.Contains(b.boneIndex3) ? b.weight3 : 0);
+                return Enumerable.Range(0, p.Length).Where(i => Share(w[i]) >= .5f).ToArray();
             }
             if (s.mount == Mount.ThighHolsterPistol)
             {
@@ -331,7 +335,7 @@ namespace AthenHill.Editor
             {
                 var log = new List<string>();
                 var model = AssetDatabase.LoadAssetAtPath<GameObject>(s.Model) ?? throw new Exception("Run the import step first: " + s.Model);
-                var root = new GameObject("WardNpc_" + s.title);
+                var root = new GameObject(Path.GetFileNameWithoutExtension(s.Prefab));   // same root name, so references into a rebuilt prefab hold
                 try
                 {
                     var visual = new GameObject("Visual").transform; visual.SetParent(root.transform, false);

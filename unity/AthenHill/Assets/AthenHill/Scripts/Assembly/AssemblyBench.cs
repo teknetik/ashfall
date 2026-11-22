@@ -116,6 +116,57 @@ namespace AthenHill
         }
         public float HeightAbove(Vector3 world) => Vector3.Dot(world - SurfacePoint, Up);
 
+        // ------------------------------------------------------------------ the art's axes, and drop areas (22 Nov 2026)
+        bool? artAxes;
+        /// The installed art works along the empties' +Y (Blender's +Z); the stand-ins along +Z. The screwdriver says which:
+        /// its working axis runs from the hand to the blade.
+        public bool ArtAxes
+        {
+            get
+            {
+                if (artAxes.HasValue) return artAxes.Value;
+                var driver = Part("tools.screwdriver"); bool art = false;
+                if (driver && driver.tip) { var length = (driver.TipPoint - driver.GrabPoint).normalized; art = Vector3.Dot(driver.tip.up, length) > Vector3.Dot(driver.tip.forward, length); }
+                artAxes = art; return art;
+            }
+        }
+        /// Out of the face a mark is on.
+        public Vector3 Out(Transform mark) => ArtAxes ? mark.up : mark.forward;
+
+        /// The pointer is over, or beside, the open surface a place is on (the pad, a mat, the tray): the part drops into
+        /// place from anywhere there.
+        public bool OverDropArea(AssemblyMarker place, Ray ray, Vector3 seatedAt)
+        {
+            if (!settings || !place) return false;
+            var names = settings.snapSurfaces; var frame = surface ? surface : transform; float margin = settings.snapMargin;
+            var seat = frame.InverseTransformPoint(seatedAt); Vector3 min = seat, max = seat;
+            if (Array.IndexOf(names, place.id) >= 0) margin += place.PickRadius;
+            else
+            {
+                var owner = Part(place.ownerPart); if (!owner || Array.IndexOf(names, owner.id) < 0) return false;
+                var box = owner.localBounds;
+                for (int i = 0; i < 8; i++)
+                {
+                    var corner = box.center + Vector3.Scale(box.extents, new Vector3((i & 1) == 0 ? -1 : 1, (i & 2) == 0 ? -1 : 1, (i & 4) == 0 ? -1 : 1));
+                    var local = frame.InverseTransformPoint(owner.transform.TransformPoint(corner));
+                    min = Vector3.Min(min, local); max = Vector3.Max(max, local);
+                }
+            }
+            // where the pointer meets the surface, and where the part in the hand is seen over it
+            bool Over(float height)
+            {
+                if (!new Plane(Up, SurfacePoint + Up * height).Raycast(ray, out float t)) return false;
+                var at = frame.InverseTransformPoint(ray.GetPoint(t));
+                return at.x >= min.x - margin && at.x <= max.x + margin && at.z >= min.z - margin && at.z <= max.z + margin;
+            }
+            return Over(HeightAbove(seatedAt)) || Over(settings.carryLift);
+        }
+
+        // ------------------------------------------------------------------ what lies on what (22 Nov 2026)
+        AssemblySupport support;
+        public AssemblySupport Support => support ??= new AssemblySupport(this);
+        void OnDestroy() => support?.Release();
+
         // ------------------------------------------------------------------ where parts are
         static void Attach(Transform t, Transform parent, Vector3 position, Quaternion rotation)
         {
@@ -137,6 +188,13 @@ namespace AthenHill
             place = Marker(target);
             if (!place || place.kind != AssemblyMarkerKind.Place) { place = null; return false; }
             parent = place.transform; seated = new Pose(place.transform.position, place.transform.rotation); approach = place.ApproachWorld;
+            if (p.IsTool && p.tip && p.HasTag("tool:punch") && ArtAxes && Part(place.ownerPart) is AssemblyPart pin && pin.hasClear && pin.OnParent)
+            {
+                // the punch stands in line with the pin, its point on the pin's end (22 Nov: it lay across it)
+                var into = pin.RemovalAxis;
+                seated = AssemblyToolPose.At(this, p, place.transform.position, into);
+                approach = new Pose(seated.position - into * .03f, seated.rotation);
+            }
             if (place.restOn)
             {
                 // a point on a surface: the part is set down on it, whatever its own origin is (the gimbal's is 20 mm above its foot)

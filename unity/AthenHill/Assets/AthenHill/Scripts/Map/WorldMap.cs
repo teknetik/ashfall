@@ -21,7 +21,8 @@ namespace AthenHill
   readonly List<MapPlace> places=new List<MapPlace>();
   readonly Dictionary<string,BermsCompassPoint> sitePoints=new Dictionary<string,BermsCompassPoint>();
   readonly Dictionary<string,WardenWaystation> stations=new Dictionary<string,WardenWaystation>();
-  int pointCount=-1,stationCount=-1;bool surveyLoaded,bound;
+  readonly Dictionary<string,LatticeTerminal> terminals=new Dictionary<string,LatticeTerminal>();
+  int pointCount=-1,stationCount=-1,terminalCount=-1;bool surveyLoaded,bound;
   Vector3 lastPlayer;bool hasLast;
   public Vector2? LastDowned {get;private set;}
   /// The map window, when the HUD built one (it is ticked from here while open).
@@ -58,6 +59,7 @@ namespace AthenHill
     var step=tutorial?tutorial.Step:BermsStep.Complete;
     var found=discovery.Visit(p,all,id=>WorldMapDiscovery.PrimerAllows(id,step));
     foreach(var w in stations)if(w.Value&&w.Value.Found&&discovery.Add(w.Key))found.Add(all.FirstOrDefault(x=>x.id==w.Key));
+    foreach(var lt in terminals)if(lt.Value&&lt.Value.Unlocked&&discovery.Add(lt.Key))found.Add(all.FirstOrDefault(x=>x.id==lt.Key));
     if(found.Count>0)
     {
      var named=found.Where(f=>f!=null&&f.kind!=MapPlaceKind.Waystation).Select(f=>f.name).ToList();
@@ -76,15 +78,15 @@ namespace AthenHill
   {
    get
    {
-    if(BermsCompassPoint.All.Count!=pointCount||WardenWaystation.All.Count!=stationCount||places.Count==0)Rebuild();
+    if(BermsCompassPoint.All.Count!=pointCount||WardenWaystation.All.Count!=stationCount||LatticeTerminal.All.Count!=terminalCount||places.Count==0)Rebuild();
     return places;
    }
   }
   void Rebuild()
   {
    Bind();
-   pointCount=BermsCompassPoint.All.Count;stationCount=WardenWaystation.All.Count;
-   places.Clear();sitePoints.Clear();stations.Clear();
+   pointCount=BermsCompassPoint.All.Count;stationCount=WardenWaystation.All.Count;terminalCount=LatticeTerminal.All.Count;
+   places.Clear();sitePoints.Clear();stations.Clear();terminals.Clear();
    var anchors=Survey?Survey.anchors:null;
    foreach(var p in WorldMapSchematic.CityPlaces())
    {
@@ -115,6 +117,12 @@ namespace AthenHill
     stations[w.Flag]=w;
     places.Add(new MapPlace(w.Flag,w.displayName,MapPlaceKind.Waystation,0,0){anchor=w.transform});
    }
+   foreach(var lt in LatticeTerminal.All)
+   {
+    if(!lt||string.IsNullOrEmpty(lt.MapId)||terminals.ContainsKey(lt.MapId))continue;
+    terminals[lt.MapId]=lt;
+    places.Add(new MapPlace(lt.MapId,string.IsNullOrEmpty(lt.displayName)?LatticeTerminalLogic.DefaultDisplayName:lt.displayName,MapPlaceKind.Waystation,0,0){anchor=lt.transform});
+   }
    if(tutorial&&tutorial.depot&&!sitePoints.ContainsKey(WorldMapDiscovery.DepotId))
     places.Add(new MapPlace(WorldMapDiscovery.DepotId,"Machine depot",MapPlaceKind.Site,0,0,siteRadius){anchor=tutorial.depot.transform});
   }
@@ -125,7 +133,9 @@ namespace AthenHill
    switch(p.kind)
    {
     case MapPlaceKind.Home:return Session&&session.HasFlag(WardHome.LeasedFlag);
-    case MapPlaceKind.Waystation:return discovery.Has(p.id)||stations.TryGetValue(p.id,out var w)&&w&&w.Found;
+    case MapPlaceKind.Waystation:
+     if(terminals.TryGetValue(p.id,out var lt))return (lt&&lt.Unlocked)||discovery.Has(p.id);
+     return discovery.Has(p.id)||stations.TryGetValue(p.id,out var w)&&w&&w.Found;
     case MapPlaceKind.Site:return discovery.Has(p.id);
     default:return true;
    }
@@ -171,7 +181,8 @@ namespace AthenHill
   {
    Bind();
    bool primer=tutorial&&tutorial.Step==BermsStep.Complete;
-   discovery.Restore(state,WorldMapDiscovery.Implied(Session?Session.Flags:null,primer));
+   var implied=WorldMapDiscovery.Implied(Session?Session.Flags:null,primer).Concat(WorldMapDiscovery.ImpliedTerminals(Session?Session.UnlockedTerminals:null));
+   discovery.Restore(state,implied);
    LastDowned=WorldMapDiscovery.Downed(state);
   }
  }

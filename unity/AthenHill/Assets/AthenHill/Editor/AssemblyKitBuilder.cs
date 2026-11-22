@@ -465,6 +465,9 @@ namespace AthenHill.Editor
                     m.spinAxis = Vector3.forward;
                     // the art may say which bone axis it turns about ("positive turns about the bone +Y close the vise")
                     var axisNote = System.Text.RegularExpressions.Regex.Match((string)e["note"] ?? "", @"bone ([+-])([XYZ])\b");
+                    // a Blender bone lies along its own +Y, so that is what a spinning bone turns about unless the art says otherwise
+                    // (22 Nov 2026: with +Z the drill's wheel and the servo's rotor tumbled)
+                    m.spinAxis = Vector3.up;
                     if (axisNote.Success) { var v = axisNote.Groups[2].Value == "X" ? Vector3.right : axisNote.Groups[2].Value == "Y" ? Vector3.up : Vector3.forward; m.spinAxis = axisNote.Groups[1].Value == "-" ? -v : v; }
                     // the part riding it is turned through it (the vise screw turns about its own thread, not about its local up)
                     if (e["ratio"] == null && string.IsNullOrEmpty(first.spinParam)) first.spinParam = m.id;
@@ -640,6 +643,8 @@ namespace AthenHill.Editor
                         // a point on a real fixture is where a thing is set down, not where its origin goes (the layout's numbers were
                         // made for stand-ins whose origins are their middles)
                         restOn = !pose && ownerId.StartsWith("fixtures.") && entries.TryGetValue(ownerId, out var oe) && oe["grey"] == null;
+                        // `at` (22 Nov): where the part lies, in the surface's frame, in place of the art's mark (clear of the open roll)
+                        if (pl["at"] != null) t.position = bench.surface.TransformPoint(V(pl["at"]));
                     }
                     else report.fallbackPlaces.Add(id);
                 }

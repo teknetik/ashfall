@@ -154,7 +154,8 @@ namespace AthenHill
             if (string.IsNullOrEmpty(text)) return null;
             var held = s.HeldTool; var part = s.bench ? s.bench.Part(a.part) : null;
             bool needsTool = !string.IsNullOrEmpty(a.tool) && a.tool != "*";
-            bool toolOk = needsTool ? held && held.HasTag(a.tool) : a.tool == "*" || !held;
+            // (22 Nov: the punch is the part of its own step, so in the hand it is not a tool to put back)
+            bool toolOk = needsTool ? held && held.HasTag(a.tool) : a.tool == "*" || !held || held.id == a.part;
             bool carried = a.verb == AssemblyVerbKind.Flick || a.verb == AssemblyVerbKind.Point && a.mode == "aim";
             if (!toolOk && held) text = Fill(T("prefix", "put_back"), "held", HeldToolName(held));
             else if (!toolOk) text = Fill(T("prefix", "take_tool"), "tool", ToolName(a.tool));
@@ -177,7 +178,7 @@ namespace AthenHill
             glintFor = id; glintLeft = glintEvery;
             var a = r.Value.action; var b = s.bench;
             var tool = string.IsNullOrEmpty(a.tool) || a.tool == "*" ? null : b.Tool(a.tool); var part = b.Part(a.part);
-            var target = tool && tool != s.HeldTool ? tool : part && part != s.HeldPart ? part : b.Marker(a.target) ? b.Part(b.Marker(a.target).ownerPart) : part;
+            var target = tool && tool != s.HeldTool ? tool : part && part != s.HeldPart && part != s.HeldTool ? part : b.Marker(a.target) ? b.Part(b.Marker(a.target).ownerPart) : part;
             if (target) s.Fx.Glint(target);
         }
         /// The bench refused a press (AssemblySession.Refused): what is wrong, and what to do instead, as a caption; Brann says it

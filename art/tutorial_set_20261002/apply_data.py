@@ -2,7 +2,7 @@
 """Tutorial set data (2 Oct 2026), idempotent: re-run after other branches (Codex inventory work) touch the catalogs.
 - CityCatalog: Field set descriptions match the salvaged scrap-metal models; field_boots no longer starts in the pack
   (it starts worn).
-- CharacterCatalog: initialEquipment adds field_boots in armour_feet (field_vest in armour_chest was already there).
+- CharacterCatalog: initialEquipment is no longer touched (22 Nov 2026: a new colonist starts with no armour).
 The primer no longer grants the helmet, arm guards, gloves and leg armour (3 Oct 2026): they are built through the Warden
 Kit orders, see art/armour_mission_20261003/apply_data.py (run after this script).
 Plain scalars only, no ': ' inside values (Unity's YAML reader rejects them; see memory unity-editor-pitfalls)."""
@@ -11,7 +11,7 @@ from pathlib import Path
 A = Path('/home/teknetik/code/ao2/unity/AthenHill/Assets/AthenHill')
 CITY = A / 'Data/CityCatalog.asset'; CHAR = A / 'Resources/CharacterCatalog.asset'
 DESC = {
-    'field_vest': 'A canvas plate carrier with a riveted steel plate cut from a machine panel, front and back, and a scrap shoulder pad. Issued to new arrivals.',
+    'field_vest': 'A canvas plate carrier with a riveted steel plate cut from a machine panel, front and back, and a scrap shoulder pad.',
     'field_boots': 'Worn work boots with welded steel toe caps and a riveted ankle plate strapped over the instep.',
     'field_helmet': 'An open-face cap beaten from a salvaged machine housing, with a riveted brow band, ear cups and a padded liner.',
     'field_armguards': 'Curved bracers cut from pipe and panel steel, buckled over the forearm and clear of the elbow for tool and weapon work.',
@@ -32,10 +32,8 @@ for item, d in DESC.items():
     if nb != block: t = t[:a] + nb + t[b:]; changes.append(item)
 CITY.write_text(t)
 c = CHAR.read_text()
-if not re.search(r'initialEquipment:\n(?:  - slot: .*\n    itemId: .*\n)*?  - slot: armour_feet\n    itemId: field_boots\n', c):
-    c = c.replace('  - slot: armour_chest\n    itemId: field_vest\n', '  - slot: armour_chest\n    itemId: field_vest\n  - slot: armour_feet\n    itemId: field_boots\n', 1)
-    assert 'itemId: field_boots\n' in c.split('initialEquipment:')[1].split('initialAttributePoints')[0], 'initialEquipment patch failed'
-    CHAR.write_text(c); changes.append('initialEquipment+field_boots')
+# 22 Nov 2026: no starting armour (Carl), so this patch no longer equips field_boots on a new colonist
+# (art/npc_rebuild_20261122/data/no_starting_armour.py).
 try:
     import yaml  # sanity parse (Unity tags stripped)
     for f in (CITY, CHAR):

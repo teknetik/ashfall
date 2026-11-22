@@ -39,10 +39,14 @@ namespace AthenHill
   public int TicksPlayed {get;private set;}
   readonly HitMarkerState markers=new HitMarkerState();
   VisualElement lowVitality;GameSettings settings;float lastTick=-99;
-  VisualElement root,hud,vitalBar,nanoBar,crosshair,hitMarker,flash,aimHint,verbsHint;
-  Label vitalValue,nanoValue,guidance,verbsLabel;
+  VisualElement root,hud,vitalBar,nanoBar,crosshair,hitMarker,flash,aimHint,verbsHint,ammoHint,exposedBadge;
+  Label vitalValue,nanoValue,guidance,verbsLabel,ammoLabel,exposedLabel;
   readonly Dictionary<FeralDroid,VisualElement> bars=new Dictionary<FeralDroid,VisualElement>();
-  float flashAlpha,toastUntil;
+  float flashAlpha,toastUntil,exposedUntil=-99;
+  const float ExposedIndicatorSeconds=1.6f;
+  public bool ExposedIndicatorShown=>Time.unscaledTime<exposedUntil;
+  public static string FormatAmmoHud(RifleAmmoKind kind,int count)
+   =>count>0?$"T Ammo · {BermsBallistics.ShortLabel(kind)} ({count})":$"T Ammo · {BermsBallistics.ShortLabel(kind)} (0 · fallback)";
   /// Damage direction indicators (ranged droids): pooled, each tracks its attacker's position and fades.
   class DamageDir{public VisualElement el;public Vector3 from;public float alpha;}
   readonly List<DamageDir> damageDirs=new List<DamageDir>();
@@ -86,7 +90,28 @@ namespace AthenHill
     verbsHint=Element("hint panel aim-hint",hints);verbsHint.SendToBack();
     verbsLabel=new Label("C Dodge · V Shove · Q EMP · X Overcharge"){pickingMode=PickingMode.Ignore};
     verbsHint.Add(verbsLabel);
+    ammoHint=Element("hint panel aim-hint",hints);ammoHint.SendToBack();
+    ammoLabel=new Label("T Ammo · STD"){pickingMode=PickingMode.Ignore};
+    ammoHint.Add(ammoLabel);
+    Show(ammoHint,false);
    }
+   exposedBadge=Element("exposed-hit-badge",hud);
+   exposedBadge.style.position=Position.Absolute;
+   exposedBadge.style.left=Length.Percent(50);
+   exposedBadge.style.top=Length.Percent(38);
+   exposedBadge.style.width=260;
+   exposedBadge.style.marginLeft=-130;
+   exposedBadge.style.backgroundColor=new Color(.24f,.06f,.05f,.86f);
+   exposedBadge.style.borderTopWidth=exposedBadge.style.borderBottomWidth=exposedBadge.style.borderLeftWidth=exposedBadge.style.borderRightWidth=1;
+   exposedBadge.style.borderTopColor=exposedBadge.style.borderBottomColor=exposedBadge.style.borderLeftColor=exposedBadge.style.borderRightColor=new Color(.9f,.36f,.3f,.92f);
+   exposedBadge.style.paddingTop=exposedBadge.style.paddingBottom=3;
+   exposedBadge.style.paddingLeft=exposedBadge.style.paddingRight=8;
+   exposedLabel=new Label("EXPOSED · NO CHEST ARMOUR"){pickingMode=PickingMode.Ignore};
+   exposedLabel.style.unityTextAlign=TextAnchor.MiddleCenter;
+   exposedLabel.style.fontSize=13;
+   exposedLabel.style.color=new Color(.97f,.64f,.58f,1f);
+   exposedBadge.Add(exposedLabel);
+   Show(exposedBadge,false);
    guidance=new Label{pickingMode=PickingMode.Ignore};guidance.AddToClassList("checkpoint-guidance");hud.Add(guidance);
    // Salvage pickup toast (rarity-coloured lines) and the scrap-heap search progress.
    toast=Element("panel loot-toast",hud);
@@ -101,6 +126,7 @@ namespace AthenHill
    combat.HitLanded+=OnHitLanded;
    combat.ExperienceAwarded+=ShowExperience;
    combat.Hurt+=amount=>flashAlpha=Mathf.Clamp01(flashAlpha+amount/30f);
+   combat.ExposedHit+=OnExposedHit;
    for(int i=0;i<4;i++){var pivot=Element("damage-dir",hud);Element("damage-dir-arc",pivot);damageDirs.Add(new DamageDir{el=pivot});}
    combat.HurtFrom+=ShowDamageDirection;
    compassTrack=root.Q("compass-track");
@@ -139,6 +165,19 @@ namespace AthenHill
      string ov=combat.OverchargeActive?$"X OVER ({Mathf.CeilToInt(combat.OverchargeRemaining)}s)":combat.OverchargeCooldownRemaining>.1f?$"X Over ({Mathf.CeilToInt(combat.OverchargeCooldownRemaining)}s)":"X Overcharge";
      verbsLabel.text=$"C Dodge · V Shove · {emp} · {ov}";
     }
+   }
+   if(ammoHint!=null)
+   {
+    bool showAmmo=play&&combat.Armed&&combat.ActiveWeaponUsesAmmo;
+    Show(ammoHint,showAmmo);
+    if(showAmmo&&ammoLabel!=null)ammoLabel.text=FormatAmmoHud(combat.ActiveAmmo,combat.ActiveAmmoCount);
+   }
+   if(exposedBadge!=null)
+   {
+    float remaining=exposedUntil-Time.unscaledTime;
+    bool showExposed=play&&remaining>0;
+    Show(exposedBadge,showExposed);
+    if(showExposed)exposedBadge.style.opacity=remaining<.4f?Mathf.Clamp01(remaining/.4f):1f;
    }
    flashAlpha=Mathf.MoveTowards(flashAlpha,0,Time.unscaledDeltaTime*(session.reducedMotion?3:1.6f));
    flash.style.opacity=flashAlpha*(session.reducedMotion?.5f:.85f);
@@ -226,7 +265,12 @@ namespace AthenHill
     d.el.style.rotate=new Rotate(angle);d.el.style.opacity=d.alpha;
    }
   }
-  void OnDestroy(){if(combat){combat.HurtFrom-=ShowDamageDirection;combat.ExperienceAwarded-=ShowExperience;combat.HitLanded-=OnHitLanded;}if(crafting)crafting.Collected-=ShowPickup;}
+  void OnExposedHit(float amount,Vector3 from)
+  {
+   exposedUntil=Time.unscaledTime+ExposedIndicatorSeconds;
+   flashAlpha=Mathf.Clamp01(Mathf.Max(flashAlpha,.85f));
+  }
+  void OnDestroy(){if(combat){combat.HurtFrom-=ShowDamageDirection;combat.ExposedHit-=OnExposedHit;combat.ExperienceAwarded-=ShowExperience;combat.HitLanded-=OnHitLanded;}if(crafting)crafting.Collected-=ShowPickup;}
   bool MarkersOn=>!settings||settings.Controls.hitMarkers;
   void OnHitLanded(CombatHit hit)
   {

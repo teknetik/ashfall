@@ -1,0 +1,1351 @@
+{
+ "name": "combat_feel",
+ "exe": "/home/teknetik/code/ao2/unity/AthenHill/Builds/batch-sh-gemini1/AthenHill.x86_64",
+ "exeMtime": "Thu Nov 19 14:08:38 2026",
+ "started": "2026-11-21 23:56:08",
+ "checks": [
+  {
+   "check": "combat feel state present (marker, shake)",
+   "passed": true,
+   "detail": {
+    "marker": {
+     "shown": "None",
+     "hits": 0,
+     "criticals": 0,
+     "kills": 0,
+     "ticks": 0,
+     "lowVitality": 0.0
+    },
+    "shake": {
+     "impulses": 0,
+     "trauma": 0.0,
+     "lastAngle": 0.0,
+     "peakAngle": 0.0,
+     "suppressed": false
+    },
+    "fxLightCap": 2
+   }
+  },
+  {
+   "check": "pistol drawn with 2 at the range",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "range: plate shots show hit/kill markers",
+   "passed": true,
+   "detail": {
+    "before": {
+     "shown": "None",
+     "hits": 0,
+     "criticals": 0,
+     "kills": 0,
+     "ticks": 0,
+     "lowVitality": 0.0
+    },
+    "after": {
+     "shown": "None",
+     "hits": 0,
+     "criticals": 0,
+     "kills": 3,
+     "ticks": 3,
+     "lowVitality": 0.0
+    }
+   }
+  },
+  {
+   "check": "range: marker ticks played",
+   "passed": true,
+   "detail": {
+    "before": 0,
+    "after": 3
+   }
+  },
+  {
+   "check": "range: shots add camera impulses",
+   "passed": true,
+   "detail": {
+    "before": {
+     "impulses": 0,
+     "trauma": 0.0,
+     "lastAngle": 0.0,
+     "peakAngle": 0.0,
+     "suppressed": false
+    },
+    "after": {
+     "impulses": 3,
+     "trauma": 0.0,
+     "lastAngle": 0.0,
+     "peakAngle": 0.0230129,
+     "suppressed": false
+    }
+   }
+  },
+  {
+   "check": "shake: a pistol shot gives a slight shake (peakAngle under 0.6 deg)",
+   "passed": true,
+   "detail": {
+    "impulses": 4,
+    "trauma": 0.0,
+    "lastAngle": 0.0,
+    "peakAngle": 0.0230129,
+    "suppressed": false
+   }
+  },
+  {
+   "check": "shake: damage taken adds a stronger impulse",
+   "passed": true,
+   "detail": {
+    "shot": {
+     "impulses": 4,
+     "trauma": 0.0,
+     "lastAngle": 0.0,
+     "peakAngle": 0.0230129,
+     "suppressed": false
+    },
+    "hurt": {
+     "impulses": 5,
+     "trauma": 0.05324463,
+     "lastAngle": 0.005684661,
+     "peakAngle": 0.104090504,
+     "suppressed": false
+    }
+   }
+  },
+  {
+   "check": "low vitality: edge shows below 35 %",
+   "passed": true,
+   "detail": {
+    "health": 32.4404259,
+    "lowVitality": 0.08148948
+   }
+  },
+  {
+   "check": "medkit on hotbar 3 heals",
+   "passed": true,
+   "detail": {
+    "before": 32.4404259,
+    "after": 75.41005
+   }
+  },
+  {
+   "check": "low vitality: edge clears after healing",
+   "passed": true,
+   "detail": {
+    "shown": "None",
+    "hits": 0,
+    "criticals": 0,
+    "kills": 3,
+    "ticks": 3,
+    "lowVitality": 0.0
+   }
+  },
+  {
+   "check": "Esc opens the pause menu",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "Reduced Motion on from the pause menu",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "shake: suppressed under Reduced Motion",
+   "passed": true,
+   "detail": {
+    "impulses": 11,
+    "trauma": 0.0,
+    "lastAngle": 0.0,
+    "peakAngle": 0.434393,
+    "suppressed": true
+   }
+  },
+  {
+   "check": "Reduced Motion back off",
+   "passed": true,
+   "detail": null
+  },
+  {
+   "check": "weak point: an aimed optic shot registers as a weak-point hit (zone optic)",
+   "passed": true,
+   "detail": {
+    "weak": [
+     {
+      "aimed": "body",
+      "state": "Chase",
+      "weak": true,
+      "zone": "optic",
+      "dealt": 17.2,
+      "killed": true,
+      "dist": 2.8,
+      "cone": 0.59,
+      "marker": "Kill",
+      "criticals": 1
+     },
+     {
+      "aimed": "optic",
+      "state": "Windup",
+      "weak": true,
+      "zone": "optic",
+      "dealt": 65.1,
+      "killed": false,
+      "dist": 1.8,
+      "cone": 0.37,
+      "marker": "Critical",
+      "criticals": 2
+     },
+     {
+      "aimed": "optic",
+      "state": "Windup",
+      "weak": true,
+      "zone": "optic",
+      "dealt": 7.1,
+      "killed": true,
+      "dist": 1.7,
+      "cone": 0.37,
+      "marker": "Kill",
+      "criticals": 2
+     },
+     {
+      "aimed": "body",
+      "state": "Chase",
+      "weak": true,
+      "zone": "optic",
+      "dealt": 43.4,
+      "killed": false,
+      "dist": 3.6,
+      "cone": 0.37,
+      "marker": "Critical",
+      "criticals": 3
+     }
+    ],
+    "opticTries": 11
+   }
+  },
+  {
+   "check": "weak point: weakPointHits and criticalHits rise",
+   "passed": true,
+   "detail": {
+    "weakPointHits": [
+     0,
+     7
+    ],
+    "criticalHits": [
+     0,
+     8
+    ],
+    "criticalFlashes": [
+     0,
+     8
+    ],
+    "criticalStaggers": [
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "check": "weak point: critical flash at the optic",
+   "passed": true,
+   "detail": [
+    0,
+    8
+   ]
+  },
+  {
+   "check": "weak point: optic damage about 1.5x a body hit (rifle vs worker)",
+   "passed": false,
+   "detail": {
+    "optic": [
+     65.1,
+     43.4
+    ],
+    "body": [
+     28.9,
+     28.9,
+     28.9,
+     28.9,
+     28.9,
+     28.9,
+     28.9,
+     28.9,
+     28.9,
+     28.9,
+     28.9,
+     28.9
+    ],
+    "ratio": 1.88
+   }
+  },
+  {
+   "check": "critical (brass) marker shown for a non-lethal weak-point hit",
+   "passed": true,
+   "detail": [
+    {
+     "shown": "None",
+     "hits": 0,
+     "criticals": 0,
+     "kills": 3,
+     "ticks": 3,
+     "lowVitality": 0.0
+    },
+    {
+     "shown": "Kill",
+     "hits": 20,
+     "criticals": 3,
+     "kills": 11,
+     "ticks": 34,
+     "lowVitality": 0.0
+    }
+   ]
+  },
+  {
+   "check": "kill markers follow kills (marker.kills delta == kills delta)",
+   "passed": true,
+   "detail": {
+    "kills": 8,
+    "markerKills": 8
+   }
+  },
+  {
+   "check": "FX light cap never exceeded during the fights",
+   "passed": true,
+   "detail": {
+    "max": 2,
+    "cap": 2
+   }
+  },
+  {
+   "check": "relay-knoll gunners fire bolts at the player",
+   "passed": true,
+   "detail": {
+    "before": 5,
+    "after": 11,
+    "captures": 4
+   }
+  },
+  {
+   "check": "no runtime exceptions in Player.log",
+   "passed": true,
+   "detail": []
+  }
+ ],
+ "captures": [
+  "/home/teknetik/code/ao2/unity/evidence/gemini_merge/20261121/native/gemini1/combat_feel/run/low-vitality-edge.png",
+  "/home/teknetik/code/ao2/unity/evidence/gemini_merge/20261121/native/gemini1/combat_feel/run/rifle-kill-marker.png",
+  "/home/teknetik/code/ao2/unity/evidence/gemini_merge/20261121/native/gemini1/combat_feel/run/weak-point-hit-marker.png",
+  "/home/teknetik/code/ao2/unity/evidence/gemini_merge/20261121/native/gemini1/combat_feel/run/gunner-bolt-0.png",
+  "/home/teknetik/code/ao2/unity/evidence/gemini_merge/20261121/native/gemini1/combat_feel/run/gunner-bolt-1.png",
+  "/home/teknetik/code/ao2/unity/evidence/gemini_merge/20261121/native/gemini1/combat_feel/run/gunner-bolt-2.png",
+  "/home/teknetik/code/ao2/unity/evidence/gemini_merge/20261121/native/gemini1/combat_feel/run/gunner-bolt-3.png"
+ ],
+ "notes": [
+  {
+   "note": "range shake after pistol shots (review cameras)",
+   "detail": {
+    "impulses": 3,
+    "trauma": 0.0,
+    "lastAngle": 0.0,
+    "peakAngle": 0.0230129,
+    "suppressed": false
+   }
+  },
+  {
+   "note": "shake after damage (lastAngle/peak in degrees)",
+   "detail": {
+    "impulses": 5,
+    "trauma": 0.05324463,
+    "lastAngle": 0.005684661,
+    "peakAngle": 0.104090504,
+    "suppressed": false
+   }
+  },
+  {
+   "note": "workers near berms_caravan",
+   "detail": [
+    [
+     "Chase",
+     [
+      -199.4,
+      -1.2,
+      64.4
+     ]
+    ],
+    [
+     "Chase",
+     [
+      -196.9,
+      -0.8,
+      78.3
+     ]
+    ],
+    [
+     "Chase",
+     [
+      -188.7,
+      -1.1,
+      71.4
+     ]
+    ]
+   ]
+  },
+  {
+   "note": "workers near berms_scrapyard",
+   "detail": [
+    [
+     "Chase",
+     [
+      -297.2,
+      1.8,
+      -101.7
+     ]
+    ],
+    [
+     "Chase",
+     [
+      -280.6,
+      2.1,
+      -102.9
+     ]
+    ]
+   ]
+  },
+  {
+   "note": "worker shots",
+   "detail": [
+    {
+     "aimed": "body",
+     "state": "Chase",
+     "weak": false,
+     "zone": null,
+     "dealt": 28.9,
+     "killed": false,
+     "dist": 1.9,
+     "cone": 0.37,
+     "marker": "Hit",
+     "criticals": 0
+    },
+    {
+     "aimed": "optic",
+     "state": "Stagger",
+     "weak": false,
+     "zone": null,
+     "dealt": 28.9,
+     "killed": false,
+     "dist": 2.1,
+     "cone": 0.37,
+     "marker": "Hit",
+     "criticals": 0
+    },
+    {
+     "aimed": "optic",
+     "state": "Recover",
+     "weak": false,
+     "zone": null,
+     "dealt": 28.9,
+     "killed": false,
+     "dist": 1.9,
+     "cone": 0.37,
+     "marker": "Hit",
+     "criticals": 0
+    },
+    {
+     "aimed": "optic",
+     "state": "Windup",
+     "weak": false,
+     "zone": null,
+     "dealt": 28.9,
+     "killed": false,
+     "dist": 1.9,
+     "cone": 0.37,
+     "marker": "Hit",
+     "criticals": 0
+    },
+    {
+     "aimed": "optic",
+     "state": "Recover",
+     "weak": false,
+     "zone": null,
+     "dealt": 28.9,
+     "killed": false,
+     "dist": 1.9,
+     "cone": 0.59,
+     "marker": "Hit",
+     "criticals": 0
+    },
+    {
+     "aimed": "optic",
+     "state": "Windup",
+     "weak": false,
+     "zone": null,
+     "dealt": 28.9,
+     "killed": false,
+     "dist": 1.2,
+     "cone": 0.59,
+     "marker": "Hit",
+     "criticals": 0
+    },
+    {
+     "aimed": "optic",
+     "state": "Stagger",
+     "weak": false,
+     "zone": null,
+     "dealt": 14.3,
+     "killed": true,
+     "dist": 1.4,
+     "cone": 0.37,
+     "marker": "Kill",
+     "criticals": 1
+    },
+    {
+     "aimed": "body",
+     "state": "Chase",
+     "weak": false,
+     "zone": null,
+     "dealt": 28.9,
+     "killed": false,
+     "dist": 2.3,
+     "cone": 0.37,
+     "marker": "Hit",
+     "criticals": 1
+    },
+    {
+     "aimed": "optic",
+     "state": "Recover",
+     "weak": false,
+     "zone": null,
+     "dealt": 28.9,
+     "killed": false,
+     "dist": 2.2,
+     "cone": 0.59,
+     "marker": "None",
+     "criticals": 1
+    },
+    {
+     "aimed": "body",
+     "state": "Chase",
+     "weak": true,
+     "zone": "optic",
+     "dealt": 17.2,
+     "killed": true,
+     "dist": 2.8,
+     "cone": 0.59,
+     "marker": "Kill",
+     "criticals": 1
+    },
+    {
+     "aimed": "optic",
+     "state": "Windup",
+     "weak": true,
+     "zone": "optic",
+     "dealt": 65.1,
+     "killed": false,
+     "dist": 1.8,
+     "cone": 0.37,
+     "marker": "Critical",
+     "criticals": 2
+    },
+    {
+     "aimed": "optic",
+     "state": "Windup",
+     "weak": false,
+     "zone": null,
+     "dealt": 28.9,
+     "killed": false,
+     "dist": 1.4,
+     "cone": 0.37,
+     "marker": "Hit",
+     "criticals": 2
+    },
+    {
+     "aimed": "optic",
+     "state": "Stagger",
+     "weak": false,
+     "zone": null,
+     "dealt": 28.9,
+     "killed": false,
+     "dist": 1.7,
+     "cone": 0.37,
+     "marker": "None",
+     "criticals": 2
+    },
+    {
+     "aimed": "optic",
+     "state": "Windup",
+     "weak": true,
+     "zone": "optic",
+     "dealt": 7.1,
+     "killed": true,
+     "dist": 1.7,
+     "cone": 0.37,
+     "marker": "Kill",
+     "criticals": 2
+    },
+    {
+     "aimed": "body",
+     "state": "Chase",
+     "weak": true,
+     "zone": "optic",
+     "dealt": 43.4,
+     "killed": false,
+     "dist": 3.6,
+     "cone": 0.37,
+     "marker": "Critical",
+     "criticals": 3
+    },
+    {
+     "aimed": "body",
+     "state": "Windup",
+     "weak": true,
+     "zone": "optic",
+     "dealt": 31.6,
+     "killed": true,
+     "dist": 2.0,
+     "cone": 0.37,
+     "marker": "Kill",
+     "criticals": 3
+    },
+    {
+     "aimed": "body",
+     "state": "Recover",
+     "weak": false,
+     "zone": null,
+     "dealt": 28.9,
+     "killed": false,
+     "dist": 2.4,
+     "cone": 0.37,
+     "marker": "Hit",
+     "criticals": 3
+    },
+    {
+     "aimed": "body",
+     "state": "Stagger",
+     "weak": false,
+     "zone": null,
+     "dealt": 28.9,
+     "killed": false,
+     "dist": 2.2,
+     "cone": 0.37,
+     "marker": "Hit",
+     "criticals": 3
+    },
+    {
+     "aimed": "body",
+     "state": "Windup",
+     "weak": false,
+     "zone": null,
+     "dealt": 28.9,
+     "killed": false,
+     "dist": 1.9,
+     "cone": 0.37,
+     "marker": "Hit",
+     "criticals": 3
+    },
+    {
+     "aimed": "body",
+     "state": "Stagger",
+     "weak": false,
+     "zone": null,
+     "dealt": 28.9,
+     "killed": false,
+     "dist": 2.1,
+     "cone": 0.37,
+     "marker": "Hit",
+     "criticals": 3
+    },
+    {
+     "aimed": "body",
+     "state": "Recover",
+     "weak": false,
+     "zone": null,
+     "dealt": 28.9,
+     "killed": false,
+     "dist": 3.1,
+     "cone": 0.37,
+     "marker": "Hit",
+     "criticals": 3
+    },
+    {
+     "aimed": "body",
+     "state": "Chase",
+     "weak": false,
+     "zone": null,
+     "dealt": 17.2,
+     "killed": true,
+     "dist": 2.4,
+     "cone": 0.37,
+     "marker": "Kill",
+     "criticals": 3
+    },
+    {
+     "aimed": "body",
+     "state": "Recover",
+     "weak": false,
+     "zone": null,
+     "dealt": 28.9,
+     "killed": false,
+     "dist": 2.3,
+     "cone": 0.37,
+     "marker": "Hit",
+     "criticals": 3
+    },
+    {
+     "aimed": "body",
+     "state": "Windup",
+     "weak": false,
+     "zone": null,
+     "dealt": 14.3,
+     "killed": true,
+     "dist": 1.9,
+     "cone": 0.37,
+     "marker": "Kill",
+     "criticals": 3
+    },
+    {
+     "aimed": "body",
+     "state": "Windup",
+     "weak": false,
+     "zone": null,
+     "dealt": 28.9,
+     "killed": false,
+     "dist": 1.9,
+     "cone": 0.37,
+     "marker": "Hit",
+     "criticals": 3
+    },
+    {
+     "aimed": "body",
+     "state": "Stagger",
+     "weak": false,
+     "zone": null,
+     "dealt": 28.9,
+     "killed": false,
+     "dist": 2.1,
+     "cone": 0.37,
+     "marker": "Hit",
+     "criticals": 3
+    },
+    {
+     "aimed": "body",
+     "state": "Recover",
+     "weak": false,
+     "zone": null,
+     "dealt": 28.9,
+     "killed": false,
+     "dist": 1.9,
+     "cone": 0.37,
+     "marker": "Hit",
+     "criticals": 3
+    },
+    {
+     "aimed": "body",
+     "state": "Windup",
+     "weak": false,
+     "zone": null,
+     "dealt": 28.9,
+     "killed": false,
+     "dist": 1.9,
+     "cone": 0.37,
+     "marker": "Hit",
+     "criticals": 3
+    },
+    {
+     "aimed": "body",
+     "state": "Windup",
+     "weak": false,
+     "zone": null,
+     "dealt": 14.3,
+     "killed": true,
+     "dist": 1.9,
+     "cone": 0.37,
+     "marker": "Kill",
+     "criticals": 3
+    }
+   ]
+  }
+ ],
+ "weather": {
+  "available": true,
+  "state": "calm",
+  "held": false,
+  "windStrength": 0.856357634,
+  "visibility": 1.0,
+  "sand": 0.0
+ },
+ "shots": [
+  {
+   "aimed": "body",
+   "state": "Chase",
+   "weak": false,
+   "zone": null,
+   "dealt": 28.9,
+   "killed": false,
+   "dist": 1.9,
+   "cone": 0.37,
+   "marker": "Hit",
+   "criticals": 0
+  },
+  {
+   "aimed": "optic",
+   "state": "Stagger",
+   "weak": false,
+   "zone": null,
+   "dealt": 28.9,
+   "killed": false,
+   "dist": 2.1,
+   "cone": 0.37,
+   "marker": "Hit",
+   "criticals": 0
+  },
+  {
+   "aimed": "optic",
+   "state": "Recover",
+   "weak": false,
+   "zone": null,
+   "dealt": 28.9,
+   "killed": false,
+   "dist": 1.9,
+   "cone": 0.37,
+   "marker": "Hit",
+   "criticals": 0
+  },
+  {
+   "aimed": "optic",
+   "state": "Windup",
+   "weak": false,
+   "zone": null,
+   "dealt": 28.9,
+   "killed": false,
+   "dist": 1.9,
+   "cone": 0.37,
+   "marker": "Hit",
+   "criticals": 0
+  },
+  {
+   "aimed": "optic",
+   "state": "Recover",
+   "weak": false,
+   "zone": null,
+   "dealt": 28.9,
+   "killed": false,
+   "dist": 1.9,
+   "cone": 0.59,
+   "marker": "Hit",
+   "criticals": 0
+  },
+  {
+   "aimed": "optic",
+   "state": "Windup",
+   "weak": false,
+   "zone": null,
+   "dealt": 28.9,
+   "killed": false,
+   "dist": 1.2,
+   "cone": 0.59,
+   "marker": "Hit",
+   "criticals": 0
+  },
+  {
+   "aimed": "optic",
+   "state": "Stagger",
+   "weak": false,
+   "zone": null,
+   "dealt": 14.3,
+   "killed": true,
+   "dist": 1.4,
+   "cone": 0.37,
+   "marker": "Kill",
+   "criticals": 1
+  },
+  {
+   "aimed": "body",
+   "state": "Chase",
+   "weak": false,
+   "zone": null,
+   "dealt": 28.9,
+   "killed": false,
+   "dist": 2.3,
+   "cone": 0.37,
+   "marker": "Hit",
+   "criticals": 1
+  },
+  {
+   "aimed": "optic",
+   "state": "Recover",
+   "weak": false,
+   "zone": null,
+   "dealt": 28.9,
+   "killed": false,
+   "dist": 2.2,
+   "cone": 0.59,
+   "marker": "None",
+   "criticals": 1
+  },
+  {
+   "aimed": "body",
+   "state": "Chase",
+   "weak": true,
+   "zone": "optic",
+   "dealt": 17.2,
+   "killed": true,
+   "dist": 2.8,
+   "cone": 0.59,
+   "marker": "Kill",
+   "criticals": 1
+  },
+  {
+   "aimed": "optic",
+   "state": "Windup",
+   "weak": true,
+   "zone": "optic",
+   "dealt": 65.1,
+   "killed": false,
+   "dist": 1.8,
+   "cone": 0.37,
+   "marker": "Critical",
+   "criticals": 2
+  },
+  {
+   "aimed": "optic",
+   "state": "Windup",
+   "weak": false,
+   "zone": null,
+   "dealt": 28.9,
+   "killed": false,
+   "dist": 1.4,
+   "cone": 0.37,
+   "marker": "Hit",
+   "criticals": 2
+  },
+  {
+   "aimed": "optic",
+   "state": "Stagger",
+   "weak": false,
+   "zone": null,
+   "dealt": 28.9,
+   "killed": false,
+   "dist": 1.7,
+   "cone": 0.37,
+   "marker": "None",
+   "criticals": 2
+  },
+  {
+   "aimed": "optic",
+   "state": "Windup",
+   "weak": true,
+   "zone": "optic",
+   "dealt": 7.1,
+   "killed": true,
+   "dist": 1.7,
+   "cone": 0.37,
+   "marker": "Kill",
+   "criticals": 2
+  },
+  {
+   "aimed": "body",
+   "state": "Chase",
+   "weak": true,
+   "zone": "optic",
+   "dealt": 43.4,
+   "killed": false,
+   "dist": 3.6,
+   "cone": 0.37,
+   "marker": "Critical",
+   "criticals": 3
+  },
+  {
+   "aimed": "body",
+   "state": "Windup",
+   "weak": true,
+   "zone": "optic",
+   "dealt": 31.6,
+   "killed": true,
+   "dist": 2.0,
+   "cone": 0.37,
+   "marker": "Kill",
+   "criticals": 3
+  },
+  {
+   "aimed": "body",
+   "state": "Recover",
+   "weak": false,
+   "zone": null,
+   "dealt": 28.9,
+   "killed": false,
+   "dist": 2.4,
+   "cone": 0.37,
+   "marker": "Hit",
+   "criticals": 3
+  },
+  {
+   "aimed": "body",
+   "state": "Stagger",
+   "weak": false,
+   "zone": null,
+   "dealt": 28.9,
+   "killed": false,
+   "dist": 2.2,
+   "cone": 0.37,
+   "marker": "Hit",
+   "criticals": 3
+  },
+  {
+   "aimed": "body",
+   "state": "Windup",
+   "weak": false,
+   "zone": null,
+   "dealt": 28.9,
+   "killed": false,
+   "dist": 1.9,
+   "cone": 0.37,
+   "marker": "Hit",
+   "criticals": 3
+  },
+  {
+   "aimed": "body",
+   "state": "Stagger",
+   "weak": false,
+   "zone": null,
+   "dealt": 28.9,
+   "killed": false,
+   "dist": 2.1,
+   "cone": 0.37,
+   "marker": "Hit",
+   "criticals": 3
+  },
+  {
+   "aimed": "body",
+   "state": "Recover",
+   "weak": false,
+   "zone": null,
+   "dealt": 28.9,
+   "killed": false,
+   "dist": 3.1,
+   "cone": 0.37,
+   "marker": "Hit",
+   "criticals": 3
+  },
+  {
+   "aimed": "body",
+   "state": "Chase",
+   "weak": false,
+   "zone": null,
+   "dealt": 17.2,
+   "killed": true,
+   "dist": 2.4,
+   "cone": 0.37,
+   "marker": "Kill",
+   "criticals": 3
+  },
+  {
+   "aimed": "body",
+   "state": "Recover",
+   "weak": false,
+   "zone": null,
+   "dealt": 28.9,
+   "killed": false,
+   "dist": 2.3,
+   "cone": 0.37,
+   "marker": "Hit",
+   "criticals": 3
+  },
+  {
+   "aimed": "body",
+   "state": "Windup",
+   "weak": false,
+   "zone": null,
+   "dealt": 14.3,
+   "killed": true,
+   "dist": 1.9,
+   "cone": 0.37,
+   "marker": "Kill",
+   "criticals": 3
+  },
+  {
+   "aimed": "body",
+   "state": "Windup",
+   "weak": false,
+   "zone": null,
+   "dealt": 28.9,
+   "killed": false,
+   "dist": 1.9,
+   "cone": 0.37,
+   "marker": "Hit",
+   "criticals": 3
+  },
+  {
+   "aimed": "body",
+   "state": "Stagger",
+   "weak": false,
+   "zone": null,
+   "dealt": 28.9,
+   "killed": false,
+   "dist": 2.1,
+   "cone": 0.37,
+   "marker": "Hit",
+   "criticals": 3
+  },
+  {
+   "aimed": "body",
+   "state": "Recover",
+   "weak": false,
+   "zone": null,
+   "dealt": 28.9,
+   "killed": false,
+   "dist": 1.9,
+   "cone": 0.37,
+   "marker": "Hit",
+   "criticals": 3
+  },
+  {
+   "aimed": "body",
+   "state": "Windup",
+   "weak": false,
+   "zone": null,
+   "dealt": 28.9,
+   "killed": false,
+   "dist": 1.9,
+   "cone": 0.37,
+   "marker": "Hit",
+   "criticals": 3
+  },
+  {
+   "aimed": "body",
+   "state": "Windup",
+   "weak": false,
+   "zone": null,
+   "dealt": 14.3,
+   "killed": true,
+   "dist": 1.9,
+   "cone": 0.37,
+   "marker": "Kill",
+   "criticals": 3
+  }
+ ],
+ "final_feel": {
+  "available": true,
+  "hits": 34,
+  "criticalHits": 8,
+  "weakPointHits": 7,
+  "kills": 8,
+  "lastHit": {
+   "critical": false,
+   "weakPoint": false,
+   "killed": true,
+   "dealt": 14.3320007,
+   "zone": null
+  },
+  "marker": {
+   "shown": "None",
+   "hits": 20,
+   "criticals": 3,
+   "kills": 11,
+   "ticks": 34,
+   "lowVitality": 0.0
+  },
+  "shake": {
+   "impulses": 107,
+   "trauma": 0.0,
+   "lastAngle": 0.0,
+   "peakAngle": 0.473814458,
+   "suppressed": false
+  },
+  "criticalFlashes": 8,
+  "fxLights": 0,
+  "fxLightCap": 2,
+  "weatherVisibility": 1.0,
+  "weakPoints": 10,
+  "criticalStaggers": 0,
+  "weakPointZones": [
+   {
+    "droid": "Feral worker droid",
+    "centre": [
+     -82.02238,
+     1.70883512,
+     -42.2332
+    ],
+    "radius": 0.19,
+    "hits": 0,
+    "state": "Idle"
+   },
+   {
+    "droid": "Feral worker droid",
+    "centre": [
+     -75.22703,
+     1.42844868,
+     -38.45784
+    ],
+    "radius": 0.189999968,
+    "hits": 0,
+    "state": "Idle"
+   },
+   {
+    "droid": "Feral scrap drone",
+    "centre": [
+     -84.72066,
+     0.2264251,
+     -36.65951
+    ],
+    "radius": 0.159999982,
+    "hits": 0,
+    "state": "Idle"
+   },
+   {
+    "droid": "Feral worker droid",
+    "centre": [
+     -89.75793,
+     1.99327636,
+     -27.0277863
+    ],
+    "radius": 0.19,
+    "hits": 0,
+    "state": "Idle"
+   },
+   {
+    "droid": "Feral scrap drone",
+    "centre": [
+     -72.7569351,
+     0.6588887,
+     -30.7564068
+    ],
+    "radius": 0.16,
+    "hits": 0,
+    "state": "Idle"
+   },
+   {
+    "droid": "Feral gunner droid",
+    "centre": [
+     -325.1967,
+     3.29800653,
+     -2.24910641
+    ],
+    "radius": 0.19,
+    "hits": 0,
+    "state": "Chase"
+   },
+   {
+    "droid": "Feral gunner droid",
+    "centre": [
+     -329.285278,
+     5.66107225,
+     3.09049654
+    ],
+    "radius": 0.190000027,
+    "hits": 0,
+    "state": "Recover"
+   },
+   {
+    "droid": "Feral worker droid",
+    "centre": [
+     -313.311,
+     2.70074654,
+     7.170847
+    ],
+    "radius": 0.190000042,
+    "hits": 0,
+    "state": "Recover"
+   },
+   {
+    "droid": "Feral lancer drone",
+    "centre": [
+     -287.750275,
+     4.26848364,
+     -81.9605
+    ],
+    "radius": 0.159999982,
+    "hits": 0,
+    "state": "Chase"
+   }
+  ],
+  "lastShotSoundSet": "weapon_field_rifle",
+  "lastCone": 0.367875,
+  "droidAudio": [
+   {
+    "droid": "Feral worker droid",
+    "played": 0,
+    "dropped": 0,
+    "last": null,
+    "roll": 0.0,
+    "rollPlaying": false
+   },
+   {
+    "droid": "Feral worker droid",
+    "played": 0,
+    "dropped": 0,
+    "last": null,
+    "roll": 0.0,
+    "rollPlaying": false
+   },
+   {
+    "droid": "Feral scrap drone",
+    "played": 0,
+    "dropped": 0,
+    "last": null,
+    "roll": 0.0,
+    "rollPlaying": false
+   },
+   {
+    "droid": "Feral worker droid",
+    "played": 0,
+    "dropped": 0,
+    "last": null,
+    "roll": 0.0,
+    "rollPlaying": false
+   },
+   {
+    "droid": "Feral scrap drone",
+    "played": 0,
+    "dropped": 0,
+    "last": null,
+    "roll": 0.0,
+    "rollPlaying": false
+   },
+   {
+    "droid": "Feral gunner droid",
+    "played": 18,
+    "dropped": 1,
+    "last": "droid-step-1",
+    "roll": 0.0,
+    "rollPlaying": false
+   },
+   {
+    "droid": "Feral gunner droid",
+    "played": 14,
+    "dropped": 0,
+    "last": "droid-step-2",
+    "roll": 0.0,
+    "rollPlaying": false
+   },
+   {
+    "droid": "Feral worker droid",
+    "played": 13,
+    "dropped": 1,
+    "last": "droid-strike",
+    "roll": 0.0,
+    "rollPlaying": false
+   },
+   {
+    "droid": "Feral worker droid",
+    "played": 66,
+    "dropped": 1,
+    "last": "droid-death",
+    "roll": 0.0,
+    "rollPlaying": false
+   },
+   {
+    "droid": "Feral lancer drone",
+    "played": 12,
+    "dropped": 0,
+    "last": "lancer-tell",
+    "roll": 0.0,
+    "rollPlaying": false
+   }
+  ],
+  "boltFlybys": 5,
+  "boltImpacts": 11
+ },
+ "passed": false,
+ "summary": "22/23 passed",
+ "finished": "2026-11-21 23:57:47"
+}

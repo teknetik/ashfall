@@ -72,7 +72,7 @@ namespace AthenHill.Tests
     Assert.That(tut.firstContact.spawns.Length,Is.EqualTo(2));Assert.That(tut.firstContact.transform.position.x,Is.InRange(-95,-75));
     Assert.That(Vector3.Distance(tut.firstContact.transform.position,tut.gateMarker.position),Is.LessThan(35));
     Assert.That(tut.depot.spawns.Length,Is.EqualTo(5));
-    Assert.That(tut.lineComplete,Does.Contain("Brann"));Assert.That(tut.lineComplete,Does.Contain("waystation"));
+    Assert.That(tut.lineComplete,Does.Contain("back to me at the post"));Assert.That(tut.lineComplete,Does.Not.Contain("Brann"),"Ossa sends the player on to Brann in person (22 Nov 2026)");Assert.That(tut.lineComplete,Does.Contain("waystation"));
     // the gameplay camera can see across the bowl
     Assert.That(session.follow.GetComponent<Camera>().farClipPlane,Is.GreaterThanOrEqualTo(1200));
    }

@@ -44,6 +44,8 @@ namespace AthenHill.Editor
         public class Spec
         {
             public string key, title, walker, walk; public float height;
+            /// Record folder holding key/rigged_fixed.glb and key/anim_only (null = the 3 Oct Meshy record; 22 Nov 2026: the hero-route rebuild).
+            public string record;
             public string Instance => "WardWalker " + title;
             public string Prefab => PrefabRoot + "/WardWalker_" + title + ".prefab";
             public string Folder => ArtRoot + "/" + title;
@@ -53,7 +55,7 @@ namespace AthenHill.Editor
         public static readonly Spec[] Specs = {
             new Spec{key="porter",   title="Daro", walker="npc_walker_01", height=1.78f, walk="walk_566"},   // Walking 2: 0.954 m/s root motion vs route 0.95 (Casual Walk 30: 0.73, rate 1.30)
             new Spec{key="nanotech", title="Sel",  walker="npc_walker_02", height=1.68f, walk="walk_566"},   // Walking 2: 0.903 vs route 1.05 (Walking Woman 1: 1.32, rate 0.80)
-            new Spec{key="grower",   title="Anso", walker="npc_walker_03", height=1.80f, walk="walk_115"},   // Quick Walk: 1.262 planted vs route 1.15 (Walking 2: 0.96, rate 1.20)
+            new Spec{key="grower",   title="Anso", walker="npc_walker_03", height=1.80f, walk="walk_566"},   // 22 Nov 2026 rebuild: Walking 2 (Quick Walk 115 measured 1.46 m/s on the new legs against the 1.15 route, rate 0.79)
         };
 
         public static float LodSwitch0 = .14f, LodCull = .012f;
@@ -86,8 +88,8 @@ namespace AthenHill.Editor
                     if (File.Exists(to) && File.ReadAllBytes(to).SequenceEqual(File.ReadAllBytes(from))) return;
                     File.Copy(from, to, true); copied.Add(to);
                 }
-                Copy(Record + s.key + "/rigged_fixed.glb", s.Model);
-                Copy(Record + s.key + "/anim_only/" + s.walk + ".glb", s.Folder + "/Source/" + s.walk + ".glb");
+                Copy((s.record ?? Record) + s.key + "/rigged_fixed.glb", s.Model);
+                Copy((s.record ?? Record) + s.key + "/anim_only/" + s.walk + ".glb", s.Folder + "/Source/" + s.walk + ".glb");
                 AssetDatabase.Refresh();
                 foreach (var path in new[] { s.Model, s.Folder + "/Source/" + s.walk + ".glb" })
                 {

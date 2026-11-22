@@ -223,6 +223,7 @@ namespace AthenHill
                     if (i == 100 && mark) { string path = ""; for (var t = mark.transform; t; t = t.parent) path = t.name + "/" + path; trail = $"at 100: part yaw {part.transform.localEulerAngles.y:0}, mark forward {mark.transform.forward.ToString("0.00")}, mark path {path}"; }
                 }
                 Up(pivot);
+                for (int i = 0; i < 180 && s.Squaring; i++) Idle(pivot);   // it swings back square before anything else is pressed
                 return done() || Fail($"the mark was never found (best facing {best:0.00}, engaged {engaged} frames, {trail}, eye {Eye.ToString("0.00")})");
             }
             Down(pivot);

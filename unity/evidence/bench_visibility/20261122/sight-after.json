@@ -1,0 +1,178 @@
+{
+  "bench": "real-fixtures-grip-materials-pistol-servo-tools",
+  "actionsInTheTable": 213,
+  "actionsChecked": 205,
+  "pointsChecked": 695,
+  "notWalked": [
+    "s1.screw_b.r:pliers",
+    "s1.pin.r:anvil",
+    "s1.pin.r:straighten",
+    "s1.pin.r:back",
+    "s1.housing:spring",
+    "s2.circlip:set",
+    "s3.strap:open",
+    "s3.strap:out"
+  ],
+  "shotsUsed": {
+    "card": 2,
+    "mat": 79,
+    "over": 27,
+    "parts": 2,
+    "pin": 1,
+    "press": 12,
+    "press_low": 2,
+    "roll": 52,
+    "tester": 3,
+    "tray": 2,
+    "vise": 91,
+    "vise_l": 3,
+    "vise_r": 3,
+    "wide": 35,
+    "work": 65
+  },
+  "paths": [
+    {
+      "action": "s1.tape:peel",
+      "shot": "vise",
+      "points": 36,
+      "hidden": 0,
+      "longestHiddenStretchMm": 0.0,
+      "aheadMm": 60.0,
+      "followable": true,
+      "startInSight": true,
+      "endInSight": true
+    },
+    {
+      "action": "s3.scribe:scribe",
+      "shot": "mat",
+      "points": 40,
+      "hidden": 0,
+      "longestHiddenStretchMm": 0.0,
+      "aheadMm": 60.0,
+      "followable": true,
+      "startInSight": true,
+      "endInSight": true
+    },
+    {
+      "action": "s3.cut:strap",
+      "shot": "over",
+      "points": 10,
+      "hidden": 0,
+      "longestHiddenStretchMm": 0.0,
+      "aheadMm": 60.0,
+      "followable": true,
+      "startInSight": true,
+      "endInSight": true
+    },
+    {
+      "action": "s3.cut:cut",
+      "shot": "over",
+      "points": 40,
+      "hidden": 0,
+      "longestHiddenStretchMm": 0.0,
+      "aheadMm": 60.0,
+      "followable": true,
+      "startInSight": true,
+      "endInSight": true
+    },
+    {
+      "action": "s4.flash:file",
+      "shot": "mat",
+      "points": 40,
+      "hidden": 0,
+      "longestHiddenStretchMm": 0.0,
+      "aheadMm": 60.0,
+      "followable": true,
+      "startInSight": true,
+      "endInSight": true
+    },
+    {
+      "action": "s5.loop:tuck",
+      "shot": "mat",
+      "points": 14,
+      "hidden": 0,
+      "longestHiddenStretchMm": 0.0,
+      "aheadMm": 60.0,
+      "followable": true,
+      "startInSight": true,
+      "endInSight": true
+    },
+    {
+      "action": "s5.seam:right",
+      "shot": "mat",
+      "points": 40,
+      "hidden": 0,
+      "longestHiddenStretchMm": 0.0,
+      "aheadMm": 60.0,
+      "followable": true,
+      "startInSight": true,
+      "endInSight": true
+    },
+    {
+      "action": "s5.seam:left",
+      "shot": "mat",
+      "points": 40,
+      "hidden": 0,
+      "longestHiddenStretchMm": 0.0,
+      "aheadMm": 60.0,
+      "followable": true,
+      "startInSight": true,
+      "endInSight": true
+    },
+    {
+      "action": "s5.damp.r:ease",
+      "shot": "mat",
+      "points": 14,
+      "hidden": 0,
+      "longestHiddenStretchMm": 0.0,
+      "aheadMm": 60.0,
+      "followable": true,
+      "startInSight": true,
+      "endInSight": true
+    },
+    {
+      "action": "s6.plug:route",
+      "shot": "vise",
+      "points": 14,
+      "hidden": 3,
+      "longestHiddenStretchMm": 12.0,
+      "aheadMm": 60.0,
+      "followable": true,
+      "startInSight": false,
+      "endInSight": true
+    }
+  ],
+  "failures": [
+    {
+      "action": "s1.pin:punch",
+      "verb": "Seat",
+      "moment": "pick it up",
+      "shot": "roll",
+      "what": "tools.punch",
+      "why": "hidden behind tools.roll (9 mm in front of it)",
+      "seenFrom": []
+    },
+    {
+      "action": "s6.pin.r:flush",
+      "verb": "Window strike",
+      "moment": "the work",
+      "shot": "vise_l",
+      "what": "pistol.housing_pin",
+      "why": "hidden behind grip.core (54 mm in front of it)",
+      "seenFrom": []
+    }
+  ],
+  "failed": 2,
+  "byWhy": {
+    "hidden": 2
+  },
+  "ok": false,
+  "sources": {
+    "fixtures": "real (data/sources.json)",
+    "tools": "real (data/sources.json)",
+    "pistol": "real (data/sources.json)",
+    "grip": "real (data/sources.json)",
+    "servo": "real (data/sources.json)",
+    "materials": "real (data/sources.json)"
+  }
+}

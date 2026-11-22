@@ -1,0 +1,605 @@
+{
+ "name": "npc_life",
+ "exe": "/home/teknetik/code/ao2/unity/AthenHill/Builds/batch-sh-gemini1/AthenHill.x86_64",
+ "exeMtime": "Thu Nov 19 14:08:38 2026",
+ "started": "2026-11-22 00:57:26",
+ "checks": [
+  {
+   "check": "bark director present with 11 speakers",
+   "passed": true,
+   "detail": {
+    "speakers": 14,
+    "captions": true,
+    "captionBound": true
+   }
+  },
+  {
+   "check": "Vex barks on the walk-up (greeting or once-only acknowledgement)",
+   "passed": true,
+   "detail": {
+    "speaker": "Vex",
+    "speakerId": "npc_vex",
+    "line": "ack_primer",
+    "text": "Made it back through the Berms. Plenty don't, first time.",
+    "trigger": "Acknowledge",
+    "voiced": true,
+    "time": 10.6278019
+   }
+  },
+  {
+   "check": "Vex bark is voiced (take bound)",
+   "passed": true,
+   "detail": "ack_primer"
+  },
+  {
+   "check": "caption shown low centre while Vex speaks",
+   "passed": true,
+   "detail": {
+    "caption": "Made it back through the Berms. Plenty don't, first time.",
+    "bounds": [
+     580.0,
+     779.0,
+     760.0,
+     49.0
+    ]
+   }
+  },
+  {
+   "check": "after the acknowledgement Vex greets normally",
+   "passed": true,
+   "detail": {
+    "speaker": "Vex",
+    "speakerId": "npc_vex",
+    "line": "greet_carts",
+    "text": "Through you go. Mind the carts.",
+    "trigger": "Greeting",
+    "voiced": true,
+    "time": 25.0151424
+   }
+  },
+  {
+   "check": "no second greeting from Vex inside the 150 s cooldown",
+   "passed": true,
+   "detail": {
+    "last": {
+     "speaker": "Daro",
+     "speakerId": "walker_daro",
+     "line": "pass_road",
+     "text": "The Tubes took the trade. Never took the road.",
+     "trigger": "Passing",
+     "voiced": true,
+     "time": 35.70748
+    },
+    "vexAgain": null
+   }
+  },
+  {
+   "check": "23:00 greeting from Vex is the night line",
+   "passed": false,
+   "detail": {}
+  },
+  {
+   "check": "08:00 greeting from Vex is the morning line",
+   "passed": true,
+   "detail": {
+    "speaker": "Vex",
+    "speakerId": "npc_vex",
+    "line": "greet_morning",
+    "text": "Gate's open. Caravans have the morning.",
+    "trigger": "Greeting",
+    "voiced": true,
+    "time": 77.7995758
+   }
+  },
+  {
+   "check": "Esc during a bark: paused and the caption is hidden",
+   "passed": true,
+   "detail": {
+    "state": "Paused",
+    "paused": true
+   }
+  },
+  {
+   "check": "captions off: a voiced bark plays with no caption",
+   "passed": true,
+   "detail": {
+    "speaker": "Vex",
+    "speakerId": "npc_vex",
+    "line": "greet_carts",
+    "text": "Through you go. Mind the carts.",
+    "trigger": "Greeting",
+    "voiced": true,
+    "time": 108.333588
+   }
+  },
+  {
+   "check": "a walker speaks a Passing line as he passes",
+   "passed": true,
+   "detail": {
+    "speaker": "Daro",
+    "speakerId": "walker_daro",
+    "line": "pass_caravan",
+    "text": "Caravan's in at noon, if you're buying.",
+    "trigger": "Passing",
+    "voiced": true,
+    "time": 139.095657
+   }
+  },
+  {
+   "check": "walker glances at the player (ActorLookAt focused)",
+   "passed": true,
+   "detail": [
+    {
+     "name": "WardWalker Daro",
+     "Focused": true,
+     "clip": "porter_walk_566"
+    },
+    {
+     "name": "WardWalker Anso",
+     "Focused": false,
+     "clip": "grower_walk_115"
+    },
+    {
+     "name": "WardWalker Sel",
+     "Focused": false,
+     "clip": "nanotech_walk_566"
+    }
+   ]
+  },
+  {
+   "check": "Mira barks on the walk-up",
+   "passed": true,
+   "detail": {
+    "speaker": "Mira",
+    "speakerId": "npc_mira",
+    "line": "ack_primer",
+    "text": "Heard you came back from the Berms in one piece. Good.",
+    "trigger": "Acknowledge",
+    "voiced": true,
+    "time": 156.141129
+   }
+  },
+  {
+   "check": "ack_primer recorded as a story flag",
+   "passed": true,
+   "detail": [
+    "bark.npc_vex.ack_primer",
+    "bark.npc_mira.ack_primer"
+   ]
+  },
+  {
+   "check": "an idle remark while lingering near a colonist (within 160 s)",
+   "passed": true,
+   "detail": {
+    "seconds": 140,
+    "last": {
+     "speaker": "Mira",
+     "speakerId": "npc_mira",
+     "line": "idle_greens",
+     "text": "Hydroponics still owes me two crates of greens.",
+     "trigger": "Idle",
+     "voiced": true,
+     "time": 297.5948
+    }
+   }
+  },
+  {
+   "check": "a Weapon line answers 2 inside the walls (within 3 s)",
+   "passed": true,
+   "detail": {
+    "speaker": "Torr",
+    "speakerId": "npc_torr",
+    "line": "weapon",
+    "text": "Whoa. Wardens see that in here, you'll lose it.",
+    "trigger": "Weapon",
+    "voiced": true,
+    "time": 309.235657
+   }
+  },
+  {
+   "check": "Tamsin prompt at the Field Supply counter",
+   "passed": true,
+   "detail": "E \u00b7 Talk to Tamsin"
+  },
+  {
+   "check": "Tamsin greeting: her take for that node plays",
+   "passed": true,
+   "detail": [
+    "npc_tamsin-greeting"
+   ]
+  },
+  {
+   "check": "Tamsin packs: her take for that node plays",
+   "passed": true,
+   "detail": [
+    "npc_tamsin-packs"
+   ]
+  },
+  {
+   "check": "Tamsin supplies: her take for that node plays",
+   "passed": true,
+   "detail": [
+    "npc_tamsin-supplies"
+   ]
+  },
+  {
+   "check": "Tamsin magazines: her take for that node plays",
+   "passed": true,
+   "detail": [
+    "npc_tamsin-magazines"
+   ]
+  },
+  {
+   "check": "four Tamsin nodes visited",
+   "passed": true,
+   "detail": [
+    "greeting",
+    "packs",
+    "supplies",
+    "magazines"
+   ]
+  },
+  {
+   "check": "Ossa prompt at the checkpoint",
+   "passed": true,
+   "detail": "E \u00b7 Talk to Warden Ossa"
+  },
+  {
+   "check": "Ossa range: her take for that node plays",
+   "passed": true,
+   "detail": [
+    "npc_ossa-range"
+   ]
+  },
+  {
+   "check": "Ossa locker: her take for that node plays",
+   "passed": true,
+   "detail": [
+    "npc_ossa-locker"
+   ]
+  },
+  {
+   "check": "Ossa range and locker nodes reached",
+   "passed": true,
+   "detail": [
+    "greeting",
+    "locker",
+    "machines",
+    "range"
+   ]
+  },
+  {
+   "check": "no runtime exceptions in Player.log",
+   "passed": true,
+   "detail": []
+  }
+ ],
+ "captures": [
+  "/home/teknetik/code/ao2/unity/evidence/gemini_merge/20261121/native/gemini1-rerun/npc_life/run/bark-vex-caption.png",
+  "/home/teknetik/code/ao2/unity/evidence/gemini_merge/20261121/native/gemini1-rerun/npc_life/run/bark-vex-night.png",
+  "/home/teknetik/code/ao2/unity/evidence/gemini_merge/20261121/native/gemini1-rerun/npc_life/run/bark-vex-morning.png",
+  "/home/teknetik/code/ao2/unity/evidence/gemini_merge/20261121/native/gemini1-rerun/npc_life/run/bark-walker-passing.png",
+  "/home/teknetik/code/ao2/unity/evidence/gemini_merge/20261121/native/gemini1-rerun/npc_life/run/bark-mira.png",
+  "/home/teknetik/code/ao2/unity/evidence/gemini_merge/20261121/native/gemini1-rerun/npc_life/run/bark-idle.png",
+  "/home/teknetik/code/ao2/unity/evidence/gemini_merge/20261121/native/gemini1-rerun/npc_life/run/bark-weapon.png",
+  "/home/teknetik/code/ao2/unity/evidence/gemini_merge/20261121/native/gemini1-rerun/npc_life/run/ossa-dialogue.png"
+ ],
+ "notes": [
+  {
+   "note": "Vex look-at / clip while barking",
+   "detail": [
+    {
+     "name": "WardNpc Vex",
+     "Focused": false,
+     "clip": "vex_talk_314"
+    }
+   ]
+  },
+  {
+   "note": "walker look-at state while passing",
+   "detail": [
+    {
+     "name": "WardWalker Daro",
+     "Focused": true,
+     "clip": "porter_walk_566"
+    },
+    {
+     "name": "WardWalker Anso",
+     "Focused": false,
+     "clip": "grower_walk_115"
+    },
+    {
+     "name": "WardWalker Sel",
+     "Focused": false,
+     "clip": "nanotech_walk_566"
+    }
+   ]
+  },
+  {
+   "note": "notice after 2 inside the walls",
+   "detail": "Wardens keep weapons holstered inside the walls."
+  },
+  {
+   "note": "NOT VERIFIED BY EAR: voices, levels, the 7 s gap and lip/talk-clip timing need a listening/watching pass",
+   "detail": null
+  }
+ ],
+ "roster": [
+  {
+   "id": "npc_ossa",
+   "name": "Warden Ossa",
+   "walker": false,
+   "lines": 7,
+   "voiced": 7,
+   "inside": false
+  },
+  {
+   "id": "npc_torr",
+   "name": "Torr",
+   "walker": false,
+   "lines": 9,
+   "voiced": 9,
+   "inside": false
+  },
+  {
+   "id": "npc_brann",
+   "name": "Brann",
+   "walker": false,
+   "lines": 8,
+   "voiced": 8,
+   "inside": false
+  },
+  {
+   "id": "npc_linn",
+   "name": "Linn",
+   "walker": false,
+   "lines": 9,
+   "voiced": 9,
+   "inside": false
+  },
+  {
+   "id": "npc_mira",
+   "name": "Mira",
+   "walker": false,
+   "lines": 11,
+   "voiced": 11,
+   "inside": false
+  },
+  {
+   "id": "npc_tamsin",
+   "name": "Tamsin",
+   "walker": false,
+   "lines": 8,
+   "voiced": 8,
+   "inside": false
+  },
+  {
+   "id": "npc_vex",
+   "name": "Vex",
+   "walker": false,
+   "lines": 9,
+   "voiced": 9,
+   "inside": true
+  },
+  {
+   "id": "npc_rell",
+   "name": "Warden Rell",
+   "walker": false,
+   "lines": 7,
+   "voiced": 7,
+   "inside": false
+  },
+  {
+   "id": "walker_daro",
+   "name": "Daro",
+   "walker": true,
+   "lines": 4,
+   "voiced": 4,
+   "inside": false
+  },
+  {
+   "id": "walker_sel",
+   "name": "Sel",
+   "walker": true,
+   "lines": 4,
+   "voiced": 4,
+   "inside": false
+  },
+  {
+   "id": "walker_anso",
+   "name": "Anso",
+   "walker": true,
+   "lines": 4,
+   "voiced": 4,
+   "inside": false
+  },
+  {
+   "id": "resident_nadje",
+   "name": "Nadje",
+   "walker": true,
+   "lines": 6,
+   "voiced": 6,
+   "inside": false
+  },
+  {
+   "id": "resident_pell",
+   "name": "Pell",
+   "walker": true,
+   "lines": 6,
+   "voiced": 6,
+   "inside": false
+  },
+  {
+   "id": "resident_oren",
+   "name": "Oren",
+   "walker": true,
+   "lines": 6,
+   "voiced": 6,
+   "inside": false
+  }
+ ],
+ "tamsin": {
+  "greeting": [
+   "npc_tamsin-greeting"
+  ],
+  "packs": [
+   "npc_tamsin-packs"
+  ],
+  "supplies": [
+   "npc_tamsin-supplies"
+  ],
+  "magazines": [
+   "npc_tamsin-magazines"
+  ]
+ },
+ "ossa": {
+  "greeting": [
+   "npc_ossa-greeting"
+  ],
+  "locker": [
+   "npc_ossa-locker"
+  ],
+  "machines": [
+   "npc_ossa-machines"
+  ],
+  "range": [
+   "npc_ossa-range"
+  ]
+ },
+ "final": {
+  "captions": true,
+  "speakers": 14,
+  "count": 12,
+  "active": null,
+  "caption": null,
+  "captionBound": true,
+  "last": {
+   "speaker": "Torr",
+   "speakerId": "npc_torr",
+   "line": "weapon",
+   "text": "Whoa. Wardens see that in here, you'll lose it.",
+   "trigger": "Weapon",
+   "voiced": true,
+   "time": 309.235657
+  },
+  "globalReadyIn": 2.371521,
+  "orderNews": null,
+  "roster": [
+   {
+    "id": "npc_ossa",
+    "name": "Warden Ossa",
+    "walker": false,
+    "lines": 7,
+    "voiced": 7,
+    "inside": true
+   },
+   {
+    "id": "npc_torr",
+    "name": "Torr",
+    "walker": false,
+    "lines": 9,
+    "voiced": 9,
+    "inside": false
+   },
+   {
+    "id": "npc_brann",
+    "name": "Brann",
+    "walker": false,
+    "lines": 8,
+    "voiced": 8,
+    "inside": false
+   },
+   {
+    "id": "npc_linn",
+    "name": "Linn",
+    "walker": false,
+    "lines": 9,
+    "voiced": 9,
+    "inside": false
+   },
+   {
+    "id": "npc_mira",
+    "name": "Mira",
+    "walker": false,
+    "lines": 11,
+    "voiced": 11,
+    "inside": false
+   },
+   {
+    "id": "npc_tamsin",
+    "name": "Tamsin",
+    "walker": false,
+    "lines": 8,
+    "voiced": 8,
+    "inside": false
+   },
+   {
+    "id": "npc_vex",
+    "name": "Vex",
+    "walker": false,
+    "lines": 9,
+    "voiced": 9,
+    "inside": false
+   },
+   {
+    "id": "npc_rell",
+    "name": "Warden Rell",
+    "walker": false,
+    "lines": 7,
+    "voiced": 7,
+    "inside": false
+   },
+   {
+    "id": "walker_daro",
+    "name": "Daro",
+    "walker": true,
+    "lines": 4,
+    "voiced": 4,
+    "inside": false
+   },
+   {
+    "id": "walker_sel",
+    "name": "Sel",
+    "walker": true,
+    "lines": 4,
+    "voiced": 4,
+    "inside": false
+   },
+   {
+    "id": "walker_anso",
+    "name": "Anso",
+    "walker": true,
+    "lines": 4,
+    "voiced": 4,
+    "inside": false
+   },
+   {
+    "id": "resident_nadje",
+    "name": "Nadje",
+    "walker": true,
+    "lines": 6,
+    "voiced": 6,
+    "inside": false
+   },
+   {
+    "id": "resident_pell",
+    "name": "Pell",
+    "walker": true,
+    "lines": 6,
+    "voiced": 6,
+    "inside": false
+   },
+   {
+    "id": "resident_oren",
+    "name": "Oren",
+    "walker": true,
+    "lines": 6,
+    "voiced": 6,
+    "inside": false
+   }
+  ]
+ },
+ "passed": false,
+ "summary": "26/27 passed",
+ "finished": "2026-11-22 01:03:16"
+}

@@ -109,6 +109,16 @@ namespace AthenHill.Tests
    Assert.That(model.ReadMagazine("mag_karaveen_freight_3").Select(r=>r.id),Is.EquivalentTo(new[]{"recipe_frame_pack","recipe_porter_carrier"}));
    Assert.That(model.ReadMagazine("mag_nanoweave_monthly").Select(r=>r.id),Is.EquivalentTo(new[]{"recipe_pack_nanoweave_pouch","recipe_pack_servo_lifter","recipe_courier_cargo_rig"}));
    Assert.That(model.ReadMagazine("mag_ward_armourer").Select(r=>r.id),Is.EquivalentTo(new[]{"recipe_armour_impact_liner","recipe_armour_thermal_liner","recipe_armour_extra_plate"}));
+   // 22 Nov 2026: Outer Berms M2/M4 progression schematics unlock when their salvage parts are first acquired
+   Assert.That(model.Acquire("salvaged_chest_plate").Select(r=>r.id),Is.EqualTo(new[]{"recipe_field_vest"}));
+   Assert.That(model.Acquire("ceramic_ballistic_plate").Select(r=>r.id),Is.EqualTo(new[]{"recipe_warden_plate_carrier"}));
+   Assert.That(model.Acquire("tread_strut").Select(r=>r.id),Is.EqualTo(new[]{"recipe_field_boots"}));
+   Assert.That(model.Acquire("med_dressing").Select(r=>r.id),Is.EqualTo(new[]{"recipe_field_bandage"}));
+   Assert.That(model.Acquire("med_biogel").Select(r=>r.id),Is.EqualTo(new[]{"recipe_medkit"}));
+   Assert.That(model.Acquire("med_nanosuture").Select(r=>r.id),Is.EqualTo(new[]{"recipe_trauma_kit"}));
+   Assert.That(model.Acquire("propellant_tin").Select(r=>r.id),Is.EqualTo(new[]{"recipe_ammo_rifle_standard"}));
+   Assert.That(model.Acquire("hardened_slug_core").Select(r=>r.id),Is.EqualTo(new[]{"recipe_ammo_rifle_ap"}));
+   Assert.That(model.Acquire("capacitor_filament").Select(r=>r.id),Is.EqualTo(new[]{"recipe_ammo_rifle_emp"}));
    Assert.That(model.KnownRecipes.Count,Is.EqualTo(Data().recipes.Length));
    // Locked schematics explain themselves in words.
    var fresh=new CraftingModel(Data(),City().items,pack,()=>true);

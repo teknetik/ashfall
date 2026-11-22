@@ -3,7 +3,7 @@
 
 Mouse mode (default) points, presses, circles and drags with the real pointer at the screen positions the game reports in
 snapshot.json -> assembly (AssemblyQa). Keyboard mode (BENCH_MODE=keys) never moves the pointer: Tab moves the focus ring,
-Space picks up / uses / holds, Q and E turn the held part, A and D steer.
+Space picks up / uses / holds, Q and Shift+Q turn the held part, the arrows steer (22 Nov: A and E side-step).
 Stages 2 to 5 are granted by dev.assembly.grant (the slice gives the finished grip complete), as in the Edit Mode bot,
 unless BENCH_FULL=1, which plays them by hand too (about 200 actions).
 
@@ -93,7 +93,7 @@ def settled(timeout=6):
     """The bench snapshot once the camera has stopped blending (positions are only right then)."""
     end = time.time() + timeout
     a = asm()
-    while time.time() < end and (a.get('camera') or {}).get('blending'):
+    while time.time() < end and ((a.get('camera') or {}).get('blending') or (a.get('camera') or {}).get('squaring')):
         time.sleep(.1); a = asm()
     time.sleep(.12)
     return asm()
@@ -165,6 +165,13 @@ def shot(name):
 
 
 # ---------------------------------------------------------------- hands
+def working(act):
+    """BENCH_MIDSHOT=1: a frame with the tool on its work (22 Nov 2026: the tools' angles)."""
+    if os.environ.get('BENCH_MIDSHOT') == '1' and act.get('tool') not in (None, '', '*') and act['id'] not in midshot:
+        midshot.add(act['id']); shot(act['id'] + '-working')
+
+
+midshot = set()
 def free_hand(act):
     h = held()
     if h.get('part') and h['part'] != act['part']:
@@ -264,7 +271,7 @@ def seat(act):
             if done(act['id']):
                 break
             if KEYS:
-                qa.key('e', True); time.sleep(.25); qa.key('e', False)
+                qa.key('q', True); time.sleep(.25); qa.key('q', False)
             else:
                 wheel(1)
         return done(act['id'])
@@ -295,7 +302,9 @@ def seat(act):
                     direction = -direction
                 last = err
                 if KEYS:
-                    k = 'e' if direction > 0 else 'q'; qa.key(k, True); time.sleep(.08 if err < 25 else .2); qa.key(k, False)
+                    if direction > 0: qa.key('Shift_L', True)
+                    qa.key('q', True); time.sleep(.08 if err < 25 else .2); qa.key('q', False)
+                    if direction > 0: qa.key('Shift_L', False)
                 else:
                     wheel(direction)
         time.sleep(.12)
@@ -345,6 +354,8 @@ def turn(act):
         # clockwise on screen (y down) is positive
         ang += sign * math.radians(14)
         move((c[0] + radius * math.cos(ang), c[1] + radius * math.sin(ang))); time.sleep(.02)
+        if n == 4:
+            working(act)
     qa.button(1, False); time.sleep(.3)
     if not done(act['id']):
         trace('turn-' + act['id'], {'centre': c, 'act': act, 'samples': samples, 'final': asm()})
@@ -389,6 +400,8 @@ def window(act):
         end = time.time() + 6
         while time.time() < end:
             v = (asm().get('verb') or {}).get('value') or 0
+            if v >= mid * .55:
+                working(act)
             if v >= mid:
                 break
             time.sleep(.02)
@@ -465,7 +478,7 @@ def path(act):
         while time.time() < end and not done(act['id']):
             v = (asm().get('verb') or {}).get('value') or 0
             if v > .5:
-                k = 'a' if steer != 'a' else 'd'
+                k = 'Left' if steer != 'Left' else 'Right'
                 if steer: qa.key(steer, False)
                 steer = k; qa.key(k, True)
             elif v < .25 and steer:
@@ -484,6 +497,8 @@ def path(act):
         move(pts[0]); time.sleep(.12); qa.button(1, True); time.sleep(.08)
         for i in range(1, len(pts)):
             glide(pts[i - 1], pts[i], seconds=pace, steps=int(40 * pace))
+            if i == len(pts) // 2:
+                working(act)
             if done(act['id']):
                 break
         time.sleep(.3); qa.button(1, False); time.sleep(.2)
@@ -515,6 +530,8 @@ def wipe(act):
             v = (row + (.5 if sweep % 2 else 0)) / 8
             a0, a1 = (at(.02, v), at(.98, v)) if row % 2 == 0 else (at(.98, v), at(.02, v))
             glide(a0, a1, seconds=.25, steps=10)
+            if row == 1:
+                working(act)
             if done(act['id']):
                 break
         if done(act['id']):
@@ -571,7 +588,7 @@ def play():
                 return False
             # BENCH_SOFT=1: the failure stands, but the action is completed for the run so that the rest of the job is played
             if qa.button: qa.button(1, False)
-            for k in ('space', 'a', 'd', 'q', 'e'):
+            for k in ('space', 'Left', 'Right', 'q', 'a', 'e', 'v'):
                 qa.key(k, False)
             key_tap('x'); time.sleep(.2)
             step, key = act_id.split(':')
@@ -670,4 +687,5 @@ def body():
     report = S.report; report['mode'] = MODE; report['captures_count'] = shots
 
 
-S.run(body)
+if __name__ == '__main__':
+    S.run(body)

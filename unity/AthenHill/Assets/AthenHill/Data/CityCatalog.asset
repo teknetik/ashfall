@@ -519,7 +519,7 @@ MonoBehaviour:
     weightKg: 4.8
   - id: field_vest
     name: Field Vest
-    description: A canvas plate carrier with a riveted steel plate cut from a machine panel, front and back, and a scrap shoulder pad. Issued to new arrivals.
+    description: A canvas plate carrier with a riveted steel plate cut from a machine panel, front and back, and a scrap shoulder pad.
     buyPrice: 30
     sellPrice: 10
     startingQuantity: 0
@@ -1232,6 +1232,409 @@ MonoBehaviour:
     icon: magazine-armourer-icon
     partsPrice: 0
     weightKg: 0
+  - id: salvaged_chest_plate
+    name: Salvaged Ballistic Plate
+    description: A curved steel chest plate pried off a feral machine chassis or Warden crate. Three plates make a bare-minimum Field Vest at Brann's bench.
+    buyPrice: 0
+    sellPrice: 6
+    startingQuantity: 0
+    tags:
+    - berms_part
+    - material
+    - material:armour
+    - tier:1
+    maxStack: 10
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: alloy-plate-icon
+    partsPrice: 0
+    weightKg: 1.1
+  - id: chest_rig_harness
+    name: Reinforced Canvas Harness
+    description: Heavy buckled load straps recovered from Karaveen wreck lockboxes and collapsed depot lockers. Holds a Field Vest's plates tight over the chest.
+    buyPrice: 0
+    sellPrice: 5
+    startingQuantity: 0
+    tags:
+    - berms_part
+    - material
+    - material:armour
+    - tier:1
+    maxStack: 10
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: webbing-icon
+    partsPrice: 0
+    weightKg: 0.6
+  - id: ceramic_ballistic_plate
+    name: Ballistic Ceramic Plate
+    description: Composite Warden-grade trauma plate stripped from mid-Berms gunners and supply lockboxes. Built to stop sustained ranged fire.
+    buyPrice: 0
+    sellPrice: 10
+    startingQuantity: 0
+    tags:
+    - berms_part
+    - material
+    - material:armour
+    - tier:2
+    maxStack: 10
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: alloy-plate-icon
+    partsPrice: 0
+    weightKg: 1.2
+  - id: nanoweave_backing
+    name: Nanoweave Backing
+    description: Layered aramid-and-nanite spall liner salvaged from locked Band 2 strongboxes and collapsed fab conduits.
+    buyPrice: 0
+    sellPrice: 9
+    startingQuantity: 0
+    tags:
+    - berms_part
+    - material
+    - material:armour
+    - tier:2
+    maxStack: 10
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: liner-icon
+    partsPrice: 0
+    weightKg: 0.45
+  - id: rig_harness_frame
+    name: Tensioned Plate Clasp
+    description: A quick-release carrier yoke recovered from Band 2 elites. Locks ceramic plates into a full Warden Plate Carrier.
+    buyPrice: 0
+    sellPrice: 14
+    startingQuantity: 0
+    tags:
+    - berms_part
+    - component
+    - material:armour
+    - tier:2
+    maxStack: 5
+    excludeFromTrade: 1
+    rarity: 2
+    sellOnly: 0
+    icon: rivets-icon
+    partsPrice: 0
+    weightKg: 0.85
+  - id: tread_strut
+    name: Shock-Absorbing Tread Strut
+    description: Spring-damped heel strut scavenged from wash wrecks and outer droids. Takes the sting out of rough terrain and Lancer splash.
+    buyPrice: 0
+    sellPrice: 8
+    startingQuantity: 0
+    tags:
+    - berms_part
+    - material
+    - material:armour
+    - tier:2
+    maxStack: 10
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: servo-icon
+    partsPrice: 0
+    weightKg: 0.7
+  - id: reinforced_sole
+    name: Reinforced Sole Plate
+    description: Bonded steel-and-rubber boot sole recovered from Warden outposts and Reaper chassis.
+    buyPrice: 0
+    sellPrice: 7
+    startingQuantity: 0
+    tags:
+    - berms_part
+    - material
+    - material:armour
+    - tier:2
+    maxStack: 10
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: alloy-plate-icon
+    partsPrice: 0
+    weightKg: 0.65
+  - id: armoured_shell_casing
+    name: Armoured Shell Casing
+    description: A contoured machine housing thick enough to beat into a ballistic helmet dome.
+    buyPrice: 0
+    sellPrice: 10
+    startingQuantity: 0
+    tags:
+    - berms_part
+    - material
+    - material:armour
+    - tier:2
+    maxStack: 10
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: alloy-plate-icon
+    partsPrice: 0
+    weightKg: 0.95
+  - id: optic_visor_lens
+    name: Optic Visor Lens
+    description: Polarised anti-glare visor glass pulled from Lancer drones and Post Sentinels. Keeps sightlines sharp through dust fronts.
+    buyPrice: 0
+    sellPrice: 11
+    startingQuantity: 0
+    tags:
+    - berms_part
+    - component
+    - component:optic
+    - material:armour
+    - tier:2
+    maxStack: 10
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: optic-icon
+    partsPrice: 0
+    weightKg: 0.3
+  - id: berms_relay_key
+    name: Warden Relay Key
+    description: An encrypted Lattice relay key carried by the inner-Berms Warden patrol. Brings the mid-Berms Waystation terminal online for manual saves and fast travel back to Ward's Lattice Jack.
+    buyPrice: 0
+    sellPrice: 0
+    startingQuantity: 0
+    tags:
+    - key
+    - unique
+    - berms
+    maxStack: 1
+    excludeFromTrade: 1
+    rarity: 2
+    sellOnly: 0
+    icon: control-core-icon
+    partsPrice: 0
+    weightKg: 0.1
+  - id: med_dressing
+    name: Field Dressing
+    description: Sealed sterile gauze and pressure tape found in Karaveen wrecks and Warden crates. Craft bandages and medkits at Brann's bench.
+    buyPrice: 0
+    sellPrice: 2
+    startingQuantity: 0
+    tags:
+    - berms_part
+    - material
+    - material:medical
+    - tier:1
+    maxStack: 30
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: liner-icon
+    partsPrice: 0
+    weightKg: 0.1
+  - id: med_biogel
+    name: Biogel Ampoule
+    description: Antiseptic coagulant gel from intact medical lockers and drone service bays. Key ingredient for Medkits and Trauma Kits.
+    buyPrice: 0
+    sellPrice: 5
+    startingQuantity: 0
+    tags:
+    - berms_part
+    - material
+    - material:medical
+    - tier:2
+    maxStack: 20
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: flask-icon
+    partsPrice: 0
+    weightKg: 0.18
+  - id: med_nanosuture
+    name: Nano-Suture Cartridge
+    description: Sealed tier-two medical nanites from Band 2-3 strongboxes. Required to fabricate Trauma Kits.
+    buyPrice: 0
+    sellPrice: 10
+    startingQuantity: 0
+    tags:
+    - berms_part
+    - material
+    - material:medical
+    - tier:3
+    maxStack: 10
+    excludeFromTrade: 1
+    rarity: 2
+    sellOnly: 0
+    icon: nanites-icon
+    partsPrice: 0
+    weightKg: 0.22
+  - id: field_bandage
+    name: Field Bandage
+    description: A quick-wrap pressure dressing stitched from scavenged field gauze. Restores 30 vitality from your hotbar.
+    buyPrice: 4
+    sellPrice: 2
+    startingQuantity: 0
+    tags:
+    - consumable
+    - medical
+    maxStack: 20
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: medkit-icon
+    partsPrice: 0
+    weightKg: 0.2
+  - id: propellant_tin
+    name: Propellant Tin
+    description: Dry smokeless propellant powder sealed in a stamped tin. Pressed with scrap alloy into Standard Ballistic Slugs.
+    buyPrice: 0
+    sellPrice: 2
+    startingQuantity: 0
+    tags:
+    - berms_part
+    - material
+    - material:ammo
+    - tier:1
+    maxStack: 30
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: rivets-icon
+    partsPrice: 0
+    weightKg: 0.25
+  - id: hardened_slug_core
+    name: Hardened Slug Core
+    description: Tungsten-alloy penetrator rods salvaged from heavy Band 2-3 droids. Needed for Armour-Piercing Rounds.
+    buyPrice: 0
+    sellPrice: 4
+    startingQuantity: 0
+    tags:
+    - berms_part
+    - material
+    - material:ammo
+    - tier:2
+    maxStack: 30
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: alloy-icon
+    partsPrice: 0
+    weightKg: 0.3
+  - id: capacitor_filament
+    name: Capacitor Filament
+    description: High-discharge wire coils pulled from Lancer drones and Post Sentinels. Powers Disruptor Shock Rounds.
+    buyPrice: 0
+    sellPrice: 5
+    startingQuantity: 0
+    tags:
+    - berms_part
+    - material
+    - material:ammo
+    - tier:2
+    maxStack: 30
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: copper-icon
+    partsPrice: 0
+    weightKg: 0.15
+  - id: ammo_rifle_standard
+    name: Standard Ballistic Slugs
+    description: General-purpose jacketed rounds for the Field Rifle. Reliable against unarmoured drones, workers, and exposed weak points.
+    buyPrice: 0
+    sellPrice: 1
+    startingQuantity: 0
+    tags:
+    - ammo
+    - ammo:rifle
+    maxStack: 120
+    excludeFromTrade: 0
+    rarity: 0
+    sellOnly: 0
+    icon: alloy-icon
+    partsPrice: 0
+    weightKg: 0.02
+  - id: ammo_rifle_ap
+    name: Armour-Piercing Rounds
+    description: Hardened penetrator slugs for the Field Rifle. Punches through plated Scrap Reapers, Post Sentinels, and armoured Gunners.
+    buyPrice: 0
+    sellPrice: 2
+    startingQuantity: 0
+    tags:
+    - ammo
+    - ammo:rifle
+    maxStack: 120
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: alloy-plate-icon
+    partsPrice: 0
+    weightKg: 0.025
+  - id: ammo_rifle_emp
+    name: Disruptor Shock Rounds
+    description: Capacitor-loaded shock rounds for the Field Rifle. Disrupts droid targeting and strips heavy armour plating.
+    buyPrice: 0
+    sellPrice: 3
+    startingQuantity: 0
+    tags:
+    - ammo
+    - ammo:rifle
+    maxStack: 120
+    excludeFromTrade: 0
+    rarity: 1
+    sellOnly: 0
+    icon: capacitor-icon
+    partsPrice: 0
+    weightKg: 0.025
+  - id: nano_dormant_matrix
+    name: Dormant Nanite Matrix
+    description: A sealed lattice wafer packed with dormant fabrication nanites from an outer-ring sentinel. High credit value, though Nanofab 2 may need this.
+    buyPrice: 0
+    sellPrice: 45
+    startingQuantity: 0
+    tags:
+    - berms_part
+    - nano_tech
+    - tier:3
+    maxStack: 5
+    excludeFromTrade: 1
+    rarity: 2
+    sellOnly: 0
+    icon: nanites-icon
+    partsPrice: 0
+    weightKg: 0.35
+  - id: nano_resonator_shard
+    name: Quantum Resonator Shard
+    description: A resonant splinter recovered near dead Quantum Tube branch pylons in the outer Berms. High credit value, though Nanofab 2 may need this.
+    buyPrice: 0
+    sellPrice: 50
+    startingQuantity: 0
+    tags:
+    - berms_part
+    - nano_tech
+    - tier:3
+    maxStack: 5
+    excludeFromTrade: 1
+    rarity: 2
+    sellOnly: 0
+    icon: shard-icon
+    partsPrice: 0
+    weightKg: 0.28
+  - id: nano_targeting_core
+    name: Sandboxed Targeting Sub-Core
+    description: An isolated targeting processor pulled from an outer-ring machine wreck. High credit value, though Nanofab 2 may need this.
+    buyPrice: 0
+    sellPrice: 55
+    startingQuantity: 0
+    tags:
+    - berms_part
+    - nano_tech
+    - tier:3
+    maxStack: 5
+    excludeFromTrade: 1
+    rarity: 2
+    sellOnly: 0
+    icon: control-core-icon
+    partsPrice: 0
+    weightKg: 0.45
   consumables:
   - itemId: medkit
     restoreHealth: 40
@@ -1257,6 +1660,12 @@ MonoBehaviour:
     overclockSeconds: 40
     overclockRegen: 1
     hotbarLabel: Surge
+  - itemId: field_bandage
+    restoreHealth: 30
+    restoreNano: 0
+    overclockSeconds: 0
+    overclockRegen: 0
+    hotbarLabel: Bandage
   consumableCooldown: 1
   destinations:
   - id: crosswind_reach

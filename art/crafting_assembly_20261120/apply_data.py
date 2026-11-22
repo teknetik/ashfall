@@ -94,7 +94,7 @@ patch(orders,
       "order_steady_hands: brief")
 patch(orders,
       "    reportBrief: Take the servo to Brann at Salvage, on the north avenue inside the walls. His workbench can make the {item}.\n    reportGuidance: dealer\n    brief: Salvage a worker-droid servo",
-      "    identifyBrief: Show the servo to Warden Ossa at the West Gate post. She knows what salvage can become.\n    identifyGuidance: \n    reportBrief: Take the servo to Brann at Salvage, on the north avenue inside the walls. His workbench can make the {item}.\n    reportGuidance: dealer\n    brief: Salvage a worker-droid servo",
+      "    identifyBrief: Show the servo to Warden Ossa at the West Gate post. She knows what salvage can become.\n    identifyGuidance: ossa\n    reportBrief: Take the servo to Brann at Salvage, on the north avenue inside the walls. His workbench can make the {item}.\n    reportGuidance: dealer\n    brief: Salvage a worker-droid servo",
       "order_steady_hands: identifyBrief")
 
 

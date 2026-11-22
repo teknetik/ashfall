@@ -97,7 +97,7 @@ namespace AthenHill.Tests
    Assert.That(run.model.Knows("recipe_alloy_plate"),"the first kit order reveals alloy plate");
    Assert.That(run.orders.Stage(run.model,run.pack),Is.EqualTo(OrderStage.Gather));Assert.That(run.orders.GuidanceKey(run.model,run.pack),Is.Null.Or.Empty);
    Assert.That(run.orders.Objective(run.model,run.pack),Does.Contain("Strap Webbing 0/2").And.Contain("Refined Alloy Plate 0/2"));
-   Give(run.pack,("scrap_alloy",6),("nanite_residue",4),("padded_liner",1),("strap_webbing",2),("rivet_stock",2));
+   Give(run.pack,("scrap_alloy",6),("nanite_residue",4),("padded_liner",1),("strap_webbing",2),("rivet_stock",2),("armoured_shell_casing",1),("optic_visor_lens",1));
    Assert.That(run.orders.Stage(run.model,run.pack),Is.EqualTo(OrderStage.Gather),"the plate is still to be rolled");
    run.Craft("recipe_alloy_plate",2);
    Assert.That(run.orders.Stage(run.model,run.pack),Is.EqualTo(OrderStage.Report));Assert.That(run.orders.GuidanceKey(run.model,run.pack),Is.EqualTo("dealer"));
@@ -187,7 +187,7 @@ namespace AthenHill.Tests
    var run=new Run();
    Give(run.pack,("grip_stabilised_pistol",1),("cell_salvaged_capacitor",1),("barrel_bored_alloy",1));
    foreach(var mod in new[]{"grip_stabilised_pistol","cell_salvaged_capacitor","barrel_bored_alloy"})run.model.TryFit(mod,out _);
-   Give(run.pack,("alloy_plate",7),("padded_liner",4),("strap_webbing",9),("rivet_stock",8),("copper_filament",2));
+   Give(run.pack,("alloy_plate",7),("padded_liner",4),("strap_webbing",9),("rivet_stock",8),("copper_filament",2),("armoured_shell_casing",1),("optic_visor_lens",1));
    foreach(var piece in new[]{"recipe_field_helmet","recipe_field_armguards","recipe_field_gloves","recipe_field_leggings"})run.Craft(piece);
    Give(run.pack,("rifle_receiver",1),("scrap_alloy",6),("copper_filament",3),("nanite_residue",4));   // the field toolkit is in the starting pack
    run.Craft("recipe_field_rifle");

@@ -208,7 +208,7 @@ namespace AthenHill.Tests
   [Test] public void ConsumableDataMatchesTheCatalog()
   {
    var city=City();
-   Assert.That(city.consumables.Select(c=>c.itemId),Is.EquivalentTo(new[]{"medkit","trauma_kit","nano_cell","nano_surge_pack"}));
+   Assert.That(city.consumables.Select(c=>c.itemId),Is.EquivalentTo(new[]{"medkit","trauma_kit","nano_cell","nano_surge_pack","field_bandage"}));
    foreach(var c in city.consumables){var item=city.items.Single(i=>i.id==c.itemId);Assert.That(item.HasTag("consumable"),c.itemId);Assert.That(c.restoreHealth>0||c.restoreNano>0||c.overclockSeconds>0,c.itemId);}
    Assert.That(city.Consumable("trauma_kit").restoreHealth,Is.GreaterThan(city.Consumable("medkit").restoreHealth));
    Assert.That(city.Consumable("nano_surge_pack").overclockSeconds,Is.GreaterThan(city.Consumable("nano_cell").overclockSeconds));

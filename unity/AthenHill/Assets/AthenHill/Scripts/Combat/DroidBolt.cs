@@ -114,7 +114,7 @@ namespace AthenHill
   }
   void HitPlayer(Vector3 at)
   {
-   target.Health.Damage(damage,origin);
+   target.TakeRangedBallisticHit(damage,origin);
    transform.position=at;Burst(at,-velocity.normalized,true);
   }
   void Burst(Vector3 at,Vector3 normal,bool directHit)

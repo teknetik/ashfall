@@ -26,6 +26,12 @@ namespace AthenHill
         /// Look around: right button held, or Left Shift (then the arrows orbit).
         public bool lookHeld, lookKey, lookClick;
         public float zoom;
+        /// A / E (or D): -1 to 1, a step sideways along the bench.
+        public float shimmy;
+        /// V: the vise turns with the hand, whatever is in it.
+        public bool swivelHeld;
+        /// G or Home: the view back as the shot has it, and the vise square.
+        public bool resetView;
         public bool abandonHeld;
     }
 
@@ -61,6 +67,8 @@ namespace AthenHill
             f.rotate = Axis("Rotate");
             f.flip = Down("Flip"); f.putBack = Down("PutBack"); f.hint = Down("Hint");
             f.lookKey = Held("LookKey");
+            if (f.lookKey) f.rotate = -f.rotate;   // Q one way, Shift+Q the other (E steps sideways)
+            f.shimmy = Axis("Shimmy"); f.swivelHeld = Held("Swivel"); f.resetView = Down("ResetView");
             f.next = Down("Next") && !f.lookKey; f.previous = Down("Next") && f.lookKey;
             // right button: a short still click puts the tool back, a hold looks around
             if (Down("Look")) { lookStart = f.screen; lookDownTime = Time.unscaledTime; lookMoved = false; }

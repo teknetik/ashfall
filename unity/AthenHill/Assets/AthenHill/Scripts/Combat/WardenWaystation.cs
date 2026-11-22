@@ -16,14 +16,23 @@ namespace AthenHill
   [Min(1)]public float discoverRadius=10;
   [Tooltip("Optional: lights that come up once the waystation is found.")]
   public Light[] foundLights=new Light[0];
+  [Tooltip("Optional: Field Lattice Terminal colocated with this waystation.")]
+  public LatticeTerminal terminal;
   public static readonly List<WardenWaystation> All=new List<WardenWaystation>();
   public string Flag=>"waystation:"+id;
-  public bool Found=>session&&session.HasFlag(Flag);
+  public bool Found=>session&&(session.HasFlag(Flag)||(terminal&&terminal.Unlocked));
   bool shown;
+  public static WardenWaystation FindById(string stationId)
+  {
+   if(string.IsNullOrEmpty(stationId))return null;
+   foreach(var w in All)if(w&&w.id==stationId)return w;
+   return null;
+  }
   void OnEnable(){All.Add(this);}
   void OnDisable(){All.Remove(this);}
   void Update()
   {
+   if(terminal&&terminal.Unlocked&&session&&!session.HasFlag(Flag))session.SetFlag(Flag);
    bool found=Found;
    if(found!=shown){shown=found;foreach(var l in foundLights)if(l)l.enabled=found;}
    if(found||!session||!player||session.State!=CityState.Play)return;

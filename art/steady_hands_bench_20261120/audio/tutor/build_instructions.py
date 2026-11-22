@@ -46,6 +46,7 @@ SHOTS = {
     'tray': 'the tray', 'press': 'the nanite press', 'tester': 'the bench tester', 'room': 'the shop',
     'press_low': 'the nanite press, from low down',
     'press_side': 'the nanite press, from the side', 'roll': 'the tool roll',
+    'pin': 'the housing pin, close',
 }
 # where a part goes, by the start of the target id
 PLACES = [
@@ -70,7 +71,8 @@ OVERRIDES = {
     's1.tape:peel': 'Hold left on the loose end of the tape and follow the lit line round the grip at a steady pace',
     's1.screw_b:oil': 'With the oil dropper, click the lower screw head: one drop',
     's1.screw_b:tap': 'With the screwdriver on the lower screw, hold left to lift and let go to tap it: two taps',
-    's1.inspect:find': 'Hold left on the vise and circle the mouse to turn the frame round until you see the crack',
+    's1.pin:punch': 'Click the punch in the tool roll, then click the ringed pin at the back of the bare grip frame',
+    's1.inspect:find': 'Drag the vise round (or hold V and move the mouse) until the crack faces you, or click the crack',
     's2.swap:open': 'Hold left on the vise handle and circle the mouse the other way to open the jaws',
     's2.stripped:grip': 'With the pliers on the chewed screw, hold left to squeeze; let go when they bite',
     's3.bath:swirl': 'Hold left on the gimbal in the jar and circle the mouse to swirl it',
