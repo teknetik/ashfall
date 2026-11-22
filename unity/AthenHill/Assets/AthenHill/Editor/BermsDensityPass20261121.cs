@@ -326,7 +326,7 @@ namespace AthenHill.Editor
             return ps;
         }
 
-        static void WireDangerAtmosphere(
+        internal static void WireDangerAtmosphere(
             Transform root,
             Transform hazardFxRoot,
             GameSession session,

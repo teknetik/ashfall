@@ -231,3 +231,47 @@ Not verified here: anything that needs a picture, a frame time or real input.
   NPC life, Berms expansion, gunner separation, next-level enemies, home/journal, Field Supply, loadout, city loop,
   range tutorial, and the bench checks.
 
+
+## Fix round, 22 November 2026 (after native QA on `batch-sh-gemini1`)
+
+### Vex's 23:00 greeting (check_showcase_npc_life 26/27, twice; 27/27 twice on `batch-sh-real12`)
+
+Cause: the check's `barkReset` (`BarkDirector.QaReset`) set every speaker's approach gate to "outside". A walker
+standing within his 3.2 m pass radius of the player at that moment was therefore "walked up to" by the reset itself
+and spoke a Passing line on the next scan, inside the 0.3 s before the check reads its bark count. That bark took the
+one-bark slot, so Vex's greeting edge (the player crossing 5.5 m on the walk-up) was used up with nothing said, and
+the 7 s global gap outlasted the check's 6 s wait. The bark log left in the layout dump at the capture is Daro's in
+both failing runs and Vex's in the passing one.
+Why only on the merged build: Gemini's night pacing (`AmbientWalker`, x0.82 at night). Daro's lane runs past the
+player's start point (16-38 m, z -3.5/-2.5, 0.95 m/s, loop 46 m). At full speed he passes the player at about t = 49 s
+and is about 5 m away at the reset (t = 54 s); slowed from the 23:00 time set (t = 42.5 s) he is still about 3.1-3.6 m
+away at the reset, on the edge of his pass radius.
+Fix: `QaReset` re-arms each gate to where the player stands (inside if already within the speaker's radius), so a
+reset no longer fabricates an approach. Gameplay barks are unchanged; the check is unchanged. Gemini's night pacing is
+kept. Not verified natively here.
+
+### Berms density props: discarded
+
+The orchestrator judged the native before/after sheets (`native/look/cam_bv_long_gate-h13.00.jpg`,
+`cam_nextlevel_post_relay-h13.00.jpg`): reused conveyor gantries, trusses on stilts and a tower dropped in the open
+bowl outside the West Gate read as scatter, not purposeful sites (AGENTS.md section 4). `BermsDensityPass20261121
+rollback` removed `Outer Berms/Berms density`; the saved scene now differs from `14440330` only by the serialized
+defaults of the new fields (36 lines) plus the danger atmosphere below. The installer, `placements.json` and
+`generate_placements.py` stay in the repository as an unaccepted pass that is **not installed**; do not run its
+`install` without a new brief.
+
+The danger atmosphere depended on it: Gemini's installer created `BermsDangerAtmosphere` under the density root, so the
+rollback removed it too. New `Editor/BermsDangerInstall20261122.cs` (`install`, `verify`, `rollback`) puts back only
+the controller under `Outer Berms/Berms danger atmosphere`: tier-3 zone radio warnings, ash wisps, distant crackles.
+Without the density hazards there are no spark arcs, so a crackle is sound only. Verify PASS (one controller, four
+zones, no lights, colliders or meshes, no density root).
+
+### Fix-round verification (-nographics)
+
+- `BermsDensityPass20261121 rollback`: removed; `BermsDangerInstall20261122 install,verify`: PASS.
+- `BermsVarietyPass20261120 verify`: PASS (droid's-eye blocked-by-other back to 1,499, as before the density pass).
+- `AssemblyBenchInstall20261120 verify` ok, `SteadyHandsBenchInstall20261120 verify,handverify` ok,
+  `BenchTutorInstall20261121 verify` pass.
+- Edit Mode `editmode-gemini-merge-fix1`: 573/574; the one failure is the pre-existing bench test
+  (`AssemblyBenchTests.APartHeldInPlaceWillNotComeAndShowsWhatHoldsIt`, also failing on `14440330`).
+- The earlier sections that describe the density install as installed are superseded by this round.

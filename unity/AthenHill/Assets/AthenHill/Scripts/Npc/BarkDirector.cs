@@ -265,6 +265,21 @@ namespace AthenHill
         };
         public static object Qa(GameSession s) { var d = s ? s.GetComponent<BarkDirector>() : null; return d ? d.QaState() : null; }
         /// QA: forget cooldowns and approach state so a scripted walk-up greets deterministically.
-        public void QaReset() { Cancel(); memory.Clear(); foreach (var s in speakers) if (s) { s.approach = default; s.nextIdle = -1; s.orderAcknowledged = null; } }
+        /// QA (barkReset): clears cooldowns, holds and the bark in progress. Each approach gate is re-armed to where the
+        /// player stands now, so a speaker the player is already beside is not "walked up to" by the reset itself: a
+        /// reset used to fire an instant Passing line from a walker who happened to be next to the player, which took the
+        /// one-bark slot and the 7 s gap and swallowed the greeting the check was walking up for (Gemini merge, 21 Nov
+        /// 2026: Daro's slower night pace put him beside the player at the 23:00 reset).
+        public void QaReset()
+        {
+            Cancel(); memory.Clear();
+            var p = session && session.player ? session.player.transform.position : transform.position;
+            foreach (var s in speakers) if (s)
+            {
+                s.approach = default;
+                if (Vector3.Distance(s.transform.position, p) <= (s.Walker ? s.passRadius : s.greetRadius)) s.approach.Occupy();
+                s.nextIdle = -1; s.orderAcknowledged = null;
+            }
+        }
     }
 }
