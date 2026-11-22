@@ -1,0 +1,29 @@
+# Puukko knife - marso by M-XR
+
+Rigid puukko knife; no cutting. About 3.2 x 18.5 x 5.5 cm, estimated mass 0.111 kg. One rigid body, no joints.
+
+Open puukko_knife/usd/puukko_knife.usda or reference its default prim. Select PhysX=Enabled on the referenced asset root before simulation; use Z-up metres and gravity. Apply external forces at the handling region described below. No authored control script is required.
+
+Appearance is the preserved marso PBR. Contact roles (uncalibrated dry estimates): SteelBlade (carbon steel: static 0.45, dynamic 0.35, restitution 0.1); AntlerHandle (antler bone: static 0.5, dynamic 0.4, restitution 0.15). Blade and handle roles split by a plane at the bolster; no cutting or sheath.
+
+Mass: Per-component density times reviewed solid volume: carbon-steel blade and bolster 7850 kg/m3 x 8.3 cm3, antler/bone handle 1850 kg/m3 x 24.5 cm3; total 111 g, within typical 100-130 g for an 18-20 cm puukko. Centre of mass and inertia: Each solid region uniform at its density; exact integration (work/band-mass.json). No physical-sample calibration is claimed.
+
+Tested envelope: Isaac Sim 6.2 PhysX GPU dynamics at 240 Hz; point-actuation handling (Grip the handle, lift the knife clear of the board and lay it back down), not robot gripper qualification. Drop and tilt clips in the delivery videos are presentation, not certification.
+
+Source: pre-existing marso Library asset (image generation, hunyuan_3d_3_1 mesh, marso PBR). Size: Source scale kept: 18.5 cm overall puukko (typical 18-22 cm); not a measured product.
+
+Scope limits: Antler density 1600-2000 kg/m3; tang hidden in the handle counted as antler. Multi-instance operation is not separately qualified. Actual proof and official outcomes accompany delivery; this authoring candidate alone is not acceptance.
+
+Licence: Creative Commons Attribution 4.0 International. Commercial contact: info@m-xr.com. NVIDIA external acceptance is not granted.
+
+## PhysX runtime selection
+
+Reference `puukko_knife/usd/puukko_knife.usda` into a clean stage. Before simulation, select `PhysX=Enabled` on the referenced asset root. The authored default `Disabled` composes runtime-neutral physics; Enabled adds the PhysX settings. Keep this selection in the consuming stage. This composition conversion requires renewed runtime proof on the resulting package bytes.
+
+Runtime target: Isaac Sim/PhysX
+NVIDIA external acceptance: not granted
+
+
+## Published release
+Published in https://huggingface.co/datasets/M-XR/marso-simready under Creative Commons Attribution 4.0 International (CC BY 4.0). See LICENSE.txt and ATTRIBUTION.txt. NVIDIA catalogue acceptance is pending.
+Package identity and version: ../com.nvidia.simready.packaging.json. Recorded official validation and benchmark outcomes: ../.metadata. Historical authoring scope is in mechanism.json; it is not a replacement for those reports.

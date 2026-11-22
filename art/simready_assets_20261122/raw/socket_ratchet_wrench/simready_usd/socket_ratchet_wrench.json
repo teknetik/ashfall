@@ -1,0 +1,352 @@
+{
+  "physics": {
+    "articulation": {
+      "schema_version": "articulation/2",
+      "root_link": "body",
+      "base_mode": "free",
+      "world_joint": null,
+      "behavior_sleep_threshold": 9.999999974752427e-07,
+      "handoff_base_mode": "free",
+      "base_mode_source": "handoff",
+      "collision_filter": {
+        "mode": "adjacent",
+        "explicit_excluded_link_pairs": [],
+        "handoff_excluded_link_pairs": [
+          [
+            "body",
+            "drive"
+          ],
+          [
+            "body",
+            "selector"
+          ],
+          [
+            "drive",
+            "release"
+          ]
+        ],
+        "excluded_link_pairs": [
+          [
+            "body",
+            "drive"
+          ],
+          [
+            "body",
+            "selector"
+          ],
+          [
+            "drive",
+            "release"
+          ]
+        ],
+        "representation": "UsdPhysics.FilteredPairsAPI plus joint collisionEnabled",
+        "external_contacts": "enabled",
+        "other_engine_validation": "not_run"
+      },
+      "collider_aggregation": "link",
+      "joint_count": 3,
+      "joint_types": {
+        "revolute": 2,
+        "prismatic": 1
+      },
+      "axis_rule": "physics:axis X; both joint frames rotated by the quaternion mapping +X onto the contract axis",
+      "links": {
+        "body": {
+          "prim": "/socket_ratchet_wrench/body",
+          "mass_kg": 0.505,
+          "mass_source": "VLM per-part estimate, 6 of 6 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/socket_ratchet_wrench/body/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 6,
+              "source_meshes": [
+                "/socket_ratchet_wrench/body/body__visual_000/Forged_body_and_ringed_barrel_grip_001",
+                "/socket_ratchet_wrench/body/body__visual_001/Inset_teardrop_cover_001",
+                "/socket_ratchet_wrench/body/body__visual_002/Cylinder_011",
+                "/socket_ratchet_wrench/body/body__visual_003/Cylinder_012",
+                "/socket_ratchet_wrench/body/body__visual_004/Cylinder_013",
+                "/socket_ratchet_wrench/body/body__visual_005/Cylinder_014"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        },
+        "drive": {
+          "prim": "/socket_ratchet_wrench/drive",
+          "mass_kg": 0.0928,
+          "mass_source": "VLM per-part estimate, 4 of 4 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/socket_ratchet_wrench/drive/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 4,
+              "source_meshes": [
+                "/socket_ratchet_wrench/drive/drive__visual_000/Cylinder_015",
+                "/socket_ratchet_wrench/drive/drive__visual_001/Cube_001",
+                "/socket_ratchet_wrench/drive/drive__visual_002/Cylinder_016",
+                "/socket_ratchet_wrench/drive/drive__visual_003/Sphere_001"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        },
+        "release": {
+          "prim": "/socket_ratchet_wrench/release",
+          "mass_kg": 0.0023,
+          "mass_source": "VLM per-part estimate, 1 of 1 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/socket_ratchet_wrench/release/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "auto-convex: convex decomposition instead of sdf",
+              "source_mesh_count": 1,
+              "source_meshes": [
+                "/socket_ratchet_wrench/release/release__visual_000/Cylinder_017"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        },
+        "selector": {
+          "prim": "/socket_ratchet_wrench/selector",
+          "mass_kg": 0.0038,
+          "mass_source": "VLM per-part estimate, 2 of 2 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/socket_ratchet_wrench/selector/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 2,
+              "source_meshes": [
+                "/socket_ratchet_wrench/selector/selector__visual_000/Cylinder_018",
+                "/socket_ratchet_wrench/selector/selector__visual_001/Reversing_selector_paddle_001"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        }
+      },
+      "joints": {
+        "ratchet_rotation": {
+          "path": "/socket_ratchet_wrench/Joints/ratchet_rotation",
+          "type": "revolute",
+          "parent": "body",
+          "child": "drive",
+          "axis_contract": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "axis_token": "X",
+          "frame_alignment_wxyz": [
+            0.707106781,
+            0.0,
+            -0.0,
+            0.707106781
+          ],
+          "limits": {
+            "lower": -180.0,
+            "upper": 180.0,
+            "unit": "deg",
+            "continuous": true,
+            "authored": false
+          },
+          "drive": {
+            "type": "force",
+            "stiffness": 0.0,
+            "damping": 1.5120818565742313e-06,
+            "damping_unit": "N*m*s/deg",
+            "damping_si": 8.663590866000934e-05,
+            "damping_basis": "4/s x load 2.17e-05",
+            "damping_si_unit": "N*m*s/rad",
+            "note": "passive joint: damping only; no actuation authored"
+          },
+          "behavior": {
+            "intent": {
+              "confidence": "medium",
+              "mode": "none",
+              "reason": "Drive rotates about the head axis during ratcheting and remains after release. Passive rotation approximates the mechanism; directional pawl locking is not expressible by this joint."
+            },
+            "status": "passive",
+            "simulator_status": "not_run"
+          }
+        },
+        "release_press": {
+          "path": "/socket_ratchet_wrench/Joints/release_press",
+          "type": "prismatic",
+          "parent": "drive",
+          "child": "release",
+          "axis_contract": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "axis_token": "X",
+          "frame_alignment_wxyz": [
+            0.707106781,
+            0.0,
+            -0.0,
+            0.707106781
+          ],
+          "limits": {
+            "lower": 0.0,
+            "upper": 0.0015,
+            "unit": "m"
+          },
+          "drive": {
+            "type": "force",
+            "stiffness": 0.07844287902116776,
+            "damping": 0.026863999664783478,
+            "damping_si": 0.026864,
+            "stiffness_si": 0.07844287999999999,
+            "max_force": 0.03419749296,
+            "target_position": -0.431454062461853,
+            "target_velocity": 0.0,
+            "damping_unit": "N*s/m",
+            "damping_si_unit": "N*s/m"
+          },
+          "behavior": {
+            "recipe_version": "joint-behavior/1",
+            "intent": {
+              "confidence": "high",
+              "mode": "spring_return",
+              "reason": "Finger pressure depresses the quick release button; an inferred internal spring restores it after release.",
+              "rest_position": 0.0
+            },
+            "status": "resolved",
+            "simulator_status": "not_run",
+            "effective_mass_or_inertia_si": 0.0023,
+            "gravity_bound_si": 0.022563,
+            "gravity_at_rest_si": -0.0,
+            "effort_unit": "N",
+            "assumptions": "Earth gravity; own descendant masses; no external payload; nominal downstream q=0 for interior spring balance",
+            "warnings": [
+              "Interaction must exceed the reported resistance; viewport dragging is not universally guaranteed."
+            ],
+            "stiffness_si": 0.07844287999999999,
+            "damping_si": 0.026864,
+            "target_position_si": -0.4314540720585476,
+            "max_effort_si": 0.03419749296,
+            "static_friction_si": 0.0,
+            "dynamic_friction_si": 0.0,
+            "nominal_settling_seconds": 1.0,
+            "rest_position_si": 0.0,
+            "supported_links": {
+              "release": {
+                "mass_kg": 0.0023,
+                "mass_properties": "mesh integrals scaled to resolved mass"
+              }
+            }
+          }
+        },
+        "direction_select": {
+          "path": "/socket_ratchet_wrench/Joints/direction_select",
+          "type": "revolute",
+          "parent": "body",
+          "child": "selector",
+          "axis_contract": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "axis_token": "X",
+          "frame_alignment_wxyz": [
+            0.707106781,
+            0.0,
+            -0.0,
+            0.707106781
+          ],
+          "limits": {
+            "lower": 0.0,
+            "upper": 45.836624,
+            "unit": "deg"
+          },
+          "drive": {
+            "type": "force",
+            "stiffness": 0.0,
+            "damping": 1.6675089753448447e-08,
+            "damping_si": 9.554122658744405e-07,
+            "stiffness_si": 0.0,
+            "max_force": null,
+            "target_velocity": 0.0,
+            "damping_unit": "N*m*s/deg",
+            "damping_si_unit": "N*m*s/rad",
+            "note": "passive drive kept; joint friction holds the position"
+          },
+          "behavior": {
+            "recipe_version": "joint-behavior/1",
+            "intent": {
+              "confidence": "high",
+              "mode": "hold_position",
+              "reason": "Thumb moves the direction lever between settings; inferred detent resistance retains the selected setting after release."
+            },
+            "status": "resolved",
+            "simulator_status": "not_run",
+            "effective_mass_or_inertia_si": 1.3728798392305603e-07,
+            "gravity_bound_si": 0.00012593685065382965,
+            "gravity_at_rest_si": 4.4552814299799e-05,
+            "effort_unit": "N*m",
+            "assumptions": "Earth gravity; own descendant masses; no external payload; nominal downstream q=0 for interior spring balance",
+            "warnings": [
+              "Interaction must exceed the reported resistance; viewport dragging is not universally guaranteed."
+            ],
+            "stiffness_si": 0.0,
+            "damping_si": 0.0,
+            "target_position_si": 0.0,
+            "max_effort_si": 0.0,
+            "static_friction_si": 0.012,
+            "dynamic_friction_si": 0.01,
+            "required_capability": "PhysxJointAxisAPI",
+            "supported_links": {
+              "selector": {
+                "mass_kg": 0.0038,
+                "mass_properties": "mesh integrals scaled to resolved mass"
+              }
+            }
+          }
+        }
+      },
+      "preview_controls": [],
+      "reference_pose": {
+        "direction_select": 0.0,
+        "ratchet_rotation": 0.0,
+        "release_press": 0.0
+      },
+      "provenance": {
+        "base_mode_reason": "Portable handheld socket ratchet with no world mount.",
+        "base_mode_source": "author_explicit",
+        "contract_revision": "2.0",
+        "producer": "articulated-asset-generation",
+        "producer_version": "0.1.0"
+      }
+    },
+    "mass_kg": 0.6039,
+    "colliders": 4,
+    "status": "articulated_body",
+    "material_class": "metal_steel",
+    "engine": "physx",
+    "multipart_physx": false,
+    "static_friction": 0.6,
+    "dynamic_friction": 0.45,
+    "restitution": 0.25,
+    "friction_model": "legacy",
+    "friction_convention": "pair_value_on_steel_dry",
+    "dynamic_friction_source": "material_table",
+    "dynamic_friction_convention": "pair_value_on_steel_dry"
+  }
+}

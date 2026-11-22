@@ -1,0 +1,31 @@
+{
+  "schema": "mxr/simready-capabilities/1",
+  "asset_revision": "1",
+  "source_user_manifest_sha256": "60cabc6775b043287012fa4cd91bcb72deb7e20fbe45314dc6def3cf5073ec88",
+  "builder_manifest_sha256": "46488653d50c594c56c63cc5db18e186b1d53048a28d6b99fc83e152c814073c",
+  "runtime": {
+    "application": "Isaac Sim",
+    "physics": "PhysX",
+    "version": "6.2.0-rc.14+mr.0.74a9356b.local"
+  },
+  "unsupported_runtimes": [
+    "Newton",
+    "MuJoCo"
+  ],
+  "operations": [
+    {
+      "id": "canteen.lift_and_place",
+      "status": "not_tested",
+      "notes": "Grip the canteen by its screw cap, lift it clear of the table and set it back down upright Scored native proof pending."
+    }
+  ],
+  "assumptions": [
+    "Estimated mass 0.330 kg (estimated mass)",
+    "Uncalibrated dry-contact coefficients"
+  ],
+  "limitations": [
+    "Rigid empty canteen in its cover; no water, strap or cup",
+    "Point-control demonstration is not robot gripper qualification",
+    "Multi-instance test deferred by user"
+  ]
+}

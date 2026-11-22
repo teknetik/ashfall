@@ -1,0 +1,29 @@
+# G clamp
+
+delivery_target: submission_isaac
+NVIDIA external acceptance: not granted
+
+Open `g_clamp.usda` and select `PhysX=Enabled` on its default prim before simulation. The authored default is Disabled for visual loading. The asset uses metres, Z-up, and native PhysX joints in Isaac Sim 6.1rc26. No controller graph or external behaviour script is needed. Set physics to 480 Hz for workpiece contact and clamping. The 240 Hz uneven-contact trial failed retention; these timesteps are not equivalent for this asset.
+
+This is a reference-informed reconstruction of the Record 119 thin-frame G-clamp family at an estimated 100 mm capacity. The fixed frame has the selected worn blue finish. Spindle, swivel shoe and sliding handle retain steel appearance. All parts are captive in intended use.
+
+Support the frame, insert a workpiece, then turn the spindle through the handle. Positive rotation about its rest +Z advances the shoe 3 mm per revolution; the visible twin-start crest pitch is 1.5 mm. Reverse rotation opens it. The tommy bar slides 27.5 mm each way. The foot swivels under physical contact. Tested use includes repeated grip, release and removal of a parallel workpiece, plus contact with a workpiece having a 5-degree lower face. This does not establish arbitrary shape, angle or load capacity. Test support points and wooden coupons are separate apparatus and are not included.
+
+Native bodies are `/Asset/Asset/link_frame`, `/Asset/Asset/link_spindle`, `/Asset/Asset/link_pad`, `/Asset/Asset/link_tommy_bar` and `/Asset/AxialCarrier`. The carrier is an invisible coordinate body for serial axial/rotary screw coupling. It receives 1% of spindle mass and inertia without adding mass. Total estimated mass is 0.793559 kg. Body-local centres of mass and principal inertia tensors derive from accepted solid mesh volumes with estimated cast-iron density 7200 kg/m3 and steel density 7850 kg/m3. Dimensions, hidden construction and overlapping-component allowances are estimates.
+
+Joints under `/Asset/Joints` are ScrewAdvance, ScrewRotation, ShoeSwivel and HandleSlide. The spherical shoe has 12-degree limits on each swing axis. PhysX articulation implements a pyramidal envelope, with about 17 degrees possible on a diagonal. This approximates the inferred swivel envelope; an exact circular cone and the full angular range have not been physically calibrated. The initial plan's shorthand '12-degree cone' is superseded by this explicit implementation description.
+
+Dry contact estimates are 0.4 static/0.3 dynamic friction for frame/contact steel and 0.3/0.2 for moving steel; restitution is 0.05 with average combine. Spindle drag is 0.03 Nm static/0.02 Nm dynamic; handle drag is 0.08 N/0.05 N. These are uncalibrated native resistance estimates. Contact force was materially timestep-sensitive. No measured clamp-force rating, physical specimen calibration, arbitrary-load self-locking or robot grasp reliability is claimed. Two-copy reuse is deferred by the user. Newton and MuJoCo are unsupported.
+
+Qualification status belongs to the reviewed handoff, not this development package. Original broad criteria exclusions remain:
+
+gclamp.screw: Includes measured cone/friction or calibrated effort not requested or available; native estimated function is separately required.
+gclamp.shoe: Includes measured cone/friction or calibrated effort not requested or available; native estimated function is separately required.
+gclamp.handle: Includes measured cone/friction or calibrated effort not requested or available; native estimated function is separately required.
+
+The approved Creative Commons Attribution 4.0 International is in `LICENSE.txt`. Published in https://huggingface.co/datasets/M-XR/marso-simready under Creative Commons Attribution 4.0 International (CC BY 4.0). See LICENSE.txt and ATTRIBUTION.txt. NVIDIA catalogue acceptance is pending.
+
+
+## Published release
+Published in https://huggingface.co/datasets/M-XR/marso-simready under Creative Commons Attribution 4.0 International (CC BY 4.0). See LICENSE.txt and ATTRIBUTION.txt. NVIDIA catalogue acceptance is pending.
+Package identity and version: ../com.nvidia.simready.packaging.json. Recorded official validation and benchmark outcomes: ../.metadata. Historical authoring scope is in mechanism.json; it is not a replacement for those reports.

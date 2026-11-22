@@ -1,0 +1,45 @@
+# Fetra 2436 workshop trolley | marso by M-XR
+
+Isaac Sim/PhysX asset. Independent acceptance and final release inputs are recorded outside this package. No NVIDIA external sign-off is implied.
+
+Reference `workshop_trolley_fetra_2436.usda` into a clean Z-up, metre-scale stage at any prim path. Select the root `PhysX` variant `Enabled` before play. Enable the standard Isaac extensions `omni.graph.scriptnode` and `isaacsim.core.nodes` and permit the embedded ScriptNode. This package was exercised in Isaac Sim 6.1.0-rc.26+mr.0.7c206f75.local; other runtimes are unqualified. A graph-disabled import is not the supported interactive configuration.
+
+The default prim is `/Trolley`; references remap it under the chosen instance root. Eleven rigid links live under `Asset/link_*`; joints under `Joints`. Keep the root movable and give it a rigid floor. No authoring helper, absolute path, fixture or test prop is needed to operate the asset. The embedded graph resolves its own instance path.
+
+Press either brake pedal approximately18 degrees with a physical toe/point force. At13 degrees it latches both the associated wheel and caster swivel at their current orientations, without a directional alignment lock. Lift below5 degrees to release. Wheels2 and3 use fixed forks; wheels0 and1 have swivels. Use the left push handle to move and steer, stop before parking, and press both pedals for storage access.
+
+Set the root Boolean `trolley:drawerLocked` or `trolley:doorLocked` false to represent unlocking with the omitted key. Pull the drawer toward local-Y through up to0.39m; open the cupboard about+Z through up to105 degrees. Close physically, then set the corresponding Boolean true. A lock request engages only when the drawer is within3mm or door within1 degree of seated; it does not teleport or remotely close a part. `...LockedEffective` reports actual engagement. The key/lock internals and robot frictional grasp are not modeled. The shelves are fixed at the delivered positions; shelf adjustment is unsupported.
+
+Supported evaluation is single-instance, finite-force handling of storage, wheel/pedal operation and low-speed transport on a rigid workshop floor, using small rigid payloads. Proof uses2kg in the drawer,2kg on a cupboard shelf and5kg on the top. These are tested examples, not a safe-load certification. The manufacturer's400kg rating is provenance and has not been qualified in this model. No humans, liquids, flexible contents or high-speed towing are covered. Two-copy behavior remains explicitly not tested at the user's deferral.
+
+Total unloaded mass66kg comes from manufacturer data. Link allocations and COM/inertia use signed mesh-volume moments and material density weights normalized to the stated link masses. Contact coefficients, restitution, lock compliance and brake torque are research-informed estimates, not physical-sample calibration. Tyre friction static/dynamic is0.65/0.50, coated steel0.35/0.25 and wood0.40/0.30 with average combine. The floor in proof is0.50/0.40. `mechanism.json` retains the local mass/inertia estimates. Wheel rolling, sliding and tipping on a ramp must be distinguished; onset of rolling is not a measured friction coefficient.
+
+The accepted textured handoff is preserved geometrically:53 visual meshes, topology, transforms, normals, UVs, material bindings and wood-edge subsets. All14 original maps remain. The exposed-metal raw linear basecolor has one downstream sRGB-encoded derivative with matching color-space declaration for NVIDIA conformance; maximum decoded linear RGB error0.0030. No finish redesign is included. Neutral clay catalogue imagery is a presentation override only.
+
+Licence: Creative Commons Attribution 4.0 International (CC BY 4.0). See LICENSE.txt and ATTRIBUTION.txt. Collection: https://huggingface.co/datasets/M-XR/marso-simready. No NVIDIA external acceptance is claimed.
+
+Manufacturer references: https://www.fetra.com/workshop_carts/workshop_cart-2436 and https://www.fetra.de/rollen/tpe-rollen/lenkrolle-71613 .
+
+## Broader inherited claims retained as not tested
+
+trolley.drawer: Inherited composite includes physical-sample calibration and robot contact; this delivery uses finite-force point actuation and research-informed estimates, with functional outcomes separately covered.
+
+trolley.cupboard: Inherited composite includes physical-sample calibration and robot contact; this delivery uses finite-force point actuation and research-informed estimates, with functional outcomes separately covered.
+
+trolley.brake_0: Inherited composite includes physical-sample calibration and robot contact; this delivery uses finite-force point actuation and research-informed estimates, with functional outcomes separately covered.
+
+trolley.brake_1: Inherited composite includes physical-sample calibration and robot contact; this delivery uses finite-force point actuation and research-informed estimates, with functional outcomes separately covered.
+
+trolley.roll_steer: Inherited composite includes physical-sample calibration and robot contact; this delivery uses finite-force point actuation and research-informed estimates, with functional outcomes separately covered.
+
+Runtime target: Isaac Sim/PhysX. NVIDIA external acceptance: not granted.
+
+
+Control interface and generic benchmark scope
+
+Direct joint-drive targets are not a supported user control interface. The embedded controller owns joint drive gains, force caps and position/velocity targets on every physics step, so external targets may be overwritten. Operate through physical forces at handles/pedals and the documented virtual-key attributes. Official generic joint_movement result: fail. Recorded watchdog timeouts are incomplete evidence and establish neither a joint-specific failure nor a pass; they do not prove physical impossibility. Completed everyday point-force operations are a separate positive claim. No general direct-drive compatibility is claimed.
+
+
+## Published release
+Published in https://huggingface.co/datasets/M-XR/marso-simready under Creative Commons Attribution 4.0 International (CC BY 4.0). See LICENSE.txt and ATTRIBUTION.txt. NVIDIA catalogue acceptance is pending.
+Package identity and version: ../com.nvidia.simready.packaging.json. Recorded official validation and benchmark outcomes: ../.metadata. Historical authoring scope is in mechanism.json; it is not a replacement for those reports.

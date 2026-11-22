@@ -1,0 +1,150 @@
+{
+  "id": "scraper",
+  "title": "Steel Putty / Surface Scraper",
+  "category": "hand_tool",
+  "subcategory": "cleaning_prep",
+  "description": "Flat spring-steel blade scraper with handle.",
+  "lore_fit": "Fits Crafting Studio surface-cleaning steps (`op: clean`, scraping corrosion/mould residue off servo cans and nanite seams).",
+  "where_to_use": [
+    "Crafting Studio bench (`op: clean` / mould prep)",
+    "Salvage shop workbench",
+    "Repairs shop counter"
+  ],
+  "recommended_usage": "Use `_LOD0..2.glb` on bench mats.",
+  "tags": [
+    "tool:scraper",
+    "cleaning",
+    "crafting_studio",
+    "bench",
+    "hand_tool"
+  ],
+  "provenance": {
+    "source_repo": "https://github.com/NVIDIA-Omniverse/simready-central",
+    "dataset": "NdotLight/SimReady_Assets",
+    "package_id": "simready.hf.NdotLight.SimReady_Assets.scraper.2026.11.10_00",
+    "license": "cc-by-4.0",
+    "author": "ndotlight",
+    "source_url": "https://huggingface.co/datasets/NdotLight/SimReady_Assets/resolve/7cf4ce8486f297e0c82f80d5bea41a72a56fd12f/scraper/com.nvidia.simready.packaging.json",
+    "wikidata_qcode": "Q921044"
+  },
+  "physical_properties": {
+    "dimensions_m": {
+      "width_x": 0.051,
+      "height_y": 0.0154,
+      "depth_z": 0.192
+    },
+    "dimensions_mm": [
+      51.0,
+      15.4,
+      192.0
+    ],
+    "mass_kg": 0.0652,
+    "simready_category": "hand_tool",
+    "rigid_body_count": 2,
+    "usd_joints": [
+      {
+        "name": "blade_assy_fixed_joint",
+        "path": "/World/Scraper/Joints/blade_assy_fixed_joint",
+        "type": "PhysicsFixedJoint"
+      }
+    ],
+    "grasp_points": []
+  },
+  "geometry": {
+    "source_triangles": 11896,
+    "parts_glb_triangles": 11896,
+    "lod_triangles": {
+      "LOD0": 11896,
+      "LOD1": 2974,
+      "LOD2": 950
+    },
+    "part_count": 4,
+    "is_multi_part": true,
+    "parts": [
+      {
+        "node": "scraper_blade",
+        "triangles": 710,
+        "vertices": 353,
+        "size_mm": [
+          51.0,
+          1.4,
+          186.5
+        ],
+        "materials": [
+          "SR_scraper_scraper"
+        ]
+      },
+      {
+        "node": "scraper_handle",
+        "triangles": 7138,
+        "vertices": 3563,
+        "size_mm": [
+          29.5,
+          15.4,
+          97.0
+        ],
+        "materials": [
+          "SR_scraper_scraper"
+        ]
+      },
+      {
+        "node": "scraper_nut",
+        "triangles": 2196,
+        "vertices": 1098,
+        "size_mm": [
+          11.5,
+          11.4,
+          11.5
+        ],
+        "materials": [
+          "SR_scraper_scraper"
+        ]
+      },
+      {
+        "node": "scraper_pin",
+        "triangles": 1852,
+        "vertices": 928,
+        "size_mm": [
+          8.0,
+          15.4,
+          8.0
+        ],
+        "materials": [
+          "SR_scraper_scraper"
+        ]
+      }
+    ]
+  },
+  "materials": [
+    {
+      "material_name": "SR_scraper_scraper",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_scraper_scraper_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_scraper_scraper_Normal.png",
+        "gltf_orm_map": "textures/SR_scraper_scraper_ORM.png",
+        "unity_urp_mask_map": "textures/SR_scraper_scraper_Mask.png"
+      }
+    }
+  ],
+  "files": {
+    "LOD0_glb": "assets/scraper/scraper_LOD0.glb",
+    "LOD1_glb": "assets/scraper/scraper_LOD1.glb",
+    "LOD2_glb": "assets/scraper/scraper_LOD2.glb",
+    "parts_glb": "assets/scraper/scraper_parts.glb",
+    "textures_dir": "assets/scraper/textures",
+    "thumbnail": "assets/scraper/thumbnail.png",
+    "meta_json": "assets/scraper/meta.json"
+  }
+}

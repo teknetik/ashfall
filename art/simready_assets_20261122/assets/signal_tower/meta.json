@@ -1,0 +1,251 @@
+{
+  "id": "signal_tower",
+  "title": "Industrial Stack Light / Status Signal Beacon",
+  "category": "infrastructure",
+  "subcategory": "signaling",
+  "description": "Multi-stage red/amber/green industrial status light stack on a mounting pole.",
+  "lore_fit": "Great visual indicator for Node 07 Quantum Tube transfer status, dust-front warning beacons at the West Gate, or automated turret/factory status.",
+  "where_to_use": [
+    "Node 07 Quantum Tube goods dock (transfer active beacon)",
+    "West Gate portal / Ossa's dust-front warning post",
+    "Warden training range firing line live-fire indicator",
+    "Salvage shop hoist monorail"
+  ],
+  "recommended_usage": "Lens segments are separate in `_parts.glb` for selective emissive switching on the city light clock.",
+  "tags": [
+    "signal_tower",
+    "beacon",
+    "status_light",
+    "quantum_tube",
+    "west_gate",
+    "training_range",
+    "separable_parts"
+  ],
+  "provenance": {
+    "source_repo": "https://github.com/NVIDIA-Omniverse/simready-central",
+    "dataset": "NdotLight/SimReady_Assets",
+    "package_id": "simready.hf.NdotLight.SimReady_Assets.signal_tower.2026.11.10_00",
+    "license": "cc-by-4.0",
+    "author": "ndotlight",
+    "source_url": "https://huggingface.co/datasets/NdotLight/SimReady_Assets/resolve/4ad7c03e19e92215a7f1fec0a15f909293735689/signal_tower/com.nvidia.simready.packaging.json",
+    "wikidata_qcode": "Q7595956"
+  },
+  "physical_properties": {
+    "dimensions_m": {
+      "width_x": 0.1,
+      "height_y": 0.639,
+      "depth_z": 0.0997
+    },
+    "dimensions_mm": [
+      100.0,
+      639.0,
+      99.7
+    ],
+    "mass_kg": 0.7275,
+    "simready_category": "industrial_equipment",
+    "rigid_body_count": 4,
+    "usd_joints": [
+      {
+        "name": "lamp_green_fixed_joint",
+        "path": "/World/Signal_Tower/Joints/lamp_green_fixed_joint",
+        "type": "PhysicsFixedJoint"
+      },
+      {
+        "name": "lamp_orange_fixed_joint",
+        "path": "/World/Signal_Tower/Joints/lamp_orange_fixed_joint",
+        "type": "PhysicsFixedJoint"
+      },
+      {
+        "name": "lamp_red_fixed_joint",
+        "path": "/World/Signal_Tower/Joints/lamp_red_fixed_joint",
+        "type": "PhysicsFixedJoint"
+      }
+    ],
+    "grasp_points": []
+  },
+  "geometry": {
+    "source_triangles": 217592,
+    "parts_glb_triangles": 39896,
+    "lod_triangles": {
+      "LOD0": 30000,
+      "LOD1": 7500,
+      "LOD2": 2400
+    },
+    "part_count": 8,
+    "is_multi_part": true,
+    "parts": [
+      {
+        "node": "signal_tower_cover_green",
+        "triangles": 808,
+        "vertices": 410,
+        "size_mm": [
+          80.0,
+          101.0,
+          80.0
+        ],
+        "materials": [
+          "SR_signal_tower_signal_tower"
+        ]
+      },
+      {
+        "node": "signal_tower_cover_orange",
+        "triangles": 14272,
+        "vertices": 7136,
+        "size_mm": [
+          80.0,
+          101.0,
+          80.0
+        ],
+        "materials": [
+          "SR_signal_tower_signal_tower"
+        ]
+      },
+      {
+        "node": "signal_tower_cover_red",
+        "triangles": 14272,
+        "vertices": 7136,
+        "size_mm": [
+          80.0,
+          101.0,
+          80.0
+        ],
+        "materials": [
+          "SR_signal_tower_signal_tower"
+        ]
+      },
+      {
+        "node": "signal_tower_light_green",
+        "triangles": 1668,
+        "vertices": 836,
+        "size_mm": [
+          66.0,
+          106.0,
+          66.0
+        ],
+        "materials": [
+          "SR_signal_tower_light_green"
+        ]
+      },
+      {
+        "node": "signal_tower_light_orange",
+        "triangles": 1668,
+        "vertices": 836,
+        "size_mm": [
+          66.0,
+          111.0,
+          66.0
+        ],
+        "materials": [
+          "SR_signal_tower_light_orange"
+        ]
+      },
+      {
+        "node": "signal_tower_light_red",
+        "triangles": 1668,
+        "vertices": 836,
+        "size_mm": [
+          66.0,
+          106.0,
+          66.0
+        ],
+        "materials": [
+          "SR_signal_tower_light_red"
+        ]
+      },
+      {
+        "node": "signal_tower_pipe",
+        "triangles": 1628,
+        "vertices": 816,
+        "size_mm": [
+          16.0,
+          145.0,
+          16.0
+        ],
+        "materials": [
+          "SR_signal_tower_signal_tower"
+        ]
+      },
+      {
+        "node": "signal_tower_body",
+        "triangles": 3912,
+        "vertices": 1962,
+        "size_mm": [
+          100.0,
+          639.0,
+          99.7
+        ],
+        "materials": [
+          "SR_signal_tower_signal_tower"
+        ]
+      }
+    ]
+  },
+  "materials": [
+    {
+      "material_name": "SR_signal_tower_signal_tower",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_signal_tower_signal_tower_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_signal_tower_signal_tower_Normal.png",
+        "gltf_orm_map": "textures/SR_signal_tower_signal_tower_ORM.png",
+        "unity_urp_mask_map": "textures/SR_signal_tower_signal_tower_Mask.png"
+      }
+    },
+    {
+      "material_name": "SR_signal_tower_light_green",
+      "base_color_factor": [
+        0.0,
+        1.0,
+        0.0749,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {}
+    },
+    {
+      "material_name": "SR_signal_tower_light_orange",
+      "base_color_factor": [
+        1.0,
+        0.7262,
+        0.0,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {}
+    },
+    {
+      "material_name": "SR_signal_tower_light_red",
+      "base_color_factor": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {}
+    }
+  ],
+  "files": {
+    "LOD0_glb": "assets/signal_tower/signal_tower_LOD0.glb",
+    "LOD1_glb": "assets/signal_tower/signal_tower_LOD1.glb",
+    "LOD2_glb": "assets/signal_tower/signal_tower_LOD2.glb",
+    "parts_glb": "assets/signal_tower/signal_tower_parts.glb",
+    "textures_dir": "assets/signal_tower/textures",
+    "thumbnail": "assets/signal_tower/thumbnail.png",
+    "meta_json": "assets/signal_tower/meta.json"
+  }
+}

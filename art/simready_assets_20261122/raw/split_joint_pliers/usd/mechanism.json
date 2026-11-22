@@ -1,0 +1,99 @@
+{
+  "schema": "mxr/simready-mechanism/1",
+  "asset": "split_joint_pliers",
+  "source_builder_revision": "pliers-r3-current-mesh-20261107",
+  "runtime": "Isaac Sim6.2.0-rc.14+mr.0.74a9356b.local / PhysX",
+  "entry": "split_joint_pliers/usd/split_joint_pliers.usda",
+  "physics_variant": {
+    "name": "PhysX",
+    "selection": "Enabled"
+  },
+  "bodies": [
+    "/Asset/Asset/link_slotted_half",
+    "/Asset/Asset/link_pinned_half"
+  ],
+  "joint": "/Asset/Joints/joint_working_pivot",
+  "mechanism": "Captive two-half adjustable joint; inferred finite keyed-seat controller and axial/tilt D6 constraints",
+  "controller": {
+    "path": "/Asset/Runtime/KeyGraph/key",
+    "embedded": true,
+    "actor_pose_setters": false,
+    "actor_velocity_setters": false,
+    "unlock_deg": 47,
+    "recapture_eligible_below_deg": 42,
+    "capture_inplane_m": 0.0006,
+    "capture_axial_m": 0.0004,
+    "seat_step_m": [
+      -0.00295,
+      0,
+      -0.00605
+    ],
+    "seats": 7
+  },
+  "usage": "Unloaded open/slide/align; capture at intermediate opening before grip loading. For inverse, reseat and capture before full closure.",
+  "development": "Connected adjust/grip/load/release/inverse demonstrated in native development. Runtime lifecycle and official qualification are recorded separately with the release.",
+  "estimates": [
+    "component masses/COM/inertia",
+    "friction/restitution",
+    "hidden key/cam/seat geometry and force coefficients"
+  ],
+  "limitations": [
+    "No factory-calibrated capacity/torque/key load",
+    "Grip includes adjacent pinned forging, not exclusive serrated land contact",
+    "Fast direct inverse closure is unqualified; use capture-and-settle sequence",
+    "No disassembly or per-link drop",
+    "Runtime lifecycle and final applicable benchmark outcomes are separate release records"
+  ],
+  "historical_authoring_capabilities": {
+    "runtime": {
+      "application": "Isaac Sim",
+      "physics": "PhysX",
+      "version": "6.2.0-rc.14+mr.0.74a9356b.local"
+    },
+    "unsupported_runtimes": [
+      "Newton",
+      "MuJoCo"
+    ],
+    "operations": [
+      {
+        "id": "pliers.adjust",
+        "status": "passed",
+        "notes": "Native connected development: unloaded one-seat adjustment, capture-and-settle, inverse reseat and final closure. Intermediate capture is required before full inverse closure; no continuously-seated closure claim."
+      },
+      {
+        "id": "pliers.grip",
+        "status": "passed",
+        "notes": "Native connected development: opposing mouth-region contacts, unparented50g representative25mm fitting retained under gravity plus2N downward with1.658mm maximum drift over0.5s, then release. Lower-side reaction includes adjacent forging; no exclusive serrated-land grip or rated torque claim."
+      },
+      {
+        "id": "package.reset",
+        "status": "passed",
+        "notes": "Native stop/play recovers original geometry and packaged key state after released-key operation; subsequent reopening works."
+      },
+      {
+        "id": "package.reload",
+        "status": "passed",
+        "notes": "Fresh clean-stage reference recovers original geometry/key state and subsequent reopening works."
+      }
+    ],
+    "assumptions": [
+      "Manufacturer0.620kg total; component shares/COM/inertia and friction are estimates.",
+      "Seven-seat key/cam geometry,47/42degree release/recapture eligibility and finite internal stiffness are reconstruction estimates."
+    ],
+    "limitations": [
+      "Capability observations do not grant final package/NVIDIA acceptance.",
+      "No calibrated capacity/torque or physical-sample certification.",
+      "No Newton/MuJoCo, two-copy independence, robot grasp policy, maintenance or half disassembly qualification.",
+      "Fast direct inverse50-to0degree closure is unqualified; use intermediate capture-and-settle."
+    ]
+  },
+  "documented_usage_scope": {
+    "supported_actions": [
+      "pliers.grip",
+      "pliers.adjust",
+      "pliers.connected"
+    ],
+    "exclusions": {}
+  },
+  "documentation_note": "Historical authoring scope is retained as context, not refreshed qualification. Current official outcomes are in ../.metadata; NVIDIA acceptance remains pending."
+}

@@ -1,0 +1,621 @@
+{
+  "physics": {
+    "articulation": {
+      "schema_version": "articulation/2",
+      "root_link": "body",
+      "base_mode": "free",
+      "world_joint": null,
+      "behavior_sleep_threshold": null,
+      "handoff_base_mode": "free",
+      "base_mode_source": "handoff",
+      "collision_filter": {
+        "mode": "adjacent",
+        "explicit_excluded_link_pairs": [],
+        "handoff_excluded_link_pairs": [
+          [
+            "bail_left",
+            "body"
+          ],
+          [
+            "bail_right",
+            "body"
+          ],
+          [
+            "body",
+            "latch_left"
+          ],
+          [
+            "body",
+            "latch_right"
+          ],
+          [
+            "body",
+            "lid"
+          ],
+          [
+            "handle",
+            "lid"
+          ]
+        ],
+        "excluded_link_pairs": [
+          [
+            "bail_left",
+            "body"
+          ],
+          [
+            "bail_left",
+            "latch_left"
+          ],
+          [
+            "bail_right",
+            "body"
+          ],
+          [
+            "bail_right",
+            "latch_right"
+          ],
+          [
+            "body",
+            "latch_left"
+          ],
+          [
+            "body",
+            "latch_right"
+          ],
+          [
+            "body",
+            "lid"
+          ],
+          [
+            "handle",
+            "lid"
+          ]
+        ],
+        "representation": "UsdPhysics.FilteredPairsAPI plus joint collisionEnabled",
+        "external_contacts": "enabled",
+        "other_engine_validation": "not_run",
+        "rest_overlap_pairs": [
+          [
+            "bail_left",
+            "latch_left",
+            0.057
+          ],
+          [
+            "bail_right",
+            "latch_right",
+            0.0595
+          ]
+        ]
+      },
+      "collider_aggregation": "link",
+      "joint_count": 6,
+      "joint_types": {
+        "revolute": 6
+      },
+      "axis_rule": "physics:axis X; both joint frames rotated by the quaternion mapping +X onto the contract axis",
+      "links": {
+        "body": {
+          "prim": "/red_metal_toolbox/body",
+          "mass_kg": 5.9354,
+          "mass_source": "VLM per-part estimate, 21 of 21 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/red_metal_toolbox/body/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 21,
+              "source_meshes": [
+                "/red_metal_toolbox/body/body__visual_000/Deep_pressed_steel_toolbox_001",
+                "/red_metal_toolbox/body/body__visual_001/Cube_012",
+                "/red_metal_toolbox/body/body__visual_002/Cylinder_036",
+                "/red_metal_toolbox/body/body__visual_003/Cylinder_037",
+                "/red_metal_toolbox/body/body__visual_004/Cylinder_038",
+                "/red_metal_toolbox/body/body__visual_005/Cube_013",
+                "/red_metal_toolbox/body/body__visual_006/Cylinder_039",
+                "/red_metal_toolbox/body/body__visual_007/Cylinder_040",
+                "/red_metal_toolbox/body/body__visual_008/Cylinder_041",
+                "/red_metal_toolbox/body/body__visual_009/Cube_014",
+                "/red_metal_toolbox/body/body__visual_010/Cylinder_042",
+                "/red_metal_toolbox/body/body__visual_011/Cylinder_043",
+                "/red_metal_toolbox/body/body__visual_012/Cylinder_044",
+                "/red_metal_toolbox/body/body__visual_013/Cylinder_045",
+                "/red_metal_toolbox/body/body__visual_014/Cylinder_046",
+                "/red_metal_toolbox/body/body__visual_015/Cube_015",
+                "/red_metal_toolbox/body/body__visual_016/Cylinder_047",
+                "/red_metal_toolbox/body/body__visual_017/Cylinder_048",
+                "/red_metal_toolbox/body/body__visual_018/Cylinder_049",
+                "/red_metal_toolbox/body/body__visual_019/Cylinder_050",
+                "/red_metal_toolbox/body/body__visual_020/Cylinder_051"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        },
+        "lid": {
+          "prim": "/red_metal_toolbox/lid",
+          "mass_kg": 3.1743,
+          "mass_source": "VLM per-part estimate, 25 of 25 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/red_metal_toolbox/lid/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 25,
+              "source_meshes": [
+                "/red_metal_toolbox/lid/lid__visual_000/Shallow_rolled_lid_001",
+                "/red_metal_toolbox/lid/lid__visual_001/Cube_016",
+                "/red_metal_toolbox/lid/lid__visual_002/Cylinder_052",
+                "/red_metal_toolbox/lid/lid__visual_003/Cylinder_053",
+                "/red_metal_toolbox/lid/lid__visual_004/Cube_017",
+                "/red_metal_toolbox/lid/lid__visual_005/Cylinder_054",
+                "/red_metal_toolbox/lid/lid__visual_006/Cylinder_055",
+                "/red_metal_toolbox/lid/lid__visual_007/Stamped_domed_mounting_shoe_002",
+                "/red_metal_toolbox/lid/lid__visual_008/Cube_018",
+                "/red_metal_toolbox/lid/lid__visual_009/Cylinder_056",
+                "/red_metal_toolbox/lid/lid__visual_010/Cylinder_057",
+                "/red_metal_toolbox/lid/lid__visual_011/Cylinder_058",
+                "/red_metal_toolbox/lid/lid__visual_012/Stamped_domed_mounting_shoe_003",
+                "/red_metal_toolbox/lid/lid__visual_013/Cube_019",
+                "/red_metal_toolbox/lid/lid__visual_014/Cylinder_059",
+                "/red_metal_toolbox/lid/lid__visual_015/Cylinder_060",
+                "/red_metal_toolbox/lid/lid__visual_016/Cylinder_061",
+                "/red_metal_toolbox/lid/lid__visual_017/Cube_020",
+                "/red_metal_toolbox/lid/lid__visual_018/Cylinder_062",
+                "/red_metal_toolbox/lid/lid__visual_019/Cylinder_063",
+                "/red_metal_toolbox/lid/lid__visual_020/Cylinder_064",
+                "/red_metal_toolbox/lid/lid__visual_021/Cube_021",
+                "/red_metal_toolbox/lid/lid__visual_022/Cylinder_065",
+                "/red_metal_toolbox/lid/lid__visual_023/Cylinder_066",
+                "/red_metal_toolbox/lid/lid__visual_024/Cylinder_067"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        },
+        "handle": {
+          "prim": "/red_metal_toolbox/handle",
+          "mass_kg": 0.2145,
+          "mass_source": "VLM per-part estimate, 1 of 1 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/red_metal_toolbox/handle/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "auto-convex: convex decomposition instead of sdf",
+              "source_mesh_count": 1,
+              "source_meshes": [
+                "/red_metal_toolbox/handle/handle__visual_000/Thick_molded_arched_carry_grip_001"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        },
+        "latch_left": {
+          "prim": "/red_metal_toolbox/latch_left",
+          "mass_kg": 0.0807,
+          "mass_source": "VLM per-part estimate, 4 of 4 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/red_metal_toolbox/latch_left/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 4,
+              "source_meshes": [
+                "/red_metal_toolbox/latch_left/latch_left__visual_000/Tapered_clasp_pressing_002",
+                "/red_metal_toolbox/latch_left/latch_left__visual_001/Cube_022",
+                "/red_metal_toolbox/latch_left/latch_left__visual_002/Cylinder_068",
+                "/red_metal_toolbox/latch_left/latch_left__visual_003/Cylinder_069"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        },
+        "latch_right": {
+          "prim": "/red_metal_toolbox/latch_right",
+          "mass_kg": 0.0807,
+          "mass_source": "VLM per-part estimate, 4 of 4 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/red_metal_toolbox/latch_right/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 4,
+              "source_meshes": [
+                "/red_metal_toolbox/latch_right/latch_right__visual_000/Tapered_clasp_pressing_003",
+                "/red_metal_toolbox/latch_right/latch_right__visual_001/Cube_023",
+                "/red_metal_toolbox/latch_right/latch_right__visual_002/Cylinder_070",
+                "/red_metal_toolbox/latch_right/latch_right__visual_003/Cylinder_071"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        },
+        "bail_left": {
+          "prim": "/red_metal_toolbox/bail_left",
+          "mass_kg": 0.0227,
+          "mass_source": "VLM per-part estimate, 1 of 1 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/red_metal_toolbox/bail_left/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "auto-convex: convex decomposition instead of sdf",
+              "source_mesh_count": 1,
+              "source_meshes": [
+                "/red_metal_toolbox/bail_left/bail_left__visual_000/Clasp_wire_bow_left_001"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        },
+        "bail_right": {
+          "prim": "/red_metal_toolbox/bail_right",
+          "mass_kg": 0.0227,
+          "mass_source": "VLM per-part estimate, 1 of 1 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/red_metal_toolbox/bail_right/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "auto-convex: convex decomposition instead of sdf",
+              "source_mesh_count": 1,
+              "source_meshes": [
+                "/red_metal_toolbox/bail_right/bail_right__visual_000/Clasp_wire_bow_right_001"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        }
+      },
+      "joints": {
+        "lid_hinge": {
+          "path": "/red_metal_toolbox/Joints/lid_hinge",
+          "type": "revolute",
+          "parent": "body",
+          "child": "lid",
+          "axis_contract": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "axis_token": "X",
+          "frame_alignment_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "limits": {
+            "lower": -105.997192,
+            "upper": 0.0,
+            "unit": "deg"
+          },
+          "drive": {
+            "type": "force",
+            "stiffness": 0.0,
+            "damping": 0.0017453292519943296,
+            "damping_unit": "N*m*s/deg",
+            "damping_si": 0.1,
+            "damping_basis": "default",
+            "damping_si_unit": "N*m*s/rad",
+            "note": "passive joint: damping only; no actuation authored"
+          },
+          "behavior": {
+            "intent": {
+              "confidence": "medium",
+              "mode": "none",
+              "reason": "Rear hinge is inferred. Lift manually; unsupported lid falls under gravity or rests at its open stop after release."
+            },
+            "status": "passive",
+            "simulator_status": "not_run"
+          }
+        },
+        "handle_fold": {
+          "path": "/red_metal_toolbox/Joints/handle_fold",
+          "type": "revolute",
+          "parent": "lid",
+          "child": "handle",
+          "axis_contract": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "axis_token": "X",
+          "frame_alignment_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "limits": {
+            "lower": -84.797754,
+            "upper": 84.797754,
+            "unit": "deg"
+          },
+          "drive": {
+            "type": "force",
+            "stiffness": 0.0,
+            "damping": 6.265280047514507e-05,
+            "damping_unit": "N*m*s/deg",
+            "damping_si": 0.003589741041901051,
+            "damping_basis": "4/s x load 0.000897",
+            "damping_si_unit": "N*m*s/rad",
+            "note": "passive joint: damping only; no actuation authored"
+          },
+          "behavior": {
+            "intent": {
+              "confidence": "high",
+              "mode": "none",
+              "reason": "Carry grip pivots at the two roof saddles; it swings freely and falls toward the lid when released."
+            },
+            "status": "passive",
+            "simulator_status": "not_run"
+          }
+        },
+        "latch_left_release": {
+          "path": "/red_metal_toolbox/Joints/latch_left_release",
+          "type": "revolute",
+          "parent": "body",
+          "child": "latch_left",
+          "axis_contract": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "axis_token": "X",
+          "frame_alignment_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "limits": {
+            "lower": -91.673247,
+            "upper": 0.0,
+            "unit": "deg"
+          },
+          "drive": {
+            "type": "force",
+            "stiffness": 0.0,
+            "damping": 6.303406735241879e-06,
+            "damping_si": 0.00036115860248369676,
+            "stiffness_si": 0.0,
+            "max_force": null,
+            "target_velocity": 0.0,
+            "damping_unit": "N*m*s/deg",
+            "damping_si_unit": "N*m*s/rad",
+            "note": "passive drive kept; joint friction holds the position"
+          },
+          "behavior": {
+            "recipe_version": "joint-behavior/1",
+            "intent": {
+              "confidence": "low",
+              "mode": "hold_position",
+              "reason": "Manually lift the over-center clasp. Detent/friction is approximated to retain its selected position after release; concealed toggle linkage is simplified."
+            },
+            "status": "resolved",
+            "simulator_status": "not_run",
+            "effective_mass_or_inertia_si": 0.0001001520283646624,
+            "gravity_bound_si": 0.024189844334243323,
+            "gravity_at_rest_si": 0.002892912159474268,
+            "effort_unit": "N*m",
+            "assumptions": "Earth gravity; own descendant masses; no external payload; nominal downstream q=0 for interior spring balance",
+            "warnings": [
+              "Interaction must exceed the reported resistance; viewport dragging is not universally guaranteed."
+            ],
+            "stiffness_si": 0.0,
+            "damping_si": 0.0,
+            "target_position_si": 0.0,
+            "max_effort_si": 0.0,
+            "static_friction_si": 0.03628476650136499,
+            "dynamic_friction_si": 0.03023730541780415,
+            "required_capability": "PhysxJointAxisAPI",
+            "supported_links": {
+              "latch_left": {
+                "mass_kg": 0.0807,
+                "mass_properties": "mesh integrals scaled to resolved mass"
+              }
+            }
+          }
+        },
+        "latch_right_release": {
+          "path": "/red_metal_toolbox/Joints/latch_right_release",
+          "type": "revolute",
+          "parent": "body",
+          "child": "latch_right",
+          "axis_contract": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "axis_token": "X",
+          "frame_alignment_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "limits": {
+            "lower": -91.673247,
+            "upper": 0.0,
+            "unit": "deg"
+          },
+          "drive": {
+            "type": "force",
+            "stiffness": 0.0,
+            "damping": 6.303406735241879e-06,
+            "damping_si": 0.00036115860248369676,
+            "stiffness_si": 0.0,
+            "max_force": null,
+            "target_velocity": 0.0,
+            "damping_unit": "N*m*s/deg",
+            "damping_si_unit": "N*m*s/rad",
+            "note": "passive drive kept; joint friction holds the position"
+          },
+          "behavior": {
+            "recipe_version": "joint-behavior/1",
+            "intent": {
+              "confidence": "low",
+              "mode": "hold_position",
+              "reason": "Manually lift the over-center clasp. Detent/friction is approximated to retain its selected position after release; concealed toggle linkage is simplified."
+            },
+            "status": "resolved",
+            "simulator_status": "not_run",
+            "effective_mass_or_inertia_si": 0.0001001520252175477,
+            "gravity_bound_si": 0.024189843876628748,
+            "gravity_at_rest_si": 0.0028929122286822273,
+            "effort_unit": "N*m",
+            "assumptions": "Earth gravity; own descendant masses; no external payload; nominal downstream q=0 for interior spring balance",
+            "warnings": [
+              "Interaction must exceed the reported resistance; viewport dragging is not universally guaranteed."
+            ],
+            "stiffness_si": 0.0,
+            "damping_si": 0.0,
+            "target_position_si": 0.0,
+            "max_effort_si": 0.0,
+            "static_friction_si": 0.036284765814943123,
+            "dynamic_friction_si": 0.030237304845785934,
+            "required_capability": "PhysxJointAxisAPI",
+            "supported_links": {
+              "latch_right": {
+                "mass_kg": 0.0807,
+                "mass_properties": "mesh integrals scaled to resolved mass"
+              }
+            }
+          }
+        },
+        "bail_left_release": {
+          "path": "/red_metal_toolbox/Joints/bail_left_release",
+          "type": "revolute",
+          "parent": "body",
+          "child": "bail_left",
+          "axis_contract": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "axis_token": "X",
+          "frame_alignment_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "limits": {
+            "lower": 0.0,
+            "upper": 97.402825,
+            "unit": "deg"
+          },
+          "drive": {
+            "type": "force",
+            "stiffness": 0.0,
+            "damping": 1.719042645351275e-06,
+            "damping_unit": "N*m*s/deg",
+            "damping_si": 9.849388838163243e-05,
+            "damping_basis": "4/s x load 2.46e-05",
+            "damping_si_unit": "N*m*s/rad",
+            "note": "passive joint: damping only; no actuation authored"
+          },
+          "behavior": {
+            "intent": {
+              "confidence": "low",
+              "mode": "none",
+              "reason": "Wire catch swings outward off the lid keeper and hangs when released. Independent pivot approximates the concealed toggle connection."
+            },
+            "status": "passive",
+            "simulator_status": "not_run"
+          }
+        },
+        "bail_right_release": {
+          "path": "/red_metal_toolbox/Joints/bail_right_release",
+          "type": "revolute",
+          "parent": "body",
+          "child": "bail_right",
+          "axis_contract": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "axis_token": "X",
+          "frame_alignment_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "limits": {
+            "lower": 0.0,
+            "upper": 97.402825,
+            "unit": "deg"
+          },
+          "drive": {
+            "type": "force",
+            "stiffness": 0.0,
+            "damping": 1.71904277212039e-06,
+            "damping_unit": "N*m*s/deg",
+            "damping_si": 9.849389564496769e-05,
+            "damping_basis": "4/s x load 2.46e-05",
+            "damping_si_unit": "N*m*s/rad",
+            "note": "passive joint: damping only; no actuation authored"
+          },
+          "behavior": {
+            "intent": {
+              "confidence": "low",
+              "mode": "none",
+              "reason": "Wire catch swings outward off the lid keeper and hangs when released. Independent pivot approximates the concealed toggle connection."
+            },
+            "status": "passive",
+            "simulator_status": "not_run"
+          }
+        }
+      },
+      "preview_controls": [],
+      "reference_pose": {
+        "bail_left_release": 0.0,
+        "bail_right_release": 0.0,
+        "handle_fold": 0.0,
+        "latch_left_release": 0.0,
+        "latch_right_release": 0.0,
+        "lid_hinge": 0.0
+      },
+      "provenance": {
+        "base_mode_reason": "Portable handheld toolbox with no world attachment.",
+        "base_mode_source": "author_explicit",
+        "contract_revision": "2.0",
+        "producer": "articulated-asset-generation",
+        "producer_version": "0.1.0"
+      }
+    },
+    "mass_kg": 9.531,
+    "colliders": 7,
+    "status": "articulated_body",
+    "material_class": "metal_steel",
+    "engine": "physx",
+    "multipart_physx": false,
+    "static_friction": 0.6,
+    "dynamic_friction": 0.45,
+    "restitution": 0.25,
+    "friction_model": "legacy",
+    "friction_convention": "pair_value_on_steel_dry",
+    "dynamic_friction_source": "material_table",
+    "dynamic_friction_convention": "pair_value_on_steel_dry"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "physics": {
+    "articulation": {
+      "schema_version": "articulation/2",
+      "root_link": "bin",
+      "base_mode": "free",
+      "world_joint": null,
+      "behavior_sleep_threshold": null,
+      "handoff_base_mode": "free",
+      "base_mode_source": "handoff",
+      "collision_filter": {
+        "mode": "adjacent",
+        "explicit_excluded_link_pairs": [],
+        "handoff_excluded_link_pairs": [],
+        "excluded_link_pairs": [],
+        "representation": "UsdPhysics.FilteredPairsAPI plus joint collisionEnabled",
+        "external_contacts": "enabled",
+        "other_engine_validation": "not_run"
+      },
+      "collider_aggregation": "link",
+      "joint_count": 0,
+      "joint_types": {},
+      "axis_rule": "physics:axis X; both joint frames rotated by the quaternion mapping +X onto the contract axis",
+      "links": {
+        "bin": {
+          "prim": "/robot_stackable_parts_bin/bin",
+          "mass_kg": 7.4876,
+          "mass_source": "plastic density 1050 kg/m^3 x 0.00713 m^3",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/robot_stackable_parts_bin/bin/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "planar",
+              "source_mesh_count": 1,
+              "source_meshes": [
+                "/robot_stackable_parts_bin/bin/bin__visual_000/Cube_006"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        }
+      },
+      "joints": {},
+      "preview_controls": [],
+      "reference_pose": {},
+      "provenance": {
+        "base_mode_reason": "One portable freestanding molded parts bin with no world attachment or moving components.",
+        "base_mode_source": "author_explicit",
+        "contract_revision": "2.0",
+        "producer": "articulated-asset-generation",
+        "producer_version": "0.1.0"
+      }
+    },
+    "mass_kg": 7.4876,
+    "colliders": 1,
+    "status": "articulated_body",
+    "material_class": "plastic",
+    "engine": "physx",
+    "multipart_physx": false,
+    "static_friction": 0.35,
+    "dynamic_friction": 0.28,
+    "restitution": 0.3,
+    "friction_model": "legacy",
+    "friction_convention": "pair_value_on_steel_dry",
+    "dynamic_friction_source": "material_table",
+    "dynamic_friction_convention": "pair_value_on_steel_dry"
+  }
+}

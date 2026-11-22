@@ -1,0 +1,151 @@
+{
+  "physics": {
+    "articulation": {
+      "schema_version": "articulation/2",
+      "root_link": "left_leaf",
+      "base_mode": "free",
+      "world_joint": null,
+      "behavior_sleep_threshold": null,
+      "handoff_base_mode": "free",
+      "base_mode_source": "handoff",
+      "collision_filter": {
+        "mode": "adjacent",
+        "explicit_excluded_link_pairs": [],
+        "handoff_excluded_link_pairs": [
+          [
+            "left_leaf",
+            "right_leaf"
+          ]
+        ],
+        "excluded_link_pairs": [
+          [
+            "left_leaf",
+            "right_leaf"
+          ]
+        ],
+        "representation": "UsdPhysics.FilteredPairsAPI plus joint collisionEnabled",
+        "external_contacts": "enabled",
+        "other_engine_validation": "not_run"
+      },
+      "collider_aggregation": "link",
+      "joint_count": 1,
+      "joint_types": {
+        "revolute": 1
+      },
+      "axis_rule": "physics:axis X; both joint frames rotated by the quaternion mapping +X onto the contract axis",
+      "links": {
+        "left_leaf": {
+          "prim": "/butt_hinge/left_leaf",
+          "mass_kg": 0.1172,
+          "mass_source": "VLM per-part estimate, 4 of 4 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/butt_hinge/left_leaf/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 4,
+              "source_meshes": [
+                "/butt_hinge/left_leaf/left_leaf__visual_000/Cube_007",
+                "/butt_hinge/left_leaf/left_leaf__visual_001/Cylinder_016",
+                "/butt_hinge/left_leaf/left_leaf__visual_002/Cylinder_017",
+                "/butt_hinge/left_leaf/left_leaf__visual_003/Cylinder_018"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        },
+        "right_leaf": {
+          "prim": "/butt_hinge/right_leaf",
+          "mass_kg": 0.0928,
+          "mass_source": "VLM per-part estimate, 1 of 1 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/butt_hinge/right_leaf/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "planar",
+              "source_mesh_count": 1,
+              "source_meshes": [
+                "/butt_hinge/right_leaf/right_leaf__visual_000/Cube_008"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        }
+      },
+      "joints": {
+        "leaf_rotation": {
+          "path": "/butt_hinge/Joints/leaf_rotation",
+          "type": "revolute",
+          "parent": "left_leaf",
+          "child": "right_leaf",
+          "axis_contract": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "axis_token": "X",
+          "frame_alignment_wxyz": [
+            0.707106781,
+            0.0,
+            -0.707106781,
+            0.0
+          ],
+          "limits": {
+            "lower": -180.0,
+            "upper": 0.0,
+            "unit": "deg"
+          },
+          "drive": {
+            "type": "force",
+            "stiffness": 0.0,
+            "damping": 2.4302004104942008e-05,
+            "damping_unit": "N*m*s/deg",
+            "damping_si": 0.0013924022689227788,
+            "damping_basis": "4/s x load 0.000348",
+            "damping_si_unit": "N*m*s/rad",
+            "note": "passive joint: damping only; no actuation authored"
+          },
+          "behavior": {
+            "intent": {
+              "confidence": "high",
+              "mode": "none",
+              "reason": "Leaves swing by hand around the common pin and remain passive after release, subject to ordinary damping and gravity. No spring or friction-holding mechanism is visible; a conventional loose butt hinge is inferred."
+            },
+            "status": "passive",
+            "simulator_status": "not_run"
+          }
+        }
+      },
+      "preview_controls": [],
+      "reference_pose": {
+        "leaf_rotation": 0.0
+      },
+      "provenance": {
+        "base_mode_reason": "Loose hinge hardware is shown without a door, frame, screws or other world mounting; assumed portable.",
+        "base_mode_source": "author_explicit",
+        "contract_revision": "2.0",
+        "producer": "articulated-asset-generation",
+        "producer_version": "0.1.0"
+      }
+    },
+    "mass_kg": 0.21,
+    "colliders": 2,
+    "status": "articulated_body",
+    "material_class": "metal_steel",
+    "engine": "physx",
+    "multipart_physx": false,
+    "static_friction": 0.6,
+    "dynamic_friction": 0.45,
+    "restitution": 0.25,
+    "friction_model": "legacy",
+    "friction_convention": "pair_value_on_steel_dry",
+    "dynamic_friction_source": "material_table",
+    "dynamic_friction_convention": "pair_value_on_steel_dry"
+  }
+}

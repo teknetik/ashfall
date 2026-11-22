@@ -1,0 +1,163 @@
+{
+  "id": "monkey_wrench",
+  "title": "Heavy Adjustable Pipe / Monkey Wrench",
+  "category": "hand_tool",
+  "subcategory": "wrench",
+  "description": "Heavy industrial adjustable wrench with worm-gear jaw.",
+  "lore_fit": "Iconic fixer tool for Torr, the yard mechanic, Air + Water pipe maintenance, and Quantum Tube node repairs.",
+  "where_to_use": [
+    "Air + Water shop frontage and filter bank",
+    "Yard mechanic service loop",
+    "Salvage shop workbench",
+    "Tool Exchange display"
+  ],
+  "recommended_usage": "Separable jaw parts in `_parts.glb`; static prop in `_LOD0..2.glb`.",
+  "tags": [
+    "tool:wrench",
+    "monkey_wrench",
+    "pipe_wrench",
+    "hand_tool",
+    "torr",
+    "mechanic",
+    "air_water"
+  ],
+  "provenance": {
+    "source_repo": "https://github.com/NVIDIA-Omniverse/simready-central",
+    "dataset": "NdotLight/SimReady_Assets",
+    "package_id": "simready.hf.NdotLight.SimReady_Assets.monkey_wrench.2026.11.10_00",
+    "license": "cc-by-4.0",
+    "author": "ndotlight",
+    "source_url": "https://huggingface.co/datasets/NdotLight/SimReady_Assets/resolve/994011821a5367ea393bda6165b72097acae05a8/monkey_wrench/com.nvidia.simready.packaging.json",
+    "wikidata_qcode": "Q356776"
+  },
+  "physical_properties": {
+    "dimensions_m": {
+      "width_x": 0.06,
+      "height_y": 0.0138,
+      "depth_z": 0.2474
+    },
+    "dimensions_mm": [
+      60.0,
+      13.8,
+      247.4
+    ],
+    "mass_kg": 0.456,
+    "simready_category": "hand_tool",
+    "rigid_body_count": 3,
+    "usd_joints": [
+      {
+        "name": "jaw_slide_joint",
+        "path": "/World/Monkey_Wrench/Joints/jaw_slide_joint",
+        "type": "PhysicsPrismaticJoint"
+      },
+      {
+        "name": "worm_spin_joint",
+        "path": "/World/Monkey_Wrench/Joints/worm_spin_joint",
+        "type": "PhysicsRevoluteJoint"
+      },
+      {
+        "name": "worm_rack_coupling",
+        "path": "/World/Monkey_Wrench/Joints/worm_rack_coupling",
+        "type": "PhysxPhysicsRackAndPinionJoint"
+      }
+    ],
+    "grasp_points": []
+  },
+  "geometry": {
+    "source_triangles": 26150,
+    "parts_glb_triangles": 26150,
+    "lod_triangles": {
+      "LOD0": 26150,
+      "LOD1": 6536,
+      "LOD2": 2092
+    },
+    "part_count": 4,
+    "is_multi_part": true,
+    "parts": [
+      {
+        "node": "monkey_wrench_adjuster_worm_01_3",
+        "triangles": 8022,
+        "vertices": 4011,
+        "size_mm": [
+          16.5,
+          13.8,
+          15.7
+        ],
+        "materials": [
+          "SR_monkey_wrench_steel_carbon"
+        ]
+      },
+      {
+        "node": "monkey_wrench_adjuster_worm_axis_01_2",
+        "triangles": 1748,
+        "vertices": 876,
+        "size_mm": [
+          32.7,
+          4.2,
+          10.1
+        ],
+        "materials": [
+          "SR_monkey_wrench_steel_carbon"
+        ]
+      },
+      {
+        "node": "monkey_wrench_frame_01",
+        "triangles": 11216,
+        "vertices": 5602,
+        "size_mm": [
+          60.0,
+          11.3,
+          247.4
+        ],
+        "materials": [
+          "SR_monkey_wrench_steel_carbon"
+        ]
+      },
+      {
+        "node": "monkey_wrench_jaw_movable_01",
+        "triangles": 5164,
+        "vertices": 2584,
+        "size_mm": [
+          33.4,
+          8.0,
+          38.9
+        ],
+        "materials": [
+          "SR_monkey_wrench_steel_carbon"
+        ]
+      }
+    ]
+  },
+  "materials": [
+    {
+      "material_name": "SR_monkey_wrench_steel_carbon",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_monkey_wrench_steel_carbon_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_monkey_wrench_steel_carbon_Normal.png",
+        "gltf_orm_map": "textures/SR_monkey_wrench_steel_carbon_ORM.png",
+        "unity_urp_mask_map": "textures/SR_monkey_wrench_steel_carbon_Mask.png"
+      }
+    }
+  ],
+  "files": {
+    "LOD0_glb": "assets/monkey_wrench/monkey_wrench_LOD0.glb",
+    "LOD1_glb": "assets/monkey_wrench/monkey_wrench_LOD1.glb",
+    "LOD2_glb": "assets/monkey_wrench/monkey_wrench_LOD2.glb",
+    "parts_glb": "assets/monkey_wrench/monkey_wrench_parts.glb",
+    "textures_dir": "assets/monkey_wrench/textures",
+    "thumbnail": "assets/monkey_wrench/thumbnail.png",
+    "meta_json": "assets/monkey_wrench/meta.json"
+  }
+}

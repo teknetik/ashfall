@@ -1,0 +1,343 @@
+{
+  "physics": {
+    "articulation": {
+      "schema_version": "articulation/2",
+      "root_link": "body",
+      "base_mode": "free",
+      "world_joint": null,
+      "behavior_sleep_threshold": null,
+      "handoff_base_mode": "free",
+      "base_mode_source": "handoff",
+      "collision_filter": {
+        "mode": "adjacent",
+        "explicit_excluded_link_pairs": [],
+        "handoff_excluded_link_pairs": [
+          [
+            "body",
+            "latch_left"
+          ],
+          [
+            "body",
+            "latch_right"
+          ],
+          [
+            "body",
+            "lid"
+          ]
+        ],
+        "excluded_link_pairs": [
+          [
+            "body",
+            "latch_left"
+          ],
+          [
+            "body",
+            "latch_right"
+          ],
+          [
+            "body",
+            "lid"
+          ]
+        ],
+        "representation": "UsdPhysics.FilteredPairsAPI plus joint collisionEnabled",
+        "external_contacts": "enabled",
+        "other_engine_validation": "not_run"
+      },
+      "collider_aggregation": "link",
+      "joint_count": 3,
+      "joint_types": {
+        "revolute": 3
+      },
+      "axis_rule": "physics:axis X; both joint frames rotated by the quaternion mapping +X onto the contract axis",
+      "links": {
+        "body": {
+          "prim": "/red_tool_chest/body",
+          "mass_kg": 11.0327,
+          "mass_source": "VLM per-part estimate, 28 of 28 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/red_tool_chest/body/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 28,
+              "source_meshes": [
+                "/red_tool_chest/body/body__visual_000/Cube_027",
+                "/red_tool_chest/body/body__visual_001/Cube_028",
+                "/red_tool_chest/body/body__visual_002/Cube_029",
+                "/red_tool_chest/body/body__visual_003/Cube_030",
+                "/red_tool_chest/body/body__visual_004/Cube_031",
+                "/red_tool_chest/body/body__visual_005/Cube_032",
+                "/red_tool_chest/body/body__visual_006/Cube_033",
+                "/red_tool_chest/body/body__visual_007/Cube_034",
+                "/red_tool_chest/body/body__visual_008/Cube_035",
+                "/red_tool_chest/body/body__visual_009/Cube_036",
+                "/red_tool_chest/body/body__visual_010/Cube_037",
+                "/red_tool_chest/body/body__visual_011/Cube_038",
+                "/red_tool_chest/body/body__visual_012/Cube_039",
+                "/red_tool_chest/body/body__visual_013/Cylinder_020",
+                "/red_tool_chest/body/body__visual_014/Cylinder_021",
+                "/red_tool_chest/body/body__visual_015/Cylinder_022",
+                "/red_tool_chest/body/body__visual_016/Cylinder_023",
+                "/red_tool_chest/body/body__visual_017/Cube_040",
+                "/red_tool_chest/body/body__visual_018/Cylinder_024",
+                "/red_tool_chest/body/body__visual_019/Cylinder_025",
+                "/red_tool_chest/body/body__visual_020/Cylinder_026",
+                "/red_tool_chest/body/body__visual_021/Cylinder_027",
+                "/red_tool_chest/body/body__visual_022/Stamped_latch_plate_002",
+                "/red_tool_chest/body/body__visual_023/Cylinder_028",
+                "/red_tool_chest/body/body__visual_024/Cylinder_029",
+                "/red_tool_chest/body/body__visual_025/Stamped_latch_plate_003",
+                "/red_tool_chest/body/body__visual_026/Cylinder_030",
+                "/red_tool_chest/body/body__visual_027/Cylinder_031"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        },
+        "lid": {
+          "prim": "/red_tool_chest/lid",
+          "mass_kg": 4.5386,
+          "mass_source": "VLM per-part estimate, 21 of 21 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/red_tool_chest/lid/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 21,
+              "source_meshes": [
+                "/red_tool_chest/lid/lid__visual_000/Cube_041",
+                "/red_tool_chest/lid/lid__visual_001/Cube_042",
+                "/red_tool_chest/lid/lid__visual_002/Cube_043",
+                "/red_tool_chest/lid/lid__visual_003/Cube_044",
+                "/red_tool_chest/lid/lid__visual_004/Cube_045",
+                "/red_tool_chest/lid/lid__visual_005/Cube_046",
+                "/red_tool_chest/lid/lid__visual_006/Lid_folded_corner_return_002",
+                "/red_tool_chest/lid/lid__visual_007/Lid_folded_corner_return_003",
+                "/red_tool_chest/lid/lid__visual_008/Tapered_pressed_reinforcing_bead_002",
+                "/red_tool_chest/lid/lid__visual_009/Tapered_pressed_reinforcing_bead_003",
+                "/red_tool_chest/lid/lid__visual_010/Cube_047",
+                "/red_tool_chest/lid/lid__visual_011/Lock_eye_bent_neck_001",
+                "/red_tool_chest/lid/lid__visual_012/Cube_048",
+                "/red_tool_chest/lid/lid__visual_013/Cube_049",
+                "/red_tool_chest/lid/lid__visual_014/Cylinder_032",
+                "/red_tool_chest/lid/lid__visual_015/Cylinder_033",
+                "/red_tool_chest/lid/lid__visual_016/Cylinder_034",
+                "/red_tool_chest/lid/lid__visual_017/Cube_050",
+                "/red_tool_chest/lid/lid__visual_018/Cylinder_035",
+                "/red_tool_chest/lid/lid__visual_019/Cylinder_036",
+                "/red_tool_chest/lid/lid__visual_020/Cylinder_037"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        },
+        "latch_left": {
+          "prim": "/red_tool_chest/latch_left",
+          "mass_kg": 0.1399,
+          "mass_source": "VLM per-part estimate, 4 of 4 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/red_tool_chest/latch_left/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 4,
+              "source_meshes": [
+                "/red_tool_chest/latch_left/latch_left__visual_000/Cube_051",
+                "/red_tool_chest/latch_left/latch_left__visual_001/Crowned_tapered_latch_lever_002",
+                "/red_tool_chest/latch_left/latch_left__visual_002/Cylinder_038",
+                "/red_tool_chest/latch_left/latch_left__visual_003/Latch_bail_002"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        },
+        "latch_right": {
+          "prim": "/red_tool_chest/latch_right",
+          "mass_kg": 0.1399,
+          "mass_source": "VLM per-part estimate, 4 of 4 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/red_tool_chest/latch_right/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 4,
+              "source_meshes": [
+                "/red_tool_chest/latch_right/latch_right__visual_000/Cube_052",
+                "/red_tool_chest/latch_right/latch_right__visual_001/Crowned_tapered_latch_lever_003",
+                "/red_tool_chest/latch_right/latch_right__visual_002/Cylinder_039",
+                "/red_tool_chest/latch_right/latch_right__visual_003/Latch_bail_003"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        }
+      },
+      "joints": {
+        "lid_hinge": {
+          "path": "/red_tool_chest/Joints/lid_hinge",
+          "type": "revolute",
+          "parent": "body",
+          "child": "lid",
+          "axis_contract": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "axis_token": "X",
+          "frame_alignment_wxyz": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "limits": {
+            "lower": 0.0,
+            "upper": 104.851277,
+            "unit": "deg"
+          },
+          "drive": {
+            "type": "force",
+            "stiffness": 0.0,
+            "damping": 0.0017453292519943296,
+            "damping_unit": "N*m*s/deg",
+            "damping_si": 0.1,
+            "damping_basis": "default",
+            "damping_si_unit": "N*m*s/rad",
+            "note": "passive joint: damping only; no actuation authored"
+          },
+          "behavior": {
+            "intent": {
+              "confidence": "medium",
+              "mode": "none",
+              "reason": "Lid is lifted by hand and falls under gravity until a mechanical opening stop; no spring or friction stay is visible. The photograph is near its open stop."
+            },
+            "status": "passive",
+            "simulator_status": "not_run"
+          }
+        },
+        "latch_left_pivot": {
+          "path": "/red_tool_chest/Joints/latch_left_pivot",
+          "type": "revolute",
+          "parent": "body",
+          "child": "latch_left",
+          "axis_contract": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "axis_token": "X",
+          "frame_alignment_wxyz": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "limits": {
+            "lower": 0.0,
+            "upper": 74.484513,
+            "unit": "deg"
+          },
+          "drive": {
+            "type": "force",
+            "stiffness": 0.0,
+            "damping": 2.2244781450559246e-05,
+            "damping_unit": "N*m*s/deg",
+            "damping_si": 0.001274532093307946,
+            "damping_basis": "4/s x load 0.000319",
+            "damping_si_unit": "N*m*s/rad",
+            "note": "passive joint: damping only; no actuation authored"
+          },
+          "behavior": {
+            "intent": {
+              "confidence": "medium",
+              "mode": "none",
+              "reason": "Released draw-latch levers can be swung outward manually and hang downward after release; open loose hardware is visible, without evidence of a return spring."
+            },
+            "status": "passive",
+            "simulator_status": "not_run"
+          }
+        },
+        "latch_right_pivot": {
+          "path": "/red_tool_chest/Joints/latch_right_pivot",
+          "type": "revolute",
+          "parent": "body",
+          "child": "latch_right",
+          "axis_contract": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "axis_token": "X",
+          "frame_alignment_wxyz": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "limits": {
+            "lower": 0.0,
+            "upper": 74.484513,
+            "unit": "deg"
+          },
+          "drive": {
+            "type": "force",
+            "stiffness": 0.0,
+            "damping": 2.2244781450559246e-05,
+            "damping_unit": "N*m*s/deg",
+            "damping_si": 0.001274532093307946,
+            "damping_basis": "4/s x load 0.000319",
+            "damping_si_unit": "N*m*s/rad",
+            "note": "passive joint: damping only; no actuation authored"
+          },
+          "behavior": {
+            "intent": {
+              "confidence": "medium",
+              "mode": "none",
+              "reason": "Released draw-latch levers can be swung outward manually and hang downward after release; open loose hardware is visible, without evidence of a return spring."
+            },
+            "status": "passive",
+            "simulator_status": "not_run"
+          }
+        }
+      },
+      "preview_controls": [],
+      "reference_pose": {
+        "latch_left_pivot": 0.0,
+        "latch_right_pivot": 0.0,
+        "lid_hinge": 1.78
+      },
+      "provenance": {
+        "base_mode_reason": "Portable freestanding metal toolbox with no world attachment.",
+        "base_mode_source": "author_explicit",
+        "contract_revision": "2.0",
+        "producer": "articulated-asset-generation",
+        "producer_version": "0.1.0"
+      }
+    },
+    "mass_kg": 15.8511,
+    "colliders": 4,
+    "status": "articulated_body",
+    "material_class": "metal_steel",
+    "engine": "physx",
+    "multipart_physx": false,
+    "static_friction": 0.6,
+    "dynamic_friction": 0.45,
+    "restitution": 0.25,
+    "friction_model": "legacy",
+    "friction_convention": "pair_value_on_steel_dry",
+    "dynamic_friction_source": "material_table",
+    "dynamic_friction_convention": "pair_value_on_steel_dry"
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "id": "hammer",
+  "title": "Machinist Ball-Peen / Claw Hammer",
+  "category": "hand_tool",
+  "subcategory": "striking",
+  "description": "Hand hammer with steel head and ergonomic grip.",
+  "lore_fit": "Used for `op: drive_pin`, `op: punch`, and `op: seized_fastener` tap operations at the Crafting Studio bench and general settlement maintenance.",
+  "where_to_use": [
+    "Crafting Studio bench tool roll",
+    "Salvage shop workbench",
+    "Repairs shop tool cart",
+    "Yard mechanic work loop"
+  ],
+  "recommended_usage": "Use `_LOD0..2.glb` for bench or tool-cart dressing, or `_parts.glb` for bench animation.",
+  "tags": [
+    "tool:hammer",
+    "hand_tool",
+    "drive_pin",
+    "crafting_studio",
+    "bench",
+    "workshop"
+  ],
+  "provenance": {
+    "source_repo": "https://github.com/NVIDIA-Omniverse/simready-central",
+    "dataset": "NdotLight/SimReady_Assets",
+    "package_id": "simready.hf.NdotLight.SimReady_Assets.hammer.2026.11.10_00",
+    "license": "cc-by-4.0",
+    "author": "ndotlight",
+    "source_url": "https://huggingface.co/datasets/NdotLight/SimReady_Assets/resolve/992613f48dad8a95ac5fd19e36d6661ab698ea09/hammer/com.nvidia.simready.packaging.json",
+    "wikidata_qcode": "Q3945253"
+  },
+  "physical_properties": {
+    "dimensions_m": {
+      "width_x": 0.1221,
+      "height_y": 0.0289,
+      "depth_z": 0.275
+    },
+    "dimensions_mm": [
+      122.1,
+      28.9,
+      275.0
+    ],
+    "mass_kg": 0.5287,
+    "simready_category": "hand_tool",
+    "rigid_body_count": 2,
+    "usd_joints": [
+      {
+        "name": "haft_assy_fixed_joint",
+        "path": "/World/Hammer/Joints/haft_assy_fixed_joint",
+        "type": "PhysicsFixedJoint"
+      }
+    ],
+    "grasp_points": []
+  },
+  "geometry": {
+    "source_triangles": 59428,
+    "parts_glb_triangles": 59428,
+    "lod_triangles": {
+      "LOD0": 30000,
+      "LOD1": 7500,
+      "LOD2": 2400
+    },
+    "part_count": 3,
+    "is_multi_part": true,
+    "parts": [
+      {
+        "node": "hammer_handle",
+        "triangles": 2032,
+        "vertices": 1018,
+        "size_mm": [
+          32.8,
+          15.5,
+          123.8
+        ],
+        "materials": [
+          "SR_hammer_hammer_1002"
+        ]
+      },
+      {
+        "node": "hammer_head",
+        "triangles": 55664,
+        "vertices": 27834,
+        "size_mm": [
+          122.1,
+          28.9,
+          53.2
+        ],
+        "materials": [
+          "SR_hammer_hammer"
+        ]
+      },
+      {
+        "node": "hammer_shaft",
+        "triangles": 1732,
+        "vertices": 868,
+        "size_mm": [
+          25.9,
+          12.1,
+          98.8
+        ],
+        "materials": [
+          "SR_hammer_hammer_1002"
+        ]
+      }
+    ]
+  },
+  "materials": [
+    {
+      "material_name": "SR_hammer_hammer_1002",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_hammer_hammer_1002_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_hammer_hammer_1002_Normal.png",
+        "gltf_orm_map": "textures/SR_hammer_hammer_1002_ORM.png",
+        "unity_urp_mask_map": "textures/SR_hammer_hammer_1002_Mask.png"
+      }
+    },
+    {
+      "material_name": "SR_hammer_hammer",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_hammer_hammer_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_hammer_hammer_Normal.png",
+        "gltf_orm_map": "textures/SR_hammer_hammer_ORM.png",
+        "unity_urp_mask_map": "textures/SR_hammer_hammer_Mask.png"
+      }
+    }
+  ],
+  "files": {
+    "LOD0_glb": "assets/hammer/hammer_LOD0.glb",
+    "LOD1_glb": "assets/hammer/hammer_LOD1.glb",
+    "LOD2_glb": "assets/hammer/hammer_LOD2.glb",
+    "parts_glb": "assets/hammer/hammer_parts.glb",
+    "textures_dir": "assets/hammer/textures",
+    "thumbnail": "assets/hammer/thumbnail.png",
+    "meta_json": "assets/hammer/meta.json"
+  }
+}

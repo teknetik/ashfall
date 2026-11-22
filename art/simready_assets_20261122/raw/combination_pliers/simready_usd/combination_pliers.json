@@ -1,0 +1,157 @@
+{
+  "physics": {
+    "articulation": {
+      "schema_version": "articulation/2",
+      "root_link": "fixed_half",
+      "base_mode": "free",
+      "world_joint": null,
+      "behavior_sleep_threshold": null,
+      "handoff_base_mode": "free",
+      "base_mode_source": "handoff",
+      "collision_filter": {
+        "mode": "adjacent",
+        "explicit_excluded_link_pairs": [],
+        "handoff_excluded_link_pairs": [
+          [
+            "fixed_half",
+            "moving_half"
+          ]
+        ],
+        "excluded_link_pairs": [
+          [
+            "fixed_half",
+            "moving_half"
+          ]
+        ],
+        "representation": "UsdPhysics.FilteredPairsAPI plus joint collisionEnabled",
+        "external_contacts": "enabled",
+        "other_engine_validation": "not_run"
+      },
+      "collider_aggregation": "link",
+      "joint_count": 1,
+      "joint_types": {
+        "revolute": 1
+      },
+      "axis_rule": "physics:axis X; both joint frames rotated by the quaternion mapping +X onto the contract axis",
+      "links": {
+        "fixed_half": {
+          "prim": "/robot_combination_pliers/fixed_half",
+          "mass_kg": 0.1497,
+          "mass_source": "VLM per-part estimate, 6 of 6 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/robot_combination_pliers/fixed_half/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 6,
+              "source_meshes": [
+                "/robot_combination_pliers/fixed_half/fixed_half__visual_000/Cylinder_003",
+                "/robot_combination_pliers/fixed_half/fixed_half__visual_001/Integral_handle_tang_002",
+                "/robot_combination_pliers/fixed_half/fixed_half__visual_002/Serrated_forged_jaw_002",
+                "/robot_combination_pliers/fixed_half/fixed_half__visual_003/Integral_wire_cutting_bevel_002",
+                "/robot_combination_pliers/fixed_half/fixed_half__visual_004/Red_insulated_molded_grip_002",
+                "/robot_combination_pliers/fixed_half/fixed_half__visual_005/Cylinder_004"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        },
+        "moving_half": {
+          "prim": "/robot_combination_pliers/moving_half",
+          "mass_kg": 0.1403,
+          "mass_source": "VLM per-part estimate, 5 of 5 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/robot_combination_pliers/moving_half/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 5,
+              "source_meshes": [
+                "/robot_combination_pliers/moving_half/moving_half__visual_000/Cylinder_005",
+                "/robot_combination_pliers/moving_half/moving_half__visual_001/Integral_handle_tang_003",
+                "/robot_combination_pliers/moving_half/moving_half__visual_002/Serrated_forged_jaw_003",
+                "/robot_combination_pliers/moving_half/moving_half__visual_003/Integral_wire_cutting_bevel_003",
+                "/robot_combination_pliers/moving_half/moving_half__visual_004/Red_insulated_molded_grip_003"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        }
+      },
+      "joints": {
+        "pivot": {
+          "path": "/robot_combination_pliers/Joints/pivot",
+          "type": "revolute",
+          "parent": "fixed_half",
+          "child": "moving_half",
+          "axis_contract": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "axis_token": "X",
+          "frame_alignment_wxyz": [
+            0.707106781,
+            0.0,
+            -0.0,
+            0.707106781
+          ],
+          "limits": {
+            "lower": 0.0,
+            "upper": 32.0,
+            "unit": "deg"
+          },
+          "drive": {
+            "type": "force",
+            "stiffness": 0.0,
+            "damping": 5.451816535289295e-05,
+            "damping_unit": "N*m*s/deg",
+            "damping_si": 0.0031236607815171183,
+            "damping_basis": "4/s x load 0.000781",
+            "damping_si_unit": "N*m*s/rad",
+            "note": "passive joint: damping only; no actuation authored"
+          },
+          "behavior": {
+            "intent": {
+              "confidence": "medium",
+              "mode": "none",
+              "reason": "The handles are squeezed or spread manually; no return spring is visible, so the pivot is assumed passive after release."
+            },
+            "status": "passive",
+            "simulator_status": "not_run"
+          }
+        }
+      },
+      "preview_controls": [],
+      "reference_pose": {
+        "pivot": 0.3490658503988659
+      },
+      "provenance": {
+        "base_mode_reason": "Handheld portable pliers, with no world mounting.",
+        "base_mode_source": "author_explicit",
+        "contract_revision": "2.0",
+        "producer": "articulated-asset-generation",
+        "producer_version": "0.1.0"
+      }
+    },
+    "mass_kg": 0.29,
+    "colliders": 2,
+    "status": "articulated_body",
+    "material_class": "plastic",
+    "engine": "physx",
+    "multipart_physx": false,
+    "static_friction": 0.35,
+    "dynamic_friction": 0.28,
+    "restitution": 0.3,
+    "friction_model": "legacy",
+    "friction_convention": "pair_value_on_steel_dry",
+    "dynamic_friction_source": "material_table",
+    "dynamic_friction_convention": "pair_value_on_steel_dry"
+  }
+}

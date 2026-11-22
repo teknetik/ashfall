@@ -1,0 +1,199 @@
+{
+  "id": "attached_lid_tote",
+  "title": "Interlocking Hinged-Lid Distribution Tote",
+  "category": "logistics_cargo",
+  "subcategory": "pallets_crates",
+  "description": "Heavy-duty logistics tote bin with two interlocking hinged lid flaps.",
+  "lore_fit": "Ideal searchable supply container for Berms waystations, caravan goods, or player home stash organization.",
+  "where_to_use": [
+    "Node 07 Quantum Tube goods dock",
+    "Outer Berms Warden waystation supplies",
+    "Field Supply interior stock",
+    "Player container home"
+  ],
+  "recommended_usage": "Lids are separate meshes in `_parts.glb` for open/closed variations.",
+  "tags": [
+    "tote",
+    "crate",
+    "hinged_lid",
+    "cargo",
+    "quantum_tube_dock",
+    "separable_parts"
+  ],
+  "provenance": {
+    "source_repo": "https://github.com/NVIDIA-Omniverse/simready-central",
+    "dataset": "ForgeCAD/simready-assets",
+    "package_id": "simready.hf.ForgeCAD.simready-assets.attached_lid_tote.2026.10.17_00",
+    "license": "cc-by-4.0",
+    "author": "ForgeCAD",
+    "source_url": "https://huggingface.co/datasets/ForgeCAD/simready-assets/resolve/2bf134c5b19e0f3d31b82350be9af96c4f5a4e49/attached_lid_tote/com.nvidia.simready.packaging.json",
+    "wikidata_qcode": "Q987767"
+  },
+  "physical_properties": {
+    "dimensions_m": {
+      "width_x": 0.6,
+      "height_y": 0.32,
+      "depth_z": 0.4
+    },
+    "dimensions_mm": [
+      600.0,
+      320.0,
+      400.0
+    ],
+    "mass_kg": 2.8125,
+    "simready_category": "logistics",
+    "rigid_body_count": 3,
+    "usd_joints": [
+      {
+        "name": "lid_l",
+        "path": "/Model/Physics/Joints/lid_l",
+        "type": "PhysicsRevoluteJoint"
+      },
+      {
+        "name": "lid_r",
+        "path": "/Model/Physics/Joints/lid_r",
+        "type": "PhysicsRevoluteJoint"
+      }
+    ],
+    "grasp_points": []
+  },
+  "geometry": {
+    "source_triangles": 29578,
+    "parts_glb_triangles": 29578,
+    "lod_triangles": {
+      "LOD0": 29578,
+      "LOD1": 7393,
+      "LOD2": 2363
+    },
+    "part_count": 5,
+    "is_multi_part": true,
+    "parts": [
+      {
+        "node": "attached_lid_tote_hinge_pins_mesh",
+        "triangles": 216,
+        "vertices": 112,
+        "size_mm": [
+          536.0,
+          4.0,
+          393.0
+        ],
+        "materials": [
+          "SR_attached_lid_tote_steel"
+        ]
+      },
+      {
+        "node": "attached_lid_tote_label_mesh",
+        "triangles": 12,
+        "vertices": 8,
+        "size_mm": [
+          84.0,
+          56.0,
+          0.8
+        ],
+        "materials": [
+          "SR_attached_lid_tote_label"
+        ]
+      },
+      {
+        "node": "attached_lid_tote_lid_l_mesh",
+        "triangles": 2862,
+        "vertices": 1425,
+        "size_mm": [
+          599.0,
+          23.0,
+          216.5
+        ],
+        "materials": [
+          "SR_attached_lid_tote_plastic"
+        ]
+      },
+      {
+        "node": "attached_lid_tote_lid_r_mesh",
+        "triangles": 2850,
+        "vertices": 1419,
+        "size_mm": [
+          599.0,
+          23.0,
+          216.5
+        ],
+        "materials": [
+          "SR_attached_lid_tote_plastic"
+        ]
+      },
+      {
+        "node": "attached_lid_tote_shell_mesh",
+        "triangles": 23638,
+        "vertices": 26183,
+        "size_mm": [
+          600.0,
+          320.0,
+          400.0
+        ],
+        "materials": [
+          "SR_attached_lid_tote_plastic"
+        ]
+      }
+    ]
+  },
+  "materials": [
+    {
+      "material_name": "SR_attached_lid_tote_steel",
+      "base_color_factor": [
+        0.62,
+        0.63,
+        0.65,
+        1.0
+      ],
+      "metallic_factor": 1.0,
+      "roughness_factor": 0.35,
+      "textures": {}
+    },
+    {
+      "material_name": "SR_attached_lid_tote_label",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.65,
+      "textures": {
+        "base_map": "textures/SR_attached_lid_tote_label_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ]
+      }
+    },
+    {
+      "material_name": "SR_attached_lid_tote_plastic",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_attached_lid_tote_plastic_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "gltf_orm_map": "textures/SR_attached_lid_tote_plastic_ORM.png",
+        "unity_urp_mask_map": "textures/SR_attached_lid_tote_plastic_Mask.png"
+      }
+    }
+  ],
+  "files": {
+    "LOD0_glb": "assets/attached_lid_tote/attached_lid_tote_LOD0.glb",
+    "LOD1_glb": "assets/attached_lid_tote/attached_lid_tote_LOD1.glb",
+    "LOD2_glb": "assets/attached_lid_tote/attached_lid_tote_LOD2.glb",
+    "parts_glb": "assets/attached_lid_tote/attached_lid_tote_parts.glb",
+    "textures_dir": "assets/attached_lid_tote/textures",
+    "thumbnail": "assets/attached_lid_tote/thumbnail.png",
+    "meta_json": "assets/attached_lid_tote/meta.json"
+  }
+}

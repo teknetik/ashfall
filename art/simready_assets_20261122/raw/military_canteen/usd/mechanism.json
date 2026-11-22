@@ -1,0 +1,61 @@
+{
+  "schema": "marso/rigid-mechanism/1",
+  "asset": "military_canteen_v1",
+  "source_kind": "marso_rigid",
+  "body": "/Asset/Canteen",
+  "joints": [],
+  "physical_properties": {
+    "materials": [
+      {
+        "id": "Canteen",
+        "object_id": "military_canteen",
+        "material_type": "canvas_cover",
+        "usd_material": "/Asset/PhysicsMaterials/Canteen",
+        "colliders": [
+          "/Asset/Canteen/Colliders/Canteen"
+        ],
+        "static_friction": 0.6,
+        "dynamic_friction": 0.5,
+        "restitution": 0.1,
+        "basis": "Uncalibrated cotton canvas cover base on a table."
+      }
+    ],
+    "bodies": [
+      {
+        "usd_body": "/Asset/Canteen",
+        "object_id": "military_canteen",
+        "construction": "shell",
+        "mass_kg": 0.33,
+        "mass_basis": "Empty one-quart military canteen with screw cap in its canvas cover, no cup: cited bodies 0.136-0.15 kg (aluminium or plastic) plus covers 0.159-0.231 kg; 0.33 kg chosen.",
+        "inertia_basis": "Hollow body: mass as a thin uniform shell over the closed collider surface (the enclosed space is not material) (work/band-mass.json).",
+        "components": [
+          {
+            "material_id": "Canteen",
+            "construction": "shell",
+            "mass_kg": 0.33,
+            "construction_basis": "Shell body",
+            "basis": "Military canteen from marso Library (Nvidia_HandOver); one rigid body"
+          }
+        ]
+      }
+    ]
+  },
+  "actions": [
+    {
+      "id": "canteen.lift_and_place",
+      "description": "Grip the canteen by its screw cap, lift it clear of the table and set it back down upright",
+      "tested_grasp": {
+        "control": "hand",
+        "body_local_point_m": [
+          0.0002,
+          -0.0012,
+          0.2072
+        ],
+        "wrist_held": true,
+        "force_cap_N": 19.7,
+        "torque_cap_Nm": 1.74,
+        "note": "Single point actuator used in the scored proof; not a gripper."
+      }
+    }
+  ]
+}

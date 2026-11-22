@@ -1,0 +1,24 @@
+Military Canteen — release qualification notes
+
+Package release: 2026.11.13. Publisher: marso by M-XR; supplier: M-XR Limited.
+These notes preserve the limitations of the accepted technical revision. They do not claim measured physical calibration, robot-gripper qualification, multi-instance testing, or NVIDIA external acceptance. The updated 256x256 PBR thumbnail is an appearance preview, not new physical test evidence.
+
+Retained official evidence: 10 default-applicable Robotics-Prop 4.0.0 benchmark results, all recorded as pass; no new physics run for this release. Original validation and benchmark reports remain byte-identical.
+
+Qualification limitations
+- Single rigid body: bottle, screw cap and canvas cover are one body. The cap does not unscrew, the cover does not deform or come off, and there is no strap, cup or water. One closed convex-decomposition collider from a 2 mm voxel remesh (40k triangles; outer surface within about 1.5 mm of the visual; the interior cover-to-bottle gap is filled, and the max visual deviation of 5.8 mm is on that interior sheet). One uncalibrated canvas-cover contact role (static 0.6, dynamic 0.5, restitution 0.1) also applies to the exposed metal shoulder and cap.
+
+- Mass 0.33 kg is a research estimate inside the cited empty body plus cover range (about 0.30-0.38 kg). It is distributed as a thin uniform shell over the closed collider (COM 80.0 mm above the base), so the inertia is idealised. Scale is the source scale (14.2 x 9.0 x 20.7 cm), not a measured product.
+
+- Handling proven only with a single wrist-held point actuator on the cap-top boss, body-local (0.0002, -0.0012, 0.2072) m, 12.7 cm directly above the COM, on a flat board. The wrist hold fixes attitude (tilt 0.000 deg while held), so swing and carry moments are not exercised. The canteen is engaged from spawn (0.7 mm clear) rather than broken out from table contact. This is not robot gripper qualification, and a frictional grip on the knurled cap is not modelled. The 151 mm lift figure is an origin height (0.15 m goal minus 2.3 mm spring sag).
+
+- The set-down releases about 3.4 mm above rest while descending at 0.13 m/s (one-step impact peak 28.3 N, 8.7x weight); a gentler placement was not tested. The velocity read-back shows about 3.0 mm/s at rest while the pose is frozen; consumers should not treat it as motion.
+
+- Two-copy / multi-instance reuse deferred by standing user decision (reports/multicopy_deferral.json); single-instance qualification only.
+
+- Provenance gaps: mesh generator and settings unknown, reference image not recorded. The prior catalogue thumbnail used neutral clay; this release thumbnail uses authored PBR materials.
+
+- Drop/tilt/roll clips are presentation only, not certification.
+
+Source: independently reviewed technical revision, review.json. SHA-256: 61c56c0c9225d482675d0f77ea854c62bdf8ece5f33e906be3e7e2482972b8e5.
+The retained source review predates release preparation; historical approval and pending-input statements are not a claim about current publication status.

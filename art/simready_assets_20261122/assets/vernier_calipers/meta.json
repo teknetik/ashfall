@@ -1,0 +1,182 @@
+{
+  "id": "vernier_calipers",
+  "title": "Precision Stainless Vernier Calipers",
+  "category": "measuring_tool",
+  "subcategory": "precision",
+  "description": "Machined stainless-steel sliding vernier caliper for internal/external measurement.",
+  "lore_fit": "High-craft precision tool for checking barrel thread tolerances (`barrel_thread_m14`), gyro bearing seats, and nanofab components.",
+  "where_to_use": [
+    "Crafting Studio bench (quality / tolerance inspection prop)",
+    "Tool Exchange precision display",
+    "Salvage shop workbench (Brann's schematic board area)"
+  ],
+  "recommended_usage": "Sliding jaw is a separate mesh in `_parts.glb`; `_LOD0..2.glb` for bench layout.",
+  "tags": [
+    "tool:calipers",
+    "measuring",
+    "precision",
+    "crafting_studio",
+    "separable_parts",
+    "bench"
+  ],
+  "provenance": {
+    "source_repo": "https://github.com/NVIDIA-Omniverse/simready-central",
+    "dataset": "NdotLight/SimReady_Assets",
+    "package_id": "simready.hf.NdotLight.SimReady_Assets.vernier_calipers.2026.11.10_00",
+    "license": "cc-by-4.0",
+    "author": "ndotlight",
+    "source_url": "https://huggingface.co/datasets/NdotLight/SimReady_Assets/resolve/6ccd7cef25b4eaa9042c58cfc63c729dc675921a/vernier_calipers/com.nvidia.simready.packaging.json",
+    "wikidata_qcode": "Q1499103"
+  },
+  "physical_properties": {
+    "dimensions_m": {
+      "width_x": 0.228,
+      "height_y": 0.0079,
+      "depth_z": 0.0768
+    },
+    "dimensions_mm": [
+      228.0,
+      7.9,
+      76.8
+    ],
+    "mass_kg": 0.1549,
+    "simready_category": "measuring_tool",
+    "rigid_body_count": 3,
+    "usd_joints": [
+      {
+        "name": "slider_slide_joint",
+        "path": "/World/Vernier_Calipers/Joints/slider_slide_joint",
+        "type": "PhysicsPrismaticJoint"
+      },
+      {
+        "name": "lock_screw_spin_joint",
+        "path": "/World/Vernier_Calipers/Joints/lock_screw_spin_joint",
+        "type": "PhysicsRevoluteJoint"
+      }
+    ],
+    "grasp_points": []
+  },
+  "geometry": {
+    "source_triangles": 38575,
+    "parts_glb_triangles": 38575,
+    "lod_triangles": {
+      "LOD0": 30000,
+      "LOD1": 7499,
+      "LOD2": 2400
+    },
+    "part_count": 6,
+    "is_multi_part": true,
+    "parts": [
+      {
+        "node": "vernier_calipers_beam_body",
+        "triangles": 13204,
+        "vertices": 6599,
+        "size_mm": [
+          228.0,
+          4.3,
+          76.8
+        ],
+        "materials": [
+          "SR_vernier_calipers_steel_satin"
+        ]
+      },
+      {
+        "node": "vernier_calipers_gib_screw_01",
+        "triangles": 740,
+        "vertices": 372,
+        "size_mm": [
+          2.5,
+          2.5,
+          3.5
+        ],
+        "materials": [
+          "SR_vernier_calipers_steel_satin"
+        ]
+      },
+      {
+        "node": "vernier_calipers_gib_screw_02",
+        "triangles": 740,
+        "vertices": 372,
+        "size_mm": [
+          2.5,
+          2.5,
+          3.5
+        ],
+        "materials": [
+          "SR_vernier_calipers_steel_satin"
+        ]
+      },
+      {
+        "node": "vernier_calipers_lock_screw",
+        "triangles": 6825,
+        "vertices": 3501,
+        "size_mm": [
+          7.0,
+          7.0,
+          9.6
+        ],
+        "materials": [
+          "SR_vernier_calipers_steel_satin"
+        ]
+      },
+      {
+        "node": "vernier_calipers_slider_body",
+        "triangles": 15834,
+        "vertices": 7913,
+        "size_mm": [
+          228.0,
+          7.3,
+          76.8
+        ],
+        "materials": [
+          "SR_vernier_calipers_steel_satin"
+        ]
+      },
+      {
+        "node": "vernier_calipers_slider_gib",
+        "triangles": 1232,
+        "vertices": 618,
+        "size_mm": [
+          53.7,
+          2.9,
+          1.5
+        ],
+        "materials": [
+          "SR_vernier_calipers_steel_satin"
+        ]
+      }
+    ]
+  },
+  "materials": [
+    {
+      "material_name": "SR_vernier_calipers_steel_satin",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_vernier_calipers_steel_satin_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_vernier_calipers_steel_satin_Normal.png",
+        "gltf_orm_map": "textures/SR_vernier_calipers_steel_satin_ORM.png",
+        "unity_urp_mask_map": "textures/SR_vernier_calipers_steel_satin_Mask.png"
+      }
+    }
+  ],
+  "files": {
+    "LOD0_glb": "assets/vernier_calipers/vernier_calipers_LOD0.glb",
+    "LOD1_glb": "assets/vernier_calipers/vernier_calipers_LOD1.glb",
+    "LOD2_glb": "assets/vernier_calipers/vernier_calipers_LOD2.glb",
+    "parts_glb": "assets/vernier_calipers/vernier_calipers_parts.glb",
+    "textures_dir": "assets/vernier_calipers/textures",
+    "thumbnail": "assets/vernier_calipers/thumbnail.png",
+    "meta_json": "assets/vernier_calipers/meta.json"
+  }
+}

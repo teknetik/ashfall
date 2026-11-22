@@ -1,0 +1,148 @@
+{
+  "id": "pliers",
+  "title": "Insulated Grip Lineman/Needle Pliers",
+  "category": "hand_tool",
+  "subcategory": "pliers",
+  "description": "Pivoting steel pliers with insulated two-tone handles.",
+  "lore_fit": "Used in Crafting Studio wiring/lead jobs (`op: unplug`, `op: solder_join`, pulling pins and binding wire).",
+  "where_to_use": [
+    "Crafting Studio bench tool roll",
+    "Relay Works electronics bench",
+    "Salvage shop workbench"
+  ],
+  "recommended_usage": "Pivoting jaws preserved in `_parts.glb`; merged static mesh in `_LOD0..2.glb`.",
+  "tags": [
+    "tool:pliers",
+    "hand_tool",
+    "wiring",
+    "crafting_studio",
+    "bench",
+    "electronics"
+  ],
+  "provenance": {
+    "source_repo": "https://github.com/NVIDIA-Omniverse/simready-central",
+    "dataset": "NdotLight/SimReady_Assets",
+    "package_id": "simready.hf.NdotLight.SimReady_Assets.pliers.2026.11.10_00",
+    "license": "cc-by-4.0",
+    "author": "ndotlight",
+    "source_url": "https://huggingface.co/datasets/NdotLight/SimReady_Assets/resolve/e844f6b5bb94e6eabf472e6a6c167cae99550f00/pliers/com.nvidia.simready.packaging.json",
+    "wikidata_qcode": "Q13049940"
+  },
+  "physical_properties": {
+    "dimensions_m": {
+      "width_x": 0.055,
+      "height_y": 0.0254,
+      "depth_z": 0.1741
+    },
+    "dimensions_mm": [
+      55.0,
+      25.4,
+      174.1
+    ],
+    "mass_kg": 0.29,
+    "simready_category": "hand_tool",
+    "rigid_body_count": 2,
+    "usd_joints": [
+      {
+        "name": "plier_pivot_joint",
+        "path": "/World/Pliers/Joints/plier_pivot_joint",
+        "type": "PhysicsRevoluteJoint"
+      }
+    ],
+    "grasp_points": []
+  },
+  "geometry": {
+    "source_triangles": 47734,
+    "parts_glb_triangles": 47734,
+    "lod_triangles": {
+      "LOD0": 29998,
+      "LOD1": 7498,
+      "LOD2": 2398
+    },
+    "part_count": 2,
+    "is_multi_part": true,
+    "parts": [
+      {
+        "node": "pliers_plier_arm_left",
+        "triangles": 23538,
+        "vertices": 11771,
+        "size_mm": [
+          37.5,
+          25.4,
+          174.1
+        ],
+        "materials": [
+          "SR_pliers_rubber_red",
+          "SR_pliers_steel_alloy"
+        ]
+      },
+      {
+        "node": "pliers_plier_arm_right",
+        "triangles": 24196,
+        "vertices": 12098,
+        "size_mm": [
+          37.5,
+          25.4,
+          174.1
+        ],
+        "materials": [
+          "SR_pliers_rubber_red",
+          "SR_pliers_steel_alloy"
+        ]
+      }
+    ]
+  },
+  "materials": [
+    {
+      "material_name": "SR_pliers_rubber_red",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_pliers_rubber_red_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_pliers_rubber_red_Normal.png",
+        "gltf_orm_map": "textures/SR_pliers_rubber_red_ORM.png",
+        "unity_urp_mask_map": "textures/SR_pliers_rubber_red_Mask.png"
+      }
+    },
+    {
+      "material_name": "SR_pliers_steel_alloy",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_pliers_steel_alloy_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_pliers_steel_alloy_Normal.png",
+        "gltf_orm_map": "textures/SR_pliers_steel_alloy_ORM.png",
+        "unity_urp_mask_map": "textures/SR_pliers_steel_alloy_Mask.png"
+      }
+    }
+  ],
+  "files": {
+    "LOD0_glb": "assets/pliers/pliers_LOD0.glb",
+    "LOD1_glb": "assets/pliers/pliers_LOD1.glb",
+    "LOD2_glb": "assets/pliers/pliers_LOD2.glb",
+    "parts_glb": "assets/pliers/pliers_parts.glb",
+    "textures_dir": "assets/pliers/textures",
+    "thumbnail": "assets/pliers/thumbnail.png",
+    "meta_json": "assets/pliers/meta.json"
+  }
+}

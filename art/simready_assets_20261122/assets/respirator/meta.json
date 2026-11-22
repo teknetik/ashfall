@@ -1,0 +1,271 @@
+{
+  "id": "respirator",
+  "title": "Dual-Cartridge Dust & Nanite Half-Mask Respirator",
+  "category": "colony_life",
+  "subcategory": "survival_gear",
+  "description": "Industrial half-face respirator mask with dual replaceable particulate/chemical filter cartridges and head straps.",
+  "lore_fit": "Essential survival gear on Tir during desert dust fronts (`Ward weather` pass) and inside nanite/salvage workshops; also fits a future HEAD/FACE armour or utility item.",
+  "where_to_use": [
+    "Field Supply counter & shelves (Tamsin's survival gear)",
+    "Salvage shop workbench (nanite paste/grinding protection)",
+    "West Gate Warden post (Ossa's dust-front gear)",
+    "Player container home table / locker"
+  ],
+  "recommended_usage": "Filter cartridges are separate nodes in `_parts.glb` (could even be a Service bench job to swap filters!); `_LOD0..2.glb` for prop placement.",
+  "tags": [
+    "respirator",
+    "dust_mask",
+    "ppe",
+    "dust_front",
+    "field_supply",
+    "tamsin",
+    "salvage_shop",
+    "separable_parts"
+  ],
+  "provenance": {
+    "source_repo": "https://github.com/NVIDIA-Omniverse/simready-central",
+    "dataset": "NdotLight/SimReady_Assets",
+    "package_id": "simready.hf.NdotLight.SimReady_Assets.respirator.2026.11.10_00",
+    "license": "cc-by-4.0",
+    "author": "ndotlight",
+    "source_url": "https://huggingface.co/datasets/NdotLight/SimReady_Assets/resolve/c8f22763cc3ac70aa326aa0668c25ec1b8e73ddc/respirator/com.nvidia.simready.packaging.json",
+    "wikidata_qcode": "Q271779"
+  },
+  "physical_properties": {
+    "dimensions_m": {
+      "width_x": 0.1615,
+      "height_y": 0.1197,
+      "depth_z": 0.1994
+    },
+    "dimensions_mm": [
+      161.5,
+      119.7,
+      199.4
+    ],
+    "mass_kg": 0.0154,
+    "simready_category": "ppe",
+    "rigid_body_count": 1,
+    "usd_joints": [],
+    "grasp_points": []
+  },
+  "geometry": {
+    "source_triangles": 111800,
+    "parts_glb_triangles": 45364,
+    "lod_triangles": {
+      "LOD0": 30000,
+      "LOD1": 7500,
+      "LOD2": 2399
+    },
+    "part_count": 7,
+    "is_multi_part": true,
+    "parts": [
+      {
+        "node": "respirator_body",
+        "triangles": 13014,
+        "vertices": 6501,
+        "size_mm": [
+          130.0,
+          119.7,
+          37.3
+        ],
+        "materials": [
+          "SR_respirator_fabric_pp"
+        ]
+      },
+      {
+        "node": "respirator_cover_end",
+        "triangles": 608,
+        "vertices": 304,
+        "size_mm": [
+          31.4,
+          36.6,
+          0.5
+        ],
+        "materials": [
+          "SR_respirator_plastic_pp"
+        ]
+      },
+      {
+        "node": "respirator_cover_housing",
+        "triangles": 3324,
+        "vertices": 1650,
+        "size_mm": [
+          36.2,
+          41.4,
+          10.3
+        ],
+        "materials": [
+          "SR_respirator_plastic_pp"
+        ]
+      },
+      {
+        "node": "respirator_filter",
+        "triangles": 12,
+        "vertices": 8,
+        "size_mm": [
+          29.4,
+          34.5,
+          0.3
+        ],
+        "materials": [
+          "SR_respirator_rubber_silicone"
+        ]
+      },
+      {
+        "node": "respirator_lower",
+        "triangles": 12595,
+        "vertices": 7795,
+        "size_mm": [
+          159.8,
+          4.9,
+          162.1
+        ],
+        "materials": [
+          "SR_respirator_fabric_polyester"
+        ]
+      },
+      {
+        "node": "respirator_nose_wire",
+        "triangles": 2824,
+        "vertices": 1414,
+        "size_mm": [
+          75.5,
+          20.4,
+          3.3
+        ],
+        "materials": [
+          "SR_respirator_steel_aluminum"
+        ]
+      },
+      {
+        "node": "respirator_upper",
+        "triangles": 12987,
+        "vertices": 8004,
+        "size_mm": [
+          161.5,
+          4.7,
+          124.8
+        ],
+        "materials": [
+          "SR_respirator_fabric_polyester"
+        ]
+      }
+    ]
+  },
+  "materials": [
+    {
+      "material_name": "SR_respirator_fabric_pp",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_respirator_fabric_pp_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_respirator_fabric_pp_Normal.png",
+        "gltf_orm_map": "textures/SR_respirator_fabric_pp_ORM.png",
+        "unity_urp_mask_map": "textures/SR_respirator_fabric_pp_Mask.png"
+      }
+    },
+    {
+      "material_name": "SR_respirator_plastic_pp",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_respirator_plastic_pp_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_respirator_plastic_pp_Normal.png",
+        "gltf_orm_map": "textures/SR_respirator_plastic_pp_ORM.png",
+        "unity_urp_mask_map": "textures/SR_respirator_plastic_pp_Mask.png"
+      }
+    },
+    {
+      "material_name": "SR_respirator_rubber_silicone",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_respirator_rubber_silicone_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_respirator_rubber_silicone_Normal.png",
+        "gltf_orm_map": "textures/SR_respirator_rubber_silicone_ORM.png",
+        "unity_urp_mask_map": "textures/SR_respirator_rubber_silicone_Mask.png"
+      }
+    },
+    {
+      "material_name": "SR_respirator_fabric_polyester",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_respirator_fabric_polyester_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_respirator_fabric_polyester_Normal.png",
+        "gltf_orm_map": "textures/SR_respirator_fabric_polyester_ORM.png",
+        "unity_urp_mask_map": "textures/SR_respirator_fabric_polyester_Mask.png"
+      }
+    },
+    {
+      "material_name": "SR_respirator_steel_aluminum",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_respirator_steel_aluminum_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_respirator_steel_aluminum_Normal.png",
+        "gltf_orm_map": "textures/SR_respirator_steel_aluminum_ORM.png",
+        "unity_urp_mask_map": "textures/SR_respirator_steel_aluminum_Mask.png"
+      }
+    }
+  ],
+  "files": {
+    "LOD0_glb": "assets/respirator/respirator_LOD0.glb",
+    "LOD1_glb": "assets/respirator/respirator_LOD1.glb",
+    "LOD2_glb": "assets/respirator/respirator_LOD2.glb",
+    "parts_glb": "assets/respirator/respirator_parts.glb",
+    "textures_dir": "assets/respirator/textures",
+    "thumbnail": "assets/respirator/thumbnail.png",
+    "meta_json": "assets/respirator/meta.json"
+  }
+}

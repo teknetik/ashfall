@@ -1,0 +1,352 @@
+{
+  "physics": {
+    "articulation": {
+      "schema_version": "articulation/2",
+      "root_link": "body",
+      "base_mode": "free",
+      "world_joint": null,
+      "behavior_sleep_threshold": null,
+      "handoff_base_mode": "free",
+      "base_mode_source": "handoff",
+      "collision_filter": {
+        "mode": "adjacent",
+        "explicit_excluded_link_pairs": [],
+        "handoff_excluded_link_pairs": [
+          [
+            "body",
+            "left_closure"
+          ],
+          [
+            "body",
+            "lid"
+          ],
+          [
+            "body",
+            "right_closure"
+          ]
+        ],
+        "excluded_link_pairs": [
+          [
+            "body",
+            "left_closure"
+          ],
+          [
+            "body",
+            "lid"
+          ],
+          [
+            "body",
+            "right_closure"
+          ]
+        ],
+        "representation": "UsdPhysics.FilteredPairsAPI plus joint collisionEnabled",
+        "external_contacts": "enabled",
+        "other_engine_validation": "not_run"
+      },
+      "collider_aggregation": "link",
+      "joint_count": 3,
+      "joint_types": {
+        "revolute": 3
+      },
+      "axis_rule": "physics:axis X; both joint frames rotated by the quaternion mapping +X onto the contract axis",
+      "links": {
+        "body": {
+          "prim": "/robot_hinged_toolbox/body",
+          "mass_kg": 2.6436,
+          "mass_source": "VLM per-part estimate, 26 of 26 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/robot_hinged_toolbox/body/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 26,
+              "source_meshes": [
+                "/robot_hinged_toolbox/body/body__visual_000/Deep_empty_drawn_steel_body_001",
+                "/robot_hinged_toolbox/body/body__visual_001/Rolled_opening_lip_001",
+                "/robot_hinged_toolbox/body/body__visual_002/Cylinder_034",
+                "/robot_hinged_toolbox/body/body__visual_003/Cylinder_035",
+                "/robot_hinged_toolbox/body/body__visual_004/Cylinder_036",
+                "/robot_hinged_toolbox/body/body__visual_005/Cylinder_037",
+                "/robot_hinged_toolbox/body/body__visual_006/Cylinder_038",
+                "/robot_hinged_toolbox/body/body__visual_007/Cylinder_039",
+                "/robot_hinged_toolbox/body/body__visual_008/Cylinder_040",
+                "/robot_hinged_toolbox/body/body__visual_009/Cylinder_041",
+                "/robot_hinged_toolbox/body/body__visual_010/Cylinder_042",
+                "/robot_hinged_toolbox/body/body__visual_011/Cylinder_043",
+                "/robot_hinged_toolbox/body/body__visual_012/Cylinder_044",
+                "/robot_hinged_toolbox/body/body__visual_013/Cube_020",
+                "/robot_hinged_toolbox/body/body__visual_014/Cube_021",
+                "/robot_hinged_toolbox/body/body__visual_015/Cylinder_045",
+                "/robot_hinged_toolbox/body/body__visual_016/Cylinder_046",
+                "/robot_hinged_toolbox/body/body__visual_017/Cylinder_047",
+                "/robot_hinged_toolbox/body/body__visual_018/Cylinder_048",
+                "/robot_hinged_toolbox/body/body__visual_019/Cylinder_049",
+                "/robot_hinged_toolbox/body/body__visual_020/Cube_022",
+                "/robot_hinged_toolbox/body/body__visual_021/Cylinder_050",
+                "/robot_hinged_toolbox/body/body__visual_022/Cylinder_051",
+                "/robot_hinged_toolbox/body/body__visual_023/Cylinder_052",
+                "/robot_hinged_toolbox/body/body__visual_024/Cylinder_053",
+                "/robot_hinged_toolbox/body/body__visual_025/Cylinder_054"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        },
+        "lid": {
+          "prim": "/robot_hinged_toolbox/lid",
+          "mass_kg": 1.6584,
+          "mass_source": "VLM per-part estimate, 22 of 22 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/robot_hinged_toolbox/lid/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 22,
+              "source_meshes": [
+                "/robot_hinged_toolbox/lid/lid__visual_000/Hollow_stamped_lid_001",
+                "/robot_hinged_toolbox/lid/lid__visual_001/Lid_rolled_skirt_edge_001",
+                "/robot_hinged_toolbox/lid/lid__visual_002/Center_lid_edge_escutcheon_001",
+                "/robot_hinged_toolbox/lid/lid__visual_003/Cube_023",
+                "/robot_hinged_toolbox/lid/lid__visual_004/Cube_024",
+                "/robot_hinged_toolbox/lid/lid__visual_005/Cylinder_055",
+                "/robot_hinged_toolbox/lid/lid__visual_006/Cylinder_056",
+                "/robot_hinged_toolbox/lid/lid__visual_007/Cylinder_057",
+                "/robot_hinged_toolbox/lid/lid__visual_008/Cylinder_058",
+                "/robot_hinged_toolbox/lid/lid__visual_009/Cylinder_059",
+                "/robot_hinged_toolbox/lid/lid__visual_010/Cylinder_060",
+                "/robot_hinged_toolbox/lid/lid__visual_011/Cylinder_061",
+                "/robot_hinged_toolbox/lid/lid__visual_012/Cylinder_062",
+                "/robot_hinged_toolbox/lid/lid__visual_013/Cylinder_063",
+                "/robot_hinged_toolbox/lid/lid__visual_014/Cylinder_064",
+                "/robot_hinged_toolbox/lid/lid__visual_015/Cylinder_065",
+                "/robot_hinged_toolbox/lid/lid__visual_016/Cube_025",
+                "/robot_hinged_toolbox/lid/lid__visual_017/Cube_026",
+                "/robot_hinged_toolbox/lid/lid__visual_018/Cube_027",
+                "/robot_hinged_toolbox/lid/lid__visual_019/Rounded_molded_carry_handle_001",
+                "/robot_hinged_toolbox/lid/lid__visual_020/Cube_028",
+                "/robot_hinged_toolbox/lid/lid__visual_021/Cube_029"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        },
+        "left_closure": {
+          "prim": "/robot_hinged_toolbox/left_closure",
+          "mass_kg": 0.078,
+          "mass_source": "VLM per-part estimate, 9 of 9 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/robot_hinged_toolbox/left_closure/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 9,
+              "source_meshes": [
+                "/robot_hinged_toolbox/left_closure/left_closure__visual_000/Pressed_lever_002",
+                "/robot_hinged_toolbox/left_closure/left_closure__visual_001/Cube_030",
+                "/robot_hinged_toolbox/left_closure/left_closure__visual_002/Cube_031",
+                "/robot_hinged_toolbox/left_closure/left_closure__visual_003/Cube_032",
+                "/robot_hinged_toolbox/left_closure/left_closure__visual_004/Cube_033",
+                "/robot_hinged_toolbox/left_closure/left_closure__visual_005/Cube_034",
+                "/robot_hinged_toolbox/left_closure/left_closure__visual_006/Cylinder_066",
+                "/robot_hinged_toolbox/left_closure/left_closure__visual_007/Latch_bail_004",
+                "/robot_hinged_toolbox/left_closure/left_closure__visual_008/Latch_bail_005"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        },
+        "right_closure": {
+          "prim": "/robot_hinged_toolbox/right_closure",
+          "mass_kg": 0.078,
+          "mass_source": "VLM per-part estimate, 9 of 9 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/robot_hinged_toolbox/right_closure/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 9,
+              "source_meshes": [
+                "/robot_hinged_toolbox/right_closure/right_closure__visual_000/Pressed_lever_003",
+                "/robot_hinged_toolbox/right_closure/right_closure__visual_001/Cube_035",
+                "/robot_hinged_toolbox/right_closure/right_closure__visual_002/Cube_036",
+                "/robot_hinged_toolbox/right_closure/right_closure__visual_003/Cube_037",
+                "/robot_hinged_toolbox/right_closure/right_closure__visual_004/Cube_038",
+                "/robot_hinged_toolbox/right_closure/right_closure__visual_005/Cube_039",
+                "/robot_hinged_toolbox/right_closure/right_closure__visual_006/Cylinder_067",
+                "/robot_hinged_toolbox/right_closure/right_closure__visual_007/Latch_bail_006",
+                "/robot_hinged_toolbox/right_closure/right_closure__visual_008/Latch_bail_007"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        }
+      },
+      "joints": {
+        "lid_hinge": {
+          "path": "/robot_hinged_toolbox/Joints/lid_hinge",
+          "type": "revolute",
+          "parent": "body",
+          "child": "lid",
+          "axis_contract": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "axis_token": "X",
+          "frame_alignment_wxyz": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "limits": {
+            "lower": 0.0,
+            "upper": 110.007897,
+            "unit": "deg"
+          },
+          "drive": {
+            "type": "force",
+            "stiffness": 0.0,
+            "damping": 0.0017453292519943296,
+            "damping_unit": "N*m*s/deg",
+            "damping_si": 0.1,
+            "damping_basis": "default",
+            "damping_si_unit": "N*m*s/rad",
+            "note": "passive joint: damping only; no actuation authored"
+          },
+          "behavior": {
+            "intent": {
+              "confidence": "medium",
+              "mode": "none",
+              "reason": "The lid is lifted by hand and swings under gravity after release; a simple piano hinge is visible, with no evidence of friction support. The upper travel stop supports the fully opened lid."
+            },
+            "status": "passive",
+            "simulator_status": "not_run"
+          }
+        },
+        "left_closure_pivot": {
+          "path": "/robot_hinged_toolbox/Joints/left_closure_pivot",
+          "type": "revolute",
+          "parent": "body",
+          "child": "left_closure",
+          "axis_contract": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "axis_token": "X",
+          "frame_alignment_wxyz": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "limits": {
+            "lower": 0.0,
+            "upper": 68.754935,
+            "unit": "deg"
+          },
+          "drive": {
+            "type": "force",
+            "stiffness": 0.0,
+            "damping": 1.999390062277698e-05,
+            "damping_unit": "N*m*s/deg",
+            "damping_si": 0.0011455661216891093,
+            "damping_basis": "4/s x load 0.000286",
+            "damping_si_unit": "N*m*s/rad",
+            "note": "passive joint: damping only; no actuation authored"
+          },
+          "behavior": {
+            "intent": {
+              "confidence": "medium",
+              "mode": "none",
+              "reason": "Released toggle lever can be swung outward by hand and hangs down after release; no return spring is visible."
+            },
+            "status": "passive",
+            "simulator_status": "not_run"
+          }
+        },
+        "right_closure_pivot": {
+          "path": "/robot_hinged_toolbox/Joints/right_closure_pivot",
+          "type": "revolute",
+          "parent": "body",
+          "child": "right_closure",
+          "axis_contract": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "axis_token": "X",
+          "frame_alignment_wxyz": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "limits": {
+            "lower": 0.0,
+            "upper": 68.754935,
+            "unit": "deg"
+          },
+          "drive": {
+            "type": "force",
+            "stiffness": 0.0,
+            "damping": 1.999390062277698e-05,
+            "damping_unit": "N*m*s/deg",
+            "damping_si": 0.0011455661216891093,
+            "damping_basis": "4/s x load 0.000286",
+            "damping_si_unit": "N*m*s/rad",
+            "note": "passive joint: damping only; no actuation authored"
+          },
+          "behavior": {
+            "intent": {
+              "confidence": "medium",
+              "mode": "none",
+              "reason": "Released toggle lever can be swung outward by hand and hangs down after release; no return spring is visible."
+            },
+            "status": "passive",
+            "simulator_status": "not_run"
+          }
+        }
+      },
+      "preview_controls": [],
+      "reference_pose": {
+        "left_closure_pivot": 0.0,
+        "lid_hinge": 0.6108652381980153,
+        "right_closure_pivot": 0.0
+      },
+      "provenance": {
+        "base_mode_reason": "Portable handheld toolbox with no world attachment.",
+        "base_mode_source": "author_explicit",
+        "contract_revision": "2.0",
+        "producer": "articulated-asset-generation",
+        "producer_version": "0.1.0"
+      }
+    },
+    "mass_kg": 4.458,
+    "colliders": 4,
+    "status": "articulated_body",
+    "material_class": "metal_steel",
+    "engine": "physx",
+    "multipart_physx": false,
+    "static_friction": 0.6,
+    "dynamic_friction": 0.45,
+    "restitution": 0.25,
+    "friction_model": "legacy",
+    "friction_convention": "pair_value_on_steel_dry",
+    "dynamic_friction_source": "material_table",
+    "dynamic_friction_convention": "pair_value_on_steel_dry"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "schema": "marso/rigid-mechanism/1",
+  "asset": "traditional_nordic_puukko_knife_v1",
+  "source_kind": "marso_rigid",
+  "body": "/Asset/Puukko",
+  "joints": [],
+  "actions": [
+    {
+      "id": "knife.pick_up_and_lay_down",
+      "description": "Grip the handle, lift the knife clear of the board and lay it back down"
+    }
+  ],
+  "physical_properties": {
+    "materials": [
+      {
+        "id": "SteelBlade",
+        "object_id": "puukko_knife",
+        "material_type": "carbon_steel",
+        "usd_material": "/Asset/PhysicsMaterials/SteelBlade",
+        "colliders": [
+          "/Asset/Puukko/Colliders/SteelBlade"
+        ],
+        "static_friction": 0.45,
+        "dynamic_friction": 0.35,
+        "restitution": 0.1,
+        "basis": "Uncalibrated dry polished steel estimate; bolster shares the blade role."
+      },
+      {
+        "id": "AntlerHandle",
+        "object_id": "puukko_knife",
+        "material_type": "antler_bone",
+        "usd_material": "/Asset/PhysicsMaterials/AntlerHandle",
+        "colliders": [
+          "/Asset/Puukko/Colliders/AntlerHandle"
+        ],
+        "static_friction": 0.5,
+        "dynamic_friction": 0.4,
+        "restitution": 0.15,
+        "basis": "Uncalibrated dry carved antler/bone estimate."
+      }
+    ],
+    "bodies": [
+      {
+        "usd_body": "/Asset/Puukko",
+        "object_id": "puukko_knife",
+        "construction": "assembly",
+        "mass_kg": 0.11074638342539148,
+        "mass_basis": "Per-component density times reviewed solid volume: carbon-steel blade and bolster 7850 kg/m3 x 8.3 cm3, antler/bone handle 1850 kg/m3 x 24.5 cm3; total 111 g, within typical 100-130 g for an 18-20 cm puukko.",
+        "inertia_basis": "Each solid region uniform at its density; exact integration (work/band-mass.json).",
+        "components": [
+          {
+            "material_id": "SteelBlade",
+            "construction": "solid",
+            "mass_kg": 0.06532948008064819,
+            "density_kg_m3": 7850,
+            "volume_m3": 8.322226761866011e-06,
+            "basis": "Blade and bolster"
+          },
+          {
+            "material_id": "AntlerHandle",
+            "construction": "solid",
+            "mass_kg": 0.045416903344743284,
+            "density_kg_m3": 1850,
+            "volume_m3": 2.454967748364502e-05,
+            "basis": "Engraved antler handle with hidden tang"
+          }
+        ]
+      }
+    ]
+  },
+  "historical_authoring_capabilities": {
+    "runtime": {
+      "application": "Isaac Sim",
+      "physics": "PhysX",
+      "version": "6.2.0-rc.14+mr.0.74a9356b.local"
+    },
+    "unsupported_runtimes": [
+      "Newton",
+      "MuJoCo"
+    ],
+    "operations": [
+      {
+        "id": "knife.pick_up_and_lay_down",
+        "status": "not_tested",
+        "notes": "Grip the handle, lift the knife clear of the board and lay it back down Scored native proof pending."
+      }
+    ],
+    "assumptions": [
+      "Estimated mass 0.111 kg (estimated mass)",
+      "Uncalibrated dry-contact coefficients"
+    ],
+    "limitations": [
+      "Rigid puukko knife; no cutting",
+      "Point-control demonstration is not robot gripper qualification",
+      "Multi-instance test deferred by user"
+    ]
+  },
+  "documented_usage_scope": {
+    "supported_actions": [
+      "knife.pick_up_and_lay_down"
+    ],
+    "exclusions": {}
+  },
+  "documentation_note": "Historical authoring scope is retained as context, not refreshed qualification. Current official outcomes are in ../.metadata; NVIDIA acceptance remains pending."
+}

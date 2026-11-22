@@ -1,0 +1,510 @@
+{
+  "id": "angle_grinder",
+  "title": "Corded Industrial Angle Grinder",
+  "category": "power_tool",
+  "subcategory": "cutting_grinding",
+  "description": "Detailed corded angle grinder with separable abrasive cutting disc, wheel guard, cast-aluminum gear case, side handle, trigger, and bolts.",
+  "lore_fit": "Matches `tool:grinder` required in `art/crafting_assembly_20261120/PLAN.md` Phase 2 for cutting scrap alloy plates and stripping rusted droid salvage.",
+  "where_to_use": [
+    "Salvage shop workbench (`tool:grinder` fixed bench tool)",
+    "Tool Exchange sci-fi/industrial tool display",
+    "Repairs shop porch and yard mechanic work area",
+    "Outer Berms drone service apron"
+  ],
+  "recommended_usage": "21 separate mesh parts in `_parts.glb` (`grinding_disc` can spin independently); use `_LOD0..2.glb` for bench/shelf placement.",
+  "tags": [
+    "tool:grinder",
+    "power_tool",
+    "crafting_studio",
+    "separable_parts",
+    "brann",
+    "salvage",
+    "cutting",
+    "bench"
+  ],
+  "provenance": {
+    "source_repo": "https://github.com/NVIDIA-Omniverse/simready-central",
+    "dataset": "NdotLight/SimReady_Assets",
+    "package_id": "simready.hf.NdotLight.SimReady_Assets.angle_grinder.2026.11.10_00",
+    "license": "cc-by-4.0",
+    "author": "ndotlight",
+    "source_url": "https://huggingface.co/datasets/NdotLight/SimReady_Assets/resolve/2980a1372e3c59336b47ff52333fb797be8847de/angle_grinder/com.nvidia.simready.packaging.json",
+    "wikidata_qcode": "Q827274"
+  },
+  "physical_properties": {
+    "dimensions_m": {
+      "width_x": 0.212,
+      "height_y": 0.1042,
+      "depth_z": 0.6075
+    },
+    "dimensions_mm": [
+      212.0,
+      104.2,
+      607.5
+    ],
+    "mass_kg": 2.1,
+    "simready_category": "power_tool",
+    "rigid_body_count": 8,
+    "usd_joints": [
+      {
+        "name": "disc_spin_joint",
+        "path": "/World/Angle_Grinder/Joints/disc_spin_joint",
+        "type": "PhysicsRevoluteJoint"
+      },
+      {
+        "name": "wheel_guard_fixed_joint",
+        "path": "/World/Angle_Grinder/Joints/wheel_guard_fixed_joint",
+        "type": "PhysicsFixedJoint"
+      },
+      {
+        "name": "trigger_joint",
+        "path": "/World/Angle_Grinder/Joints/trigger_joint",
+        "type": "PhysicsPrismaticJoint"
+      },
+      {
+        "name": "side_handle_fixed_joint",
+        "path": "/World/Angle_Grinder/Joints/side_handle_fixed_joint",
+        "type": "PhysicsFixedJoint"
+      },
+      {
+        "name": "front_housing_fixed_joint",
+        "path": "/World/Angle_Grinder/Joints/front_housing_fixed_joint",
+        "type": "PhysicsFixedJoint"
+      },
+      {
+        "name": "head_fixed_joint",
+        "path": "/World/Angle_Grinder/Joints/head_fixed_joint",
+        "type": "PhysicsFixedJoint"
+      },
+      {
+        "name": "cord_fixed_joint",
+        "path": "/World/Angle_Grinder/Joints/cord_fixed_joint",
+        "type": "PhysicsFixedJoint"
+      }
+    ],
+    "grasp_points": []
+  },
+  "geometry": {
+    "source_triangles": 303827,
+    "parts_glb_triangles": 61151,
+    "lod_triangles": {
+      "LOD0": 29999,
+      "LOD1": 7499,
+      "LOD2": 2398
+    },
+    "part_count": 21,
+    "is_multi_part": true,
+    "parts": [
+      {
+        "node": "angle_grinder_bolt_01",
+        "triangles": 600,
+        "vertices": 302,
+        "size_mm": [
+          5.5,
+          5.5,
+          11.7
+        ],
+        "materials": [
+          "SR_angle_grinder_steel_machined"
+        ]
+      },
+      {
+        "node": "angle_grinder_bolt_02",
+        "triangles": 600,
+        "vertices": 302,
+        "size_mm": [
+          5.5,
+          5.5,
+          11.7
+        ],
+        "materials": [
+          "SR_angle_grinder_steel_machined"
+        ]
+      },
+      {
+        "node": "angle_grinder_bolt_03",
+        "triangles": 600,
+        "vertices": 302,
+        "size_mm": [
+          5.5,
+          11.6,
+          5.5
+        ],
+        "materials": [
+          "SR_angle_grinder_steel_machined"
+        ]
+      },
+      {
+        "node": "angle_grinder_bolt_04",
+        "triangles": 600,
+        "vertices": 302,
+        "size_mm": [
+          5.5,
+          11.6,
+          5.5
+        ],
+        "materials": [
+          "SR_angle_grinder_steel_machined"
+        ]
+      },
+      {
+        "node": "angle_grinder_button",
+        "triangles": 659,
+        "vertices": 497,
+        "size_mm": [
+          11.5,
+          13.0,
+          23.6
+        ],
+        "materials": [
+          "SR_angle_grinder_plastic_molded"
+        ]
+      },
+      {
+        "node": "angle_grinder_button_housing",
+        "triangles": 2672,
+        "vertices": 1338,
+        "size_mm": [
+          20.5,
+          24.4,
+          37.2
+        ],
+        "materials": [
+          "SR_angle_grinder_plastic_molded"
+        ]
+      },
+      {
+        "node": "angle_grinder_cable",
+        "triangles": 1152,
+        "vertices": 578,
+        "size_mm": [
+          5.0,
+          5.0,
+          203.0
+        ],
+        "materials": [
+          "SR_angle_grinder_rubber_molded"
+        ]
+      },
+      {
+        "node": "angle_grinder_clamping_flange",
+        "triangles": 2542,
+        "vertices": 1273,
+        "size_mm": [
+          33.0,
+          36.7,
+          33.0
+        ],
+        "materials": [
+          "SR_angle_grinder_steel_machined"
+        ]
+      },
+      {
+        "node": "angle_grinder_gear_case_lower",
+        "triangles": 1512,
+        "vertices": 758,
+        "size_mm": [
+          76.0,
+          36.8,
+          74.1
+        ],
+        "materials": [
+          "SR_angle_grinder_aluminum_cast"
+        ]
+      },
+      {
+        "node": "angle_grinder_gear_case_upper",
+        "triangles": 2356,
+        "vertices": 1180,
+        "size_mm": [
+          76.3,
+          49.5,
+          74.1
+        ],
+        "materials": [
+          "SR_angle_grinder_aluminum_cast"
+        ]
+      },
+      {
+        "node": "angle_grinder_grinding_disc",
+        "triangles": 1268,
+        "vertices": 634,
+        "size_mm": [
+          115.0,
+          10.0,
+          115.0
+        ],
+        "materials": [
+          "SR_angle_grinder_abrasive_wheel"
+        ]
+      },
+      {
+        "node": "angle_grinder_housing_collar",
+        "triangles": 1894,
+        "vertices": 949,
+        "size_mm": [
+          53.2,
+          61.5,
+          10.0
+        ],
+        "materials": [
+          "SR_angle_grinder_plastic_molded"
+        ]
+      },
+      {
+        "node": "angle_grinder_housing_front",
+        "triangles": 1566,
+        "vertices": 785,
+        "size_mm": [
+          75.2,
+          79.8,
+          85.1
+        ],
+        "materials": [
+          "SR_angle_grinder_plastic_molded"
+        ]
+      },
+      {
+        "node": "angle_grinder_housing_main",
+        "triangles": 6778,
+        "vertices": 3393,
+        "size_mm": [
+          54.6,
+          62.9,
+          156.4
+        ],
+        "materials": [
+          "SR_angle_grinder_plastic_molded"
+        ]
+      },
+      {
+        "node": "angle_grinder_housing_rear",
+        "triangles": 3712,
+        "vertices": 1858,
+        "size_mm": [
+          54.3,
+          62.4,
+          17.5
+        ],
+        "materials": [
+          "SR_angle_grinder_plastic_molded"
+        ]
+      },
+      {
+        "node": "angle_grinder_nonslip_grip",
+        "triangles": 27932,
+        "vertices": 13968,
+        "size_mm": [
+          80.7,
+          51.0,
+          51.0
+        ],
+        "materials": [
+          "SR_angle_grinder_rubber_molded"
+        ]
+      },
+      {
+        "node": "angle_grinder_side_handle_core",
+        "triangles": 748,
+        "vertices": 376,
+        "size_mm": [
+          73.2,
+          34.6,
+          34.6
+        ],
+        "materials": [
+          "SR_angle_grinder_plastic_molded"
+        ]
+      },
+      {
+        "node": "angle_grinder_side_handle_flange",
+        "triangles": 182,
+        "vertices": 93,
+        "size_mm": [
+          17.0,
+          34.8,
+          34.9
+        ],
+        "materials": [
+          "SR_angle_grinder_plastic_molded"
+        ]
+      },
+      {
+        "node": "angle_grinder_strain_relief",
+        "triangles": 452,
+        "vertices": 228,
+        "size_mm": [
+          10.0,
+          10.0,
+          53.0
+        ],
+        "materials": [
+          "SR_angle_grinder_rubber_molded"
+        ]
+      },
+      {
+        "node": "angle_grinder_stud",
+        "triangles": 306,
+        "vertices": 155,
+        "size_mm": [
+          11.2,
+          10.0,
+          10.0
+        ],
+        "materials": [
+          "SR_angle_grinder_steel_machined"
+        ]
+      },
+      {
+        "node": "angle_grinder_wheel_guard",
+        "triangles": 3020,
+        "vertices": 1512,
+        "size_mm": [
+          125.0,
+          26.6,
+          92.5
+        ],
+        "materials": [
+          "SR_angle_grinder_steel_painted"
+        ]
+      }
+    ]
+  },
+  "materials": [
+    {
+      "material_name": "SR_angle_grinder_steel_machined",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_angle_grinder_steel_machined_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_angle_grinder_steel_machined_Normal.png",
+        "gltf_orm_map": "textures/SR_angle_grinder_steel_machined_ORM.png",
+        "unity_urp_mask_map": "textures/SR_angle_grinder_steel_machined_Mask.png"
+      }
+    },
+    {
+      "material_name": "SR_angle_grinder_plastic_molded",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_angle_grinder_plastic_molded_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_angle_grinder_plastic_molded_Normal.png",
+        "gltf_orm_map": "textures/SR_angle_grinder_plastic_molded_ORM.png",
+        "unity_urp_mask_map": "textures/SR_angle_grinder_plastic_molded_Mask.png"
+      }
+    },
+    {
+      "material_name": "SR_angle_grinder_rubber_molded",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_angle_grinder_rubber_molded_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_angle_grinder_rubber_molded_Normal.png",
+        "gltf_orm_map": "textures/SR_angle_grinder_rubber_molded_ORM.png",
+        "unity_urp_mask_map": "textures/SR_angle_grinder_rubber_molded_Mask.png"
+      }
+    },
+    {
+      "material_name": "SR_angle_grinder_aluminum_cast",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_angle_grinder_aluminum_cast_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_angle_grinder_aluminum_cast_Normal.png",
+        "gltf_orm_map": "textures/SR_angle_grinder_aluminum_cast_ORM.png",
+        "unity_urp_mask_map": "textures/SR_angle_grinder_aluminum_cast_Mask.png"
+      }
+    },
+    {
+      "material_name": "SR_angle_grinder_abrasive_wheel",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_angle_grinder_abrasive_wheel_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_angle_grinder_abrasive_wheel_Normal.png",
+        "gltf_orm_map": "textures/SR_angle_grinder_abrasive_wheel_ORM.png",
+        "unity_urp_mask_map": "textures/SR_angle_grinder_abrasive_wheel_Mask.png"
+      }
+    },
+    {
+      "material_name": "SR_angle_grinder_steel_painted",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_angle_grinder_steel_painted_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_angle_grinder_steel_painted_Normal.png",
+        "gltf_orm_map": "textures/SR_angle_grinder_steel_painted_ORM.png",
+        "unity_urp_mask_map": "textures/SR_angle_grinder_steel_painted_Mask.png"
+      }
+    }
+  ],
+  "files": {
+    "LOD0_glb": "assets/angle_grinder/angle_grinder_LOD0.glb",
+    "LOD1_glb": "assets/angle_grinder/angle_grinder_LOD1.glb",
+    "LOD2_glb": "assets/angle_grinder/angle_grinder_LOD2.glb",
+    "parts_glb": "assets/angle_grinder/angle_grinder_parts.glb",
+    "textures_dir": "assets/angle_grinder/textures",
+    "thumbnail": "assets/angle_grinder/thumbnail.png",
+    "meta_json": "assets/angle_grinder/meta.json"
+  }
+}

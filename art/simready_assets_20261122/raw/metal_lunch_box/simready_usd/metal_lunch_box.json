@@ -1,0 +1,236 @@
+{
+  "physics": {
+    "articulation": {
+      "schema_version": "articulation/2",
+      "root_link": "body",
+      "base_mode": "free",
+      "world_joint": null,
+      "behavior_sleep_threshold": null,
+      "handoff_base_mode": "free",
+      "base_mode_source": "handoff",
+      "collision_filter": {
+        "mode": "adjacent",
+        "explicit_excluded_link_pairs": [],
+        "handoff_excluded_link_pairs": [
+          [
+            "body",
+            "clasp"
+          ],
+          [
+            "body",
+            "lid"
+          ]
+        ],
+        "excluded_link_pairs": [
+          [
+            "body",
+            "clasp"
+          ],
+          [
+            "body",
+            "lid"
+          ]
+        ],
+        "representation": "UsdPhysics.FilteredPairsAPI plus joint collisionEnabled",
+        "external_contacts": "enabled",
+        "other_engine_validation": "not_run"
+      },
+      "collider_aggregation": "link",
+      "joint_count": 2,
+      "joint_types": {
+        "revolute": 2
+      },
+      "axis_rule": "physics:axis X; both joint frames rotated by the quaternion mapping +X onto the contract axis",
+      "links": {
+        "body": {
+          "prim": "/metal_lunch_box/body",
+          "mass_kg": 1.1758,
+          "mass_source": "VLM per-part estimate, 9 of 9 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/metal_lunch_box/body/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 9,
+              "source_meshes": [
+                "/metal_lunch_box/body/body__visual_000/Tapered_molded_outer_bowl_001",
+                "/metal_lunch_box/body/body__visual_001/Deep_drawn_stainless_insert_001",
+                "/metal_lunch_box/body/body__visual_002/Raised_plastic_perimeter_lip_001",
+                "/metal_lunch_box/body/body__visual_003/Cylinder_006",
+                "/metal_lunch_box/body/body__visual_004/Cylinder_007",
+                "/metal_lunch_box/body/body__visual_005/Cylinder_008",
+                "/metal_lunch_box/body/body__visual_006/Cylinder_009",
+                "/metal_lunch_box/body/body__visual_007/Cube_007",
+                "/metal_lunch_box/body/body__visual_008/Cube_008"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        },
+        "lid": {
+          "prim": "/metal_lunch_box/lid",
+          "mass_kg": 0.621,
+          "mass_source": "VLM per-part estimate, 9 of 9 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/metal_lunch_box/lid/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 9,
+              "source_meshes": [
+                "/metal_lunch_box/lid/lid__visual_000/Shallow_sculpted_lid_shell_001",
+                "/metal_lunch_box/lid/lid__visual_001/Lid_underside_recessed_panel_001",
+                "/metal_lunch_box/lid/lid__visual_002/Lid_upper_border_bead_001",
+                "/metal_lunch_box/lid/lid__visual_003/Cube_009",
+                "/metal_lunch_box/lid/lid__visual_004/Cube_010",
+                "/metal_lunch_box/lid/lid__visual_005/Cylinder_010",
+                "/metal_lunch_box/lid/lid__visual_006/Cylinder_011",
+                "/metal_lunch_box/lid/lid__visual_007/Cube_011",
+                "/metal_lunch_box/lid/lid__visual_008/Cube_012"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        },
+        "clasp": {
+          "prim": "/metal_lunch_box/clasp",
+          "mass_kg": 0.0641,
+          "mass_source": "VLM per-part estimate, 2 of 2 meshes",
+          "colliders": 1,
+          "collision": [
+            {
+              "prim": "/metal_lunch_box/clasp/Collisions/link_collision",
+              "approximation": "convexDecomposition",
+              "basis": "combined rigid link; bounded concave cook",
+              "source_mesh_count": 2,
+              "source_meshes": [
+                "/metal_lunch_box/clasp/clasp__visual_000/Front_hinged_clasp_bail_001",
+                "/metal_lunch_box/clasp/clasp__visual_001/Cube_013"
+              ],
+              "aggregation": "link",
+              "boolean_union": false,
+              "cooked_shape_count": null
+            }
+          ]
+        }
+      },
+      "joints": {
+        "lid_hinge": {
+          "path": "/metal_lunch_box/Joints/lid_hinge",
+          "type": "revolute",
+          "parent": "body",
+          "child": "lid",
+          "axis_contract": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "axis_token": "X",
+          "frame_alignment_wxyz": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "limits": {
+            "lower": 0.0,
+            "upper": 105.997192,
+            "unit": "deg"
+          },
+          "drive": {
+            "type": "force",
+            "stiffness": 0.0,
+            "damping": 0.0009323560013211771,
+            "damping_unit": "N*m*s/deg",
+            "damping_si": 0.05342006387939725,
+            "damping_basis": "4/s x load 0.0134",
+            "damping_si_unit": "N*m*s/rad",
+            "note": "passive joint: damping only; no actuation authored"
+          },
+          "behavior": {
+            "intent": {
+              "confidence": "medium",
+              "mode": "none",
+              "reason": "Lift the lid by hand; absent visible stays or a friction support, it swings under gravity after release. Rear hinge is inferred from the open pose."
+            },
+            "status": "passive",
+            "simulator_status": "not_run"
+          }
+        },
+        "clasp_hinge": {
+          "path": "/metal_lunch_box/Joints/clasp_hinge",
+          "type": "revolute",
+          "parent": "body",
+          "child": "clasp",
+          "axis_contract": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "axis_token": "X",
+          "frame_alignment_wxyz": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "limits": {
+            "lower": 0.0,
+            "upper": 94.538036,
+            "unit": "deg"
+          },
+          "drive": {
+            "type": "force",
+            "stiffness": 0.0,
+            "damping": 2.8960569392674763e-06,
+            "damping_unit": "N*m*s/deg",
+            "damping_si": 0.00016593183984960137,
+            "damping_basis": "4/s x load 4.15e-05",
+            "damping_si_unit": "N*m*s/rad",
+            "note": "passive joint: damping only; no actuation authored"
+          },
+          "behavior": {
+            "intent": {
+              "confidence": "medium",
+              "mode": "none",
+              "reason": "Front bail swings outward by hand and hangs after release; a passive hinge is inferred, with snap engagement not simulated."
+            },
+            "status": "passive",
+            "simulator_status": "not_run"
+          }
+        }
+      },
+      "preview_controls": [],
+      "reference_pose": {
+        "clasp_hinge": 0.0,
+        "lid_hinge": 0.43
+      },
+      "provenance": {
+        "base_mode_reason": "Portable lunch container without any world attachment.",
+        "base_mode_source": "author_explicit",
+        "contract_revision": "2.0",
+        "producer": "articulated-asset-generation",
+        "producer_version": "0.1.0"
+      }
+    },
+    "mass_kg": 1.8609,
+    "colliders": 3,
+    "status": "articulated_body",
+    "material_class": "metal_steel",
+    "engine": "physx",
+    "multipart_physx": false,
+    "static_friction": 0.6,
+    "dynamic_friction": 0.45,
+    "restitution": 0.25,
+    "friction_model": "legacy",
+    "friction_convention": "pair_value_on_steel_dry",
+    "dynamic_friction_source": "material_table",
+    "dynamic_friction_convention": "pair_value_on_steel_dry"
+  }
+}

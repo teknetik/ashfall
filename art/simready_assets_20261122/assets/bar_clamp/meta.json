@@ -1,0 +1,436 @@
+{
+  "id": "bar_clamp",
+  "title": "Quick-Release Bar Clamp",
+  "category": "hand_tool",
+  "subcategory": "holder_clamp",
+  "description": "Steel-bar trigger clamp with separable sliding jaw, trigger lever, release button, pressure pads, and internal spring/plate parts.",
+  "lore_fit": "Ideal clamping fixture for Tamsin's Field Supply soft-goods and armour-plate table or Brann's alloy-sheet cutting setup (`op: cut_from_stock`).",
+  "where_to_use": [
+    "Field Supply interior (Tamsin's armour/pack crafting table holder)",
+    "Salvage shop workbench (clamping alloy stock or grip plates)",
+    "Tool Exchange display rack"
+  ],
+  "recommended_usage": "17 cleanly separated mesh parts in `_parts.glb`; can be used as an interactive clamp in Crafting Studio or static bench dressing in `_LOD0..2.glb`.",
+  "tags": [
+    "tool:clamp",
+    "bar_clamp",
+    "bench",
+    "tamsin",
+    "brann",
+    "crafting_studio",
+    "separable_parts",
+    "hand_tool"
+  ],
+  "provenance": {
+    "source_repo": "https://github.com/NVIDIA-Omniverse/simready-central",
+    "dataset": "ForgeCAD/simready-assets",
+    "package_id": "simready.hf.ForgeCAD.simready-assets.bar_clamp.2026.10.17_00",
+    "license": "cc-by-4.0",
+    "author": "ForgeCAD",
+    "source_url": "https://huggingface.co/datasets/ForgeCAD/simready-assets/resolve/0573053fa2c9174ca2a4678a462ec4dfd3035d59/bar_clamp/com.nvidia.simready.packaging.json",
+    "wikidata_qcode": "Q846600"
+  },
+  "physical_properties": {
+    "dimensions_m": {
+      "width_x": 0.453,
+      "height_y": 0.0516,
+      "depth_z": 0.1845
+    },
+    "dimensions_mm": [
+      453.0,
+      51.6,
+      184.5
+    ],
+    "mass_kg": 0.7491,
+    "simready_category": "hand tool",
+    "rigid_body_count": 5,
+    "usd_joints": [
+      {
+        "name": "bar",
+        "path": "/Model/Physics/Joints/bar",
+        "type": "PhysicsPrismaticJoint"
+      },
+      {
+        "name": "trigger",
+        "path": "/Model/Physics/Joints/trigger",
+        "type": "PhysicsRevoluteJoint"
+      },
+      {
+        "name": "drive_plate",
+        "path": "/Model/Physics/Joints/drive_plate",
+        "type": "PhysicsPrismaticJoint"
+      },
+      {
+        "name": "release",
+        "path": "/Model/Physics/Joints/release",
+        "type": "PhysicsRevoluteJoint"
+      }
+    ],
+    "grasp_points": []
+  },
+  "geometry": {
+    "source_triangles": 102526,
+    "parts_glb_triangles": 47751,
+    "lod_triangles": {
+      "LOD0": 29999,
+      "LOD1": 7496,
+      "LOD2": 3043
+    },
+    "part_count": 17,
+    "is_multi_part": true,
+    "parts": [
+      {
+        "node": "bar_clamp_bar_mesh",
+        "triangles": 324,
+        "vertices": 160,
+        "size_mm": [
+          450.0,
+          6.4,
+          19.0
+        ],
+        "materials": [
+          "SR_bar_clamp_zinc"
+        ]
+      },
+      {
+        "node": "bar_clamp_body_mesh",
+        "triangles": 9084,
+        "vertices": 9952,
+        "size_mm": [
+          135.5,
+          34.0,
+          132.5
+        ],
+        "materials": [
+          "SR_bar_clamp_bodynylon"
+        ]
+      },
+      {
+        "node": "bar_clamp_brake_plate_mesh",
+        "triangles": 380,
+        "vertices": 190,
+        "size_mm": [
+          7.2,
+          22.0,
+          44.8
+        ],
+        "materials": [
+          "SR_bar_clamp_steel"
+        ]
+      },
+      {
+        "node": "bar_clamp_button_mesh",
+        "triangles": 172,
+        "vertices": 88,
+        "size_mm": [
+          9.0,
+          1.6,
+          9.0
+        ],
+        "materials": [
+          "SR_bar_clamp_blacknylon"
+        ]
+      },
+      {
+        "node": "bar_clamp_jaw_mesh",
+        "triangles": 2183,
+        "vertices": 2439,
+        "size_mm": [
+          24.0,
+          32.0,
+          110.0
+        ],
+        "materials": [
+          "SR_bar_clamp_bodynylon"
+        ]
+      },
+      {
+        "node": "bar_clamp_lever_mesh",
+        "triangles": 6827,
+        "vertices": 7819,
+        "size_mm": [
+          14.8,
+          20.0,
+          87.5
+        ],
+        "materials": [
+          "SR_bar_clamp_blacknylon"
+        ]
+      },
+      {
+        "node": "bar_clamp_logo_mesh",
+        "triangles": 8520,
+        "vertices": 4284,
+        "size_mm": [
+          53.9,
+          0.5,
+          13.1
+        ],
+        "materials": [
+          "SR_bar_clamp_logo"
+        ]
+      },
+      {
+        "node": "bar_clamp_overmold_mesh",
+        "triangles": 7501,
+        "vertices": 8152,
+        "size_mm": [
+          69.3,
+          30.0,
+          81.5
+        ],
+        "materials": [
+          "SR_bar_clamp_grip"
+        ]
+      },
+      {
+        "node": "bar_clamp_pad_mesh",
+        "triangles": 2300,
+        "vertices": 2658,
+        "size_mm": [
+          6.0,
+          26.0,
+          52.7
+        ],
+        "materials": [
+          "SR_bar_clamp_pad"
+        ]
+      },
+      {
+        "node": "bar_clamp_pad_mesh_001",
+        "triangles": 2300,
+        "vertices": 2658,
+        "size_mm": [
+          6.0,
+          26.0,
+          52.7
+        ],
+        "materials": [
+          "SR_bar_clamp_pad"
+        ]
+      },
+      {
+        "node": "bar_clamp_pin_mesh",
+        "triangles": 124,
+        "vertices": 64,
+        "size_mm": [
+          4.0,
+          31.7,
+          4.0
+        ],
+        "materials": [
+          "SR_bar_clamp_steel"
+        ]
+      },
+      {
+        "node": "bar_clamp_pins_mesh",
+        "triangles": 248,
+        "vertices": 128,
+        "size_mm": [
+          43.5,
+          33.7,
+          34.5
+        ],
+        "materials": [
+          "SR_bar_clamp_steel"
+        ]
+      },
+      {
+        "node": "bar_clamp_plate_mesh",
+        "triangles": 80,
+        "vertices": 40,
+        "size_mm": [
+          3.0,
+          22.0,
+          40.5
+        ],
+        "materials": [
+          "SR_bar_clamp_blackoxide"
+        ]
+      },
+      {
+        "node": "bar_clamp_screws_mesh",
+        "triangles": 870,
+        "vertices": 445,
+        "size_mm": [
+          114.3,
+          3.8,
+          117.5
+        ],
+        "materials": [
+          "SR_bar_clamp_blackoxide"
+        ]
+      },
+      {
+        "node": "bar_clamp_springs_mesh",
+        "triangles": 4122,
+        "vertices": 2069,
+        "size_mm": [
+          46.0,
+          22.1,
+          37.0
+        ],
+        "materials": [
+          "SR_bar_clamp_steel"
+        ]
+      },
+      {
+        "node": "bar_clamp_stop_pin_mesh",
+        "triangles": 380,
+        "vertices": 192,
+        "size_mm": [
+          4.0,
+          14.0,
+          4.0
+        ],
+        "materials": [
+          "SR_bar_clamp_steel"
+        ]
+      },
+      {
+        "node": "bar_clamp_thumb_cap_mesh",
+        "triangles": 2336,
+        "vertices": 2456,
+        "size_mm": [
+          9.1,
+          13.0,
+          9.1
+        ],
+        "materials": [
+          "SR_bar_clamp_blacknylon"
+        ]
+      }
+    ]
+  },
+  "materials": [
+    {
+      "material_name": "SR_bar_clamp_zinc",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 1.0,
+      "roughness_factor": 0.34,
+      "textures": {
+        "base_map": "textures/SR_bar_clamp_zinc_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ]
+      }
+    },
+    {
+      "material_name": "SR_bar_clamp_bodynylon",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.52,
+      "textures": {
+        "base_map": "textures/SR_bar_clamp_bodynylon_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ]
+      }
+    },
+    {
+      "material_name": "SR_bar_clamp_steel",
+      "base_color_factor": [
+        0.55,
+        0.56,
+        0.58,
+        1.0
+      ],
+      "metallic_factor": 1.0,
+      "roughness_factor": 0.3,
+      "textures": {}
+    },
+    {
+      "material_name": "SR_bar_clamp_blacknylon",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.62,
+      "textures": {
+        "base_map": "textures/SR_bar_clamp_blacknylon_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ]
+      }
+    },
+    {
+      "material_name": "SR_bar_clamp_logo",
+      "base_color_factor": [
+        0.012,
+        0.012,
+        0.013,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.45,
+      "textures": {}
+    },
+    {
+      "material_name": "SR_bar_clamp_grip",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.82,
+      "textures": {
+        "base_map": "textures/SR_bar_clamp_grip_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ]
+      }
+    },
+    {
+      "material_name": "SR_bar_clamp_pad",
+      "base_color_factor": [
+        0.018,
+        0.018,
+        0.019,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.92,
+      "textures": {}
+    },
+    {
+      "material_name": "SR_bar_clamp_blackoxide",
+      "base_color_factor": [
+        0.045,
+        0.046,
+        0.05,
+        1.0
+      ],
+      "metallic_factor": 0.7,
+      "roughness_factor": 0.45,
+      "textures": {}
+    }
+  ],
+  "files": {
+    "LOD0_glb": "assets/bar_clamp/bar_clamp_LOD0.glb",
+    "LOD1_glb": "assets/bar_clamp/bar_clamp_LOD1.glb",
+    "LOD2_glb": "assets/bar_clamp/bar_clamp_LOD2.glb",
+    "parts_glb": "assets/bar_clamp/bar_clamp_parts.glb",
+    "textures_dir": "assets/bar_clamp/textures",
+    "thumbnail": "assets/bar_clamp/thumbnail.png",
+    "meta_json": "assets/bar_clamp/meta.json"
+  }
+}

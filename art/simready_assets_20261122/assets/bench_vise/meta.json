@@ -1,0 +1,487 @@
+{
+  "id": "bench_vise",
+  "title": "Heavy Workshop Bench Vise",
+  "category": "bench_fixture",
+  "subcategory": "holder_clamp",
+  "description": "Articulated cast-iron and steel workshop bench vise with separable jaws, lead screw, handle bar, and swivel base.",
+  "lore_fit": "Fits Brann's Salvage workbench (`station: brann_metal`) or the Repairs bay as a heavy-duty holder fixture (`role: holder`) for weapon and servo teardown.",
+  "where_to_use": [
+    "Salvage shop interior (Brann's workbench holder fixture)",
+    "Crafting Studio (`station.json` holder role)",
+    "Repairs shop porch worktable",
+    "Warden training range drone service apron"
+  ],
+  "recommended_usage": "Use `bench_vise_parts.glb` when separate movable jaw/screw nodes are needed for Crafting Studio clamping (`op: clamp`), or `bench_vise_LOD0..2.glb` as a static workshop prop.",
+  "tags": [
+    "tool:vise",
+    "bench",
+    "fixture",
+    "holder",
+    "clamp",
+    "crafting_studio",
+    "separable_parts",
+    "brann",
+    "workshop"
+  ],
+  "provenance": {
+    "source_repo": "https://github.com/NVIDIA-Omniverse/simready-central",
+    "dataset": "ForgeCAD/simready-assets",
+    "package_id": "simready.hf.ForgeCAD.simready-assets.bench_vise.2026.10.17_00",
+    "license": "cc-by-4.0",
+    "author": "ForgeCAD",
+    "source_url": "https://huggingface.co/datasets/ForgeCAD/simready-assets/resolve/0573053fa2c9174ca2a4678a462ec4dfd3035d59/bench_vise/com.nvidia.simready.packaging.json",
+    "wikidata_qcode": "Q475638"
+  },
+  "physical_properties": {
+    "dimensions_m": {
+      "width_x": 0.3,
+      "height_y": 0.6925,
+      "depth_z": 0.6595
+    },
+    "dimensions_mm": [
+      300.0,
+      692.5,
+      659.5
+    ],
+    "mass_kg": 17.8042,
+    "simready_category": "hand tool",
+    "rigid_body_count": 7,
+    "usd_joints": [
+      {
+        "name": "swivel",
+        "path": "/Model/Physics/Joints/swivel",
+        "type": "PhysicsRevoluteJoint"
+      },
+      {
+        "name": "jaw",
+        "path": "/Model/Physics/Joints/jaw",
+        "type": "PhysicsPrismaticJoint"
+      },
+      {
+        "name": "screw",
+        "path": "/Model/Physics/Joints/screw",
+        "type": "PhysicsRevoluteJoint"
+      },
+      {
+        "name": "handle_slide",
+        "path": "/Model/Physics/Joints/handle_slide",
+        "type": "PhysicsPrismaticJoint"
+      },
+      {
+        "name": "lock_1",
+        "path": "/Model/Physics/Joints/lock_1",
+        "type": "PhysicsRevoluteJoint"
+      },
+      {
+        "name": "lock_2",
+        "path": "/Model/Physics/Joints/lock_2",
+        "type": "PhysicsRevoluteJoint"
+      },
+      {
+        "name": "Base_fixed_base",
+        "path": "/Model/Physics/Joints/Base_fixed_base",
+        "type": "PhysicsFixedJoint"
+      }
+    ],
+    "grasp_points": []
+  },
+  "geometry": {
+    "source_triangles": 174780,
+    "parts_glb_triangles": 55820,
+    "lod_triangles": {
+      "LOD0": 30000,
+      "LOD1": 7500,
+      "LOD2": 2379
+    },
+    "part_count": 21,
+    "is_multi_part": true,
+    "parts": [
+      {
+        "node": "bench_vise_anvil_face_mesh",
+        "triangles": 140,
+        "vertices": 72,
+        "size_mm": [
+          68.0,
+          1.5,
+          42.5
+        ],
+        "materials": [
+          "SR_bench_vise_machinediron"
+        ]
+      },
+      {
+        "node": "bench_vise_bar_mesh",
+        "triangles": 704,
+        "vertices": 354,
+        "size_mm": [
+          203.1,
+          18.0,
+          18.0
+        ],
+        "materials": [
+          "SR_bench_vise_steel"
+        ]
+      },
+      {
+        "node": "bench_vise_bolts_mesh",
+        "triangles": 1922,
+        "vertices": 969,
+        "size_mm": [
+          176.4,
+          121.1,
+          112.0
+        ],
+        "materials": [
+          "SR_bench_vise_blackoxide"
+        ]
+      },
+      {
+        "node": "bench_vise_casting_mesh",
+        "triangles": 1422,
+        "vertices": 707,
+        "size_mm": [
+          140.0,
+          150.0,
+          142.0
+        ],
+        "materials": [
+          "SR_bench_vise_paint"
+        ]
+      },
+      {
+        "node": "bench_vise_casting_mesh_001",
+        "triangles": 2216,
+        "vertices": 1110,
+        "size_mm": [
+          125.0,
+          138.0,
+          302.5
+        ],
+        "materials": [
+          "SR_bench_vise_paint"
+        ]
+      },
+      {
+        "node": "bench_vise_casting_mesh_002",
+        "triangles": 3854,
+        "vertices": 1921,
+        "size_mm": [
+          177.1,
+          28.0,
+          150.0
+        ],
+        "materials": [
+          "SR_bench_vise_paint"
+        ]
+      },
+      {
+        "node": "bench_vise_head_mesh",
+        "triangles": 720,
+        "vertices": 360,
+        "size_mm": [
+          36.0,
+          36.0,
+          36.0
+        ],
+        "materials": [
+          "SR_bench_vise_steel"
+        ]
+      },
+      {
+        "node": "bench_vise_knobs_mesh",
+        "triangles": 2304,
+        "vertices": 1156,
+        "size_mm": [
+          250.0,
+          27.0,
+          27.0
+        ],
+        "materials": [
+          "SR_bench_vise_steel"
+        ]
+      },
+      {
+        "node": "bench_vise_lever_mesh",
+        "triangles": 2106,
+        "vertices": 1053,
+        "size_mm": [
+          28.0,
+          16.4,
+          82.0
+        ],
+        "materials": [
+          "SR_bench_vise_steel"
+        ]
+      },
+      {
+        "node": "bench_vise_lever_mesh_001",
+        "triangles": 2106,
+        "vertices": 1053,
+        "size_mm": [
+          28.0,
+          16.4,
+          82.0
+        ],
+        "materials": [
+          "SR_bench_vise_steel"
+        ]
+      },
+      {
+        "node": "bench_vise_lock_studs_mesh",
+        "triangles": 632,
+        "vertices": 320,
+        "size_mm": [
+          130.0,
+          42.2,
+          16.0
+        ],
+        "materials": [
+          "SR_bench_vise_blackoxide"
+        ]
+      },
+      {
+        "node": "bench_vise_nut_mesh",
+        "triangles": 852,
+        "vertices": 428,
+        "size_mm": [
+          45.0,
+          28.5,
+          40.0
+        ],
+        "materials": [
+          "SR_bench_vise_bronze"
+        ]
+      },
+      {
+        "node": "bench_vise_pipe_jaw_mesh",
+        "triangles": 56,
+        "vertices": 32,
+        "size_mm": [
+          75.0,
+          33.0,
+          7.5
+        ],
+        "materials": [
+          "SR_bench_vise_paint"
+        ]
+      },
+      {
+        "node": "bench_vise_pipe_jaw_mesh_001",
+        "triangles": 56,
+        "vertices": 32,
+        "size_mm": [
+          75.0,
+          33.0,
+          7.5
+        ],
+        "materials": [
+          "SR_bench_vise_paint"
+        ]
+      },
+      {
+        "node": "bench_vise_screws_mesh",
+        "triangles": 712,
+        "vertices": 360,
+        "size_mm": [
+          77.9,
+          15.4,
+          19.7
+        ],
+        "materials": [
+          "SR_bench_vise_blackoxide"
+        ]
+      },
+      {
+        "node": "bench_vise_screws_mesh_001",
+        "triangles": 712,
+        "vertices": 360,
+        "size_mm": [
+          77.9,
+          15.4,
+          19.7
+        ],
+        "materials": [
+          "SR_bench_vise_blackoxide"
+        ]
+      },
+      {
+        "node": "bench_vise_serrated_insert_mesh",
+        "triangles": 1330,
+        "vertices": 663,
+        "size_mm": [
+          125.0,
+          28.0,
+          8.0
+        ],
+        "materials": [
+          "SR_bench_vise_serratedsteel"
+        ]
+      },
+      {
+        "node": "bench_vise_serrated_insert_mesh_001",
+        "triangles": 1330,
+        "vertices": 663,
+        "size_mm": [
+          125.0,
+          28.0,
+          8.0
+        ],
+        "materials": [
+          "SR_bench_vise_serratedsteel"
+        ]
+      },
+      {
+        "node": "bench_vise_shaft_mesh",
+        "triangles": 30212,
+        "vertices": 15108,
+        "size_mm": [
+          28.0,
+          28.0,
+          220.5
+        ],
+        "materials": [
+          "SR_bench_vise_steel"
+        ]
+      },
+      {
+        "node": "bench_vise_top_mesh",
+        "triangles": 1174,
+        "vertices": 581,
+        "size_mm": [
+          300.0,
+          100.0,
+          240.0
+        ],
+        "materials": [
+          "SR_bench_vise_beech"
+        ]
+      },
+      {
+        "node": "bench_vise_travel_stop_mesh",
+        "triangles": 1260,
+        "vertices": 632,
+        "size_mm": [
+          62.0,
+          42.0,
+          24.0
+        ],
+        "materials": [
+          "SR_bench_vise_blackoxide"
+        ]
+      }
+    ]
+  },
+  "materials": [
+    {
+      "material_name": "SR_bench_vise_machinediron",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.85,
+      "roughness_factor": 0.4,
+      "textures": {
+        "base_map": "textures/SR_bench_vise_machinediron_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ]
+      }
+    },
+    {
+      "material_name": "SR_bench_vise_steel",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 1.0,
+      "roughness_factor": 0.28,
+      "textures": {
+        "base_map": "textures/SR_bench_vise_steel_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ]
+      }
+    },
+    {
+      "material_name": "SR_bench_vise_blackoxide",
+      "base_color_factor": [
+        0.045,
+        0.045,
+        0.05,
+        1.0
+      ],
+      "metallic_factor": 0.7,
+      "roughness_factor": 0.45,
+      "textures": {}
+    },
+    {
+      "material_name": "SR_bench_vise_paint",
+      "base_color_factor": [
+        0.035,
+        0.09,
+        0.24,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.32,
+      "textures": {}
+    },
+    {
+      "material_name": "SR_bench_vise_bronze",
+      "base_color_factor": [
+        0.6,
+        0.42,
+        0.21,
+        1.0
+      ],
+      "metallic_factor": 1.0,
+      "roughness_factor": 0.35,
+      "textures": {}
+    },
+    {
+      "material_name": "SR_bench_vise_serratedsteel",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 1.0,
+      "roughness_factor": 0.45,
+      "textures": {
+        "base_map": "textures/SR_bench_vise_serratedsteel_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ]
+      }
+    },
+    {
+      "material_name": "SR_bench_vise_beech",
+      "base_color_factor": [
+        0.52,
+        0.33,
+        0.17,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.6,
+      "textures": {}
+    }
+  ],
+  "files": {
+    "LOD0_glb": "assets/bench_vise/bench_vise_LOD0.glb",
+    "LOD1_glb": "assets/bench_vise/bench_vise_LOD1.glb",
+    "LOD2_glb": "assets/bench_vise/bench_vise_LOD2.glb",
+    "parts_glb": "assets/bench_vise/bench_vise_parts.glb",
+    "textures_dir": "assets/bench_vise/textures",
+    "thumbnail": "assets/bench_vise/thumbnail.png",
+    "meta_json": "assets/bench_vise/meta.json"
+  }
+}

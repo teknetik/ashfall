@@ -1,0 +1,380 @@
+{
+  "id": "power_drill",
+  "title": "Industrial Cordless Power Drill",
+  "category": "power_tool",
+  "subcategory": "drilling_fastening",
+  "description": "Heavy-duty hand drill with chuck, bit, trigger, housing, and battery pack.",
+  "lore_fit": "Directly supports the Crafting Studio `op: drill_pattern` operation (drilling barrel vent ports and mounting holes in alloy plates).",
+  "where_to_use": [
+    "Salvage shop workbench (`op: drill_pattern` tool)",
+    "Tool Exchange display shelf",
+    "Repairs shop counter",
+    "Warden training range repair bench"
+  ],
+  "recommended_usage": "Use `_parts.glb` if chuck/trigger articulation is needed at the bench, or `_LOD0..2.glb` as a workshop prop.",
+  "tags": [
+    "tool:drill",
+    "power_tool",
+    "drill_pattern",
+    "crafting_studio",
+    "bench",
+    "brann",
+    "workshop"
+  ],
+  "provenance": {
+    "source_repo": "https://github.com/NVIDIA-Omniverse/simready-central",
+    "dataset": "NdotLight/SimReady_Assets",
+    "package_id": "simready.hf.NdotLight.SimReady_Assets.power_drill.2026.11.10_00",
+    "license": "cc-by-4.0",
+    "author": "ndotlight",
+    "source_url": "https://huggingface.co/datasets/NdotLight/SimReady_Assets/resolve/795bdea281736a43515671e8264e4cc076e5aa46/power_drill/com.nvidia.simready.packaging.json",
+    "wikidata_qcode": "Q26991405"
+  },
+  "physical_properties": {
+    "dimensions_m": {
+      "width_x": 0.0714,
+      "height_y": 0.2058,
+      "depth_z": 0.2316
+    },
+    "dimensions_mm": [
+      71.4,
+      205.8,
+      231.6
+    ],
+    "mass_kg": 1.0069,
+    "simready_category": "power_tool",
+    "rigid_body_count": 4,
+    "usd_joints": [
+      {
+        "name": "chuck_spin_joint",
+        "path": "/World/Power_Drill/Joints/chuck_spin_joint",
+        "type": "PhysicsRevoluteJoint"
+      },
+      {
+        "name": "trigger_press_joint",
+        "path": "/World/Power_Drill/Joints/trigger_press_joint",
+        "type": "PhysicsPrismaticJoint"
+      },
+      {
+        "name": "battery_fixed_joint",
+        "path": "/World/Power_Drill/Joints/battery_fixed_joint",
+        "type": "PhysicsFixedJoint"
+      }
+    ],
+    "grasp_points": []
+  },
+  "geometry": {
+    "source_triangles": 184764,
+    "parts_glb_triangles": 47447,
+    "lod_triangles": {
+      "LOD0": 29999,
+      "LOD1": 7499,
+      "LOD2": 2399
+    },
+    "part_count": 11,
+    "is_multi_part": true,
+    "parts": [
+      {
+        "node": "power_drill_battery_001",
+        "triangles": 2105,
+        "vertices": 1033,
+        "size_mm": [
+          71.4,
+          46.0,
+          107.7
+        ],
+        "materials": [
+          "SR_power_drill_drill_battery"
+        ]
+      },
+      {
+        "node": "power_drill_battery_clip_l",
+        "triangles": 480,
+        "vertices": 242,
+        "size_mm": [
+          4.0,
+          20.0,
+          94.0
+        ],
+        "materials": [
+          "SR_power_drill_drill_battery"
+        ]
+      },
+      {
+        "node": "power_drill_battery_clip_r",
+        "triangles": 480,
+        "vertices": 242,
+        "size_mm": [
+          4.0,
+          20.0,
+          94.0
+        ],
+        "materials": [
+          "SR_power_drill_drill_battery"
+        ]
+      },
+      {
+        "node": "power_drill_bit",
+        "triangles": 1186,
+        "vertices": 595,
+        "size_mm": [
+          5.6,
+          5.6,
+          48.0
+        ],
+        "materials": [
+          "SR_power_drill_drill_bit"
+        ]
+      },
+      {
+        "node": "power_drill_bit_tip",
+        "triangles": 496,
+        "vertices": 250,
+        "size_mm": [
+          24.9,
+          24.9,
+          11.0
+        ],
+        "materials": [
+          "SR_power_drill_drill_bit"
+        ]
+      },
+      {
+        "node": "power_drill_body_001",
+        "triangles": 8238,
+        "vertices": 4121,
+        "size_mm": [
+          60.0,
+          91.2,
+          91.2
+        ],
+        "materials": [
+          "SR_power_drill_drill_body"
+        ]
+      },
+      {
+        "node": "power_drill_body_cap",
+        "triangles": 230,
+        "vertices": 117,
+        "size_mm": [
+          60.0,
+          60.0,
+          15.1
+        ],
+        "materials": [
+          "SR_power_drill_drill_body"
+        ]
+      },
+      {
+        "node": "power_drill_body_vent",
+        "triangles": 1556,
+        "vertices": 780,
+        "size_mm": [
+          55.3,
+          55.3,
+          31.8
+        ],
+        "materials": [
+          "SR_power_drill_drill_body_001"
+        ]
+      },
+      {
+        "node": "power_drill_chuck",
+        "triangles": 29282,
+        "vertices": 14643,
+        "size_mm": [
+          47.5,
+          47.5,
+          50.0
+        ],
+        "materials": [
+          "SR_power_drill_drill_chuck"
+        ]
+      },
+      {
+        "node": "power_drill_grip",
+        "triangles": 1996,
+        "vertices": 1000,
+        "size_mm": [
+          47.1,
+          104.1,
+          73.1
+        ],
+        "materials": [
+          "SR_power_drill_drill_grip"
+        ]
+      },
+      {
+        "node": "power_drill_trigger_001",
+        "triangles": 1398,
+        "vertices": 701,
+        "size_mm": [
+          23.2,
+          25.3,
+          20.0
+        ],
+        "materials": [
+          "SR_power_drill_drill_trigger"
+        ]
+      }
+    ]
+  },
+  "materials": [
+    {
+      "material_name": "SR_power_drill_drill_battery",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_power_drill_drill_battery_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_power_drill_drill_battery_Normal.png",
+        "gltf_orm_map": "textures/SR_power_drill_drill_battery_ORM.png",
+        "unity_urp_mask_map": "textures/SR_power_drill_drill_battery_Mask.png"
+      }
+    },
+    {
+      "material_name": "SR_power_drill_drill_bit",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_power_drill_drill_bit_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_power_drill_drill_bit_Normal.png",
+        "gltf_orm_map": "textures/SR_power_drill_drill_bit_ORM.png",
+        "unity_urp_mask_map": "textures/SR_power_drill_drill_bit_Mask.png"
+      }
+    },
+    {
+      "material_name": "SR_power_drill_drill_body",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_power_drill_drill_body_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_power_drill_drill_body_Normal.png",
+        "gltf_orm_map": "textures/SR_power_drill_drill_body_ORM.png",
+        "unity_urp_mask_map": "textures/SR_power_drill_drill_body_Mask.png"
+      }
+    },
+    {
+      "material_name": "SR_power_drill_drill_body_001",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_power_drill_drill_body_001_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_power_drill_drill_body_001_Normal.png",
+        "gltf_orm_map": "textures/SR_power_drill_drill_body_001_ORM.png",
+        "unity_urp_mask_map": "textures/SR_power_drill_drill_body_001_Mask.png"
+      }
+    },
+    {
+      "material_name": "SR_power_drill_drill_chuck",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_power_drill_drill_chuck_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_power_drill_drill_chuck_Normal.png",
+        "gltf_orm_map": "textures/SR_power_drill_drill_chuck_ORM.png",
+        "unity_urp_mask_map": "textures/SR_power_drill_drill_chuck_Mask.png"
+      }
+    },
+    {
+      "material_name": "SR_power_drill_drill_grip",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_power_drill_drill_grip_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_power_drill_drill_grip_Normal.png",
+        "gltf_orm_map": "textures/SR_power_drill_drill_grip_ORM.png",
+        "unity_urp_mask_map": "textures/SR_power_drill_drill_grip_Mask.png"
+      }
+    },
+    {
+      "material_name": "SR_power_drill_drill_trigger",
+      "base_color_factor": [
+        0.8,
+        0.8,
+        0.8,
+        1.0
+      ],
+      "metallic_factor": 0.0,
+      "roughness_factor": 0.5,
+      "textures": {
+        "base_map": "textures/SR_power_drill_drill_trigger_BaseMap.png",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "normal_map": "textures/SR_power_drill_drill_trigger_Normal.png",
+        "gltf_orm_map": "textures/SR_power_drill_drill_trigger_ORM.png",
+        "unity_urp_mask_map": "textures/SR_power_drill_drill_trigger_Mask.png"
+      }
+    }
+  ],
+  "files": {
+    "LOD0_glb": "assets/power_drill/power_drill_LOD0.glb",
+    "LOD1_glb": "assets/power_drill/power_drill_LOD1.glb",
+    "LOD2_glb": "assets/power_drill/power_drill_LOD2.glb",
+    "parts_glb": "assets/power_drill/power_drill_parts.glb",
+    "textures_dir": "assets/power_drill/textures",
+    "thumbnail": "assets/power_drill/thumbnail.png",
+    "meta_json": "assets/power_drill/meta.json"
+  }
+}

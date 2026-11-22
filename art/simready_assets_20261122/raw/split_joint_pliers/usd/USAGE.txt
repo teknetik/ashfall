@@ -1,0 +1,31 @@
+Split joint pliers — Isaac Sim candidate
+
+delivery_target: submission_isaac
+
+NVIDIA external acceptance: not granted. Qualification status is recorded in the accompanying release records.
+
+Open split_joint_pliers/usd/split_joint_pliers.usda. Reference its default prim into a metre-scaled Z-up stage. Before play, select PhysX=Enabled on the referenced asset root. Enable omni.graph.action, omni.graph.nodes, omni.graph.scriptnode and isaacsim.core.nodes, and permit trusted embedded ScriptNode execution (/app/omni.graph.scriptnode/opt_in=true). The default PhysX=Disabled keeps the neutral USD representation. Target runtime: Isaac Sim6.2.0-rc.14+mr.0.74a9356b.local, PhysX.
+
+Accepted used black/orange TPR and bright-steel appearance is preserved. Two captive halves; no ordinary disassembly. Manufacturer total mass0.620kg; component shares, COM/inertia and dry friction values are estimates. Apply finite forces at the handles; the delivered runtime uses no body pose/velocity setters.
+
+Supported development sequence: unload and open to approximately50degrees; slide one inferred slot seat; align the pin; close to approximately33degrees and allow actual seat capture before fitting approach/loading. Grip a representative25mm fitting, release its temporary support and retain its50g mass under gravity plus2N downward, then reacquire fitting support, reopen and withdraw. For inverse adjustment, open unloaded, return to the original seat, close to approximately33degrees and allow capture before full closure. A fast continuous50-to0degree closure was not qualified. Native development demonstrated the connected sequence. Runtime lifecycle and official qualification are separate claims recorded with the release.
+
+Physical grip uses the upper gripping land and the lower mouth region, including adjacent pinned forging. Exclusive serrated-land contact, friction calibration, rated torque and the advertised60mm capacity are not certified. The generic convex fitting is test apparatus, not delivered geometry.
+
+The concealed key is represented by finite equal/opposite internal wrenches conditioned on actual pin geometry and opening angle. The native D6 joint provides axial/tilt capture. Estimated47degree unlock,42degree recapture eligibility, seven-seat pitch/cam reconstruction and52degree envelope are not factory measurements. Capture also requires pin alignment within0.6mm in-plane/0.4mm axial; graph state is not evidence of seating. Initial seat is zero. No angular return spring is claimed.
+
+During closure the pin may move before actual capture; tested inverse full closure briefly reached1.332mm seat error and settled to0.134mm. Working load retention was within its declared1mm seat bound. Do not claim continuously seated closure or sample-calibrated key forces.
+
+Assembled-object drop media is a demonstration rather than an extra acceptance test. No per-link drop or removable-half operation applies. No robot grasp-policy, Newton/MuJoCo, two-copy independence or maintenance/disassembly qualification is claimed. Historical CAD generation provenance remains unknown; current preserved-mesh intake and appearance were separately reviewed.
+
+Licence: Creative Commons Attribution 4.0 International (cc-by-4.0), M-XR Limited. See split_joint_pliers/usd/LICENSE.txt. NVIDIA acceptance is not granted.
+
+Frozen optional-check disclosure (separate from reviewed demonstration media):
+
+physics.drop_demo: not_tested - Assembled-object drop is a recorded demonstration, not an acceptance gate; planned after functional qualification.
+
+
+
+## Published release
+Published in https://huggingface.co/datasets/M-XR/marso-simready under Creative Commons Attribution 4.0 International (CC BY 4.0). See LICENSE.txt and ATTRIBUTION.txt. NVIDIA catalogue acceptance is pending.
+Package identity and version: ../com.nvidia.simready.packaging.json. Recorded official validation and benchmark outcomes: ../.metadata. Historical authoring scope is in mechanism.json; it is not a replacement for those reports.

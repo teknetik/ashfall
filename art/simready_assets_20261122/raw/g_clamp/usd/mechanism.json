@@ -1,0 +1,305 @@
+{
+  "schema": "mxr/simready-mechanism/1",
+  "asset": "g_clamp",
+  "physical_properties": {
+    "materials": [
+      {
+        "id": "coated_frame",
+        "object_id": "assembled_clamp",
+        "material_type": "cast_iron",
+        "usd_material": "/Asset/PhysicsMaterials/coated_frame",
+        "colliders": [
+          "/Asset/Asset/link_frame/part_i_braced_frame/part_i_braced_frame_001",
+          "/Asset/Asset/link_frame/part_threaded_boss_exterior/part_threaded_boss_exterior_001"
+        ],
+        "static_friction": 0.4,
+        "dynamic_friction": 0.3,
+        "restitution": 0.05,
+        "basis": "Estimated dry workshop contact, not calibrated. Painted/cast frame and bare contact steel 0.4/0.3; smoother moving steel0.3/0.2; plausible ranges static0.2-0.6,dynamic0.15-0.5. Average combine."
+      },
+      {
+        "id": "steel_contact",
+        "object_id": "assembled_clamp",
+        "material_type": "bare_contact_steel",
+        "usd_material": "/Asset/PhysicsMaterials/steel_contact",
+        "colliders": [
+          "/Asset/Asset/link_frame/part_fixed_contact_land/part_fixed_contact_land_001",
+          "/Asset/Asset/link_pad/part_swivel_pressure_foot/part_swivel_pressure_foot_001"
+        ],
+        "static_friction": 0.4,
+        "dynamic_friction": 0.3,
+        "restitution": 0.05,
+        "basis": "Estimated dry workshop contact, not calibrated. Painted/cast frame and bare contact steel 0.4/0.3; smoother moving steel0.3/0.2; plausible ranges static0.2-0.6,dynamic0.15-0.5. Average combine."
+      },
+      {
+        "id": "steel_moving",
+        "object_id": "assembled_clamp",
+        "material_type": "smooth_moving_steel",
+        "usd_material": "/Asset/PhysicsMaterials/steel_moving",
+        "colliders": [
+          "/Asset/Asset/link_spindle/part_spindle_core/part_spindle_core",
+          "/Asset/Asset/link_spindle/part_acme_start_1/part_acme_start_1_001",
+          "/Asset/Asset/link_spindle/part_acme_start_2/part_acme_start_2_001",
+          "/Asset/Asset/link_spindle/part_cross_hub/part_cross_hub_001",
+          "/Asset/Asset/link_tommy_bar/part_captured_tommy_bar/part_captured_tommy_bar_001"
+        ],
+        "static_friction": 0.3,
+        "dynamic_friction": 0.2,
+        "restitution": 0.05,
+        "basis": "Estimated dry workshop contact, not calibrated. Painted/cast frame and bare contact steel 0.4/0.3; smoother moving steel0.3/0.2; plausible ranges static0.2-0.6,dynamic0.15-0.5. Average combine."
+      }
+    ],
+    "bodies": [
+      {
+        "usd_body": "/Asset/Asset/link_frame",
+        "object_id": "assembled_clamp",
+        "construction": "assembly",
+        "mass_kg": 0.6894687924649824,
+        "mass_basis": "Sum of accepted solid mesh volumes and estimated material densities; not the historical650g allocation.",
+        "inertia_basis": "Signed tetrahedral full tensor; principal axes/body-local COM. Virtual carrier receives1% spindle mass/inertia; slight rotation-inertia abstraction disclosed.",
+        "components": [
+          {
+            "material_id": "coated_frame",
+            "construction": "solid",
+            "mass_kg": 0.62693190260288,
+            "density_kg_m3": 7200,
+            "volume_m3": 8.707387536151111e-05,
+            "basis": "Closed accepted mesh tetrahedral volume; cast-iron7200 or steel7850kg/m3 estimated. Source dimensions inferred; component overlap can overestimate mass by up to10%."
+          },
+          {
+            "material_id": "coated_frame",
+            "construction": "solid",
+            "mass_kg": 0.05410785991728502,
+            "density_kg_m3": 7200,
+            "volume_m3": 7.5149805440673635e-06,
+            "basis": "Closed accepted mesh tetrahedral volume; cast-iron7200 or steel7850kg/m3 estimated. Source dimensions inferred; component overlap can overestimate mass by up to10%."
+          },
+          {
+            "material_id": "steel_contact",
+            "construction": "solid",
+            "mass_kg": 0.008429029944817304,
+            "density_kg_m3": 7850,
+            "volume_m3": 1.0737617764098475e-06,
+            "basis": "Closed accepted mesh tetrahedral volume; cast-iron7200 or steel7850kg/m3 estimated. Source dimensions inferred; component overlap can overestimate mass by up to10%."
+          }
+        ]
+      },
+      {
+        "usd_body": "/Asset/Asset/link_spindle",
+        "object_id": "assembled_clamp",
+        "construction": "assembly",
+        "mass_kg": 0.08451482746301583,
+        "mass_basis": "Sum of accepted solid mesh volumes and estimated material densities; not the historical650g allocation.",
+        "inertia_basis": "Signed tetrahedral full tensor; principal axes/body-local COM. Virtual carrier receives1% spindle mass/inertia; slight rotation-inertia abstraction disclosed.",
+        "components": [
+          {
+            "material_id": "steel_moving",
+            "construction": "solid",
+            "mass_kg": 0.057634979197197726,
+            "density_kg_m3": 7850,
+            "volume_m3": 7.342035566522003e-06,
+            "basis": "Closed accepted mesh tetrahedral volume; cast-iron7200 or steel7850kg/m3 estimated. Source dimensions inferred; component overlap can overestimate mass by up to10%."
+          },
+          {
+            "material_id": "steel_moving",
+            "construction": "solid",
+            "mass_kg": 0.007800930074843495,
+            "density_kg_m3": 7850,
+            "volume_m3": 9.937490541201903e-07,
+            "basis": "Closed accepted mesh tetrahedral volume; cast-iron7200 or steel7850kg/m3 estimated. Source dimensions inferred; component overlap can overestimate mass by up to10%."
+          },
+          {
+            "material_id": "steel_moving",
+            "construction": "solid",
+            "mass_kg": 0.00780119047440363,
+            "density_kg_m3": 7850,
+            "volume_m3": 9.93782226038679e-07,
+            "basis": "Closed accepted mesh tetrahedral volume; cast-iron7200 or steel7850kg/m3 estimated. Source dimensions inferred; component overlap can overestimate mass by up to10%."
+          },
+          {
+            "material_id": "steel_moving",
+            "construction": "solid",
+            "mass_kg": 0.011277727716570981,
+            "density_kg_m3": 7850,
+            "volume_m3": 1.4366532123020357e-06,
+            "basis": "Closed accepted mesh tetrahedral volume; cast-iron7200 or steel7850kg/m3 estimated. Source dimensions inferred; component overlap can overestimate mass by up to10%."
+          }
+        ]
+      },
+      {
+        "usd_body": "/Asset/Asset/link_pad",
+        "object_id": "assembled_clamp",
+        "construction": "solid",
+        "mass_kg": 0.010890525084729366,
+        "mass_basis": "Sum of accepted solid mesh volumes and estimated material densities; not the historical650g allocation.",
+        "inertia_basis": "Signed tetrahedral full tensor; principal axes/body-local COM. Virtual carrier receives1% spindle mass/inertia; slight rotation-inertia abstraction disclosed.",
+        "components": [
+          {
+            "material_id": "steel_contact",
+            "construction": "solid",
+            "mass_kg": 0.010890525084729366,
+            "density_kg_m3": 7850,
+            "volume_m3": 1.3873280362712567e-06,
+            "basis": "Closed accepted mesh tetrahedral volume; cast-iron7200 or steel7850kg/m3 estimated. Source dimensions inferred; component overlap can overestimate mass by up to10%."
+          }
+        ]
+      },
+      {
+        "usd_body": "/Asset/Asset/link_tommy_bar",
+        "object_id": "assembled_clamp",
+        "construction": "solid",
+        "mass_kg": 0.007831378815188065,
+        "mass_basis": "Sum of accepted solid mesh volumes and estimated material densities; not the historical650g allocation.",
+        "inertia_basis": "Signed tetrahedral full tensor; principal axes/body-local COM. Virtual carrier receives1% spindle mass/inertia; slight rotation-inertia abstraction disclosed.",
+        "components": [
+          {
+            "material_id": "steel_moving",
+            "construction": "solid",
+            "mass_kg": 0.007831378815188065,
+            "density_kg_m3": 7850,
+            "volume_m3": 9.976278745462502e-07,
+            "basis": "Closed accepted mesh tetrahedral volume; cast-iron7200 or steel7850kg/m3 estimated. Source dimensions inferred; component overlap can overestimate mass by up to10%."
+          }
+        ]
+      },
+      {
+        "usd_body": "/Asset/AxialCarrier",
+        "object_id": "assembled_clamp",
+        "construction": "assembly",
+        "mass_kg": 0.0008536851258890489,
+        "mass_basis": "Sum of accepted solid mesh volumes and estimated material densities; not the historical650g allocation.",
+        "inertia_basis": "Signed tetrahedral full tensor; principal axes/body-local COM. Virtual carrier receives1% spindle mass/inertia; slight rotation-inertia abstraction disclosed.",
+        "components": [
+          {
+            "material_id": "steel_moving",
+            "construction": "solid",
+            "mass_kg": 0.0005821715070424013,
+            "density_kg_m3": 7850,
+            "volume_m3": 7.416197541941418e-08,
+            "basis": "Closed accepted mesh tetrahedral volume; cast-iron7200 or steel7850kg/m3 estimated. Source dimensions inferred; component overlap can overestimate mass by up to10%."
+          },
+          {
+            "material_id": "steel_moving",
+            "construction": "solid",
+            "mass_kg": 7.879727348326763e-05,
+            "density_kg_m3": 7850,
+            "volume_m3": 1.0037869233537277e-08,
+            "basis": "Closed accepted mesh tetrahedral volume; cast-iron7200 or steel7850kg/m3 estimated. Source dimensions inferred; component overlap can overestimate mass by up to10%."
+          },
+          {
+            "material_id": "steel_moving",
+            "construction": "solid",
+            "mass_kg": 7.879990378185485e-05,
+            "density_kg_m3": 7850,
+            "volume_m3": 1.0038204303421e-08,
+            "basis": "Closed accepted mesh tetrahedral volume; cast-iron7200 or steel7850kg/m3 estimated. Source dimensions inferred; component overlap can overestimate mass by up to10%."
+          },
+          {
+            "material_id": "steel_moving",
+            "construction": "solid",
+            "mass_kg": 0.00011391644158152506,
+            "density_kg_m3": 7850,
+            "volume_m3": 1.4511648609111472e-08,
+            "basis": "Closed accepted mesh tetrahedral volume; cast-iron7200 or steel7850kg/m3 estimated. Source dimensions inferred; component overlap can overestimate mass by up to10%."
+          }
+        ]
+      }
+    ]
+  },
+  "implementation": {
+    "screw": "Native articulation prismatic+revolute with mimic gearing -0.003/360 metres per degree; positive rotation advances positiveZ. Virtual axial carrier with1% mass allocation, no graph.",
+    "foot": "Native spherical joint, 12 degrees per swing axis, captive translation and free yaw. PhysX articulation uses a pyramidal swing envelope, approximately17 degrees diagonal; not an exact12-degree circular cone. Contact alignment tested with a5-degree lower workpiece face at480Hz.",
+    "handle": "Passive prismatic +/-27.5mm as source; native angular/linear effort friction estimated.",
+    "friction": "Spin static0.03Nm,dynamic0.02Nm estimated workshop thread drag; self-holding is to be tested, not certified under arbitrary load.",
+    "limits": "100 mm travel and12-degree per-axis shoe swing are source-informed estimates. Mass/contact/effort are uncalibrated. Use480Hz for contact clamping;240Hz uneven-contact trial failed retention."
+  },
+  "source_binding": {
+    "texture": "dc02535d955b4e2937ced4b57815e6bfdfecd1171afb779ff47c2c4117642b02"
+  },
+  "runtime": "Isaac Sim6.1rc26 PhysX;480Hz for contact clamping, native schemas, no custom graph.",
+  "historical_authoring_capabilities": {
+    "runtime": {
+      "application": "Isaac Sim",
+      "physics": "PhysX",
+      "version": "6.1.0-rc.26+mr.0.7c206f75.local"
+    },
+    "unsupported_runtimes": [
+      "Newton",
+      "MuJoCo"
+    ],
+    "operations": [
+      {
+        "id": "screw_advance_reverse",
+        "status": "passed",
+        "notes": "Native screw rotation advances and retracts the captive jaw at 3 mm per revolution; two-start geometry has 1.5 mm crest pitch."
+      },
+      {
+        "id": "swivel_contact_5degrees",
+        "status": "passed",
+        "notes": "At 480 Hz, the captive shoe aligns with and retains the tested 5 degree uneven workpiece. No measured load rating or full cone envelope certification."
+      },
+      {
+        "id": "captured_handle_slide",
+        "status": "passed",
+        "notes": "Native sliding handle travels in both directions and remains captive at its configured limits."
+      },
+      {
+        "id": "repeated_grip_release_remove",
+        "status": "passed",
+        "notes": "Continuous native insertion, tightening, workpiece-support release, grip under weight, reverse release, removal and repeat with the tool visibly supported."
+      }
+    ],
+    "assumptions": [
+      "Source-informed dimensions and solid-mesh mass estimates.",
+      "480Hz required for tested workpiece contact."
+    ],
+    "limitations": [
+      "No measured force rating or friction calibration.",
+      "12degree per-axis spherical envelope is pyramidal, not circular.",
+      "Two-copy reuse deferred.",
+      "Official joint-movement aggregate passed with 2 of 4 sub-probes responding; separate native screw and swivel proofs support those operations.",
+      "The tool is supported during workpiece use; robot grasping and calibrated force control are not qualified."
+    ]
+  },
+  "documented_usage_scope": {
+    "supported_actions": [
+      "everyday_core",
+      "gclamp.helical_native",
+      "gclamp.swivel_native",
+      "gclamp.handle_native"
+    ],
+    "exclusions": {
+      "gclamp.screw": {
+        "status": "not_tested",
+        "reason": "Includes measured cone/friction or calibrated effort not requested or available; native estimated function is separately required.",
+        "covered_by": [
+          "gclamp.helical_native",
+          "gclamp.swivel_native",
+          "gclamp.handle_native",
+          "everyday_core"
+        ]
+      },
+      "gclamp.shoe": {
+        "status": "not_tested",
+        "reason": "Includes measured cone/friction or calibrated effort not requested or available; native estimated function is separately required.",
+        "covered_by": [
+          "gclamp.helical_native",
+          "gclamp.swivel_native",
+          "gclamp.handle_native",
+          "everyday_core"
+        ]
+      },
+      "gclamp.handle": {
+        "status": "not_tested",
+        "reason": "Includes measured cone/friction or calibrated effort not requested or available; native estimated function is separately required.",
+        "covered_by": [
+          "gclamp.helical_native",
+          "gclamp.swivel_native",
+          "gclamp.handle_native",
+          "everyday_core"
+        ]
+      }
+    }
+  },
+  "documentation_note": "Historical authoring scope is retained as context, not refreshed qualification. Current official outcomes are in ../.metadata; NVIDIA acceptance remains pending."
+}

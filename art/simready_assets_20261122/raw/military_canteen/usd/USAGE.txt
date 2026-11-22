@@ -1,0 +1,24 @@
+# Military canteen - marso by M-XR
+
+Rigid empty canteen in its cover; no water, strap or cup. About 14.2 x 9.0 x 20.7 cm, estimated mass 0.330 kg. One rigid body, no joints.
+
+Open military_canteen/usd/military_canteen.usda or reference its default prim. Select PhysX=Enabled on the referenced asset root before simulation; use Z-up metres and gravity. Apply external forces to the body; the tested grasp point is recorded with the action in mechanism.json (canteen.lift_and_place: body-local (0.000, -0.001, 0.207) m). No authored control script is required.
+
+Appearance is the preserved marso PBR. Contact roles (uncalibrated dry estimates): Canteen (canvas cover: static 0.6, dynamic 0.5, restitution 0.1). One canvas cover role; convex decomposition.
+
+Mass: Empty one-quart military canteen with screw cap in its canvas cover, no cup: cited bodies 0.136-0.15 kg (aluminium or plastic) plus covers 0.159-0.231 kg; 0.33 kg chosen. Centre of mass and inertia: Hollow body: mass as a thin uniform shell over the closed collider surface (the enclosed space is not material). No physical-sample calibration is claimed.
+
+Tested envelope: Isaac Sim 6.2 PhysX GPU dynamics at 240 Hz; point-actuation handling (Grip the canteen by its screw cap, lift it clear of the table and set it back down upright), not robot gripper qualification. Drop and tilt clips in the delivery videos are presentation, not certification.
+
+Source: pre-existing marso Library asset (mesh of unrecorded generator (provenance gap), marso PBR). Provenance gaps: No unique upstream image link for the mesh node; reference image not recorded. Size: Source scale kept: 14.2 x 9.0 x 20.7 cm one-quart military canteen in canvas cover; not a measured product
+
+Scope limits: Empty; body, cap and cover not separable on the single-texture mesh; one combined role; water not simulated; uncalibrated. Multi-instance operation is not separately qualified. Actual proof and official outcomes accompany delivery; this authoring candidate alone is not acceptance.
+
+Licence: Creative Commons Attribution 4.0 International (CC BY 4.0), attribution: marso by M-XR. Contact: info@m-xr.com. No upload or NVIDIA external acceptance is implied.
+
+## PhysX runtime selection
+
+Reference `military_canteen/usd/military_canteen.usda` into a clean stage. Before simulation, select `PhysX=Enabled` on the referenced asset root. The authored default `Disabled` composes runtime-neutral physics; Enabled adds the PhysX settings. Keep this selection in the consuming stage. This composition conversion requires renewed runtime proof on the resulting package bytes.
+
+Delivery target: submission_isaac
+NVIDIA external acceptance: not granted
